@@ -1,20 +1,55 @@
 import 'package:material_ui/material_ui.dart';
 
-class RemyaSettingsApp extends StatelessWidget {
+import 'features/settings/domain/settings_catalog.dart';
+import 'features/settings/presentation/settings_shell.dart';
+
+class RemyaSettingsApp extends StatefulWidget {
   const RemyaSettingsApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Remy'a Settings",
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.indigo,
-          dynamicSchemeVariant: .expressive,
-        ),
+  State<RemyaSettingsApp> createState() => _RemyaSettingsAppState();
+}
+
+class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
+  late final _catalog = SettingsCatalog.load();
+
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+    title: "Remy'a Settings",
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color(0xFF8054C9),
+        dynamicSchemeVariant: .expressive,
       ),
-      home: Scaffold(appBar: AppBar(title: const Text("Remy'a Settings"))),
-    );
-  }
+      scaffoldBackgroundColor: const Color(0xFFF6F5FA),
+      fontFamilyFallback: const [
+        'Noto Sans CJK SC',
+        'Noto Sans CJK TC',
+        'sans-serif',
+      ],
+    ),
+    home: FutureBuilder<SettingsCatalog>(
+      future: _catalog,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Scaffold(
+            body: Center(
+              child: Padding(
+                padding: .all(32),
+                child: Text('设置目录无法加载。请检查应用资源是否完整，然后重新启动。'),
+              ),
+            ),
+          );
+        }
+        if (!snapshot.hasData) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        return SettingsShell(catalog: snapshot.data!);
+      },
+    ),
+  );
 }

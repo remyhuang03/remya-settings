@@ -1,8 +1,14 @@
 # Agent Instructions & Development Guidelines
 
 ## Project Scope
-- `remya_settings` is an independent Linux desktop project using Flutter and Rust.
-- Reuse development practices from `image_resizer`, not its features, configuration, window geometry, assets, application identifiers, or license.
+- `remya_settings` is a global system settings application for Hyprland on Linux, using Flutter and Rust.
+- Follow Windows 11 Settings for information architecture and layout (persistent category navigation, search, Home cards, breadcrumbs, grouped settings, and nested pages), while using Material Design 3 Expressive rather than Fluent styling.
+- The current milestone is UI only. Do not read or change system settings, invoke services or commands, add platform integrations, or persist preview values.
+- Maintain the settings catalog and its schema alongside the UI. Preserve source references and document coverage gaps; Microsoft's public page catalog is not a complete internal control schema.
+- Keep `docs/settings-implementation-progress.md` synchronized with every added, removed, or implemented catalog item. Preserve stable IDs and existing tracking notes; record verification evidence before marking a system feature implemented.
+- Every setting must declare availability and a reason: `planned` (not implemented), `unsupported` (Windows-specific, legacy, or inapplicable), or `available` (a working, verified integration). Show text and an icon, not color alone; keep unavailable controls disabled while allowing navigation to their previews.
+- Never present sample values as detected device state, or mark an item available merely because its page renders. Enable controls only after a real integration and its tests exist.
+- Reuse development practices from `image_resizer`, not its features, configuration, window geometry, assets, or application identifiers.
 - Write rule documents, including `AGENTS.md`, in English.
 
 ## Architecture: Monorepo + Feature-first + Rust Workspace
@@ -21,7 +27,8 @@
 - Use the root `rust-toolchain.toml` and inherit common crate metadata from the workspace.
 - Commit `.fvmrc`, `pubspec.lock`, and `Cargo.lock`; ignore SDK caches, build output, and local configuration.
 - Reuse existing helpers and dependencies. Add packages only for concrete requirements.
-- Check dependency license compatibility and preserve third-party notices. No distribution license is selected; do not inherit another project's license.
+- This project uses the PolyForm Noncommercial License 1.0.0 (`LICENSE`), matching `image_resizer` by explicit owner instruction.
+- Check dependency license compatibility before adding code or libraries and preserve third-party notices. Prefer permissive licenses (MIT, BSD, Apache-2.0, ISC, Zlib, Unlicense). LGPL libraries must remain dynamically linked or separate processes; do not introduce GPL, AGPL, SSPL, or other incompatible strong-copyleft code.
 
 ## Coding & UI
 - Use dot shorthand wherever supported and the expected type is unambiguous. Keep explicit types when shorthand cannot resolve correctly.

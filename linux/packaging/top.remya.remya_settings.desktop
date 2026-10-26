@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Remy'a Settings
+Comment=System settings for Hyprland
+Exec=remya_settings
+Icon=top.remya.remya_settings
+Terminal=false
+Categories=Settings;DesktopSettings;
+StartupWMClass=top.remya.remya_settings

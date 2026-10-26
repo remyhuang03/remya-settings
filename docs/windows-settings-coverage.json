@@ -1,0 +1,4879 @@
+{
+  "researchDate": "2026-10-26",
+  "uriSource": "https://learn.microsoft.com/en-us/windows/apps/develop/launch/launch-settings",
+  "backupSource": "https://learn.microsoft.com/en-us/windows/configuration/windows-backup/catalog?pivots=windows-11",
+  "uris": [
+    {
+      "uri": "ms-settings:workplace",
+      "page": "work",
+      "sourceCategory": "Accounts",
+      "title": "Access work or school"
+    },
+    {
+      "uri": "ms-settings:emailandaccounts",
+      "page": "email",
+      "sourceCategory": "Accounts",
+      "title": "Email & app accounts"
+    },
+    {
+      "uri": "ms-settings:otherusers",
+      "page": "other-users",
+      "sourceCategory": "Accounts",
+      "title": "Family & other people"
+    },
+    {
+      "uri": "ms-settings:provisioning",
+      "page": "provisioning",
+      "sourceCategory": "Accounts",
+      "title": "Provisioning"
+    },
+    {
+      "uri": "ms-settings:workplace-provisioning",
+      "page": "provisioning",
+      "sourceCategory": "Accounts",
+      "title": "Provisioning"
+    },
+    {
+      "uri": "ms-settings:workplace-repairtoken",
+      "page": "repair-token",
+      "sourceCategory": "Accounts",
+      "title": "Repair token"
+    },
+    {
+      "uri": "ms-settings:assignedaccess",
+      "page": "kiosk",
+      "sourceCategory": "Accounts",
+      "title": "Set up a kiosk"
+    },
+    {
+      "uri": "ms-settings:signinoptions",
+      "page": "signin",
+      "sourceCategory": "Accounts",
+      "title": "Sign-in options"
+    },
+    {
+      "uri": "ms-settings:signinoptions-dynamiclock",
+      "page": "dynamic-lock",
+      "sourceCategory": "Accounts",
+      "title": "Sign-in options"
+    },
+    {
+      "uri": "ms-settings:sync",
+      "page": "backup",
+      "sourceCategory": "Accounts",
+      "title": "Sync your settings"
+    },
+    {
+      "uri": "ms-settings:backup",
+      "page": "backup",
+      "sourceCategory": "Accounts",
+      "title": "Sync your settings"
+    },
+    {
+      "uri": "ms-settings:windowsanywhere",
+      "page": "windows-anywhere",
+      "sourceCategory": "Accounts",
+      "title": "Windows Anywhere"
+    },
+    {
+      "uri": "ms-settings:signinoptions-launchfaceenrollment",
+      "page": "hello-face",
+      "sourceCategory": "Accounts",
+      "title": "Windows Hello setup"
+    },
+    {
+      "uri": "ms-settings:signinoptions-launchfingerprintenrollment",
+      "page": "hello-fingerprint",
+      "sourceCategory": "Accounts",
+      "title": "Windows Hello setup"
+    },
+    {
+      "uri": "ms-settings:yourinfo",
+      "page": "your-info",
+      "sourceCategory": "Accounts",
+      "title": "Your info"
+    },
+    {
+      "uri": "ms-settings:appsfeatures",
+      "page": "installed",
+      "sourceCategory": "Apps",
+      "title": "Apps & Features"
+    },
+    {
+      "uri": "ms-settings:appsfeatures-app",
+      "page": "app-properties",
+      "sourceCategory": "Apps",
+      "title": "App features"
+    },
+    {
+      "uri": "ms-settings:appsforwebsites",
+      "page": "websites",
+      "sourceCategory": "Apps",
+      "title": "Apps for websites"
+    },
+    {
+      "uri": "ms-settings:defaultapps",
+      "page": "defaults",
+      "sourceCategory": "Apps",
+      "title": "Default apps"
+    },
+    {
+      "uri": "ms-settings:defaultbrowsersettings",
+      "page": "defaults",
+      "sourceCategory": "Apps",
+      "title": "Default browser settings"
+    },
+    {
+      "uri": "ms-settings:optionalfeatures",
+      "page": "optional",
+      "sourceCategory": "Apps",
+      "title": "Manage optional features"
+    },
+    {
+      "uri": "ms-settings:maps",
+      "page": "maps",
+      "sourceCategory": "Apps",
+      "title": "Offline Maps"
+    },
+    {
+      "uri": "ms-settings:maps-downloadmaps",
+      "page": "maps",
+      "sourceCategory": "Apps",
+      "title": "Offline Maps"
+    },
+    {
+      "uri": "ms-settings:startupapps",
+      "page": "startup",
+      "sourceCategory": "Apps",
+      "title": "Startup apps"
+    },
+    {
+      "uri": "ms-settings:videoplayback",
+      "page": "video",
+      "sourceCategory": "Apps",
+      "title": "Video playback"
+    },
+    {
+      "uri": "ms-settings:controlcenter",
+      "page": "controlcenter",
+      "sourceCategory": "Control Center",
+      "title": "Control center"
+    },
+    {
+      "uri": "ms-settings:autoplay",
+      "page": "autoplay",
+      "sourceCategory": "Devices",
+      "title": "AutoPlay"
+    },
+    {
+      "uri": "ms-settings:bluetooth",
+      "page": "bluetooth",
+      "sourceCategory": "Devices",
+      "title": "Bluetooth"
+    },
+    {
+      "uri": "ms-settings:connecteddevices",
+      "page": "device-list",
+      "sourceCategory": "Devices",
+      "title": "Connected Devices"
+    },
+    {
+      "uri": "ms-settings:camera",
+      "page": "cameras",
+      "sourceCategory": "Devices",
+      "title": "Default camera"
+    },
+    {
+      "uri": "ms-settings:mousetouchpad",
+      "page": "mouse",
+      "sourceCategory": "Devices",
+      "title": "Mouse & touchpad"
+    },
+    {
+      "uri": "ms-settings:pen",
+      "page": "pen",
+      "sourceCategory": "Devices",
+      "title": "Pen & Windows Ink"
+    },
+    {
+      "uri": "ms-settings:pen-button",
+      "page": "pen-shortcuts",
+      "sourceCategory": "Devices",
+      "title": "Pen shortcut button"
+    },
+    {
+      "uri": "ms-settings:printers",
+      "page": "printers",
+      "sourceCategory": "Devices",
+      "title": "Printers & scanners"
+    },
+    {
+      "uri": "ms-settings:devices-touch",
+      "page": "touch",
+      "sourceCategory": "Devices",
+      "title": "Touch"
+    },
+    {
+      "uri": "ms-settings:devices-touchpad",
+      "page": "touchpad",
+      "sourceCategory": "Devices",
+      "title": "Touchpad"
+    },
+    {
+      "uri": "ms-settings:devicestyping-hwkbtextsuggestions",
+      "page": "typing",
+      "sourceCategory": "Devices",
+      "title": "Text Suggestions"
+    },
+    {
+      "uri": "ms-settings:typing",
+      "page": "typing",
+      "sourceCategory": "Devices",
+      "title": "Typing"
+    },
+    {
+      "uri": "ms-settings:usb",
+      "page": "usb",
+      "sourceCategory": "Devices",
+      "title": "USB"
+    },
+    {
+      "uri": "ms-settings:wheel",
+      "page": "wheel",
+      "sourceCategory": "Devices",
+      "title": "Wheel"
+    },
+    {
+      "uri": "ms-settings:mobile-devices",
+      "page": "mobile",
+      "sourceCategory": "Devices",
+      "title": "Your phone"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-audio",
+      "page": "accessibility-audio",
+      "sourceCategory": "Ease of access",
+      "title": "Audio"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-closedcaptioning",
+      "page": "captions",
+      "sourceCategory": "Ease of access",
+      "title": "Closed captions"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-colorfilter",
+      "page": "color-filters",
+      "sourceCategory": "Ease of access",
+      "title": "Color filters"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-colorfilter-adaptivecolorlink",
+      "page": "color-filters",
+      "sourceCategory": "Ease of access",
+      "title": "Color filters"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-colorfilter-bluelightlink",
+      "page": "color-filters",
+      "sourceCategory": "Ease of access",
+      "title": "Color filters"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-display",
+      "page": "text-size",
+      "sourceCategory": "Ease of access",
+      "title": "Display"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-eyecontrol",
+      "page": "eye-control",
+      "sourceCategory": "Ease of access",
+      "title": "Eye control"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-hearingaids",
+      "page": "hearing",
+      "sourceCategory": "Ease of access",
+      "title": "Hearing devices"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-highcontrast",
+      "page": "contrast",
+      "sourceCategory": "Ease of access",
+      "title": "High contrast"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-keyboard",
+      "page": "accessibility-keyboard",
+      "sourceCategory": "Ease of access",
+      "title": "Keyboard"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-magnifier",
+      "page": "magnifier",
+      "sourceCategory": "Ease of access",
+      "title": "Magnifier"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-mouse",
+      "page": "mouse-keys",
+      "sourceCategory": "Ease of access",
+      "title": "Mouse"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-mousepointer",
+      "page": "pointer",
+      "sourceCategory": "Ease of access",
+      "title": "Mouse pointer & touch"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-narrator",
+      "page": "narrator",
+      "sourceCategory": "Ease of access",
+      "title": "Narrator"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-narrator-isautostartenabled",
+      "page": "narrator",
+      "sourceCategory": "Ease of access",
+      "title": "Narrator"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-speechrecognition",
+      "page": "voice-access",
+      "sourceCategory": "Ease of access",
+      "title": "Speech"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-cursor",
+      "page": "text-cursor",
+      "sourceCategory": "Ease of access",
+      "title": "Text cursor"
+    },
+    {
+      "uri": "ms-settings:easeofaccess-visualeffects",
+      "page": "visual-effects",
+      "sourceCategory": "Ease of access",
+      "title": "Visual Effects"
+    },
+    {
+      "uri": "ms-settings:extras",
+      "page": "extras",
+      "sourceCategory": "Extras",
+      "title": "Extras"
+    },
+    {
+      "uri": "ms-settings:family-group",
+      "page": "family",
+      "sourceCategory": "Family Group",
+      "title": "Family Group"
+    },
+    {
+      "uri": "ms-settings:gaming-gamebar",
+      "page": "game-bar",
+      "sourceCategory": "Gaming",
+      "title": "Game bar"
+    },
+    {
+      "uri": "ms-settings:gaming-gamedvr",
+      "page": "captures",
+      "sourceCategory": "Gaming",
+      "title": "Game DVR"
+    },
+    {
+      "uri": "ms-settings:gaming-gamemode",
+      "page": "game-mode",
+      "sourceCategory": "Gaming",
+      "title": "Game Mode"
+    },
+    {
+      "uri": "ms-settings:gaming-fullscreen",
+      "page": "xbox-mode",
+      "sourceCategory": "Gaming",
+      "title": "Xbox Mode"
+    },
+    {
+      "uri": "ms-settings:quietmomentsgame",
+      "page": "quiet-schedule",
+      "sourceCategory": "Gaming",
+      "title": "Playing a game full screen"
+    },
+    {
+      "uri": "ms-settings:gaming-trueplay",
+      "page": "trueplay",
+      "sourceCategory": "Gaming",
+      "title": "TruePlay"
+    },
+    {
+      "uri": "ms-settings:holographic-audio",
+      "page": "holographic-audio",
+      "sourceCategory": "Gaming",
+      "title": "Audio and speech"
+    },
+    {
+      "uri": "ms-settings:privacy-holographic-environment",
+      "page": "privacy-holographic-environment",
+      "sourceCategory": "Gaming",
+      "title": "Environment"
+    },
+    {
+      "uri": "ms-settings:holographic-headset",
+      "page": "holographic-headset",
+      "sourceCategory": "Gaming",
+      "title": "Headset display"
+    },
+    {
+      "uri": "ms-settings:holographic-management",
+      "page": "holographic-management",
+      "sourceCategory": "Gaming",
+      "title": "Uninstall"
+    },
+    {
+      "uri": "ms-settings:holographic-startupandesktop",
+      "page": "holographic-startupandesktop",
+      "sourceCategory": "Gaming",
+      "title": "Startup and desktop"
+    },
+    {
+      "uri": "ms-settings:network-status",
+      "page": "network-status",
+      "sourceCategory": "Network and internet",
+      "title": "Network & internet"
+    },
+    {
+      "uri": "ms-settings:network-advancedsettings",
+      "page": "network-advanced",
+      "sourceCategory": "Network and internet",
+      "title": "Advanced settings"
+    },
+    {
+      "uri": "ms-settings:network-airplanemode",
+      "page": "airplane",
+      "sourceCategory": "Network and internet",
+      "title": "Airplane mode"
+    },
+    {
+      "uri": "ms-settings:proximity",
+      "page": "airplane",
+      "sourceCategory": "Network and internet",
+      "title": "Airplane mode"
+    },
+    {
+      "uri": "ms-settings:network-cellular",
+      "page": "cellular",
+      "sourceCategory": "Network and internet",
+      "title": "Cellular & SIM"
+    },
+    {
+      "uri": "ms-settings:network-dialup",
+      "page": "dialup",
+      "sourceCategory": "Network and internet",
+      "title": "Dial-up"
+    },
+    {
+      "uri": "ms-settings:network-directaccess",
+      "page": "directaccess",
+      "sourceCategory": "Network and internet",
+      "title": "DirectAccess"
+    },
+    {
+      "uri": "ms-settings:network-ethernet",
+      "page": "ethernet",
+      "sourceCategory": "Network and internet",
+      "title": "Ethernet"
+    },
+    {
+      "uri": "ms-settings:network-wifisettings",
+      "page": "known-networks",
+      "sourceCategory": "Network and internet",
+      "title": "Manage known networks"
+    },
+    {
+      "uri": "ms-settings:network-mobilehotspot",
+      "page": "hotspot",
+      "sourceCategory": "Network and internet",
+      "title": "Mobile hotspot"
+    },
+    {
+      "uri": "ms-settings:network-proxy",
+      "page": "proxy",
+      "sourceCategory": "Network and internet",
+      "title": "Proxy"
+    },
+    {
+      "uri": "ms-settings:network-vpn",
+      "page": "vpn",
+      "sourceCategory": "Network and internet",
+      "title": "VPN"
+    },
+    {
+      "uri": "ms-settings:network-wifi",
+      "page": "wifi",
+      "sourceCategory": "Network and internet",
+      "title": "Wi-Fi"
+    },
+    {
+      "uri": "ms-settings:wifi-provisioning",
+      "page": "wifi-provisioning",
+      "sourceCategory": "Network and internet",
+      "title": "Wi-Fi provisioning"
+    },
+    {
+      "uri": "ms-settings:personalization-background",
+      "page": "background",
+      "sourceCategory": "Personalization",
+      "title": "Background"
+    },
+    {
+      "uri": "ms-settings:personalization-start-places",
+      "page": "start-folders",
+      "sourceCategory": "Personalization",
+      "title": "Choose which folders appear on Start"
+    },
+    {
+      "uri": "ms-settings:personalization-colors",
+      "page": "colors",
+      "sourceCategory": "Personalization",
+      "title": "Colors"
+    },
+    {
+      "uri": "ms-settings:colors",
+      "page": "colors",
+      "sourceCategory": "Personalization",
+      "title": "Colors"
+    },
+    {
+      "uri": "ms-settings:personalization-textinput-copilot-hardwarekey",
+      "page": "copilot-key",
+      "sourceCategory": "Personalization",
+      "title": "Customize Copilot key on keyboard"
+    },
+    {
+      "uri": "ms-settings:personalization-lighting",
+      "page": "lighting",
+      "sourceCategory": "Personalization",
+      "title": "Dynamic Lighting"
+    },
+    {
+      "uri": "ms-settings:fonts",
+      "page": "fonts",
+      "sourceCategory": "Personalization",
+      "title": "Fonts"
+    },
+    {
+      "uri": "ms-settings:personalization-glance",
+      "page": "personalization-glance",
+      "sourceCategory": "Personalization",
+      "title": "Glance"
+    },
+    {
+      "uri": "ms-settings:lockscreen",
+      "page": "lockscreen",
+      "sourceCategory": "Personalization",
+      "title": "Lock screen"
+    },
+    {
+      "uri": "ms-settings:personalization-navbar",
+      "page": "personalization-navbar",
+      "sourceCategory": "Personalization",
+      "title": "Navigation bar"
+    },
+    {
+      "uri": "ms-settings:personalization",
+      "page": "personalization",
+      "sourceCategory": "Personalization",
+      "title": "Personalization (category)"
+    },
+    {
+      "uri": "ms-settings:personalization-start",
+      "page": "start",
+      "sourceCategory": "Personalization",
+      "title": "Start"
+    },
+    {
+      "uri": "ms-settings:taskbar",
+      "page": "taskbar",
+      "sourceCategory": "Personalization",
+      "title": "Taskbar"
+    },
+    {
+      "uri": "ms-settings:personalization-textinput",
+      "page": "text-input",
+      "sourceCategory": "Personalization",
+      "title": "Text input"
+    },
+    {
+      "uri": "ms-settings:personalization-touchkeyboard",
+      "page": "text-input",
+      "sourceCategory": "Personalization",
+      "title": "Touch Keyboard"
+    },
+    {
+      "uri": "ms-settings:themes",
+      "page": "themes",
+      "sourceCategory": "Personalization",
+      "title": "Themes"
+    },
+    {
+      "uri": "ms-settings:mobile-devices-addphone",
+      "page": "mobile",
+      "sourceCategory": "Phone",
+      "title": "Phone Link"
+    },
+    {
+      "uri": "ms-settings:mobile-devices-addphone-direct",
+      "page": "mobile",
+      "sourceCategory": "Phone",
+      "title": "Phone Link"
+    },
+    {
+      "uri": "ms-settings:deviceusage",
+      "page": "device-usage",
+      "sourceCategory": "Phone",
+      "title": "Device Usage"
+    },
+    {
+      "uri": "ms-settings:privacy-accessoryapps",
+      "page": "privacy-accessoryapps",
+      "sourceCategory": "Privacy",
+      "title": "Accessory apps"
+    },
+    {
+      "uri": "ms-settings:privacy-accountinfo",
+      "page": "privacy-accountinfo",
+      "sourceCategory": "Privacy",
+      "title": "Account info"
+    },
+    {
+      "uri": "ms-settings:privacy-activityhistory",
+      "page": "activity",
+      "sourceCategory": "Privacy",
+      "title": "Activity history"
+    },
+    {
+      "uri": "ms-settings:privacy-advertisingid",
+      "page": "general-privacy",
+      "sourceCategory": "Privacy",
+      "title": "Advertising ID"
+    },
+    {
+      "uri": "ms-settings:privacy-appdiagnostics",
+      "page": "privacy-appdiagnostics",
+      "sourceCategory": "Privacy",
+      "title": "App diagnostics"
+    },
+    {
+      "uri": "ms-settings:privacy-automaticfiledownloads",
+      "page": "privacy-automaticfiledownloads",
+      "sourceCategory": "Privacy",
+      "title": "Automatic file downloads"
+    },
+    {
+      "uri": "ms-settings:privacy-backgroundapps",
+      "page": "privacy-backgroundapps",
+      "sourceCategory": "Privacy",
+      "title": "Background Apps"
+    },
+    {
+      "uri": "ms-settings:privacy-backgroundspatialperception",
+      "page": "privacy-backgroundspatialperception",
+      "sourceCategory": "Privacy",
+      "title": "Background Spatial Perception"
+    },
+    {
+      "uri": "ms-settings:privacy-calendar",
+      "page": "privacy-calendar",
+      "sourceCategory": "Privacy",
+      "title": "Calendar"
+    },
+    {
+      "uri": "ms-settings:privacy-callhistory",
+      "page": "privacy-callhistory",
+      "sourceCategory": "Privacy",
+      "title": "Call history"
+    },
+    {
+      "uri": "ms-settings:privacy-webcam",
+      "page": "privacy-webcam",
+      "sourceCategory": "Privacy",
+      "title": "Camera"
+    },
+    {
+      "uri": "ms-settings:privacy-contacts",
+      "page": "privacy-contacts",
+      "sourceCategory": "Privacy",
+      "title": "Contacts"
+    },
+    {
+      "uri": "ms-settings:privacy-documents",
+      "page": "privacy-documents",
+      "sourceCategory": "Privacy",
+      "title": "Documents"
+    },
+    {
+      "uri": "ms-settings:privacy-downloadsfolder",
+      "page": "privacy-downloadsfolder",
+      "sourceCategory": "Privacy",
+      "title": "Downloads folder"
+    },
+    {
+      "uri": "ms-settings:privacy-email",
+      "page": "privacy-email",
+      "sourceCategory": "Privacy",
+      "title": "Email"
+    },
+    {
+      "uri": "ms-settings:privacy-eyetracker",
+      "page": "privacy-eyetracker",
+      "sourceCategory": "Privacy",
+      "title": "Eye tracker"
+    },
+    {
+      "uri": "ms-settings:privacy-feedback",
+      "page": "diagnostics",
+      "sourceCategory": "Privacy",
+      "title": "Feedback & diagnostics"
+    },
+    {
+      "uri": "ms-settings:privacy-broadfilesystemaccess",
+      "page": "privacy-broadfilesystemaccess",
+      "sourceCategory": "Privacy",
+      "title": "File system"
+    },
+    {
+      "uri": "ms-settings:privacy",
+      "page": "general-privacy",
+      "sourceCategory": "Privacy",
+      "title": "General"
+    },
+    {
+      "uri": "ms-settings:privacy-general",
+      "page": "general-privacy",
+      "sourceCategory": "Privacy",
+      "title": "General"
+    },
+    {
+      "uri": "ms-settings:privacy-graphicscaptureprogrammatic",
+      "page": "privacy-graphicscaptureprogrammatic",
+      "sourceCategory": "Privacy",
+      "title": "Graphics"
+    },
+    {
+      "uri": "ms-settings:privacy-graphicscapturewithoutborder",
+      "page": "privacy-graphicscapturewithoutborder",
+      "sourceCategory": "Privacy",
+      "title": "Graphics"
+    },
+    {
+      "uri": "ms-settings:privacy-speechtyping",
+      "page": "inking",
+      "sourceCategory": "Privacy",
+      "title": "Inking & typing"
+    },
+    {
+      "uri": "ms-settings:privacy-location",
+      "page": "privacy-location",
+      "sourceCategory": "Privacy",
+      "title": "Location"
+    },
+    {
+      "uri": "ms-settings:privacy-messaging",
+      "page": "privacy-messaging",
+      "sourceCategory": "Privacy",
+      "title": "Messaging"
+    },
+    {
+      "uri": "ms-settings:privacy-microphone",
+      "page": "privacy-microphone",
+      "sourceCategory": "Privacy",
+      "title": "Microphone"
+    },
+    {
+      "uri": "ms-settings:privacy-motion",
+      "page": "privacy-motion",
+      "sourceCategory": "Privacy",
+      "title": "Motion"
+    },
+    {
+      "uri": "ms-settings:privacy-musiclibrary",
+      "page": "privacy-musiclibrary",
+      "sourceCategory": "Privacy",
+      "title": "Music Library"
+    },
+    {
+      "uri": "ms-settings:privacy-notifications",
+      "page": "privacy-notifications",
+      "sourceCategory": "Privacy",
+      "title": "Notifications"
+    },
+    {
+      "uri": "ms-settings:privacy-customdevices",
+      "page": "privacy-customdevices",
+      "sourceCategory": "Privacy",
+      "title": "Other devices"
+    },
+    {
+      "uri": "ms-settings:privacy-phonecalls",
+      "page": "privacy-phonecalls",
+      "sourceCategory": "Privacy",
+      "title": "Phone calls"
+    },
+    {
+      "uri": "ms-settings:privacy-pictures",
+      "page": "privacy-pictures",
+      "sourceCategory": "Privacy",
+      "title": "Pictures"
+    },
+    {
+      "uri": "ms-settings:privacy-radios",
+      "page": "privacy-radios",
+      "sourceCategory": "Privacy",
+      "title": "Radios"
+    },
+    {
+      "uri": "ms-settings:privacy-speech",
+      "page": "online-speech",
+      "sourceCategory": "Privacy",
+      "title": "Speech"
+    },
+    {
+      "uri": "ms-settings:privacy-tasks",
+      "page": "privacy-tasks",
+      "sourceCategory": "Privacy",
+      "title": "Tasks"
+    },
+    {
+      "uri": "ms-settings:privacy-videos",
+      "page": "privacy-videos",
+      "sourceCategory": "Privacy",
+      "title": "Videos"
+    },
+    {
+      "uri": "ms-settings:privacy-voiceactivation",
+      "page": "privacy-voiceactivation",
+      "sourceCategory": "Privacy",
+      "title": "Voice activation"
+    },
+    {
+      "uri": "ms-settings:search",
+      "page": "search-index",
+      "sourceCategory": "Search",
+      "title": "Search"
+    },
+    {
+      "uri": "ms-settings:search-moredetails",
+      "page": "search-index",
+      "sourceCategory": "Search",
+      "title": "Search more details"
+    },
+    {
+      "uri": "ms-settings:search-permissions",
+      "page": "search-permissions",
+      "sourceCategory": "Search",
+      "title": "Search Permissions"
+    },
+    {
+      "uri": "ms-settings:apps-volume",
+      "page": "volume-mixer",
+      "sourceCategory": "Sound",
+      "title": "Volume mixer"
+    },
+    {
+      "uri": "ms-settings:sound",
+      "page": "sound",
+      "sourceCategory": "Sound",
+      "title": "Sound"
+    },
+    {
+      "uri": "ms-settings:sound-devices",
+      "page": "sound-devices",
+      "sourceCategory": "Sound",
+      "title": "Sound devices"
+    },
+    {
+      "uri": "ms-settings:sound-defaultinputproperties",
+      "page": "audio-input",
+      "sourceCategory": "Sound",
+      "title": "Default microphone"
+    },
+    {
+      "uri": "ms-settings:sound-defaultoutputproperties",
+      "page": "audio-output",
+      "sourceCategory": "Sound",
+      "title": "Default audio output"
+    },
+    {
+      "uri": "ms-settings:sound-properties",
+      "page": "audio-output",
+      "sourceCategory": "Sound",
+      "title": "Audio device properties (specific device)"
+    },
+    {
+      "uri": "ms-settings:about",
+      "page": "about",
+      "sourceCategory": "System",
+      "title": "About"
+    },
+    {
+      "uri": "ms-settings:display-advanced",
+      "page": "advanced-display",
+      "sourceCategory": "System",
+      "title": "Advanced display settings"
+    },
+    {
+      "uri": "ms-settings:batterysaver",
+      "page": "battery-saver",
+      "sourceCategory": "System",
+      "title": "Battery Saver"
+    },
+    {
+      "uri": "ms-settings:batterysaver-settings",
+      "page": "battery-saver",
+      "sourceCategory": "System",
+      "title": "Battery Saver settings"
+    },
+    {
+      "uri": "ms-settings:batterysaver-usagedetails",
+      "page": "battery-usage",
+      "sourceCategory": "System",
+      "title": "Battery use"
+    },
+    {
+      "uri": "ms-settings:clipboard",
+      "page": "clipboard",
+      "sourceCategory": "System",
+      "title": "Clipboard"
+    },
+    {
+      "uri": "ms-settings:savelocations",
+      "page": "save-locations",
+      "sourceCategory": "System",
+      "title": "Default Save Locations"
+    },
+    {
+      "uri": "ms-settings:display",
+      "page": "display",
+      "sourceCategory": "System",
+      "title": "Display"
+    },
+    {
+      "uri": "ms-settings:screenrotation",
+      "page": "display",
+      "sourceCategory": "System",
+      "title": "Display"
+    },
+    {
+      "uri": "ms-settings:quietmomentspresentation",
+      "page": "quiet-schedule",
+      "sourceCategory": "System",
+      "title": "Duplicating my display"
+    },
+    {
+      "uri": "ms-settings:quietmomentsscheduled",
+      "page": "quiet-schedule",
+      "sourceCategory": "System",
+      "title": "During these hours"
+    },
+    {
+      "uri": "ms-settings:deviceencryption",
+      "page": "encryption",
+      "sourceCategory": "System",
+      "title": "Encryption"
+    },
+    {
+      "uri": "ms-settings:energyrecommendations",
+      "page": "energy",
+      "sourceCategory": "System",
+      "title": "Energy recommendations"
+    },
+    {
+      "uri": "ms-settings:quiethours",
+      "page": "focus",
+      "sourceCategory": "System",
+      "title": "Focus assist"
+    },
+    {
+      "uri": "ms-settings:display-advancedgraphics",
+      "page": "graphics",
+      "sourceCategory": "System",
+      "title": "Graphics Settings"
+    },
+    {
+      "uri": "ms-settings:display-advancedgraphics-default",
+      "page": "graphics",
+      "sourceCategory": "System",
+      "title": "Graphics Default Settings"
+    },
+    {
+      "uri": "ms-settings:multitasking",
+      "page": "multitasking",
+      "sourceCategory": "System",
+      "title": "Multitasking"
+    },
+    {
+      "uri": "ms-settings:multitasking-sgupdate",
+      "page": "multitasking",
+      "sourceCategory": "System",
+      "title": "Multitasking"
+    },
+    {
+      "uri": "ms-settings:nightlight",
+      "page": "night-light",
+      "sourceCategory": "System",
+      "title": "Night light settings"
+    },
+    {
+      "uri": "ms-settings:project",
+      "page": "projection",
+      "sourceCategory": "System",
+      "title": "Projecting to this PC"
+    },
+    {
+      "uri": "ms-settings:crossdevice",
+      "page": "nearby",
+      "sourceCategory": "System",
+      "title": "Shared experiences"
+    },
+    {
+      "uri": "ms-settings:tabletmode",
+      "page": "tabletmode",
+      "sourceCategory": "System",
+      "title": "Tablet mode"
+    },
+    {
+      "uri": "ms-settings:notifications",
+      "page": "notifications",
+      "sourceCategory": "System",
+      "title": "Notifications & actions"
+    },
+    {
+      "uri": "ms-settings:remotedesktop",
+      "page": "remote-desktop",
+      "sourceCategory": "System",
+      "title": "Remote Desktop"
+    },
+    {
+      "uri": "ms-settings:phone",
+      "page": "phone",
+      "sourceCategory": "System",
+      "title": "Phone"
+    },
+    {
+      "uri": "ms-settings:powersleep",
+      "page": "power",
+      "sourceCategory": "System",
+      "title": "Power & sleep"
+    },
+    {
+      "uri": "ms-settings:presence",
+      "page": "presence",
+      "sourceCategory": "System",
+      "title": "Presence sensing"
+    },
+    {
+      "uri": "ms-settings:storagesense",
+      "page": "storage",
+      "sourceCategory": "System",
+      "title": "Storage"
+    },
+    {
+      "uri": "ms-settings:storagepolicies",
+      "page": "storage-sense",
+      "sourceCategory": "System",
+      "title": "Storage Sense"
+    },
+    {
+      "uri": "ms-settings:storagerecommendations",
+      "page": "cleanup",
+      "sourceCategory": "System",
+      "title": "Storage recommendations"
+    },
+    {
+      "uri": "ms-settings:disksandvolumes",
+      "page": "disks",
+      "sourceCategory": "System",
+      "title": "Disks & volumes"
+    },
+    {
+      "uri": "ms-settings:dateandtime",
+      "page": "date-time",
+      "sourceCategory": "Time and language",
+      "title": "Date & time"
+    },
+    {
+      "uri": "ms-settings:regionlanguage-jpnime",
+      "page": "regionlanguage-jpnime",
+      "sourceCategory": "Time and language",
+      "title": "Japan IME settings"
+    },
+    {
+      "uri": "ms-settings:regionformatting",
+      "page": "language",
+      "sourceCategory": "Time and language",
+      "title": "Region"
+    },
+    {
+      "uri": "ms-settings:keyboard",
+      "page": "keyboard",
+      "sourceCategory": "Time and language",
+      "title": "Language"
+    },
+    {
+      "uri": "ms-settings:keyboard-advanced",
+      "page": "keyboard",
+      "sourceCategory": "Time and language",
+      "title": "Language"
+    },
+    {
+      "uri": "ms-settings:regionlanguage",
+      "page": "language",
+      "sourceCategory": "Time and language",
+      "title": "Language"
+    },
+    {
+      "uri": "ms-settings:regionlanguage-bpmfime",
+      "page": "regionlanguage-bpmfime",
+      "sourceCategory": "Time and language",
+      "title": "Language"
+    },
+    {
+      "uri": "ms-settings:regionlanguage-cangjieime",
+      "page": "regionlanguage-cangjieime",
+      "sourceCategory": "Time and language",
+      "title": "Language"
+    },
+    {
+      "uri": "ms-settings:regionlanguage-chsime-wubi-udp",
+      "page": "regionlanguage-chsime-wubi-udp",
+      "sourceCategory": "Time and language",
+      "title": "Language"
+    },
+    {
+      "uri": "ms-settings:regionlanguage-quickime",
+      "page": "regionlanguage-quickime",
+      "sourceCategory": "Time and language",
+      "title": "Language"
+    },
+    {
+      "uri": "ms-settings:regionlanguage-korime",
+      "page": "regionlanguage-korime",
+      "sourceCategory": "Time and language",
+      "title": "Language"
+    },
+    {
+      "uri": "ms-settings:regionlanguage-chsime-pinyin",
+      "page": "regionlanguage-chsime-pinyin",
+      "sourceCategory": "Time and language",
+      "title": "Pinyin IME settings"
+    },
+    {
+      "uri": "ms-settings:regionlanguage-chsime-pinyin-domainlexicon",
+      "page": "regionlanguage-chsime-pinyin-domainlexicon",
+      "sourceCategory": "Time and language",
+      "title": "Pinyin IME settings"
+    },
+    {
+      "uri": "ms-settings:regionlanguage-chsime-pinyin-keyconfig",
+      "page": "regionlanguage-chsime-pinyin-keyconfig",
+      "sourceCategory": "Time and language",
+      "title": "Pinyin IME settings"
+    },
+    {
+      "uri": "ms-settings:regionlanguage-chsime-pinyin-udp",
+      "page": "regionlanguage-chsime-pinyin-udp",
+      "sourceCategory": "Time and language",
+      "title": "Pinyin IME settings"
+    },
+    {
+      "uri": "ms-settings:speech",
+      "page": "speech",
+      "sourceCategory": "Time and language",
+      "title": "Speech"
+    },
+    {
+      "uri": "ms-settings:regionlanguage-chsime-wubi",
+      "page": "regionlanguage-chsime-wubi",
+      "sourceCategory": "Time and language",
+      "title": "Wubi IME settings"
+    },
+    {
+      "uri": "ms-settings:activation",
+      "page": "activation",
+      "sourceCategory": "Update and security",
+      "title": "Activation"
+    },
+    {
+      "uri": "ms-settings:delivery-optimization",
+      "page": "delivery",
+      "sourceCategory": "Update and security",
+      "title": "Delivery Optimization"
+    },
+    {
+      "uri": "ms-settings:delivery-optimization-activity",
+      "page": "delivery-activity",
+      "sourceCategory": "Update and security",
+      "title": "Delivery Optimization"
+    },
+    {
+      "uri": "ms-settings:delivery-optimization-advanced",
+      "page": "delivery-advanced",
+      "sourceCategory": "Update and security",
+      "title": "Delivery Optimization"
+    },
+    {
+      "uri": "ms-settings:findmydevice",
+      "page": "find-device",
+      "sourceCategory": "Update and security",
+      "title": "Find My Device"
+    },
+    {
+      "uri": "ms-settings:developers",
+      "page": "advanced",
+      "sourceCategory": "Update and security",
+      "title": "For developers"
+    },
+    {
+      "uri": "ms-settings:recovery",
+      "page": "recovery",
+      "sourceCategory": "Update and security",
+      "title": "Recovery"
+    },
+    {
+      "uri": "ms-settings:signinoptions-launchsecuritykeyenrollment",
+      "page": "security-key",
+      "sourceCategory": "Update and security",
+      "title": "Launch Security Key Enrollment"
+    },
+    {
+      "uri": "ms-settings:troubleshoot",
+      "page": "troubleshoot",
+      "sourceCategory": "Update and security",
+      "title": "Troubleshoot"
+    },
+    {
+      "uri": "ms-settings:windowsdefender",
+      "page": "security",
+      "sourceCategory": "Update and security",
+      "title": "Windows Security"
+    },
+    {
+      "uri": "ms-settings:windowsinsider",
+      "page": "insider",
+      "sourceCategory": "Update and security",
+      "title": "Windows Insider Program"
+    },
+    {
+      "uri": "ms-settings:windowsinsider-optin",
+      "page": "insider",
+      "sourceCategory": "Update and security",
+      "title": "Windows Insider Program"
+    },
+    {
+      "uri": "ms-settings:windowsupdate",
+      "page": "updates",
+      "sourceCategory": "Update and security",
+      "title": "Windows Update"
+    },
+    {
+      "uri": "ms-settings:windowsupdate-action",
+      "page": "updates",
+      "sourceCategory": "Update and security",
+      "title": "Windows Update"
+    },
+    {
+      "uri": "ms-settings:windowsupdate-activehours",
+      "page": "active-hours",
+      "sourceCategory": "Update and security",
+      "title": "Windows Update-Active hours"
+    },
+    {
+      "uri": "ms-settings:windowsupdate-options",
+      "page": "update-options",
+      "sourceCategory": "Update and security",
+      "title": "Windows Update-Advanced options"
+    },
+    {
+      "uri": "ms-settings:windowsupdate-optionalupdates",
+      "page": "optional-updates",
+      "sourceCategory": "Update and security",
+      "title": "Windows Update-Optional updates"
+    },
+    {
+      "uri": "ms-settings:windowsupdate-restartoptions",
+      "page": "restart",
+      "sourceCategory": "Update and security",
+      "title": "Windows Update-Restart options"
+    },
+    {
+      "uri": "ms-settings:windowsupdate-seekerondemand",
+      "page": "updates",
+      "sourceCategory": "Update and security",
+      "title": "Windows Update-Seeker on demand"
+    },
+    {
+      "uri": "ms-settings:windowsupdate-history",
+      "page": "update-history",
+      "sourceCategory": "Update and security",
+      "title": "Windows Update-View update history"
+    }
+  ],
+  "backupSettings": [
+    {
+      "area": "System",
+      "path": [
+        "Display"
+      ],
+      "page": "display",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Display",
+        "Multiple displays"
+      ],
+      "page": "display",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Display",
+        "Multiple displays",
+        "Remember window locations based on monitor connection"
+      ],
+      "page": "display",
+      "coverage": "control",
+      "control": "display.reference.45daf28f"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Display",
+        "Multiple displays",
+        "Minimize windows when a monitor is disconnected"
+      ],
+      "page": "display",
+      "coverage": "control",
+      "control": "display.reference.b0b25287"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Display",
+        "Multiple displays",
+        "Ease cursor movement between displays"
+      ],
+      "page": "display",
+      "coverage": "control",
+      "control": "display.reference.9c5f075f"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Display",
+        "Night Light"
+      ],
+      "page": "display",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Display",
+        "Night Light",
+        "Show warmer colors on your display to help you sleep"
+      ],
+      "page": "display",
+      "coverage": "control",
+      "control": "display.reference.5106967a"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Display",
+        "Night Light",
+        "Strength"
+      ],
+      "page": "display",
+      "coverage": "control",
+      "control": "display.reference.b55908e7"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Display",
+        "Night Light",
+        "Schedule Night Light"
+      ],
+      "page": "display",
+      "coverage": "control",
+      "control": "display.reference.613ad1ca"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Display",
+        "Night Light",
+        "Sunset to sunrise/ Set hours (Actual sunrise / sunset time depends on location)"
+      ],
+      "page": "display",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Display",
+        "Night Light",
+        "Sunset to sunrise/ Set hours (Actual sunrise / sunset time depends on location)",
+        "Turn on"
+      ],
+      "page": "display",
+      "coverage": "control",
+      "control": "display.reference.a303e647"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Display",
+        "Night Light",
+        "Sunset to sunrise/ Set hours (Actual sunrise / sunset time depends on location)",
+        "Turn off"
+      ],
+      "page": "display",
+      "coverage": "control",
+      "control": "display.reference.0d998610"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Sound"
+      ],
+      "page": "sound",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Sound",
+        "Mono audio"
+      ],
+      "page": "sound",
+      "coverage": "control",
+      "control": "sound.reference.523e7f5c"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Sound",
+        "More sound settings > Sounds [Program Events] (Windows default sounds)"
+      ],
+      "page": "sound",
+      "coverage": "control",
+      "control": "sound.reference.a9568fa7"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications"
+      ],
+      "page": "notifications",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Notifications"
+      ],
+      "page": "notifications",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Notifications",
+        "Allow notifications to play sounds"
+      ],
+      "page": "notifications",
+      "coverage": "control",
+      "control": "notifications.reference.da472fb3"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Notifications",
+        "Show notifications on the lock screen"
+      ],
+      "page": "notifications",
+      "coverage": "control",
+      "control": "notifications.reference.c7fafa9e"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Notifications",
+        "Show reminders and incoming VoIP calls on the lock screen"
+      ],
+      "page": "notifications",
+      "coverage": "control",
+      "control": "notifications.reference.1517c6c9"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Notifications",
+        "Show notification bell icon"
+      ],
+      "page": "notifications",
+      "coverage": "control",
+      "control": "notifications.reference.d08d71db"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Do not disturb"
+      ],
+      "page": "notifications",
+      "coverage": "control",
+      "control": "notifications.reference.30527137"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Turn on do not disturb automatically"
+      ],
+      "page": "notifications",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Turn on do not disturb automatically",
+        "During these times"
+      ],
+      "page": "notifications",
+      "coverage": "control",
+      "control": "notifications.reference.40e74cde"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Turn on do not disturb automatically",
+        "When duplicating your display (priority notification banners are also hidden)"
+      ],
+      "page": "notifications",
+      "coverage": "control",
+      "control": "notifications.reference.1c052cd8"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Turn on do not disturb automatically",
+        "When playing a game"
+      ],
+      "page": "notifications",
+      "coverage": "control",
+      "control": "notifications.reference.210adac4"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Turn on do not disturb automatically",
+        "When using an app in full-screen mode (priority notification banners are also hidden)"
+      ],
+      "page": "notifications",
+      "coverage": "control",
+      "control": "notifications.reference.3554d597"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Turn on do not disturb automatically",
+        "For the first hour after a Windows feature update"
+      ],
+      "page": "notifications",
+      "coverage": "control",
+      "control": "notifications.reference.3d050709"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Set Priority Notifications"
+      ],
+      "page": "notifications",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Set Priority Notifications",
+        "Calls and reminders"
+      ],
+      "page": "notifications",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Set Priority Notifications",
+        "Calls and reminders",
+        "Show incoming calls, including VoIP"
+      ],
+      "page": "notifications",
+      "coverage": "control",
+      "control": "notifications.reference.beb97dd8"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Set Priority Notifications",
+        "Calls and reminders",
+        "Show reminders, regardless of app used"
+      ],
+      "page": "notifications",
+      "coverage": "control",
+      "control": "notifications.reference.8ad51f25"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Notifications",
+        "Set Priority Notifications",
+        "Apps"
+      ],
+      "page": "notifications",
+      "coverage": "control",
+      "control": "notifications.reference.7e9418df"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Multitasking"
+      ],
+      "page": "multitasking",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Multitasking",
+        "Snap Windows"
+      ],
+      "page": "multitasking",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Multitasking",
+        "Snap Windows",
+        "When I snap a window, suggest what I can snap next to it"
+      ],
+      "page": "multitasking",
+      "coverage": "control",
+      "control": "multitasking.reference.1f0fd68e"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Multitasking",
+        "Snap Windows",
+        "Show snap layouts when I hover over a window's maximize button"
+      ],
+      "page": "multitasking",
+      "coverage": "control",
+      "control": "multitasking.reference.7eb36360"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Multitasking",
+        "Snap Windows",
+        "Show snap layouts when I drag a window to the top of my screen"
+      ],
+      "page": "multitasking",
+      "coverage": "control",
+      "control": "multitasking.reference.6adfd906"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Multitasking",
+        "Snap Windows",
+        "Show tabs from apps when snapping or pressing Alt+Tab"
+      ],
+      "page": "multitasking",
+      "coverage": "control",
+      "control": "multitasking.reference.b64a018f"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Multitasking",
+        "Snap Windows",
+        "Show my snapped windows when I hover over taskbar apps, in Task View, and when I press Alt+Tab"
+      ],
+      "page": "multitasking",
+      "coverage": "control",
+      "control": "multitasking.reference.22d30ff1"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Multitasking",
+        "Snap Windows",
+        "When I drag a window, let me snap it without dragging all the way to the screen edge"
+      ],
+      "page": "multitasking",
+      "coverage": "control",
+      "control": "multitasking.reference.35f7e68f"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Multitasking",
+        "Desktops"
+      ],
+      "page": "multitasking",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Multitasking",
+        "Desktops",
+        "On the task, show all the open windows"
+      ],
+      "page": "multitasking",
+      "coverage": "control",
+      "control": "multitasking.reference.c8540ba4"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Multitasking",
+        "Desktops",
+        "Show all open windows when I press Alt+Tab"
+      ],
+      "page": "multitasking",
+      "coverage": "control",
+      "control": "multitasking.reference.2d6a63c7"
+    },
+    {
+      "area": "System",
+      "path": [
+        "Multitasking",
+        "Title bar window shake"
+      ],
+      "page": "multitasking",
+      "coverage": "control",
+      "control": "multitasking.reference.301a71a1"
+    },
+    {
+      "area": "System",
+      "path": [
+        "For Developers"
+      ],
+      "page": "advanced",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "For Developers",
+        "File Explorer"
+      ],
+      "page": "advanced",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "For Developers",
+        "File Explorer",
+        "Show file extensions"
+      ],
+      "page": "advanced",
+      "coverage": "control",
+      "control": "advanced.reference.96b6fa8d"
+    },
+    {
+      "area": "System",
+      "path": [
+        "For Developers",
+        "File Explorer",
+        "Show hidden and system files"
+      ],
+      "page": "advanced",
+      "coverage": "control",
+      "control": "advanced.reference.f09f62a2"
+    },
+    {
+      "area": "System",
+      "path": [
+        "For Developers",
+        "File Explorer",
+        "Show full path in title bar"
+      ],
+      "page": "advanced",
+      "coverage": "control",
+      "control": "advanced.reference.d6ad9b0f"
+    },
+    {
+      "area": "System",
+      "path": [
+        "For Developers",
+        "File Explorer",
+        "Show empty drives"
+      ],
+      "page": "advanced",
+      "coverage": "control",
+      "control": "advanced.reference.4c7d62c7"
+    },
+    {
+      "area": "System",
+      "path": [
+        "About"
+      ],
+      "page": "about",
+      "coverage": "section"
+    },
+    {
+      "area": "System",
+      "path": [
+        "About",
+        "Rename this PC"
+      ],
+      "page": "about",
+      "coverage": "control",
+      "control": "about.reference.9cc38bce"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Autoplay"
+      ],
+      "page": "autoplay",
+      "coverage": "section"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Autoplay",
+        "Use AutoPlay for all media and devices"
+      ],
+      "page": "autoplay",
+      "coverage": "control",
+      "control": "autoplay.reference.60b8b8bf"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Autoplay",
+        "Removable drive"
+      ],
+      "page": "autoplay",
+      "coverage": "control",
+      "control": "autoplay.reference.ea178ab2"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Autoplay",
+        "Memory card"
+      ],
+      "page": "autoplay",
+      "coverage": "control",
+      "control": "autoplay.reference.9dce54e3"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Printers & Scanners"
+      ],
+      "page": "printers",
+      "coverage": "section"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Printers & Scanners",
+        "Let Windows manage my default printer"
+      ],
+      "page": "printers",
+      "coverage": "control",
+      "control": "printers.reference.c1c02196"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Mouse"
+      ],
+      "page": "mouse",
+      "coverage": "section"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Mouse",
+        "Mouse pointer speed"
+      ],
+      "page": "mouse",
+      "coverage": "control",
+      "control": "mouse.reference.76e18b09"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Mouse",
+        "Roll the mouse wheel to scroll"
+      ],
+      "page": "mouse",
+      "coverage": "control",
+      "control": "mouse.reference.f26b3e91"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Mouse",
+        "Lines to scroll at a time"
+      ],
+      "page": "mouse",
+      "coverage": "control",
+      "control": "mouse.reference.3bbac4aa"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Mouse",
+        "Scroll inactive windows when hovering over them"
+      ],
+      "page": "mouse",
+      "coverage": "control",
+      "control": "mouse.reference.8907aa76"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Pen and Windows Ink"
+      ],
+      "page": "pen",
+      "coverage": "section"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Pen and Windows Ink",
+        "Ignore touch input when I'm using my pen"
+      ],
+      "page": "pen",
+      "coverage": "control",
+      "control": "pen.reference.f573a64c"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Pen and Windows Ink",
+        "Let me use my pen as a mouse when it's available"
+      ],
+      "page": "pen",
+      "coverage": "control",
+      "control": "pen.reference.e839eb2c"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Pen and Windows Ink",
+        "Use the pen button as a right-click equivalent when it's available"
+      ],
+      "page": "pen",
+      "coverage": "control",
+      "control": "pen.reference.0f60ea0a"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Pen and Windows Ink",
+        "Tactile signals (supported on some devices only)"
+      ],
+      "page": "pen",
+      "coverage": "section"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Pen and Windows Ink",
+        "Tactile signals (supported on some devices only)",
+        "While inking (supported on some devices only)"
+      ],
+      "page": "pen",
+      "coverage": "control",
+      "control": "pen.reference.3ad69d1e"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Pen and Windows Ink",
+        "Tactile signals (supported on some devices only)",
+        "While interacting with your device (supported on some devices only)"
+      ],
+      "page": "pen",
+      "coverage": "control",
+      "control": "pen.reference.7b1c28dd"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Pen and Windows Ink",
+        "Tactile signals (supported on some devices only)",
+        "Intensity (supported on some devices only)"
+      ],
+      "page": "pen",
+      "coverage": "control",
+      "control": "pen.reference.8a3c1cf1"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Choose what your shortcut button does"
+      ],
+      "page": "pen-shortcuts",
+      "coverage": "section"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Choose what your shortcut button does",
+        "Single-click"
+      ],
+      "page": "pen-shortcuts",
+      "coverage": "control",
+      "control": "pen-shortcuts.reference.ceea88ce"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Choose what your shortcut button does",
+        "Double-click"
+      ],
+      "page": "pen-shortcuts",
+      "coverage": "control",
+      "control": "pen-shortcuts.reference.1f59f186"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Choose what your shortcut button does",
+        "Press and hold (only supported by some pens)"
+      ],
+      "page": "pen-shortcuts",
+      "coverage": "control",
+      "control": "pen-shortcuts.reference.853b480c"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Choose what your shortcut button does",
+        "Allow apps to override the shortcut button behavior"
+      ],
+      "page": "pen-shortcuts",
+      "coverage": "control",
+      "control": "pen-shortcuts.reference.339eec05"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Choose what your shortcut button does",
+        "When available, show pen menu after I remove my pen from storage"
+      ],
+      "page": "pen-shortcuts",
+      "coverage": "control",
+      "control": "pen-shortcuts.reference.afd4d4ac"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Touchpad"
+      ],
+      "page": "touchpad",
+      "coverage": "section"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Touchpad",
+        "Change the cursor speed"
+      ],
+      "page": "touchpad",
+      "coverage": "control",
+      "control": "touchpad.reference.8f2e9734"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Touchpad",
+        "Touchpad sensitivity"
+      ],
+      "page": "touchpad",
+      "coverage": "control",
+      "control": "touchpad.reference.79eb339a"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Touchpad",
+        "Tap with a single finger to single-click"
+      ],
+      "page": "touchpad",
+      "coverage": "control",
+      "control": "touchpad.reference.45d5f5e6"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Touchpad",
+        "Tap with two fingers to right-click"
+      ],
+      "page": "touchpad",
+      "coverage": "control",
+      "control": "touchpad.reference.380325e1"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Touchpad",
+        "Tap twice and drag to multi-select"
+      ],
+      "page": "touchpad",
+      "coverage": "control",
+      "control": "touchpad.reference.c6871bd5"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Touchpad",
+        "Press the lower right corner of the touchpad to right-click"
+      ],
+      "page": "touchpad",
+      "coverage": "control",
+      "control": "touchpad.reference.0c650d0c"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Touchpad",
+        "Drag two fingers to scroll"
+      ],
+      "page": "touchpad",
+      "coverage": "control",
+      "control": "touchpad.reference.ddf2ff25"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Touchpad",
+        "Pinch to Zoom"
+      ],
+      "page": "touchpad",
+      "coverage": "control",
+      "control": "touchpad.reference.9fd08601"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Touchpad",
+        "Touchpad feedback (supported on some devices only)"
+      ],
+      "page": "touchpad",
+      "coverage": "section"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Touchpad",
+        "Touchpad feedback (supported on some devices only)",
+        "Intensity (supported on some devices only)"
+      ],
+      "page": "touchpad",
+      "coverage": "control",
+      "control": "touchpad.reference.bbbc35e5"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "USB"
+      ],
+      "page": "usb",
+      "coverage": "section"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "USB",
+        "Connection notifications"
+      ],
+      "page": "usb",
+      "coverage": "control",
+      "control": "usb.reference.efa5ab97"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "USB",
+        "Show a notification if this PC is charging slowly over USB"
+      ],
+      "page": "usb",
+      "coverage": "control",
+      "control": "usb.reference.d575fa71"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Touch"
+      ],
+      "page": "touch",
+      "coverage": "section"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Touch",
+        "Three- and four-finger touch gestures"
+      ],
+      "page": "touch",
+      "coverage": "control",
+      "control": "touch.reference.b3eb626b"
+    },
+    {
+      "area": "Bluetooth & devices",
+      "path": [
+        "Touch",
+        "Touch the screen to wake (supported on some devices only)"
+      ],
+      "page": "touch",
+      "coverage": "control",
+      "control": "touch.reference.4283e4ac"
+    },
+    {
+      "area": "Network & internet",
+      "path": [
+        "Wi-Fi"
+      ],
+      "page": "wifi",
+      "coverage": "section"
+    },
+    {
+      "area": "Network & internet",
+      "path": [
+        "Wi-Fi",
+        "Random hardware addresses"
+      ],
+      "page": "wifi",
+      "coverage": "control",
+      "control": "wifi.reference.cc052043"
+    },
+    {
+      "area": "Network & internet",
+      "path": [
+        "VPN"
+      ],
+      "page": "vpn",
+      "coverage": "section"
+    },
+    {
+      "area": "Network & internet",
+      "path": [
+        "VPN",
+        "Allow VPN over metered networks"
+      ],
+      "page": "vpn",
+      "coverage": "control",
+      "control": "vpn.reference.f20bc91d"
+    },
+    {
+      "area": "Network & internet",
+      "path": [
+        "VPN",
+        "Allow VPN while roaming"
+      ],
+      "page": "vpn",
+      "coverage": "control",
+      "control": "vpn.reference.b8f24d72"
+    },
+    {
+      "area": "Network & internet",
+      "path": [
+        "Cellular"
+      ],
+      "page": "cellular",
+      "coverage": "section"
+    },
+    {
+      "area": "Network & internet",
+      "path": [
+        "Cellular",
+        "Let Windows keep me connected"
+      ],
+      "page": "cellular",
+      "coverage": "control",
+      "control": "cellular.reference.0a6416ca"
+    },
+    {
+      "area": "Network & internet",
+      "path": [
+        "Cellular",
+        "Metered Connection"
+      ],
+      "page": "cellular",
+      "coverage": "control",
+      "control": "cellular.reference.3a1637fd"
+    },
+    {
+      "area": "Network & internet",
+      "path": [
+        "Cellular",
+        "Data roaming options (dropdown)"
+      ],
+      "page": "cellular",
+      "coverage": "control",
+      "control": "cellular.reference.120ca531"
+    },
+    {
+      "area": "Network & internet",
+      "path": [
+        "Cellular",
+        "Use cellular whenever Wi-Fi is poor"
+      ],
+      "page": "cellular",
+      "coverage": "control",
+      "control": "cellular.reference.a4a32b75"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Background"
+      ],
+      "page": "background",
+      "coverage": "section"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Background",
+        "Personalize your background"
+      ],
+      "page": "background",
+      "coverage": "control",
+      "control": "background.reference.fdec0d3a"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Background",
+        "Choose a photo"
+      ],
+      "page": "background",
+      "coverage": "control",
+      "control": "background.reference.a8aee03d"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Background",
+        "Choose a fit for your desktop image"
+      ],
+      "page": "background",
+      "coverage": "control",
+      "control": "background.reference.0518a1f3"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Colors"
+      ],
+      "page": "colors",
+      "coverage": "section"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Colors",
+        "Choose your mode"
+      ],
+      "page": "colors",
+      "coverage": "control",
+      "control": "colors.reference.1232ca77"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Colors",
+        "Transparency Effects"
+      ],
+      "page": "colors",
+      "coverage": "control",
+      "control": "colors.reference.ed936eee"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Colors",
+        "Accent Color"
+      ],
+      "page": "colors",
+      "coverage": "control",
+      "control": "colors.reference.8fd43cc0"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Colors",
+        "Windows Color"
+      ],
+      "page": "colors",
+      "coverage": "control",
+      "control": "colors.reference.14bc5762"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Colors",
+        "Custom Color"
+      ],
+      "page": "colors",
+      "coverage": "control",
+      "control": "colors.reference.b4c97f0e"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Colors",
+        "Show Accent color on start and Taskbar"
+      ],
+      "page": "colors",
+      "coverage": "control",
+      "control": "colors.reference.990d69cf"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Colors",
+        "Show Accent color on Title bar and window border"
+      ],
+      "page": "colors",
+      "coverage": "control",
+      "control": "colors.reference.47f631a5"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Themes"
+      ],
+      "page": "themes",
+      "coverage": "control",
+      "control": "themes.reference.94d5186b"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Lock screen"
+      ],
+      "page": "lockscreen",
+      "coverage": "section"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Lock screen",
+        "Personalize your lock screen"
+      ],
+      "page": "lockscreen",
+      "coverage": "control",
+      "control": "lockscreen.reference.3ada0526"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Lock screen",
+        "Get fun facts, tips, tricks, and more on your lock screen"
+      ],
+      "page": "lockscreen",
+      "coverage": "control",
+      "control": "lockscreen.reference.252498b5"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Lock screen",
+        "Show the lock screen background picture on the sign-in screen"
+      ],
+      "page": "lockscreen",
+      "coverage": "control",
+      "control": "lockscreen.reference.6437619e"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start"
+      ],
+      "page": "start",
+      "coverage": "section"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Start layout"
+      ],
+      "page": "start",
+      "coverage": "section"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Start layout",
+        "Layout"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.4e607a8a"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Start layout",
+        "Show recently added apps"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.9e4e7236"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Start layout",
+        "Show most used apps"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.fc387ac7"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Start layout",
+        "Show recommended files in Start, recent files in File Explorer, and items in Jump Lists"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.8ec7c2b7"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Start layout",
+        "Show recommendations for tips, shortcuts, new apps and more"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.bfca4f8f"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Start layout",
+        "Show account-related notifications"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.14d5c068"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Folders"
+      ],
+      "page": "start",
+      "coverage": "section"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Folders",
+        "Settings"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.abde902c"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Folders",
+        "File Explorer"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.f8412609"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Folders",
+        "Documents"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.69e50dbf"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Folders",
+        "Downloads"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.5932c066"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Folders",
+        "Music"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.85550725"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Folders",
+        "Pictures"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.db786e0a"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Folders",
+        "Videos"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.8139f929"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Folders",
+        "Network"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.6ec482d6"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Start",
+        "Folders",
+        "Personal folder"
+      ],
+      "page": "start",
+      "coverage": "control",
+      "control": "start.reference.543cab9d"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar"
+      ],
+      "page": "taskbar",
+      "coverage": "section"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar Pinned layout"
+      ],
+      "page": "taskbar",
+      "coverage": "control",
+      "control": "taskbar.reference.47ef6392"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar Items"
+      ],
+      "page": "taskbar",
+      "coverage": "section"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar Items",
+        "Task View"
+      ],
+      "page": "taskbar",
+      "coverage": "control",
+      "control": "taskbar.reference.0ca8d47b"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar Items",
+        "Widgets"
+      ],
+      "page": "taskbar",
+      "coverage": "control",
+      "control": "taskbar.reference.2f04f30d"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar behaviors"
+      ],
+      "page": "taskbar",
+      "coverage": "section"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar behaviors",
+        "Taskbar alignment"
+      ],
+      "page": "taskbar",
+      "coverage": "control",
+      "control": "taskbar.reference.be160a7d"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar behaviors",
+        "Automatically hide the taskbar"
+      ],
+      "page": "taskbar",
+      "coverage": "control",
+      "control": "taskbar.reference.986b8b3a"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar behaviors",
+        "Show badges on taskbar apps"
+      ],
+      "page": "taskbar",
+      "coverage": "control",
+      "control": "taskbar.reference.b10a5381"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar behaviors",
+        "Show flashing on taskbar apps"
+      ],
+      "page": "taskbar",
+      "coverage": "control",
+      "control": "taskbar.reference.3e990cfd"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar behaviors",
+        "Show my taskbar on all my displays"
+      ],
+      "page": "taskbar",
+      "coverage": "control",
+      "control": "taskbar.reference.7eab6479"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar behaviors",
+        "When using multiple displays show my taskbar apps on"
+      ],
+      "page": "taskbar",
+      "coverage": "control",
+      "control": "taskbar.reference.d7ca79fe"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar behaviors",
+        "Share any window from my taskbar"
+      ],
+      "page": "taskbar",
+      "coverage": "control",
+      "control": "taskbar.reference.e875398a"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar behaviors",
+        "Select the far corner of the taskbar to show the desktop"
+      ],
+      "page": "taskbar",
+      "coverage": "control",
+      "control": "taskbar.reference.502aa5d3"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar behaviors",
+        "Combine taskbar buttons and hide labels"
+      ],
+      "page": "taskbar",
+      "coverage": "control",
+      "control": "taskbar.reference.67cefb4c"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Taskbar",
+        "Taskbar behaviors",
+        "Combine taskbar buttons and hide labels on other taskbars"
+      ],
+      "page": "taskbar",
+      "coverage": "control",
+      "control": "taskbar.reference.e7e5a003"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Text Input"
+      ],
+      "page": "text-input",
+      "coverage": "section"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Text Input",
+        "Theme for touch keyboard"
+      ],
+      "page": "text-input",
+      "coverage": "control",
+      "control": "text-input.reference.e71b3bbe"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Text Input",
+        "Touch keyboard"
+      ],
+      "page": "text-input",
+      "coverage": "section"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Text Input",
+        "Touch keyboard",
+        "Touch keyboard size"
+      ],
+      "page": "text-input",
+      "coverage": "control",
+      "control": "text-input.reference.3fb1e372"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Text Input",
+        "Touch keyboard",
+        "Show key background"
+      ],
+      "page": "text-input",
+      "coverage": "control",
+      "control": "text-input.reference.0a8ab202"
+    },
+    {
+      "area": "Personalization",
+      "path": [
+        "Text Input",
+        "Touch keyboard",
+        "Key text size"
+      ],
+      "page": "text-input",
+      "coverage": "control",
+      "control": "text-input.reference.1fc1438b"
+    },
+    {
+      "area": "Accounts",
+      "path": [
+        "Windows Backup"
+      ],
+      "page": "backup",
+      "coverage": "section"
+    },
+    {
+      "area": "Accounts",
+      "path": [
+        "Windows Backup",
+        "Remember my apps"
+      ],
+      "page": "backup",
+      "coverage": "control",
+      "control": "backup.reference.04edcf6f"
+    },
+    {
+      "area": "Accounts",
+      "path": [
+        "Windows Backup",
+        "Remember my preferences (toggle)"
+      ],
+      "page": "backup",
+      "coverage": "section"
+    },
+    {
+      "area": "Accounts",
+      "path": [
+        "Windows Backup",
+        "Remember my preferences (toggle)",
+        "Accessibility"
+      ],
+      "page": "backup",
+      "coverage": "control",
+      "control": "backup.reference.52e80604"
+    },
+    {
+      "area": "Accounts",
+      "path": [
+        "Windows Backup",
+        "Remember my preferences (toggle)",
+        "Accounts, WiFi networks and passwords"
+      ],
+      "page": "backup",
+      "coverage": "control",
+      "control": "backup.reference.33a8643d"
+    },
+    {
+      "area": "Accounts",
+      "path": [
+        "Windows Backup",
+        "Remember my preferences (toggle)",
+        "Personalization"
+      ],
+      "page": "backup",
+      "coverage": "control",
+      "control": "backup.reference.60ff3096"
+    },
+    {
+      "area": "Accounts",
+      "path": [
+        "Windows Backup",
+        "Remember my preferences (toggle)",
+        "Language preferences and dictionary"
+      ],
+      "page": "backup",
+      "coverage": "control",
+      "control": "backup.reference.b695b07e"
+    },
+    {
+      "area": "Accounts",
+      "path": [
+        "Windows Backup",
+        "Remember my preferences (toggle)",
+        "Other Windows settings"
+      ],
+      "page": "backup",
+      "coverage": "control",
+      "control": "backup.reference.802b32da"
+    },
+    {
+      "area": "Accounts",
+      "path": [
+        "Windows Backup",
+        "Email and Accounts"
+      ],
+      "page": "backup",
+      "coverage": "section"
+    },
+    {
+      "area": "Accounts",
+      "path": [
+        "Windows Backup",
+        "Email and Accounts",
+        "Accounts used by other apps (MSA accounts only)"
+      ],
+      "page": "backup",
+      "coverage": "control",
+      "control": "backup.reference.c0c91ce4"
+    },
+    {
+      "area": "Time & language",
+      "path": [
+        "Date & time"
+      ],
+      "page": "date-time",
+      "coverage": "section"
+    },
+    {
+      "area": "Time & language",
+      "path": [
+        "Date & time",
+        "Set timezone automatically"
+      ],
+      "page": "date-time",
+      "coverage": "section"
+    },
+    {
+      "area": "Time & language",
+      "path": [
+        "Date & time",
+        "Set timezone automatically",
+        "Timezone"
+      ],
+      "page": "date-time",
+      "coverage": "control",
+      "control": "date-time.reference.7e2d22fe"
+    },
+    {
+      "area": "Time & language",
+      "path": [
+        "Date & time",
+        "Show additional calendars in the taskbar"
+      ],
+      "page": "date-time",
+      "coverage": "control",
+      "control": "date-time.reference.d2ebb693"
+    },
+    {
+      "area": "Time & language",
+      "path": [
+        "Typing"
+      ],
+      "page": "typing",
+      "coverage": "section"
+    },
+    {
+      "area": "Time & language",
+      "path": [
+        "Typing",
+        "Touch Keyboard"
+      ],
+      "page": "typing",
+      "coverage": "section"
+    },
+    {
+      "area": "Time & language",
+      "path": [
+        "Typing",
+        "Touch Keyboard",
+        "Play key sounds as I type"
+      ],
+      "page": "typing",
+      "coverage": "control",
+      "control": "typing.reference.f2b8f9a3"
+    },
+    {
+      "area": "Time & language",
+      "path": [
+        "Typing",
+        "Touch Keyboard",
+        "Capitalize the first letter of each sentence"
+      ],
+      "page": "typing",
+      "coverage": "control",
+      "control": "typing.reference.60050a6c"
+    },
+    {
+      "area": "Time & language",
+      "path": [
+        "Typing",
+        "Touch Keyboard",
+        "Add a period after I double-tap the Spacebar"
+      ],
+      "page": "typing",
+      "coverage": "control",
+      "control": "typing.reference.e553e73c"
+    },
+    {
+      "area": "Time & language",
+      "path": [
+        "Typing",
+        "Touch Keyboard",
+        "Use all uppercase letters when I double-tap Shift"
+      ],
+      "page": "typing",
+      "coverage": "control",
+      "control": "typing.reference.f932de70"
+    },
+    {
+      "area": "Time & language",
+      "path": [
+        "Typing",
+        "Show text suggestions when typing on the physical keyboard"
+      ],
+      "page": "typing",
+      "coverage": "control",
+      "control": "typing.reference.c7d6bbd6"
+    },
+    {
+      "area": "Time & language",
+      "path": [
+        "Typing",
+        "Multilingual text suggestions"
+      ],
+      "page": "typing",
+      "coverage": "control",
+      "control": "typing.reference.27daeccc"
+    },
+    {
+      "area": "Time & language",
+      "path": [
+        "Typing",
+        "Autocorrect misspelled words"
+      ],
+      "page": "typing",
+      "coverage": "control",
+      "control": "typing.reference.0fa3afa7"
+    },
+    {
+      "area": "Time & language",
+      "path": [
+        "Typing",
+        "Highlight misspelled words"
+      ],
+      "page": "typing",
+      "coverage": "control",
+      "control": "typing.reference.f924c774"
+    },
+    {
+      "area": "Gaming",
+      "path": [
+        "Game Bar"
+      ],
+      "page": "game-bar",
+      "coverage": "control",
+      "control": "game-bar.reference.2c2d66f8"
+    },
+    {
+      "area": "Gaming",
+      "path": [
+        "Game Mode"
+      ],
+      "page": "game-mode",
+      "coverage": "control",
+      "control": "game-mode.reference.9424db05"
+    },
+    {
+      "area": "Gaming",
+      "path": [
+        "Game Bar shortcuts (in-app settings)"
+      ],
+      "page": "game-bar",
+      "coverage": "section"
+    },
+    {
+      "area": "Gaming",
+      "path": [
+        "Game Bar shortcuts (in-app settings)",
+        "Game Bar (Win + G)"
+      ],
+      "page": "game-bar",
+      "coverage": "control",
+      "control": "game-bar.reference.c2ddeb9e"
+    },
+    {
+      "area": "Gaming",
+      "path": [
+        "Game Bar shortcuts (in-app settings)",
+        "Take a screenshot (Win + Alt + PrtScrn)"
+      ],
+      "page": "game-bar",
+      "coverage": "control",
+      "control": "game-bar.reference.08b320f8"
+    },
+    {
+      "area": "Gaming",
+      "path": [
+        "Game Bar shortcuts (in-app settings)",
+        "Record last 30 seconds (Win + Alt + G)"
+      ],
+      "page": "game-bar",
+      "coverage": "control",
+      "control": "game-bar.reference.20695066"
+    },
+    {
+      "area": "Gaming",
+      "path": [
+        "Game Bar shortcuts (in-app settings)",
+        "Start/stop recording (Win + Alt + R)"
+      ],
+      "page": "game-bar",
+      "coverage": "control",
+      "control": "game-bar.reference.b67958ca"
+    },
+    {
+      "area": "Gaming",
+      "path": [
+        "Game Bar shortcuts (in-app settings)",
+        "Microphone on/off (Win + Alt + M)"
+      ],
+      "page": "game-bar",
+      "coverage": "control",
+      "control": "game-bar.reference.f983d88b"
+    },
+    {
+      "area": "Gaming",
+      "path": [
+        "Game Bar shortcuts (in-app settings)",
+        "HDR on/off (Win + Alt + B)"
+      ],
+      "page": "game-bar",
+      "coverage": "control",
+      "control": "game-bar.reference.9bc24c92"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Text Size"
+      ],
+      "page": "text-size",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Text Size",
+        "Text Size"
+      ],
+      "page": "text-size",
+      "coverage": "control",
+      "control": "text-size.reference.8ff6836a"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Visual effects"
+      ],
+      "page": "visual-effects",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Visual effects",
+        "Always show scrollbars"
+      ],
+      "page": "visual-effects",
+      "coverage": "control",
+      "control": "visual-effects.reference.22476e4b"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Visual effects",
+        "Transparency effects"
+      ],
+      "page": "visual-effects",
+      "coverage": "control",
+      "control": "visual-effects.reference.8e1825a1"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Visual effects",
+        "Animation effects"
+      ],
+      "page": "visual-effects",
+      "coverage": "control",
+      "control": "visual-effects.reference.6aa5bc02"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Visual effects",
+        "Dismiss notifications after preferred amount of time"
+      ],
+      "page": "visual-effects",
+      "coverage": "control",
+      "control": "visual-effects.reference.5b6b06b4"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Mouse pointer and touch"
+      ],
+      "page": "pointer",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Mouse pointer and touch",
+        "Mouse pointer style"
+      ],
+      "page": "pointer",
+      "coverage": "control",
+      "control": "pointer.reference.8a9af3b1"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Mouse pointer and touch",
+        "Size"
+      ],
+      "page": "pointer",
+      "coverage": "control",
+      "control": "pointer.reference.966d030b"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Mouse pointer and touch",
+        "Touch indicator"
+      ],
+      "page": "pointer",
+      "coverage": "control",
+      "control": "pointer.reference.09b6b51e"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Mouse pointer and touch",
+        "Make the touch indicator circle darker and larger"
+      ],
+      "page": "pointer",
+      "coverage": "control",
+      "control": "pointer.reference.5ed3015e"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Text cursor"
+      ],
+      "page": "text-cursor",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Text cursor",
+        "Text cursor indicator"
+      ],
+      "page": "text-cursor",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Text cursor",
+        "Text cursor indicator",
+        "Text cursor indicator size"
+      ],
+      "page": "text-cursor",
+      "coverage": "control",
+      "control": "text-cursor.reference.4c40f3ca"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Text cursor",
+        "Text cursor indicator",
+        "Text cursor indicator color"
+      ],
+      "page": "text-cursor",
+      "coverage": "control",
+      "control": "text-cursor.reference.b0cd3942"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Text cursor",
+        "Text cursor thickness"
+      ],
+      "page": "text-cursor",
+      "coverage": "control",
+      "control": "text-cursor.reference.7beee9f0"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier"
+      ],
+      "page": "magnifier",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "Magnifier (toggle)"
+      ],
+      "page": "magnifier",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "Magnifier (toggle)",
+        "Start Magnifier before sign-in"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.54348147"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "Magnifier (toggle)",
+        "Start Magnifier after sign-in"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.0a370c37"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "Zoom level"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.05c8bf1b"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "Zoom increment"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.027b1d5b"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "View"
+      ],
+      "page": "magnifier",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "View",
+        "View preference"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.f46dfa93"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "View",
+        "Have Magnifier follow my (when selected Docked and Full Screen View)"
+      ],
+      "page": "magnifier",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "View",
+        "Have Magnifier follow my (when selected Docked and Full Screen View)",
+        "Mouse pointer"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.353f0bce"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "View",
+        "Have Magnifier follow my (when selected Docked and Full Screen View)",
+        "Keyboard focus"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.3b4676ec"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "View",
+        "Have Magnifier follow my (when selected Docked and Full Screen View)",
+        "Text cursor"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.709e0120"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "View",
+        "Have Magnifier follow my (when selected Docked and Full Screen View)",
+        "Narrator cursor"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.38c4b18b"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "View",
+        "Change lens size (when selected Lens View)"
+      ],
+      "page": "magnifier",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "View",
+        "Change lens size (when selected Lens View)",
+        "Height / Width sliders"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.7dec5770"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "View",
+        "Keep the mouse pointer location (when selected Full Screen View)"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.16d01cce"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "View",
+        "Keep the text cursor location (when selected Full Screen View)"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.3b25fbba"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "View",
+        "Invert Colors"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.54f55938"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "View",
+        "Smooth edges of images and text"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.16440b75"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Magnifier",
+        "View",
+        "Reading shortcut"
+      ],
+      "page": "magnifier",
+      "coverage": "control",
+      "control": "magnifier.reference.164500de"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Color filters"
+      ],
+      "page": "color-filters",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Color filters",
+        "Color filters"
+      ],
+      "page": "color-filters",
+      "coverage": "control",
+      "control": "color-filters.reference.93c3c16a"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Color filters",
+        "Preferred color filter selection"
+      ],
+      "page": "color-filters",
+      "coverage": "control",
+      "control": "color-filters.reference.d1a1684b"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Color filters",
+        "Keyboard shortcut for color filters"
+      ],
+      "page": "color-filters",
+      "coverage": "control",
+      "control": "color-filters.reference.3a55c85c"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Contrast themes"
+      ],
+      "page": "contrast",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Contrast themes",
+        "Contrast Themes"
+      ],
+      "page": "contrast",
+      "coverage": "control",
+      "control": "contrast.reference.08c75109"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Contrast themes",
+        "Choose a theme"
+      ],
+      "page": "contrast",
+      "coverage": "control",
+      "control": "contrast.reference.2f32f7fc"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Contrast themes",
+        "Text"
+      ],
+      "page": "contrast",
+      "coverage": "control",
+      "control": "contrast.reference.4ef5eef9"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Contrast themes",
+        "Hyperlinks"
+      ],
+      "page": "contrast",
+      "coverage": "control",
+      "control": "contrast.reference.01e89338"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Contrast themes",
+        "Disabled Text"
+      ],
+      "page": "contrast",
+      "coverage": "control",
+      "control": "contrast.reference.15794103"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Contrast themes",
+        "Selected Text"
+      ],
+      "page": "contrast",
+      "coverage": "control",
+      "control": "contrast.reference.d200a697"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Contrast themes",
+        "Button Text"
+      ],
+      "page": "contrast",
+      "coverage": "control",
+      "control": "contrast.reference.ea31e5bf"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Contrast themes",
+        "Background"
+      ],
+      "page": "contrast",
+      "coverage": "control",
+      "control": "contrast.reference.3fb30d73"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator"
+      ],
+      "page": "narrator",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Narrator (toggle)"
+      ],
+      "page": "narrator",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Narrator (toggle)",
+        "Start Narrator before sign-in"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.eda89fb6"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Narrator (toggle)",
+        "Start Narrator after sign-in"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.385fc6f8"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Keyboard shortcut for Narrator"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.257eaf83"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Narrator Home"
+      ],
+      "page": "narrator",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Narrator Home",
+        "Show Narrator Home when Narrator starts"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.5d68306a"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Choose a voice"
+      ],
+      "page": "narrator",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Choose a voice",
+        "Speed"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.292ae141"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Choose a voice",
+        "Pitch"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.10c29e0c"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Choose a voice",
+        "Volume"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.36f3b8e5"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Lower the volume of other apps when Narrator is speaking"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.05dc20b9"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Verbosity level"
+      ],
+      "page": "narrator",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Verbosity level",
+        "Emphasize formatted text"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.db00112d"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Verbosity level",
+        "Read phonetically when reading by character"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.8b69d44f"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Verbosity level",
+        "Pause slightly when reading punctuation"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.104339a2"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Verbosity level",
+        "Read advanced details like help text on buttons and other controls"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.57fc18dc"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Change how capitalized text is read"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.4f442eb5"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Context level for buttons and controls"
+      ],
+      "page": "narrator",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Context level for buttons and controls",
+        "Read hints on how to interact with buttons and other controls"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.cbb531ac"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Context level for buttons and controls",
+        "Tell me why actions can't be performed"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.29167366"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Context level for buttons and controls",
+        "Play sounds instead of announcements for common actions"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.a3b181a7"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Context level for buttons and controls",
+        "Tell me details about buttons and other controls"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.203122a4"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Have Narrator announce when I type"
+      ],
+      "page": "narrator",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Have Narrator announce when I type",
+        "Letters, numbers, and punctuation"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.4af62bdf"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Have Narrator announce when I type",
+        "Words"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.90a5b7a3"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Have Narrator announce when I type",
+        "Function keys"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.d8b45f58"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Have Narrator announce when I type",
+        "Arrow, Tab, and other navigation keys"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.912b4b1e"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Have Narrator announce when I type",
+        "Toggle keys, like Caps lock and Num lock"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.7c37961a"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Have Narrator announce when I type",
+        "Shift, Alt, and other modifier keys"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.4c9af18e"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Narrator key"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.d4ef110b"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "On touch keyboards, activate keys when I lift my finger"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.e8183e12"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Read and interact with the screen using the mouse"
+      ],
+      "page": "narrator",
+      "coverage": "section"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Read and interact with the screen using the mouse",
+        "Have the Narrator cursor follow my mouse"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.27190ac0"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Show the Narrator cursor"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.e91a6959"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Move my text cursor with the Narrator cursor as Narrator reads text"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.bf4148da"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Sync the Narrator cursor and system focus"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.e90861de"
+    },
+    {
+      "area": "Vision",
+      "path": [
+        "Narrator",
+        "Enable Narrator Extensions"
+      ],
+      "page": "narrator",
+      "coverage": "control",
+      "control": "narrator.reference.14f46908"
+    },
+    {
+      "area": "Hearing",
+      "path": [
+        "Audio"
+      ],
+      "page": "accessibility-audio",
+      "coverage": "section"
+    },
+    {
+      "area": "Hearing",
+      "path": [
+        "Audio",
+        "Mono Audio"
+      ],
+      "page": "accessibility-audio",
+      "coverage": "control",
+      "control": "accessibility-audio.reference.0d993fdd"
+    },
+    {
+      "area": "Hearing",
+      "path": [
+        "Audio",
+        "Flash my screen during audio notifications"
+      ],
+      "page": "accessibility-audio",
+      "coverage": "control",
+      "control": "accessibility-audio.reference.380697ec"
+    },
+    {
+      "area": "Hearing",
+      "path": [
+        "Captions"
+      ],
+      "page": "captions",
+      "coverage": "section"
+    },
+    {
+      "area": "Hearing",
+      "path": [
+        "Captions",
+        "Live Captions"
+      ],
+      "page": "captions",
+      "coverage": "section"
+    },
+    {
+      "area": "Hearing",
+      "path": [
+        "Captions",
+        "Live Captions",
+        "Filter Profanity"
+      ],
+      "page": "captions",
+      "coverage": "control",
+      "control": "captions.reference.b233720a"
+    },
+    {
+      "area": "Hearing",
+      "path": [
+        "Captions",
+        "Live Captions",
+        "Position"
+      ],
+      "page": "captions",
+      "coverage": "control",
+      "control": "captions.reference.07051098"
+    },
+    {
+      "area": "Hearing",
+      "path": [
+        "Captions",
+        "Caption Style"
+      ],
+      "page": "captions",
+      "coverage": "control",
+      "control": "captions.reference.0472a68c"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Speech"
+      ],
+      "page": "voice-access",
+      "coverage": "section"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Speech",
+        "Voice access (main toggle)"
+      ],
+      "page": "voice-access",
+      "coverage": "section"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Speech",
+        "Voice access (main toggle)",
+        "Start voice access after you sign in to your PC"
+      ],
+      "page": "voice-access",
+      "coverage": "control",
+      "control": "voice-access.reference.1353c86e"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Speech",
+        "Voice access (main toggle)",
+        "Start voice access before you sign in to your PC"
+      ],
+      "page": "voice-access",
+      "coverage": "control",
+      "control": "voice-access.reference.5c4cd1f8"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "section"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Sticky keys (main toggle)"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "section"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Sticky keys (main toggle)",
+        "Keyboard shortcut for Sticky keys"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.1766f98b"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Sticky keys (main toggle)",
+        "Show the sticky keys icon on the taskbar"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.cb1dbaf2"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Sticky keys (main toggle)",
+        "Lock shortcut keys when pressed twice in a row"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.c06b6443"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Sticky keys (main toggle)",
+        "Turn off Sticky keys when two keys are pressed at the same time"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "section"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Sticky keys (main toggle)",
+        "Turn off Sticky keys when two keys are pressed at the same time",
+        "Play a sound when shortcut keys are pressed and released"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.59e11b79"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Filter keys (main toggle)"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.8fdb2ef9"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Keyboard shortcut for Filter keys"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.61d353a2"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Show the Filter keys icon on the taskbar"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.e15cf0d4"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Beep when keys are pressed"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.78978487"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Ignore quick keystrokes"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "section"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Ignore quick keystrokes",
+        "Wait before accepting a keystroke"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.4440fbf5"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Ignore unintended keystrokes (bounce keys)"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "section"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Ignore unintended keystrokes (bounce keys)",
+        "Wait before accepting repeated keystrokes"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.bf8c6dd7"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Ignore repeated keystrokes (repeat keys)"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "section"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Ignore repeated keystrokes (repeat keys)",
+        "Wait before accepting the first repeated keystroke"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.28c292fb"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Ignore repeated keystrokes (repeat keys)",
+        "Wait before accepting subsequent repeated keystrokes"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.bb32e872"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Toggle keys"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.dd8bff2c"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Notification preferences"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "section"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Notification preferences",
+        "Notify me when I turn on Sticky, Filter, or Toggle keys from the keyboard"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.fa916f67"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Notification preferences",
+        "Play a sound when I turn Sticky, Filter, or Toggle keys on or off from the keyboard"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.8754adfd"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Underline acess keys"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.4a5a5e4c"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Keyboard",
+        "Use the print screen to open screen capture"
+      ],
+      "page": "accessibility-keyboard",
+      "coverage": "control",
+      "control": "accessibility-keyboard.reference.6f3d637b"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Mouse"
+      ],
+      "page": "mouse-keys",
+      "coverage": "section"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Mouse",
+        "Mouse keys"
+      ],
+      "page": "mouse-keys",
+      "coverage": "control",
+      "control": "mouse-keys.reference.da0c9570"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Mouse",
+        "Mouse keys (main toggle)"
+      ],
+      "page": "mouse-keys",
+      "coverage": "section"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Mouse",
+        "Mouse keys (main toggle)",
+        "Only use mouse keys when Num lock is on"
+      ],
+      "page": "mouse-keys",
+      "coverage": "control",
+      "control": "mouse-keys.reference.bdf1cbf2"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Mouse",
+        "Mouse keys (main toggle)",
+        "Show the mouse keys icon on the taskbar"
+      ],
+      "page": "mouse-keys",
+      "coverage": "control",
+      "control": "mouse-keys.reference.f113b78d"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Mouse",
+        "Mouse keys (main toggle)",
+        "Hold the Ctrl key to speed up and the Shift key to slow down"
+      ],
+      "page": "mouse-keys",
+      "coverage": "control",
+      "control": "mouse-keys.reference.4f1675d1"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Mouse",
+        "Mouse keys (main toggle)",
+        "Mouse keys speed"
+      ],
+      "page": "mouse-keys",
+      "coverage": "control",
+      "control": "mouse-keys.reference.fe021cfe"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Mouse",
+        "Mouse keys (main toggle)",
+        "Mouse keys acceleration"
+      ],
+      "page": "mouse-keys",
+      "coverage": "control",
+      "control": "mouse-keys.reference.df0cfb8c"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Eye Control"
+      ],
+      "page": "eye-control",
+      "coverage": "section"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Eye Control",
+        "Eye Control (toggle)"
+      ],
+      "page": "eye-control",
+      "coverage": "control",
+      "control": "eye-control.reference.907d9244"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Eye Control",
+        "Gaze app (Eye Control in-app settings)"
+      ],
+      "page": "eye-control",
+      "coverage": "section"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Eye Control",
+        "Gaze app (Eye Control in-app settings)",
+        "Choose how to \"click\" - Click by dwelling/with a switch"
+      ],
+      "page": "eye-control",
+      "coverage": "control",
+      "control": "eye-control.reference.21352930"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Eye Control",
+        "Gaze app (Eye Control in-app settings)",
+        "Show gaze cursor"
+      ],
+      "page": "eye-control",
+      "coverage": "control",
+      "control": "eye-control.reference.6a77b7f2"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Eye Control",
+        "Gaze app (Eye Control in-app settings)",
+        "Use shape writing"
+      ],
+      "page": "eye-control",
+      "coverage": "control",
+      "control": "eye-control.reference.d6f76a93"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Eye Control",
+        "Gaze app (Eye Control in-app settings)",
+        "Use advanced mouse features"
+      ],
+      "page": "eye-control",
+      "coverage": "control",
+      "control": "eye-control.reference.4b13d6bb"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Eye Control",
+        "Gaze app (Eye Control in-app settings)",
+        "Typing dwell time"
+      ],
+      "page": "eye-control",
+      "coverage": "control",
+      "control": "eye-control.reference.78e70cc1"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Eye Control",
+        "Gaze app (Eye Control in-app settings)",
+        "General dwell time"
+      ],
+      "page": "eye-control",
+      "coverage": "control",
+      "control": "eye-control.reference.cd2d145c"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Eye Control",
+        "Gaze app (Eye Control in-app settings)",
+        "Smoothing"
+      ],
+      "page": "eye-control",
+      "coverage": "control",
+      "control": "eye-control.reference.116858e7"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Eye Control",
+        "Gaze app (Eye Control in-app settings)",
+        "Lag"
+      ],
+      "page": "eye-control",
+      "coverage": "control",
+      "control": "eye-control.reference.20b71f9e"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Eye Control",
+        "Gaze app (Eye Control in-app settings)",
+        "Dock bottom"
+      ],
+      "page": "eye-control",
+      "coverage": "control",
+      "control": "eye-control.reference.2938eea9"
+    },
+    {
+      "area": "Interaction",
+      "path": [
+        "Eye Control",
+        "Gaze app (Eye Control in-app settings)",
+        "Keyboard dock button"
+      ],
+      "page": "eye-control",
+      "coverage": "control",
+      "control": "eye-control.reference.da32acee"
+    },
+    {
+      "area": "Privacy & security",
+      "path": [
+        "Activity history"
+      ],
+      "page": "activity",
+      "coverage": "section"
+    },
+    {
+      "area": "Privacy & security",
+      "path": [
+        "Activity history",
+        "Store my activity history on this device"
+      ],
+      "page": "activity",
+      "coverage": "control",
+      "control": "activity.reference.c2152566"
+    },
+    {
+      "area": "File Explorer settings",
+      "path": [
+        "Single click to open an item (point to select): Underline icon titles/Double click to open an item (single-click to select)"
+      ],
+      "page": "file-explorer",
+      "coverage": "control",
+      "control": "file-explorer.reference.afe7ff09"
+    },
+    {
+      "area": "File Explorer settings",
+      "path": [
+        "Decrease space between items (compact view)"
+      ],
+      "page": "file-explorer",
+      "coverage": "control",
+      "control": "file-explorer.reference.7ec40057"
+    },
+    {
+      "area": "File Explorer settings",
+      "path": [
+        "Display the full path in the title bar"
+      ],
+      "page": "file-explorer",
+      "coverage": "control",
+      "control": "file-explorer.reference.d37f9e0c"
+    },
+    {
+      "area": "File Explorer settings",
+      "path": [
+        "Hidden files and folders: Don't show hidden files, folders, or drives/Show hidden files, folders, and drives"
+      ],
+      "page": "file-explorer",
+      "coverage": "control",
+      "control": "file-explorer.reference.13fc4541"
+    },
+    {
+      "area": "File Explorer settings",
+      "path": [
+        "Hide empty drives"
+      ],
+      "page": "file-explorer",
+      "coverage": "control",
+      "control": "file-explorer.reference.b49d9a75"
+    },
+    {
+      "area": "File Explorer settings",
+      "path": [
+        "Hide extensions for known file Types"
+      ],
+      "page": "file-explorer",
+      "coverage": "control",
+      "control": "file-explorer.reference.67cc9b59"
+    },
+    {
+      "area": "File Explorer settings",
+      "path": [
+        "Use check box to select items"
+      ],
+      "page": "file-explorer",
+      "coverage": "control",
+      "control": "file-explorer.reference.485b9758"
+    },
+    {
+      "area": "File Explorer settings",
+      "path": [
+        "Recyle bin"
+      ],
+      "page": "file-explorer",
+      "coverage": "section"
+    },
+    {
+      "area": "File Explorer settings",
+      "path": [
+        "Recyle bin",
+        "Display delete confirmation dialog"
+      ],
+      "page": "file-explorer",
+      "coverage": "control",
+      "control": "file-explorer.reference.163ce553"
+    },
+    {
+      "area": "File Explorer settings",
+      "path": [
+        "Desktop"
+      ],
+      "page": "file-explorer",
+      "coverage": "section"
+    },
+    {
+      "area": "File Explorer settings",
+      "path": [
+        "Desktop",
+        "View (Icon size, Auto arrange icons, Show desktop icons)"
+      ],
+      "page": "file-explorer",
+      "coverage": "control",
+      "control": "file-explorer.reference.f24ca65a"
+    },
+    {
+      "area": "File Explorer settings",
+      "path": [
+        "Desktop",
+        "Sort by (Name, Size, Item type, Date modified)"
+      ],
+      "page": "file-explorer",
+      "coverage": "control",
+      "control": "file-explorer.reference.ed11d482"
+    }
+  ]
+}

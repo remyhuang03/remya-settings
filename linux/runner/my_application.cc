@@ -45,14 +45,27 @@ static void my_application_activate(GApplication* application) {
   if (use_header_bar) {
     GtkHeaderBar* header_bar = GTK_HEADER_BAR(gtk_header_bar_new());
     gtk_widget_show(GTK_WIDGET(header_bar));
-    gtk_header_bar_set_title(header_bar, "remya_settings");
+    gtk_header_bar_set_title(header_bar, "Remy'a Settings");
     gtk_header_bar_set_show_close_button(header_bar, TRUE);
     gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
   } else {
-    gtk_window_set_title(window, "remya_settings");
+    gtk_window_set_title(window, "Remy'a Settings");
   }
 
   gtk_window_set_default_size(window, 1280, 720);
+
+  // Resolve the bundled icon independently of the caller's working directory.
+  g_autofree gchar* executable_path = g_file_read_link("/proc/self/exe", nullptr);
+  if (executable_path != nullptr) {
+    g_autofree gchar* executable_dir = g_path_get_dirname(executable_path);
+    g_autofree gchar* icon_path = g_build_filename(
+        executable_dir, "data", "flutter_assets", "assets", "icons",
+        "settings.png", nullptr);
+    g_autoptr(GError) icon_error = nullptr;
+    if (!gtk_window_set_icon_from_file(window, icon_path, &icon_error)) {
+      g_warning("Failed to load application icon: %s", icon_error->message);
+    }
+  }
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(

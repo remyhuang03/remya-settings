@@ -1,5 +1,5 @@
 name: remya_settings
-description: "Remy'a Settings, a Material Design 3 Expressive Linux desktop application."
+description: "A Material Design 3 Expressive system settings application for Hyprland."
 publish_to: 'none'
 version: 0.1.0+1
 
@@ -18,3 +18,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/settings/catalog.json
+    - assets/icons/settings.svg
+    - assets/icons/settings.png
+    - LICENSE
