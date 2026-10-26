@@ -4,11 +4,13 @@ A global system settings application for **Hyprland on Linux**, using **Flutter*
 
 ## Current milestone: UI only
 
-Browse Home, 11 categories, 202 detail pages, and About; search settings, follow related pages, and inspect third-party licenses. The catalog contains 1,321 preview controls, with every operation explicitly **not implemented** or **not applicable** and disabled. Devices, account information, values, and capacities are examples, never detected host state. No system configuration is read or changed, no services are called, and no preview values are persisted.
+Browse Home, 13 categories, 308 detail pages, and About; search settings, follow related pages, and inspect third-party licenses. The catalog contains 2,180 preview controls, with every operation explicitly **not implemented** or **not applicable** and disabled. Devices, account information, values, and capacities are examples, never detected host state. No system configuration is read or changed, no services are called, and no preview values are persisted.
 
 The inventory covers the 219 unique names in Microsoft's public URI tables and all 354 hierarchy entries (267 leaf controls) in its Windows 11 backup catalog. This is an application-owned UI schema, not an export of Windows' unpublished internal schema. See [research, sources, coverage, and limitations](docs/windows-settings-research.md).
 
 See the [item-by-item implementation progress checklist](docs/settings-implementation-progress.md) for every setting's stable ID, implementation status, and space for tracking and verification notes.
+
+The Hyprland extension adds 106 pages and 859 controls based on official configuration documentation and existing settings tools; the original Windows-reference pages and controls are preserved. See [Hyprland sources, classifications, and version limits](docs/hyprland-settings-research.md).
 
 ## Layout
 

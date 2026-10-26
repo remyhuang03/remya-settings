@@ -2,6 +2,8 @@
 
 Research date: 2026-10-26. Target product: a global settings application for **Hyprland on Linux**, with **Material Design 3 Expressive** styling.
 
+This document describes the preserved Windows-reference baseline (202 pages and 1,321 controls). The later additive Hyprland catalog extension is documented separately in [Hyprland research](hyprland-settings-research.md); the progress checklist tracks the combined catalog.
+
 ## Evidence and limits
 
 Microsoft publishes a [Settings navigation guide](https://support.microsoft.com/en-us/windows/experience/exploring-windows-settings), a [page URI reference](https://learn.microsoft.com/en-us/windows/apps/develop/launch/launch-settings), and a [Windows 11 backup settings catalog](https://learn.microsoft.com/en-us/windows/configuration/windows-backup/catalog?pivots=windows-11). These are complementary inventories, not a published internal schema for every Windows Settings control. Availability varies by OS release, edition, hardware, installed applications, organization policy, account, and staged feature rollout.

@@ -6,10 +6,12 @@
 
 清单覆盖现有目录中的全部设置项，包括主要中文控件和保留原名的 Windows 参考细项；相同概念可能存在多个展示位置。下述数量统计的是控件条目，不是去重后的独立后端功能数量。公开资料与内部 schema 的边界见 [调研说明](windows-settings-research.md)。
 
+本轮仅分类追加 Hyprland 内容：新增 106 个页面、859 项设置及 2 个分类；原有 202 个页面与 1,321 项设置原样保留。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
+
 ## 当前概况
 
-- 设置分类：11 个；详情页面：202 个；设置条目：1,321 项。
-- 系统功能已实现：0 项；未实现：1,162 项；不适用：159 项。
+- 设置分类：13 个；详情页面：308 个；设置条目：2,180 项。
+- 系统功能已实现：0 项；未实现：2,021 项；不适用：159 项。
 - 本阶段没有系统设置读写、设备扫描、服务调用或预览值持久化。所有设备名称、选项和值均为界面示例。
 
 ### 已完成的界面能力（不计入系统功能进度）
@@ -37,17 +39,19 @@
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 43 | 274 | 0 | 254 | 20 |
-| [蓝牙和设备](#category-devices) | 13 | 105 | 0 | 101 | 4 |
+| [系统](#category-system) | 51 | 335 | 0 | 315 | 20 |
+| [蓝牙和设备](#category-devices) | 25 | 224 | 0 | 220 | 4 |
 | [网络和 Internet](#category-network) | 15 | 90 | 0 | 88 | 2 |
-| [个性化](#category-personalization) | 15 | 129 | 0 | 119 | 10 |
-| [应用](#category-apps) | 9 | 45 | 0 | 45 | 0 |
+| [个性化](#category-personalization) | 45 | 280 | 0 | 270 | 10 |
+| [应用](#category-apps) | 14 | 59 | 0 | 59 | 0 |
 | [账户](#category-accounts) | 19 | 78 | 0 | 59 | 19 |
 | [时间和语言](#category-time) | 16 | 103 | 0 | 48 | 55 |
-| [游戏](#category-gaming) | 5 | 29 | 0 | 25 | 4 |
+| [游戏](#category-gaming) | 7 | 49 | 0 | 45 | 4 |
 | [辅助功能](#category-accessibility) | 15 | 242 | 0 | 242 | 0 |
-| [隐私和安全性](#category-privacy) | 42 | 179 | 0 | 151 | 28 |
+| [隐私和安全性](#category-privacy) | 56 | 295 | 0 | 267 | 28 |
 | [系统更新](#category-update) | 10 | 47 | 0 | 30 | 17 |
+| [窗口与工作区](#category-hyprland) | 23 | 258 | 0 | 258 | 0 |
+| [会话与配置](#category-session) | 12 | 120 | 0 | 120 | 0 |
 
 <a id="category-system"></a>
 
@@ -1057,6 +1061,188 @@ Windows 参考入口：`ms-settings:phone`。
 | --- | --- | --- | --- | --- |
 | 功能状态 | `phone.540cc78d` | 信息展示 | 不适用 | — |
 
+### Hyprland · XWayland 兼容 — `hypr-xwayland`
+
+合成器高级设置：xwayland · Hyprland
+
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### XWayland 兼容
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用 · enabled | `hypr-xwayland.enabled` | 开关 | 未实现 | — |
+| create abstract socket · create_abstract_socket | `hypr-xwayland.create-abstract-socket` | 开关 | 未实现 | — |
+| XWayland 强制整数缩放 · force_zero_scaling | `hypr-xwayland.force-zero-scaling` | 开关 | 未实现 | — |
+| 最近邻缩放 · use_nearest_neighbor | `hypr-xwayland.use-nearest-neighbor` | 开关 | 未实现 | — |
+
+### Hyprland · 应用兼容例外 — `hypr-quirks`
+
+合成器高级设置：quirks · Hyprland
+
+页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 应用兼容例外
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| prefer hdr · prefer_hdr | `hypr-quirks.prefer-hdr` | 滑块 | 未实现 | — |
+| skip non kms dmabuf formats · skip_non_kms_dmabuf_formats | `hypr-quirks.skip-non-kms-dmabuf-formats` | 开关 | 未实现 | — |
+
+### Hyprland 显示器规则 · 规则字段 — `hypr-monitor-fields`
+
+按官方文档分类的组件参数 · Hyprland
+
+页面状态：**未实现**；条目：22；已实现 0 / 未实现 22 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+相关页面 ID：`hypr-output-assignments`、`hypr-multi-gpu`。
+
+参考资料：[hypr-monitors](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/monitors/_index.md)。
+
+#### 规则字段
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 目标显示器 · output | `hypr-monitor-fields.output` | 文本输入 | 未实现 | — |
+| 禁用此输出 · disabled | `hypr-monitor-fields.disabled` | 开关 | 未实现 | — |
+| 工作模式 · mode | `hypr-monitor-fields.mode` | 文本输入 | 未实现 | — |
+| 缩放 · scale | `hypr-monitor-fields.scale` | 文本输入 | 未实现 | — |
+| 旋转和翻转 · transform | `hypr-monitor-fields.transform` | 文本输入 | 未实现 | — |
+| 虚拟桌面位置 · position | `hypr-monitor-fields.position` | 文本输入 | 未实现 | — |
+| 镜像目标 · mirror | `hypr-monitor-fields.mirror` | 文本输入 | 未实现 | — |
+| 输出位深 · bitdepth | `hypr-monitor-fields.bitdepth` | 文本输入 | 未实现 | — |
+| 色彩管理预设 · cm | `hypr-monitor-fields.cm` | 文本输入 | 未实现 | — |
+| SDR 传递函数 · sdr_eotf | `hypr-monitor-fields.sdr-eotf` | 文本输入 | 未实现 | — |
+| 可变刷新率模式 · vrr | `hypr-monitor-fields.vrr` | 文本输入 | 未实现 | — |
+| ICC 配置文件 · icc | `hypr-monitor-fields.icc` | 文本输入 | 未实现 | — |
+| 平铺保留区域 · reserved_area | `hypr-monitor-fields.reserved-area` | 文本输入 | 未实现 | — |
+| 强制宽色域能力 · supports_wide_color | `hypr-monitor-fields.supports-wide-color` | 文本输入 | 未实现 | — |
+| 强制 HDR 能力 · supports_hdr | `hypr-monitor-fields.supports-hdr` | 文本输入 | 未实现 | — |
+| HDR 中的 SDR 亮度 · sdrbrightness | `hypr-monitor-fields.sdrbrightness` | 文本输入 | 未实现 | — |
+| HDR 中的 SDR 饱和度 · sdrsaturation | `hypr-monitor-fields.sdrsaturation` | 文本输入 | 未实现 | — |
+| SDR 最小亮度映射 · sdr_min_luminance | `hypr-monitor-fields.sdr-min-luminance` | 文本输入 | 未实现 | — |
+| SDR 最大亮度映射 · sdr_max_luminance | `hypr-monitor-fields.sdr-max-luminance` | 文本输入 | 未实现 | — |
+| 显示器最小亮度 · min_luminance | `hypr-monitor-fields.min-luminance` | 文本输入 | 未实现 | — |
+| 显示器峰值亮度 · max_luminance | `hypr-monitor-fields.max-luminance` | 文本输入 | 未实现 | — |
+| 显示器平均峰值亮度 · max_avg_luminance | `hypr-monitor-fields.max-avg-luminance` | 文本输入 | 未实现 | — |
+
+### 空闲与睡眠 · 通用 — `hypr-idle-general`
+
+按官方文档分类的组件参数 · 可选组件 hypridle
+
+页面状态：**未实现**；条目：10；已实现 0 / 未实现 10 / 不适用 0。
+
+原因：尚未实现；可选组件 hypridle 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-idle](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hypridle.md)。
+
+#### 通用
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 锁屏命令 · lock_cmd | `hypr-idle-general.lock-cmd` | 文本输入 | 未实现 | — |
+| 解锁命令 · unlock_cmd | `hypr-idle-general.unlock-cmd` | 文本输入 | 未实现 | — |
+| on lock cmd · on_lock_cmd | `hypr-idle-general.on-lock-cmd` | 文本输入 | 未实现 | — |
+| on unlock cmd · on_unlock_cmd | `hypr-idle-general.on-unlock-cmd` | 文本输入 | 未实现 | — |
+| 睡眠前命令 · before_sleep_cmd | `hypr-idle-general.before-sleep-cmd` | 文本输入 | 未实现 | — |
+| 唤醒后命令 · after_sleep_cmd | `hypr-idle-general.after-sleep-cmd` | 文本输入 | 未实现 | — |
+| 忽略 D-Bus 空闲抑制 · ignore_dbus_inhibit | `hypr-idle-general.ignore-dbus-inhibit` | 开关 | 未实现 | — |
+| 忽略 systemd 空闲抑制 · ignore_systemd_inhibit | `hypr-idle-general.ignore-systemd-inhibit` | 开关 | 未实现 | — |
+| 忽略 Wayland 空闲抑制 · ignore_wayland_inhibit | `hypr-idle-general.ignore-wayland-inhibit` | 开关 | 未实现 | — |
+| 睡眠等待锁屏策略 · inhibit_sleep | `hypr-idle-general.inhibit-sleep` | 文本输入 | 未实现 | — |
+
+### 空闲与睡眠 · 空闲监听器 — `hypr-idle-listeners`
+
+按官方文档分类的组件参数 · 可选组件 hypridle
+
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+
+原因：尚未实现；可选组件 hypridle 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-idle](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hypridle.md)。
+
+#### 空闲监听器
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 超时秒数 · timeout | `hypr-idle-listeners.timeout` | 文本输入 | 未实现 | — |
+| 空闲超时动作 · on-timeout | `hypr-idle-listeners.on-timeout` | 文本输入 | 未实现 | — |
+| 恢复活动动作 · on-resume | `hypr-idle-listeners.on-resume` | 文本输入 | 未实现 | — |
+| 忽略空闲抑制 · ignore_inhibit | `hypr-idle-listeners.ignore-inhibit` | 开关 | 未实现 | — |
+| 空闲触发条件命令 · condition_cmd | `hypr-idle-listeners.condition-cmd` | 文本输入 | 未实现 | — |
+| 条件重试间隔 · condition_retry | `hypr-idle-listeners.condition-retry` | 文本输入 | 未实现 | — |
+
+### 显示器布局与工作区分配 — `hypr-output-assignments`
+
+输出启停、位置与工作区到显示器映射 · Hyprland
+
+页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[nwg-displays-project](https://github.com/nwg-piotr/nwg-displays/blob/412eff2779cf123f308753faab1a182dd474ba7a/README.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 输出名称或描述匹配 | `hypr-output-assignments.output` | 文本输入 | 未实现 | — |
+| 启用此输出 | `hypr-output-assignments.enabled` | 开关 | 未实现 | — |
+| 显示器逻辑坐标 | `hypr-output-assignments.position` | 文本输入 | 未实现 | — |
+| 镜像输出目标 | `hypr-output-assignments.mirror` | 文本输入 | 未实现 | — |
+| 工作区与输出分配 | `hypr-output-assignments.workspace` | 文本输入 | 未实现 | — |
+| 未知显示器后备规则 | `hypr-output-assignments.fallback` | 文本输入 | 未实现 | — |
+| 保存布局草稿 | `hypr-output-assignments.save` | 操作 | 未实现 | — |
+
+### 多 GPU 与显卡选择 — `hypr-multi-gpu`
+
+显卡顺序、渲染设备及驱动兼容 · Hyprland
+
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-multi-gpu](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/extra/multi-gpu.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| DRM 设备选择顺序 | `hypr-multi-gpu.devices` | 文本输入 | 未实现 | — |
+| 渲染 GPU 选择 | `hypr-multi-gpu.render-device` | 文本输入 | 未实现 | — |
+| GPU 和驱动信息 | `hypr-multi-gpu.vendor` | 信息展示 | 未实现 | — |
+| 显示器与 GPU 连接关系 | `hypr-multi-gpu.mapping` | 信息展示 | 未实现 | — |
+| 显卡环境变量覆盖 | `hypr-multi-gpu.variables` | 文本输入 | 未实现 | — |
+
+### PipeWire 音频路由 — `hypr-audio-routing`
+
+设备配置、应用流与端口连接 · 可选 PipeWire 控制组件
+
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+
+原因：尚未实现；可选 PipeWire 控制组件 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-audio](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprpwcenter.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 音频设备配置档 | `hypr-audio-routing.profile` | 文本输入 | 未实现 | — |
+| 输入输出端口 | `hypr-audio-routing.port` | 文本输入 | 未实现 | — |
+| 应用音频流 | `hypr-audio-routing.streams` | 信息展示 | 未实现 | — |
+| 音频流路由 | `hypr-audio-routing.routing` | 操作 | 未实现 | — |
+| 默认输入和输出节点 | `hypr-audio-routing.default` | 操作 | 未实现 | — |
 
 <a id="category-devices"></a>
 
@@ -1404,6 +1590,304 @@ Windows 参考入口：`ms-settings:wheel`。
 | 触觉反馈 | `wheel.f7d769a7` | 开关 | 不适用 | — |
 | 默认工具 | `wheel.cbe34089` | 选择 | 不适用 | — |
 
+### Hyprland · 键盘与指针全局选项 — `hypr-input`
+
+合成器高级设置：input · Hyprland
+
+页面状态：**未实现**；条目：31；已实现 0 / 未实现 31 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 键盘与指针全局选项
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 指针加速曲线 · accel_profile | `hypr-input.accel-profile` | 文本输入 | 未实现 | — |
+| 离散滚轮模拟 · emulate_discrete_scroll | `hypr-input.emulate-discrete-scroll` | 滑块 | 未实现 | — |
+| 平铺与浮动切换焦点策略 · float_switch_override_focus | `hypr-input.float-switch-override-focus` | 滑块 | 未实现 | — |
+| 关闭窗口后的焦点 · focus_on_close | `hypr-input.focus-on-close` | 滑块 | 未实现 | — |
+| 焦点跟随鼠标模式 · follow_mouse | `hypr-input.follow-mouse` | 滑块 | 未实现 | — |
+| 焦点检测区域收缩 · follow_mouse_shrink | `hypr-input.follow-mouse-shrink` | 滑块 | 未实现 | — |
+| 焦点切换移动阈值 · follow_mouse_threshold | `hypr-input.follow-mouse-threshold` | 文本输入 | 未实现 | — |
+| 强制关闭加速 · force_no_accel | `hypr-input.force-no-accel` | 开关 | 未实现 | — |
+| 自定义 XKB 文件 · kb_file | `hypr-input.kb-file` | 文本输入 | 未实现 | — |
+| 键盘布局 · kb_layout | `hypr-input.kb-layout` | 文本输入 | 未实现 | — |
+| 键盘型号 · kb_model | `hypr-input.kb-model` | 文本输入 | 未实现 | — |
+| XKB 扩展选项 · kb_options | `hypr-input.kb-options` | 文本输入 | 未实现 | — |
+| XKB 规则集 · kb_rules | `hypr-input.kb-rules` | 文本输入 | 未实现 | — |
+| 键盘布局变体 · kb_variant | `hypr-input.kb-variant` | 文本输入 | 未实现 | — |
+| 左手指针模式 · left_handed | `hypr-input.left-handed` | 开关 | 未实现 | — |
+| 跨窗口时重新聚焦 · mouse_refocus | `hypr-input.mouse-refocus` | 开关 | 未实现 | — |
+| 自然滚动 · natural_scroll | `hypr-input.natural-scroll` | 开关 | 未实现 | — |
+| 默认开启 Num Lock · numlock_by_default | `hypr-input.numlock-by-default` | 开关 | 未实现 | — |
+| 窗口外滚动事件处理 · off_window_axis_events | `hypr-input.off-window-axis-events` | 滑块 | 未实现 | — |
+| 按键重复延迟 · repeat_delay | `hypr-input.repeat-delay` | 滑块 | 未实现 | — |
+| 按键重复频率 · repeat_rate | `hypr-input.repeat-rate` | 滑块 | 未实现 | — |
+| 按当前布局解析快捷键 · resolve_binds_by_sym | `hypr-input.resolve-binds-by-sym` | 开关 | 未实现 | — |
+| 设备旋转角度 · rotation | `hypr-input.rotation` | 滑块 | 未实现 | — |
+| 滚动触发按钮 · scroll_button | `hypr-input.scroll-button` | 滑块 | 未实现 | — |
+| 滚动按钮锁定 · scroll_button_lock | `hypr-input.scroll-button-lock` | 开关 | 未实现 | — |
+| 自定义滚动加速采样点 · scroll_points | `hypr-input.scroll-points` | 文本输入 | 未实现 | — |
+| 滚动方式 · scroll_method | `hypr-input.scroll-method` | 文本输入 | 未实现 | — |
+| 滚动倍数 · scroll_factor | `hypr-input.scroll-factor` | 滑块 | 未实现 | — |
+| 指针灵敏度 · sensitivity | `hypr-input.sensitivity` | 滑块 | 未实现 | — |
+| 特殊工作区焦点穿透 · special_fallthrough | `hypr-input.special-fallthrough` | 开关 | 未实现 | — |
+| 聚焦时吞掉首次点击 · swallow_focus_click | `hypr-input.swallow-focus-click` | 开关 | 未实现 | — |
+
+### Hyprland · 触摸板高级选项 — `hypr-input-touchpad`
+
+合成器高级设置：input.touchpad · Hyprland
+
+页面状态：**未实现**；条目：12；已实现 0 / 未实现 12 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 触摸板高级选项
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 按手指数分配点击 · clickfinger_behavior | `hypr-input-touchpad.clickfinger-behavior` | 开关 | 未实现 | — |
+| 打字时禁用触摸板 · disable_while_typing | `hypr-input-touchpad.disable-while-typing` | 开关 | 未实现 | — |
+| 三指拖动 · drag_3fg | `hypr-input-touchpad.drag-3fg` | 滑块 | 未实现 | — |
+| 拖动锁定 · drag_lock | `hypr-input-touchpad.drag-lock` | 滑块 | 未实现 | — |
+| flip x · flip_x | `hypr-input-touchpad.flip-x` | 开关 | 未实现 | — |
+| flip y · flip_y | `hypr-input-touchpad.flip-y` | 开关 | 未实现 | — |
+| 中键模拟 · middle_button_emulation | `hypr-input-touchpad.middle-button-emulation` | 开关 | 未实现 | — |
+| 自然滚动 · natural_scroll | `hypr-input-touchpad.natural-scroll` | 开关 | 未实现 | — |
+| 滚动倍数 · scroll_factor | `hypr-input-touchpad.scroll-factor` | 滑块 | 未实现 | — |
+| tap and drag · tap_and_drag | `hypr-input-touchpad.tap-and-drag` | 开关 | 未实现 | — |
+| 轻触按钮映射 · tap_button_map | `hypr-input-touchpad.tap-button-map` | 文本输入 | 未实现 | — |
+| tap to click · tap_to_click | `hypr-input-touchpad.tap-to-click` | 开关 | 未实现 | — |
+
+### Hyprland · 触摸屏映射 — `hypr-input-touchdevice`
+
+合成器高级设置：input.touchdevice · Hyprland
+
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 触摸屏映射
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用 · enabled | `hypr-input-touchdevice.enabled` | 开关 | 未实现 | — |
+| 目标显示器 · output | `hypr-input-touchdevice.output` | 文本输入 | 未实现 | — |
+| 旋转和翻转 · transform | `hypr-input-touchdevice.transform` | 滑块 | 未实现 | — |
+
+### Hyprland · 虚拟键盘 — `hypr-input-virtualkeyboard`
+
+合成器高级设置：input.virtualkeyboard · Hyprland
+
+页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 虚拟键盘
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| release pressed on close · release_pressed_on_close | `hypr-input-virtualkeyboard.release-pressed-on-close` | 开关 | 未实现 | — |
+| share states · share_states | `hypr-input-virtualkeyboard.share-states` | 滑块 | 未实现 | — |
+
+### Hyprland · 数位板映射 — `hypr-input-tablet`
+
+合成器高级设置：input.tablet · Hyprland
+
+页面状态：**未实现**；条目：10；已实现 0 / 未实现 10 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 数位板映射
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用 · enabled | `hypr-input-tablet.enabled` | 开关 | 未实现 | — |
+| 目标显示器 · output | `hypr-input-tablet.output` | 文本输入 | 未实现 | — |
+| 旋转和翻转 · transform | `hypr-input-tablet.transform` | 滑块 | 未实现 | — |
+| absolute region position · absolute_region_position | `hypr-input-tablet.absolute-region-position` | 开关 | 未实现 | — |
+| active area position · active_area_position | `hypr-input-tablet.active-area-position` | 文本输入 | 未实现 | — |
+| active area size · active_area_size | `hypr-input-tablet.active-area-size` | 文本输入 | 未实现 | — |
+| 左手指针模式 · left_handed | `hypr-input-tablet.left-handed` | 开关 | 未实现 | — |
+| region position · region_position | `hypr-input-tablet.region-position` | 文本输入 | 未实现 | — |
+| region size · region_size | `hypr-input-tablet.region-size` | 文本输入 | 未实现 | — |
+| relative input · relative_input | `hypr-input-tablet.relative-input` | 开关 | 未实现 | — |
+
+### Hyprland · 数位笔工具 — `hypr-input-tablettool`
+
+合成器高级设置：input.tablettool · Hyprland
+
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 数位笔工具
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| eraser button mode · eraser_button_mode | `hypr-input-tablettool.eraser-button-mode` | 滑块 | 未实现 | — |
+| eraser button override · eraser_button_override | `hypr-input-tablettool.eraser-button-override` | 文本输入 | 未实现 | — |
+| pressure range min · pressure_range_min | `hypr-input-tablettool.pressure-range-min` | 滑块 | 未实现 | — |
+| pressure range max · pressure_range_max | `hypr-input-tablettool.pressure-range-max` | 滑块 | 未实现 | — |
+
+### Hyprland · 工作区手势选项 — `hypr-gestures`
+
+合成器高级设置：gestures · Hyprland
+
+页面状态：**未实现**；条目：12；已实现 0 / 未实现 12 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 工作区手势选项
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| close max timeout · close_max_timeout | `hypr-gestures.close-max-timeout` | 滑块 | 未实现 | — |
+| workspace swipe cancel ratio · workspace_swipe_cancel_ratio | `hypr-gestures.workspace-swipe-cancel-ratio` | 滑块 | 未实现 | — |
+| workspace swipe create new · workspace_swipe_create_new | `hypr-gestures.workspace-swipe-create-new` | 开关 | 未实现 | — |
+| workspace swipe direction lock · workspace_swipe_direction_lock | `hypr-gestures.workspace-swipe-direction-lock` | 开关 | 未实现 | — |
+| workspace swipe direction lock threshold · workspace_swipe_direction_lock_threshold | `hypr-gestures.workspace-swipe-direction-lock-threshold` | 滑块 | 未实现 | — |
+| workspace swipe distance · workspace_swipe_distance | `hypr-gestures.workspace-swipe-distance` | 滑块 | 未实现 | — |
+| workspace swipe forever · workspace_swipe_forever | `hypr-gestures.workspace-swipe-forever` | 开关 | 未实现 | — |
+| workspace swipe invert · workspace_swipe_invert | `hypr-gestures.workspace-swipe-invert` | 开关 | 未实现 | — |
+| workspace swipe min speed to force · workspace_swipe_min_speed_to_force | `hypr-gestures.workspace-swipe-min-speed-to-force` | 滑块 | 未实现 | — |
+| workspace swipe touch · workspace_swipe_touch | `hypr-gestures.workspace-swipe-touch` | 开关 | 未实现 | — |
+| workspace swipe touch invert · workspace_swipe_touch_invert | `hypr-gestures.workspace-swipe-touch-invert` | 开关 | 未实现 | — |
+| workspace swipe use r · workspace_swipe_use_r | `hypr-gestures.workspace-swipe-use-r` | 开关 | 未实现 | — |
+
+### Hyprland · 滚动布局手势选项 — `hypr-gestures-scrolling`
+
+合成器高级设置：gestures.scrolling · Hyprland
+
+页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 滚动布局手势选项
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| move snap to grid · move_snap_to_grid | `hypr-gestures-scrolling.move-snap-to-grid` | 开关 | 未实现 | — |
+| move snap cursor · move_snap_cursor | `hypr-gestures-scrolling.move-snap-cursor` | 开关 | 未实现 | — |
+
+### Hyprland · 光标引擎 — `hypr-cursor`
+
+合成器高级设置：cursor · Hyprland
+
+页面状态：**未实现**；条目：23；已实现 0 / 未实现 23 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 光标引擎
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| default monitor · default_monitor | `hypr-cursor.default-monitor` | 文本输入 | 未实现 | — |
+| 使用 Hyprcursor 主题 · enable_hyprcursor | `hypr-cursor.enable-hyprcursor` | 开关 | 未实现 | — |
+| 按键时隐藏光标 · hide_on_key_press | `hypr-cursor.hide-on-key-press` | 开关 | 未实现 | — |
+| hide on tablet · hide_on_tablet | `hypr-cursor.hide-on-tablet` | 开关 | 未实现 | — |
+| hide on touch · hide_on_touch | `hypr-cursor.hide-on-touch` | 开关 | 未实现 | — |
+| hotspot padding · hotspot_padding | `hypr-cursor.hotspot-padding` | 滑块 | 未实现 | — |
+| 空闲隐藏光标超时 · inactive_timeout | `hypr-cursor.inactive-timeout` | 滑块 | 未实现 | — |
+| invisible · invisible | `hypr-cursor.invisible` | 开关 | 未实现 | — |
+| min refresh rate · min_refresh_rate | `hypr-cursor.min-refresh-rate` | 滑块 | 未实现 | — |
+| no break fs vrr · no_break_fs_vrr | `hypr-cursor.no-break-fs-vrr` | 滑块 | 未实现 | — |
+| 禁用硬件光标 · no_hardware_cursors | `hypr-cursor.no-hardware-cursors` | 滑块 | 未实现 | — |
+| 禁止指针自动移动 · no_warps | `hypr-cursor.no-warps` | 开关 | 未实现 | — |
+| persistent warps · persistent_warps | `hypr-cursor.persistent-warps` | 开关 | 未实现 | — |
+| sync gsettings theme · sync_gsettings_theme | `hypr-cursor.sync-gsettings-theme` | 开关 | 未实现 | — |
+| use cpu buffer · use_cpu_buffer | `hypr-cursor.use-cpu-buffer` | 滑块 | 未实现 | — |
+| warp back after non mouse input · warp_back_after_non_mouse_input | `hypr-cursor.warp-back-after-non-mouse-input` | 开关 | 未实现 | — |
+| warp on change workspace · warp_on_change_workspace | `hypr-cursor.warp-on-change-workspace` | 滑块 | 未实现 | — |
+| warp on monitor change · warp_on_monitor_change | `hypr-cursor.warp-on-monitor-change` | 滑块 | 未实现 | — |
+| warp on toggle special · warp_on_toggle_special | `hypr-cursor.warp-on-toggle-special` | 滑块 | 未实现 | — |
+| zoom detached camera · zoom_detached_camera | `hypr-cursor.zoom-detached-camera` | 开关 | 未实现 | — |
+| zoom disable aa · zoom_disable_aa | `hypr-cursor.zoom-disable-aa` | 开关 | 未实现 | — |
+| 光标缩放倍数 · zoom_factor | `hypr-cursor.zoom-factor` | 滑块 | 未实现 | — |
+| 固定缩放锚点 · zoom_rigid | `hypr-cursor.zoom-rigid` | 开关 | 未实现 | — |
+
+### 触摸板手势绑定 · 规则字段 — `hypr-gesture-fields`
+
+按官方文档分类的组件参数 · Hyprland
+
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-gestures](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/gestures.md)。
+
+#### 规则字段
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 手势动作 · action | `hypr-gesture-fields.action` | 文本输入 | 未实现 | — |
+| 手势方向 · direction | `hypr-gesture-fields.direction` | 文本输入 | 未实现 | — |
+| 手指数量 · fingers | `hypr-gesture-fields.fingers` | 滑块 | 未实现 | — |
+| 绕过快捷键抑制 · disable_inhibit | `hypr-gesture-fields.disable-inhibit` | 开关 | 未实现 | — |
+| 修饰键 · mods | `hypr-gesture-fields.mods` | 文本输入 | 未实现 | — |
+| 缩放 · scale | `hypr-gesture-fields.scale` | 滑块 | 未实现 | — |
+
+### 每设备输入配置 — `hypr-device-profiles`
+
+按设备名称匹配与覆盖全局输入 · Hyprland
+
+页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-devices](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/devices.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 设备名称或匹配 | `hypr-device-profiles.device` | 文本输入 | 未实现 | — |
+| 启用此设备 | `hypr-device-profiles.enabled` | 开关 | 未实现 | — |
+| 此设备启用快捷键 | `hypr-device-profiles.keybinds` | 开关 | 未实现 | — |
+| 设备标签和分组 | `hypr-device-profiles.tags` | 文本输入 | 未实现 | — |
+| 此设备键盘布局覆盖 | `hypr-device-profiles.keyboard` | 文本输入 | 未实现 | — |
+| 此设备指针灵敏度覆盖 | `hypr-device-profiles.sensitivity` | 文本输入 | 未实现 | — |
+| 数位板绑定显示器 | `hypr-device-profiles.output` | 文本输入 | 未实现 | — |
+| 查看继承的全局选项 | `hypr-device-profiles.inherit` | 操作 | 未实现 | — |
+
+### 设备专属绑定与硬件开关 — `hypr-device-bindings`
+
+盖板、平板模式及设备范围的绑定 · Hyprland
+
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-switches](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/switches.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 设备名称或标签 | `hypr-device-bindings.device` | 文本输入 | 未实现 | — |
+| 硬件开关名称 | `hypr-device-bindings.switch` | 文本输入 | 未实现 | — |
+| 开关触发条件 | `hypr-device-bindings.state` | 选择 | 未实现 | — |
+| 触发动作 | `hypr-device-bindings.callback` | 文本输入 | 未实现 | — |
+| 笔记本合盖动作 | `hypr-device-bindings.lid` | 文本输入 | 未实现 | — |
+| 平板模式切换动作 | `hypr-device-bindings.tablet` | 文本输入 | 未实现 | — |
 
 <a id="category-network"></a>
 
@@ -1740,7 +2224,6 @@ Windows 参考入口：`ms-settings:wifi-provisioning`。
 | --- | --- | --- | --- | --- |
 | 导入无线网络配置 | `wifi-provisioning.6473ace4` | 操作 | 未实现 | — |
 | 配置文件路径 | `wifi-provisioning.0b38bb02` | 文本输入 | 未实现 | — |
-
 
 <a id="category-personalization"></a>
 
@@ -2144,6 +2627,606 @@ Windows 参考入口：`ms-settings:personalization`。
 | 锁屏界面 | `personalization.355caa83` | 操作 | 未实现 | — |
 | 任务栏 | `personalization.3405fcce` | 操作 | 未实现 | — |
 
+### Hyprland · 窗口边框渐变 — `hypr-general-col`
+
+合成器高级设置：general.col · Hyprland
+
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 窗口边框渐变
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 活动窗口边框渐变 · active_border | `hypr-general-col.active-border` | 文本输入 | 未实现 | — |
+| 非活动窗口边框渐变 · inactive_border | `hypr-general-col.inactive-border` | 文本输入 | 未实现 | — |
+| 禁止分组窗口边框 · nogroup_border | `hypr-general-col.nogroup-border` | 文本输入 | 未实现 | — |
+| 禁止分组活动窗口边框 · nogroup_border_active | `hypr-general-col.nogroup-border-active` | 文本输入 | 未实现 | — |
+
+### Hyprland · 窗口装饰与透明度 — `hypr-decoration`
+
+合成器高级设置：decoration · Hyprland
+
+页面状态：**未实现**；条目：12；已实现 0 / 未实现 12 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 窗口装饰与透明度
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 活动窗口透明度 · active_opacity | `hypr-decoration.active-opacity` | 滑块 | 未实现 | — |
+| 边框参与窗口绘制 · border_part_of_window | `hypr-decoration.border-part-of-window` | 开关 | 未实现 | — |
+| 周围区域变暗程度 · dim_around | `hypr-decoration.dim-around` | 滑块 | 未实现 | — |
+| 非活动窗口变暗 · dim_inactive | `hypr-decoration.dim-inactive` | 开关 | 未实现 | — |
+| 模态窗口父窗口变暗 · dim_modal | `hypr-decoration.dim-modal` | 开关 | 未实现 | — |
+| 特殊工作区背景变暗 · dim_special | `hypr-decoration.dim-special` | 文本输入 | 未实现 | — |
+| 非活动窗口变暗强度 · dim_strength | `hypr-decoration.dim-strength` | 滑块 | 未实现 | — |
+| 全屏窗口透明度 · fullscreen_opacity | `hypr-decoration.fullscreen-opacity` | 滑块 | 未实现 | — |
+| 非活动窗口透明度 · inactive_opacity | `hypr-decoration.inactive-opacity` | 滑块 | 未实现 | — |
+| 圆角半径 · rounding | `hypr-decoration.rounding` | 滑块 | 未实现 | — |
+| 圆角曲率 · rounding_power | `hypr-decoration.rounding-power` | 滑块 | 未实现 | — |
+| 屏幕着色器路径 · screen_shader | `hypr-decoration.screen-shader` | 文本输入 | 未实现 | — |
+
+### Hyprland · 背景模糊 — `hypr-decoration-blur`
+
+合成器高级设置：decoration.blur · Hyprland
+
+页面状态：**未实现**；条目：17；已实现 0 / 未实现 17 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 背景模糊
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用 · enabled | `hypr-decoration-blur.enabled` | 开关 | 未实现 | — |
+| 亮度调节 · brightness | `hypr-decoration-blur.brightness` | 滑块 | 未实现 | — |
+| 对比度 · contrast | `hypr-decoration-blur.contrast` | 滑块 | 未实现 | — |
+| 忽略窗口透明度 · ignore_opacity | `hypr-decoration-blur.ignore-opacity` | 开关 | 未实现 | — |
+| 输入法弹窗模糊 · input_methods | `hypr-decoration-blur.input-methods` | 开关 | 未实现 | — |
+| 输入法模糊透明阈值 · input_methods_ignorealpha | `hypr-decoration-blur.input-methods-ignorealpha` | 滑块 | 未实现 | — |
+| 模糊性能优化 · new_optimizations | `hypr-decoration-blur.new-optimizations` | 开关 | 未实现 | — |
+| 噪点强度 · noise | `hypr-decoration-blur.noise` | 滑块 | 未实现 | — |
+| 模糊迭代次数 · passes | `hypr-decoration-blur.passes` | 滑块 | 未实现 | — |
+| 弹出窗口模糊 · popups | `hypr-decoration-blur.popups` | 开关 | 未实现 | — |
+| 弹窗透明阈值 · popups_ignorealpha | `hypr-decoration-blur.popups-ignorealpha` | 滑块 | 未实现 | — |
+| 窗口或控件尺寸 · size | `hypr-decoration-blur.size` | 文本输入 | 未实现 | — |
+| 特殊工作区模糊 · special | `hypr-decoration-blur.special` | 开关 | 未实现 | — |
+| 效果变体 · variant | `hypr-decoration-blur.variant` | 选择 | 未实现 | — |
+| 模糊色彩饱和提升 · vibrancy | `hypr-decoration-blur.vibrancy` | 滑块 | 未实现 | — |
+| 暗区饱和度影响 · vibrancy_darkness | `hypr-decoration-blur.vibrancy-darkness` | 滑块 | 未实现 | — |
+| 穿透效果 · xray | `hypr-decoration-blur.xray` | 开关 | 未实现 | — |
+
+### Hyprland · 模糊变体：acrylic — `hypr-decoration-blur-acrylic`
+
+合成器高级设置：decoration.blur.acrylic · Hyprland
+
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### decoration.blur.acrylic
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| aberration · aberration | `hypr-decoration-blur-acrylic.aberration` | 滑块 | 未实现 | — |
+| bulb · bulb | `hypr-decoration-blur-acrylic.bulb` | 滑块 | 未实现 | — |
+| clarity · clarity | `hypr-decoration-blur-acrylic.clarity` | 滑块 | 未实现 | — |
+| refraction · refraction | `hypr-decoration-blur-acrylic.refraction` | 滑块 | 未实现 | — |
+| tint · tint | `hypr-decoration-blur-acrylic.tint` | 颜色 | 未实现 | — |
+
+### Hyprland · 模糊变体：aurora — `hypr-decoration-blur-aurora`
+
+合成器高级设置：decoration.blur.aurora · Hyprland
+
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### decoration.blur.aurora
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| color1 · color1 | `hypr-decoration-blur-aurora.color1` | 颜色 | 未实现 | — |
+| color2 · color2 | `hypr-decoration-blur-aurora.color2` | 颜色 | 未实现 | — |
+| intensity · intensity | `hypr-decoration-blur-aurora.intensity` | 滑块 | 未实现 | — |
+| speed · speed | `hypr-decoration-blur-aurora.speed` | 滑块 | 未实现 | — |
+
+### Hyprland · 模糊变体：drops — `hypr-decoration-blur-drops`
+
+合成器高级设置：decoration.blur.drops · Hyprland
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### decoration.blur.drops
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| speed · speed | `hypr-decoration-blur-drops.speed` | 滑块 | 未实现 | — |
+
+### Hyprland · 模糊变体：fluid_jar — `hypr-decoration-blur-fluid-jar`
+
+合成器高级设置：decoration.blur.fluid_jar · Hyprland
+
+页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### decoration.blur.fluid_jar
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 颜色 · color | `hypr-decoration-blur-fluid-jar.color` | 颜色 | 未实现 | — |
+| distortion · distortion | `hypr-decoration-blur-fluid-jar.distortion` | 滑块 | 未实现 | — |
+| fill amount · fill_amount | `hypr-decoration-blur-fluid-jar.fill-amount` | 滑块 | 未实现 | — |
+| mass · mass | `hypr-decoration-blur-fluid-jar.mass` | 滑块 | 未实现 | — |
+| precision · precision | `hypr-decoration-blur-fluid-jar.precision` | 滑块 | 未实现 | — |
+| speed · speed | `hypr-decoration-blur-fluid-jar.speed` | 滑块 | 未实现 | — |
+| turbulence · turbulence | `hypr-decoration-blur-fluid-jar.turbulence` | 滑块 | 未实现 | — |
+
+### Hyprland · 模糊变体：glass — `hypr-decoration-blur-glass`
+
+合成器高级设置：decoration.blur.glass · Hyprland
+
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### decoration.blur.glass
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| refraction · refraction | `hypr-decoration-blur-glass.refraction` | 滑块 | 未实现 | — |
+| roughness · roughness | `hypr-decoration-blur-glass.roughness` | 滑块 | 未实现 | — |
+| 窗口或控件尺寸 · size | `hypr-decoration-blur-glass.size` | 滑块 | 未实现 | — |
+
+### Hyprland · 模糊变体：haze — `hypr-decoration-blur-haze`
+
+合成器高级设置：decoration.blur.haze · Hyprland
+
+页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### decoration.blur.haze
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| intensity · intensity | `hypr-decoration-blur-haze.intensity` | 滑块 | 未实现 | — |
+| iridescence · iridescence | `hypr-decoration-blur-haze.iridescence` | 滑块 | 未实现 | — |
+
+### Hyprland · 模糊变体：heat_shimmer — `hypr-decoration-blur-heat-shimmer`
+
+合成器高级设置：decoration.blur.heat_shimmer · Hyprland
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### decoration.blur.heat_shimmer
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| speed · speed | `hypr-decoration-blur-heat-shimmer.speed` | 滑块 | 未实现 | — |
+
+### Hyprland · 模糊变体：ripple — `hypr-decoration-blur-ripple`
+
+合成器高级设置：decoration.blur.ripple · Hyprland
+
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### decoration.blur.ripple
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| duration · duration | `hypr-decoration-blur-ripple.duration` | 滑块 | 未实现 | — |
+| radius · radius | `hypr-decoration-blur-ripple.radius` | 滑块 | 未实现 | — |
+| strength · strength | `hypr-decoration-blur-ripple.strength` | 滑块 | 未实现 | — |
+| width · width | `hypr-decoration-blur-ripple.width` | 滑块 | 未实现 | — |
+
+### Hyprland · 模糊变体：water — `hypr-decoration-blur-water`
+
+合成器高级设置：decoration.blur.water · Hyprland
+
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### decoration.blur.water
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| damping · damping | `hypr-decoration-blur-water.damping` | 滑块 | 未实现 | — |
+| duration · duration | `hypr-decoration-blur-water.duration` | 滑块 | 未实现 | — |
+| radius · radius | `hypr-decoration-blur-water.radius` | 滑块 | 未实现 | — |
+| speed · speed | `hypr-decoration-blur-water.speed` | 滑块 | 未实现 | — |
+| strength · strength | `hypr-decoration-blur-water.strength` | 滑块 | 未实现 | — |
+
+### Hyprland · 窗口阴影 — `hypr-decoration-shadow`
+
+合成器高级设置：decoration.shadow · Hyprland
+
+页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 窗口阴影
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用 · enabled | `hypr-decoration-shadow.enabled` | 开关 | 未实现 | — |
+| 颜色 · color | `hypr-decoration-shadow.color` | 文本输入 | 未实现 | — |
+| 非活动颜色 · color_inactive | `hypr-decoration-shadow.color-inactive` | 文本输入 | 未实现 | — |
+| 偏移 · offset | `hypr-decoration-shadow.offset` | 文本输入 | 未实现 | — |
+| 影响范围 · range | `hypr-decoration-shadow.range` | 滑块 | 未实现 | — |
+| 渲染强度 · render_power | `hypr-decoration-shadow.render-power` | 滑块 | 未实现 | — |
+| 缩放 · scale | `hypr-decoration-shadow.scale` | 滑块 | 未实现 | — |
+| sharp · sharp | `hypr-decoration-shadow.sharp` | 开关 | 未实现 | — |
+
+### Hyprland · 窗口发光 — `hypr-decoration-glow`
+
+合成器高级设置：decoration.glow · Hyprland
+
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 窗口发光
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用 · enabled | `hypr-decoration-glow.enabled` | 开关 | 未实现 | — |
+| 颜色 · color | `hypr-decoration-glow.color` | 颜色 | 未实现 | — |
+| 非活动颜色 · color_inactive | `hypr-decoration-glow.color-inactive` | 文本输入 | 未实现 | — |
+| 影响范围 · range | `hypr-decoration-glow.range` | 滑块 | 未实现 | — |
+| 渲染强度 · render_power | `hypr-decoration-glow.render-power` | 滑块 | 未实现 | — |
+
+### Hyprland · 运动模糊 — `hypr-decoration-motion-blur`
+
+合成器高级设置：decoration.motion_blur · Hyprland
+
+页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 运动模糊
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用 · enabled | `hypr-decoration-motion-blur.enabled` | 开关 | 未实现 | — |
+| samples · samples | `hypr-decoration-motion-blur.samples` | 滑块 | 未实现 | — |
+
+### Hyprland · 窗口弹性形变 — `hypr-decoration-wobble`
+
+合成器高级设置：decoration.wobble · Hyprland
+
+页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 窗口弹性形变
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用 · enabled | `hypr-decoration-wobble.enabled` | 开关 | 未实现 | — |
+| mesh · mesh | `hypr-decoration-wobble.mesh` | 滑块 | 未实现 | — |
+| stiffness · stiffness | `hypr-decoration-wobble.stiffness` | 滑块 | 未实现 | — |
+| damping · damping | `hypr-decoration-wobble.damping` | 滑块 | 未实现 | — |
+| mass · mass | `hypr-decoration-wobble.mass` | 滑块 | 未实现 | — |
+| intensity · intensity | `hypr-decoration-wobble.intensity` | 滑块 | 未实现 | — |
+| value epsilon · value_epsilon | `hypr-decoration-wobble.value-epsilon` | 滑块 | 未实现 | — |
+| velocity epsilon · velocity_epsilon | `hypr-decoration-wobble.velocity-epsilon` | 滑块 | 未实现 | — |
+
+### Hyprland · 动画全局选项 — `hypr-animations`
+
+合成器高级设置：animations · Hyprland
+
+页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 动画全局选项
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用 · enabled | `hypr-animations.enabled` | 开关 | 未实现 | — |
+| 工作区动画首尾相接 · workspace_wraparound | `hypr-animations.workspace-wraparound` | 开关 | 未实现 | — |
+
+### Hyprland · 窗口组边框颜色 — `hypr-group-col`
+
+合成器高级设置：group.col · Hyprland
+
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 窗口组边框颜色
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| border active · border_active | `hypr-group-col.border-active` | 文本输入 | 未实现 | — |
+| border inactive · border_inactive | `hypr-group-col.border-inactive` | 文本输入 | 未实现 | — |
+| border locked active · border_locked_active | `hypr-group-col.border-locked-active` | 文本输入 | 未实现 | — |
+| border locked inactive · border_locked_inactive | `hypr-group-col.border-locked-inactive` | 文本输入 | 未实现 | — |
+
+### Hyprland · 窗口组标签栏颜色 — `hypr-group-groupbar-col`
+
+合成器高级设置：group.groupbar.col · Hyprland
+
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 窗口组标签栏颜色
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| active · active | `hypr-group-groupbar-col.active` | 文本输入 | 未实现 | — |
+| inactive · inactive | `hypr-group-groupbar-col.inactive` | 文本输入 | 未实现 | — |
+| locked active · locked_active | `hypr-group-groupbar-col.locked-active` | 文本输入 | 未实现 | — |
+| locked inactive · locked_inactive | `hypr-group-groupbar-col.locked-inactive` | 文本输入 | 未实现 | — |
+
+### Hyprland · 合成器杂项颜色 — `hypr-misc-col`
+
+合成器高级设置：misc.col · Hyprland
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 合成器杂项颜色
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 显示欢迎标语 · splash | `hypr-misc-col.splash` | 颜色 | 未实现 | — |
+
+### Hyprpaper 壁纸选项 · 其他选项 — `hypr-paper-misc-options`
+
+按官方文档分类的组件参数 · 可选组件 hyprpaper
+
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprpaper 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-paper](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprpaper.md)。
+
+#### 其他选项
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 显示欢迎标语 · splash | `hypr-paper-misc-options.splash` | 开关 | 未实现 | — |
+| 欢迎标语偏移 · splash_offset | `hypr-paper-misc-options.splash-offset` | 文本输入 | 未实现 | — |
+| 欢迎标语透明度 · splash_opacity | `hypr-paper-misc-options.splash-opacity` | 文本输入 | 未实现 | — |
+| 组件 IPC 开关 · ipc | `hypr-paper-misc-options.ipc` | 开关 | 未实现 | — |
+
+### Hyprsunset 色温 · 通用配置 — `hypr-sunset-configuration`
+
+按官方文档分类的组件参数 · 可选组件 hyprsunset
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprsunset 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-sunset](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprsunset.md)。
+
+#### 通用配置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 伽马上限 · max-gamma | `hypr-sunset-configuration.max-gamma` | 文本输入 | 未实现 | — |
+
+### Hyprsunset 色温 · 时间计划 — `hypr-sunset-profile`
+
+按官方文档分类的组件参数 · 可选组件 hyprsunset
+
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprsunset 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-sunset](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprsunset.md)。
+
+#### 时间计划
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 切换时间 · time | `hypr-sunset-profile.time` | 文本输入 | 未实现 | — |
+| 色温 · temperature | `hypr-sunset-profile.temperature` | 文本输入 | 未实现 | — |
+| 伽马亮度 · gamma | `hypr-sunset-profile.gamma` | 文本输入 | 未实现 | — |
+| 禁用色温变化 · identity | `hypr-sunset-profile.identity` | 开关 | 未实现 | — |
+| 切换时命令 · on-switch | `hypr-sunset-profile.on-switch` | 文本输入 | 未实现 | — |
+
+### Qt 应用外观 · 主题 — `hypr-qt-theme`
+
+按官方文档分类的组件参数 · 可选组件 hyprqt6engine
+
+页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprqt6engine 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-qt](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprqt6engine.md)。
+
+#### 主题
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| color scheme · color_scheme | `hypr-qt-theme.color-scheme` | 文本输入 | 未实现 | — |
+| icon theme · icon_theme | `hypr-qt-theme.icon-theme` | 文本输入 | 未实现 | — |
+| style · style | `hypr-qt-theme.style` | 文本输入 | 未实现 | — |
+| font fixed · font_fixed | `hypr-qt-theme.font-fixed` | 文本输入 | 未实现 | — |
+| font fixed size · font_fixed_size | `hypr-qt-theme.font-fixed-size` | 文本输入 | 未实现 | — |
+| font · font | `hypr-qt-theme.font` | 文本输入 | 未实现 | — |
+| 字号 · font_size | `hypr-qt-theme.font-size` | 文本输入 | 未实现 | — |
+
+### Qt 应用外观 · 其他设置 — `hypr-qt-misc`
+
+按官方文档分类的组件参数 · 可选组件 hyprqt6engine
+
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprqt6engine 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-qt](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprqt6engine.md)。
+
+#### 其他设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| single click activate · single_click_activate | `hypr-qt-misc.single-click-activate` | 开关 | 未实现 | — |
+| menus have icons · menus_have_icons | `hypr-qt-misc.menus-have-icons` | 开关 | 未实现 | — |
+| shortcuts for context menus · shortcuts_for_context_menus | `hypr-qt-misc.shortcuts-for-context-menus` | 开关 | 未实现 | — |
+
+### 动画树与曲线 — `hypr-animation-editor`
+
+窗口、图层、工作区动画与 Bézier / Spring · Hyprland
+
+页面状态：**未实现**；条目：10；已实现 0 / 未实现 10 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-animations](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/animations.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 动画节点名称 | `hypr-animation-editor.leaf` | 文本输入 | 未实现 | — |
+| 启用此节点动画 | `hypr-animation-editor.enabled` | 开关 | 未实现 | — |
+| 动画时长（100 ms 单位） | `hypr-animation-editor.speed` | 文本输入 | 未实现 | — |
+| 动画样式 | `hypr-animation-editor.style` | 文本输入 | 未实现 | — |
+| 曲线名称 | `hypr-animation-editor.curve` | 文本输入 | 未实现 | — |
+| Bézier 控制点 | `hypr-animation-editor.bezier` | 文本输入 | 未实现 | — |
+| Spring 质量 | `hypr-animation-editor.spring-mass` | 文本输入 | 未实现 | — |
+| Spring 刚度 | `hypr-animation-editor.spring-stiffness` | 文本输入 | 未实现 | — |
+| Spring 阻尼 | `hypr-animation-editor.spring-damping` | 文本输入 | 未实现 | — |
+| 查看动画节点继承 | `hypr-animation-editor.inheritance` | 操作 | 未实现 | — |
+
+### 颜色与渐变编辑 — `hypr-gradient-editor`
+
+边框、窗口组与多色渐变 · Hyprland
+
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hyprsettings-project](https://github.com/acropolis914/hyprsettings/blob/2343820372012eb436d7d24fe645f7948651d37b/README.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 渐变色标和透明度 | `hypr-gradient-editor.stops` | 文本输入 | 未实现 | — |
+| 渐变角度 | `hypr-gradient-editor.angle` | 文本输入 | 未实现 | — |
+| 活动和非活动配色 | `hypr-gradient-editor.active` | 文本输入 | 未实现 | — |
+| 预览渐变 | `hypr-gradient-editor.preview` | 操作 | 未实现 | — |
+
+### 按显示器设置壁纸 — `hypr-wallpaper-outputs`
+
+独立壁纸、目录轮换与后备壁纸 · 可选组件 hyprpaper
+
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprpaper 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-paper](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprpaper.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 显示器名称或后备规则 | `hypr-wallpaper-outputs.monitor` | 文本输入 | 未实现 | — |
+| 图片文件或目录 | `hypr-wallpaper-outputs.path` | 文本输入 | 未实现 | — |
+| 填充方式 | `hypr-wallpaper-outputs.fit` | 选择 | 未实现 | — |
+| 目录轮换间隔（秒） | `hypr-wallpaper-outputs.timeout` | 文本输入 | 未实现 | — |
+| 轮换顺序 | `hypr-wallpaper-outputs.order` | 选择 | 未实现 | — |
+| 扫描子目录 | `hypr-wallpaper-outputs.recursive` | 开关 | 未实现 | — |
+
+### Hyprcursor 与 XCursor 主题 — `hypr-cursor-theme`
+
+主题名称、尺寸与 GTK 应用兼容 · Hyprcursor / XCursor 主题组件
+
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+
+原因：尚未实现；Hyprcursor / XCursor 主题组件 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-cursor](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprcursor.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Hyprcursor 主题名称 | `hypr-cursor-theme.theme` | 文本输入 | 未实现 | — |
+| Hyprcursor 光标尺寸 | `hypr-cursor-theme.size` | 文本输入 | 未实现 | — |
+| XCursor 回退主题 | `hypr-cursor-theme.xcursor-theme` | 文本输入 | 未实现 | — |
+| XCursor 回退尺寸 | `hypr-cursor-theme.xcursor-size` | 文本输入 | 未实现 | — |
+| GTK 应用光标主题 | `hypr-cursor-theme.gtk` | 文本输入 | 未实现 | — |
+
+### 桌面组件与样式预设 — `hypr-shell-components`
+
+面板、Dock、应用抽屉、通知与退出菜单 · 可选桌面 Shell 组件；不预设必须使用 nwg-shell
+
+页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+
+原因：尚未实现；可选桌面 Shell 组件；不预设必须使用 nwg-shell 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[nwg-config-project](https://github.com/nwg-piotr/nwg-shell-config/blob/99dc0e00aa8b0931cd2b1be562ef950fbcc337f8/README.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 桌面样式预设 | `hypr-shell-components.preset` | 文本输入 | 未实现 | — |
+| 面板组件和配置 | `hypr-shell-components.panel` | 文本输入 | 未实现 | — |
+| Dock 组件和配置 | `hypr-shell-components.dock` | 文本输入 | 未实现 | — |
+| 应用抽屉组件和配置 | `hypr-shell-components.drawer` | 文本输入 | 未实现 | — |
+| 通知中心样式 | `hypr-shell-components.notifications` | 文本输入 | 未实现 | — |
+| 退出菜单样式 | `hypr-shell-components.exit-menu` | 文本输入 | 未实现 | — |
+| 系统托盘模块 | `hypr-shell-components.tray` | 操作 | 未实现 | — |
 
 <a id="category-apps"></a>
 
@@ -2331,6 +3414,94 @@ Windows 参考入口：`ms-settings:startupapps`。
 | 示例应用开机启动 | `startup.bf13c9a3` | 开关 | 未实现 | — |
 | 启动影响 | `startup.e46804cd` | 信息展示 | 未实现 | — |
 
+### Hyprlauncher 启动器 · 通用 — `hypr-launcher-general`
+
+按官方文档分类的组件参数 · 可选组件 hyprlauncher
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprlauncher 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-launcher](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlauncher.md)。
+
+#### 通用
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| grab focus · grab_focus | `hypr-launcher-general.grab-focus` | 开关 | 未实现 | — |
+
+### Hyprlauncher 启动器 · 缓存 — `hypr-launcher-cache`
+
+按官方文档分类的组件参数 · 可选组件 hyprlauncher
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprlauncher 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-launcher](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlauncher.md)。
+
+#### 缓存
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用 · enabled | `hypr-launcher-cache.enabled` | 开关 | 未实现 | — |
+
+### Hyprlauncher 启动器 · 搜索来源 — `hypr-launcher-finders`
+
+按官方文档分类的组件参数 · 可选组件 hyprlauncher
+
+页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprlauncher 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-launcher](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlauncher.md)。
+
+#### 搜索来源
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| default finder · default_finder | `hypr-launcher-finders.default-finder` | 文本输入 | 未实现 | — |
+| desktop prefix · desktop_prefix | `hypr-launcher-finders.desktop-prefix` | 文本输入 | 未实现 | — |
+| unicode prefix · unicode_prefix | `hypr-launcher-finders.unicode-prefix` | 文本输入 | 未实现 | — |
+| math prefix · math_prefix | `hypr-launcher-finders.math-prefix` | 文本输入 | 未实现 | — |
+| font prefix · font_prefix | `hypr-launcher-finders.font-prefix` | 文本输入 | 未实现 | — |
+| desktop launch prefix · desktop_launch_prefix | `hypr-launcher-finders.desktop-launch-prefix` | 文本输入 | 未实现 | — |
+| desktop icons · desktop_icons | `hypr-launcher-finders.desktop-icons` | 开关 | 未实现 | — |
+
+### Hyprlauncher 启动器 · 界面 — `hypr-launcher-ui`
+
+按官方文档分类的组件参数 · 可选组件 hyprlauncher
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprlauncher 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-launcher](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlauncher.md)。
+
+#### 界面
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| window size · window_size | `hypr-launcher-ui.window-size` | 文本输入 | 未实现 | — |
+
+### 桌面默认工具 — `hypr-default-apps`
+
+快捷键调用的终端、文件管理器与编辑器 · 桌面组件默认应用配置
+
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+
+原因：尚未实现；桌面组件默认应用配置 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[nwg-config-project](https://github.com/nwg-piotr/nwg-shell-config/blob/99dc0e00aa8b0931cd2b1be562ef950fbcc337f8/README.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 默认终端 | `hypr-default-apps.terminal` | 文本输入 | 未实现 | — |
+| 默认文件管理器 | `hypr-default-apps.file-manager` | 文本输入 | 未实现 | — |
+| 默认文本编辑器 | `hypr-default-apps.editor` | 文本输入 | 未实现 | — |
+| 默认浏览器快捷命令 | `hypr-default-apps.browser` | 文本输入 | 未实现 | — |
 
 <a id="category-accounts"></a>
 
@@ -2702,7 +3873,6 @@ Windows 首页 Microsoft 365 和 Xbox 卡片参考
 | 管理订阅 | `subscriptions.2e529b53` | 操作 | 不适用 | — |
 | 查看订阅权益 | `subscriptions.a0f44278` | 操作 | 不适用 | — |
 
-
 <a id="category-time"></a>
 
 ## 时间和语言
@@ -3064,7 +4234,6 @@ Windows 参考入口：`ms-settings:regionlanguage-chsime-wubi`。
 | 用户词典 | `regionlanguage-chsime-wubi.953dcd7c` | 操作 | 不适用 | — |
 | 按键设置 | `regionlanguage-chsime-wubi.9be757c1` | 操作 | 不适用 | — |
 
-
 <a id="category-gaming"></a>
 
 ## 游戏
@@ -3185,6 +4354,55 @@ Windows 参考入口：`ms-settings:gaming-trueplay`。
 | --- | --- | --- | --- | --- |
 | 功能状态 | `trueplay.540cc78d` | 信息展示 | 不适用 | — |
 
+### Hyprland · OpenGL 合成选项 — `hypr-opengl`
+
+合成器高级设置：opengl · Hyprland
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### OpenGL 合成选项
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| nvidia anti flicker · nvidia_anti_flicker | `hypr-opengl.nvidia-anti-flicker` | 开关 | 未实现 | — |
+
+### Hyprland · 渲染与色彩管线 — `hypr-render`
+
+合成器高级设置：render · Hyprland
+
+页面状态：**未实现**；条目：19；已实现 0 / 未实现 19 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 渲染与色彩管线
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| async commit · async_commit | `hypr-render.async-commit` | 开关 | 未实现 | — |
+| cm auto hdr · cm_auto_hdr | `hypr-render.cm-auto-hdr` | 滑块 | 未实现 | — |
+| 色彩管理开关 · cm_enabled | `hypr-render.cm-enabled` | 开关 | 未实现 | — |
+| cm sdr eotf · cm_sdr_eotf | `hypr-render.cm-sdr-eotf` | 文本输入 | 未实现 | — |
+| ctm animation · ctm_animation | `hypr-render.ctm-animation` | 滑块 | 未实现 | — |
+| commit timing enabled · commit_timing_enabled | `hypr-render.commit-timing-enabled` | 开关 | 未实现 | — |
+| 直接扫描输出策略 · direct_scanout | `hypr-render.direct-scanout` | 滑块 | 未实现 | — |
+| expand undersized textures · expand_undersized_textures | `hypr-render.expand-undersized-textures` | 开关 | 未实现 | — |
+| fp16 sdr tf · fp16_sdr_tf | `hypr-render.fp16-sdr-tf` | 滑块 | 未实现 | — |
+| icc vcgt enabled · icc_vcgt_enabled | `hypr-render.icc-vcgt-enabled` | 开关 | 未实现 | — |
+| keep unmodified copy · keep_unmodified_copy | `hypr-render.keep-unmodified-copy` | 滑块 | 未实现 | — |
+| 渲染调度策略 · new_render_scheduling | `hypr-render.new-render-scheduling` | 开关 | 未实现 | — |
+| not shown fifo lock · not_shown_fifo_lock | `hypr-render.not-shown-fifo-lock` | 滑块 | 未实现 | — |
+| non shader cm · non_shader_cm | `hypr-render.non-shader-cm` | 滑块 | 未实现 | — |
+| non shader cm interop · non_shader_cm_interop | `hypr-render.non-shader-cm-interop` | 滑块 | 未实现 | — |
+| send content type · send_content_type | `hypr-render.send-content-type` | 开关 | 未实现 | — |
+| use fp16 · use_fp16 | `hypr-render.use-fp16` | 滑块 | 未实现 | — |
+| use shader blur blend · use_shader_blur_blend | `hypr-render.use-shader-blur-blend` | 开关 | 未实现 | — |
+| xp mode · xp_mode | `hypr-render.xp-mode` | 开关 | 未实现 | — |
 
 <a id="category-accessibility"></a>
 
@@ -3738,7 +4956,6 @@ Windows 参考入口：`ms-settings:easeofaccess-hearingaids`。
 | 左耳音量 | `hearing.62883390` | 滑块 | 未实现 | — |
 | 右耳音量 | `hearing.d5119674` | 滑块 | 未实现 | — |
 | 麦克风环境音 | `hearing.c5d3fccf` | 开关 | 未实现 | — |
-
 
 <a id="category-privacy"></a>
 
@@ -4556,6 +5773,333 @@ Windows 参考入口：`ms-settings:privacy-voiceactivation`。
 | 应用访问记录 | `privacy-voiceactivation.bc0f5a5a` | 信息展示 | 未实现 | — |
 | 锁屏时允许语音激活 | `privacy-voiceactivation.0b683ed1` | 开关 | 未实现 | — |
 
+### Hyprland · 输入捕获边界 — `hypr-input-capture`
+
+合成器高级设置：input-capture · Hyprland
+
+页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 输入捕获边界
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| capture modifiers · capture_modifiers | `hypr-input-capture.capture-modifiers` | 开关 | 未实现 | — |
+| enforce barriers · enforce_barriers | `hypr-input-capture.enforce-barriers` | 开关 | 未实现 | — |
+
+### Hyprlock 锁屏 · 通用 — `hypr-lock-general`
+
+按官方文档分类的组件参数 · 可选组件 hyprlock
+
+页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
+
+#### 通用
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 隐藏光标 · hide_cursor | `hypr-lock-general.hide-cursor` | 开关 | 未实现 | — |
+| ignore empty input · ignore_empty_input | `hypr-lock-general.ignore-empty-input` | 开关 | 未实现 | — |
+| immediate render · immediate_render | `hypr-lock-general.immediate-render` | 开关 | 未实现 | — |
+| text trim · text_trim | `hypr-lock-general.text-trim` | 开关 | 未实现 | — |
+| fractional scaling · fractional_scaling | `hypr-lock-general.fractional-scaling` | 文本输入 | 未实现 | — |
+| screencopy mode · screencopy_mode | `hypr-lock-general.screencopy-mode` | 文本输入 | 未实现 | — |
+| fail timeout · fail_timeout | `hypr-lock-general.fail-timeout` | 文本输入 | 未实现 | — |
+
+### Hyprlock 锁屏 · 身份验证 — `hypr-lock-authentication`
+
+按官方文档分类的组件参数 · 可选组件 hyprlock
+
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
+
+#### 身份验证
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| pam:enabled · pam:enabled | `hypr-lock-authentication.pam-enabled` | 开关 | 未实现 | — |
+| pam:module · pam:module | `hypr-lock-authentication.pam-module` | 文本输入 | 未实现 | — |
+| fingerprint:enabled · fingerprint:enabled | `hypr-lock-authentication.fingerprint-enabled` | 开关 | 未实现 | — |
+| fingerprint:ready message · fingerprint:ready_message | `hypr-lock-authentication.fingerprint-ready-message` | 文本输入 | 未实现 | — |
+| fingerprint:present message · fingerprint:present_message | `hypr-lock-authentication.fingerprint-present-message` | 文本输入 | 未实现 | — |
+| fingerprint:retry delay · fingerprint:retry_delay | `hypr-lock-authentication.fingerprint-retry-delay` | 文本输入 | 未实现 | — |
+
+### Hyprlock 锁屏 · 动画 — `hypr-lock-animations`
+
+按官方文档分类的组件参数 · 可选组件 hyprlock
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
+
+#### 动画
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用 · enabled | `hypr-lock-animations.enabled` | 开关 | 未实现 | — |
+
+### Hyprlock 锁屏 · 阴影通用参数 — `hypr-lock-shadowable`
+
+按官方文档分类的组件参数 · 可选组件 hyprlock
+
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
+
+#### 阴影通用参数
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| shadow passes · shadow_passes | `hypr-lock-shadowable.shadow-passes` | 文本输入 | 未实现 | — |
+| shadow size · shadow_size | `hypr-lock-shadowable.shadow-size` | 文本输入 | 未实现 | — |
+| shadow color · shadow_color | `hypr-lock-shadowable.shadow-color` | 文本输入 | 未实现 | — |
+| shadow boost · shadow_boost | `hypr-lock-shadowable.shadow-boost` | 文本输入 | 未实现 | — |
+
+### Hyprlock 锁屏 · 点击操作 — `hypr-lock-clickable`
+
+按官方文档分类的组件参数 · 可选组件 hyprlock
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
+
+#### 点击操作
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| onclick · onclick | `hypr-lock-clickable.onclick` | 文本输入 | 未实现 | — |
+
+### Hyprlock 锁屏 · 背景 — `hypr-lock-background`
+
+按官方文档分类的组件参数 · 可选组件 hyprlock
+
+页面状态：**未实现**；条目：14；已实现 0 / 未实现 14 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
+
+#### 背景
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 显示器匹配 · monitor | `hypr-lock-background.monitor` | 文本输入 | 未实现 | — |
+| 资源路径 · path | `hypr-lock-background.path` | 文本输入 | 未实现 | — |
+| 颜色 · color | `hypr-lock-background.color` | 文本输入 | 未实现 | — |
+| 锁屏背景模糊次数 · blur_passes | `hypr-lock-background.blur-passes` | 文本输入 | 未实现 | — |
+| 锁屏背景模糊大小 · blur_size | `hypr-lock-background.blur-size` | 文本输入 | 未实现 | — |
+| 噪点强度 · noise | `hypr-lock-background.noise` | 文本输入 | 未实现 | — |
+| 对比度 · contrast | `hypr-lock-background.contrast` | 文本输入 | 未实现 | — |
+| 亮度调节 · brightness | `hypr-lock-background.brightness` | 文本输入 | 未实现 | — |
+| 模糊色彩饱和提升 · vibrancy | `hypr-lock-background.vibrancy` | 文本输入 | 未实现 | — |
+| 暗区饱和度影响 · vibrancy_darkness | `hypr-lock-background.vibrancy-darkness` | 文本输入 | 未实现 | — |
+| reload time · reload_time | `hypr-lock-background.reload-time` | 文本输入 | 未实现 | — |
+| reload cmd · reload_cmd | `hypr-lock-background.reload-cmd` | 文本输入 | 未实现 | — |
+| 背景切换时间 · crossfade_time | `hypr-lock-background.crossfade-time` | 文本输入 | 未实现 | — |
+| zindex · zindex | `hypr-lock-background.zindex` | 文本输入 | 未实现 | — |
+
+### Hyprlock 锁屏 · 图片 — `hypr-lock-image`
+
+按官方文档分类的组件参数 · 可选组件 hyprlock
+
+页面状态：**未实现**；条目：13；已实现 0 / 未实现 13 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
+
+#### 图片
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 显示器匹配 · monitor | `hypr-lock-image.monitor` | 文本输入 | 未实现 | — |
+| 资源路径 · path | `hypr-lock-image.path` | 文本输入 | 未实现 | — |
+| 窗口或控件尺寸 · size | `hypr-lock-image.size` | 文本输入 | 未实现 | — |
+| 圆角半径 · rounding | `hypr-lock-image.rounding` | 文本输入 | 未实现 | — |
+| 窗口边框宽度 · border_size | `hypr-lock-image.border-size` | 文本输入 | 未实现 | — |
+| 窗口边框渐变覆盖 · border_color | `hypr-lock-image.border-color` | 文本输入 | 未实现 | — |
+| rotate · rotate | `hypr-lock-image.rotate` | 文本输入 | 未实现 | — |
+| reload time · reload_time | `hypr-lock-image.reload-time` | 文本输入 | 未实现 | — |
+| reload cmd · reload_cmd | `hypr-lock-image.reload-cmd` | 文本输入 | 未实现 | — |
+| 虚拟桌面位置 · position | `hypr-lock-image.position` | 文本输入 | 未实现 | — |
+| 水平对齐 · halign | `hypr-lock-image.halign` | 文本输入 | 未实现 | — |
+| 垂直对齐 · valign | `hypr-lock-image.valign` | 文本输入 | 未实现 | — |
+| zindex · zindex | `hypr-lock-image.zindex` | 文本输入 | 未实现 | — |
+
+### Hyprlock 锁屏 · 形状 — `hypr-lock-shape`
+
+按官方文档分类的组件参数 · 可选组件 hyprlock
+
+页面状态：**未实现**；条目：12；已实现 0 / 未实现 12 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
+
+#### 形状
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 显示器匹配 · monitor | `hypr-lock-shape.monitor` | 文本输入 | 未实现 | — |
+| 窗口或控件尺寸 · size | `hypr-lock-shape.size` | 文本输入 | 未实现 | — |
+| 颜色 · color | `hypr-lock-shape.color` | 文本输入 | 未实现 | — |
+| 圆角半径 · rounding | `hypr-lock-shape.rounding` | 文本输入 | 未实现 | — |
+| rotate · rotate | `hypr-lock-shape.rotate` | 文本输入 | 未实现 | — |
+| 窗口边框宽度 · border_size | `hypr-lock-shape.border-size` | 文本输入 | 未实现 | — |
+| 窗口边框渐变覆盖 · border_color | `hypr-lock-shape.border-color` | 文本输入 | 未实现 | — |
+| 穿透效果 · xray | `hypr-lock-shape.xray` | 开关 | 未实现 | — |
+| 虚拟桌面位置 · position | `hypr-lock-shape.position` | 文本输入 | 未实现 | — |
+| 水平对齐 · halign | `hypr-lock-shape.halign` | 文本输入 | 未实现 | — |
+| 垂直对齐 · valign | `hypr-lock-shape.valign` | 文本输入 | 未实现 | — |
+| zindex · zindex | `hypr-lock-shape.zindex` | 文本输入 | 未实现 | — |
+
+### Hyprlock 锁屏 · 密码输入框 — `hypr-lock-input-field`
+
+按官方文档分类的组件参数 · 可选组件 hyprlock
+
+页面状态：**未实现**；条目：31；已实现 0 / 未实现 31 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
+
+#### 密码输入框
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 显示器匹配 · monitor | `hypr-lock-input-field.monitor` | 文本输入 | 未实现 | — |
+| 窗口或控件尺寸 · size | `hypr-lock-input-field.size` | 文本输入 | 未实现 | — |
+| outline thickness · outline_thickness | `hypr-lock-input-field.outline-thickness` | 文本输入 | 未实现 | — |
+| 密码点大小 · dots_size | `hypr-lock-input-field.dots-size` | 文本输入 | 未实现 | — |
+| 密码点间距 · dots_spacing | `hypr-lock-input-field.dots-spacing` | 文本输入 | 未实现 | — |
+| dots center · dots_center | `hypr-lock-input-field.dots-center` | 开关 | 未实现 | — |
+| dots rounding · dots_rounding | `hypr-lock-input-field.dots-rounding` | 文本输入 | 未实现 | — |
+| dots text format · dots_text_format | `hypr-lock-input-field.dots-text-format` | 文本输入 | 未实现 | — |
+| outer color · outer_color | `hypr-lock-input-field.outer-color` | 文本输入 | 未实现 | — |
+| inner color · inner_color | `hypr-lock-input-field.inner-color` | 文本输入 | 未实现 | — |
+| font color · font_color | `hypr-lock-input-field.font-color` | 文本输入 | 未实现 | — |
+| 字体家族 · font_family | `hypr-lock-input-field.font-family` | 文本输入 | 未实现 | — |
+| 空输入淡出 · fade_on_empty | `hypr-lock-input-field.fade-on-empty` | 开关 | 未实现 | — |
+| fade timeout · fade_timeout | `hypr-lock-input-field.fade-timeout` | 文本输入 | 未实现 | — |
+| 密码输入占位文字 · placeholder_text | `hypr-lock-input-field.placeholder-text` | 文本输入 | 未实现 | — |
+| 隐藏输入内容 · hide_input | `hypr-lock-input-field.hide-input` | 开关 | 未实现 | — |
+| hide input base color · hide_input_base_color | `hypr-lock-input-field.hide-input-base-color` | 文本输入 | 未实现 | — |
+| 圆角半径 · rounding | `hypr-lock-input-field.rounding` | 文本输入 | 未实现 | — |
+| check color · check_color | `hypr-lock-input-field.check-color` | 文本输入 | 未实现 | — |
+| check text · check_text | `hypr-lock-input-field.check-text` | 文本输入 | 未实现 | — |
+| fail color · fail_color | `hypr-lock-input-field.fail-color` | 文本输入 | 未实现 | — |
+| 验证失败文字 · fail_text | `hypr-lock-input-field.fail-text` | 文本输入 | 未实现 | — |
+| capslock color · capslock_color | `hypr-lock-input-field.capslock-color` | 文本输入 | 未实现 | — |
+| numlock color · numlock_color | `hypr-lock-input-field.numlock-color` | 文本输入 | 未实现 | — |
+| bothlock color · bothlock_color | `hypr-lock-input-field.bothlock-color` | 文本输入 | 未实现 | — |
+| invert numlock · invert_numlock | `hypr-lock-input-field.invert-numlock` | 开关 | 未实现 | — |
+| swap font color · swap_font_color | `hypr-lock-input-field.swap-font-color` | 开关 | 未实现 | — |
+| 虚拟桌面位置 · position | `hypr-lock-input-field.position` | 文本输入 | 未实现 | — |
+| 水平对齐 · halign | `hypr-lock-input-field.halign` | 文本输入 | 未实现 | — |
+| 垂直对齐 · valign | `hypr-lock-input-field.valign` | 文本输入 | 未实现 | — |
+| zindex · zindex | `hypr-lock-input-field.zindex` | 文本输入 | 未实现 | — |
+
+### Hyprlock 锁屏 · 文字标签 — `hypr-lock-label`
+
+按官方文档分类的组件参数 · 可选组件 hyprlock
+
+页面状态：**未实现**；条目：10；已实现 0 / 未实现 10 / 不适用 0。
+
+原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
+
+#### 文字标签
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 显示器匹配 · monitor | `hypr-lock-label.monitor` | 文本输入 | 未实现 | — |
+| 文字内容 · text | `hypr-lock-label.text` | 文本输入 | 未实现 | — |
+| text align · text_align | `hypr-lock-label.text-align` | 文本输入 | 未实现 | — |
+| 颜色 · color | `hypr-lock-label.color` | 文本输入 | 未实现 | — |
+| 字号 · font_size | `hypr-lock-label.font-size` | 文本输入 | 未实现 | — |
+| 字体家族 · font_family | `hypr-lock-label.font-family` | 文本输入 | 未实现 | — |
+| rotate · rotate | `hypr-lock-label.rotate` | 文本输入 | 未实现 | — |
+| 虚拟桌面位置 · position | `hypr-lock-label.position` | 文本输入 | 未实现 | — |
+| 水平对齐 · halign | `hypr-lock-label.halign` | 文本输入 | 未实现 | — |
+| 垂直对齐 · valign | `hypr-lock-label.valign` | 文本输入 | 未实现 | — |
+
+### 合成器权限规则 — `hypr-compositor-permissions`
+
+截图、插件、键盘、光标位置与输入捕获 · Hyprland
+
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+相关页面 ID：`hypr-desktop-portals`、`hypr-input-capture`。
+
+参考资料：[hypr-permissions](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/advanced-configuration/permissions.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用 Hyprland 权限检查 | `hypr-compositor-permissions.enforce` | 开关 | 未实现 | — |
+| 应用路径或设备匹配表达式 | `hypr-compositor-permissions.binary` | 文本输入 | 未实现 | — |
+| 权限类型 | `hypr-compositor-permissions.type` | 选择 | 未实现 | — |
+| 授权策略 | `hypr-compositor-permissions.policy` | 选择 | 未实现 | — |
+| 权限规则重启生效提示 | `hypr-compositor-permissions.restart` | 信息展示 | 未实现 | — |
+| 新增权限规则 | `hypr-compositor-permissions.add` | 操作 | 未实现 | — |
+
+### 桌面门户与屏幕共享 — `hypr-desktop-portals`
+
+窗口捕获、全局快捷键和文件选择提供者 · 可选组件 xdg-desktop-portal-hyprland 及文件选择门户
+
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+
+原因：尚未实现；可选组件 xdg-desktop-portal-hyprland 及文件选择门户 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-portal](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/xdg-desktop-portal-hyprland.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| XDPH 服务与提供者 | `hypr-desktop-portals.backend` | 信息展示 | 未实现 | — |
+| 屏幕和窗口共享选择器 | `hypr-desktop-portals.sharing` | 操作 | 未实现 | — |
+| 应用全局快捷键授权 | `hypr-desktop-portals.shortcuts` | 操作 | 未实现 | — |
+| 文件选择门户提供者 | `hypr-desktop-portals.picker` | 选择 | 未实现 | — |
+| 共享会话恢复令牌 | `hypr-desktop-portals.restore` | 开关 | 未实现 | — |
+| 门户服务诊断 | `hypr-desktop-portals.diagnostics` | 操作 | 未实现 | — |
+
+### 管理员授权代理 — `hypr-polkit-agent`
+
+授权对话框与会话代理状态 · 可选授权代理
+
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+
+原因：尚未实现；可选授权代理 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-polkit](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprpolkitagent.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 授权代理选择 | `hypr-polkit-agent.agent` | 选择 | 未实现 | — |
+| 登录时启动授权代理 | `hypr-polkit-agent.autostart` | 开关 | 未实现 | — |
+| 授权代理状态 | `hypr-polkit-agent.status` | 信息展示 | 未实现 | — |
 
 <a id="category-update"></a>
 
@@ -4765,3 +6309,926 @@ Windows 参考入口：`ms-settings:windowsinsider`、`ms-settings:windowsinside
 | 注册预览体验计划 | `insider.378311bc` | 操作 | 不适用 | — |
 | 预览频道 | `insider.a4eb980c` | 选择 | 不适用 | — |
 | 停止获取预览版本 | `insider.3a8e2507` | 开关 | 不适用 | — |
+
+<a id="category-hyprland"></a>
+
+## 窗口与工作区
+
+平铺布局、工作区、窗口组、规则与快捷键
+
+### Hyprland · 窗口平铺与边距 — `hypr-general`
+
+合成器高级设置：general · Hyprland
+
+页面状态：**未实现**；条目：14；已实现 0 / 未实现 14 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 窗口平铺与边距
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 允许画面撕裂 · allow_tearing | `hypr-general.allow-tearing` | 开关 | 未实现 | — |
+| 窗口边框宽度 · border_size | `hypr-general.border-size` | 滑块 | 未实现 | — |
+| 边框拖拽扩展范围 · extend_border_grab_area | `hypr-general.extend-border-grab-area` | 滑块 | 未实现 | — |
+| 浮动窗口边距 · float_gaps | `hypr-general.float-gaps` | 文本输入 | 未实现 | — |
+| 窗口内间距 · gaps_in | `hypr-general.gaps-in` | 文本输入 | 未实现 | — |
+| 屏幕外边距 · gaps_out | `hypr-general.gaps-out` | 文本输入 | 未实现 | — |
+| 工作区间距 · gaps_workspaces | `hypr-general.gaps-workspaces` | 滑块 | 未实现 | — |
+| 边框悬停调整光标 · hover_icon_on_border | `hypr-general.hover-icon-on-border` | 开关 | 未实现 | — |
+| 平铺布局 · layout | `hypr-general.layout` | 选择 | 未实现 | — |
+| 合成器界面语言 · locale | `hypr-general.locale` | 文本输入 | 未实现 | — |
+| 模态窗口阻止父窗口交互 · modal_parent_blocking | `hypr-general.modal-parent-blocking` | 开关 | 未实现 | — |
+| 禁用焦点回退 · no_focus_fallback | `hypr-general.no-focus-fallback` | 开关 | 未实现 | — |
+| 浮动调整大小的角落 · resize_corner | `hypr-general.resize-corner` | 滑块 | 未实现 | — |
+| 拖动边框调整大小 · resize_on_border | `hypr-general.resize-on-border` | 开关 | 未实现 | — |
+
+### Hyprland · 浮动窗口吸附 — `hypr-general-snap`
+
+合成器高级设置：general.snap · Hyprland
+
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 浮动窗口吸附
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用 · enabled | `hypr-general-snap.enabled` | 开关 | 未实现 | — |
+| 边框重叠贴靠 · border_overlap | `hypr-general-snap.border-overlap` | 开关 | 未实现 | — |
+| 贴靠时遵守边距 · respect_gaps | `hypr-general-snap.respect-gaps` | 开关 | 未实现 | — |
+| 显示器贴靠阈值 · monitor_gap | `hypr-general-snap.monitor-gap` | 滑块 | 未实现 | — |
+| 窗口贴靠阈值 · window_gap | `hypr-general-snap.window-gap` | 滑块 | 未实现 | — |
+
+### Hyprland · 窗口组行为 — `hypr-group`
+
+合成器高级设置：group · Hyprland
+
+页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 窗口组行为
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| auto group · auto_group | `hypr-group.auto-group` | 开关 | 未实现 | — |
+| drag into group · drag_into_group | `hypr-group.drag-into-group` | 滑块 | 未实现 | — |
+| focus removed window · focus_removed_window | `hypr-group.focus-removed-window` | 开关 | 未实现 | — |
+| group on movetoworkspace · group_on_movetoworkspace | `hypr-group.group-on-movetoworkspace` | 开关 | 未实现 | — |
+| insert after current · insert_after_current | `hypr-group.insert-after-current` | 开关 | 未实现 | — |
+| merge floated into tiled on groupbar · merge_floated_into_tiled_on_groupbar | `hypr-group.merge-floated-into-tiled-on-groupbar` | 开关 | 未实现 | — |
+| merge groups on drag · merge_groups_on_drag | `hypr-group.merge-groups-on-drag` | 开关 | 未实现 | — |
+| merge groups on groupbar · merge_groups_on_groupbar | `hypr-group.merge-groups-on-groupbar` | 开关 | 未实现 | — |
+
+### Hyprland · 窗口组标签栏 — `hypr-group-groupbar`
+
+合成器高级设置：group.groupbar · Hyprland
+
+页面状态：**未实现**；条目：31；已实现 0 / 未实现 31 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 窗口组标签栏
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用 · enabled | `hypr-group-groupbar.enabled` | 开关 | 未实现 | — |
+| 图层背景模糊 · blur | `hypr-group-groupbar.blur` | 开关 | 未实现 | — |
+| disable when only · disable_when_only | `hypr-group-groupbar.disable-when-only` | 开关 | 未实现 | — |
+| 字体家族 · font_family | `hypr-group-groupbar.font-family` | 文本输入 | 未实现 | — |
+| 字号 · font_size | `hypr-group-groupbar.font-size` | 滑块 | 未实现 | — |
+| font weight active · font_weight_active | `hypr-group-groupbar.font-weight-active` | 文本输入 | 未实现 | — |
+| font weight inactive · font_weight_inactive | `hypr-group-groupbar.font-weight-inactive` | 文本输入 | 未实现 | — |
+| 窗口内间距 · gaps_in | `hypr-group-groupbar.gaps-in` | 滑块 | 未实现 | — |
+| 屏幕外边距 · gaps_out | `hypr-group-groupbar.gaps-out` | 滑块 | 未实现 | — |
+| gradients · gradients | `hypr-group-groupbar.gradients` | 开关 | 未实现 | — |
+| gradient round only edges · gradient_round_only_edges | `hypr-group-groupbar.gradient-round-only-edges` | 开关 | 未实现 | — |
+| gradient rounding · gradient_rounding | `hypr-group-groupbar.gradient-rounding` | 滑块 | 未实现 | — |
+| gradient rounding power · gradient_rounding_power | `hypr-group-groupbar.gradient-rounding-power` | 滑块 | 未实现 | — |
+| height · height | `hypr-group-groupbar.height` | 滑块 | 未实现 | — |
+| indicator gap · indicator_gap | `hypr-group-groupbar.indicator-gap` | 滑块 | 未实现 | — |
+| indicator height · indicator_height | `hypr-group-groupbar.indicator-height` | 滑块 | 未实现 | — |
+| keep upper gap · keep_upper_gap | `hypr-group-groupbar.keep-upper-gap` | 开关 | 未实现 | — |
+| middle click close · middle_click_close | `hypr-group-groupbar.middle-click-close` | 开关 | 未实现 | — |
+| priority · priority | `hypr-group-groupbar.priority` | 滑块 | 未实现 | — |
+| render titles · render_titles | `hypr-group-groupbar.render-titles` | 开关 | 未实现 | — |
+| round only edges · round_only_edges | `hypr-group-groupbar.round-only-edges` | 开关 | 未实现 | — |
+| 圆角半径 · rounding | `hypr-group-groupbar.rounding` | 滑块 | 未实现 | — |
+| 圆角曲率 · rounding_power | `hypr-group-groupbar.rounding-power` | 滑块 | 未实现 | — |
+| scrolling · scrolling | `hypr-group-groupbar.scrolling` | 开关 | 未实现 | — |
+| stacked · stacked | `hypr-group-groupbar.stacked` | 开关 | 未实现 | — |
+| text color · text_color | `hypr-group-groupbar.text-color` | 颜色 | 未实现 | — |
+| text color inactive · text_color_inactive | `hypr-group-groupbar.text-color-inactive` | 文本输入 | 未实现 | — |
+| text color locked active · text_color_locked_active | `hypr-group-groupbar.text-color-locked-active` | 文本输入 | 未实现 | — |
+| text color locked inactive · text_color_locked_inactive | `hypr-group-groupbar.text-color-locked-inactive` | 文本输入 | 未实现 | — |
+| text offset · text_offset | `hypr-group-groupbar.text-offset` | 滑块 | 未实现 | — |
+| text padding · text_padding | `hypr-group-groupbar.text-padding` | 滑块 | 未实现 | — |
+
+### Hyprland · 布局全局策略 — `hypr-layout`
+
+合成器高级设置：layout · Hyprland
+
+页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 布局全局策略
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 单窗口宽高比 · single_window_aspect_ratio | `hypr-layout.single-window-aspect-ratio` | 文本输入 | 未实现 | — |
+| 单窗口宽高比容差 · single_window_aspect_ratio_tolerance | `hypr-layout.single-window-aspect-ratio-tolerance` | 滑块 | 未实现 | — |
+
+### Hyprland · 快捷键处理策略 — `hypr-binds`
+
+合成器高级设置：binds · Hyprland
+
+页面状态：**未实现**；条目：14；已实现 0 / 未实现 14 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 快捷键处理策略
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| allow pin fullscreen · allow_pin_fullscreen | `hypr-binds.allow-pin-fullscreen` | 开关 | 未实现 | — |
+| allow workspace cycles · allow_workspace_cycles | `hypr-binds.allow-workspace-cycles` | 开关 | 未实现 | — |
+| disable keybind grabbing · disable_keybind_grabbing | `hypr-binds.disable-keybind-grabbing` | 开关 | 未实现 | — |
+| drag threshold · drag_threshold | `hypr-binds.drag-threshold` | 文本输入 | 未实现 | — |
+| focus preferred method · focus_preferred_method | `hypr-binds.focus-preferred-method` | 滑块 | 未实现 | — |
+| hide special on workspace change · hide_special_on_workspace_change | `hypr-binds.hide-special-on-workspace-change` | 开关 | 未实现 | — |
+| ignore group lock · ignore_group_lock | `hypr-binds.ignore-group-lock` | 开关 | 未实现 | — |
+| movefocus cycles fullscreen · movefocus_cycles_fullscreen | `hypr-binds.movefocus-cycles-fullscreen` | 开关 | 未实现 | — |
+| movefocus cycles groupfirst · movefocus_cycles_groupfirst | `hypr-binds.movefocus-cycles-groupfirst` | 开关 | 未实现 | — |
+| pass mouse when bound · pass_mouse_when_bound | `hypr-binds.pass-mouse-when-bound` | 开关 | 未实现 | — |
+| scroll event delay · scroll_event_delay | `hypr-binds.scroll-event-delay` | 滑块 | 未实现 | — |
+| window direction monitor fallback · window_direction_monitor_fallback | `hypr-binds.window-direction-monitor-fallback` | 开关 | 未实现 | — |
+| workspace back and forth · workspace_back_and_forth | `hypr-binds.workspace-back-and-forth` | 滑块 | 未实现 | — |
+| workspace center on · workspace_center_on | `hypr-binds.workspace-center-on` | 滑块 | 未实现 | — |
+
+### Dwindle 布局 — `hypr-layout-dwindle`
+
+布局参数与按工作区覆盖 · Hyprland
+
+页面状态：**未实现**；条目：11；已实现 0 / 未实现 11 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-dwindle](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/layouts/dwindle-layout.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### dwindle
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 强制分割方向 · force_split | `hypr-layout-dwindle.force-split` | 滑块 | 未实现 | — |
+| 保留分割方向 · preserve_split | `hypr-layout-dwindle.preserve-split` | 开关 | 未实现 | — |
+| 智能分割 · smart_split | `hypr-layout-dwindle.smart-split` | 开关 | 未实现 | — |
+| 智能窗口缩放 · smart_resizing | `hypr-layout-dwindle.smart-resizing` | 开关 | 未实现 | — |
+| 持续覆盖分割方向 · permanent_direction_override | `hypr-layout-dwindle.permanent-direction-override` | 开关 | 未实现 | — |
+| 特殊工作区缩放 · special_scale_factor | `hypr-layout-dwindle.special-scale-factor` | 滑块 | 未实现 | — |
+| split width multiplier · split_width_multiplier | `hypr-layout-dwindle.split-width-multiplier` | 滑块 | 未实现 | — |
+| 使用活动窗口决定分割 · use_active_for_splits | `hypr-layout-dwindle.use-active-for-splits` | 开关 | 未实现 | — |
+| 默认分割比例 · default_split_ratio | `hypr-layout-dwindle.default-split-ratio` | 滑块 | 未实现 | — |
+| split bias · split_bias | `hypr-layout-dwindle.split-bias` | 滑块 | 未实现 | — |
+| precise mouse move · precise_mouse_move | `hypr-layout-dwindle.precise-mouse-move` | 开关 | 未实现 | — |
+
+### Master 布局 — `hypr-layout-master`
+
+布局参数与按工作区覆盖 · Hyprland
+
+页面状态：**未实现**；条目：13；已实现 0 / 未实现 13 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-master](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/layouts/master-layout.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### master
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 允许较小主区域 · allow_small_split | `hypr-layout-master.allow-small-split` | 开关 | 未实现 | — |
+| 特殊工作区缩放 · special_scale_factor | `hypr-layout-master.special-scale-factor` | 滑块 | 未实现 | — |
+| 主区域比例 · mfact | `hypr-layout-master.mfact` | 滑块 | 未实现 | — |
+| 新窗口主从策略 · new_status | `hypr-layout-master.new-status` | 文本输入 | 未实现 | — |
+| 新窗口置顶 · new_on_top | `hypr-layout-master.new-on-top` | 开关 | 未实现 | — |
+| 新窗口跟随活动窗口 · new_on_active | `hypr-layout-master.new-on-active` | 文本输入 | 未实现 | — |
+| 主区域方向 · orientation | `hypr-layout-master.orientation` | 选择 | 未实现 | — |
+| slave count for center master · slave_count_for_center_master | `hypr-layout-master.slave-count-for-center-master` | 滑块 | 未实现 | — |
+| center master fallback · center_master_fallback | `hypr-layout-master.center-master-fallback` | 文本输入 | 未实现 | — |
+| 智能窗口缩放 · smart_resizing | `hypr-layout-master.smart-resizing` | 开关 | 未实现 | — |
+| drop at cursor · drop_at_cursor | `hypr-layout-master.drop-at-cursor` | 开关 | 未实现 | — |
+| 保持主窗口位置 · always_keep_position | `hypr-layout-master.always-keep-position` | 开关 | 未实现 | — |
+| 关闭窗口后聚焦主窗口 · focus_master_on_close | `hypr-layout-master.focus-master-on-close` | 开关 | 未实现 | — |
+
+### Master 布局工作区参数 — `hypr-layout-master-workspace`
+
+布局参数与按工作区覆盖 · Hyprland
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-master](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/layouts/master-layout.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 工作区覆盖
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| orientation = [o] · orientation = [o] | `hypr-layout-master-workspace.orientation-o` | 文本输入 | 未实现 | — |
+
+### Scrolling 布局 — `hypr-layout-scrolling`
+
+布局参数与按工作区覆盖 · Hyprland
+
+页面状态：**未实现**；条目：9；已实现 0 / 未实现 9 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-scrolling](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/layouts/scrolling-layout.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### scrolling
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 单列全屏策略 · fullscreen_on_one_column | `hypr-layout-scrolling.fullscreen-on-one-column` | 开关 | 未实现 | — |
+| 列宽 · column_width | `hypr-layout-scrolling.column-width` | 滑块 | 未实现 | — |
+| 列焦点适配方式 · focus_fit_method | `hypr-layout-scrolling.focus-fit-method` | 滑块 | 未实现 | — |
+| follow focus · follow_focus | `hypr-layout-scrolling.follow-focus` | 开关 | 未实现 | — |
+| follow min visible · follow_min_visible | `hypr-layout-scrolling.follow-min-visible` | 滑块 | 未实现 | — |
+| explicit column widths · explicit_column_widths | `hypr-layout-scrolling.explicit-column-widths` | 文本输入 | 未实现 | — |
+| wrap focus · wrap_focus | `hypr-layout-scrolling.wrap-focus` | 开关 | 未实现 | — |
+| wrap swapcol · wrap_swapcol | `hypr-layout-scrolling.wrap-swapcol` | 开关 | 未实现 | — |
+| 手势方向 · direction | `hypr-layout-scrolling.direction` | 文本输入 | 未实现 | — |
+
+### Scrolling 布局工作区参数 — `hypr-layout-scrolling-workspace`
+
+布局参数与按工作区覆盖 · Hyprland
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-scrolling](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/layouts/scrolling-layout.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 工作区覆盖
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 手势方向 · direction | `hypr-layout-scrolling-workspace.direction` | 文本输入 | 未实现 | — |
+
+### 工作区规则 · 规则参数 — `hypr-workspace-rule-rules`
+
+按官方文档分类的组件参数 · Hyprland
+
+页面状态：**未实现**；条目：15；已实现 0 / 未实现 15 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-workspace-rules](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/rules/workspace-rules.md)。
+
+#### 规则参数
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 动画样式 · animation | `hypr-workspace-rule-rules.animation` | 文本输入 | 未实现 | — |
+| 窗口边框宽度 · border_size | `hypr-workspace-rule-rules.border-size` | 文本输入 | 未实现 | — |
+| 绘制窗口装饰 · decorate | `hypr-workspace-rule-rules.decorate` | 开关 | 未实现 | — |
+| 默认工作区名称 · default_name | `hypr-workspace-rule-rules.default-name` | 文本输入 | 未实现 | — |
+| 浮动窗口边距 · float_gaps | `hypr-workspace-rule-rules.float-gaps` | 文本输入 | 未实现 | — |
+| 窗口内间距 · gaps_in | `hypr-workspace-rule-rules.gaps-in` | 文本输入 | 未实现 | — |
+| 屏幕外边距 · gaps_out | `hypr-workspace-rule-rules.gaps-out` | 文本输入 | 未实现 | — |
+| 平铺布局 · layout | `hypr-workspace-rule-rules.layout` | 文本输入 | 未实现 | — |
+| 工作区布局参数 · layout_opts | `hypr-workspace-rule-rules.layout-opts` | 文本输入 | 未实现 | — |
+| 显示器匹配 · monitor | `hypr-workspace-rule-rules.monitor` | 文本输入 | 未实现 | — |
+| 默认工作区 · default | `hypr-workspace-rule-rules.default` | 开关 | 未实现 | — |
+| 禁用边框 · no_border | `hypr-workspace-rule-rules.no-border` | 开关 | 未实现 | — |
+| 禁用圆角 · no_rounding | `hypr-workspace-rule-rules.no-rounding` | 开关 | 未实现 | — |
+| 禁用阴影 · no_shadow | `hypr-workspace-rule-rules.no-shadow` | 开关 | 未实现 | — |
+| 保持空工作区 · persistent | `hypr-workspace-rule-rules.persistent` | 开关 | 未实现 | — |
+
+### 窗口规则 · 匹配条件 — `hypr-window-rule-props`
+
+按官方文档分类的组件参数 · Hyprland
+
+页面状态：**未实现**；条目：17；已实现 0 / 未实现 17 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-window-rules](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/rules/window-rules.md)。
+
+#### 匹配条件
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 窗口应用类匹配 · class | `hypr-window-rule-props.class` | 文本输入 | 未实现 | — |
+| 内容类型 · content | `hypr-window-rule-props.content` | 文本输入 | 未实现 | — |
+| 焦点状态匹配 · focus | `hypr-window-rule-props.focus` | 开关 | 未实现 | — |
+| 全屏 · fullscreen | `hypr-window-rule-props.fullscreen` | 开关 | 未实现 | — |
+| 客户端全屏状态 · fullscreen_state_client | `hypr-window-rule-props.fullscreen-state-client` | 文本输入 | 未实现 | — |
+| 合成器全屏状态 · fullscreen_state_internal | `hypr-window-rule-props.fullscreen-state-internal` | 文本输入 | 未实现 | — |
+| 浮动窗口 · float | `hypr-window-rule-props.float` | 开关 | 未实现 | — |
+| 窗口分组 · group | `hypr-window-rule-props.group` | 开关 | 未实现 | — |
+| 初始应用类匹配 · initial_class | `hypr-window-rule-props.initial-class` | 文本输入 | 未实现 | — |
+| 初始窗口标题匹配 · initial_title | `hypr-window-rule-props.initial-title` | 文本输入 | 未实现 | — |
+| 模态窗口匹配 · modal | `hypr-window-rule-props.modal` | 开关 | 未实现 | — |
+| 跨工作区固定 · pin | `hypr-window-rule-props.pin` | 开关 | 未实现 | — |
+| 窗口标签 · tag | `hypr-window-rule-props.tag` | 文本输入 | 未实现 | — |
+| 窗口标题匹配 · title | `hypr-window-rule-props.title` | 文本输入 | 未实现 | — |
+| 工作区选择器 · workspace | `hypr-window-rule-props.workspace` | 文本输入 | 未实现 | — |
+| XDG 窗口标签 · xdg_tag | `hypr-window-rule-props.xdg-tag` | 文本输入 | 未实现 | — |
+| XWayland 窗口匹配 · xwayland | `hypr-window-rule-props.xwayland` | 开关 | 未实现 | — |
+
+### 窗口规则 · 静态效果 — `hypr-window-rule-static-effects`
+
+按官方文档分类的组件参数 · Hyprland
+
+页面状态：**未实现**；条目：18；已实现 0 / 未实现 18 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-window-rules](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/rules/window-rules.md)。
+
+#### 静态效果
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 浮动窗口居中 · center | `hypr-window-rule-static-effects.center` | 开关 | 未实现 | — |
+| 内容类型 · content | `hypr-window-rule-static-effects.content` | 文本输入 | 未实现 | — |
+| 浮动窗口 · float | `hypr-window-rule-static-effects.float` | 开关 | 未实现 | — |
+| 全屏 · fullscreen | `hypr-window-rule-static-effects.fullscreen` | 开关 | 未实现 | — |
+| fullscreen state · fullscreen_state | `hypr-window-rule-static-effects.fullscreen-state` | 文本输入 | 未实现 | — |
+| 窗口分组 · group | `hypr-window-rule-static-effects.group` | 文本输入 | 未实现 | — |
+| 最大化 · maximize | `hypr-window-rule-static-effects.maximize` | 开关 | 未实现 | — |
+| 显示器匹配 · monitor | `hypr-window-rule-static-effects.monitor` | 文本输入 | 未实现 | — |
+| 浮动窗口坐标 · move | `hypr-window-rule-static-effects.move` | 文本输入 | 未实现 | — |
+| no close for · no_close_for | `hypr-window-rule-static-effects.no-close-for` | 文本输入 | 未实现 | — |
+| 禁止初始聚焦 · no_initial_focus | `hypr-window-rule-static-effects.no-initial-focus` | 开关 | 未实现 | — |
+| 跨工作区固定 · pin | `hypr-window-rule-static-effects.pin` | 开关 | 未实现 | — |
+| 伪平铺模式 · pseudo | `hypr-window-rule-static-effects.pseudo` | 开关 | 未实现 | — |
+| scrolling width · scrolling_width | `hypr-window-rule-static-effects.scrolling-width` | 文本输入 | 未实现 | — |
+| 窗口或控件尺寸 · size | `hypr-window-rule-static-effects.size` | 文本输入 | 未实现 | — |
+| 抑制窗口事件 · suppress_event | `hypr-window-rule-static-effects.suppress-event` | 文本输入 | 未实现 | — |
+| 强制平铺 · tile | `hypr-window-rule-static-effects.tile` | 开关 | 未实现 | — |
+| 工作区选择器 · workspace | `hypr-window-rule-static-effects.workspace` | 文本输入 | 未实现 | — |
+
+### 窗口规则 · 动态效果 — `hypr-window-rule-dynamic-effects`
+
+按官方文档分类的组件参数 · Hyprland
+
+页面状态：**未实现**；条目：42；已实现 0 / 未实现 42 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-window-rules](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/rules/window-rules.md)。
+
+#### 动态效果
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| allows input · allows_input | `hypr-window-rule-dynamic-effects.allows-input` | 开关 | 未实现 | — |
+| 动画样式 · animation | `hypr-window-rule-dynamic-effects.animation` | 文本输入 | 未实现 | — |
+| 窗口边框渐变覆盖 · border_color | `hypr-window-rule-dynamic-effects.border-color` | 文本输入 | 未实现 | — |
+| 窗口边框宽度 · border_size | `hypr-window-rule-dynamic-effects.border-size` | 文本输入 | 未实现 | — |
+| 限制指针到窗口 · confine_pointer | `hypr-window-rule-dynamic-effects.confine-pointer` | 开关 | 未实现 | — |
+| 周围区域变暗程度 · dim_around | `hypr-window-rule-dynamic-effects.dim-around` | 开关 | 未实现 | — |
+| 绘制窗口装饰 · decorate | `hypr-window-rule-dynamic-effects.decorate` | 开关 | 未实现 | — |
+| 应用激活时聚焦 · focus_on_activate | `hypr-window-rule-dynamic-effects.focus-on-activate` | 开关 | 未实现 | — |
+| 阻止空闲模式 · idle_inhibit | `hypr-window-rule-dynamic-effects.idle-inhibit` | 文本输入 | 未实现 | — |
+| 立即呈现允许撕裂 · immediate | `hypr-window-rule-dynamic-effects.immediate` | 开关 | 未实现 | — |
+| 调整时保持宽高比 · keep_aspect_ratio | `hypr-window-rule-dynamic-effects.keep-aspect-ratio` | 开关 | 未实现 | — |
+| 最大窗口尺寸 · max_size | `hypr-window-rule-dynamic-effects.max-size` | 文本输入 | 未实现 | — |
+| 最小窗口尺寸 · min_size | `hypr-window-rule-dynamic-effects.min-size` | 文本输入 | 未实现 | — |
+| nearest neighbor · nearest_neighbor | `hypr-window-rule-dynamic-effects.nearest-neighbor` | 开关 | 未实现 | — |
+| 禁用动画 · no_anim | `hypr-window-rule-dynamic-effects.no-anim` | 开关 | 未实现 | — |
+| no auto hdr · no_auto_hdr | `hypr-window-rule-dynamic-effects.no-auto-hdr` | 开关 | 未实现 | — |
+| no blur · no_blur | `hypr-window-rule-dynamic-effects.no-blur` | 开关 | 未实现 | — |
+| no dim · no_dim | `hypr-window-rule-dynamic-effects.no-dim` | 开关 | 未实现 | — |
+| no focus · no_focus | `hypr-window-rule-dynamic-effects.no-focus` | 开关 | 未实现 | — |
+| no follow mouse · no_follow_mouse | `hypr-window-rule-dynamic-effects.no-follow-mouse` | 开关 | 未实现 | — |
+| no glow · no_glow | `hypr-window-rule-dynamic-effects.no-glow` | 开关 | 未实现 | — |
+| no max size · no_max_size | `hypr-window-rule-dynamic-effects.no-max-size` | 开关 | 未实现 | — |
+| 禁止屏幕共享捕获 · no_screen_share | `hypr-window-rule-dynamic-effects.no-screen-share` | 开关 | 未实现 | — |
+| 禁用阴影 · no_shadow | `hypr-window-rule-dynamic-effects.no-shadow` | 开关 | 未实现 | — |
+| no shortcuts inhibit · no_shortcuts_inhibit | `hypr-window-rule-dynamic-effects.no-shortcuts-inhibit` | 开关 | 未实现 | — |
+| no vrr · no_vrr | `hypr-window-rule-dynamic-effects.no-vrr` | 开关 | 未实现 | — |
+| no wobble · no_wobble | `hypr-window-rule-dynamic-effects.no-wobble` | 开关 | 未实现 | — |
+| no xdg drags · no_xdg_drags | `hypr-window-rule-dynamic-effects.no-xdg-drags` | 开关 | 未实现 | — |
+| 透明度覆盖 · opacity | `hypr-window-rule-dynamic-effects.opacity` | 文本输入 | 未实现 | — |
+| opaque · opaque | `hypr-window-rule-dynamic-effects.opaque` | 开关 | 未实现 | — |
+| force rgbx · force_rgbx | `hypr-window-rule-dynamic-effects.force-rgbx` | 开关 | 未实现 | — |
+| persistent size · persistent_size | `hypr-window-rule-dynamic-effects.persistent-size` | 开关 | 未实现 | — |
+| render unfocused · render_unfocused | `hypr-window-rule-dynamic-effects.render-unfocused` | 开关 | 未实现 | — |
+| 圆角半径 · rounding | `hypr-window-rule-dynamic-effects.rounding` | 文本输入 | 未实现 | — |
+| 圆角曲率 · rounding_power | `hypr-window-rule-dynamic-effects.rounding-power` | 文本输入 | 未实现 | — |
+| scroll mouse · scroll_mouse | `hypr-window-rule-dynamic-effects.scroll-mouse` | 文本输入 | 未实现 | — |
+| scroll touchpad · scroll_touchpad | `hypr-window-rule-dynamic-effects.scroll-touchpad` | 文本输入 | 未实现 | — |
+| stay focused · stay_focused | `hypr-window-rule-dynamic-effects.stay-focused` | 开关 | 未实现 | — |
+| sync fullscreen · sync_fullscreen | `hypr-window-rule-dynamic-effects.sync-fullscreen` | 开关 | 未实现 | — |
+| 窗口标签 · tag | `hypr-window-rule-dynamic-effects.tag` | 文本输入 | 未实现 | — |
+| tonemap · tonemap | `hypr-window-rule-dynamic-effects.tonemap` | 文本输入 | 未实现 | — |
+| 穿透效果 · xray | `hypr-window-rule-dynamic-effects.xray` | 开关 | 未实现 | — |
+
+### 图层规则 · 匹配条件 — `hypr-layer-rule-props`
+
+按官方文档分类的组件参数 · Hyprland
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-layer-rules](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/rules/layer-rules.md)。
+
+#### 匹配条件
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 图层命名空间匹配 · namespace | `hypr-layer-rule-props.namespace` | 文本输入 | 未实现 | — |
+
+### 图层规则 · 图层效果 — `hypr-layer-rule-effects`
+
+按官方文档分类的组件参数 · Hyprland
+
+页面状态：**未实现**；条目：10；已实现 0 / 未实现 10 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-layer-rules](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/rules/layer-rules.md)。
+
+#### 图层效果
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 锁屏上层显示模式 · above_lock | `hypr-layer-rule-effects.above-lock` | 文本输入 | 未实现 | — |
+| 动画样式 · animation | `hypr-layer-rule-effects.animation` | 文本输入 | 未实现 | — |
+| 图层背景模糊 · blur | `hypr-layer-rule-effects.blur` | 开关 | 未实现 | — |
+| 图层弹窗模糊 · blur_popups | `hypr-layer-rule-effects.blur-popups` | 开关 | 未实现 | — |
+| 周围区域变暗程度 · dim_around | `hypr-layer-rule-effects.dim-around` | 开关 | 未实现 | — |
+| 模糊透明度阈值 · ignore_alpha | `hypr-layer-rule-effects.ignore-alpha` | 滑块 | 未实现 | — |
+| 禁用动画 · no_anim | `hypr-layer-rule-effects.no-anim` | 开关 | 未实现 | — |
+| 禁止屏幕共享捕获 · no_screen_share | `hypr-layer-rule-effects.no-screen-share` | 开关 | 未实现 | — |
+| 空间保留优先级 · order | `hypr-layer-rule-effects.order` | 文本输入 | 未实现 | — |
+| 穿透效果 · xray | `hypr-layer-rule-effects.xray` | 开关 | 未实现 | — |
+
+### 平铺布局与布局操作 — `hypr-layout-overview`
+
+布局选择与按工作区切换 · Hyprland
+
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+相关页面 ID：`hypr-layout-dwindle`、`hypr-layout-master`、`hypr-layout-scrolling`、`hypr-layout-monocle`、`hypr-workspaces`。
+
+参考资料：[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 默认平铺布局 | `hypr-layout-overview.engine` | 选择 | 未实现 | — |
+| 指定工作区布局 | `hypr-layout-overview.workspace-layout` | 文本输入 | 未实现 | — |
+| 切换分割方向 | `hypr-layout-overview.split` | 操作 | 未实现 | — |
+| 交换窗口位置 | `hypr-layout-overview.swap` | 操作 | 未实现 | — |
+| 按布局调整窗口尺寸 | `hypr-layout-overview.resize` | 操作 | 未实现 | — |
+| 窗口伪平铺 | `hypr-layout-overview.pseudotile` | 开关 | 未实现 | — |
+
+### Monocle 单窗口布局 — `hypr-layout-monocle`
+
+窗口轮换与布局全屏 · Hyprland
+
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-monocle](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/layouts/monocle-layout.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 下一个窗口 | `hypr-layout-monocle.next` | 操作 | 未实现 | — |
+| 上一个窗口 | `hypr-layout-monocle.previous` | 操作 | 未实现 | — |
+| 单窗口占满工作区 | `hypr-layout-monocle.maximize` | 操作 | 未实现 | — |
+
+### 工作区与特殊工作区 — `hypr-workspaces`
+
+命名、显示器绑定、持久化与暂存区 · Hyprland
+
+页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+相关页面 ID：`hypr-workspace-rule-rules`。
+
+参考资料：[hypr-workspace-rules](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/rules/workspace-rules.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 工作区编号或名称 | `hypr-workspaces.selector` | 文本输入 | 未实现 | — |
+| 特殊工作区名称 | `hypr-workspaces.special` | 文本输入 | 未实现 | — |
+| 绑定显示器 | `hypr-workspaces.monitor` | 文本输入 | 未实现 | — |
+| 保留空工作区 | `hypr-workspaces.persistent` | 开关 | 未实现 | — |
+| 显示器默认工作区 | `hypr-workspaces.default` | 开关 | 未实现 | — |
+| 移动窗口到工作区 | `hypr-workspaces.move-window` | 操作 | 未实现 | — |
+| 显示或隐藏特殊工作区 | `hypr-workspaces.toggle-special` | 操作 | 未实现 | — |
+| 编辑工作区规则 | `hypr-workspaces.rules` | 操作 | 未实现 | — |
+
+### 键盘与鼠标快捷键 — `hypr-keybinds`
+
+修饰键、按键代码、动作和条件 · Hyprland
+
+页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+相关页面 ID：`hypr-bind-flags`、`hypr-keybind-submaps`、`hypr-device-bindings`。
+
+参考资料：[hypr-binds](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/_index.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 修饰键组合 | `hypr-keybinds.modifiers` | 文本输入 | 未实现 | — |
+| 按键符号或 keycode | `hypr-keybinds.key` | 文本输入 | 未实现 | — |
+| 窗口或应用动作 | `hypr-keybinds.dispatcher` | 文本输入 | 未实现 | — |
+| 动作参数 | `hypr-keybinds.arguments` | 文本输入 | 未实现 | — |
+| 快捷键说明 | `hypr-keybinds.description` | 文本输入 | 未实现 | — |
+| 新增绑定 | `hypr-keybinds.add` | 操作 | 未实现 | — |
+| 检查绑定冲突 | `hypr-keybinds.conflicts` | 操作 | 未实现 | — |
+| 快捷键速查表 | `hypr-keybinds.cheatsheet` | 操作 | 未实现 | — |
+
+### 快捷键触发条件 — `hypr-bind-flags`
+
+锁屏、释放、长按、重复与设备限定 · Hyprland
+
+页面状态：**未实现**；条目：16；已实现 0 / 未实现 16 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-bind-flags](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/flags.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| locked · locked | `hypr-bind-flags.locked` | 开关 | 未实现 | — |
+| release · release | `hypr-bind-flags.release` | 开关 | 未实现 | — |
+| click · click | `hypr-bind-flags.click` | 开关 | 未实现 | — |
+| drag · drag | `hypr-bind-flags.drag` | 开关 | 未实现 | — |
+| long press · long_press | `hypr-bind-flags.long-press` | 开关 | 未实现 | — |
+| repeating · repeating | `hypr-bind-flags.repeating` | 开关 | 未实现 | — |
+| non consuming · non_consuming | `hypr-bind-flags.non-consuming` | 开关 | 未实现 | — |
+| auto consuming · auto_consuming | `hypr-bind-flags.auto-consuming` | 开关 | 未实现 | — |
+| mouse · mouse | `hypr-bind-flags.mouse` | 开关 | 未实现 | — |
+| transparent · transparent | `hypr-bind-flags.transparent` | 开关 | 未实现 | — |
+| ignore mods · ignore_mods | `hypr-bind-flags.ignore-mods` | 开关 | 未实现 | — |
+| description · description | `hypr-bind-flags.description` | 开关 | 未实现 | — |
+| dont inhibit · dont_inhibit | `hypr-bind-flags.dont-inhibit` | 开关 | 未实现 | — |
+| submap universal · submap_universal | `hypr-bind-flags.submap-universal` | 开关 | 未实现 | — |
+| device · device | `hypr-bind-flags.device` | 开关 | 未实现 | — |
+| allow input capture · allow_input_capture | `hypr-bind-flags.allow-input-capture` | 开关 | 未实现 | — |
+
+### 快捷键子映射 — `hypr-keybind-submaps`
+
+模式切换与分层快捷键 · Hyprland
+
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-submaps](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/submaps.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 子映射名称 | `hypr-keybind-submaps.name` | 文本输入 | 未实现 | — |
+| 进入子映射的绑定 | `hypr-keybind-submaps.enter` | 文本输入 | 未实现 | — |
+| 退出子映射的绑定 | `hypr-keybind-submaps.exit` | 文本输入 | 未实现 | — |
+| 返回默认映射 | `hypr-keybind-submaps.reset` | 操作 | 未实现 | — |
+| 子映射内绑定 | `hypr-keybind-submaps.bindings` | 操作 | 未实现 | — |
+
+<a id="category-session"></a>
+
+## 会话与配置
+
+Hyprland 会话、配置文件、启动与诊断
+
+### Hyprland · 合成器行为与启动外观 — `hypr-misc`
+
+合成器高级设置：misc · Hyprland
+
+页面状态：**未实现**；条目：42；已实现 0 / 未实现 42 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 合成器行为与启动外观
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| allow session lock restore · allow_session_lock_restore | `hypr-misc.allow-session-lock-restore` | 开关 | 未实现 | — |
+| always follow on dnd · always_follow_on_dnd | `hypr-misc.always-follow-on-dnd` | 开关 | 未实现 | — |
+| animate manual resizes · animate_manual_resizes | `hypr-misc.animate-manual-resizes` | 开关 | 未实现 | — |
+| animate mouse windowdragging · animate_mouse_windowdragging | `hypr-misc.animate-mouse-windowdragging` | 开关 | 未实现 | — |
+| anr missed pings · anr_missed_pings | `hypr-misc.anr-missed-pings` | 滑块 | 未实现 | — |
+| background color · background_color | `hypr-misc.background-color` | 文本输入 | 未实现 | — |
+| bell sound · bell_sound | `hypr-misc.bell-sound` | 文本输入 | 未实现 | — |
+| close special on empty · close_special_on_empty | `hypr-misc.close-special-on-empty` | 开关 | 未实现 | — |
+| disable autoreload · disable_autoreload | `hypr-misc.disable-autoreload` | 开关 | 未实现 | — |
+| disable hyprland guiutils check · disable_hyprland_guiutils_check | `hypr-misc.disable-hyprland-guiutils-check` | 开关 | 未实现 | — |
+| disable hyprland logo · disable_hyprland_logo | `hypr-misc.disable-hyprland-logo` | 开关 | 未实现 | — |
+| disable scale notification · disable_scale_notification | `hypr-misc.disable-scale-notification` | 开关 | 未实现 | — |
+| disable splash rendering · disable_splash_rendering | `hypr-misc.disable-splash-rendering` | 开关 | 未实现 | — |
+| disable watchdog warning · disable_watchdog_warning | `hypr-misc.disable-watchdog-warning` | 开关 | 未实现 | — |
+| disable xdg env checks · disable_xdg_env_checks | `hypr-misc.disable-xdg-env-checks` | 开关 | 未实现 | — |
+| enable anr dialog · enable_anr_dialog | `hypr-misc.enable-anr-dialog` | 开关 | 未实现 | — |
+| enable swallow · enable_swallow | `hypr-misc.enable-swallow` | 开关 | 未实现 | — |
+| exit window retains fullscreen · exit_window_retains_fullscreen | `hypr-misc.exit-window-retains-fullscreen` | 滑块 | 未实现 | — |
+| float force onscreen · float_force_onscreen | `hypr-misc.float-force-onscreen` | 滑块 | 未实现 | — |
+| new float force onscreen · new_float_force_onscreen | `hypr-misc.new-float-force-onscreen` | 滑块 | 未实现 | — |
+| 应用激活时聚焦 · focus_on_activate | `hypr-misc.focus-on-activate` | 开关 | 未实现 | — |
+| 字体家族 · font_family | `hypr-misc.font-family` | 文本输入 | 未实现 | — |
+| force default wallpaper · force_default_wallpaper | `hypr-misc.force-default-wallpaper` | 滑块 | 未实现 | — |
+| initial workspace token timeout · initial_workspace_token_timeout | `hypr-misc.initial-workspace-token-timeout` | 滑块 | 未实现 | — |
+| initial workspace tracking · initial_workspace_tracking | `hypr-misc.initial-workspace-tracking` | 文本输入 | 未实现 | — |
+| key press enables dpms · key_press_enables_dpms | `hypr-misc.key-press-enables-dpms` | 开关 | 未实现 | — |
+| layers hog keyboard focus · layers_hog_keyboard_focus | `hypr-misc.layers-hog-keyboard-focus` | 开关 | 未实现 | — |
+| lockdead screen delay · lockdead_screen_delay | `hypr-misc.lockdead-screen-delay` | 滑块 | 未实现 | — |
+| middle click paste · middle_click_paste | `hypr-misc.middle-click-paste` | 开关 | 未实现 | — |
+| mouse move enables dpms · mouse_move_enables_dpms | `hypr-misc.mouse-move-enables-dpms` | 开关 | 未实现 | — |
+| mouse move focuses monitor · mouse_move_focuses_monitor | `hypr-misc.mouse-move-focuses-monitor` | 开关 | 未实现 | — |
+| name vk after proc · name_vk_after_proc | `hypr-misc.name-vk-after-proc` | 开关 | 未实现 | — |
+| on focus under fullscreen · on_focus_under_fullscreen | `hypr-misc.on-focus-under-fullscreen` | 滑块 | 未实现 | — |
+| render unfocused fps · render_unfocused_fps | `hypr-misc.render-unfocused-fps` | 滑块 | 未实现 | — |
+| screencopy force 8b · screencopy_force_8b | `hypr-misc.screencopy-force-8b` | 开关 | 未实现 | — |
+| session lock blur · session_lock_blur | `hypr-misc.session-lock-blur` | 开关 | 未实现 | — |
+| session lock xray · session_lock_xray | `hypr-misc.session-lock-xray` | 开关 | 未实现 | — |
+| size limits tiled · size_limits_tiled | `hypr-misc.size-limits-tiled` | 开关 | 未实现 | — |
+| splash font family · splash_font_family | `hypr-misc.splash-font-family` | 文本输入 | 未实现 | — |
+| swallow exception regex · swallow_exception_regex | `hypr-misc.swallow-exception-regex` | 文本输入 | 未实现 | — |
+| swallow regex · swallow_regex | `hypr-misc.swallow-regex` | 文本输入 | 未实现 | — |
+| 可变刷新率模式 · vrr | `hypr-misc.vrr` | 滑块 | 未实现 | — |
+
+### Hyprland · Hyprland 生态选项 — `hypr-ecosystem`
+
+合成器高级设置：ecosystem · Hyprland
+
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### Hyprland 生态选项
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启用合成器权限 · enforce_permissions | `hypr-ecosystem.enforce-permissions` | 开关 | 未实现 | — |
+| 禁用捐赠提示 · no_donation_nag | `hypr-ecosystem.no-donation-nag` | 开关 | 未实现 | — |
+| 禁用更新新闻 · no_update_news | `hypr-ecosystem.no-update-news` | 开关 | 未实现 | — |
+
+### Hyprland · 合成器诊断选项 — `hypr-debug`
+
+合成器高级设置：debug · Hyprland
+
+页面状态：**未实现**；条目：22；已实现 0 / 未实现 22 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 合成器诊断选项
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| colored stdout logs · colored_stdout_logs | `hypr-debug.colored-stdout-logs` | 开关 | 未实现 | — |
+| damage blink · damage_blink | `hypr-debug.damage-blink` | 开关 | 未实现 | — |
+| damage tracking · damage_tracking | `hypr-debug.damage-tracking` | 滑块 | 未实现 | — |
+| disable logs · disable_logs | `hypr-debug.disable-logs` | 开关 | 未实现 | — |
+| disable scale checks · disable_scale_checks | `hypr-debug.disable-scale-checks` | 开关 | 未实现 | — |
+| disable time · disable_time | `hypr-debug.disable-time` | 开关 | 未实现 | — |
+| ds handle same buffer · ds_handle_same_buffer | `hypr-debug.ds-handle-same-buffer` | 开关 | 未实现 | — |
+| ds handle same buffer fifo · ds_handle_same_buffer_fifo | `hypr-debug.ds-handle-same-buffer-fifo` | 开关 | 未实现 | — |
+| enable stdout logs · enable_stdout_logs | `hypr-debug.enable-stdout-logs` | 开关 | 未实现 | — |
+| error limit · error_limit | `hypr-debug.error-limit` | 滑块 | 未实现 | — |
+| error position · error_position | `hypr-debug.error-position` | 滑块 | 未实现 | — |
+| fifo pending workaround · fifo_pending_workaround | `hypr-debug.fifo-pending-workaround` | 开关 | 未实现 | — |
+| full cm proto · full_cm_proto | `hypr-debug.full-cm-proto` | 开关 | 未实现 | — |
+| gl debugging · gl_debugging | `hypr-debug.gl-debugging` | 开关 | 未实现 | — |
+| invalidate buffers · invalidate_buffers | `hypr-debug.invalidate-buffers` | 滑块 | 未实现 | — |
+| log damage · log_damage | `hypr-debug.log-damage` | 开关 | 未实现 | — |
+| manual crash · manual_crash | `hypr-debug.manual-crash` | 滑块 | 未实现 | — |
+| overlay · overlay | `hypr-debug.overlay` | 开关 | 未实现 | — |
+| pass · pass | `hypr-debug.pass` | 开关 | 未实现 | — |
+| render solitary wo damage · render_solitary_wo_damage | `hypr-debug.render-solitary-wo-damage` | 开关 | 未实现 | — |
+| suppress errors · suppress_errors | `hypr-debug.suppress-errors` | 开关 | 未实现 | — |
+| vfr · vfr | `hypr-debug.vfr` | 开关 | 未实现 | — |
+
+### Hyprland · 实验性选项 — `hypr-experimental`
+
+合成器高级设置：experimental · Hyprland
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 实验性选项
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| wp cm 1 2 · wp_cm_1_2 | `hypr-experimental.wp-cm-1-2` | 开关 | 未实现 | — |
+
+### 配置文件与模块 — `hypr-config-files`
+
+Lua / legacy 配置、包含关系与注释保留 · Hyprland
+
+页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+相关页面 ID：`hypr-config-backup`、`hypr-environment`、`hypr-autostart`、`hypr-diagnostics`。
+
+参考资料：[hyprsettings-project](https://github.com/acropolis914/hyprsettings/blob/2343820372012eb436d7d24fe645f7948651d37b/README.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 配置入口路径 | `hypr-config-files.entry` | 文本输入 | 未实现 | — |
+| 配置语法版本 | `hypr-config-files.format` | 选择 | 未实现 | — |
+| 包含文件和模块关系 | `hypr-config-files.includes` | 操作 | 未实现 | — |
+| 变量和覆盖优先级 | `hypr-config-files.precedence` | 操作 | 未实现 | — |
+| 保留注释与文件组织 | `hypr-config-files.comments` | 开关 | 未实现 | — |
+| 查看修改差异 | `hypr-config-files.diff` | 操作 | 未实现 | — |
+| 配置语法检查 | `hypr-config-files.validation` | 操作 | 未实现 | — |
+| 重新加载配置 | `hypr-config-files.reload` | 操作 | 未实现 | — |
+
+### 配置备份与恢复 — `hypr-config-backup`
+
+备份、恢复点与导入导出 · Hyprland
+
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[nwg-config-project](https://github.com/nwg-piotr/nwg-shell-config/blob/99dc0e00aa8b0931cd2b1be562ef950fbcc337f8/README.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 备份文件范围 | `hypr-config-backup.scope` | 文本输入 | 未实现 | — |
+| 创建配置备份 | `hypr-config-backup.create` | 操作 | 未实现 | — |
+| 恢复备份 | `hypr-config-backup.restore` | 操作 | 未实现 | — |
+| 导入配置归档 | `hypr-config-backup.import` | 操作 | 未实现 | — |
+| 导出配置归档 | `hypr-config-backup.export` | 操作 | 未实现 | — |
+| 恢复前查看差异 | `hypr-config-backup.preview` | 操作 | 未实现 | — |
+
+### 会话启动和退出动作 — `hypr-autostart`
+
+启动钩子、退出钩子与用户服务 · Hyprland
+
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-autostart](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/autostart.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 启动应用或命令 | `hypr-autostart.command` | 文本输入 | 未实现 | — |
+| 触发阶段 | `hypr-autostart.event` | 选择 | 未实现 | — |
+| 启用此启动项 | `hypr-autostart.enabled` | 开关 | 未实现 | — |
+| 启动顺序和依赖 | `hypr-autostart.order` | 文本输入 | 未实现 | — |
+| 新增会话动作 | `hypr-autostart.add` | 操作 | 未实现 | — |
+
+### UWSM 与用户服务 — `hypr-session-services`
+
+会话启动方式和用户服务生命周期 · 可选组件 UWSM / systemd 用户会话
+
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+
+原因：尚未实现；可选组件 UWSM / systemd 用户会话 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-systemd](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/extra/systemd.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 会话管理方式 | `hypr-session-services.manager` | 选择 | 未实现 | — |
+| 会话环境导入 | `hypr-session-services.environment` | 文本输入 | 未实现 | — |
+| 桌面用户服务 | `hypr-session-services.services` | 操作 | 未实现 | — |
+| 图形会话 target | `hypr-session-services.targets` | 信息展示 | 未实现 | — |
+| 会话服务日志 | `hypr-session-services.logs` | 操作 | 未实现 | — |
+
+### 会话环境变量 — `hypr-environment`
+
+Wayland、XDG、主题与应用环境 · Hyprland
+
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-environment](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/environment-variables.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 变量名称 | `hypr-environment.name` | 文本输入 | 未实现 | — |
+| 变量值 | `hypr-environment.value` | 文本输入 | 未实现 | — |
+| 变量作用范围 | `hypr-environment.scope` | 选择 | 未实现 | — |
+| GTK / Qt / SDL / Electron 平台选择 | `hypr-environment.toolkit` | 文本输入 | 未实现 | — |
+| XDG 桌面标识 | `hypr-environment.xdg` | 文本输入 | 未实现 | — |
+| 新增环境变量 | `hypr-environment.add` | 操作 | 未实现 | — |
+
+### Hyprland 插件 — `hypr-plugins`
+
+插件来源、加载状态与版本兼容 · Hyprland
+
+页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-plugins](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hyprland-plugins/using-plugins.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 插件仓库地址 | `hypr-plugins.repository` | 文本输入 | 未实现 | — |
+| 插件列表和状态 | `hypr-plugins.list` | 信息展示 | 未实现 | — |
+| 启用插件 | `hypr-plugins.enable` | 开关 | 未实现 | — |
+| 检查插件更新 | `hypr-plugins.update` | 操作 | 未实现 | — |
+| 重新加载插件 | `hypr-plugins.reload` | 操作 | 未实现 | — |
+| Hyprland ABI 兼容状态 | `hypr-plugins.compatibility` | 信息展示 | 未实现 | — |
+| 插件加载权限 | `hypr-plugins.permissions` | 操作 | 未实现 | — |
+
+### 会话信息与 IPC 诊断 — `hypr-diagnostics`
+
+版本、配置错误、窗口和设备诊断 · Hyprland
+
+页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-ipc](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/ipc/_index.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Hyprland 版本和提交 | `hypr-diagnostics.version` | 信息展示 | 未实现 | — |
+| 配置错误 | `hypr-diagnostics.errors` | 信息展示 | 未实现 | — |
+| 窗口和应用类信息 | `hypr-diagnostics.clients` | 信息展示 | 未实现 | — |
+| 图层命名空间 | `hypr-diagnostics.layers` | 信息展示 | 未实现 | — |
+| 显示器能力 | `hypr-diagnostics.monitors` | 信息展示 | 未实现 | — |
+| 输入设备标识 | `hypr-diagnostics.devices` | 信息展示 | 未实现 | — |
+| IPC 事件查看 | `hypr-diagnostics.events` | 操作 | 未实现 | — |
+| 导出诊断摘要 | `hypr-diagnostics.report` | 操作 | 未实现 | — |
+
+### 退出会话与电源菜单 — `hypr-shutdown`
+
+应用退出、锁定与关机动作 · 可选会话退出组件及系统电源服务
+
+页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+
+原因：尚未实现；可选会话退出组件及系统电源服务 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-shutdown](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprshutdown.md)。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| 结束图形会话 | `hypr-shutdown.logout` | 操作 | 未实现 | — |
+| 锁定会话 | `hypr-shutdown.lock` | 操作 | 未实现 | — |
+| 挂起 | `hypr-shutdown.suspend` | 操作 | 未实现 | — |
+| 休眠 | `hypr-shutdown.hibernate` | 操作 | 未实现 | — |
+| 重新启动 | `hypr-shutdown.reboot` | 操作 | 未实现 | — |
+| 关闭电源 | `hypr-shutdown.poweroff` | 操作 | 未实现 | — |
+| 等待应用退出时间 | `hypr-shutdown.timeout` | 文本输入 | 未实现 | — |

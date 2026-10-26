@@ -17,7 +17,7 @@ void main() {
       final coverage = jsonDecode(
         File('docs/windows-settings-coverage.json').readAsStringSync(),
       ) as Map<String, dynamic>;
-      expect(catalog.categories.length, 11);
+      expect(catalog.categories.length, greaterThanOrEqualTo(11));
       expect(catalog.pages.length, greaterThanOrEqualTo(202));
       expect(catalog.controlCount, greaterThanOrEqualTo(1321));
       expect(
