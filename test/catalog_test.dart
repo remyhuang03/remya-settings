@@ -10,6 +10,25 @@ Map<String, dynamic> readCatalog() =>
         as Map<String, dynamic>;
 
 void main() {
+  test('bundled catalog and application UI contain no Chinese text', () {
+    final chinese = RegExp(r'[\u4e00-\u9fff]');
+    expect(
+      File('assets/settings/catalog.json').readAsStringSync(),
+      isNot(matches(chinese)),
+    );
+    for (final file
+        in Directory('lib')
+            .listSync(recursive: true)
+            .whereType<File>()
+            .where((file) => file.path.endsWith('.dart'))) {
+      expect(
+        file.readAsStringSync(),
+        isNot(matches(chinese)),
+        reason: file.path,
+      );
+    }
+  });
+
   test(
     'every source route and backup leaf has a renderable catalog target',
     () {
@@ -46,7 +65,10 @@ void main() {
           expect(control.reason, isNotEmpty);
         }
       }
-      expect(catalog.search('夜间模式').map((p) => p.id), contains('night-light'));
+      expect(
+        catalog.search('Night light').map((p) => p.id),
+        contains('night-light'),
+      );
       expect(
         catalog.search('ms-settings:network-wifi').map((p) => p.id),
         contains('wifi'),
@@ -77,6 +99,10 @@ void main() {
   test(
     'About version matches the package version and icon source is retained',
     () {
+      expect(
+        appVersion,
+        matches(RegExp(r'^\d+\.\d+\.\d+\+\d{4}-\d{2}-\d{2}$')),
+      );
       expect(
         File('pubspec.yaml').readAsStringSync(),
         contains('version: $appVersion'),

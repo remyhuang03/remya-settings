@@ -79,7 +79,7 @@ void main() {
       contains('hypr-idle-listeners'),
     );
     expect(
-      catalog.search('窗口规则').map((p) => p.id),
+      catalog.search('window rules').map((p) => p.id),
       contains('hypr-window-rule-props'),
     );
   });
@@ -98,11 +98,11 @@ void main() {
       final statuses = {for (final row in rows) row[1]!: row[2]!};
       expect(statuses.length, controls.length);
       for (final control in controls) {
-        expect(
-          statuses[control.id],
-          control.availability.label,
-          reason: control.id,
-        );
+        expect(statuses[control.id], switch (control.availability) {
+          .available => '已实现',
+          .planned => '未实现',
+          .unsupported => '不适用',
+        }, reason: control.id);
       }
       final headings = RegExp(
         r'^### .* — `([^`]+)`$',

@@ -17,6 +17,19 @@ IconData categoryIcon(String icon) => switch (icon) {
   _ => Icons.settings_outlined,
 };
 
+IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
+    switch (page.preview) {
+      'display' => Icons.desktop_windows_outlined,
+      'sound' => Icons.volume_up_outlined,
+      'network' => Icons.wifi_outlined,
+      'devices' => Icons.devices_other_outlined,
+      'power' => Icons.battery_charging_full_rounded,
+      'storage' => Icons.storage_outlined,
+      'personalization' => Icons.palette_outlined,
+      'update' => Icons.system_update_alt_rounded,
+      _ => categoryIcon(category.icon),
+    };
+
 class AvailabilityBadge extends StatelessWidget {
   const AvailabilityBadge(this.availability, {super.key, this.reason});
   final SettingAvailability availability;
@@ -24,6 +37,7 @@ class AvailabilityBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (availability == .available) return const SizedBox.shrink();
     final colors = Theme.of(context).colorScheme;
     final (icon, color, background) = switch (availability) {
       .available => (
@@ -105,7 +119,7 @@ class SettingControlTile extends StatelessWidget {
           );
           final control = Semantics(
             label:
-                '${setting.title}，${setting.availability.label}。${setting.reason}',
+                '${setting.title}, ${setting.availability.label}. ${setting.reason}',
             enabled: false,
             child: Tooltip(
               message: setting.reason,
@@ -155,7 +169,7 @@ class _PreviewControl extends StatelessWidget {
               onChanged: null,
             ),
             Text(
-              '示例 ${setting.value}${setting.unit}',
+              'Sample ${setting.value}${setting.unit}',
               style: Theme.of(context).textTheme.labelSmall,
             ),
           ],
@@ -216,7 +230,7 @@ class _PreviewControl extends StatelessWidget {
             shape: .circle,
           ),
         ),
-        label: Text('示例 ${setting.value}'),
+        label: Text('Sample ${setting.value}'),
       ),
     };
   }

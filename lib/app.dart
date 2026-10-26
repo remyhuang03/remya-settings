@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import 'features/settings/domain/settings_catalog.dart';
 import 'features/settings/presentation/settings_shell.dart';
+import 'features/settings/presentation/settings_title_bar.dart';
 
 class RemyaSettingsApp extends StatefulWidget {
   const RemyaSettingsApp({super.key});
@@ -30,6 +31,14 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
         'sans-serif',
       ],
     ),
+    builder: (context, child) => Overlay.wrap(
+      child: Column(
+        children: [
+          const SettingsTitleBar(),
+          Expanded(child: child!),
+        ],
+      ),
+    ),
     home: FutureBuilder<SettingsCatalog>(
       future: _catalog,
       builder: (context, snapshot) {
@@ -38,7 +47,9 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
             body: Center(
               child: Padding(
                 padding: .all(32),
-                child: Text('设置目录无法加载。请检查应用资源是否完整，然后重新启动。'),
+                child: Text(
+                  'Unable to load settings. Check the application assets and restart.',
+                ),
               ),
             ),
           );

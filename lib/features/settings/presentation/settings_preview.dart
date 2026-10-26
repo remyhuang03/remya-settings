@@ -15,23 +15,35 @@ class SettingsPreview extends StatelessWidget {
     final (icon, title, detail) = switch (kind) {
       'sound' => (
         Icons.graphic_eq_rounded,
-        '为每一种声音，留出空间',
-        '输出、输入和应用音量 · 尚未读取音频设备',
+        'Make room for every sound',
+        'Output, input, and app volume · Audio devices have not been read',
       ),
-      'network' => (Icons.wifi_rounded, '连接你的世界', '连接状态待接入 · 不扫描或连接网络'),
+      'network' => (
+        Icons.wifi_rounded,
+        'Connect your world',
+        'Connection preview · Networks are not scanned or connected',
+      ),
       'devices' => (
         Icons.devices_other_rounded,
-        '设备，井然有序',
-        '外设目录待接入 · 不扫描或配对设备',
+        'Your devices, organized',
+        'Device preview · Devices are not scanned or paired',
       ),
-      'power' => (Icons.battery_charging_full_rounded, '让能量恰到好处', '电源和电池状态待接入'),
-      'storage' => (Icons.storage_rounded, '为重要的东西腾出空间', '所有容量均为示例 · 不扫描或清理文件'),
+      'power' => (
+        Icons.battery_charging_full_rounded,
+        'Power that fits your day',
+        'Power and battery integration is not implemented',
+      ),
+      'storage' => (
+        Icons.storage_rounded,
+        'Room for what matters',
+        'Sample capacities · Files are not scanned or cleaned',
+      ),
       'update' => (
         Icons.security_update_good_rounded,
-        '让系统持续焕新',
-        '更新服务尚未接入 · 不下载或安装更新',
+        'Keep your system fresh',
+        'Update preview · Updates are not downloaded or installed',
       ),
-      _ => (Icons.settings_outlined, '设置预览', '功能尚未接入'),
+      _ => (Icons.settings_outlined, 'Settings preview', 'Not implemented'),
     };
     return SettingsSurface(
       child: Row(
@@ -74,7 +86,10 @@ class _DisplayPreview extends StatelessWidget {
     return SettingsSurface(
       child: Column(
         children: [
-          const Align(alignment: .centerLeft, child: Text('显示器排列 · 示意图')),
+          const Align(
+            alignment: .centerLeft,
+            child: Text('Display arrangement · Preview'),
+          ),
           const SizedBox(height: 24),
           SizedBox(
             height: 160,
@@ -105,9 +120,11 @@ class _DisplayPreview extends StatelessWidget {
             runSpacing: 8,
             alignment: .center,
             children: [
-              OutlinedButton(onPressed: null, child: Text('标识')),
-              OutlinedButton(onPressed: null, child: Text('检测')),
-              Text('显示器尚未检测，排列不可拖动'),
+              OutlinedButton(onPressed: null, child: Text('Identify')),
+              OutlinedButton(onPressed: null, child: Text('Detect')),
+              Text(
+                'Displays have not been detected; arrangement is not draggable',
+              ),
             ],
           ),
         ],
@@ -173,7 +190,10 @@ class _ThemePreview extends StatelessWidget {
       child: Column(
         crossAxisAlignment: .start,
         children: [
-          Text('属于你的桌面', style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            'A desktop of your own',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: 16),
           Container(
             height: 156,
@@ -249,7 +269,7 @@ class _ThemePreview extends StatelessWidget {
                   decoration: BoxDecoration(color: color, shape: .circle),
                 ),
               Text(
-                '主题示意 · 尚不可应用',
+                'Theme preview · Cannot be applied yet',
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],

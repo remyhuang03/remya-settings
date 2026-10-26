@@ -9,11 +9,9 @@ class SettingsHome extends StatelessWidget {
     super.key,
     required this.catalog,
     required this.onCategory,
-    required this.onPage,
   });
   final SettingsCatalog catalog;
   final ValueChanged<String> onCategory;
-  final ValueChanged<SettingsPageSpec> onPage;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +31,7 @@ class SettingsHome extends StatelessWidget {
                 'assets/icons/settings.png',
                 width: 72,
                 height: 72,
-                semanticLabel: '设置',
+                semanticLabel: 'Settings',
               ),
               const SizedBox(width: 24),
               Expanded(
@@ -41,18 +39,13 @@ class SettingsHome extends StatelessWidget {
                   crossAxisAlignment: .start,
                   children: [
                     Text(
-                      '你的桌面，由你定义。',
+                      'Your desktop, your way.',
                       style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(color: colors.onPrimaryContainer),
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      '为 Hyprland 打造的全局系统设置',
-                      style: TextStyle(color: colors.onPrimaryContainer),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'UI 预览 · 系统功能尚未实现',
+                      'UI preview · System integrations are not implemented',
                       style: TextStyle(
                         color: colors.onPrimaryContainer,
                         fontSize: 12,
@@ -65,28 +58,7 @@ class SettingsHome extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 28),
-        Text('常用设置', style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 12),
-        SettingsSurface(
-          padding: .zero,
-          child: Column(
-            children: [
-              for (final (id, icon) in [
-                ('display', Icons.desktop_windows_outlined),
-                ('sound', Icons.volume_up_outlined),
-                ('wifi', Icons.wifi_outlined),
-                ('background', Icons.wallpaper_outlined),
-              ])
-                PageLink(
-                  page: catalog.page(id),
-                  icon: icon,
-                  onTap: () => onPage(catalog.page(id)),
-                ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 28),
-        Text('所有设置', style: Theme.of(context).textTheme.titleLarge),
+        Text('All settings', style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 12),
         LayoutBuilder(
           builder: (context, constraints) {
@@ -112,7 +84,7 @@ class SettingsHome extends StatelessWidget {
         ),
         const SizedBox(height: 24),
         Text(
-          '${catalog.categories.length} 个分类 · ${catalog.pages.length} 个页面 · ${catalog.controlCount} 个设置项\n示例数据仅用于布局预览，不代表当前设备配置。',
+          '${catalog.categories.length} categories · ${catalog.pages.length} pages · ${catalog.controlCount} settings\nSample data is for layout previews and does not represent your device.',
           style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
@@ -170,7 +142,7 @@ class _CategoryCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '$pages 个页面 · 系统功能未实现',
+                      '$pages pages · Not implemented',
                       style: Theme.of(context).textTheme.labelSmall
                           ?.copyWith(color: colors.onSurfaceVariant),
                     ),
@@ -182,63 +154,6 @@ class _CategoryCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class SettingsCategoryView extends StatelessWidget {
-  const SettingsCategoryView({
-    super.key,
-    required this.catalog,
-    required this.category,
-    required this.onPage,
-  });
-  final SettingsCatalog catalog;
-  final SettingsCategory category;
-  final ValueChanged<SettingsPageSpec> onPage;
-
-  @override
-  Widget build(BuildContext context) {
-    final pages = catalog.inCategory(category.id);
-    return Column(
-      crossAxisAlignment: .stretch,
-      children: [
-        Text(
-          category.description,
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 20),
-        for (final (status, title) in [
-          (SettingAvailability.available, '已实现的设置'),
-          (SettingAvailability.planned, '设置'),
-          (SettingAvailability.unsupported, '平台专属和旧版参考'),
-        ])
-          if (pages.any((p) => p.availability == status)) ...[
-            Padding(
-              padding: const .only(bottom: 12, top: 8),
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-            SettingsSurface(
-              padding: .zero,
-              child: Column(
-                children: [
-                  for (final page in pages.where(
-                    (p) => p.availability == status,
-                  ))
-                    PageLink(
-                      page: page,
-                      icon: categoryIcon(category.icon),
-                      onTap: () => onPage(page),
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
-      ],
     );
   }
 }
@@ -277,7 +192,10 @@ class SettingsDetail extends StatelessWidget {
       if (page.children.isNotEmpty) ...[
         Padding(
           padding: const .only(top: 28, bottom: 12),
-          child: Text('相关设置', style: Theme.of(context).textTheme.titleMedium),
+          child: Text(
+            'Related settings',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
         ),
         SettingsSurface(
           padding: .zero,
@@ -294,7 +212,10 @@ class SettingsDetail extends StatelessWidget {
         ),
       ],
       const SizedBox(height: 24),
-      Text('所有数值、设备和账户均为预览示例。', style: Theme.of(context).textTheme.labelSmall),
+      Text(
+        'All values, devices, and accounts are preview samples.',
+        style: Theme.of(context).textTheme.labelSmall,
+      ),
     ],
   );
 }
@@ -321,7 +242,9 @@ class _SectionCard extends StatelessWidget {
           child: ExpansionTile(
             key: PageStorageKey('reference-${section.controls.first.id}'),
             title: Text(section.title),
-            subtitle: const Text('保留原始名称的补充预览选项 · 均未实现'),
+            subtitle: const Text(
+              'Additional reference options · Not implemented',
+            ),
             children: [controls],
           ),
         ),

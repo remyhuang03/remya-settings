@@ -3,9 +3,12 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 enum SettingAvailability {
-  available('已实现', '已接入并验证的系统功能'),
-  planned('未实现', '仅界面预览，尚未接入系统服务'),
-  unsupported('不适用', 'Windows 专属、旧版或当前平台不适用');
+  available('Available', 'A working, verified system integration'),
+  planned('Planned', 'UI preview only; system integration is not implemented'),
+  unsupported(
+    'Unsupported',
+    'Windows-specific, legacy, or inapplicable to this platform',
+  );
 
   const SettingAvailability(this.label, this.description);
   final String label;

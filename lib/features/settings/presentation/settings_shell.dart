@@ -19,6 +19,7 @@ class _SettingsShellState extends State<SettingsShell> {
   final _searchFocus = FocusNode();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _history = <({String category, String? page})>[];
+  final _expandedCategories = <String>{};
   String _category = 'home';
   SettingsPageSpec? _page;
   String _query = '';
@@ -31,6 +32,10 @@ class _SettingsShellState extends State<SettingsShell> {
   }
 
   void _navigate(String category, [SettingsPageSpec? page]) {
+    if (category != 'home' && category != 'about') {
+      page ??= widget.catalog.inCategory(category).first;
+      _expandedCategories.add(category);
+    }
     if (_category == category && _page?.id == page?.id && _query.isEmpty) {
       return;
     }
@@ -58,6 +63,9 @@ class _SettingsShellState extends State<SettingsShell> {
     final location = _history.removeLast();
     setState(() {
       _category = location.category;
+      if (_category != 'home' && _category != 'about') {
+        _expandedCategories.add(_category);
+      }
       _page = location.page == null
           ? null
           : widget.catalog.page(location.page!);
@@ -116,12 +124,12 @@ class _SettingsShellState extends State<SettingsShell> {
     controller: _searchController,
     focusNode: _searchFocus,
     decoration: InputDecoration(
-      hintText: '查找设置',
+      hintText: 'Find a setting',
       prefixIcon: const Icon(Icons.search_rounded, size: 21),
       suffixIcon: _query.isEmpty
           ? null
           : IconButton(
-              tooltip: '清除搜索',
+              tooltip: 'Clear search',
               onPressed: () => setState(() {
                 _searchController.clear();
                 _query = '';
@@ -147,60 +155,71 @@ class _SettingsShellState extends State<SettingsShell> {
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
-            Row(
-              children: [
-                Image.asset(
-                  'assets/icons/settings.png',
-                  width: 44,
-                  height: 44,
-                  semanticLabel: '应用图标',
-                ),
-                const SizedBox(width: 10),
-                const Expanded(
-                  child: Column(
-                    crossAxisAlignment: .start,
-                    children: [
-                      Text(
-                        "Remy'a Settings",
-                        style: TextStyle(fontWeight: .w700, fontSize: 17),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        'Hyprland · UI Preview',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
             if (showSearch) ...[_search(), const SizedBox(height: 20)],
             Expanded(
               child: ListView(
                 children: [
-                  _navigationTile('home', '主页', Icons.home_outlined),
+                  _navigationTile('home', 'Home', Icons.home_outlined),
                   const SizedBox(height: 6),
                   for (final category in widget.catalog.categories)
-                    _navigationTile(
-                      category.id,
-                      category.title,
-                      categoryIcon(category.icon),
-                    ),
+                    _categoryNavigation(category),
                 ],
               ),
             ),
             const Divider(height: 24),
-            _navigationTile('about', '关于', Icons.info_outline_rounded),
+            _navigationTile('about', 'About', Icons.info_outline_rounded),
             const SizedBox(height: 8),
             const Text(
-              '系统功能尚未接入',
+              'System integrations are not implemented',
               textAlign: .center,
               style: TextStyle(fontSize: 11),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _categoryNavigation(SettingsCategory category) {
+    final expanded = _expandedCategories.contains(category.id);
+    return Column(
+      children: [
+        Semantics(
+          expanded: expanded,
+          child: ListTile(
+            key: ValueKey('nav-${category.id}'),
+            selected: _category == category.id && _query.isEmpty,
+            leading: Icon(categoryIcon(category.icon), size: 22),
+            title: Text(category.title, style: const TextStyle(fontSize: 14)),
+            shape: RoundedRectangleBorder(borderRadius: .circular(18)),
+            trailing: Icon(expanded ? Icons.expand_less : Icons.expand_more),
+            onTap: () => setState(() {
+              if (expanded) {
+                _expandedCategories.remove(category.id);
+              } else {
+                _expandedCategories.add(category.id);
+              }
+            }),
+          ),
+        ),
+        if (expanded)
+          for (final page in widget.catalog.inCategory(category.id))
+            Padding(
+              padding: const .only(left: 16),
+              child: ListTile(
+                key: ValueKey('nav-page-${page.id}'),
+                selected: _page?.id == page.id && _query.isEmpty,
+                selectedTileColor: Theme.of(context)
+                    .colorScheme
+                    .secondaryContainer,
+                shape: RoundedRectangleBorder(borderRadius: .circular(14)),
+                leading: Icon(pageIcon(page, category), size: 20),
+                title: Text(page.title, style: const TextStyle(fontSize: 13)),
+                minTileHeight: 44,
+                onTap: () => _openPage(page),
+              ),
+            ),
+      ],
     );
   }
 
@@ -221,11 +240,11 @@ class _SettingsShellState extends State<SettingsShell> {
 
   Widget _header(bool wide) {
     final title = _query.isNotEmpty
-        ? '搜索设置'
+        ? 'Search settings'
         : _page?.title ??
               switch (_category) {
-                'home' => '主页',
-                'about' => '关于',
+                'home' => 'Home',
+                'about' => 'About',
                 _ => widget.catalog.category(_category).title,
               };
     return Padding(
@@ -234,12 +253,12 @@ class _SettingsShellState extends State<SettingsShell> {
         children: [
           if (!wide)
             IconButton(
-              tooltip: '打开导航',
+              tooltip: 'Open navigation',
               onPressed: () => _scaffoldKey.currentState?.openDrawer(),
               icon: const Icon(Icons.menu_rounded),
             ),
           IconButton(
-            tooltip: '返回',
+            tooltip: 'Back',
             onPressed: _history.isNotEmpty || _query.isNotEmpty ? _back : null,
             icon: const Icon(Icons.arrow_back_rounded, size: 21),
           ),
@@ -277,7 +296,7 @@ class _SettingsShellState extends State<SettingsShell> {
           if (wide)
             const Chip(
               avatar: Icon(Icons.visibility_outlined, size: 16),
-              label: Text('仅界面预览'),
+              label: Text('UI preview'),
             ),
         ],
       ),
@@ -291,7 +310,7 @@ class _SettingsShellState extends State<SettingsShell> {
       content = Column(
         crossAxisAlignment: .stretch,
         children: [
-          Text('${results.length} 个页面匹配「${_query.trim()}」'),
+          Text('${results.length} pages match "${_query.trim()}"'),
           const SizedBox(height: 16),
           if (results.isEmpty)
             const SettingsSurface(
@@ -299,9 +318,9 @@ class _SettingsShellState extends State<SettingsShell> {
                 children: [
                   Icon(Icons.search_off_rounded, size: 40),
                   SizedBox(height: 12),
-                  Text('未找到相关设置'),
+                  Text('No settings found'),
                   SizedBox(height: 8),
-                  Text('试试「显示」「鼠标」「隐私」或英文设置名称。'),
+                  Text('Try display, mouse, privacy, or a setting name.'),
                 ],
               ),
             ),
@@ -332,19 +351,11 @@ class _SettingsShellState extends State<SettingsShell> {
         onPage: _openPage,
       );
     } else if (_category == 'home') {
-      content = SettingsHome(
-        catalog: widget.catalog,
-        onCategory: _navigate,
-        onPage: _openPage,
-      );
+      content = SettingsHome(catalog: widget.catalog, onCategory: _navigate);
     } else if (_category == 'about') {
       content = const AboutPage();
     } else {
-      content = SettingsCategoryView(
-        catalog: widget.catalog,
-        category: widget.catalog.category(_category),
-        onPage: _openPage,
-      );
+      content = const SizedBox.shrink();
     }
     return SelectionArea(
       child: SingleChildScrollView(
