@@ -8,7 +8,8 @@ const appVersion = '0.1.0+2026-10-26';
 const repositoryUrl = 'https://github.com/remyhuang03/remya_settings';
 
 class AboutPage extends StatelessWidget {
-  const AboutPage({super.key});
+  const AboutPage({super.key, required this.onLicenses});
+  final VoidCallback onLicenses;
 
   Future<void> _openRepository(BuildContext context) async {
     try {
@@ -48,7 +49,12 @@ class AboutPage extends StatelessWidget {
                 textAlign: .center,
               ),
               const SizedBox(height: 8),
-              const Chip(label: Text('v$appVersion')),
+              Text(
+                'v$appVersion',
+                style: text.labelLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
               const SizedBox(height: 16),
             ],
           ),
@@ -73,19 +79,7 @@ class AboutPage extends StatelessWidget {
                   'View licenses for Flutter and dependencies',
                 ),
                 trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => showLicensePage(
-                  context: context,
-                  applicationName: "Remy'a Settings",
-                  applicationVersion: appVersion,
-                  applicationIcon: Padding(
-                    padding: const .all(16),
-                    child: Image.asset(
-                      'assets/icons/settings.png',
-                      width: 64,
-                      height: 64,
-                    ),
-                  ),
-                ),
+                onTap: onLicenses,
               ),
               const Divider(height: 1),
               const ListTile(

@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../appearance/application/app_preferences_controller.dart';
+import '../../appearance/domain/app_preferences.dart';
 import '../domain/settings_catalog.dart';
 
 IconData categoryIcon(String icon) => switch (icon) {
@@ -114,13 +116,19 @@ class SettingControlTile extends StatelessWidget {
             children: [
               Text(setting.title, style: Theme.of(context).textTheme.bodyLarge),
               const SizedBox(height: 6),
-              AvailabilityBadge(setting.availability, reason: setting.reason),
+              if (setting.availability == .available)
+                Text(
+                  setting.reason,
+                  style: Theme.of(context).textTheme.bodySmall,
+                )
+              else
+                AvailabilityBadge(setting.availability, reason: setting.reason),
             ],
           );
           final control = Semantics(
             label:
                 '${setting.title}, ${setting.availability.label}. ${setting.reason}',
-            enabled: false,
+            enabled: setting.availability == .available ? null : false,
             child: Tooltip(
               message: setting.reason,
               child: _PreviewControl(setting),
@@ -154,7 +162,13 @@ class _PreviewControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Controls stay disabled until real system bindings are implemented and tested.
+    if (const {
+      materialStyleSettingId,
+      materialThemeModeSettingId,
+    }.contains(setting.id)) {
+      return _AppMaterialChoice(setting);
+    }
+    // System previews stay disabled until real integrations are verified.
     return switch (setting.kind) {
       .toggle => Switch(value: setting.value as bool, onChanged: null),
       .slider => SizedBox(
@@ -233,6 +247,54 @@ class _PreviewControl extends StatelessWidget {
         label: Text('Sample ${setting.value}'),
       ),
     };
+  }
+}
+
+class _AppMaterialChoice extends StatelessWidget {
+  const _AppMaterialChoice(this.setting);
+  final SettingSpec setting;
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = AppPreferencesScope.of(context);
+    final style = setting.id == materialStyleSettingId;
+    final value = style
+        ? controller.preferences.styleVariant.label
+        : controller.preferences.themeMode.label;
+    return SizedBox(
+      width: 232,
+      child: DropdownButtonFormField<String>(
+        key: ValueKey('${setting.id}-$value'),
+        initialValue: value,
+        isExpanded: true,
+        decoration: const InputDecoration(
+          isDense: true,
+          border: OutlineInputBorder(borderRadius: .all(.circular(14))),
+        ),
+        items: [
+          for (final option in setting.options)
+            DropdownMenuItem(value: option, child: Text(option)),
+        ],
+        onChanged: controller.isBusy || !style && controller.systemTheme == null
+            ? null
+            : (value) {
+                if (value == null) return;
+                if (style) {
+                  controller.setStyleVariant(
+                    DynamicSchemeVariant.values.firstWhere(
+                      (item) => item.label == value,
+                    ),
+                  );
+                } else {
+                  controller.setThemeMode(
+                    SystemThemeMode.values.firstWhere(
+                      (item) => item.label == value,
+                    ),
+                  );
+                }
+              },
+      ),
+    );
   }
 }
 

@@ -27,6 +27,9 @@ static void my_application_activate(GApplication* application) {
   gtk_window_set_decorated(window, FALSE);
 
   gtk_window_set_default_size(window, 1280, 720);
+  GdkGeometry geometry = {};
+  geometry.min_width = 1000;
+  gtk_window_set_geometry_hints(window, nullptr, &geometry, GDK_HINT_MIN_SIZE);
 
   // Resolve the bundled icon independently of the caller's working directory.
   g_autofree gchar* executable_path = g_file_read_link("/proc/self/exe", nullptr);

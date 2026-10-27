@@ -1,0 +1,17 @@
+[package]
+name = "remya_settings_appearance"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+flutter_rust_bridge = "=2.13.0"
+gio = { version = "0.21.5", features = ["v2_84"] }
+tempfile = "3.23"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }

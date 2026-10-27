@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../appearance/application/app_preferences_controller.dart';
+import '../../appearance/domain/app_preferences.dart';
 import '../domain/settings_catalog.dart';
 import 'settings_preview.dart';
 import 'settings_widgets.dart';
@@ -45,7 +47,7 @@ class SettingsHome extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'UI preview · System integrations are not implemented',
+                      'Unavailable settings are previews',
                       style: TextStyle(
                         color: colors.onPrimaryContainer,
                         fontSize: 12,
@@ -213,7 +215,7 @@ class SettingsDetail extends StatelessWidget {
       ],
       const SizedBox(height: 24),
       Text(
-        'All values, devices, and accounts are preview samples.',
+        'Unimplemented settings use sample values, not detected device state.',
         style: Theme.of(context).textTheme.labelSmall,
       ),
     ],
@@ -261,6 +263,49 @@ class _SectionCard extends StatelessWidget {
           ),
         ),
         SettingsSurface(padding: .zero, child: controls),
+        if (section.controls.first.id == materialStyleSettingId)
+          Padding(
+            padding: const .fromLTRB(12, 8, 12, 0),
+            child: Wrap(
+              spacing: 12,
+              crossAxisAlignment: .center,
+              children: [
+                const Text('Appearance preferences'),
+                TextButton.icon(
+                  onPressed: AppPreferencesScope.of(context).isBusy
+                      ? null
+                      : AppPreferencesScope.of(context).reload,
+                  icon: const Icon(Icons.refresh_rounded),
+                  label: const Text('Reload settings'),
+                ),
+              ],
+            ),
+          ),
+        if (section.controls.first.id == materialStyleSettingId)
+          const _SystemAppearanceResults(),
+      ],
+    );
+  }
+}
+
+class _SystemAppearanceResults extends StatelessWidget {
+  const _SystemAppearanceResults();
+
+  @override
+  Widget build(BuildContext context) {
+    final targets = AppPreferencesScope.of(context).systemTheme?.targets ?? [];
+    return Column(
+      children: [
+        for (final target in targets)
+          ListTile(
+            dense: true,
+            leading: Icon(switch (target.status) {
+              .unavailable || .detected => Icons.info_outline_rounded,
+              _ => Icons.check_circle_outline_rounded,
+            }),
+            title: Text(target.name),
+            subtitle: Text(target.detail),
+          ),
       ],
     );
   }

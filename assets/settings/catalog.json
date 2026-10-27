@@ -236,6 +236,41 @@
       "id": "nwg-displays-project",
       "title": "nwg-displays output and workspace allocation",
       "url": "https://github.com/nwg-piotr/nwg-displays/blob/412eff2779cf123f308753faab1a182dd474ba7a/README.md"
+    },
+    {
+      "id": "app-appearance",
+      "title": "Application Material appearance configuration",
+      "url": "https://github.com/remyhuang03/remya_settings/blob/main/docs/app-preferences.md"
+    },
+    {
+      "id": "gtk4-appearance",
+      "title": "GTK 4.20+ interface color scheme",
+      "url": "https://docs.gtk.org/gtk4/property.Settings.gtk-interface-color-scheme.html"
+    },
+    {
+      "id": "gtk3-appearance",
+      "title": "Current GTK 3 dark theme preference",
+      "url": "https://docs.gtk.org/gtk3/property.Settings.gtk-application-prefer-dark-theme.html"
+    },
+    {
+      "id": "gnome-appearance",
+      "title": "GNOME interface settings schema",
+      "url": "https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas/-/blob/master/schemas/org.gnome.desktop.interface.gschema.xml"
+    },
+    {
+      "id": "qt-quick-appearance-environment",
+      "title": "Qt Quick Controls supported appearance environment variables",
+      "url": "https://doc.qt.io/qt-6/qtquickcontrols-environment.html"
+    },
+    {
+      "id": "hyprland-lua-environment",
+      "title": "Current Hyprland Lua environment configuration",
+      "url": "https://wiki.hypr.land/configuring/core/environment-variables/"
+    },
+    {
+      "id": "fish-configuration-files",
+      "title": "Current fish configuration files",
+      "url": "https://fishshell.com/docs/current/language.html#configuration-files"
     }
   ],
   "categories": [
@@ -6690,17 +6725,57 @@
       "id": "themes",
       "category": "personalization",
       "title": "Themes",
-      "description": "Thematic combinations, sounds and pointers",
+      "description": "Material palette and system appearance",
       "preview": "personalization",
       "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "reason": "Light/Dark changes supported system appearance settings. Other desktop theme controls remain previews.",
       "sources": [
-        "uris"
+        "uris",
+        "app-appearance",
+        "gtk4-appearance",
+        "gtk3-appearance",
+        "gnome-appearance"
       ],
       "windowsUris": [
         "ms-settings:themes"
       ],
       "sections": [
+        {
+          "title": "Material Design",
+          "controls": [
+            {
+              "id": "themes.material-style-variant",
+              "title": "Material style variant",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Applies to Remy'a Settings and is saved in its app configuration.",
+              "value": "Expressive",
+              "options": [
+                "Tonal spot",
+                "Fidelity",
+                "Monochrome",
+                "Neutral",
+                "Vibrant",
+                "Expressive",
+                "Content",
+                "Rainbow",
+                "Fruit salad"
+              ]
+            },
+            {
+              "id": "themes.material-theme-mode",
+              "title": "Dark theme",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Changes GNOME, installed GTK toolkits, and documented Qt Quick Light/Dark defaults through the Rust backend.",
+              "value": "Light",
+              "options": [
+                "Light",
+                "Dark"
+              ]
+            }
+          ]
+        },
         {
           "title": "Settings",
           "controls": [

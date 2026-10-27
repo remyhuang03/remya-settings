@@ -1,0 +1,10 @@
+# Remy'a Settings appearance preferences. System mode is read from GNOME/GTK.
+version = 1
+
+[theme]
+# tonal_spot, fidelity, monochrome, neutral, vibrant, expressive,
+# content, rainbow, fruit_salad
+style_variant = "expressive"
+# Last selected mode: light or dark. Startup reads the actual system preference.
+# Editing this record does not write desktop settings; select Light/Dark in the app.
+theme_mode = "light"

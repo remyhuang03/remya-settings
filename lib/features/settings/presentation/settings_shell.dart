@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../about/presentation/about_page.dart';
+import '../../about/presentation/licenses_view.dart';
 import '../domain/settings_catalog.dart';
 import 'settings_content.dart';
 import 'settings_widgets.dart';
@@ -17,7 +18,6 @@ class SettingsShell extends StatefulWidget {
 class _SettingsShellState extends State<SettingsShell> {
   final _searchController = TextEditingController();
   final _searchFocus = FocusNode();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _history = <({String category, String? page})>[];
   final _expandedCategories = <String>{};
   String _category = 'home';
@@ -32,7 +32,7 @@ class _SettingsShellState extends State<SettingsShell> {
   }
 
   void _navigate(String category, [SettingsPageSpec? page]) {
-    if (category != 'home' && category != 'about') {
+    if (!const {'home', 'about', 'licenses'}.contains(category)) {
       page ??= widget.catalog.inCategory(category).first;
       _expandedCategories.add(category);
     }
@@ -46,7 +46,6 @@ class _SettingsShellState extends State<SettingsShell> {
       _query = '';
       _searchController.clear();
     });
-    _scaffoldKey.currentState?.closeDrawer();
   }
 
   void _openPage(SettingsPageSpec page) => _navigate(page.category, page);
@@ -63,7 +62,7 @@ class _SettingsShellState extends State<SettingsShell> {
     final location = _history.removeLast();
     setState(() {
       _category = location.category;
-      if (_category != 'home' && _category != 'about') {
+      if (!const {'home', 'about', 'licenses'}.contains(_category)) {
         _expandedCategories.add(_category);
       }
       _page = location.page == null
@@ -85,37 +84,22 @@ class _SettingsShellState extends State<SettingsShell> {
         if (_query.isNotEmpty) _back();
       },
     },
-    child: LayoutBuilder(
-      builder: (context, constraints) {
-        final wide = constraints.maxWidth >= 1000;
-        return Scaffold(
-          key: _scaffoldKey,
-          drawer: wide
-              ? null
-              : Drawer(width: 292, child: _sidebar(showSearch: false)),
-          body: SafeArea(
-            child: Row(
-              children: [
-                if (wide)
-                  SizedBox(width: 280, child: _sidebar(showSearch: true)),
-                Expanded(
-                  child: Column(
-                    children: [
-                      _header(wide),
-                      if (!wide)
-                        Padding(
-                          padding: const .fromLTRB(20, 0, 20, 12),
-                          child: _search(),
-                        ),
-                      Expanded(child: _body(wide)),
-                    ],
-                  ),
-                ),
-              ],
+    child: Scaffold(
+      body: SafeArea(
+        child: Row(
+          children: [
+            SizedBox(width: 280, child: _sidebar()),
+            Expanded(
+              child: Column(
+                children: [
+                  _header(),
+                  Expanded(child: _body()),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     ),
   );
 
@@ -146,7 +130,7 @@ class _SettingsShellState extends State<SettingsShell> {
     onChanged: (value) => setState(() => _query = value.trim()),
   );
 
-  Widget _sidebar({required bool showSearch}) {
+  Widget _sidebar() {
     final colors = Theme.of(context).colorScheme;
     return Material(
       color: colors.surfaceContainerLow,
@@ -155,7 +139,8 @@ class _SettingsShellState extends State<SettingsShell> {
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
-            if (showSearch) ...[_search(), const SizedBox(height: 20)],
+            _search(),
+            const SizedBox(height: 20),
             Expanded(
               child: ListView(
                 children: [
@@ -170,7 +155,7 @@ class _SettingsShellState extends State<SettingsShell> {
             _navigationTile('about', 'About', Icons.info_outline_rounded),
             const SizedBox(height: 8),
             const Text(
-              'System integrations are not implemented',
+              'Unavailable settings are previews',
               textAlign: .center,
               style: TextStyle(fontSize: 11),
             ),
@@ -227,7 +212,9 @@ class _SettingsShellState extends State<SettingsShell> {
     padding: const .symmetric(vertical: 3),
     child: ListTile(
       key: ValueKey('nav-$id'),
-      selected: _category == id && _query.isEmpty,
+      selected:
+          (_category == id || id == 'about' && _category == 'licenses') &&
+          _query.isEmpty,
       selectedTileColor: Theme.of(context).colorScheme.secondaryContainer,
       shape: RoundedRectangleBorder(borderRadius: .circular(18)),
       leading: Icon(icon, size: 22),
@@ -238,72 +225,39 @@ class _SettingsShellState extends State<SettingsShell> {
     ),
   );
 
-  Widget _header(bool wide) {
+  Widget _header() {
     final title = _query.isNotEmpty
         ? 'Search settings'
         : _page?.title ??
               switch (_category) {
                 'home' => 'Home',
                 'about' => 'About',
+                'licenses' => 'Licenses',
                 _ => widget.catalog.category(_category).title,
               };
     return Padding(
-      padding: .fromLTRB(wide ? 32 : 12, 20, wide ? 32 : 12, 16),
+      padding: const .fromLTRB(32, 20, 32, 16),
       child: Row(
         children: [
-          if (!wide)
-            IconButton(
-              tooltip: 'Open navigation',
-              onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-              icon: const Icon(Icons.menu_rounded),
-            ),
-          IconButton(
-            tooltip: 'Back',
-            onPressed: _history.isNotEmpty || _query.isNotEmpty ? _back : null,
-            icon: const Icon(Icons.arrow_back_rounded, size: 21),
-          ),
-          const SizedBox(width: 8),
           Expanded(
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                if (_page != null && _query.isEmpty)
-                  Wrap(
-                    crossAxisAlignment: .center,
-                    children: [
-                      InkWell(
-                        onTap: () => _navigate(_category),
-                        borderRadius: .circular(8),
-                        child: Padding(
-                          padding: const .symmetric(vertical: 4),
-                          child: Text(
-                            widget.catalog.category(_category).title,
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                        ),
-                      ),
-                      const Icon(Icons.chevron_right_rounded, size: 14),
-                    ],
-                  ),
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.headlineMedium
-                      ?.copyWith(fontWeight: .w600),
-                ),
-              ],
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.headlineMedium
+                  ?.copyWith(fontWeight: .w600),
             ),
           ),
-          if (wide)
-            const Chip(
-              avatar: Icon(Icons.visibility_outlined, size: 16),
-              label: Text('UI preview'),
-            ),
         ],
       ),
     );
   }
 
-  Widget _body(bool wide) {
+  Widget _body() {
+    if (_category == 'licenses' && _query.isEmpty) {
+      return Padding(
+        padding: const .fromLTRB(32, 8, 32, 24),
+        child: const LicensesView(),
+      );
+    }
     final Widget content;
     if (_query.trim().isNotEmpty) {
       final results = widget.catalog.search(_query);
@@ -353,7 +307,7 @@ class _SettingsShellState extends State<SettingsShell> {
     } else if (_category == 'home') {
       content = SettingsHome(catalog: widget.catalog, onCategory: _navigate);
     } else if (_category == 'about') {
-      content = const AboutPage();
+      content = AboutPage(onLicenses: () => _navigate('licenses'));
     } else {
       content = const SizedBox.shrink();
     }
@@ -362,7 +316,7 @@ class _SettingsShellState extends State<SettingsShell> {
         key: ValueKey(
           'content-$_category-${_page?.id}-${_query.trim().isNotEmpty}',
         ),
-        padding: .fromLTRB(wide ? 32 : 20, 8, wide ? 32 : 20, 40),
+        padding: const .fromLTRB(32, 8, 32, 40),
         child: Align(
           alignment: .topCenter,
           child: ConstrainedBox(

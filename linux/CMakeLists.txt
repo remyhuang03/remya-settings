@@ -74,6 +74,24 @@ set_target_properties(${BINARY_NAME}
 # them to the application.
 include(flutter/generated_plugins.cmake)
 
+# Build the Rust feature workspace through the pinned root toolchain.
+find_program(CARGO_EXECUTABLE cargo REQUIRED)
+set(RUST_WORKSPACE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/..")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  set(RUST_PROFILE "debug")
+  set(RUST_PROFILE_ARGS "")
+else()
+  set(RUST_PROFILE "release")
+  set(RUST_PROFILE_ARGS "--release")
+endif()
+set(RUST_APPEARANCE_LIBRARY "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/libremya_settings_appearance.so")
+add_custom_target(rust_appearance ALL
+  COMMAND "${CARGO_EXECUTABLE}" build --locked --package remya_settings_appearance ${RUST_PROFILE_ARGS}
+  WORKING_DIRECTORY "${RUST_WORKSPACE_DIR}"
+  BYPRODUCTS "${RUST_APPEARANCE_LIBRARY}"
+  COMMENT "Building Rust appearance backend")
+add_dependencies(${BINARY_NAME} rust_appearance)
+
 
 # === Installation ===
 # By default, "installing" just makes a relocatable bundle in the build
@@ -90,6 +108,7 @@ install(CODE "
 
 set(INSTALL_BUNDLE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/data")
 set(INSTALL_BUNDLE_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+install(FILES "${RUST_APPEARANCE_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
 
 install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
   COMPONENT Runtime)

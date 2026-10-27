@@ -10,15 +10,15 @@
 
 ## 当前概况
 
-- 设置分类：13 个；详情页面：308 个；设置条目：2,180 项。
-- 系统功能已实现：0 项；未实现：2,021 项；不适用：159 项。
-- 本阶段没有系统设置读写、设备扫描、服务调用或预览值持久化。所有设备名称、选项和值均为界面示例。
+- 设置分类：13 个；详情页面：308 个；设置条目：2,182 项。
+- 已实现：2 项（本应用配色 1 项、系统深浅色 1 项）；系统功能已实现：1 项；未实现：2,021 项；不适用：159 项。
+- Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 ### 已完成的界面能力（不计入系统功能进度）
 
-- [x] 首页、分类侧栏、窄屏抽屉与自适应布局。
+- [x] 首页、常驻分类侧栏与自适应内容布局（窗口最小宽度 1000 逻辑像素）。
 - [x] 按页面、设置名称和参考 URI 进行本地搜索。
-- [x] 面包屑、返回、相关页面跳转及参考细项展开。
+- [x] 相关页面跳转、Alt+Left 键盘历史导航及参考细项展开。
 - [x] 已实现 / 未实现 / 不适用的文字、图标和控件禁用状态。
 - [x] 应用图标、About、版本和仓库信息。
 - [x] 项目许可证及第三方许可查看。
@@ -42,7 +42,7 @@
 | [系统](#category-system) | 51 | 335 | 0 | 315 | 20 |
 | [蓝牙和设备](#category-devices) | 25 | 224 | 0 | 220 | 4 |
 | [网络和 Internet](#category-network) | 15 | 90 | 0 | 88 | 2 |
-| [个性化](#category-personalization) | 45 | 280 | 0 | 270 | 10 |
+| [个性化](#category-personalization) | 45 | 282 | 2 | 270 | 10 |
 | [应用](#category-apps) | 14 | 59 | 0 | 59 | 0 |
 | [账户](#category-accounts) | 19 | 78 | 0 | 59 | 19 |
 | [时间和语言](#category-time) | 16 | 103 | 0 | 48 | 55 |
@@ -379,7 +379,7 @@ Windows 参考入口：`ms-settings:quiethours`。
 
 时间、全屏与演示条件
 
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**未实现**（包含 2 个本应用外观控件）；条目：10；已实现 2 / 未实现 8 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2302,6 +2302,13 @@ Windows 参考入口：`ms-settings:personalization-colors`、`ms-settings:color
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
 Windows 参考入口：`ms-settings:themes`。
+
+#### Material Design
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Material style variant | `themes.material-style-variant` | 选择 | 已实现 | App-only TOML persistence and runtime theme; see app-preferences.md and appearance tests |
+| Dark theme | `themes.material-theme-mode` | 选择 | 已实现 | Rust GNOME/GTK Light/Dark and documented Qt Quick defaults via fish/Hyprland; see app-preferences.md and backend tests |
 
 #### 设置
 
@@ -7249,3 +7256,44 @@ Wayland、XDG、主题与应用环境 · Hyprland
 - Version follows the reference app format, `0.1.0+2026-10-26`, and matches pubspec.yaml. Redundant About descriptions, the status legend, and the matching Home subtitle are removed.
 - Verification: all 17 Flutter tests, format/analyze, Linux debug build, Cargo checks, and git diff checks passed. The running app was hot-reloaded. The desktop opener accepted the repository URL and opened the existing browser session; authenticated repository access was not checked.
 - About branding now sits directly on the page without a surface card; repository and license list styling is unchanged.
+
+## Header cleanup
+
+- Removed the visible page Back button and category breadcrumb link. Page titles and compact sidebar access remain; Alt+Left still supports keyboard history navigation.
+- About version is plain text without a chip border or fill. Catalog items, IDs, and integration states are unchanged.
+- Verification: all 17 Flutter tests, format/analyze, Linux debug build, Cargo checks, and git diff checks passed. The running app was hot-reloaded and the Home header inspected on Hyprland; About styling is covered by widget checks.
+
+## License layout correction
+
+- Replaced the stock stacked license route with a license view inside the existing settings shell. The custom title bar and sidebar remain accessible, with no extra Back button.
+- Package list and selected license text have separate bounded scroll areas: side by side in wide content, stacked in compact content. All LicenseRegistry entries and paragraph indentation are retained. Loading, empty, and failure states are explicit.
+
+## Application preferences and persistent navigation
+
+- Added the two implemented app-only Material Design controls under Themes; existing catalog IDs, sources, and tracking notes are preserved. Host settings remain unavailable previews.
+- The sidebar is persistent. The native runner declares a minimum width of 1000 logical pixels without imposing window placement.
+- Configuration architecture and validation evidence are documented in [app-preferences.md](app-preferences.md). Seed color configuration is intentionally omitted.
+
+### Material appearance verification (2026-10-27)
+
+- All 32 Flutter tests passed, including strict TOML/schema validation, all 27 style/mode round trips, atomic file writes, modes/symlinks, failed replacement cleanup, serialized edits, invalid external edits, disposal, live Material controls, Follow system brightness, error banners, and retained navigation.
+- Dart format/analyze, Linux Debug and Release builds, Cargo format/clippy/tests, and git diff checks passed.
+- A separate native Linux process loaded an isolated Dark + Monochrome configuration. Invoking its actual dropdown callbacks changed the complete application to Vibrant + Light and persisted both choices; restarting restored those values. Native engine screenshots confirmed both appearances and the corrected license view inside the persistent sidebar.
+- Wayland protocol logs confirmed `xdg_toplevel.set_min_size(1000, 0)` before mapping. The test process used its own temporary configuration directory; personal configuration was not modified.
+- No seed-color setting, automatic external-file watcher, host integration, or cross-process file locking is included. External edits require Reload configuration; avoid simultaneous editing by multiple instances.
+
+
+## System appearance backend (supersedes the app-only preview above)
+
+- Removed Follow system. Light/Dark uses Rust through flutter_rust_bridge 2.13.0; startup/Reload reads actual system preference without enforcing a stored preview value. The application follows the selected mode.
+- GNOME/libadwaita uses the installed color-scheme schema key. GTK 3 uses its explicit prefer-dark flag; modern GTK 4.20+ uses gtk-interface-color-scheme and removes the obsolete GTK 4 flag. Existing GTK themes switch only to matching installed variants.
+- Installed Qt 6 Quick Material/Universal modules use their documented Light/Dark environment variables. Managed blocks update only fish and the active Hyprland Lua entrypoint, with syntax validation and preserved surrounding content. Qt Widgets/qt6ct/Kvantum platform plugins and unrelated palettes are retained because they have no uniform explicit Light/Dark switch. Missing optional targets are reported and skipped.
+- Backend file writes are atomic, preserve comments/permissions/symlinks, verify readback, detect conflicting edits, and roll back prior changes on failure. GSettings persistence is independently checked in a fresh process. A per-user lock serializes system updates.
+- AGENTS.md now targets current Arch dependencies and fish; no old dependency compatibility layers, Bash/Zsh environment edits, or forced theme/plugin replacements. Full ownership, configuration paths, failure behavior, session boundaries, and primary documentation are in [app-preferences.md](app-preferences.md).
+
+### System appearance verification (2026-10-27)
+
+- All 34 Flutter tests and 13 Rust tests passed, with Dart format/analyze, Cargo fmt/clippy, and diff checks. Linux Debug and Release builds bundle the native appearance library and third-party notices.
+- A native app in an isolated XDG/keyfile environment loaded Dark/Monochrome; its actual widget callbacks selected Vibrant/Light through the real Rust bridge. Independent readback confirmed GNOME prefer-light, GTK 3/4 flags, and both Qt environment variables in fish/Hyprland configuration. The process completed without a controller error and was stopped after verification.
+- Real desktop Light/Dark toggles were independently verified with fresh GNOME reads, GTK 3/4 native probes, and Qt 6 Material/Universal QML probes launched by fish using the generated environment block. Existing fish/Hyprland files passed full syntax validation; evaluating only the generated Lua block confirmed the hl.env keys and values. No unrelated config content changed, and original GNOME user values and all four personal files were restored and verified afterward.
+- No compositor/session restart was performed. Environment propagation to a full new Hyprland login remains untested; existing processes retain their environment and explicit per-app overrides can take precedence. No plugin/style replacement or seed color feature was added.

@@ -61,7 +61,13 @@ void main() {
         expect(page.controls, isNotEmpty);
         expect(page.availability, isNot(SettingAvailability.available));
         for (final control in page.controls) {
-          expect(control.availability, isNot(SettingAvailability.available));
+          expect(
+            control.availability == .available,
+            const {
+              'themes.material-style-variant',
+              'themes.material-theme-mode',
+            }.contains(control.id),
+          );
           expect(control.reason, isNotEmpty);
         }
       }

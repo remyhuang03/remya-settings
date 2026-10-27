@@ -2,9 +2,9 @@
 
 A global system settings application for **Hyprland on Linux**, using **Flutter**, **Material Design 3 Expressive**, and a **Rust workspace**. Layout and information architecture reference Windows 11 Settings.
 
-## Current milestone: UI only
+## Current milestone: system appearance and host previews
 
-Browse Home, 13 categories, 308 detail pages, and About; search settings, follow related pages, and inspect third-party licenses. The catalog contains 2,180 preview controls, with every operation explicitly **not implemented** or **not applicable** and disabled. Devices, account information, values, and capacities are examples, never detected host state. No system configuration is read or changed, no services are called, and no preview values are persisted.
+Browse Home, 13 categories, 308 detail pages, and About; search settings, follow related pages, and inspect third-party licenses. The catalog contains 2,182 controls: a working application Material palette, a Rust-backed system Light/Dark setting, and 2,180 disabled host previews. Appearance reads installed GNOME/GTK preferences and changes them only when explicitly selected; documented Qt Quick defaults are saved through fish and Hyprland Lua configuration. Other device/account values are examples, never detected host state, and preview controls do not persist values.
 
 The inventory covers the 219 unique names in Microsoft's public URI tables and all 354 hierarchy entries (267 leaf controls) in its Windows 11 backup catalog. This is an application-owned UI schema, not an export of Windows' unpublished internal schema. See [research, sources, coverage, and limitations](docs/windows-settings-research.md).
 
@@ -20,9 +20,13 @@ lib/
   main.dart               Flutter startup
   app.dart                Application composition and theme
   features/
+    appearance/           App preferences, atomic TOML storage, theme state
     settings/             Catalog model, navigation, search, page renderer
     about/                Product information and licenses
-  src/rust/core/          Empty future backend crate
+  src/rust/
+    core/                 Empty future backend crate
+    appearance/           GNOME/GTK settings and Qt toolkit environments
+    appearance_bridge/    Generated Flutter/Rust bridge
 assets/
   icons/                  Owner-provided SVG and rendered PNG
   settings/               UI catalog and JSON Schema
@@ -31,11 +35,11 @@ docs/                     Research and coverage snapshot
 test/                     Catalog, interaction, and layout checks
 ```
 
-Flutter stays at the repository root. Rust crates live under `lib/src/rust/` and are registered in the root workspace. Backend APIs and `flutter_rust_bridge` will be added when real functionality is implemented.
+Flutter stays at the repository root. Rust crates live under `lib/src/rust/` and are registered in the root workspace. The appearance feature uses `flutter_rust_bridge` 2.13.0; Linux CMake builds its shared library. App-owned appearance preferences use a typed Dart model, TOML file storage, and a shared controller. See [configuration architecture and supported settings](docs/app-preferences.md) and [the example configuration](config/config.example.toml).
 
 ## Development
 
-Install FVM, Rust via rustup, and Linux Flutter build prerequisites (Clang, CMake, Ninja, pkg-config, and GTK 3 development libraries). From the repository root:
+Install FVM, Rust via rustup, and Linux Flutter build prerequisites (Clang, CMake, Ninja, pkg-config, and GTK 3 development libraries, GLib/GIO 2.84+ headers, and GSettings tools). Current Arch packages are the target; GTK 4 appearance requires GTK 4.20+. fish and luac validate their respective environment configuration targets. From the repository root:
 
 ```bash
 fvm install
@@ -56,6 +60,8 @@ cargo test --workspace
 git diff --check
 ```
 
-Keyboard shortcuts: Ctrl+F or Ctrl+E focuses search, Escape clears search, and Alt+Left navigates back. Navigation collapses into a drawer below 1,000 logical pixels.
+After Rust dependency changes, run `python tool/generate_rust_notices.py` to refresh bundled third-party notices. GLib/GIO use dynamic system linking; generated notices are shown in the license view.
+
+Keyboard shortcuts: Ctrl+F or Ctrl+E focuses search, Escape clears search, and Alt+Left navigates back. The sidebar stays visible; the native window minimum width is 1,000 logical pixels. Themes → Material Design controls the app palette and system Light/Dark mode. Environment defaults affect new fish processes and the next Hyprland session; see the configuration document for supported targets and override limits.
 
 Licensed under [PolyForm Noncommercial License 1.0.0](LICENSE), matching `image_resizer`.

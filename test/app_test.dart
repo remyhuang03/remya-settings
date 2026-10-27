@@ -6,12 +6,17 @@ import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/app.dart';
+import 'package:remya_settings/features/appearance/application/app_preferences_controller.dart';
+import 'package:remya_settings/features/appearance/data/app_preferences_file.dart';
 import 'package:remya_settings/features/about/presentation/about_page.dart';
+import 'package:remya_settings/features/about/presentation/licenses_view.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 import 'package:remya_settings/features/settings/presentation/settings_content.dart';
 import 'package:remya_settings/features/settings/presentation/settings_shell.dart';
 import 'package:remya_settings/features/settings/presentation/settings_title_bar.dart';
 import 'package:remya_settings/features/settings/presentation/settings_widgets.dart';
+
+import 'support/fake_system_appearance.dart';
 
 void main() {
   late SettingsCatalog catalog;
@@ -20,6 +25,21 @@ void main() {
       jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
           as Map<String, dynamic>,
     );
+  });
+
+  late AppPreferencesController preferences;
+  setUp(() {
+    final directory = Directory.systemTemp.createTempSync(
+      'remya-settings-widgets-',
+    );
+    preferences = AppPreferencesController(
+      systemAppearance: FakeSystemAppearance(),
+      store: AppPreferencesFile(File('${directory.path}/config.toml')),
+    );
+    addTearDown(() {
+      preferences.dispose();
+      directory.deleteSync(recursive: true);
+    });
   });
 
   Future<void> mount(
@@ -33,7 +53,10 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: ThemeData(useMaterial3: true),
-        home: Scaffold(body: child),
+        home: AppPreferencesScope(
+          controller: preferences,
+          child: Scaffold(body: child),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -111,8 +134,15 @@ void main() {
   testWidgets(
     'About uses dated version and repository list item without status labels',
     (tester) async {
-      await mount(tester, const AboutPage());
+      await mount(tester, AboutPage(onLicenses: () {}));
       expect(find.text('v$appVersion'), findsOneWidget);
+      expect(
+        find.ancestor(
+          of: find.text('v$appVersion'),
+          matching: find.byType(Chip),
+        ),
+        findsNothing,
+      );
       final repository = tester.widget<ListTile>(
         find.ancestor(
           of: find.text('Repository'),
@@ -155,7 +185,12 @@ void main() {
           .every((w) => w.onChanged == null),
       isTrue,
     );
-    await tester.tap(find.byTooltip('Back'));
+    expect(find.byTooltip('Back'), findsNothing);
+    expect(find.text('System'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('settings-search')));
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.altLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.altLeft);
     await tester.pumpAndSettle();
     expect(find.text('Your desktop, your way.'), findsOneWidget);
     await tester.enterText(
@@ -173,12 +208,17 @@ void main() {
     await tester.ensureVisible(licenseTile);
     await tester.tap(licenseTile);
     await tester.pumpAndSettle();
-    expect(find.byType(LicensePage), findsOneWidget);
+    expect(find.byType(LicensesView), findsOneWidget);
+    expect(find.byKey(const ValueKey('nav-about')), findsOneWidget);
+    expect(find.byTooltip('Back'), findsNothing);
+    await tester.tap(find.byKey(const ValueKey('nav-about')));
+    await tester.pumpAndSettle();
+    expect(find.byType(AboutPage), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
   for (final width in [1280.0, 600.0, 360.0]) {
-    testWidgets('all pages lay out with disabled controls at width $width', (
+    testWidgets('preview controls stay disabled at detail width $width', (
       tester,
     ) async {
       addTearDown(tester.view.resetPhysicalSize);
@@ -189,15 +229,18 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             theme: ThemeData(useMaterial3: true),
-            home: Scaffold(
-              body: SingleChildScrollView(
-                child: Padding(
-                  padding: const .all(20),
-                  child: SettingsDetail(
-                    key: ValueKey(page.id),
-                    catalog: catalog,
-                    page: page,
-                    onPage: (_) {},
+            home: AppPreferencesScope(
+              controller: preferences,
+              child: Scaffold(
+                body: SingleChildScrollView(
+                  child: Padding(
+                    padding: const .all(20),
+                    child: SettingsDetail(
+                      key: ValueKey(page.id),
+                      catalog: catalog,
+                      page: page,
+                      onPage: (_) {},
+                    ),
                   ),
                 ),
               ),
@@ -235,7 +278,7 @@ void main() {
     });
   }
 
-  testWidgets('Home and About remain usable at narrow width and large text', (
+  testWidgets('Home and About remain usable at minimum width and large text', (
     tester,
   ) async {
     addTearDown(tester.view.resetPhysicalSize);
@@ -246,18 +289,18 @@ void main() {
         data: const MediaQueryData(textScaler: TextScaler.linear(1.5)),
         child: SettingsShell(catalog: catalog),
       ),
-      size: const Size(360, 800),
+      size: const Size(1000, 800),
     );
     expect(tester.takeException(), isNull);
-    await tester.tap(find.byTooltip('Open navigation'));
-    await tester.pumpAndSettle();
+    expect(find.byType(Drawer), findsNothing);
+    expect(find.byTooltip('Open navigation'), findsNothing);
     await tester.tap(find.byKey(const ValueKey('nav-about')));
     await tester.pumpAndSettle();
     expect(find.byType(AboutPage), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('compact navigation and reference controls remain accessible', (
+  testWidgets('persistent sidebar and reference controls remain accessible', (
     tester,
   ) async {
     addTearDown(tester.view.resetPhysicalSize);
@@ -265,10 +308,10 @@ void main() {
     await mount(
       tester,
       SettingsShell(catalog: catalog),
-      size: const Size(600, 720),
+      size: const Size(1000, 720),
     );
-    await tester.tap(find.byTooltip('Open navigation'));
-    await tester.pumpAndSettle();
+    expect(find.byType(Drawer), findsNothing);
+    expect(find.byTooltip('Open navigation'), findsNothing);
     await tester.tap(find.byKey(const ValueKey('nav-system')));
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('nav-page-display')), findsOneWidget);
