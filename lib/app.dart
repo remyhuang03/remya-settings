@@ -9,8 +9,9 @@ import 'features/settings/presentation/settings_shell.dart';
 import 'features/settings/presentation/settings_title_bar.dart';
 
 class RemyaSettingsApp extends StatefulWidget {
-  const RemyaSettingsApp({super.key, this.preferences});
+  const RemyaSettingsApp({super.key, this.preferences, this.navigation});
   final AppPreferencesController? preferences;
+  final ValueNotifier<String?>? navigation;
 
   @override
   State<RemyaSettingsApp> createState() => _RemyaSettingsAppState();
@@ -93,7 +94,10 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
                 body: Center(child: CircularProgressIndicator()),
               );
             }
-            return SettingsShell(catalog: snapshot.data!);
+            return SettingsShell(
+              catalog: snapshot.data!,
+              navigation: widget.navigation,
+            );
           },
         ),
       ),

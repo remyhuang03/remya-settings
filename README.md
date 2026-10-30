@@ -62,6 +62,29 @@ git diff --check
 
 After Rust dependency changes, run `python tool/generate_rust_notices.py` to refresh bundled third-party notices. GLib/GIO use dynamic system linking; generated notices are shown in the license view.
 
+## Install in the user application menu
+
+The application ID is `top.remya.settings`; its executable remains `remya_settings`.
+Build and install into XDG_DATA_HOME with a user command in `~/.local/bin`:
+
+```bash
+fvm flutter build linux --release
+python tool/install.py
+```
+
+Launch **Remy'a Settings** from the menu, run `remya_settings`, or use
+`gtk-launch top.remya.settings`. `remya_settings --help` lists the CLI. The D-Bus
+service starts on demand without a window and stays available after the UI is
+closed; run `remya_settings quit` before updating. The installer preserves config
+and refuses to replace unrelated commands or a running bundle. See
+[the XDG directory layout](docs/xdg-layout.md) and
+[the complete CLI and D-Bus API](docs/public-api.md).
+
+Remya Bar is a separate dependent application. Its public integration boundary is
+`packages/remya_settings_client`: versioned contracts, D-Bus transport, shared MD3E
+theme, and observable theme state. GUI, CLI, and D-Bus operations share the same
+settings controller and Rust backend.
+
 Keyboard shortcuts: Ctrl+F or Ctrl+E focuses search, Escape clears search, and Alt+Left navigates back. The sidebar stays visible; the native window minimum width is 1,000 logical pixels. Themes → Material Design controls the app palette and system Light/Dark mode. Environment defaults affect new fish processes and the next Hyprland session; see the configuration document for supported targets and override limits.
 
 Licensed under [PolyForm Noncommercial License 1.0.0](LICENSE), matching `image_resizer`.

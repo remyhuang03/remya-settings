@@ -86,7 +86,7 @@ void main() {
           .theme!
           .colorScheme
           .primary;
-      await select(materialStyleSettingId, 'Expressive', 'Monochrome');
+      await select(materialStyleSettingId, 'Tonal spot', 'Monochrome');
       await select(materialThemeModeSettingId, 'Light', 'Dark');
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
       expect(app.themeMode, ThemeMode.dark);

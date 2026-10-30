@@ -18,7 +18,7 @@ The Rust feature crate is `lib/src/rust/appearance/`; the core crate stays empty
 
 | Build | File |
 | --- | --- |
-| Debug | `config/config.local.toml` below the launch working directory |
+| Debug | `config/config.local.toml` below the native-reported repository root, independent of launch cwd |
 | Profile/release | `$XDG_CONFIG_HOME/remya/settings/config.toml` |
 | Profile/release fallback | `$HOME/.config/remya/settings/config.toml` when XDG_CONFIG_HOME is missing or relative |
 
@@ -28,14 +28,14 @@ An absolute HOME or XDG_CONFIG_HOME is required. Debug mode isolates only the ap
 version = 1
 
 [theme]
-style_variant = "expressive"
+style_variant = "tonal_spot"
 theme_mode = "light"
 ```
 
 - `style_variant`: `tonal_spot`, `fidelity`, `monochrome`, `neutral`, `vibrant`, `expressive`, `content`, `rainbow`, or `fruit_salad`. These change the Material color scheme; widgets retain Material Design 3 Expressive styling.
 - `theme_mode`: last selected `light` or `dark`. Startup and Reload read the current GNOME/GTK preference instead of enforcing this saved record. Editing TOML never changes the desktop. A previous preview file containing `system` is accepted as migration input and saved as an explicit mode on the next successful edit.
-- Missing fields use Expressive/Light defaults. Missing files do not trigger a write. Empty files, malformed TOML, unsupported versions, unknown keys, wrong types, and unknown enum values are rejected.
-- No seed-color configuration, image-derived colors, file watcher, or automatic startup writes are included. External edits require **Reload settings**. Removing a file and reloading retains the last valid live state.
+- Missing fields use Tonal spot/Light defaults. Existing explicit style selections are retained. Missing files do not trigger a write. Empty files, malformed TOML, unsupported versions, unknown keys, wrong types, and unknown enum values are rejected.
+- No seed-color configuration, image-derived colors, or automatic startup writes are included. The public service observes external configuration changes every 500 ms and reloads through the same controller. Invalid files retain the last valid live theme and produce an API/UI error. Removing a file and reloading retains the last valid live state.
 
 `lib/features/appearance/` keeps the immutable model, file store, serialized controller, and Rust adapter together. `main.dart` initializes the bridge and reads state before startup. `app.dart` owns the controller, distributes it through an inherited notifier, and rebuilds both Material themes. Busy controls are disabled; failures appear in an English error banner with Reload. Navigation is retained across theme changes.
 
@@ -77,3 +77,12 @@ Sources: [fish configuration](https://fishshell.com/docs/current/language.html#c
 Durable tests cover strict TOML, atomic persistence, controller ordering/error recovery, actual control bindings, retained navigation, installed theme matching, GSettings/file rollback, managed environment blocks, syntax validation, and missing optional targets. Native verification uses the real bridge and independent GTK/Qt probes, with exact restoration of personal files after temporary Light/Dark checks. Current verification evidence is recorded in [the implementation tracker](settings-implementation-progress.md).
 
 Only `themes.material-style-variant` and `themes.material-theme-mode` are available: one app palette control and one implemented system appearance control. The remaining 2,180 catalog controls remain disabled previews. The sidebar is persistent and the native window minimum width is 1000 logical pixels.
+
+## Dependent applications and public operations
+
+The common configuration decoder, XDG path contract, and Material theme live in
+`packages/remya_settings_client`. Settings retains the writer/controller and Rust
+system backend. Remya Bar consumes the effective release theme through the public
+D-Bus service; it does not apply system preferences or depend on Settings pages.
+See [public interfaces](public-api.md) for CLI/D-Bus operation parity and
+[XDG layout](xdg-layout.md) for debug, installation, and runtime paths.

@@ -4,7 +4,7 @@ version = 1
 [theme]
 # tonal_spot, fidelity, monochrome, neutral, vibrant, expressive,
 # content, rainbow, fruit_salad
-style_variant = "expressive"
+style_variant = "tonal_spot"
 # Last selected mode: light or dark. Startup reads the actual system preference.
 # Editing this record does not write desktop settings; select Light/Dark in the app.
 theme_mode = "light"

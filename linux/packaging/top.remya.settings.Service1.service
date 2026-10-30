@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=top.remya.settings.Service1
+Exec=remya_settings --service

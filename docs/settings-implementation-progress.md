@@ -2307,7 +2307,7 @@ Windows 参考入口：`ms-settings:themes`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Material style variant | `themes.material-style-variant` | 选择 | 已实现 | App-only TOML persistence and runtime theme; see app-preferences.md and appearance tests |
+| Material style variant | `themes.material-style-variant` | 选择 | 已实现 | App-only TOML persistence and runtime theme; Tonal spot default; see app-preferences.md and appearance tests |
 | Dark theme | `themes.material-theme-mode` | 选择 | 已实现 | Rust GNOME/GTK Light/Dark and documented Qt Quick defaults via fish/Hyprland; see app-preferences.md and backend tests |
 
 #### 设置
@@ -7297,3 +7297,29 @@ Wayland、XDG、主题与应用环境 · Hyprland
 - A native app in an isolated XDG/keyfile environment loaded Dark/Monochrome; its actual widget callbacks selected Vibrant/Light through the real Rust bridge. Independent readback confirmed GNOME prefer-light, GTK 3/4 flags, and both Qt environment variables in fish/Hyprland configuration. The process completed without a controller error and was stopped after verification.
 - Real desktop Light/Dark toggles were independently verified with fresh GNOME reads, GTK 3/4 native probes, and Qt 6 Material/Universal QML probes launched by fish using the generated environment block. Existing fish/Hyprland files passed full syntax validation; evaluating only the generated Lua block confirmed the hl.env keys and values. No unrelated config content changed, and original GNOME user values and all four personal files were restored and verified afterward.
 - No compositor/session restart was performed. Environment propagation to a full new Hyprland login remains untested; existing processes retain their environment and explicit per-app overrides can take precedence. No plugin/style replacement or seed color feature was added.
+
+## Public application interfaces and Bar integration (2026-10-30)
+
+- Added operation parity for every currently available control through CLI and
+  versioned session D-Bus, using the existing application controller and Rust
+  backend. Preview availability and existing control IDs are unchanged.
+- Added catalog inspection/search, bounded listing, page navigation, reload,
+  theme change/error observation, and application open/quit operations.
+- Shared the configuration decoder and MD3E policy through the public
+  `remya_settings_client` package. Remya Bar remains a separate application and
+  consumes the effective theme through the Settings service.
+- Standardized application IDs (`top.remya.settings`, `top.remya.bar`), XDG
+  installation, user commands, and cwd-independent repository debug config.
+- Interface parity/rollback tests and isolated installed CLI/D-Bus tests passed,
+  including real Rust Light/Dark writes and independent readback inside a
+  temporary XDG/keyfile environment. Live bar theme changes passed on all three
+  connected outputs. Personal system configuration was not used for write tests.
+- API details and boundaries: [public-api.md](public-api.md),
+  [xdg-layout.md](xdg-layout.md), and `test/interface_smoke.py`.
+
+- Final live verification also exercised an actual pointer click on the Bar gear,
+  transparent capsule corners on all outputs, desktop-entry activation, and
+  special-character XDG installation paths. The independent Rust bridge probe
+  read all three monitors through socket1 and received a real `openlayer` event
+  through socket2. All task-started instances were stopped and reserved space
+  returned to the existing desktop baseline.

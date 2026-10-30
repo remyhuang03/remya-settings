@@ -1,4 +1,7 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_settings_client/remya_settings_client.dart';
+export 'package:remya_settings_client/remya_settings_client.dart'
+    show MaterialStyleKey;
 
 import '../../../src/rust/appearance_bridge/api.dart';
 export '../../../src/rust/appearance_bridge/api.dart' show SystemThemeMode;
@@ -18,11 +21,6 @@ extension MaterialStyleLabel on DynamicSchemeVariant {
     .rainbow => 'Rainbow',
     .fruitSalad => 'Fruit salad',
   };
-
-  String get configKey => name.replaceAllMapped(
-    RegExp('[A-Z]'),
-    (match) => '_${match[0]!.toLowerCase()}',
-  );
 }
 
 extension AppThemeModeLabel on SystemThemeMode {
@@ -39,7 +37,7 @@ extension AppThemeModeLabel on SystemThemeMode {
 
 class AppPreferences {
   const AppPreferences({
-    this.styleVariant = .expressive,
+    this.styleVariant = .tonalSpot,
     this.themeMode = .light,
   });
 
@@ -55,31 +53,11 @@ class AppPreferences {
   );
 
   factory AppPreferences.fromMap(Map<String, dynamic> map) {
-    if (map['version'] is! int ||
-        map['version'] != 1 ||
-        map.keys.any((key) => !const {'version', 'theme'}.contains(key))) {
-      throw const FormatException('Unsupported app preferences schema');
-    }
-    final theme = map['theme'] ?? <String, dynamic>{};
-    if (theme is! Map ||
-        theme.keys.any(
-          (key) => !const {'style_variant', 'theme_mode'}.contains(key),
-        )) {
-      throw const FormatException('Invalid theme table');
-    }
-    final styleKey = theme['style_variant'] ?? 'expressive';
-    final storedMode = theme['theme_mode'];
-    final modeKey = storedMode == 'system' ? 'light' : storedMode ?? 'light';
-    final styles = DynamicSchemeVariant.values.where(
-      (value) => value.configKey == styleKey,
+    final theme = RemyaTheme.fromMap(map);
+    return .new(
+      styleVariant: theme.styleVariant,
+      themeMode: theme.mode == .dark ? .dark : .light,
     );
-    final modes = SystemThemeMode.values.where(
-      (value) => value.name == modeKey,
-    );
-    if (styles.isEmpty || modes.isEmpty) {
-      throw const FormatException('Invalid Material style or theme mode');
-    }
-    return .new(styleVariant: styles.single, themeMode: modes.single);
   }
 
   Map<String, dynamic> toMap() => {
@@ -90,20 +68,10 @@ class AppPreferences {
     },
   };
 
-  ThemeData theme(Brightness brightness) => .new(
-    useMaterial3: true,
-    colorScheme: .fromSeed(
-      seedColor: const Color(0xFF8054C9),
-      brightness: brightness,
-      dynamicSchemeVariant: styleVariant,
-    ),
-    iconButtonTheme: const .new(variant: .material3Expressive),
-    fontFamilyFallback: const [
-      'Noto Sans CJK SC',
-      'Noto Sans CJK TC',
-      'sans-serif',
-    ],
-  );
+  ThemeData theme(Brightness brightness) => RemyaTheme(
+    styleVariant: styleVariant,
+    mode: themeMode.materialMode,
+  ).theme(brightness);
 
   @override
   bool operator ==(Object other) =>

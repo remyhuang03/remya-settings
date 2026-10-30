@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:toml/toml.dart';
+import 'package:remya_settings_client/remya_settings_client.dart';
 
 import '../domain/app_preferences.dart';
 
@@ -9,28 +10,18 @@ class AppPreferencesFile {
   const AppPreferencesFile(this.file);
   final File file;
 
+  static Directory? debugRepository;
+
   static File resolve({
     bool isDebug = kDebugMode,
     Map<String, String>? environment,
     Directory? workingDirectory,
   }) {
-    if (isDebug) {
-      return File(
-        '${(workingDirectory ?? Directory.current).absolute.path}/config/config.local.toml',
-      );
-    }
-    final env = environment ?? Platform.environment;
-    final configHome = env['XDG_CONFIG_HOME'];
-    if (configHome != null && configHome.startsWith('/')) {
-      return File('$configHome/remya/settings/config.toml');
-    }
-    final home = env['HOME'];
-    if (home == null || !home.startsWith('/')) {
-      throw const FileSystemException(
-        'An absolute HOME or XDG_CONFIG_HOME is required',
-      );
-    }
-    return File('$home/.config/remya/settings/config.toml');
+    return settingsConfigFile(
+      isDebug: isDebug,
+      repositoryDirectory: workingDirectory ?? debugRepository,
+      environment: environment,
+    );
   }
 
   Future<AppPreferences?> load() async {

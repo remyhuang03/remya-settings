@@ -7,7 +7,7 @@ project(runner LANGUAGES CXX)
 set(BINARY_NAME "remya_settings")
 # The unique GTK application identifier for this application. See:
 # https://wiki.gnome.org/HowDoI/ChooseApplicationID
-set(APPLICATION_ID "top.remya.remya_settings")
+set(APPLICATION_ID "top.remya.settings")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.
@@ -92,6 +92,14 @@ add_custom_target(rust_appearance ALL
   COMMENT "Building Rust appearance backend")
 add_dependencies(${BINARY_NAME} rust_appearance)
 
+set(SETTINGS_CLI "${CMAKE_BINARY_DIR}/remya_settings_cli")
+add_custom_target(settings_cli ALL
+  COMMAND fvm dart compile exe tool/settings_cli.dart -o "${SETTINGS_CLI}"
+  WORKING_DIRECTORY "${RUST_WORKSPACE_DIR}"
+  BYPRODUCTS "${SETTINGS_CLI}"
+  COMMENT "Building the headless settings CLI client")
+add_dependencies(${BINARY_NAME} settings_cli)
+
 
 # === Installation ===
 # By default, "installing" just makes a relocatable bundle in the build
@@ -108,6 +116,7 @@ install(CODE "
 
 set(INSTALL_BUNDLE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/data")
 set(INSTALL_BUNDLE_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+install(PROGRAMS "${SETTINGS_CLI}" DESTINATION "${CMAKE_INSTALL_PREFIX}/libexec" COMPONENT Runtime)
 install(FILES "${RUST_APPEARANCE_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
 
 install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
@@ -140,11 +149,13 @@ install(CODE "
 install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
   DESTINATION "${INSTALL_BUNDLE_DATA_DIR}" COMPONENT Runtime)
 
-install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/packaging/top.remya.remya_settings.desktop"
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/packaging/top.remya.settings.desktop"
   DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications" COMPONENT Runtime)
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/packaging/top.remya.settings.Service1.service"
+  DESTINATION "${CMAKE_INSTALL_PREFIX}/share/dbus-1/services" COMPONENT Runtime)
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/../assets/icons/settings.svg"
   DESTINATION "${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps"
-  RENAME "top.remya.remya_settings.svg" COMPONENT Runtime)
+  RENAME "top.remya.settings.svg" COMPONENT Runtime)
 
 # Install the AOT library on non-Debug builds only.
 if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")

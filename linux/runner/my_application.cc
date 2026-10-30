@@ -7,24 +7,33 @@
 struct _MyApplication {
   GtkApplication parent_instance;
   char** dart_entrypoint_arguments;
+  gboolean service_mode;
 };
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
 
 // Called when first Flutter frame received.
 static void first_frame_cb(MyApplication* self, FlView* view) {
-  gtk_widget_show(gtk_widget_get_toplevel(GTK_WIDGET(view)));
+  if (!self->service_mode) gtk_widget_show(gtk_widget_get_toplevel(GTK_WIDGET(view)));
 }
 
 // Implements GApplication::activate.
 static void my_application_activate(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
+  GList* windows = gtk_application_get_windows(GTK_APPLICATION(self));
+  GtkWindow* existing = windows == nullptr ? nullptr : GTK_WINDOW(windows->data);
+  if (existing != nullptr) {
+    self->service_mode = FALSE;
+    gtk_window_present(existing);
+    return;
+  }
   GtkWindow* window =
       GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
 
   // Flutter draws the title bar; the compositor still owns window placement.
   gtk_window_set_title(window, "Remy'a Settings");
   gtk_window_set_decorated(window, FALSE);
+  g_signal_connect(window, "delete-event", G_CALLBACK(gtk_widget_hide_on_delete), nullptr);
 
   gtk_window_set_default_size(window, 1280, 720);
   GdkGeometry geometry = {};
@@ -63,9 +72,31 @@ static void my_application_activate(GApplication* application) {
                            self);
   gtk_widget_realize(GTK_WIDGET(view));
 
+  g_autoptr(FlStandardMethodCodec) paths_codec = fl_standard_method_codec_new();
+  g_autoptr(FlMethodChannel) paths_channel = fl_method_channel_new(
+      fl_engine_get_binary_messenger(fl_view_get_engine(view)), "top.remya.paths",
+      FL_METHOD_CODEC(paths_codec));
+  fl_method_channel_set_method_call_handler(
+      paths_channel,
+      [](FlMethodChannel* channel, FlMethodCall* call, gpointer data) {
+        if (g_strcmp0(fl_method_call_get_name(call), "repositoryDirectory") == 0) {
+          g_autoptr(FlValue) root = fl_value_new_string(REMYA_REPOSITORY_DIR);
+          fl_method_call_respond_success(call, root, nullptr);
+        } else if (g_strcmp0(fl_method_call_get_name(call), "show") == 0) {
+          my_application_activate(G_APPLICATION(data));
+          fl_method_call_respond_success(call, nullptr, nullptr);
+        } else if (g_strcmp0(fl_method_call_get_name(call), "quit") == 0) {
+          fl_method_call_respond_success(call, nullptr, nullptr);
+          g_application_quit(G_APPLICATION(data));
+        } else {
+          fl_method_call_respond_not_implemented(call, nullptr);
+        }
+      },
+      self, nullptr);
+
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
 
-  gtk_widget_grab_focus(GTK_WIDGET(view));
+  if (!self->service_mode) gtk_widget_grab_focus(GTK_WIDGET(view));
 }
 
 // Implements GApplication::local_command_line.
@@ -75,6 +106,7 @@ static gboolean my_application_local_command_line(GApplication* application,
   MyApplication* self = MY_APPLICATION(application);
   // Strip out the first argument as it is the binary name.
   self->dart_entrypoint_arguments = g_strdupv(*arguments + 1);
+  self->service_mode = g_strv_contains(*arguments, "--service");
 
   g_autoptr(GError) error = nullptr;
   if (!g_application_register(application, nullptr, &error)) {
@@ -83,7 +115,12 @@ static gboolean my_application_local_command_line(GApplication* application,
     return TRUE;
   }
 
-  g_application_activate(application);
+  if (!g_application_get_is_remote(application)) {
+    g_application_hold(application);
+    g_application_activate(application);
+  } else if (!self->service_mode) {
+    g_application_activate(application);
+  }
   *exit_status = 0;
 
   return TRUE;
@@ -134,5 +171,5 @@ MyApplication* my_application_new() {
 
   return MY_APPLICATION(g_object_new(my_application_get_type(),
                                      "application-id", APPLICATION_ID, "flags",
-                                     G_APPLICATION_NON_UNIQUE, nullptr));
+                                     G_APPLICATION_DEFAULT_FLAGS, nullptr));
 }

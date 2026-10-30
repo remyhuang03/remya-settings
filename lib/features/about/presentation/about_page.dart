@@ -7,14 +7,23 @@ import '../../settings/presentation/settings_widgets.dart';
 const appVersion = '0.1.0+2026-10-26';
 const repositoryUrl = 'https://github.com/remyhuang03/remya_settings';
 
+Future<void> openSettingsRepository() async {
+  final result = await Process.run('xdg-open', [repositoryUrl]);
+  if (result.exitCode != 0) {
+    throw const ProcessException('xdg-open', [
+      repositoryUrl,
+    ], 'Unable to open the repository.');
+  }
+}
+
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key, required this.onLicenses});
   final VoidCallback onLicenses;
 
   Future<void> _openRepository(BuildContext context) async {
     try {
-      final result = await Process.run('xdg-open', [repositoryUrl]);
-      if (result.exitCode == 0) return;
+      await openSettingsRepository();
+      return;
     } on ProcessException {
       // The desktop opener may be missing or unavailable.
     }

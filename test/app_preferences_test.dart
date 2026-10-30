@@ -19,6 +19,22 @@ void main() {
   });
   tearDown(() => directory.deleteSync(recursive: true));
 
+  test('new and partial preferences default to Tonal spot', () {
+    expect(const AppPreferences().styleVariant, DynamicSchemeVariant.tonalSpot);
+    for (final map in <Map<String, dynamic>>[
+      {'version': 1},
+      {
+        'version': 1,
+        'theme': {'theme_mode': 'dark'},
+      },
+    ]) {
+      expect(
+        AppPreferences.fromMap(map).styleVariant,
+        DynamicSchemeVariant.tonalSpot,
+      );
+    }
+  });
+
   test(
     'every style and theme mode round-trips without seed configuration',
     () async {
@@ -180,7 +196,7 @@ void main() {
       expect(file.readAsStringSync(), 'broken = [');
       expect(
         controller.preferences.styleVariant,
-        DynamicSchemeVariant.expressive,
+        DynamicSchemeVariant.tonalSpot,
       );
       await store.save(
         const AppPreferences(themeMode: .dark, styleVariant: .neutral),

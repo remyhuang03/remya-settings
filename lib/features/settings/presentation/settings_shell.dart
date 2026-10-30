@@ -8,8 +8,9 @@ import 'settings_content.dart';
 import 'settings_widgets.dart';
 
 class SettingsShell extends StatefulWidget {
-  const SettingsShell({super.key, required this.catalog});
+  const SettingsShell({super.key, required this.catalog, this.navigation});
   final SettingsCatalog catalog;
+  final ValueNotifier<String?>? navigation;
 
   @override
   State<SettingsShell> createState() => _SettingsShellState();
@@ -25,7 +26,27 @@ class _SettingsShellState extends State<SettingsShell> {
   String _query = '';
 
   @override
+  void initState() {
+    super.initState();
+    widget.navigation?.addListener(_externalNavigation);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _externalNavigation();
+    });
+  }
+
+  void _externalNavigation() {
+    final target = widget.navigation?.value;
+    if (target == null) return;
+    if (const {'home', 'about', 'licenses'}.contains(target)) {
+      _navigate(target);
+    } else {
+      _openPage(widget.catalog.page(target));
+    }
+  }
+
+  @override
   void dispose() {
+    widget.navigation?.removeListener(_externalNavigation);
     _searchController.dispose();
     _searchFocus.dispose();
     super.dispose();
