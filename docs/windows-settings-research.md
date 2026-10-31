@@ -2,17 +2,17 @@
 
 Research date: 2026-10-26. Target product: a global settings application for **Hyprland on Linux**, with **Material Design 3 Expressive** styling.
 
-This document describes the preserved Windows-reference baseline (202 pages and 1,321 controls). The later additive Hyprland catalog extension is documented separately in [Hyprland research](hyprland-settings-research.md); the progress checklist tracks the combined catalog.
+This document describes the Windows-reference catalog (188 pages and 1,251 controls). The later additive Hyprland catalog extension is documented separately in [Hyprland research](hyprland-settings-research.md); the progress checklist tracks the combined catalog.
 
 ## Evidence and limits
 
 Microsoft publishes a [Settings navigation guide](https://support.microsoft.com/en-us/windows/experience/exploring-windows-settings), a [page URI reference](https://learn.microsoft.com/en-us/windows/apps/develop/launch/launch-settings), and a [Windows 11 backup settings catalog](https://learn.microsoft.com/en-us/windows/configuration/windows-backup/catalog?pivots=windows-11). These are complementary inventories, not a published internal schema for every Windows Settings control. Availability varies by OS release, edition, hardware, installed applications, organization policy, account, and staged feature rollout.
 
-The checked-in catalog covers all **219 unique URI names** found in the reference's tables at research time. Query parameters selecting individual apps, cameras, or audio endpoints belong to the same page; aliases are recorded on their target page. Old Windows Mobile, removed features, Windows Mixed Reality, and OEM extension pages are retained as clearly unavailable reference previews. A URI that redirects to another view is not evidence of an independent current Windows 11 page.
+The checked-in catalog includes **204 unique URI names** found in the reference's tables at research time. Query parameters selecting individual apps, cameras, or audio endpoints belong to the same page; aliases are recorded on their target page. Old Windows Mobile, removed features, Windows Mixed Reality, and OEM extension pages are retained as clearly unavailable reference previews. A URI that redirects to another view is not evidence of an independent current Windows 11 page.
 
-The Windows 11 pivot of the backup catalog contains **354 hierarchy entries**. Its **267 leaf entries** are represented by individually identified controls in collapsible "Windows 参考细项" sections; the other entries identify groups. Original English names are retained there for traceability, alongside the primary Chinese UI. This catalog includes some File Explorer settings and in-app Game Bar options, which are treated as reference content rather than additional Settings categories. Backup checkmarks describe Windows backup coverage, not implementation status in this application.
+The Windows 11 pivot of the backup catalog contains **343 hierarchy entries**. Its **257 leaf entries** are represented by individually identified controls in collapsible "Windows 参考细项" sections; the other entries identify groups. Original English names are retained there for traceability, alongside the primary Chinese UI. This catalog includes some File Explorer settings, which are treated as reference content rather than additional Settings categories. Backup checkmarks describe Windows backup coverage, not implementation status in this application.
 
-There are **202 detail pages**, **1,321 preview controls**, **11 settings categories**, and a separate Home and About view. All controls are authored UI previews. Control types, ranges, sample values, grouping, and option lists are this project's initial model, not Microsoft's internal types, actual hardware capabilities, live defaults, or a guarantee of an exact match to every Windows build. In particular, source-only reference fields whose choices are not documented use an explicit "未配置" option. Future implementation must verify real platform contracts and replace illustrative ranges and choices before enabling them.
+There are **188 detail pages**, **1,251 reference controls**, **10 settings categories**, and a separate Home and About view. All controls are authored UI previews. Control types, ranges, sample values, grouping, and option lists are this project's initial model, not Microsoft's internal types, actual hardware capabilities, live defaults, or a guarantee of an exact match to every Windows build. In particular, source-only reference fields whose choices are not documented use an explicit "未配置" option. Future implementation must verify real platform contracts and replace illustrative ranges and choices before enabling them.
 
 Supplemental pages come from [Advanced settings](https://learn.microsoft.com/en-us/windows/advanced-settings/), [app privacy guidance](https://support.microsoft.com/en-us/windows/privacy/windows-privacy-settings-that-apps-use), [Recall](https://support.microsoft.com/en-us/windows/ai/ai-features/retrace-your-steps-with-recall), [passkey management](https://support.microsoft.com/en-gb/accounts-billing/security/manage-your-saved-passkeys), and [presence sensing](https://support.microsoft.com/en-gb/windows/privacy/managing-presence-sensing-settings-in-windows-11). These include settings without entries in the URI reference. Exact service-specific and undocumented vendor extension schemas are outside the public evidence; no exhaustive Windows-internal export is claimed.
 
@@ -25,12 +25,11 @@ Supplemental pages come from [Advanced settings](https://learn.microsoft.com/en-
 | Network & Internet | Status, Wi-Fi, Ethernet, VPN, hotspot, airplane mode, cellular, proxy, adapters, usage | Future network service integration |
 | Personalization | Background, colors, themes, lock screen, text input, launcher, panel, fonts, lighting | Future Hyprland and desktop component configuration |
 | Apps | Installed apps, defaults, optional features, startup, playback and website associations | Future package and XDG application integration |
-| Accounts | Identity, login, local users, organization, backup, credentials and passkeys | Future Linux session and account integration |
+| Accounts | Identity, login, local users, backup, credentials and passkeys | Future Linux session and account integration |
 | Time & language | Clock, synchronization, region, languages, typing, IMEs, speech | Future locale and input method integration |
-| Gaming | Game bar, capture, game mode and full-screen experience | Future Linux gaming/capture integration |
 | Accessibility | Text, visual effects, pointer, cursor, magnification, contrast, reader, audio, captions, voice, keyboard, mouse and eye control | Future compositor and assistive technology integration |
 | Privacy & security | Security, encryption, activity, diagnostics, search and per-capability application permissions | Future Linux security and portal integration |
-| System updates | Status, history, scheduling, optional updates, delivery and previews | Future distribution-aware update integration |
+| System updates | Status, history and update preferences | Future distribution-aware update integration |
 
 Windows-branded services are preserved as references, not promises to implement those services on Linux. Some concepts (taskbar, Start, clipboard history, notification center) may eventually map to separately installed desktop components; no particular shell or daemon is selected in this UI milestone.
 
@@ -46,7 +45,7 @@ Search matches category/page labels, descriptions, control names, and Windows re
 
 - Runtime data: `assets/settings/catalog.json`.
 - JSON Schema: `assets/settings/catalog.schema.json` (Draft 2020-12).
-- Immutable research snapshot: `docs/windows-settings-coverage.json`.
+- Included reference coverage: `docs/windows-settings-coverage.json`.
 - Runtime model: `lib/features/settings/domain/settings_catalog.dart`.
 - Renderer: `lib/features/settings/presentation/`.
 

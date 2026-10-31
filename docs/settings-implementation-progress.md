@@ -6,17 +6,19 @@
 
 清单覆盖现有目录中的全部设置项，包括主要中文控件和保留原名的 Windows 参考细项；相同概念可能存在多个展示位置。下述数量统计的是控件条目，不是去重后的独立后端功能数量。公开资料与内部 schema 的边界见 [调研说明](windows-settings-research.md)。
 
-本轮仅分类追加 Hyprland 内容：新增 106 个页面、859 项设置及 2 个分类；原有 202 个页面与 1,321 项设置原样保留。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
+Hyprland 内容包含 106 个页面、859 项设置及 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
 
 ## 当前概况
 
-- 设置分类：13 个；详情页面：308 个；设置条目：2,182 项。
-- 已实现：2 项（本应用配色 1 项、系统深浅色 1 项）；系统功能已实现：1 项；未实现：2,021 项；不适用：159 项。
+- 设置分类：12 个；详情页面：294 个；设置条目：2,113 项。
+- 已实现：8 项；未实现：1,972 项；不适用：133 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
+
+- 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。
 
 ### 已完成的界面能力（不计入系统功能进度）
 
-- [x] 首页、常驻分类侧栏与自适应内容布局（窗口最小宽度 1000 逻辑像素）。
+- [x] 首页、常驻分类侧栏与自适应内容布局（窄窗口常驻图标侧栏）。
 - [x] 按页面、设置名称和参考 URI 进行本地搜索。
 - [x] 相关页面跳转、Alt+Left 键盘历史导航及参考细项展开。
 - [x] 已实现 / 未实现 / 不适用的文字、图标和控件禁用状态。
@@ -39,17 +41,16 @@
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 51 | 335 | 0 | 315 | 20 |
+| [系统](#category-system) | 53 | 355 | 0 | 335 | 20 |
 | [蓝牙和设备](#category-devices) | 25 | 224 | 0 | 220 | 4 |
 | [网络和 Internet](#category-network) | 15 | 90 | 0 | 88 | 2 |
 | [个性化](#category-personalization) | 45 | 282 | 2 | 270 | 10 |
 | [应用](#category-apps) | 14 | 59 | 0 | 59 | 0 |
-| [账户](#category-accounts) | 19 | 78 | 0 | 59 | 19 |
-| [时间和语言](#category-time) | 16 | 103 | 0 | 48 | 55 |
-| [游戏](#category-gaming) | 7 | 49 | 0 | 45 | 4 |
+| [账户](#category-accounts) | 16 | 69 | 0 | 55 | 14 |
+| [时间和语言](#category-time) | 16 | 98 | 6 | 37 | 55 |
 | [辅助功能](#category-accessibility) | 15 | 242 | 0 | 242 | 0 |
 | [隐私和安全性](#category-privacy) | 56 | 295 | 0 | 267 | 28 |
-| [系统更新](#category-update) | 10 | 47 | 0 | 30 | 17 |
+| [系统更新](#category-update) | 4 | 21 | 0 | 21 | 0 |
 | [窗口与工作区](#category-hyprland) | 23 | 258 | 0 | 258 | 0 |
 | [会话与配置](#category-session) | 12 | 120 | 0 | 120 | 0 |
 
@@ -379,7 +380,7 @@ Windows 参考入口：`ms-settings:quiethours`。
 
 时间、全屏与演示条件
 
-页面状态：**未实现**（包含 2 个本应用外观控件）；条目：10；已实现 2 / 未实现 8 / 不适用 0。
+页面状态：**未实现**（包含 2 个本应用外观控件）；条目：8；已实现 0 / 未实现 8 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1243,6 +1244,57 @@ Windows 参考入口：`ms-settings:phone`。
 | Apply audio streaming | `hypr-audio-routing.streams` | 信息展示 | 未实现 | — |
 | Audio stream routing | `hypr-audio-routing.routing` | 操作 | 未实现 | — |
 | Default input and output nodes | `hypr-audio-routing.default` | 操作 | 未实现 | — |
+
+### Hyprland · OpenGL compositing options — `hypr-opengl`
+
+合成器高级设置：opengl · Hyprland
+
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### OpenGL 合成选项
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| nvidia anti flicker · nvidia_anti_flicker | `hypr-opengl.nvidia-anti-flicker` | 开关 | 未实现 | — |
+
+### Hyprland · Rendering and Color Pipeline — `hypr-render`
+
+合成器高级设置：render · Hyprland
+
+页面状态：**未实现**；条目：19；已实现 0 / 未实现 19 / 不适用 0。
+
+原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
+
+参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
+
+#### 渲染与色彩管线
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| async commit · async_commit | `hypr-render.async-commit` | 开关 | 未实现 | — |
+| cm auto hdr · cm_auto_hdr | `hypr-render.cm-auto-hdr` | 滑块 | 未实现 | — |
+| Color management switch · cm_enabled | `hypr-render.cm-enabled` | 开关 | 未实现 | — |
+| cm sdr eotf · cm_sdr_eotf | `hypr-render.cm-sdr-eotf` | 文本输入 | 未实现 | — |
+| ctm animation · ctm_animation | `hypr-render.ctm-animation` | 滑块 | 未实现 | — |
+| commit timing enabled · commit_timing_enabled | `hypr-render.commit-timing-enabled` | 开关 | 未实现 | — |
+| Direct scan output strategy · direct_scanout | `hypr-render.direct-scanout` | 滑块 | 未实现 | — |
+| expand undersized textures · expand_undersized_textures | `hypr-render.expand-undersized-textures` | 开关 | 未实现 | — |
+| fp16 sdr tf · fp16_sdr_tf | `hypr-render.fp16-sdr-tf` | 滑块 | 未实现 | — |
+| icc vcgt enabled · icc_vcgt_enabled | `hypr-render.icc-vcgt-enabled` | 开关 | 未实现 | — |
+| keep unmodified copy · keep_unmodified_copy | `hypr-render.keep-unmodified-copy` | 滑块 | 未实现 | — |
+| Rendering scheduling strategy · new_render_scheduling | `hypr-render.new-render-scheduling` | 开关 | 未实现 | — |
+| not shown fifo lock · not_shown_fifo_lock | `hypr-render.not-shown-fifo-lock` | 滑块 | 未实现 | — |
+| non shader cm · non_shader_cm | `hypr-render.non-shader-cm` | 滑块 | 未实现 | — |
+| non shader cm interop · non_shader_cm_interop | `hypr-render.non-shader-cm-interop` | 滑块 | 未实现 | — |
+| send content type · send_content_type | `hypr-render.send-content-type` | 开关 | 未实现 | — |
+| use fp16 · use_fp16 | `hypr-render.use-fp16` | 滑块 | 未实现 | — |
+| use shader blur blend · use_shader_blur_blend | `hypr-render.use-shader-blur-blend` | 开关 | 未实现 | — |
+| xp mode · xp_mode | `hypr-render.xp-mode` | 开关 | 未实现 | — |
+
 
 <a id="category-devices"></a>
 
@@ -2297,7 +2349,7 @@ Windows 参考入口：`ms-settings:personalization-colors`、`ms-settings:color
 
 主题组合、声音与指针
 
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**未实现**；条目：10；已实现 2 / 未实现 8 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2308,7 +2360,7 @@ Windows 参考入口：`ms-settings:themes`。
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Material style variant | `themes.material-style-variant` | 选择 | 已实现 | App-only TOML persistence and runtime theme; Tonal spot default; see app-preferences.md and appearance tests |
-| Dark theme | `themes.material-theme-mode` | 选择 | 已实现 | Rust GNOME/GTK Light/Dark and documented Qt Quick defaults via fish/Hyprland; see app-preferences.md and backend tests |
+| Dark theme | `themes.material-theme-mode` | 选择 | 已实现 | Rust GNOME/GTK Light/Dark and documented Qt Quick defaults via fish/Hyprland; Light/Dark icon buttons, backend target diagnostics hidden; see app-preferences.md and backend tests |
 
 #### 设置
 
@@ -3652,23 +3704,6 @@ Windows 参考入口：`ms-settings:signinoptions-launchsecuritykeyenrollment`�
 | Set key PIN | `security-key.ef14bdad` | 操作 | 未实现 | — |
 | Reset security keys | `security-key.9d94adb9` | 操作 | 未实现 | — |
 
-### Family — `family`
-
-家庭成员与家长控制参考
-
-页面状态：**不适用**；条目：3；已实现 0 / 未实现 0 / 不适用 3。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:family-group`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Add family members | `family.4a69e379` | 操作 | 不适用 | — |
-| View homegroup | `family.140354ae` | 操作 | 不适用 | — |
-| Manage parental controls | `family.fc605dfe` | 操作 | 不适用 | — |
 
 ### Other users — `other-users`
 
@@ -3689,24 +3724,6 @@ Windows 参考入口：`ms-settings:otherusers`。
 | Remove account | `other-users.b15b73d2` | 操作 | 未实现 | — |
 | Set up self-service terminals | `other-users.bf429391` | 操作 | 未实现 | — |
 
-### Access work or school — `work`
-
-组织账户与设备管理参考
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:workplace`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Connect organizational accounts | `work.15cc03bd` | 操作 | 未实现 | — |
-| Disconnect organizational accounts | `work.840a0f15` | 操作 | 未实现 | — |
-| Export management logs | `work.89aa0c9d` | 操作 | 未实现 | — |
-| Provisioning packages | `work.c24f1bf1` | 操作 | 未实现 | — |
 
 ### System backup — `backup`
 
@@ -3795,22 +3812,6 @@ Windows 参考入口：`ms-settings:workplace-repairtoken`。
 | Repair token | `repair-token.ad0f71f6` | 文本输入 | 不适用 | — |
 | Application token | `repair-token.6006fa6c` | 操作 | 不适用 | — |
 
-### Windows Anywhere — `windows-anywhere`
-
-Windows 专用跨设备体验参考
-
-页面状态：**不适用**；条目：2；已实现 0 / 未实现 0 / 不适用 2。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:windowsanywhere`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Manage device synchronization | `windows-anywhere.32121bde` | 操作 | 不适用 | — |
-| Device support status | `windows-anywhere.e67d4f70` | 信息展示 | 不适用 | — |
 
 ### Passkeys — `passkeys`
 
@@ -3888,40 +3889,41 @@ Windows 首页 Microsoft 365 和 Xbox 卡片参考
 
 ### Date and time — `date-time`
 
-时间同步、时区与日历
+时间同步、时区与区域日期时间格式
 
-页面状态：**未实现**；条目：11；已实现 0 / 未实现 11 / 不适用 0。
+页面状态：**部分实现**；条目：7；已实现 6 / 未实现 1 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：自动时区检测仍为预览；其他选项通过系统服务读取和修改。
 
 Windows 参考入口：`ms-settings:dateandtime`。
 
-#### 设置
+#### Time synchronization
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Automatically set time | `date-time.db451de3` | 开关 | 未实现 | — |
+| Automatically set time | `date-time.db451de3` | 开关 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; settings_api_test.dart; resident Rust service and private-pipe authorization. |
+| Time server | `date-time.7e33a213` | 文本输入 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; settings_api_test.dart; resident Rust service and private-pipe authorization. |
+| Sync now | `date-time.098d06ec` | 操作 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; settings_api_test.dart; resident Rust service and private-pipe authorization. |
+| Set date and time manually | `date-time.6422d209` | 操作 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; settings_api_test.dart; resident Rust service and private-pipe authorization. |
+
+#### Time zone
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Time zone | `date-time.fb2a23dc` | 选择 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; settings_api_test.dart; resident Rust service and private-pipe authorization. |
 | Automatically set time zone | `date-time.2af5dabe` | 开关 | 未实现 | — |
-| Time zone | `date-time.fb2a23dc` | 选择 | 未实现 | — |
-| Automatically adjust for daylight saving time | `date-time.753113c2` | 开关 | 未实现 | — |
-| Set date and time manually | `date-time.6422d209` | 操作 | 未实现 | — |
-| Sync now | `date-time.098d06ec` | 操作 | 未实现 | — |
-| Time server | `date-time.7e33a213` | 文本输入 | 未实现 | — |
-| Other calendars | `date-time.d1937ca7` | 选择 | 未实现 | — |
-| Display seconds | `date-time.3d9b3c71` | 开关 | 未实现 | — |
 
-#### Windows 参考细项
+#### Regional format
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Timezone | `date-time.reference.7e2d22fe` | 选择 | 未实现 | — |
-| Show additional calendars in the taskbar | `date-time.reference.d2ebb693` | 选择 | 未实现 | — |
+| Date/time format | `date-time.format` | 选择 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; settings_api_test.dart; resident Rust service and private-pipe authorization. |
 
 ### Language and Region — `language`
 
 显示语言、首选语言与区域格式
 
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -3937,7 +3939,6 @@ Windows 参考入口：`ms-settings:regionlanguage`、`ms-settings:regionformatt
 | Regional format | `language.b77c691e` | 选择 | 未实现 | — |
 | Language options | `language.feb9d380` | 操作 | 未实现 | — |
 | Manage language settings | `language.5f7e5146` | 操作 | 未实现 | — |
-| Global language support using UTF-8 | `language.3fb068b9` | 开关 | 未实现 | — |
 
 ### Typing — `typing`
 
@@ -4240,176 +4241,6 @@ Windows 参考入口：`ms-settings:regionlanguage-chsime-wubi`。
 | Cloud Candidate Suggestions | `regionlanguage-chsime-wubi.01c381ff` | 开关 | 不适用 | — |
 | User Dictionary | `regionlanguage-chsime-wubi.953dcd7c` | 操作 | 不适用 | — |
 | Button settings | `regionlanguage-chsime-wubi.9be757c1` | 操作 | 不适用 | — |
-
-<a id="category-gaming"></a>
-
-## 游戏
-
-游戏模式、录制与快捷键
-
-### Game Bar — `game-bar`
-
-录制入口与快捷键参考
-
-页面状态：**未实现**；条目：13；已实现 0 / 未实现 13 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:gaming-gamebar`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Use your controller to open Game Bar | `game-bar.ea0a7460` | 开关 | 未实现 | — |
-| Custom shortcut keys | `game-bar.cb1b0cb0` | 操作 | 未实现 | — |
-| Open the game bar shortcut key | `game-bar.96f83311` | 文本输入 | 未实现 | — |
-| Screenshot shortcut keys | `game-bar.4c21a586` | 文本输入 | 未实现 | — |
-| Record shortcut keys | `game-bar.8c6677b3` | 文本输入 | 未实现 | — |
-| Microphone shortcut keys | `game-bar.cb09c7dd` | 文本输入 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Game Bar | `game-bar.reference.2c2d66f8` | 开关 | 未实现 | — |
-| Game Bar (Win + G) | `game-bar.reference.c2ddeb9e` | 开关 | 未实现 | — |
-| Take a screenshot (Win + Alt + PrtScrn) | `game-bar.reference.08b320f8` | 开关 | 未实现 | — |
-| Record last 30 seconds (Win + Alt + G) | `game-bar.reference.20695066` | 开关 | 未实现 | — |
-| Start/stop recording (Win + Alt + R) | `game-bar.reference.b67958ca` | 开关 | 未实现 | — |
-| Microphone on/off (Win + Alt + M) | `game-bar.reference.f983d88b` | 开关 | 未实现 | — |
-| HDR on/off (Win + Alt + B) | `game-bar.reference.9bc24c92` | 开关 | 未实现 | — |
-
-### Captures — `captures`
-
-录制目录、质量与音频
-
-页面状态：**未实现**；条目：9；已实现 0 / 未实现 9 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:gaming-gamedvr`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Recording and saving directory | `captures.83b75112` | 文本输入 | 未实现 | — |
-| Record what just happened | `captures.dc4c5631` | 开关 | 未实现 | — |
-| Maximum recording duration | `captures.ae31435d` | 选择 | 未实现 | — |
-| Record audio | `captures.21ad33bd` | 开关 | 未实现 | — |
-| Microphone volume | `captures.cdc9e129` | 滑块 | 未实现 | — |
-| System volume | `captures.d17879a4` | 滑块 | 未实现 | — |
-| Video frame rate | `captures.720a9c6c` | 选择 | 未实现 | — |
-| Video quality | `captures.327df78f` | 选择 | 未实现 | — |
-| Record mouse pointer | `captures.70b4169d` | 开关 | 未实现 | — |
-
-### Game Mode — `game-mode`
-
-游戏优化与相关图形设置
-
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:gaming-gamemode`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Game Mode | `game-mode.65634ae8` | 开关 | 未实现 | — |
-| Graphics performance options | `game-mode.3df22bbd` | 操作 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Game Mode | `game-mode.reference.9424db05` | 选择 | 未实现 | — |
-
-### Xbox Mode — `xbox-mode`
-
-全屏游戏会话参考
-
-页面状态：**不适用**；条目：3；已实现 0 / 未实现 0 / 不适用 3。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:gaming-fullscreen`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Enable Xbox Mode | `xbox-mode.43ced550` | 开关 | 不适用 | — |
-| Default game application | `xbox-mode.b7596ef6` | 选择 | 不适用 | — |
-| Go to full screen on startup | `xbox-mode.815d8436` | 开关 | 不适用 | — |
-
-### TruePlay — `trueplay`
-
-已移除的 Windows 游戏功能参考
-
-页面状态：**不适用**；条目：1；已实现 0 / 未实现 0 / 不适用 1。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:gaming-trueplay`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Functional status | `trueplay.540cc78d` | 信息展示 | 不适用 | — |
-
-### Hyprland · OpenGL compositing options — `hypr-opengl`
-
-合成器高级设置：opengl · Hyprland
-
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### OpenGL 合成选项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| nvidia anti flicker · nvidia_anti_flicker | `hypr-opengl.nvidia-anti-flicker` | 开关 | 未实现 | — |
-
-### Hyprland · Rendering and Color Pipeline — `hypr-render`
-
-合成器高级设置：render · Hyprland
-
-页面状态：**未实现**；条目：19；已实现 0 / 未实现 19 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 渲染与色彩管线
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| async commit · async_commit | `hypr-render.async-commit` | 开关 | 未实现 | — |
-| cm auto hdr · cm_auto_hdr | `hypr-render.cm-auto-hdr` | 滑块 | 未实现 | — |
-| Color management switch · cm_enabled | `hypr-render.cm-enabled` | 开关 | 未实现 | — |
-| cm sdr eotf · cm_sdr_eotf | `hypr-render.cm-sdr-eotf` | 文本输入 | 未实现 | — |
-| ctm animation · ctm_animation | `hypr-render.ctm-animation` | 滑块 | 未实现 | — |
-| commit timing enabled · commit_timing_enabled | `hypr-render.commit-timing-enabled` | 开关 | 未实现 | — |
-| Direct scan output strategy · direct_scanout | `hypr-render.direct-scanout` | 滑块 | 未实现 | — |
-| expand undersized textures · expand_undersized_textures | `hypr-render.expand-undersized-textures` | 开关 | 未实现 | — |
-| fp16 sdr tf · fp16_sdr_tf | `hypr-render.fp16-sdr-tf` | 滑块 | 未实现 | — |
-| icc vcgt enabled · icc_vcgt_enabled | `hypr-render.icc-vcgt-enabled` | 开关 | 未实现 | — |
-| keep unmodified copy · keep_unmodified_copy | `hypr-render.keep-unmodified-copy` | 滑块 | 未实现 | — |
-| Rendering scheduling strategy · new_render_scheduling | `hypr-render.new-render-scheduling` | 开关 | 未实现 | — |
-| not shown fifo lock · not_shown_fifo_lock | `hypr-render.not-shown-fifo-lock` | 滑块 | 未实现 | — |
-| non shader cm · non_shader_cm | `hypr-render.non-shader-cm` | 滑块 | 未实现 | — |
-| non shader cm interop · non_shader_cm_interop | `hypr-render.non-shader-cm-interop` | 滑块 | 未实现 | — |
-| send content type · send_content_type | `hypr-render.send-content-type` | 开关 | 未实现 | — |
-| use fp16 · use_fp16 | `hypr-render.use-fp16` | 滑块 | 未实现 | — |
-| use shader blur blend · use_shader_blur_blend | `hypr-render.use-shader-blur-blend` | 开关 | 未实现 | — |
-| xp mode · xp_mode | `hypr-render.xp-mode` | 开关 | 未实现 | — |
 
 <a id="category-accessibility"></a>
 
@@ -6118,13 +5949,13 @@ Windows 参考入口：`ms-settings:privacy-voiceactivation`。
 
 更新状态与维护安排
 
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
 Windows 参考入口：`ms-settings:windowsupdate`、`ms-settings:windowsupdate-action`、`ms-settings:windowsupdate-seekerondemand`。
 
-相关页面 ID：`update-history`、`update-options`、`insider`。
+相关页面 ID：`update-history`、`update-options`。
 
 #### 设置
 
@@ -6136,7 +5967,6 @@ Windows 参考入口：`ms-settings:windowsupdate`、`ms-settings:windowsupdate-
 | Pause updates | `updates.70b991bf` | 选择 | 未实现 | — |
 | Update history | `updates.0c4e326b` | 操作 | 未实现 | — |
 | Advanced options | `updates.378a5408` | 操作 | 未实现 | — |
-| Insider Program | `updates.6b27d490` | 操作 | 未实现 | — |
 
 ### Update history — `update-history`
 
@@ -6161,15 +5991,15 @@ Windows 参考入口：`ms-settings:windowsupdate-history`。
 
 ### Update advanced options — `update-options`
 
-下载、重启与可选更新
+下载与更新偏好
 
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
 Windows 参考入口：`ms-settings:windowsupdate-options`。
 
-相关页面 ID：`active-hours`、`restart`、`optional-updates`、`delivery`。
+相关页面 ID：`active-hours`。
 
 #### 设置
 
@@ -6180,8 +6010,6 @@ Windows 参考入口：`ms-settings:windowsupdate-options`。
 | Restart as soon as possible | `update-options.0a009ef6` | 开关 | 未实现 | — |
 | Notify me when a reboot is needed | `update-options.1439f298` | 开关 | 未实现 | — |
 | Activity time | `update-options.abe0ecdb` | 操作 | 未实现 | — |
-| Optional updates | `update-options.0680a7f3` | 操作 | 未实现 | — |
-| Delivery Optimization | `update-options.cdf4d30f` | 操作 | 未实现 | — |
 | Recovery | `update-options.79748ca1` | 操作 | 未实现 | — |
 
 ### Active hours — `active-hours`
@@ -6202,120 +6030,11 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 | Start time | `active-hours.e8868af6` | 文本输入 | 未实现 | — |
 | End time | `active-hours.a0bb9f49` | 文本输入 | 未实现 | — |
 
-### Restart options — `restart`
 
-预约更新重启参考
 
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
-Windows 参考入口：`ms-settings:windowsupdate-restartoptions`。
 
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Plan a restart | `restart.44b9c516` | 开关 | 未实现 | — |
-| Restart time | `restart.389c87b1` | 文本输入 | 未实现 | — |
-| Restart date | `restart.a9e43782` | 文本输入 | 未实现 | — |
-
-### Optional updates — `optional-updates`
-
-可选驱动与其他更新
-
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:windowsupdate-optionalupdates`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Driver updates | `optional-updates.96574344` | 操作 | 未实现 | — |
-| Other updates | `optional-updates.7cf8d3a1` | 操作 | 未实现 | — |
-| Download and install | `optional-updates.f4df9977` | 操作 | 未实现 | — |
-
-### Delivery Optimization — `delivery`
-
-Windows 对等更新下载参考
-
-页面状态：**不适用**；条目：4；已实现 0 / 未实现 0 / 不适用 4。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:delivery-optimization`。
-
-相关页面 ID：`delivery-advanced`、`delivery-activity`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Allow downloads from other computers | `delivery.e6f32237` | 开关 | 不适用 | — |
-| Download source | `delivery.f92ab4a0` | 选择 | 不适用 | — |
-| Advanced bandwidth options | `delivery.e4b8232a` | 操作 | 不适用 | — |
-| Activity Monitor | `delivery.8af97a09` | 操作 | 不适用 | — |
-
-### Delivery optimization advanced options — `delivery-advanced`
-
-下载上传带宽限制参考
-
-页面状态：**不适用**；条目：7；已实现 0 / 未实现 0 / 不适用 7。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:delivery-optimization-advanced`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Limit background download bandwidth | `delivery-advanced.e83387e1` | 开关 | 不适用 | — |
-| Background download bandwidth | `delivery-advanced.ca6cbdef` | 滑块 | 不适用 | — |
-| Limit foreground download bandwidth | `delivery-advanced.e7da235d` | 开关 | 不适用 | — |
-| Front-end download bandwidth | `delivery-advanced.9a68eea5` | 滑块 | 不适用 | — |
-| Limit upload bandwidth | `delivery-advanced.4fd3fe9e` | 开关 | 不适用 | — |
-| Upload bandwidth | `delivery-advanced.833b5a72` | 滑块 | 不适用 | — |
-| Monthly upload limit | `delivery-advanced.cfbe4220` | 文本输入 | 不适用 | — |
-
-### Delivery optimization activities — `delivery-activity`
-
-Windows 更新流量统计参考
-
-页面状态：**不适用**；条目：3；已实现 0 / 未实现 0 / 不适用 3。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:delivery-optimization-activity`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Download statistics | `delivery-activity.f2c09a5a` | 信息展示 | 不适用 | — |
-| Upload statistics | `delivery-activity.ae448372` | 信息展示 | 不适用 | — |
-| Average download speed | `delivery-activity.f1acf34e` | 信息展示 | 不适用 | — |
-
-### Windows Insider Program — `insider`
-
-Windows 预览版本参考
-
-页面状态：**不适用**；条目：3；已实现 0 / 未实现 0 / 不适用 3。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:windowsinsider`、`ms-settings:windowsinsider-optin`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Sign up for the Insider Program | `insider.378311bc` | 操作 | 不适用 | — |
-| Preview channel | `insider.a4eb980c` | 选择 | 不适用 | — |
-| Stop getting preview builds | `insider.3a8e2507` | 开关 | 不适用 | — |
 
 <a id="category-hyprland"></a>
 

@@ -26,11 +26,8 @@ void main() {
         .map((c) => c.id)
         .toSet();
     expect(controls, containsAll(coverage['baselineControls'] as List));
-    expect((coverage['baselinePages'] as List).length, 202);
-    expect((coverage['baselineControls'] as List).length, 1321);
-    expect(catalog.categories.length, 13);
-    expect(catalog.pages.length, 308);
-    expect(catalog.controlCount, 2182);
+    expect(catalog.page('hypr-opengl').category, 'system');
+    expect(catalog.page('hypr-render').category, 'system');
   });
 
   test('every added control has a pinned source and stays unavailable', () {

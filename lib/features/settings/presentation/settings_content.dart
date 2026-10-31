@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../../appearance/application/app_preferences_controller.dart';
-import '../../appearance/domain/app_preferences.dart';
+import '../../date_time/application/date_time_controller.dart';
+import '../../date_time/presentation/date_time_settings.dart';
 import '../domain/settings_catalog.dart';
 import 'settings_preview.dart';
 import 'settings_widgets.dart';
@@ -175,6 +175,7 @@ class SettingsDetail extends StatelessWidget {
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: .stretch,
     children: [
+      if (page.id == 'date-time') const CurrentDateTime(),
       Wrap(
         spacing: 12,
         runSpacing: 8,
@@ -228,11 +229,23 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final visible = section.controls
+        .where(
+          (setting) => switch (setting.id) {
+            manualTimeSettingId =>
+              DateTimeScope.maybeOf(context)?.hideManualTime != true,
+            timeServerSettingId || syncNowSettingId =>
+              DateTimeScope.maybeOf(context)?.state?.ntp == true,
+            _ => true,
+          },
+        )
+        .toList();
+    if (visible.isEmpty) return const SizedBox.shrink();
     final controls = Column(
       children: [
-        for (var i = 0; i < section.controls.length; i++) ...[
+        for (var i = 0; i < visible.length; i++) ...[
           if (i != 0) const Divider(height: 1, indent: 20, endIndent: 20),
-          SettingControlTile(section.controls[i]),
+          SettingControlTile(visible[i]),
         ],
       ],
     );
@@ -263,49 +276,6 @@ class _SectionCard extends StatelessWidget {
           ),
         ),
         SettingsSurface(padding: .zero, child: controls),
-        if (section.controls.first.id == materialStyleSettingId)
-          Padding(
-            padding: const .fromLTRB(12, 8, 12, 0),
-            child: Wrap(
-              spacing: 12,
-              crossAxisAlignment: .center,
-              children: [
-                const Text('Appearance preferences'),
-                TextButton.icon(
-                  onPressed: AppPreferencesScope.of(context).isBusy
-                      ? null
-                      : AppPreferencesScope.of(context).reload,
-                  icon: const Icon(Icons.refresh_rounded),
-                  label: const Text('Reload settings'),
-                ),
-              ],
-            ),
-          ),
-        if (section.controls.first.id == materialStyleSettingId)
-          const _SystemAppearanceResults(),
-      ],
-    );
-  }
-}
-
-class _SystemAppearanceResults extends StatelessWidget {
-  const _SystemAppearanceResults();
-
-  @override
-  Widget build(BuildContext context) {
-    final targets = AppPreferencesScope.of(context).systemTheme?.targets ?? [];
-    return Column(
-      children: [
-        for (final target in targets)
-          ListTile(
-            dense: true,
-            leading: Icon(switch (target.status) {
-              .unavailable || .detected => Icons.info_outline_rounded,
-              _ => Icons.check_circle_outline_rounded,
-            }),
-            title: Text(target.name),
-            subtitle: Text(target.detail),
-          ),
       ],
     );
   }

@@ -5,6 +5,7 @@ import 'package:toml/toml.dart';
 import 'package:remya_settings_client/remya_settings_client.dart';
 
 import '../domain/app_preferences.dart';
+import '../../integration/settings_file.dart';
 
 class AppPreferencesFile {
   const AppPreferencesFile(this.file);
@@ -36,36 +37,8 @@ class AppPreferencesFile {
     return AppPreferences.fromMap(TomlDocument.parse(content).toMap());
   }
 
-  Future<void> save(AppPreferences preferences) async {
-    var target = file;
-    if (await FileSystemEntity.isLink(target.path)) {
-      target = File(await target.resolveSymbolicLinks());
-    }
-    await target.parent.create(recursive: true);
-    final temporary = await target.parent.createTemp('.remya-settings-');
-    try {
-      final staged = File('${temporary.path}/config.toml');
-      await staged.writeAsString(
-        '# Remy\'a Settings app preferences\n${TomlDocument.fromMap(preferences.toMap())}\n',
-        flush: true,
-      );
-      final mode = await target.exists()
-          ? (await target.stat()).mode & 0x1ff
-          : 0x180;
-      final result = await Process.run('chmod', [
-        mode.toRadixString(8),
-        '--',
-        staged.path,
-      ]);
-      if (result.exitCode != 0) {
-        throw FileSystemException(
-          'Unable to preserve config permissions',
-          target.path,
-        );
-      }
-      await staged.rename(target.path);
-    } finally {
-      await temporary.delete(recursive: true);
-    }
-  }
+  Future<void> save(AppPreferences preferences) => writeSettingsFile(
+    file,
+    '# Remy\'a Settings app preferences\n${TomlDocument.fromMap(preferences.toMap())}\n',
+  );
 }

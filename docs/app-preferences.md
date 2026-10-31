@@ -33,7 +33,7 @@ theme_mode = "light"
 ```
 
 - `style_variant`: `tonal_spot`, `fidelity`, `monochrome`, `neutral`, `vibrant`, `expressive`, `content`, `rainbow`, or `fruit_salad`. These change the Material color scheme; widgets retain Material Design 3 Expressive styling.
-- `theme_mode`: last selected `light` or `dark`. Startup and Reload read the current GNOME/GTK preference instead of enforcing this saved record. Editing TOML never changes the desktop. A previous preview file containing `system` is accepted as migration input and saved as an explicit mode on the next successful edit.
+- `theme_mode`: last selected `light` or `dark`. First launch reads the current GNOME/GTK preference and atomically saves it. Startup and Reload subsequently compare saved and actual values without overwriting either side; a top warning offers adoption or application. Editing TOML never changes the desktop. A previous preview file containing `system` is accepted as migration input and saved as an explicit mode on the next successful edit.
 - Missing fields use Tonal spot/Light defaults. Existing explicit style selections are retained. Missing files do not trigger a write. Empty files, malformed TOML, unsupported versions, unknown keys, wrong types, and unknown enum values are rejected.
 - No seed-color configuration, image-derived colors, or automatic startup writes are included. The public service observes external configuration changes every 500 ms and reloads through the same controller. Invalid files retain the last valid live theme and produce an API/UI error. Removing a file and reloading retains the last valid live state.
 
@@ -50,7 +50,7 @@ theme_mode = "light"
 | Qt Quick Material | `QT_QUICK_CONTROLS_MATERIAL_THEME` | `Light` / `Dark`, only when the Qt 6 style module is installed |
 | Qt Quick Universal | `QT_QUICK_CONTROLS_UNIVERSAL_THEME` | `Light` / `Dark`, only when the Qt 6 style module is installed |
 
-Target current Arch Linux packages. No deprecated GTK 4 fallback or old Hyprland syntax is implemented. Toolkit and schema detection do not install packages. Result rows distinguish detected, applied, unchanged, and unavailable targets.
+Target current Arch Linux packages. No deprecated GTK 4 fallback or old Hyprland syntax is implemented. Toolkit and schema detection do not install packages. The settings page offers Light and Dark icon buttons with selection states, tooltips, and keyboard focus. Selecting either mode applies supported toolkit settings automatically through Rust. Backend target results remain internal; the page does not show toolkit/environment diagnostics or a routine reload button. Failures still appear in the error banner with Reload.
 
 Qt defaults apply only to applications using those styles; explicit QML properties take precedence. The backend does not set `QT_QUICK_CONTROLS_STYLE`, `QT_QPA_PLATFORMTHEME`, `QT_STYLE_OVERRIDE`, or `GTK_THEME`, replace a palette file, or guess Kvantum/qt6ct/KDE theme names. Qt Widgets and other applications can consume the system preference through their existing platform integration. The desktop portal appearance interface is read-only: availability and propagation depend on the installed portal backend, so the app does not claim universal application coverage.
 
@@ -76,7 +76,7 @@ Sources: [fish configuration](https://fishshell.com/docs/current/language.html#c
 
 Durable tests cover strict TOML, atomic persistence, controller ordering/error recovery, actual control bindings, retained navigation, installed theme matching, GSettings/file rollback, managed environment blocks, syntax validation, and missing optional targets. Native verification uses the real bridge and independent GTK/Qt probes, with exact restoration of personal files after temporary Light/Dark checks. Current verification evidence is recorded in [the implementation tracker](settings-implementation-progress.md).
 
-Only `themes.material-style-variant` and `themes.material-theme-mode` are available: one app palette control and one implemented system appearance control. The remaining 2,180 catalog controls remain disabled previews. The sidebar is persistent and the native window minimum width is 1000 logical pixels.
+The appearance controls and two manual date/time controls are available (see public-api.md). The remaining 2,178 catalog controls remain disabled previews. The single-level sidebar is persistent, becomes icon-only below 1000 logical pixels, and uses wrapping connected page buttons with leading icons under the category title. The native minimum width is 360 logical pixels.
 
 ## Dependent applications and public operations
 

@@ -317,12 +317,6 @@
       "icon": "language"
     },
     {
-      "id": "gaming",
-      "title": "Gaming",
-      "description": "Game mode, recording and shortcut keys",
-      "icon": "sports_esports"
-    },
-    {
       "id": "accessibility",
       "title": "Accessibility",
       "description": "Vision, hearing and interaction",
@@ -859,6 +853,337 @@
                 "High performance"
               ],
               "value": "Determined by the system"
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "hypr-opengl",
+      "category": "system",
+      "title": "Hyprland · OpenGL compositing options",
+      "description": "Advanced compositor settings: opengl · Hyprland",
+      "preview": "none",
+      "availability": "planned",
+      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+      "sources": [
+        "hypr-options",
+        "hyprviz-project"
+      ],
+      "windowsUris": [],
+      "sections": [
+        {
+          "title": "OpenGL Compositing Options",
+          "controls": [
+            {
+              "id": "hypr-opengl.nvidia-anti-flicker",
+              "title": "nvidia anti flicker · nvidia_anti_flicker",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": true,
+              "referencePath": [
+                "hypr-options",
+                "opengl",
+                "nvidia_anti_flicker"
+              ]
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "hypr-render",
+      "category": "system",
+      "title": "Hyprland · Rendering and Color Pipeline",
+      "description": "Advanced compositor settings: render · Hyprland",
+      "preview": "none",
+      "availability": "planned",
+      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+      "sources": [
+        "hypr-options",
+        "hyprviz-project"
+      ],
+      "windowsUris": [],
+      "sections": [
+        {
+          "title": "Rendering and Color Pipeline",
+          "controls": [
+            {
+              "id": "hypr-render.async-commit",
+              "title": "async commit · async_commit",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "async_commit"
+              ]
+            },
+            {
+              "id": "hypr-render.cm-auto-hdr",
+              "title": "cm auto hdr · cm_auto_hdr",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 1.0,
+              "min": 0.0,
+              "max": 2.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "cm_auto_hdr"
+              ]
+            },
+            {
+              "id": "hypr-render.cm-enabled",
+              "title": "Color management switch · cm_enabled",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": true,
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "cm_enabled"
+              ]
+            },
+            {
+              "id": "hypr-render.cm-sdr-eotf",
+              "title": "cm sdr eotf · cm_sdr_eotf",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "default",
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "cm_sdr_eotf"
+              ]
+            },
+            {
+              "id": "hypr-render.ctm-animation",
+              "title": "ctm animation · ctm_animation",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 2.0,
+              "min": 0.0,
+              "max": 2.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "ctm_animation"
+              ]
+            },
+            {
+              "id": "hypr-render.commit-timing-enabled",
+              "title": "commit timing enabled · commit_timing_enabled",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": true,
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "commit_timing_enabled"
+              ]
+            },
+            {
+              "id": "hypr-render.direct-scanout",
+              "title": "Direct scan output strategy · direct_scanout",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 0.0,
+              "min": 0.0,
+              "max": 2.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "direct_scanout"
+              ]
+            },
+            {
+              "id": "hypr-render.expand-undersized-textures",
+              "title": "expand undersized textures · expand_undersized_textures",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": true,
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "expand_undersized_textures"
+              ]
+            },
+            {
+              "id": "hypr-render.fp16-sdr-tf",
+              "title": "fp16 sdr tf · fp16_sdr_tf",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 0.0,
+              "min": 0.0,
+              "max": 1.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "fp16_sdr_tf"
+              ]
+            },
+            {
+              "id": "hypr-render.icc-vcgt-enabled",
+              "title": "icc vcgt enabled · icc_vcgt_enabled",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": true,
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "icc_vcgt_enabled"
+              ]
+            },
+            {
+              "id": "hypr-render.keep-unmodified-copy",
+              "title": "keep unmodified copy · keep_unmodified_copy",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 2.0,
+              "min": 0.0,
+              "max": 2.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "keep_unmodified_copy"
+              ]
+            },
+            {
+              "id": "hypr-render.new-render-scheduling",
+              "title": "Rendering scheduling strategy · new_render_scheduling",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "new_render_scheduling"
+              ]
+            },
+            {
+              "id": "hypr-render.not-shown-fifo-lock",
+              "title": "not shown fifo lock · not_shown_fifo_lock",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 0.0,
+              "min": 0.0,
+              "max": 2.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "not_shown_fifo_lock"
+              ]
+            },
+            {
+              "id": "hypr-render.non-shader-cm",
+              "title": "non shader cm · non_shader_cm",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 2.0,
+              "min": 0.0,
+              "max": 3.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "non_shader_cm"
+              ]
+            },
+            {
+              "id": "hypr-render.non-shader-cm-interop",
+              "title": "non shader cm interop · non_shader_cm_interop",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 2.0,
+              "min": 0.0,
+              "max": 2.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "non_shader_cm_interop"
+              ]
+            },
+            {
+              "id": "hypr-render.send-content-type",
+              "title": "send content type · send_content_type",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": true,
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "send_content_type"
+              ]
+            },
+            {
+              "id": "hypr-render.use-fp16",
+              "title": "use fp16 · use_fp16",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 2.0,
+              "min": 0.0,
+              "max": 2.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "use_fp16"
+              ]
+            },
+            {
+              "id": "hypr-render.use-shader-blur-blend",
+              "title": "use shader blur blend · use_shader_blur_blend",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "use_shader_blur_blend"
+              ]
+            },
+            {
+              "id": "hypr-render.xp-mode",
+              "title": "xp mode · xp_mode",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "render",
+                "xp_mode"
+              ]
             }
           ]
         }
@@ -9100,53 +9425,6 @@
       "children": []
     },
     {
-      "id": "family",
-      "category": "accounts",
-      "title": "Family",
-      "description": "Family Member and Parental Control Reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:family-group"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "family.4a69e379",
-              "title": "Add family members",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Add"
-            },
-            {
-              "id": "family.140354ae",
-              "title": "View homegroup",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "family.fc605dfe",
-              "title": "Manage parental controls",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "other-users",
       "category": "accounts",
       "title": "Other users",
@@ -9191,61 +9469,6 @@
             {
               "id": "other-users.bf429391",
               "title": "Set up self-service terminals",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "work",
-      "category": "accounts",
-      "title": "Access work or school",
-      "description": "Organizational Account and Device Management Reference",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:workplace"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "work.15cc03bd",
-              "title": "Connect organizational accounts",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Connection"
-            },
-            {
-              "id": "work.840a0f15",
-              "title": "Disconnect organizational accounts",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "work.89aa0c9d",
-              "title": "Export management logs",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "work.c24f1bf1",
-              "title": "Provisioning packages",
               "type": "action",
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
@@ -9567,52 +9790,13 @@
       "children": []
     },
     {
-      "id": "windows-anywhere",
-      "category": "accounts",
-      "title": "Windows Anywhere",
-      "description": "Windows-specific cross-device experience reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:windowsanywhere"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "windows-anywhere.32121bde",
-              "title": "Manage device synchronization",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "windows-anywhere.e67d4f70",
-              "title": "Device support status",
-              "type": "info",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Not applicable to Hyprland"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "date-time",
       "category": "time",
       "title": "Date and time",
-      "description": "Time synchronization, time zone and calendar",
+      "description": "Clock synchronization, time zone and regional date/time format",
       "preview": "none",
       "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "reason": "Date/time settings use actual system state. Automatic time zone detection remains a preview.",
       "sources": [
         "uris"
       ],
@@ -9621,15 +9805,55 @@
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Time synchronization",
           "controls": [
             {
               "id": "date-time.db451de3",
               "title": "Automatically set time",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Synchronize the system clock automatically over the network.",
               "value": false
+            },
+            {
+              "id": "date-time.7e33a213",
+              "title": "Time server",
+              "type": "text",
+              "availability": "available",
+              "reason": "Usually no change is needed. Separate custom servers with spaces.",
+              "value": ""
+            },
+            {
+              "id": "date-time.098d06ec",
+              "title": "Sync now",
+              "type": "action",
+              "availability": "available",
+              "reason": "Request a fresh network time response and verify synchronization.",
+              "value": "Synchronization"
+            },
+            {
+              "id": "date-time.6422d209",
+              "title": "Set date and time manually",
+              "type": "action",
+              "availability": "available",
+              "reason": "Set the system clock manually; automatic time synchronization will be turned off.",
+              "value": "Configuration"
+            }
+          ]
+        },
+        {
+          "title": "Time zone",
+          "controls": [
+            {
+              "id": "date-time.fb2a23dc",
+              "title": "Time zone",
+              "type": "choice",
+              "availability": "available",
+              "reason": "GMT offsets reflect the current date. Daylight saving time follows the selected time zone automatically.",
+              "options": [
+                "UTC"
+              ],
+              "value": "UTC"
             },
             {
               "id": "date-time.2af5dabe",
@@ -9638,109 +9862,22 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": false
-            },
-            {
-              "id": "date-time.fb2a23dc",
-              "title": "Time zone",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Example: UTC+08:00",
-                "UTC",
-                "UTC-08:00"
-              ],
-              "value": "Example: UTC+08:00"
-            },
-            {
-              "id": "date-time.753113c2",
-              "title": "Automatically adjust for daylight saving time",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "date-time.6422d209",
-              "title": "Set date and time manually",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "date-time.098d06ec",
-              "title": "Sync now",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Synchronization"
-            },
-            {
-              "id": "date-time.7e33a213",
-              "title": "Time server",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "date-time.d1937ca7",
-              "title": "Other calendars",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "None",
-                "Simplified Chinese Lunar Calendar",
-                "Traditional Chinese Lunar Calendar"
-              ],
-              "value": "None"
-            },
-            {
-              "id": "date-time.3d9b3c71",
-              "title": "Display seconds",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
             }
           ]
         },
         {
-          "title": "Windows reference settings",
-          "collapsed": true,
+          "title": "Regional format",
           "controls": [
             {
-              "id": "date-time.reference.7e2d22fe",
-              "title": "Timezone",
+              "id": "date-time.format",
+              "title": "Date/time format",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Date & time",
-                "Set timezone automatically",
-                "Timezone"
-              ],
-              "value": "Not configured",
+              "availability": "available",
+              "reason": "Set system LC_TIME. Restart applications or sign in again to apply; a system restart also applies it. Other language settings are preserved.",
               "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "date-time.reference.d2ebb693",
-              "title": "Show additional calendars in the taskbar",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Date & time",
-                "Show additional calendars in the taskbar"
+                "System language default"
               ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
+              "value": "System language default"
             }
           ]
         }
@@ -9827,14 +9964,6 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": "Configuration"
-            },
-            {
-              "id": "language.3fb068b9",
-              "title": "Global language support using UTF-8",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
             }
           ]
         }
@@ -10204,421 +10333,6 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "game-bar",
-      "category": "gaming",
-      "title": "Game Bar",
-      "description": "Recording entrance and shortcut key reference",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:gaming-gamebar"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "game-bar.ea0a7460",
-              "title": "Use your controller to open Game Bar",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "game-bar.cb1b0cb0",
-              "title": "Custom shortcut keys",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "game-bar.96f83311",
-              "title": "Open the game bar shortcut key",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "game-bar.4c21a586",
-              "title": "Screenshot shortcut keys",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "game-bar.8c6677b3",
-              "title": "Record shortcut keys",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "game-bar.cb09c7dd",
-              "title": "Microphone shortcut keys",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "game-bar.reference.2c2d66f8",
-              "title": "Game Bar",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Game Bar"
-              ],
-              "value": false
-            },
-            {
-              "id": "game-bar.reference.c2ddeb9e",
-              "title": "Game Bar (Win + G)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Game Bar shortcuts (in-app settings)",
-                "Game Bar (Win + G)"
-              ],
-              "value": false
-            },
-            {
-              "id": "game-bar.reference.08b320f8",
-              "title": "Take a screenshot (Win + Alt + PrtScrn)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Game Bar shortcuts (in-app settings)",
-                "Take a screenshot (Win + Alt + PrtScrn)"
-              ],
-              "value": false
-            },
-            {
-              "id": "game-bar.reference.20695066",
-              "title": "Record last 30 seconds (Win + Alt + G)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Game Bar shortcuts (in-app settings)",
-                "Record last 30 seconds (Win + Alt + G)"
-              ],
-              "value": false
-            },
-            {
-              "id": "game-bar.reference.b67958ca",
-              "title": "Start/stop recording (Win + Alt + R)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Game Bar shortcuts (in-app settings)",
-                "Start/stop recording (Win + Alt + R)"
-              ],
-              "value": false
-            },
-            {
-              "id": "game-bar.reference.f983d88b",
-              "title": "Microphone on/off (Win + Alt + M)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Game Bar shortcuts (in-app settings)",
-                "Microphone on/off (Win + Alt + M)"
-              ],
-              "value": false
-            },
-            {
-              "id": "game-bar.reference.9bc24c92",
-              "title": "HDR on/off (Win + Alt + B)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Game Bar shortcuts (in-app settings)",
-                "HDR on/off (Win + Alt + B)"
-              ],
-              "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "captures",
-      "category": "gaming",
-      "title": "Captures",
-      "description": "Recording directory, quality and audio",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:gaming-gamedvr"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "captures.83b75112",
-              "title": "Recording and saving directory",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "captures.dc4c5631",
-              "title": "Record what just happened",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "captures.ae31435d",
-              "title": "Maximum recording duration",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "30 minutes",
-                "1 hour",
-                "2 hours",
-                "4 hours"
-              ],
-              "value": "30 minutes"
-            },
-            {
-              "id": "captures.21ad33bd",
-              "title": "Record audio",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "captures.cdc9e129",
-              "title": "Microphone volume",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "captures.d17879a4",
-              "title": "System volume",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "captures.720a9c6c",
-              "title": "Video frame rate",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "30 fps",
-                "60 fps"
-              ],
-              "value": "30 fps"
-            },
-            {
-              "id": "captures.327df78f",
-              "title": "Video quality",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Standards",
-                "high"
-              ],
-              "value": "Standards"
-            },
-            {
-              "id": "captures.70b4169d",
-              "title": "Record mouse pointer",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "game-mode",
-      "category": "gaming",
-      "title": "Game Mode",
-      "description": "Game optimization and related graphics settings",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:gaming-gamemode"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "game-mode.65634ae8",
-              "title": "Game Mode",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "game-mode.3df22bbd",
-              "title": "Graphics performance options",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "game-mode.reference.9424db05",
-              "title": "Game Mode",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Game Mode"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "xbox-mode",
-      "category": "gaming",
-      "title": "Xbox Mode",
-      "description": "Full screen game session reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:gaming-fullscreen"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "xbox-mode.43ced550",
-              "title": "Enable Xbox Mode",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "xbox-mode.b7596ef6",
-              "title": "Default game application",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Not configured"
-              ],
-              "value": "Not configured"
-            },
-            {
-              "id": "xbox-mode.815d8436",
-              "title": "Go to full screen on startup",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "trueplay",
-      "category": "gaming",
-      "title": "TruePlay",
-      "description": "Removed Windows gaming feature reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:gaming-trueplay"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "trueplay.540cc78d",
-              "title": "Functional status",
-              "type": "info",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Microsoft has removed this feature"
             }
           ]
         }
@@ -14567,22 +14281,13 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": "Configuration"
-            },
-            {
-              "id": "updates.6b27d490",
-              "title": "Insider Program",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
             }
           ]
         }
       ],
       "children": [
         "update-history",
-        "update-options",
-        "insider"
+        "update-options"
       ]
     },
     {
@@ -14660,7 +14365,7 @@
       "id": "update-options",
       "category": "update",
       "title": "Update advanced options",
-      "description": "Download, restart and optional updates",
+      "description": "Download and update preferences",
       "preview": "none",
       "availability": "planned",
       "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
@@ -14715,22 +14420,6 @@
               "value": "Configuration"
             },
             {
-              "id": "update-options.0680a7f3",
-              "title": "Optional updates",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "update-options.cdf4d30f",
-              "title": "Delivery Optimization",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
               "id": "update-options.79748ca1",
               "title": "Recovery",
               "type": "action",
@@ -14742,10 +14431,7 @@
         }
       ],
       "children": [
-        "active-hours",
-        "restart",
-        "optional-updates",
-        "delivery"
+        "active-hours"
       ]
     },
     {
@@ -14793,351 +14479,6 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": ""
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "restart",
-      "category": "update",
-      "title": "Restart options",
-      "description": "Schedule update and restart reference",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:windowsupdate-restartoptions"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "restart.44b9c516",
-              "title": "Plan a restart",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "restart.389c87b1",
-              "title": "Restart time",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "restart.a9e43782",
-              "title": "Restart date",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "optional-updates",
-      "category": "update",
-      "title": "Optional updates",
-      "description": "Optional drivers and other updates",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:windowsupdate-optionalupdates"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "optional-updates.96574344",
-              "title": "Driver updates",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "optional-updates.7cf8d3a1",
-              "title": "Other updates",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "optional-updates.f4df9977",
-              "title": "Download and install",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Installation"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "delivery",
-      "category": "update",
-      "title": "Delivery Optimization",
-      "description": "Windows Peer Update Download Reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:delivery-optimization"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "delivery.e6f32237",
-              "title": "Allow downloads from other computers",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "delivery.f92ab4a0",
-              "title": "Download source",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Local network",
-                "Local network and Internet"
-              ],
-              "value": "Local network"
-            },
-            {
-              "id": "delivery.e4b8232a",
-              "title": "Advanced bandwidth options",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "delivery.8af97a09",
-              "title": "Activity Monitor",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": [
-        "delivery-advanced",
-        "delivery-activity"
-      ]
-    },
-    {
-      "id": "delivery-advanced",
-      "category": "update",
-      "title": "Delivery optimization advanced options",
-      "description": "Download and upload bandwidth limit reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:delivery-optimization-advanced"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "delivery-advanced.e83387e1",
-              "title": "Limit background download bandwidth",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "delivery-advanced.ca6cbdef",
-              "title": "Background download bandwidth",
-              "type": "slider",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "delivery-advanced.e7da235d",
-              "title": "Limit foreground download bandwidth",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "delivery-advanced.9a68eea5",
-              "title": "Front-end download bandwidth",
-              "type": "slider",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "delivery-advanced.4fd3fe9e",
-              "title": "Limit upload bandwidth",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "delivery-advanced.833b5a72",
-              "title": "Upload bandwidth",
-              "type": "slider",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "delivery-advanced.cfbe4220",
-              "title": "Monthly upload limit",
-              "type": "text",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": ""
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "delivery-activity",
-      "category": "update",
-      "title": "Delivery optimization activities",
-      "description": "Windows update traffic statistics reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:delivery-optimization-activity"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "delivery-activity.f2c09a5a",
-              "title": "Download statistics",
-              "type": "info",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Not read"
-            },
-            {
-              "id": "delivery-activity.ae448372",
-              "title": "Upload statistics",
-              "type": "info",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Not read"
-            },
-            {
-              "id": "delivery-activity.f1acf34e",
-              "title": "Average download speed",
-              "type": "info",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Not read"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "insider",
-      "category": "update",
-      "title": "Windows Insider Program",
-      "description": "Windows preview version reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:windowsinsider",
-        "ms-settings:windowsinsider-optin"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "insider.378311bc",
-              "title": "Sign up for the Insider Program",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Start"
-            },
-            {
-              "id": "insider.a4eb980c",
-              "title": "Preview channel",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Canary",
-                "Dev",
-                "Beta",
-                "Release Preview"
-              ],
-              "value": "Canary"
-            },
-            {
-              "id": "insider.3a8e2507",
-              "title": "Stop getting preview builds",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
             }
           ]
         }
@@ -23326,337 +22667,6 @@
                 "hypr-options",
                 "xwayland",
                 "use_nearest_neighbor"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-opengl",
-      "category": "gaming",
-      "title": "Hyprland · OpenGL compositing options",
-      "description": "Advanced compositor settings: opengl · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-options",
-        "hyprviz-project"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "OpenGL Compositing Options",
-          "controls": [
-            {
-              "id": "hypr-opengl.nvidia-anti-flicker",
-              "title": "nvidia anti flicker · nvidia_anti_flicker",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "opengl",
-                "nvidia_anti_flicker"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-render",
-      "category": "gaming",
-      "title": "Hyprland · Rendering and Color Pipeline",
-      "description": "Advanced compositor settings: render · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-options",
-        "hyprviz-project"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Rendering and Color Pipeline",
-          "controls": [
-            {
-              "id": "hypr-render.async-commit",
-              "title": "async commit · async_commit",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "async_commit"
-              ]
-            },
-            {
-              "id": "hypr-render.cm-auto-hdr",
-              "title": "cm auto hdr · cm_auto_hdr",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "cm_auto_hdr"
-              ]
-            },
-            {
-              "id": "hypr-render.cm-enabled",
-              "title": "Color management switch · cm_enabled",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "cm_enabled"
-              ]
-            },
-            {
-              "id": "hypr-render.cm-sdr-eotf",
-              "title": "cm sdr eotf · cm_sdr_eotf",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "default",
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "cm_sdr_eotf"
-              ]
-            },
-            {
-              "id": "hypr-render.ctm-animation",
-              "title": "ctm animation · ctm_animation",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 2.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "ctm_animation"
-              ]
-            },
-            {
-              "id": "hypr-render.commit-timing-enabled",
-              "title": "commit timing enabled · commit_timing_enabled",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "commit_timing_enabled"
-              ]
-            },
-            {
-              "id": "hypr-render.direct-scanout",
-              "title": "Direct scan output strategy · direct_scanout",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "direct_scanout"
-              ]
-            },
-            {
-              "id": "hypr-render.expand-undersized-textures",
-              "title": "expand undersized textures · expand_undersized_textures",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "expand_undersized_textures"
-              ]
-            },
-            {
-              "id": "hypr-render.fp16-sdr-tf",
-              "title": "fp16 sdr tf · fp16_sdr_tf",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "fp16_sdr_tf"
-              ]
-            },
-            {
-              "id": "hypr-render.icc-vcgt-enabled",
-              "title": "icc vcgt enabled · icc_vcgt_enabled",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "icc_vcgt_enabled"
-              ]
-            },
-            {
-              "id": "hypr-render.keep-unmodified-copy",
-              "title": "keep unmodified copy · keep_unmodified_copy",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 2.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "keep_unmodified_copy"
-              ]
-            },
-            {
-              "id": "hypr-render.new-render-scheduling",
-              "title": "Rendering scheduling strategy · new_render_scheduling",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "new_render_scheduling"
-              ]
-            },
-            {
-              "id": "hypr-render.not-shown-fifo-lock",
-              "title": "not shown fifo lock · not_shown_fifo_lock",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "not_shown_fifo_lock"
-              ]
-            },
-            {
-              "id": "hypr-render.non-shader-cm",
-              "title": "non shader cm · non_shader_cm",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 2.0,
-              "min": 0.0,
-              "max": 3.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "non_shader_cm"
-              ]
-            },
-            {
-              "id": "hypr-render.non-shader-cm-interop",
-              "title": "non shader cm interop · non_shader_cm_interop",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 2.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "non_shader_cm_interop"
-              ]
-            },
-            {
-              "id": "hypr-render.send-content-type",
-              "title": "send content type · send_content_type",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "send_content_type"
-              ]
-            },
-            {
-              "id": "hypr-render.use-fp16",
-              "title": "use fp16 · use_fp16",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 2.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "use_fp16"
-              ]
-            },
-            {
-              "id": "hypr-render.use-shader-blur-blend",
-              "title": "use shader blur blend · use_shader_blur_blend",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "use_shader_blur_blend"
-              ]
-            },
-            {
-              "id": "hypr-render.xp-mode",
-              "title": "xp mode · xp_mode",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "render",
-                "xp_mode"
               ]
             }
           ]

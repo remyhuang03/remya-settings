@@ -8,6 +8,7 @@ use std::fs::{self, File, OpenOptions};
 use std::os::unix::fs::OpenOptionsExt;
 use std::path::PathBuf;
 use std::process::Command;
+use std::sync::OnceLock;
 
 const SCHEMA: &str = "org.gnome.desktop.interface";
 
@@ -53,14 +54,17 @@ impl Context {
                 .filter(|path| path.is_absolute())
                 .map(|path| path.join("themes")),
         );
+        static GTK4_INSTALLED: OnceLock<bool> = OnceLock::new();
         let gtk4 = config.join("gtk-4.0/settings.ini").exists()
-            || Command::new("ldconfig")
-                .arg("-p")
-                .output()
-                .is_ok_and(|output| {
-                    output.status.success()
-                        && String::from_utf8_lossy(&output.stdout).contains("libgtk-4.so.1")
-                });
+            || *GTK4_INSTALLED.get_or_init(|| {
+                Command::new("ldconfig")
+                    .arg("-p")
+                    .output()
+                    .is_ok_and(|output| {
+                        output.status.success()
+                            && String::from_utf8_lossy(&output.stdout).contains("libgtk-4.so.1")
+                    })
+            });
         let gnome = gio::SettingsSchemaSource::default()
             .and_then(|source| source.lookup(SCHEMA, true))
             .map(|schema| gio::Settings::new_full(&schema, None::<&gio::SettingsBackend>, None));

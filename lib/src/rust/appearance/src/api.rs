@@ -1,10 +1,12 @@
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(serde::Serialize, serde::Deserialize, Clone, Copy, Debug, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
 pub enum SystemThemeMode {
     Light,
     Dark,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(serde::Serialize, serde::Deserialize, Clone, Copy, Debug, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
 pub enum ThemeTargetStatus {
     Detected,
     Applied,
@@ -12,14 +14,14 @@ pub enum ThemeTargetStatus {
     Unavailable,
 }
 
-#[derive(Clone, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, Clone, Debug)]
 pub struct ThemeTargetResult {
     pub name: String,
     pub status: ThemeTargetStatus,
     pub detail: String,
 }
 
-#[derive(Clone, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, Clone, Debug)]
 pub struct SystemThemeState {
     pub mode: Option<SystemThemeMode>,
     pub targets: Vec<ThemeTargetResult>,

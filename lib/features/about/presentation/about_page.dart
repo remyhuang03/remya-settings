@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 
 import '../../settings/presentation/settings_widgets.dart';
+import '../../settings/domain/settings_catalog.dart';
 
 const appVersion = '0.1.0+2026-10-26';
 const repositoryUrl = 'https://github.com/remyhuang03/remya_settings';
@@ -17,7 +18,8 @@ Future<void> openSettingsRepository() async {
 }
 
 class AboutPage extends StatelessWidget {
-  const AboutPage({super.key, required this.onLicenses});
+  const AboutPage({super.key, required this.catalog, required this.onLicenses});
+  final SettingsCatalog catalog;
   final VoidCallback onLicenses;
 
   Future<void> _openRepository(BuildContext context) async {
@@ -37,6 +39,14 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final controls = catalog.pages.expand((page) => page.controls);
+    final supported = controls
+        .where((item) => item.availability == .available)
+        .length;
+    final pending = controls
+        .where((item) => item.availability == .planned)
+        .length;
+    final unsupported = controls.length - supported - pending;
     return Column(
       crossAxisAlignment: .stretch,
       children: [
@@ -65,6 +75,41 @@ class AboutPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        SettingsSurface(
+          child: Column(
+            crossAxisAlignment: .start,
+            children: [
+              Text('Settings coverage', style: text.titleMedium),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 40,
+                runSpacing: 16,
+                children: [
+                  for (final stat in [
+                    ('Supported', supported),
+                    ('Not yet done', pending),
+                    ('Total', controls.length),
+                  ])
+                    Column(
+                      crossAxisAlignment: .start,
+                      mainAxisSize: .min,
+                      children: [
+                        Text(
+                          '${stat.$2}',
+                          key: ValueKey('coverage-${stat.$1}'),
+                          style: text.headlineSmall,
+                        ),
+                        Text(stat.$1, style: text.bodyMedium),
+                      ],
+                    ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text('$unsupported unsupported', style: text.bodySmall),
             ],
           ),
         ),

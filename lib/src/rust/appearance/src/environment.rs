@@ -1,8 +1,10 @@
 use crate::api::{SystemThemeMode, ThemeTargetResult, ThemeTargetStatus};
 use crate::files::{FileChange, read_optional};
+use std::collections::HashMap;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
+use std::sync::{Mutex, OnceLock};
 
 const MATERIAL: &str = "QT_QUICK_CONTROLS_MATERIAL_THEME";
 const UNIVERSAL: &str = "QT_QUICK_CONTROLS_UNIVERSAL_THEME";
@@ -135,10 +137,16 @@ impl Environment {
 }
 
 fn command_exists(command: &str, flag: &str) -> bool {
-    Command::new(command)
-        .arg(flag)
-        .output()
-        .is_ok_and(|output| output.status.success())
+    static TOOLS: OnceLock<Mutex<HashMap<(String, String), bool>>> = OnceLock::new();
+    let mut tools = TOOLS.get_or_init(Default::default).lock().unwrap();
+    *tools
+        .entry((command.into(), flag.into()))
+        .or_insert_with(|| {
+            Command::new(command)
+                .arg(flag)
+                .output()
+                .is_ok_and(|output| output.status.success())
+        })
 }
 
 fn target(name: &str, status: ThemeTargetStatus, detail: impl Into<String>) -> ThemeTargetResult {

@@ -1,0 +1,41 @@
+<node>
+  <interface name="top.remya.settings.Settings1">
+    <method name="Get">
+      <arg type="s" direction="in"/>
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="Set">
+      <arg type="s" direction="in"/>
+      <arg type="s" direction="in"/>
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="List">
+      <arg type="s" direction="in"/>
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="Search">
+      <arg type="s" direction="in"/>
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="Open">
+      <arg type="s" direction="in"/>
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="Resolve">
+      <arg type="s" direction="in"/>
+      <arg type="s" direction="in"/>
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="Reload">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="Restart">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="Close"><arg type="s" direction="out"/></method>
+    <method name="Quit">
+      <arg type="s" direction="out"/>
+    </method>
+    <signal name="Changed"><arg type="s"/><arg type="s"/></signal>
+  </interface>
+</node>

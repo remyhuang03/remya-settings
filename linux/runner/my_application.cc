@@ -33,11 +33,12 @@ static void my_application_activate(GApplication* application) {
   // Flutter draws the title bar; the compositor still owns window placement.
   gtk_window_set_title(window, "Remy'a Settings");
   gtk_window_set_decorated(window, FALSE);
-  g_signal_connect(window, "delete-event", G_CALLBACK(gtk_widget_hide_on_delete), nullptr);
+
 
   gtk_window_set_default_size(window, 1280, 720);
   GdkGeometry geometry = {};
-  geometry.min_width = 1000;
+  geometry.min_width = 360;
+  geometry.min_height = 600;
   gtk_window_set_geometry_hints(window, nullptr, &geometry, GDK_HINT_MIN_SIZE);
 
   // Resolve the bundled icon independently of the caller's working directory.
@@ -79,7 +80,12 @@ static void my_application_activate(GApplication* application) {
   fl_method_channel_set_method_call_handler(
       paths_channel,
       [](FlMethodChannel* channel, FlMethodCall* call, gpointer data) {
-        if (g_strcmp0(fl_method_call_get_name(call), "repositoryDirectory") == 0) {
+        if (g_strcmp0(fl_method_call_get_name(call), "initialPage") == 0) {
+          auto* self = MY_APPLICATION(data);
+          const char* page = self->dart_entrypoint_arguments && self->dart_entrypoint_arguments[0] && self->dart_entrypoint_arguments[1] ? self->dart_entrypoint_arguments[1] : "home";
+          g_autoptr(FlValue) value = fl_value_new_string(page);
+          fl_method_call_respond_success(call, value, nullptr);
+        } else if (g_strcmp0(fl_method_call_get_name(call), "repositoryDirectory") == 0) {
           g_autoptr(FlValue) root = fl_value_new_string(REMYA_REPOSITORY_DIR);
           fl_method_call_respond_success(call, root, nullptr);
         } else if (g_strcmp0(fl_method_call_get_name(call), "show") == 0) {
@@ -116,7 +122,7 @@ static gboolean my_application_local_command_line(GApplication* application,
   }
 
   if (!g_application_get_is_remote(application)) {
-    g_application_hold(application);
+
     g_application_activate(application);
   } else if (!self->service_mode) {
     g_application_activate(application);
@@ -160,7 +166,13 @@ static void my_application_class_init(MyApplicationClass* klass) {
   G_OBJECT_CLASS(klass)->dispose = my_application_dispose;
 }
 
-static void my_application_init(MyApplication* self) {}
+static void my_application_init(MyApplication* self) {
+  const GActionEntry actions[] = {{"close", [](GSimpleAction*, GVariant*, gpointer data) {
+    GList* windows = gtk_application_get_windows(GTK_APPLICATION(data));
+    if (windows != nullptr) gtk_window_close(GTK_WINDOW(windows->data));
+  }, nullptr, nullptr, nullptr, {0}}};
+  g_action_map_add_action_entries(G_ACTION_MAP(self), actions, G_N_ELEMENTS(actions), self);
+}
 
 MyApplication* my_application_new() {
   // Set the program name to the application ID, which helps various systems

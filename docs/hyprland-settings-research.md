@@ -2,7 +2,7 @@
 
 Research date: 2026-10-26. Baseline: commit `44679b271497c40a0d37dd40299f89ae59c7aa6f`.
 
-This extension adds **2 categories, 106 pages, and 859 controls**. The combined catalog has **13 categories, 308 pages, and 2,180 controls**. All **202 original pages and 1,321 original controls** remain unchanged, including the Windows-only and legacy reference items. No category or setting was removed, reclassified, or replaced. The original Windows coverage snapshot is also unchanged.
+This extension adds **2 categories, 106 pages, and 859 controls**. The combined catalog has **12 categories, 294 pages, and 2,113 controls**. The current reference catalog contains **188 pages and 1,251 controls**. Coverage files describe the current included controls.
 
 This milestone remains **UI only**. Every addition is `planned`, operation controls remain disabled, and no configuration, process, device, or service is read or modified by the application. Optional components are identified in each page's availability reason. Their presence and compatibility have not been detected.
 
@@ -24,15 +24,14 @@ Only feature facts and interface organization were used. No third-party implemen
 
 ## Classification and gap coverage
 
-Existing top-level category identities and their order are preserved. New pages are appended within their categories by the renderer; the two new categories are appended to navigation.
+Hyprland pages are grouped by system responsibility; OpenGL and rendering belong under System. The two dedicated Hyprland categories remain at the end of navigation.
 
 | Category | Added pages | Missing concepts now represented |
 | --- | ---: | --- |
-| System | 8 | Native monitor rules and reserved areas, HDR/ICC/VRR fields, output/workspace assignments, multi-GPU selection, XWayland and application quirks, hypridle listeners, PipeWire routing |
+| System | 10 | OpenGL, rendering and color pipeline, native monitor rules and reserved areas, HDR/ICC/VRR fields, output/workspace assignments, multi-GPU selection, XWayland and application quirks, hypridle listeners, PipeWire routing |
 | Bluetooth & devices | 12 | Global and per-device XKB/input overrides, pointer engine, touchpad/touch/tablet/pen parameters, virtual keyboards, gesture definitions and hardware switch bindings |
 | Personalization | 30 | Border gradients, gaps-related appearance, opacity/dimming, blur and its variants, shadows/glow/motion effects, animation trees and curves, wallpaper-per-output, cursor themes, Qt engine and shell presets |
 | Apps | 5 | Launcher discovery/cache/UI settings and default terminal, file manager, editor, and browser commands |
-| Gaming | 2 | OpenGL and renderer configuration, synchronization, direct scanout, color pipeline and presentation behavior |
 | Privacy & security | 14 | Compositor permission rules, capture boundaries, portals and file-picker providers, authorization agent, Hyprlock authentication and widget configuration |
 | **Window & workspaces (new)** | **23** | Dwindle/Master/Scrolling/Monocle layouts, general layout and snapping, persistent/special workspaces, window groups and group bars, window/layer/workspace rules, key bindings, flags and submaps |
 | **Session & configuration (new)** | **12** | Config entrypoints and includes, comments/overrides, backup/restore and diff previews, autostart/shutdown hooks, UWSM/user services, environment variables, plugins, diagnostics, experimental options and logout/power menu |
@@ -56,7 +55,7 @@ Documented boolean fields use disabled switches. Bounded numeric fields use the 
 - `docs/settings-implementation-progress.md`: combined human-readable tracker; all preexisting detailed page blocks and tracking notes are retained verbatim, with added pages and updated summary counts.
 - `test/hyprland_catalog_test.dart`: retained baseline identities, source mapping integrity, coverage of the 368 core fields, searchable additions, disabled availability, and exact tracker parity.
 
-Before completion, old category/page/source objects are compared deeply with the baseline commit and the Windows coverage snapshot is compared byte for byte. Rendering tests exercise the enlarged catalog at wide, compact, and narrow widths; asset/schema validation and a Linux build check that the generic renderer accepts every added page.
+Catalog tests validate current category/page/control identities and source mappings. Rendering tests exercise the enlarged catalog at wide, compact, and narrow widths; asset/schema validation and a Linux build check that the generic renderer accepts every added page.
 
 ## Implementation boundaries for later work
 

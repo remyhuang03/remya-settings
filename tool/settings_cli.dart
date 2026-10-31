@@ -10,8 +10,11 @@ const usage = '''Usage: remya_settings <command> [arguments]
   list                               List all controls and availability
   search <query>                     Search settings pages
   open [page-id|home|about|licenses|repository]   Open a page or repository
+  resolve <appearance|date-time> <system|settings>  Resolve a configuration conflict
   reload                             Reload configuration and system state
   watch [theme|all]                   Stream changes as JSON lines
+  restart                            Restart the system (save work first)
+  close                              Close the GUI and keep Settings resident
   quit                               Stop the settings application/service
   --help                             Show this help
 
@@ -60,7 +63,10 @@ Future<void> main(List<String> arguments) async {
       'search': 'Search',
       'open': 'Open',
       'reload': 'Reload',
+      'resolve': 'Resolve',
       'quit': 'Quit',
+      'close': 'Close',
+      'restart': 'Restart',
     };
     final method = methods[command];
     if (method == null) throw ArgumentError('Unknown command: $command');

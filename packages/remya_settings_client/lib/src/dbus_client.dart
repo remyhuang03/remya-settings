@@ -15,7 +15,10 @@ const settingsMethods = {
   'Search': 1,
   'Open': 1,
   'Reload': 0,
+  'Resolve': 2,
   'Quit': 0,
+  'Close': 0,
+  'Restart': 0,
 };
 
 typedef SettingsChange = ({String topic, Map<String, dynamic> value});

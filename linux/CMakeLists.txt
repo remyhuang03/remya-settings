@@ -92,6 +92,20 @@ add_custom_target(rust_appearance ALL
   COMMENT "Building Rust appearance backend")
 add_dependencies(${BINARY_NAME} rust_appearance)
 
+set(RUST_DATE_TIME_LIBRARY "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/libremya_settings_date_time.so")
+add_custom_target(rust_date_time ALL
+  COMMAND "${CARGO_EXECUTABLE}" build --locked --package remya_settings_date_time ${RUST_PROFILE_ARGS}
+  WORKING_DIRECTORY "${RUST_WORKSPACE_DIR}"
+  BYPRODUCTS "${RUST_DATE_TIME_LIBRARY}"
+  COMMENT "Building Rust date_time backend")
+add_dependencies(${BINARY_NAME} rust_date_time)
+
+add_custom_target(rust_service ALL
+  COMMAND "${CARGO_EXECUTABLE}" build --locked --package remya_settings_service ${RUST_PROFILE_ARGS}
+  WORKING_DIRECTORY "${RUST_WORKSPACE_DIR}"
+  COMMENT "Building resident Settings service")
+add_dependencies(${BINARY_NAME} rust_service)
+
 set(SETTINGS_CLI "${CMAKE_BINARY_DIR}/remya_settings_cli")
 add_custom_target(settings_cli ALL
   COMMAND fvm dart compile exe tool/settings_cli.dart -o "${SETTINGS_CLI}"
@@ -116,8 +130,9 @@ install(CODE "
 
 set(INSTALL_BUNDLE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/data")
 set(INSTALL_BUNDLE_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+install(PROGRAMS "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/remya-settings-service" DESTINATION "${CMAKE_INSTALL_PREFIX}/libexec" COMPONENT Runtime)
 install(PROGRAMS "${SETTINGS_CLI}" DESTINATION "${CMAKE_INSTALL_PREFIX}/libexec" COMPONENT Runtime)
-install(FILES "${RUST_APPEARANCE_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
+install(FILES "${RUST_DATE_TIME_LIBRARY}" "${RUST_APPEARANCE_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
 
 install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
   COMPONENT Runtime)

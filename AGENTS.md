@@ -22,14 +22,24 @@
 - Keep generated bridge code separate from handwritten code and regenerate it instead of editing it manually. Use `flutter_rust_bridge.yaml`, the matching 2.13.0 generator, and FVM formatting after generation. Linux CMake builds and bundles the Rust shared library.
 
 ## Public Interfaces and Dependent Applications
+- The ordinary-user Rust service owns production configuration, reconciliation, and CLI/D-Bus dispatch. Flutter is a disposable GUI client; closing its window must terminate its process and release the engine.
+- System writes requiring elevation run in a separately authorized Rust process over private bounded pipes. Authorize once on the first explicit GUI launch; reuse it while Settings stays resident. Do not expose arbitrary commands, configurable privileged paths, or a public privileged socket. Read-only Bar activation must not prompt for authorization.
+
 - The application/desktop ID is `top.remya.settings`; the executable is `remya_settings`. Remya Bar (`top.remya.bar`) is a separate dependent application.
 - Provide complete operation parity through the CLI and versioned session D-Bus API for every implemented feature. Expose unavailable catalog entries for inspection but reject attempts to execute them; never simulate success.
-- Route GUI, CLI, and D-Bus operations through the owning feature controller/backend. Extend `features/integration/settings_api.dart`, the client contract, documentation, and parity tests when adding available operations; do not duplicate persistence or system-write logic in interfaces.
+- Route GUI, CLI, and D-Bus operations through the owning feature controller/backend. Extend `lib/src/rust/service`, the client contract and `api/settings1.xml`, documentation, and parity tests when adding available operations; do not duplicate persistence or system-write logic in interfaces.
 - Debug dependent applications may pass the Settings debug executable to the public opener; keep release launch on the D-Bus interface and document missing-build guidance.
 - `packages/remya_settings_client` is the public integration boundary for dependent apps. Keep its pure Dart contract usable without Flutter and its theme adapter free of Settings UI or backend dependencies. Preserve versioned wire contracts and stable setting IDs; use a new interface version for incompatible changes.
 - Keep debug application preferences in repository config/config.local.toml regardless of launch cwd. Profile/release preferences use XDG_CONFIG_HOME/remya/settings/config.toml with the standard HOME fallback. Keep installation bundles and desktop/service metadata under XDG_DATA_HOME and commands under HOME/.local/bin. Ignore relative XDG values.
 - Do not automatically migrate or remove prior installations or user configuration. Use `tool/install.py`; refuse to overwrite unrelated commands or update a running installed bundle.
 - Keep `docs/public-api.md` and `docs/xdg-layout.md` synchronized with implementation. Run `python test/interface_smoke.py` against both release bundles for interface or integration changes; use isolated XDG roots and GSettings state for system-write verification.
+
+## System Configuration Reconciliation
+- Apply this rule to every implemented system-backed setting, including future integrations; app-only preferences and unavailable previews have no system counterpart and must not be synchronized.
+- On first use, read and validate the actual system configuration and atomically save it as the initial Settings configuration. Never apply defaults to the system at first launch. If detection fails, report the error and leave configuration uninitialized.
+- On application startup and when opening a settings page, compare saved Settings values with fresh system readback. Preserve both values on conflict and show a warning at the top with explicit choices: adopt the system configuration into Settings, or apply the saved Settings configuration to the system.
+- Route both choices through the owning feature controller, retain validation and platform authorization, and verify system readback after writes. Failed detection, authorization, persistence, or application must remain visible and must not silently resolve a conflict or overwrite the last valid configuration.
+- Compare stable preferences, not naturally changing measurements: never persist the current wall clock as a time to restore at startup. Keep GUI, CLI, and D-Bus behavior consistent and cover initialization, conflicts, both resolutions, and failure retention with tests.
 
 ## Toolchains & Dependencies
 - Assume fish is the user's default shell. Persist appearance-related environment variables only through fish and Hyprland configuration; do not modify Bash, Zsh, POSIX profile files, /etc/environment, or systemd environment configuration. Use documented Light/Dark settings or official environment variables only; skip software without an explicit setting instead of forcing platform plugins or guessing theme replacements.
@@ -43,6 +53,9 @@
 - Check dependency license compatibility before adding code or libraries and preserve third-party notices. Prefer permissive licenses (MIT, BSD, Apache-2.0, ISC, Zlib, Unlicense). LGPL libraries must remain dynamically linked or separate processes; do not introduce GPL, AGPL, SSPL, or other incompatible strong-copyleft code.
 
 ## Coding & UI
+- Keep setting labels, descriptions, status text, and value readouts in the left information column; reserve the right column for interactive controls. On narrow windows, keep information left-aligned and controls trailing-aligned below it.
+- Apply setting changes immediately when the setting supports immediate application and doing so is appropriate; do not add an unnecessary Apply button.
+- For settings that require a system restart, show a global "Reboot to apply" status bar with Restart now and Later actions, and a local explanation beside the setting. State application restart or sign-in requirements accurately when a full reboot is unnecessary.
 - Use dot shorthand wherever supported and the expected type is unambiguous. Keep explicit types when shorthand cannot resolve correctly.
 - Split complex components into smaller objects with clear responsibilities. Keep small, non-reusable components private in the same file and composition shallow.
 - All UI must follow Material Design 3 Expressive (MD3E).
@@ -68,6 +81,9 @@
 - Keep durable tests for non-trivial logic and regressions; remove temporary UI inspection tests after verification and avoid duplicate coverage.
 - A successful build does not verify desktop behavior. Check affected window behavior and interactions on the real desktop; report untested boundaries.
 - Validate configuration input, preserve the last valid state on errors, and use atomic persistence when writing configuration is introduced. Never commit secrets or machine-specific configuration.
+
+- After every application code change, finish validation and rebuild the release bundle, then run `python tool/install.py` on this workstation as the final implementation step so the user can manually review the installed application. Source changes and successful builds alone do not complete the task.
+- Verify that the installed bundle, command, and desktop entry use the updated build, and exercise the installed application. Preserve user configuration and unrelated installations. When both Settings and Bar change, install Settings first and Bar second; retain the required cleanup of verification instances.
 
 ## Git Workflow
 - Develop and validate on a separate branch using `<type>/<short-description>` with lowercase words and hyphens, such as `feat/appearance` or `chore/initialize-project`.

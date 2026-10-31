@@ -4,12 +4,6 @@
   "backupSource": "https://learn.microsoft.com/en-us/windows/configuration/windows-backup/catalog?pivots=windows-11",
   "uris": [
     {
-      "uri": "ms-settings:workplace",
-      "page": "work",
-      "sourceCategory": "Accounts",
-      "title": "Access work or school"
-    },
-    {
       "uri": "ms-settings:emailandaccounts",
       "page": "email",
       "sourceCategory": "Accounts",
@@ -68,12 +62,6 @@
       "page": "backup",
       "sourceCategory": "Accounts",
       "title": "Sync your settings"
-    },
-    {
-      "uri": "ms-settings:windowsanywhere",
-      "page": "windows-anywhere",
-      "sourceCategory": "Accounts",
-      "title": "Windows Anywhere"
     },
     {
       "uri": "ms-settings:signinoptions-launchfaceenrollment",
@@ -364,46 +352,10 @@
       "title": "Extras"
     },
     {
-      "uri": "ms-settings:family-group",
-      "page": "family",
-      "sourceCategory": "Family Group",
-      "title": "Family Group"
-    },
-    {
-      "uri": "ms-settings:gaming-gamebar",
-      "page": "game-bar",
-      "sourceCategory": "Gaming",
-      "title": "Game bar"
-    },
-    {
-      "uri": "ms-settings:gaming-gamedvr",
-      "page": "captures",
-      "sourceCategory": "Gaming",
-      "title": "Game DVR"
-    },
-    {
-      "uri": "ms-settings:gaming-gamemode",
-      "page": "game-mode",
-      "sourceCategory": "Gaming",
-      "title": "Game Mode"
-    },
-    {
-      "uri": "ms-settings:gaming-fullscreen",
-      "page": "xbox-mode",
-      "sourceCategory": "Gaming",
-      "title": "Xbox Mode"
-    },
-    {
       "uri": "ms-settings:quietmomentsgame",
       "page": "quiet-schedule",
       "sourceCategory": "Gaming",
       "title": "Playing a game full screen"
-    },
-    {
-      "uri": "ms-settings:gaming-trueplay",
-      "page": "trueplay",
-      "sourceCategory": "Gaming",
-      "title": "TruePlay"
     },
     {
       "uri": "ms-settings:holographic-audio",
@@ -1204,24 +1156,6 @@
       "title": "Activation"
     },
     {
-      "uri": "ms-settings:delivery-optimization",
-      "page": "delivery",
-      "sourceCategory": "Update and security",
-      "title": "Delivery Optimization"
-    },
-    {
-      "uri": "ms-settings:delivery-optimization-activity",
-      "page": "delivery-activity",
-      "sourceCategory": "Update and security",
-      "title": "Delivery Optimization"
-    },
-    {
-      "uri": "ms-settings:delivery-optimization-advanced",
-      "page": "delivery-advanced",
-      "sourceCategory": "Update and security",
-      "title": "Delivery Optimization"
-    },
-    {
       "uri": "ms-settings:findmydevice",
       "page": "find-device",
       "sourceCategory": "Update and security",
@@ -1258,18 +1192,6 @@
       "title": "Windows Security"
     },
     {
-      "uri": "ms-settings:windowsinsider",
-      "page": "insider",
-      "sourceCategory": "Update and security",
-      "title": "Windows Insider Program"
-    },
-    {
-      "uri": "ms-settings:windowsinsider-optin",
-      "page": "insider",
-      "sourceCategory": "Update and security",
-      "title": "Windows Insider Program"
-    },
-    {
       "uri": "ms-settings:windowsupdate",
       "page": "updates",
       "sourceCategory": "Update and security",
@@ -1292,18 +1214,6 @@
       "page": "update-options",
       "sourceCategory": "Update and security",
       "title": "Windows Update-Advanced options"
-    },
-    {
-      "uri": "ms-settings:windowsupdate-optionalupdates",
-      "page": "optional-updates",
-      "sourceCategory": "Update and security",
-      "title": "Windows Update-Optional updates"
-    },
-    {
-      "uri": "ms-settings:windowsupdate-restartoptions",
-      "page": "restart",
-      "sourceCategory": "Update and security",
-      "title": "Windows Update-Restart options"
     },
     {
       "uri": "ms-settings:windowsupdate-seekerondemand",
@@ -3069,27 +2979,6 @@
     {
       "area": "Time & language",
       "path": [
-        "Date & time",
-        "Set timezone automatically",
-        "Timezone"
-      ],
-      "page": "date-time",
-      "coverage": "control",
-      "control": "date-time.reference.7e2d22fe"
-    },
-    {
-      "area": "Time & language",
-      "path": [
-        "Date & time",
-        "Show additional calendars in the taskbar"
-      ],
-      "page": "date-time",
-      "coverage": "control",
-      "control": "date-time.reference.d2ebb693"
-    },
-    {
-      "area": "Time & language",
-      "path": [
         "Typing"
       ],
       "page": "typing",
@@ -3187,92 +3076,6 @@
       "page": "typing",
       "coverage": "control",
       "control": "typing.reference.f924c774"
-    },
-    {
-      "area": "Gaming",
-      "path": [
-        "Game Bar"
-      ],
-      "page": "game-bar",
-      "coverage": "control",
-      "control": "game-bar.reference.2c2d66f8"
-    },
-    {
-      "area": "Gaming",
-      "path": [
-        "Game Mode"
-      ],
-      "page": "game-mode",
-      "coverage": "control",
-      "control": "game-mode.reference.9424db05"
-    },
-    {
-      "area": "Gaming",
-      "path": [
-        "Game Bar shortcuts (in-app settings)"
-      ],
-      "page": "game-bar",
-      "coverage": "section"
-    },
-    {
-      "area": "Gaming",
-      "path": [
-        "Game Bar shortcuts (in-app settings)",
-        "Game Bar (Win + G)"
-      ],
-      "page": "game-bar",
-      "coverage": "control",
-      "control": "game-bar.reference.c2ddeb9e"
-    },
-    {
-      "area": "Gaming",
-      "path": [
-        "Game Bar shortcuts (in-app settings)",
-        "Take a screenshot (Win + Alt + PrtScrn)"
-      ],
-      "page": "game-bar",
-      "coverage": "control",
-      "control": "game-bar.reference.08b320f8"
-    },
-    {
-      "area": "Gaming",
-      "path": [
-        "Game Bar shortcuts (in-app settings)",
-        "Record last 30 seconds (Win + Alt + G)"
-      ],
-      "page": "game-bar",
-      "coverage": "control",
-      "control": "game-bar.reference.20695066"
-    },
-    {
-      "area": "Gaming",
-      "path": [
-        "Game Bar shortcuts (in-app settings)",
-        "Start/stop recording (Win + Alt + R)"
-      ],
-      "page": "game-bar",
-      "coverage": "control",
-      "control": "game-bar.reference.b67958ca"
-    },
-    {
-      "area": "Gaming",
-      "path": [
-        "Game Bar shortcuts (in-app settings)",
-        "Microphone on/off (Win + Alt + M)"
-      ],
-      "page": "game-bar",
-      "coverage": "control",
-      "control": "game-bar.reference.f983d88b"
-    },
-    {
-      "area": "Gaming",
-      "path": [
-        "Game Bar shortcuts (in-app settings)",
-        "HDR on/off (Win + Alt + B)"
-      ],
-      "page": "game-bar",
-      "coverage": "control",
-      "control": "game-bar.reference.9bc24c92"
     },
     {
       "area": "Vision",

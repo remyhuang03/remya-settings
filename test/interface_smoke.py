@@ -57,12 +57,31 @@ def session_checks():
         initial = cli('get', 'theme')
         pid = service_pid()
         assert initial == dbus('Get', 'theme')
+        clock = cli('get', 'date-time')
+        zone_options = cli('get', 'timezones')
+        zones = zone_options['options']
+        assert all('(GMT' in zone_options['labels'][zone] for zone in zones)
+        assert cli('get', 'time-locales')['options']
+        for setting in ['date-time.db451de3', 'date-time.098d06ec', 'date-time.7e33a213', 'date-time.format']:
+            assert cli('get', setting)['value'] == dbus('Get', setting)['value']
+        assert 'InvalidArgument' in cli('set', 'date-time.7e33a213', '["https://invalid"]', ok=False)
+        assert clock['timezone'] in zones and clock['saved_timezone'] == clock['timezone']
+        assert not clock['conflict'] and int(clock['unix_micros']) > 0
+        assert cli('get', 'date-time.fb2a23dc')['value'] == clock['timezone']
+        assert 'InvalidArgument' in cli('set', 'date-time.fb2a23dc', 'Invalid/Zone', ok=False)
+        assert 'InvalidArgument' in cli('set', 'date-time.6422d209', '{}', ok=False)
+        zone_config = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/date-time.toml'
+        alternate = next(zone for zone in zones if zone != clock['timezone'])
+        zone_config.write_text('version = 1\ntimezone = ' + json.dumps(alternate) + '\n')
+        assert cli('get', 'configuration')['date-time']['conflict']
+        assert not cli('resolve', 'date-time', 'system')['date-time']['conflict']
+        assert cli('get', 'date-time')['timezone'] == clock['timezone']
         assert not any(client['pid'] == pid for client in json.loads(subprocess.check_output(['hyprctl', 'clients', '-j']))), 'Background service showed a window'
         assert cli('set', 'themes.material-style-variant', 'vibrant')['theme']['style_variant'] == 'vibrant'
         assert dbus('Set', 'themes.material-theme-mode', 'dark')['theme']['theme_mode'] == 'dark'
         assert cli('get', 'system')['mode'] == 'dark'
         controls = cli('list')['controls']
-        assert len([control for control in controls if control['availability'] == 'available']) == 2
+        assert len([control for control in controls if control['availability'] == 'available']) == 8
         unavailable = next(control for control in controls if control['availability'] != 'available')
         assert 'Unavailable' in cli('set', unavailable['id'], 'true', ok=False)
         assert 'InvalidArgument' in cli('set', 'themes.material-theme-mode', 'system', ok=False)
@@ -134,13 +153,13 @@ def session_checks():
         deadline = time.monotonic() + 5
         while time.monotonic() < deadline:
             clients = json.loads(subprocess.check_output(['hyprctl', 'clients', '-j']))
-            if any(client['pid'] == pid and client['class'] == 'top.remya.settings' for client in clients):
+            if any(client['class'] == 'top.remya.settings' and Path(f"/proc/{client['pid']}/exe").resolve().is_relative_to(Path(os.environ['XDG_DATA_HOME'])) for client in clients):
                 break
             time.sleep(0.1)
         else:
             raise AssertionError('Open did not show the settings window')
         subprocess.run(['gtk-launch', 'top.remya.settings'], check=True, timeout=5)
-        assert len([client for client in json.loads(subprocess.check_output(['hyprctl', 'clients', '-j'])) if client['pid'] == pid]) == 1
+        assert len([client for client in json.loads(subprocess.check_output(['hyprctl', 'clients', '-j'])) if client['class'] == 'top.remya.settings' and Path(f"/proc/{client['pid']}/exe").resolve().is_relative_to(Path(os.environ['XDG_DATA_HOME']))]) == 1
         assert cli('quit') == {'quitting': True}
         print('PASS: installed CLI/D-Bus parity, activation without UI, actual isolated Rust writes/readback, signals, validation/recovery, navigation, and quit')
     finally:

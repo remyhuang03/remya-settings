@@ -52,3 +52,27 @@ Hyprland configuration, or system directories.
 Sources: [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/latest/),
 [Desktop Entry Specification](https://specifications.freedesktop.org/desktop-entry-spec/latest/),
 and [D-Bus service activation](https://dbus.freedesktop.org/doc/dbus-specification.html#message-bus-starting-services).
+
+## Date/time preference
+
+`date-time.toml` lives beside `config.toml` (debug: repository
+`config/date-time.toml`; profile/release: `$XDG_CONFIG_HOME/remya/settings/date-time.toml`,
+with the existing absolute HOME fallback). It contains `version = 1` and the
+saved `timezone`, `ntp`, `time_servers`, and `time_locale` preferences. Older timezone-only version-1 files adopt missing fields from validated actual system state. It uses the same atomic writer and permissions policy
+as appearance preferences. Missing state adopts the actual system time zone;
+malformed/unknown values are retained and reported rather than overwritten.
+There is no stored clock timestamp, unused cache directory, or private Bar parser.
+
+The time server system integration additionally owns
+`/etc/systemd/timesyncd.conf.d/90-remya-settings.conf`. This is a systemd drop-in,
+not XDG application configuration. It is written only following an explicit
+Custom/Default selection and successful pkexec authorization. Default removes
+only this managed file. The Rust service and CLI reside in the bundle's `libexec/`
+directory; installation does not create or change system time configuration.
+
+The activation entry still launches `remya_settings --service`, which now execs
+`libexec/remya-settings-service` without loading GTK or Flutter. Normal desktop
+launch calls the existing Open interface; only the private `--gui <page>` path
+creates the Flutter process. The authorized helper uses the same Rust executable
+with `--privileged` and inherits a private pipe, with no permanent root service
+installation or global privileged socket.

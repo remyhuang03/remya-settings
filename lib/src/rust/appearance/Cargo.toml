@@ -8,7 +8,12 @@ license.workspace = true
 [lib]
 crate-type = ["cdylib", "rlib"]
 
+[features]
+default = ["bridge"]
+bridge = []
+
 [dependencies]
+serde = { version = "1", features = ["derive"] }
 flutter_rust_bridge = "=2.13.0"
 gio = { version = "0.21.5", features = ["v2_84"] }
 tempfile = "3.23"

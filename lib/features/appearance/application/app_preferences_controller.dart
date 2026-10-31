@@ -12,6 +12,9 @@ class AppPreferencesController extends ChangeNotifier {
   final SystemAppearanceBackend systemAppearance;
   SystemThemeState? _systemTheme;
   SystemThemeState? get systemTheme => _systemTheme;
+  bool get hasConflict =>
+      _systemTheme?.mode != null &&
+      _systemTheme!.mode != _preferences.themeMode;
   final AppPreferencesFile store;
   AppPreferences _preferences = const .new();
   AppPreferences get preferences => _preferences;
@@ -26,13 +29,19 @@ class AppPreferencesController extends ChangeNotifier {
     if (!_disposed) notifyListeners();
   }
 
-  Future<void> _run(Future<void> Function() operation, String error) {
+  Future<void> _run(
+    Future<void> Function() operation,
+    String error, {
+    bool background = false,
+  }) {
     if (_disposed) return Future.value();
-    _operations++;
-    _notify();
+    if (!background) {
+      _operations++;
+      _notify();
+    }
     final result = _pending.then((_) async {
       if (_disposed) {
-        _operations--;
+        if (!background) _operations--;
         return;
       }
       try {
@@ -41,7 +50,7 @@ class AppPreferencesController extends ChangeNotifier {
       } catch (failure) {
         errorMessage = '$error $failure';
       } finally {
-        _operations--;
+        if (!background) _operations--;
         _notify();
       }
     });
@@ -49,24 +58,48 @@ class AppPreferencesController extends ChangeNotifier {
     return result;
   }
 
-  Future<void> reload() => _run(() async {
+  Future<void> retry() => reload();
+
+  Future<void> reload() => _run(
+    () async {
+      final observed = await systemAppearance.read();
+      if (observed.mode == null) {
+        throw StateError(
+          'System appearance cannot be detected; configuration was retained',
+        );
+      }
+      var loaded = await store.load();
+      if (loaded == null) {
+        loaded = _preferences.copyWith(themeMode: observed.mode);
+        await store.save(loaded);
+      }
+      if (!_disposed) {
+        _systemTheme = observed;
+        _preferences = loaded;
+      }
+    },
+    'Could not reload appearance settings.',
+    background: true,
+  );
+
+  Future<void> useSystemConfiguration() => _run(() async {
     final observed = await systemAppearance.read();
-    final loaded = await store.load() ?? _preferences;
+    if (observed.mode == null) {
+      throw StateError('System appearance cannot be detected');
+    }
+    final current = await store.load() ?? _preferences;
+    final next = current.copyWith(themeMode: observed.mode);
+    await store.save(next);
     if (!_disposed) {
       _systemTheme = observed;
-      _preferences = loaded.copyWith(
-        themeMode: observed.mode ?? loaded.themeMode,
-      );
+      _preferences = next;
     }
-  }, 'Could not reload appearance settings.');
+  }, 'Could not adopt system appearance.');
 
   Future<void> setStyleVariant(DynamicSchemeVariant value) => _run(() async {
     final current = await store.load() ?? _preferences;
     final observed = await systemAppearance.read();
-    final next = current.copyWith(
-      styleVariant: value,
-      themeMode: observed.mode ?? _preferences.themeMode,
-    );
+    final next = current.copyWith(styleVariant: value);
     await store.save(next);
     if (!_disposed) {
       _preferences = next;
@@ -102,9 +135,7 @@ class AppPreferencesController extends ChangeNotifier {
         final observed = await systemAppearance.read();
         if (!_disposed) {
           _systemTheme = observed;
-          _preferences = current.copyWith(
-            themeMode: observed.mode ?? _preferences.themeMode,
-          );
+          _preferences = current;
         }
       } catch (_) {}
       rethrow;

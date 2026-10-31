@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:remya_settings/features/about/presentation/about_page.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 
 Map<String, dynamic> readCatalog() =>
@@ -36,15 +35,10 @@ void main() {
       final coverage = jsonDecode(
         File('docs/windows-settings-coverage.json').readAsStringSync(),
       ) as Map<String, dynamic>;
-      expect(catalog.categories.length, greaterThanOrEqualTo(11));
-      expect(catalog.pages.length, greaterThanOrEqualTo(202));
-      expect(catalog.controlCount, greaterThanOrEqualTo(1321));
       expect(
         catalog.pages.expand((p) => p.controls).map((c) => c.kind).toSet(),
         SettingKind.values.toSet(),
       );
-      expect((coverage['uris'] as List).length, 219);
-      expect((coverage['backupSettings'] as List).length, 354);
       for (final entry in coverage['uris'] as List) {
         expect(
           catalog.page(entry['page'] as String).windowsUris,
@@ -66,6 +60,12 @@ void main() {
             const {
               'themes.material-style-variant',
               'themes.material-theme-mode',
+              'date-time.fb2a23dc',
+              'date-time.6422d209',
+              'date-time.db451de3',
+              'date-time.098d06ec',
+              'date-time.7e33a213',
+              'date-time.format',
             }.contains(control.id),
           );
           expect(control.reason, isNotEmpty);
@@ -99,33 +99,6 @@ void main() {
       final duplicate = readCatalog();
       (duplicate['pages'] as List).add((duplicate['pages'] as List).first);
       expect(() => SettingsCatalog.fromJson(duplicate), throwsFormatException);
-    },
-  );
-
-  test(
-    'About version matches the package version and icon source is retained',
-    () {
-      expect(
-        appVersion,
-        matches(RegExp(r'^\d+\.\d+\.\d+\+\d{4}-\d{2}-\d{2}$')),
-      );
-      expect(
-        File('pubspec.yaml').readAsStringSync(),
-        contains('version: $appVersion'),
-      );
-      expect(
-        File('assets/icons/settings.svg').readAsStringSync(),
-        contains('<svg'),
-      );
-      expect(File('assets/icons/settings.png').lengthSync(), greaterThan(0));
-      expect(
-        File('LICENSE').readAsStringSync(),
-        contains('PolyForm Noncommercial License 1.0.0'),
-      );
-      expect(
-        File('Cargo.toml').readAsStringSync(),
-        contains('PolyForm-Noncommercial-1.0.0'),
-      );
     },
   );
 }

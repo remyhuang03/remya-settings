@@ -232,7 +232,7 @@ void main() {
     },
   );
   test(
-    'system mode is read from the backend without writing at startup',
+    'legacy system mode is reconciled explicitly without writing the system',
     () async {
       file.writeAsStringSync(
         'version = 1\n[theme]\nstyle_variant = "neutral"\ntheme_mode = "system"\n',
@@ -244,6 +244,9 @@ void main() {
       );
       addTearDown(controller.dispose);
       await controller.reload();
+      expect(controller.preferences.themeMode, SystemThemeMode.light);
+      expect(controller.hasConflict, isTrue);
+      await controller.useSystemConfiguration();
       expect(controller.preferences.themeMode, SystemThemeMode.dark);
       expect(controller.preferences.styleVariant, DynamicSchemeVariant.neutral);
       expect(system.applyCalls, 0);
@@ -270,5 +273,33 @@ void main() {
     expect((await store.load())!.themeMode, SystemThemeMode.dark);
     expect((await store.load())!.styleVariant, DynamicSchemeVariant.neutral);
     expect(controller.errorMessage, contains('GTK configuration is read-only'));
+  });
+  test('first launch adopts system preferences, restart preserves conflicts and both choices work', () async {
+    final system = FakeSystemAppearance(mode: .dark);
+    final controller = AppPreferencesController(
+      store: store,
+      systemAppearance: system,
+    );
+    addTearDown(controller.dispose);
+    await controller.reload();
+    expect((await store.load())!.themeMode, SystemThemeMode.dark);
+    expect(system.applyCalls, 0);
+    system.mode = .light;
+    await controller.reload();
+    expect(controller.hasConflict, isTrue);
+    expect(controller.preferences.themeMode, SystemThemeMode.dark);
+    await controller.useSystemConfiguration();
+    expect(controller.hasConflict, isFalse);
+    expect((await store.load())!.themeMode, SystemThemeMode.light);
+    system.mode = .dark;
+    await controller.reload();
+    system.applyError = StateError('denied');
+    await controller.setThemeMode(controller.preferences.themeMode);
+    expect(controller.hasConflict, isTrue);
+    expect((await store.load())!.themeMode, SystemThemeMode.light);
+    system.applyError = null;
+    await controller.setThemeMode(controller.preferences.themeMode);
+    expect(controller.hasConflict, isFalse);
+    expect(system.mode, SystemThemeMode.light);
   });
 }

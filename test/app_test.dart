@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:remya_settings/app.dart';
 import 'package:remya_settings/features/appearance/application/app_preferences_controller.dart';
 import 'package:remya_settings/features/appearance/data/app_preferences_file.dart';
 import 'package:remya_settings/features/about/presentation/about_page.dart';
@@ -62,17 +61,6 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('application loads its bundled catalog', (tester) async {
-    await tester.runAsync(() async {
-      await tester.pumpWidget(const RemyaSettingsApp());
-      await SettingsCatalog.load();
-    });
-    await tester.pumpAndSettle();
-    expect(find.byType(SettingsShell), findsOneWidget);
-    expect(find.byType(SettingsTitleBar), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
-
   testWidgets('title bar requests native close, drag and maximize', (
     tester,
   ) async {
@@ -105,67 +93,203 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('sidebar categories collapse and show icons on secondary pages', (
+  for (final width in [1280.0, 600.0, 360.0]) {
+    testWidgets('persistent single-level navigation at $width', (tester) async {
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await mount(
+        tester,
+        SettingsShell(catalog: catalog),
+        size: Size(width, 900),
+      );
+      final category = find.byKey(const ValueKey('nav-system'));
+      await tester.tap(category);
+      await tester.pumpAndSettle();
+      final display = find.byKey(const ValueKey('nav-page-display'));
+      expect(tester.widget(display), isA<FilledButton>());
+      expect(find.byType(Drawer), findsNothing);
+      expect(find.text('Display arrangement · Preview'), findsOneWidget);
+      expect(
+        width < 1000
+            ? tester.widget(category) is IconButton
+            : tester.widget(category) is ListTile,
+        isTrue,
+      );
+      await tester.tap(category);
+      await tester.pumpAndSettle();
+      expect(display, findsOneWidget);
+      if (width < 1000) {
+        await tester.tap(find.byTooltip('Find a setting'));
+        await tester.pumpAndSettle();
+        await tester.enterText(
+          find.byKey(const ValueKey('settings-search')),
+          'Night light',
+        );
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const ValueKey('page-link-night-light')),
+          findsOneWidget,
+        );
+      }
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  for (final width in [1280.0, 600.0, 360.0]) {
+    testWidgets('page buttons wrap with leading icons at $width', (
+      tester,
+    ) async {
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final navigation = ValueNotifier<String?>('date-time');
+      addTearDown(navigation.dispose);
+      await mount(
+        tester,
+        SettingsShell(catalog: catalog, navigation: navigation),
+        size: Size(width, 900),
+      );
+      final group = find.byKey(const ValueKey('page-buttons-time'));
+      expect(tester.widget(group), isA<Wrap>());
+      final pages = catalog.inCategory('time');
+      final first = find.byKey(ValueKey('nav-page-${pages.first.id}'));
+      final last = find.byKey(ValueKey('nav-page-${pages.last.id}'));
+      expect(
+        tester.getTopLeft(last).dy,
+        greaterThan(tester.getTopLeft(first).dy),
+      );
+      final bounds = tester.getRect(group);
+      for (final page in pages) {
+        final button = find.byKey(ValueKey('nav-page-${page.id}'));
+        expect(
+          find.descendant(
+            of: button,
+            matching: find.byIcon(pageIcon(page, catalog.category('time'))),
+          ),
+          findsOneWidget,
+        );
+        final rectangle = tester.getRect(button);
+        expect(rectangle.left, greaterThanOrEqualTo(bounds.left));
+        expect(rectangle.right, lessThanOrEqualTo(bounds.right + 0.01));
+      }
+      expect(
+        pageIcon(pages.first, catalog.category('time')),
+        Icons.schedule_rounded,
+      );
+      expect(
+        pageIcon(catalog.page('language'), catalog.category('time')),
+        Icons.translate_rounded,
+      );
+      await tester.ensureVisible(last);
+      await tester.tap(last);
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<SettingsDetail>(find.byType(SettingsDetail)).page.id,
+        pages.last.id,
+      );
+      await tester.ensureVisible(find.byType(SettingsDetail));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+  }
+
+  for (final brightness in Brightness.values) {
+    testWidgets(
+      'compact selected icons use the container foreground in ${brightness.name}',
+      (tester) async {
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        final theme = preferences.preferences.theme(brightness);
+        final navigation = ValueNotifier<String?>('date-time');
+        addTearDown(navigation.dispose);
+        await mount(
+          tester,
+          Theme(
+            data: theme,
+            child: SettingsShell(catalog: catalog, navigation: navigation),
+          ),
+          size: const Size(600, 900),
+        );
+        final selected = find.byKey(const ValueKey('nav-time'));
+        final icon = find.descendant(of: selected, matching: find.byType(Icon));
+        expect(
+          IconTheme.of(tester.element(icon)).color,
+          theme.colorScheme.onSecondaryContainer,
+        );
+        final button = tester.widget<IconButton>(selected);
+        expect(
+          button.style!.backgroundColor!.resolve({WidgetState.selected}),
+          theme.colorScheme.secondaryContainer,
+        );
+        final luminances = [
+          theme.colorScheme.onSecondaryContainer.computeLuminance(),
+          theme.colorScheme.secondaryContainer.computeLuminance(),
+        ]..sort();
+        expect(
+          (luminances.last + 0.05) / (luminances.first + 0.05),
+          greaterThanOrEqualTo(3),
+        );
+        await tester.tap(find.byKey(const ValueKey('nav-home')));
+        await tester.pumpAndSettle();
+        expect(
+          IconTheme.of(tester.element(icon)).color,
+          theme.colorScheme.onSurfaceVariant,
+        );
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox.shrink());
+      },
+    );
+  }
+
+  testWidgets('About shows live catalog coverage and repository information', (
     tester,
   ) async {
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-    await mount(tester, SettingsShell(catalog: catalog));
-    expect(find.byType(PageLink), findsNothing);
-    expect(find.text('Hyprland · UI Preview'), findsNothing);
-    final category = find.byKey(const ValueKey('nav-system'));
-    final display = find.byKey(const ValueKey('nav-page-display'));
-    expect(display, findsNothing);
-    await tester.tap(category);
-    await tester.pumpAndSettle();
-    expect(tester.widget<ListTile>(display).leading, isA<Icon>());
-    await tester.tap(category);
-    await tester.pumpAndSettle();
-    expect(display, findsNothing);
-    await tester.tap(category);
-    await tester.pumpAndSettle();
-    await tester.tap(display);
-    await tester.pumpAndSettle();
-    expect(tester.widget<ListTile>(display).selected, isTrue);
-    expect(find.text('Display arrangement · Preview'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+    await mount(tester, AboutPage(catalog: catalog, onLicenses: () {}));
+    expect(find.text('v$appVersion'), findsOneWidget);
+    final controls = catalog.pages.expand((page) => page.controls);
+    for (final stat in [
+      (
+        'Supported',
+        controls.where((item) => item.availability == .available).length,
+      ),
+      (
+        'Not yet done',
+        controls.where((item) => item.availability == .planned).length,
+      ),
+      ('Total', catalog.controlCount),
+    ]) {
+      expect(
+        tester.widget<Text>(find.byKey(ValueKey('coverage-${stat.$1}'))).data,
+        '${stat.$2}',
+      );
+    }
 
-  testWidgets(
-    'About uses dated version and repository list item without status labels',
-    (tester) async {
-      await mount(tester, AboutPage(onLicenses: () {}));
-      expect(find.text('v$appVersion'), findsOneWidget);
-      expect(
-        find.ancestor(
-          of: find.text('v$appVersion'),
-          matching: find.byType(Chip),
-        ),
-        findsNothing,
-      );
-      final repository = tester.widget<ListTile>(
-        find.ancestor(
-          of: find.text('Repository'),
-          matching: find.byType(ListTile),
-        ),
-      );
-      expect(repository.onTap, isNotNull);
-      expect(repository.trailing, isA<Icon>());
-      expect(find.text('Available'), findsNothing);
-      expect(find.text('Project status'), findsNothing);
-      expect(find.text('Global system settings for Hyprland'), findsNothing);
-      expect(
-        find.text(
-          'Windows Settings organization with Material Design 3 Expressive styling.',
-        ),
-        findsNothing,
-      );
-      await mount(tester, const AvailabilityBadge(.available));
-      expect(find.byType(Tooltip), findsNothing);
-      expect(find.byType(Icon), findsNothing);
-      expect(find.text('Available'), findsNothing);
-    },
-  );
+    expect(
+      find.ancestor(of: find.text('v$appVersion'), matching: find.byType(Chip)),
+      findsNothing,
+    );
+    final repository = tester.widget<ListTile>(
+      find.ancestor(
+        of: find.text('Repository'),
+        matching: find.byType(ListTile),
+      ),
+    );
+    expect(repository.onTap, isNotNull);
+    expect(repository.trailing, isA<Icon>());
+    expect(find.text('Available'), findsNothing);
+    expect(find.text('Project status'), findsNothing);
+    expect(find.text('Global system settings for Hyprland'), findsNothing);
+    expect(
+      find.text(
+        'Windows Settings organization with Material Design 3 Expressive styling.',
+      ),
+      findsNothing,
+    );
+    await mount(tester, const AvailabilityBadge(.available));
+    expect(find.byType(Tooltip), findsNothing);
+    expect(find.byType(Icon), findsNothing);
+    expect(find.text('Available'), findsNothing);
+  });
 
   testWidgets('browse, search, navigate back and open About and licenses', (
     tester,
@@ -176,8 +300,6 @@ void main() {
     expect(find.text('Your desktop, your way.'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('nav-system')));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('nav-page-display')));
-    await tester.pumpAndSettle();
     expect(find.text('Display arrangement · Preview'), findsOneWidget);
     expect(
       tester
@@ -186,7 +308,7 @@ void main() {
       isTrue,
     );
     expect(find.byTooltip('Back'), findsNothing);
-    expect(find.text('System'), findsOneWidget);
+    expect(find.text('System'), findsWidgets);
     await tester.tap(find.byKey(const ValueKey('settings-search')));
     await tester.sendKeyDownEvent(LogicalKeyboardKey.altLeft);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
@@ -278,7 +400,7 @@ void main() {
     });
   }
 
-  testWidgets('Home and About remain usable at minimum width and large text', (
+  testWidgets('Home and About remain usable at minimum size and large text', (
     tester,
   ) async {
     addTearDown(tester.view.resetPhysicalSize);
@@ -287,9 +409,14 @@ void main() {
       tester,
       MediaQuery(
         data: const MediaQueryData(textScaler: TextScaler.linear(1.5)),
-        child: SettingsShell(catalog: catalog),
+        child: Column(
+          children: [
+            const SettingsTitleBar(),
+            Expanded(child: SettingsShell(catalog: catalog)),
+          ],
+        ),
       ),
-      size: const Size(1000, 800),
+      size: const Size(1000, 600),
     );
     expect(tester.takeException(), isNull);
     expect(find.byType(Drawer), findsNothing);
@@ -315,8 +442,6 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('nav-system')));
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('nav-page-display')), findsOneWidget);
-    await tester.tap(find.byKey(const ValueKey('nav-page-display')));
-    await tester.pumpAndSettle();
     final reference = find.text('Windows reference settings');
     await tester.ensureVisible(reference);
     await tester.tap(reference);

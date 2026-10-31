@@ -12,22 +12,31 @@ import 'package:remya_settings/features/settings/presentation/settings_shell.dar
 import 'support/fake_system_appearance.dart';
 
 void main() {
-  test('Material catalog choices match the implemented enums', () async {
-    final catalog = await SettingsCatalog.load();
-    final controls = catalog.page('themes').controls;
-    expect(
-      controls
-          .firstWhere((setting) => setting.id == materialStyleSettingId)
-          .options,
-      DynamicSchemeVariant.values.map((value) => value.label).toList(),
-    );
-    expect(
-      controls
-          .firstWhere((setting) => setting.id == materialThemeModeSettingId)
-          .options,
-      SystemThemeMode.values.map((value) => value.label).toList(),
-    );
-  });
+  test(
+    'Material catalog choices and default match the app preferences',
+    () async {
+      final catalog = await SettingsCatalog.load();
+      final controls = catalog.page('themes').controls;
+      expect(
+        controls
+            .firstWhere((setting) => setting.id == materialStyleSettingId)
+            .value,
+        const AppPreferences().styleVariant.label,
+      );
+      expect(
+        controls
+            .firstWhere((setting) => setting.id == materialStyleSettingId)
+            .options,
+        DynamicSchemeVariant.values.map((value) => value.label).toList(),
+      );
+      expect(
+        controls
+            .firstWhere((setting) => setting.id == materialThemeModeSettingId)
+            .options,
+        SystemThemeMode.values.map((value) => value.label).toList(),
+      );
+    },
+  );
 
   testWidgets(
     'Themes controls update the whole app and persist without losing navigation',
@@ -54,9 +63,24 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('nav-personalization')));
       await tester.pumpAndSettle();
+      await tester.ensureVisible(find.byKey(const ValueKey('nav-page-themes')));
       await tester.tap(find.byKey(const ValueKey('nav-page-themes')));
       await tester.pumpAndSettle();
+      final light = find.byKey(
+        const ValueKey('$materialThemeModeSettingId-Light'),
+      );
+      final dark = find.byKey(
+        const ValueKey('$materialThemeModeSettingId-Dark'),
+      );
       expect(find.text('Material Design'), findsOneWidget);
+      expect(find.text('Appearance preferences'), findsNothing);
+      expect(find.text('Reload settings'), findsNothing);
+      expect(
+        find.byKey(ValueKey('control-$materialStyleSettingId')),
+        findsOneWidget,
+      );
+      expect(tester.widget<IconButton>(light).isSelected, isTrue);
+      expect(tester.widget<IconButton>(dark).isSelected, isFalse);
       expect(find.text('Follow system'), findsNothing);
       expect(find.byType(Drawer), findsNothing);
       tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
@@ -67,9 +91,9 @@ void main() {
         Brightness.light,
       );
 
-      Future<void> select(String id, String old, String value) async {
+      Future<void> select(String id, String value) async {
         final choice = tester.widget<DropdownButtonFormField<String>>(
-          find.byKey(ValueKey('$id-$old')),
+          find.byKey(ValueKey('control-$id')),
         );
         expect(choice.onChanged, isNotNull);
         await tester.runAsync(() async {
@@ -86,8 +110,18 @@ void main() {
           .theme!
           .colorScheme
           .primary;
-      await select(materialStyleSettingId, 'Tonal spot', 'Monochrome');
-      await select(materialThemeModeSettingId, 'Light', 'Dark');
+      await select(materialStyleSettingId, 'Monochrome');
+      await tester.runAsync(() async {
+        await tester.ensureVisible(dark);
+        await tester.tap(dark);
+        while (controller.isBusy) {
+          await Future<void>.delayed(const Duration(milliseconds: 5));
+        }
+      });
+      await tester.pumpAndSettle();
+      expect(system.applyCalls, 1);
+      expect(tester.widget<IconButton>(light).isSelected, isFalse);
+      expect(tester.widget<IconButton>(dark).isSelected, isTrue);
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
       expect(app.themeMode, ThemeMode.dark);
       expect(app.darkTheme!.brightness, Brightness.dark);
@@ -104,6 +138,16 @@ void main() {
           await store.load(),
           const AppPreferences(styleVariant: .monochrome, themeMode: .dark),
         );
+        await tester.ensureVisible(light);
+        await tester.tap(light);
+        while (controller.isBusy) {
+          await Future<void>.delayed(const Duration(milliseconds: 5));
+        }
+        expect(system.applyCalls, 2);
+        expect(
+          await store.load(),
+          const AppPreferences(styleVariant: .monochrome, themeMode: .light),
+        );
         store.file.writeAsStringSync(
           'version = 1\n[theme]\ntheme_mode = "light"\nstyle_variant = "vibrant"\n',
         );
@@ -116,20 +160,25 @@ void main() {
         ThemeMode.light,
       );
       expect(
-        find.byKey(ValueKey('$materialStyleSettingId-Vibrant')),
-        findsOneWidget,
+        tester
+            .widget<DropdownButtonFormField<String>>(
+              find.byKey(const ValueKey('control-$materialStyleSettingId')),
+            )
+            .initialValue,
+        'Vibrant',
       );
-      expect(
-        find.byKey(ValueKey('$materialThemeModeSettingId-Light')),
-        findsOneWidget,
-      );
+      expect(tester.widget<IconButton>(light).isSelected, isTrue);
       await tester.runAsync(() async {
         store.file.writeAsStringSync('version = 2');
         await controller.reload();
       });
       await tester.pumpAndSettle();
-      expect(find.byType(MaterialBanner), findsOneWidget);
-      expect(find.text(store.file.path), findsOneWidget);
+      expect(find.text('Unable to update settings'), findsOneWidget);
+      await tester.tap(find.text('Details'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining(store.file.path), findsOneWidget);
+      await tester.tap(find.text('Close').last);
+      await tester.pumpAndSettle();
       expect(
         tester.widget<MaterialApp>(find.byType(MaterialApp)).themeMode,
         ThemeMode.light,
