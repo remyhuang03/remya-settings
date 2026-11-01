@@ -1,4 +1,8 @@
-# Remy'a Settings
+<p align="center">
+  <img src="assets/icons/settings.svg" width="128" alt="Remy'a Settings icon">
+</p>
+
+<h1 align="center">Remy'a Settings</h1>
 
 A global system settings application for **Hyprland on Linux**, using **Flutter**, **Material Design 3 Expressive**, and a **Rust workspace**. Layout and information architecture reference Windows 11 Settings.
 
