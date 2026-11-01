@@ -53,7 +53,7 @@ Documented boolean fields use disabled switches. Bounded numeric fields use the 
 - `assets/settings/catalog.json`: original objects plus appended categories, sources, and pages.
 - `docs/hyprland-settings-coverage.json`: baseline IDs, inspected repository revisions, file permalinks, new page IDs, and one source mapping for every added control. Native types/defaults/limits are recorded for table-derived fields.
 - `docs/settings-implementation-progress.md`: combined human-readable tracker; all preexisting detailed page blocks and tracking notes are retained verbatim, with added pages and updated summary counts.
-- `test/hyprland_catalog_test.dart`: retained baseline identities, source mapping integrity, coverage of the 368 core fields, searchable additions, disabled availability, and exact tracker parity.
+- `test/catalog_test.dart`: retained baseline identities, source mapping integrity, coverage of the 368 core fields, searchable additions, disabled availability, and exact tracker parity.
 
 Catalog tests validate current category/page/control identities and source mappings. Rendering tests exercise the enlarged catalog at wide, compact, and narrow widths; asset/schema validation and a Linux build check that the generic renderer accepts every added page.
 

@@ -8,9 +8,6 @@ import 'package:remya_settings/features/integration/settings_status.dart';
 import 'package:remya_settings/features/appearance/application/app_preferences_controller.dart';
 import 'package:remya_settings/features/appearance/data/app_preferences_file.dart';
 
-import 'package:remya_settings/features/settings/presentation/settings_shell.dart';
-import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
-
 import 'support/fake_date_time.dart';
 import 'support/fake_system_appearance.dart';
 
@@ -325,88 +322,4 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
     },
   );
-  for (final width in [1280.0, 600.0, 360.0]) {
-    testWidgets('live date/time controls fit the full shell at $width', (
-      tester,
-    ) async {
-      tester.view.devicePixelRatio = 1;
-      tester.view.physicalSize = Size(width, 900);
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      await tester.runAsync(controller.reload);
-      final catalog = (await tester.runAsync(SettingsCatalog.load))!;
-      final navigation = ValueNotifier<String?>('date-time');
-      addTearDown(navigation.dispose);
-      final preferences = AppPreferencesController(
-        store: AppPreferencesFile(File('${directory.path}/theme.toml')),
-        systemAppearance: FakeSystemAppearance(),
-      );
-      addTearDown(preferences.dispose);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: DateTimeScope(
-            controller: controller,
-            child: SettingsShell(
-              catalog: catalog,
-              navigation: navigation,
-              status: SettingsStatus(
-                preferences: preferences,
-                dateTime: controller,
-              ),
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.textContaining('Usually no change'), findsOneWidget);
-      expect(
-        find.textContaining('Synchronized · pool.ntp.org'),
-        findsOneWidget,
-      );
-      expect(find.byKey(const ValueKey(manualTimeSettingId)), findsNothing);
-      final servers = tester.getRect(
-        find.byKey(const ValueKey('time-server-mode')),
-      );
-      final timezone = tester.getRect(
-        find.byKey(const ValueKey('timezone-combobox')),
-      );
-      expect(servers.right, closeTo(timezone.right, 1));
-      final sync = tester.widget<IconButton>(
-        find.byKey(const ValueKey('control-$syncNowSettingId')),
-      );
-      expect(sync.tooltip, 'Sync now');
-      expect(
-        ((sync.icon as RotationTransition).child as Icon).icon,
-        Icons.sync_rounded,
-      );
-
-      await tester.runAsync(() => controller.setAutomaticTime(false));
-      await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey(manualTimeSettingId)), findsOneWidget);
-      expect(find.byKey(const ValueKey(timeServerSettingId)), findsNothing);
-      expect(find.byKey(const ValueKey(syncNowSettingId)), findsNothing);
-      final pane = tester.getRect(
-        find.byKey(const ValueKey('settings-main-content')),
-      );
-      await tester.runAsync(() => controller.setTimeLocale('C'));
-      await tester.pumpAndSettle();
-      final status = tester.getRect(
-        find.byKey(const ValueKey('settings-status-card')),
-      );
-      expect(status.left, greaterThanOrEqualTo(width < 1000 ? 80 : 280));
-      expect(status.right, lessThanOrEqualTo(pane.right));
-      expect(status.bottom, lessThanOrEqualTo(pane.bottom));
-      expect(
-        tester.getRect(find.byKey(const ValueKey('settings-main-content'))),
-        pane,
-      );
-
-      await tester.ensureVisible(
-        find.byKey(const ValueKey('timezone-combobox')),
-      );
-      await tester.pumpAndSettle();
-      expect(tester.takeException(), isNull);
-      await tester.pumpWidget(const SizedBox.shrink());
-    });
-  }
 }

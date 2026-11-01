@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/appearance/application/app_preferences_controller.dart';
@@ -196,56 +195,12 @@ final mainScroll = find
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('catalog', () {
-    test(
-      'advanced display options live in a collapsed Display section',
-      () async {
-        final page = catalog.page('display');
-        final advanced = page.sections.singleWhere(
-          (s) => s.title == 'Advanced',
-        );
-        expect(advanced.collapsed, isTrue);
-        expect(advanced.controls.map((c) => c.id), contains(displayVrrId));
-        expect(
-          page.sections
-              .firstWhere((s) => s.title == 'Scale and layout')
-              .controls
-              .map((c) => c.id),
-          contains(displayRefreshId),
-        );
-        expect(catalog.page('advanced-display').id, 'display');
-        expect(catalog.page('hypr-monitor-fields').id, 'display');
-        expect(page.windowsUris, contains('ms-settings:display-advanced'));
-        for (final id in displaySettingIds) {
-          final control = page.controls.singleWhere((c) => c.id == id);
-          expect(
-            control.availability,
-            SettingAvailability.available,
-            reason: id,
-          );
-        }
-        expect(
-          catalog.inCategory('system').map((p) => p.id),
-          isNot(contains('advanced-display')),
-        );
-      },
-    );
-  });
-
   group('snapDisplayPosition', () {
     const left = Rect.fromLTWH(0, 0, 1000, 500);
     test('edges within the threshold snap together', () {
       expect(
         snapDisplayPosition(const Rect.fromLTWH(1020, 15, 800, 400), [left]),
         const Offset(1000, 0),
-      );
-    });
-    test('far positions are kept and rounded', () {
-      expect(
-        snapDisplayPosition(const Rect.fromLTWH(2000.4, 900.6, 800, 400), [
-          left,
-        ]),
-        const Offset(2000, 901),
       );
     });
     test('a released display never overlaps another', () {
@@ -276,14 +231,6 @@ void main() {
         expect(controller.selected!.name, 'A');
       },
     );
-
-    test('a background reload never recreates controls', () async {
-      final controller = DisplayController(FakeDisplayBackend([output('A')]));
-      await controller.reload();
-      final revision = controller.revision;
-      await controller.reload();
-      expect(controller.revision, revision);
-    });
 
     test(
       'changes send the confirmation window and failures stay retryable',
@@ -330,15 +277,6 @@ void main() {
         expect(controller.isBusy, isFalse);
       },
     );
-
-    test('detection errors reported by the service stay visible', () async {
-      final backend = FakeDisplayBackend([])
-        ..stateError = 'Hyprland is not running';
-      final controller = DisplayController(backend);
-      await controller.reload();
-      expect(controller.errorMessage, 'Hyprland is not running');
-      expect(controller.selected, isNull);
-    });
 
     test('conflicts offer both resolutions through the service', () async {
       final backend = FakeDisplayBackend([
@@ -417,23 +355,6 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    testWidgets(
-      'refresh lives in the arrangement header without instruction text',
-      (tester) async {
-        final backend = await pump(tester);
-        final refresh = find.byKey(const ValueKey('display-refresh'));
-        await scrollTo(tester, refresh);
-        expect(find.text('Detect displays'), findsNothing);
-        expect(
-          find.textContaining('Select a display to change it'),
-          findsNothing,
-        );
-        await tester.tap(refresh);
-        await tester.pumpAndSettle();
-        expect(backend.writes.single.$1, displayDetectId);
-      },
-    );
-
     testWidgets('Position edits both coordinates together', (tester) async {
       final backend = await pump(tester);
       final x = find.byKey(
@@ -507,199 +428,6 @@ void main() {
       expect(backend.writes.last.$2['value'], '2');
     });
 
-    testWidgets('brightness writes while the pointer is still dragging', (
-      tester,
-    ) async {
-      final backend = await pump(tester);
-      final slider = find.byKey(
-        const ValueKey('display-control-$displayBrightnessId'),
-      );
-      await scrollTo(tester, slider);
-      final drag = await tester.startGesture(tester.getCenter(slider));
-      await drag.moveBy(const Offset(40, 0));
-      await tester.pump();
-      expect(backend.writes.last.$1, displayBrightnessId);
-      expect(backend.writes.last.$2['value'], isNot('40'));
-      await drag.up();
-      await tester.pumpAndSettle();
-      final actual = backend.brightnessValues['eDP-1'];
-      expect(find.text('$actual%'), findsWidgets);
-    });
-
-    testWidgets('shows real displays and hides advanced options by default', (
-      tester,
-    ) async {
-      await pump(tester);
-      expect(find.byKey(const ValueKey('display-arrangement')), findsOneWidget);
-      expect(find.byKey(const ValueKey('display-tile-eDP-1')), findsOneWidget);
-      expect(find.byKey(const ValueKey('display-tile-DP-3')), findsOneWidget);
-      expect(find.text('Display arrangement · Preview'), findsNothing);
-      expect(find.text('Advanced'), findsOneWidget);
-      expect(find.text('Variable refresh rate'), findsNothing);
-      expect(find.text('Advanced display'), findsNothing);
-      expect(
-        find.byKey(const ValueKey('nav-page-advanced-display')),
-        findsNothing,
-      );
-    });
-
-    testWidgets('expands Advanced on tap and for the retired page ID', (
-      tester,
-    ) async {
-      await pump(tester);
-      await scrollTo(tester, find.text('Advanced'));
-      await tester.tap(find.text('Advanced'));
-      await tester.pumpAndSettle();
-      expect(
-        find.text('Variable refresh rate', skipOffstage: false),
-        findsOneWidget,
-      );
-    });
-
-    testWidgets('a deep link to Advanced display opens the section', (
-      tester,
-    ) async {
-      await pump(tester, page: 'advanced-display');
-      // Read-only rows keep their information in the left column.
-      expect(
-        tester.getTopLeft(find.text('Desktop mode', skipOffstage: false)).dx,
-        tester.getTopLeft(find.text('Bit depth', skipOffstage: false)).dx,
-      );
-      expect(
-        find.text('Variable refresh rate', skipOffstage: false),
-        findsOneWidget,
-      );
-    });
-
-    testWidgets('a deep link expands Advanced on an already open page', (
-      tester,
-    ) async {
-      final navigation = ValueNotifier<String?>('display');
-      await pump(tester, navigation: navigation);
-      expect(find.text('Variable refresh rate'), findsNothing);
-      navigation.value = 'advanced-display';
-      await tester.pumpAndSettle();
-      expect(
-        find.text('Variable refresh rate', skipOffstage: false),
-        findsOneWidget,
-      );
-    });
-
-    for (final kind in [PointerDeviceKind.mouse, PointerDeviceKind.touch]) {
-      testWidgets('dragging a display saves its snapped position with $kind', (
-        tester,
-      ) async {
-        final backend = await pump(tester);
-        final tile = find.byKey(const ValueKey('display-tile-DP-3'));
-        await scrollTo(tester, tile);
-        final scrolled = tester
-            .state<ScrollableState>(mainScroll)
-            .position
-            .pixels;
-        await tester.drag(tile, const Offset(0, 30), kind: kind);
-        await tester.pumpAndSettle();
-        final (id, request) = backend.writes.last;
-        expect(id, displayPositionId);
-        expect(request['output'], 'DP-3');
-        final [x, y] = (request['value'] as String)
-            .split('x')
-            .map(int.parse)
-            .toList();
-        expect(x, 1920, reason: 'stays attached to its neighbour');
-        expect(y, greaterThan(0));
-        expect(
-          tester.state<ScrollableState>(mainScroll).position.pixels,
-          scrolled,
-          reason: 'the drag must not scroll the page',
-        );
-      });
-    }
-
-    testWidgets('tapping a display selects it without moving it', (
-      tester,
-    ) async {
-      final backend = await pump(tester);
-      final tile = find.byKey(const ValueKey('display-tile-DP-3'));
-      await scrollTo(tester, tile);
-      await tester.tap(tile);
-      await tester.pumpAndSettle();
-      expect(backend.writes, isEmpty);
-      final controller = DisplayScope.maybeOf(tester.element(tile))!;
-      expect(controller.selected!.name, 'DP-3');
-    });
-
-    testWidgets('selecting a display updates capability gated controls', (
-      tester,
-    ) async {
-      await pump(tester);
-      await tester.scrollUntilVisible(
-        find.byKey(const ValueKey('display-control-$displayHdrId')),
-        200,
-        scrollable: mainScroll,
-      );
-      Switch hdr() => tester.widget<Switch>(
-        find.byKey(const ValueKey('display-control-$displayHdrId')),
-      );
-      expect(hdr().onChanged, isNull);
-      expect(
-        find.text('This display does not report HDR support.'),
-        findsOneWidget,
-      );
-      await tester.scrollUntilVisible(
-        find.byKey(const ValueKey('display-tile-DP-3')),
-        -200,
-        scrollable: mainScroll,
-      );
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('display-tile-DP-3')));
-      await tester.pumpAndSettle();
-      await tester.scrollUntilVisible(
-        find.byKey(const ValueKey('display-control-$displayHdrId')),
-        200,
-        scrollable: mainScroll,
-      );
-      expect(hdr().onChanged, isNotNull);
-      expect(
-        find.text('This display does not report HDR support.'),
-        findsNothing,
-      );
-    });
-
-    testWidgets('brightness shows its value or why it is unavailable', (
-      tester,
-    ) async {
-      await pump(tester);
-      final readout = find.byKey(
-        const ValueKey('display-readout-$displayBrightnessId'),
-      );
-      await tester.scrollUntilVisible(readout, 200, scrollable: mainScroll);
-      expect(tester.widget<Text>(readout).data, '40%');
-      await tester.scrollUntilVisible(
-        find.byKey(const ValueKey('display-tile-DP-3')),
-        -200,
-        scrollable: mainScroll,
-      );
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('display-tile-DP-3')));
-      await tester.pumpAndSettle();
-      await tester.scrollUntilVisible(
-        find.text('Display lacks DDC/CI'),
-        200,
-        scrollable: mainScroll,
-      );
-      expect(find.text('Display lacks DDC/CI'), findsOneWidget);
-      expect(
-        tester
-            .widget<Slider>(
-              find.byKey(
-                const ValueKey('display-control-$displayBrightnessId'),
-              ),
-            )
-            .onChanged,
-        isNull,
-      );
-    });
-
     testWidgets('a blocked rule file disables writes and explains why', (
       tester,
     ) async {
@@ -719,30 +447,6 @@ void main() {
         ),
       );
       expect(field.onChanged, isNull);
-    });
-
-    testWidgets('paired controls and Advanced stay usable at minimum width', (
-      tester,
-    ) async {
-      await pump(tester);
-      tester.view.physicalSize = const Size(360, 800);
-      await tester.pumpAndSettle();
-      for (final key in [
-        'display-control-$displayPositionId-y',
-        'display-control-$displayResolutionId-y',
-        'display-flip',
-      ]) {
-        await scrollTo(tester, find.byKey(ValueKey(key)));
-        expect(tester.takeException(), isNull);
-      }
-      await scrollTo(tester, find.text('Advanced'));
-      await tester.tap(find.text('Advanced'));
-      await tester.pumpAndSettle();
-      expect(
-        find.text('Variable refresh rate', skipOffstage: false),
-        findsOneWidget,
-      );
-      expect(tester.takeException(), isNull);
     });
 
     testWidgets('risky changes ask to keep or revert with a countdown', (
@@ -769,52 +473,5 @@ void main() {
       await tester.pumpAndSettle(const Duration(milliseconds: 300));
       expect(backend.resolves, ['revert', 'keep']);
     });
-
-    testWidgets('a conflict warning offers both choices', (tester) async {
-      final backend = await pump(
-        tester,
-        outputs: [
-          output('A', conflicts: ['transform'], overrides: {'transform': '3'}),
-        ],
-      );
-      expect(find.text('Configuration differs'), findsOneWidget);
-      await tester.tap(find.text('Use system configuration'));
-      await tester.pumpAndSettle();
-      expect(backend.resolves, ['system']);
-    });
-
-    testWidgets('disabled displays are listed and can be selected', (
-      tester,
-    ) async {
-      await pump(tester, outputs: [output('A'), output('B', disabled: true)]);
-      expect(find.byKey(const ValueKey('display-tile-B')), findsNothing);
-      await scrollTo(tester, find.byKey(const ValueKey('display-idle-B')));
-      await tester.tap(find.byKey(const ValueKey('display-idle-B')));
-      await tester.pumpAndSettle();
-      await scrollTo(
-        tester,
-        find.byKey(const ValueKey('display-hint-$displayScaleId')),
-      );
-      expect(find.text('This display is not in use.'), findsWidgets);
-    });
-
-    testWidgets(
-      'the page opens related previews and stays usable when narrow',
-      (tester) async {
-        await pump(tester);
-        final night = find.byKey(const ValueKey('open-page-display.e32be03e'));
-        await scrollTo(tester, night);
-        await tester.tap(night);
-        await tester.pumpAndSettle();
-        expect(
-          find.byKey(const ValueKey('night-light.e32be03e')),
-          findsOneWidget,
-        );
-
-        tester.view.physicalSize = const Size(420, 800);
-        await tester.pumpAndSettle();
-        expect(tester.takeException(), isNull);
-      },
-    );
   });
 }

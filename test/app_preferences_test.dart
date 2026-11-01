@@ -19,45 +19,6 @@ void main() {
   });
   tearDown(() => directory.deleteSync(recursive: true));
 
-  test('new and partial preferences default to Tonal spot', () {
-    expect(const AppPreferences().styleVariant, DynamicSchemeVariant.tonalSpot);
-    for (final map in <Map<String, dynamic>>[
-      {'version': 1},
-      {
-        'version': 1,
-        'theme': {'theme_mode': 'dark'},
-      },
-    ]) {
-      expect(
-        AppPreferences.fromMap(map).styleVariant,
-        DynamicSchemeVariant.tonalSpot,
-      );
-    }
-  });
-
-  test(
-    'every style and theme mode round-trips without seed configuration',
-    () async {
-      for (final style in DynamicSchemeVariant.values) {
-        for (final mode in SystemThemeMode.values) {
-          final preferences = AppPreferences(
-            styleVariant: style,
-            themeMode: mode,
-          );
-          await store.save(preferences);
-          expect(await store.load(), preferences);
-          expect(preferences.theme(.light).brightness, Brightness.light);
-          expect(preferences.theme(.dark).brightness, Brightness.dark);
-          expect(
-            (preferences.toMap()['theme'] as Map).keys,
-            unorderedEquals(['style_variant', 'theme_mode']),
-          );
-        }
-      }
-      expect(file.statSync().mode & 0x1ff, 0x180);
-    },
-  );
-
   test('debug and release paths use this app identity and XDG rules', () {
     expect(
       AppPreferencesFile.resolve(

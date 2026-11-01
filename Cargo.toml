@@ -1,5 +1,5 @@
 [workspace]
-members = ["lib/src/rust/core", "lib/src/rust/appearance", "lib/src/rust/date_time", "lib/src/rust/display", "lib/src/rust/service"]
+members = ["lib/src/rust/core", "lib/src/rust/appearance", "lib/src/rust/date_time", "lib/src/rust/display", "lib/src/rust/service", "lib/src/rust/system_information"]
 resolver = "3"
 
 [workspace.package]

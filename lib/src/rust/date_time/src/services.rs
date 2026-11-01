@@ -187,6 +187,6 @@ pub(crate) fn list_locales() -> Result<Vec<String>, String> {
     Ok(locales)
 }
 
-fn normalize_locale(locale: &str) -> String {
+pub(crate) fn normalize_locale(locale: &str) -> String {
     locale.replace('-', "").to_ascii_lowercase()
 }

@@ -10,3 +10,6 @@ mod ntp_config;
 
 mod ntp_config_write;
 mod persistent;
+
+mod calendar;
+pub use calendar::format_calendar_date;

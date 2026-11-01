@@ -81,12 +81,62 @@ def session_checks():
         assert dbus('Set', 'themes.material-theme-mode', 'dark')['theme']['theme_mode'] == 'dark'
         assert cli('get', 'system')['mode'] == 'dark'
         controls = cli('list')['controls']
-        assert len([control for control in controls if control['availability'] == 'available']) == 37
+        assert len([control for control in controls if control['availability'] == 'available']) == 54
         unavailable = next(control for control in controls if control['availability'] != 'available')
         assert 'Unavailable' in cli('set', unavailable['id'], 'true', ok=False)
         assert 'InvalidArgument' in cli('set', 'themes.material-theme-mode', 'system', ok=False)
         assert cli('get', unavailable['id'])['availability'] != 'available'
-        assert cli('get', 'catalog')['pages']
+        hostname = cli('get', 'hostname')
+        assert hostname == dbus('Get', 'hostname')
+        assert hostname['initialized'] and not hostname['conflict'] and hostname['error'] is None
+        assert cli('get', 'about.0f142010')['value'] == hostname['static_hostname']
+        hostname_file = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/hostname.toml'
+        assert 'static_hostname' in hostname_file.read_text()
+        assert 'InvalidArgument' in cli('set', 'about.0f142010', 'Bad Name', ok=False)
+        hostname_file.write_text('version = 1\nstatic_hostname = "saved-hostname"\n')
+        assert cli('get', 'hostname')['conflict']
+        assert cli('get', 'configuration')['hostname']['conflict']
+        assert 'Conflict' in cli('set', 'about.0f142010', 'new-hostname', ok=False)
+        assert not dbus('Resolve', 'hostname', 'system')['hostname']['conflict']
+        assert cli('get', 'hostname')['static_hostname'] == hostname['static_hostname']
+        assert 'authorize' in cli('set', 'about.0f142010', 'new-hostname', ok=False).lower()
+        assert cli('get', 'hostname')['error']
+        cli('resolve', 'hostname', 'system')
+        info = cli('get', 'system-information')
+        assert info == dbus('Get', 'system-information')
+        assert len(info['values']) == 16
+        page = json.dumps(cli('get', 'page:about'))
+        assert all(removed not in page for removed in ('Windows reference settings', 'about.5da0260f', 'about.92d0cfd9'))
+        assert 'InvalidArgument' in cli('get', 'about.5da0260f', ok=False)
+        for setting_id, field in info['values'].items():
+            assert (field['value'] is None) != (field['error'] is None)
+            assert cli('get', setting_id)['value'] == field['value']
+            assert 'ReadOnly' in cli('set', setting_id, 'changed', ok=False)
+        assert info['values']['about.4433eb13']['value'] == os.uname().nodename
+        assert os.uname().release in info['values']['about.kernel-version']['value']
+        cpu_model = next(line.split(':', 1)[1].strip() for line in Path('/proc/cpuinfo').read_text().splitlines() if line.startswith('model name'))
+        assert cpu_model == info['values']['about.b4366749']['value']
+        for setting, filename in {'manufacturer':'sys_vendor', 'model':'product_name', 'model-version':'product_version', 'board-manufacturer':'board_vendor', 'board-model':'board_name', 'firmware-manufacturer':'bios_vendor', 'firmware-version':'bios_version'}.items():
+            assert info['values'][f'about.{setting}']['value'] == Path('/sys/class/dmi/id', filename).read_text().strip()
+        raw_date = Path('/sys/class/dmi/id/bios_date').read_text().strip()
+        month, day, year = raw_date.split('/')
+        locale_values = subprocess.check_output(['gdbus', 'call', '--system', '--dest', 'org.freedesktop.locale1', '--object-path', '/org/freedesktop/locale1', '--method', 'org.freedesktop.DBus.Properties.Get', 'org.freedesktop.locale1', 'Locale'], text=True)
+        time_locale = re.search(r"'LC_TIME=([^']+)'", locale_values) or re.search(r"'LANG=([^']+)'", locale_values)
+        date_env = dict(os.environ, LC_TIME=time_locale[1] if time_locale else 'C', TZ='UTC0')
+        date_env.pop('LC_ALL', None)
+        expected_date = subprocess.check_output(['/usr/bin/date', '--date', f'{year}-{month}-{day}', '+%x'], env=date_env, text=True).strip()
+        assert info['values']['about.firmware-date']['value'] == expected_date
+        assert all('\u00b7' not in (field['value'] or '') for field in info['values'].values())
+        ram_kib = next(int(line.split()[1]) for line in Path('/proc/meminfo').read_text().splitlines() if line.startswith('MemTotal:'))
+        assert f'{ram_kib / 1024**2:.2f} GiB' == info['values']['about.d014ab77']['value']
+        pages = cli('get', 'catalog')['pages']
+        assert pages
+        assert not {'energy', 'multitasking'} & {page['id'] for page in pages}
+        assert not cli('search', 'Energy recommendations')['pages']
+        assert not cli('search', 'Multitasking')['pages']
+        for removed in ('energy', 'multitasking'):
+            assert 'InvalidArgument' in cli('get', f'page:{removed}', ok=False)
+            assert 'InvalidArgument' in cli('open', removed, ok=False)
         assert cli('search', 'material')['pages']
         assert cli('reload')['theme'] == dbus('Get', 'theme')
         executable = Path(os.environ['HOME']) / '.local/bin/remya_settings'
@@ -149,6 +199,7 @@ def session_checks():
             fill = image.getpixel((image.width // 2, 20))
             assert image.getpixel((0, 0)) != fill and image.getpixel((image.width - 1, 0)) != fill, 'Capsule corners were filled'
         print(f'PASS: installed bar on {len(bars)} outputs follows live D-Bus Light/Dark changes', flush=True)
+        assert cli('open', 'system-information') == {'opened': 'system-information'}
         assert cli('open', 'about') == {'opened': 'about'}
         deadline = time.monotonic() + 5
         while time.monotonic() < deadline:

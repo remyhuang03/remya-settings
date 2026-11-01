@@ -38,11 +38,13 @@ No command evaluates shell input. IDs are stable catalog IDs, not translated lab
 | CLI | D-Bus method and input signature | Result |
 | --- | --- | --- |
 | `get theme` | `Get(s key)` with `theme` | Versioned theme configuration |
+| `get hostname` | `Get(s key)` with `hostname` | Actual static/runtime names, saved static name, conflict and error |
+| `get system-information` | `Get(s key)` with `system-information` | Fresh read-only device/system fields with per-field errors |
 | `get about` | `Get(s key)` with `about` | Application identity, version, repository, license, API version |
 | `get date-time` | `Get(s key)` with `date-time` | Actual clock, local time, NTP status, time zone, saved zone, and conflict |
 | `get timezones` | `Get(s key)` with `timezones` | Finite system time zone options |
 | `get configuration` | `Get(s key)` with `configuration` | Saved/system values, conflicts, and detection errors |
-| `resolve <appearance / date-time / display> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
+| `resolve <appearance / date-time / display / hostname> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
 | `resolve display <keep / revert>` | `Resolve(ss feature, source)` | Confirm or undo a pending display change |
 | `get system` | `Get(s key)` with `system` | Fresh system mode and target readback |
 | `get display` | `Get(s key)` with `display` | Outputs, modes, saved and actual values, conflicts, pending change, write blocker |
@@ -69,7 +71,7 @@ in one message. `List` starts with cursor `"0"` and returns up to 32 controls,
 pagination is automatic. Invalid or out-of-range cursors fail. Search uses the
 same all-terms, case-insensitive matching as the GUI.
 
-All currently available system controls are writable through both interfaces:
+Available system preferences are writable through both interfaces; System information fields are read-only:
 
 | Setting ID | Accepted values |
 | --- | --- |
@@ -172,9 +174,10 @@ additions; use a new interface version for incompatible wire/schema changes.
 
 ## Verification
 
-- `fvm flutter test test/settings_api_test.dart`: contract parity, available
-  setters, unavailable controls, input validation, rollback, system result
-  serialization, catalog/search, reload, and navigation.
+- `fvm flutter test`: configuration persistence, validation, conflicts and
+  resolutions, failure retention, service controllers, and important GUI interactions.
+  Shallow presentation checks and static XML string assertions were removed;
+  CLI/D-Bus contract parity is exercised by the live interface smoke test.
 - `python test/interface_smoke.py`: installs both release bundles into temporary
   XDG roots, starts an isolated session bus, and exercises actual CLI/D-Bus
   activation, Rust writes and readback, signals, malformed configuration recovery,
@@ -408,9 +411,10 @@ checks. Toolkit and command capabilities are cached until application restart.
 Time zone offsets are refreshed on feature reload; locale options are cached after discovery; the open date/time page
 updates its clock locally once per second and does not perform per-second IPC.
 
-`test/date_time_test.dart`, `test/settings_scheduler_test.dart`,
-`test/app_preferences_test.dart`, and `test/settings_api_test.dart` cover the
-shared controllers, both conflict resolutions, failures, GUI, and API parity.
+`test/date_time_test.dart`, `test/service_controllers_test.dart`, and
+`test/app_preferences_test.dart` cover the
+shared controllers, both conflict resolutions, failures, and GUI behavior.
+`python test/interface_smoke.py` verifies actual CLI/D-Bus parity.
 `cargo test -p remya_settings_date_time` exercises actual GIO D-Bus calls against a
 private bus/fake timedated, including permission denial, NTP restoration, readback,
 and calendar/DST validation; it never changes the host clock.
@@ -425,7 +429,7 @@ editing controls. Errors appear in rounded Material error surfaces at the bottom
 method signatures, JSON keys, and `Changed(ss)` remain the public contract.
 The compatible `Close()` / `close` addition closes the GUI without quitting Settings.
 The native service reads `packages/remya_settings_client/api/settings1.xml`;
-`settings_api_test.dart` checks it against the pure Dart client method arities.
+`python test/interface_smoke.py` exercises its methods through the CLI and D-Bus.
 
 The launcher dispatches commands to the existing CLI and `--service` to the Rust
 user service. `Open` starts `remya_settings --gui <page>` only when needed; further
@@ -453,3 +457,86 @@ compares normalized locale spellings and recognizes localed removing a redundant
 LC_TIME that equals LANG. The GUI adopts this actual default instead of claiming
 a readback mismatch. Bottom status cards share MD3E container styling; technical
 errors are available in Details and restart notices use a primary action.
+
+## System information
+
+`Get("system-information")` returns `api_version: 1` and `values`, keyed by the
+16 stable `about.*` information IDs. Each field contains a string `value` and
+null `error`, or null `value` and a diagnostic `error`. `Get(<information ID>)`
+returns the same field with ID, availability, and reason. `Set` rejects these
+fields with `ReadOnly`. The pure Dart client exposes `readSystemInformation()`
+and `systemInformationSettingIds`. `Get("about")` remains application metadata.
+
+The feature-owned Rust backend uses MIT-licensed `sysinfo` 0.40.1 (Rust >= 1.95),
+with only the `system` feature. It reads CPU models/logical processor count,
+Linux-usable RAM (GiB), kernel architecture, OS and kernel versions,
+hostname, manufacturer, model, model revision, motherboard manufacturer/model,
+and physical/logical processor counts; it does not refresh process, disk, or network lists. RAM is not a
+firmware DIMM capacity measurement. Firmware manufacturer, version and release
+date are read from the three fixed public Linux DMI sysfs attributes
+`bios_vendor`, `bios_version`, and `bios_date`. Empty values and common firmware
+placeholders are reported as unavailable. Read failures remain per-field errors.
+
+The GUI reads on page entry and offers Refresh. No observations are persisted or
+reconciled, no elevation is requested by the reader, and no system writes occur.
+Rename device is implemented through the shared hostname controller. Device identifier and Advanced system settings were removed by owner request; the reader does not access machine-id.
+The duplicate Windows reference Rename control was removed, with source coverage
+mapped to the existing `about.0f142010` control. Use `open system-information`
+to open this page; `open about` retains the application About page behavior.
+
+The page follows the Windows Settings About hierarchy: a device header followed
+by labeled Device specifications, Firmware, and System specifications groups.
+Independent facts have their own rows; text information never uses U+00B7 as a
+separator. No serial numbers, UUIDs, or device identifiers are read.
+
+Firmware dates are parsed as the DMI calendar date, then formatted using `%x`
+under fresh systemd-localed `LC_TIME`, inheriting `LANG` or `C` when absent.
+This uses GNU coreutils `date` with separate arguments, a validated installed
+locale and a fixed UTC timezone; no process-global locale or system settings
+are changed. The resident service's inherited `LC_ALL` does not override the
+selected system time format. Invalid dates or unavailable locales return a
+per-field error. GUI, CLI and D-Bus share this same localized value.
+
+## Device hostname
+
+`Get("hostname")` returns `static_hostname`, runtime `hostname`,
+`saved_static_hostname`, `initialized`, `writable`, `conflict`, `error`, `authorized`, and
+`authorizing`. `Get("about.0f142010")` includes the same state and the static
+hostname as `value`. `Get("system-information")` includes this state under
+`hostname`; its information fields remain read-only.
+
+`Set("about.0f142010", name)` accepts 1–63 lowercase ASCII letters, digits, and
+hyphens, beginning and ending with a letter or digit. It rejects an unresolved
+configuration conflict. The pure Dart client exposes `readHostname()`,
+`renameHostname()`, `resolveHostname()`, and the matching form validator.
+`Resolve("hostname", "system")` adopts the observed static name;
+`Resolve("hostname", "settings")` reapplies the saved static name. Both return
+full configuration including `hostname`. The `hostname` change topic reports
+updates and operation errors to clients. Empty or existing valid domain-style
+static names can be adopted and restored; the normal rename form accepts only a
+single nonempty label. Runtime names are observations, never persisted.
+
+The Rust service initializes `hostname.toml` from actual hostnamed readback on
+first successful detection, never from defaults. Startup, page entry, polling,
+and explicit Refresh compare current static configuration with the saved name.
+Invalid configuration, detection failures, failed authorization, writes, or
+persistence preserve the last valid saved value and surface an error. Conflicts
+require one of the two explicit resolution actions. Failed operations remain
+visible across ordinary reads until a successful retry or resolution.
+
+The existing private authorized helper accepts only a bounded typed Hostname
+request containing the target and expected previous static name. It rechecks
+that previous name, calls `org.freedesktop.hostname1.SetStaticHostname`, and
+verifies static and current runtime names before reporting success. Clearing an
+initially absent static name restores hostnamed's normal runtime-name policy.
+PrettyHostname, `/etc/hosts`, network configuration and service configuration
+are not modified. Changes are immediate; existing apps may need reopening.
+The ordinary service, GUI and CLI do not directly write system hostname files.
+
+The System information menu uses an info icon. An edit icon beside the current
+hostname opens the validated rename dialog; there is no separate Rename row.
+Validation includes a private fake hostnamed D-Bus server for success, stale
+names, denied writes and mismatched readback, feature-controller tests for
+initialization/conflicts/resolutions/persistence failures, and widget tests for
+input validation, failed renames and refresh after success at minimum width.
+These tests never rename the workstation.

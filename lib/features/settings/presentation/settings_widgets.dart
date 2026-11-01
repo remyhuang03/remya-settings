@@ -26,6 +26,7 @@ IconData categoryIcon(String icon) => switch (icon) {
 IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
     switch (page.id) {
       'date-time' => Icons.schedule_rounded,
+      'about' => Icons.info_outline_rounded,
       'language' => Icons.translate_rounded,
       'typing' || 'text-input' => Icons.edit_note_rounded,
       'keyboard' ||

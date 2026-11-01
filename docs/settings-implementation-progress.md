@@ -8,10 +8,12 @@
 
 Hyprland 内容包含 105 个页面、837 项设置及 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
 
+Energy recommendations（`energy`）与 Multitasking（`multitasking`）已按用户要求删除；原始 Windows 来源记录保留在覆盖文档的 removedPages 中，不再显示菜单、搜索结果或相关页面入口。
+
 ## 当前概况
 
-- 设置分类：12 个；详情页面：280 个；设置条目：2,067 项。
-- 已实现：37 项；未实现：1,917 项；不适用：113 项。
+- 设置分类：12 个；详情页面：278 个；设置条目：2053 项。
+- 已实现：54 项；未实现：1886 项；不适用：113 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。
@@ -480,26 +482,6 @@ Windows 参考入口：`ms-settings:batterysaver-usagedetails`。
 | Sleep time | `battery-usage.adee81f9` | 信息展示 | 未实现 | — |
 | Battery usage per app | `battery-usage.68bac7d6` | 信息展示 | 未实现 | — |
 
-### Energy recommendations — `energy`
-
-屏幕、睡眠和能耗建议
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:energyrecommendations`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Apply all suggestions | `energy.08ce1ee7` | 操作 | 未实现 | — |
-| Adjust screen brightness | `energy.0e3095cb` | 操作 | 未实现 | — |
-| Adjust screen off time | `energy.60d9d90f` | 操作 | 未实现 | — |
-| Adjust your sleep schedule | `energy.066b21ab` | 操作 | 未实现 | — |
-| Optimize power mode | `energy.bfee6a15` | 操作 | 未实现 | — |
-
 ### Storage — `storage`
 
 空间使用、磁盘与清理
@@ -613,48 +595,6 @@ Windows 参考入口：`ms-settings:crossdevice`。
 | Receive file location | `nearby.7436bca6` | 文本输入 | 未实现 | — |
 | Change the save directory | `nearby.e04563a3` | 操作 | 未实现 | — |
 
-### Multitasking — `multitasking`
-
-窗口排列、工作区与切换
-
-页面状态：**未实现**；条目：17；已实现 0 / 未实现 17 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:multitasking`、`ms-settings:multitasking-sgupdate`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Snap to window | `multitasking.789ebfe1` | 开关 | 未实现 | — |
-| Show window suggestions when snapping | `multitasking.49b7cb6a` | 开关 | 未实现 | — |
-| Show layout when hovering maximize button | `multitasking.335ca0a4` | 开关 | 未实现 | — |
-| Show layout when dragging to top of screen | `multitasking.5d8590f9` | 开关 | 未实现 | — |
-| Tabs in Alt + Tab | `multitasking.11f8a9c1` | 选择 | 未实现 | — |
-
-#### 桌面
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Taskbar window range | `multitasking.6b3b6f33` | 选择 | 未实现 | — |
-| Alt + Tab window range | `multitasking.88acef48` | 选择 | 未实现 | — |
-| Title bar window shakes | `multitasking.3930eac4` | 开关 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| When I snap a window, suggest what I can snap next to it | `multitasking.reference.1f0fd68e` | 开关 | 未实现 | — |
-| Show snap layouts when I hover over a window's maximize button | `multitasking.reference.7eb36360` | 选择 | 未实现 | — |
-| Show snap layouts when I drag a window to the top of my screen | `multitasking.reference.6adfd906` | 选择 | 未实现 | — |
-| Show tabs from apps when snapping or pressing Alt+Tab | `multitasking.reference.b64a018f` | 开关 | 未实现 | — |
-| Show my snapped windows when I hover over taskbar apps, in Task View, and when I press Alt+Tab | `multitasking.reference.22d30ff1` | 开关 | 未实现 | — |
-| When I drag a window, let me snap it without dragging all the way to the screen edge | `multitasking.reference.35f7e68f` | 开关 | 未实现 | — |
-| On the task, show all the open windows | `multitasking.reference.c8540ba4` | 开关 | 未实现 | — |
-| Show all open windows when I press Alt+Tab | `multitasking.reference.2d6a63c7` | 开关 | 未实现 | — |
-| Title bar window shake | `multitasking.reference.301a71a1` | 开关 | 未实现 | — |
-
 ### Recovery — `recovery`
 
 恢复选项与高级启动
@@ -757,9 +697,9 @@ Windows 参考入口：`ms-settings:presence`。
 
 设备规格、系统版本与相关信息
 
-页面状态：**未实现**；条目：9；已实现 0 / 未实现 9 / 不适用 0。
+页面状态：**已实现**；条目：17；已实现 17 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Rust sysinfo 0.40.1 只读设备与系统信息；重命名经 Rust、私有授权进程与 systemd-hostnamed 完成，保存静态名并处理冲突。Device identifier 与 Advanced system settings 已按用户要求删除。硬件读取结果不持久化；主机名仅保存静态配置，运行名称只读。
 
 Windows 参考入口：`ms-settings:about`。
 
@@ -767,20 +707,26 @@ Windows 参考入口：`ms-settings:about`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Device name | `about.4433eb13` | 信息展示 | 未实现 | — |
-| Processor | `about.b4366749` | 信息展示 | 未实现 | — |
-| Memory | `about.d014ab77` | 信息展示 | 未实现 | — |
-| System type | `about.96af9884` | 信息展示 | 未实现 | — |
-| Operating system version | `about.d0a7f225` | 信息展示 | 未实现 | — |
-| Device identifier | `about.5da0260f` | 信息展示 | 未实现 | — |
-| Rename device | `about.0f142010` | 操作 | 未实现 | — |
-| Advanced system settings | `about.92d0cfd9` | 操作 | 未实现 | — |
+| Device name | `about.4433eb13` | 信息展示 | 已实现 | Rust 字段错误测试；Flutter 读取/刷新/360px 测试；实机 CLI/D-Bus 回读 |
+| Processor | `about.b4366749` | 信息展示 | 已实现 | Rust 字段错误测试；Flutter 读取/刷新/360px 测试；实机 CLI/D-Bus 回读 |
+| Memory | `about.d014ab77` | 信息展示 | 已实现 | Rust 字段错误测试；Flutter 读取/刷新/360px 测试；实机 CLI/D-Bus 回读 |
+| System type | `about.96af9884` | 信息展示 | 已实现 | Rust 字段错误测试；Flutter 读取/刷新/360px 测试；实机 CLI/D-Bus 回读 |
+| Operating system version | `about.d0a7f225` | 信息展示 | 已实现 | Rust 字段错误测试；Flutter 读取/刷新/360px 测试；实机 CLI/D-Bus 回读 |
+| Manufacturer | `about.manufacturer` | 信息展示 | 已实现 | Rust 字段校验；Flutter 宽/窄窗口测试；实机 sysfs 与 CLI/D-Bus 回读 |
+| Model | `about.model` | 信息展示 | 已实现 | Rust 字段校验；Flutter 宽/窄窗口测试；实机 sysfs 与 CLI/D-Bus 回读 |
+| Model revision | `about.model-version` | 信息展示 | 已实现 | Rust 字段校验；Flutter 宽/窄窗口测试；实机 sysfs 与 CLI/D-Bus 回读 |
+| Motherboard manufacturer | `about.board-manufacturer` | 信息展示 | 已实现 | Rust 字段校验；Flutter 宽/窄窗口测试；实机 sysfs 与 CLI/D-Bus 回读 |
+| Motherboard model | `about.board-model` | 信息展示 | 已实现 | Rust 字段校验；Flutter 宽/窄窗口测试；实机 sysfs 与 CLI/D-Bus 回读 |
+| Firmware manufacturer | `about.firmware-manufacturer` | 信息展示 | 已实现 | Rust 字段校验；Flutter 宽/窄窗口测试；实机 sysfs 与 CLI/D-Bus 回读 |
+| Firmware version | `about.firmware-version` | 信息展示 | 已实现 | Rust 字段校验；Flutter 宽/窄窗口测试；实机 sysfs 与 CLI/D-Bus 回读 |
+| Firmware release date | `about.firmware-date` | 信息展示 | 已实现 | DMI 日期校验；依当前 localed LC_TIME（继承 LANG）格式化；中英文 locale 测试与 CLI/D-Bus 回读 |
+| Physical CPU cores | `about.cpu-cores` | 信息展示 | 已实现 | Rust 字段校验；Flutter 宽/窄窗口测试；实机 sysfs 与 CLI/D-Bus 回读 |
+| Logical processors | `about.cpu-threads` | 信息展示 | 已实现 | Rust 字段校验；Flutter 宽/窄窗口测试；实机 sysfs 与 CLI/D-Bus 回读 |
+| Kernel version | `about.kernel-version` | 信息展示 | 已实现 | Rust 字段校验；Flutter 宽/窄窗口测试；实机 sysfs 与 CLI/D-Bus 回读 |
+| Rename device | `about.0f142010` | 操作 | 已实现 | 私有 hostnamed D-Bus 成功/拒绝/冲突/回读测试；初始化、双向同步与持久化失败测试；宽/窄窗口编辑图标及弹窗验证；未改实机名称 |
 
-#### Windows 参考细项
 
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Rename this PC | `about.reference.9cc38bce` | 操作 | 未实现 | — |
+Windows reference settings 已按要求删除；其 Rename this PC 来源覆盖映射到保留的 `about.0f142010`。内存为 Linux 可用总容量。
 
 ### Advanced settings — `advanced`
 
@@ -3656,23 +3602,23 @@ Windows 参考入口：`ms-settings:dateandtime`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Automatically set time | `date-time.db451de3` | 开关 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; settings_api_test.dart; resident Rust service and private-pipe authorization. |
-| Time server | `date-time.7e33a213` | 文本输入 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; settings_api_test.dart; resident Rust service and private-pipe authorization. |
-| Sync now | `date-time.098d06ec` | 操作 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; settings_api_test.dart; resident Rust service and private-pipe authorization. |
-| Set date and time manually | `date-time.6422d209` | 操作 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; settings_api_test.dart; resident Rust service and private-pipe authorization. |
+| Automatically set time | `date-time.db451de3` | 开关 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; interface_smoke.py; resident Rust service and private-pipe authorization. |
+| Time server | `date-time.7e33a213` | 文本输入 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; interface_smoke.py; resident Rust service and private-pipe authorization. |
+| Sync now | `date-time.098d06ec` | 操作 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; interface_smoke.py; resident Rust service and private-pipe authorization. |
+| Set date and time manually | `date-time.6422d209` | 操作 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; interface_smoke.py; resident Rust service and private-pipe authorization. |
 
 #### Time zone
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Time zone | `date-time.fb2a23dc` | 选择 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; settings_api_test.dart; resident Rust service and private-pipe authorization. |
+| Time zone | `date-time.fb2a23dc` | 选择 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; interface_smoke.py; resident Rust service and private-pipe authorization. |
 | Automatically set time zone | `date-time.2af5dabe` | 开关 | 未实现 | — |
 
 #### Regional format
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Date/time format | `date-time.format` | 选择 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; settings_api_test.dart; resident Rust service and private-pipe authorization. |
+| Date/time format | `date-time.format` | 选择 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; interface_smoke.py; resident Rust service and private-pipe authorization. |
 
 ### Language and Region — `language`
 

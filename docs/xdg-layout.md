@@ -89,3 +89,19 @@ launch calls the existing Open interface; only the private `--gui <page>` path
 creates the Flutter process. The authorized helper uses the same Rust executable
 with `--privileged` and inherits a private pipe, with no permanent root service
 installation or global privileged socket.
+
+## System information
+
+System specification fields are read-only observations and create no XDG files.
+They do not read or derive a device identifier.
+
+## Device hostname preference
+
+`hostname.toml` lives beside `config.toml` (debug: repository
+`config/hostname.toml`; profile/release: `$XDG_CONFIG_HOME/remya/settings/hostname.toml`,
+with the existing absolute HOME fallback). Its version-1 schema contains only
+`version = 1` and `static_hostname`. Initialization adopts actual system state;
+malformed files are retained and reported. Writes use the existing atomic writer
+and permissions policy. Runtime hostname, PrettyHostname, and hardware
+specifications are never saved. No system hostname files are written directly;
+systemd-hostnamed owns those changes through the existing authorized helper.

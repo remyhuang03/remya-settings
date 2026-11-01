@@ -1,3 +1,5 @@
+import 'features/system_information/application/hostname_controller.dart';
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -34,19 +36,27 @@ Future<void> main() async {
   final preferences = ServicePreferencesController(client);
   final dateTime = ServiceDateTimeController(client);
   final display = DisplayController(ServiceDisplayBackend(client));
+  final hostname = HostnameController(
+    read: client.readHostname,
+    renameName: client.renameHostname,
+    resolve: client.resolveHostname,
+  );
   final navigation = ValueNotifier<String?>(null);
   final scheduler = SettingsScheduler([
     preferences.reload,
     dateTime.reload,
     display.reload,
+    hostname.reload,
   ]);
   runApp(
     RemyaSettingsApp(
       preferences: preferences,
       dateTime: dateTime,
       display: display,
+      hostname: hostname,
       navigation: navigation,
       scheduler: scheduler,
+      systemInformation: client.readSystemInformation,
     ),
   );
   client.changes.listen((change) {
@@ -65,6 +75,8 @@ Future<void> main() async {
         preferences.reload();
       case 'date-time':
         dateTime.reload();
+      case 'hostname':
+        hostname.reload();
       case 'display':
         display.reload();
     }

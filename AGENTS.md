@@ -54,6 +54,8 @@
 - Check dependency license compatibility before adding code or libraries and preserve third-party notices. Prefer permissive licenses (MIT, BSD, Apache-2.0, ISC, Zlib, Unlicense). LGPL libraries must remain dynamically linked or separate processes; do not introduce GPL, AGPL, SSPL, or other incompatible strong-copyleft code.
 
 ## Coding & UI
+- Format user-visible calendar dates according to the current system LC_TIME, inheriting LANG when LC_TIME is unset. Keep persisted dates locale-independent.
+- Do not use the middle dot character (U+00B7) to separate text information. Present distinct facts as labeled fields or separate lines.
 - Keep setting labels, descriptions, status text, and value readouts in the left information column; reserve the right column for interactive controls. On narrow windows, keep information left-aligned and controls trailing-aligned below it.
 - Put a page's advanced options in a default-collapsed `Advanced` section of that same page, not in a separate second-level page or menu. Keep their stable control IDs; when an existing advanced page is folded in, keep its old page ID opening the section.
 - Apply setting changes immediately when the setting supports immediate application and doing so is appropriate; do not add an unnecessary Apply button.

@@ -1,3 +1,5 @@
+import '../system_information/application/hostname_controller.dart';
+
 import 'package:material_ui/material_ui.dart';
 
 import '../appearance/application/app_preferences_controller.dart';
@@ -102,6 +104,48 @@ class SettingsStatus extends StatelessWidget {
                   useSystem: controller.retry,
                 ),
             ],
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+class HostnameStatus extends StatelessWidget {
+  const HostnameStatus({
+    super.key,
+    required this.controller,
+    this.navigatorKey,
+  });
+  final HostnameController controller;
+  final GlobalKey<NavigatorState>? navigatorKey;
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: controller,
+    builder: (context, _) => ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.sizeOf(context).height * 0.4,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: .min,
+          children: [
+            if (controller.hasConflict)
+              _ConflictWarning(
+                navigatorKey: navigatorKey,
+                title:
+                    'Device name differs from saved Settings.\nSystem: ${controller.staticHostname}\nSettings: ${controller.savedHostname}',
+                busy: controller.isBusy,
+                useSystem: controller.useSystemConfiguration,
+                useSettings: controller.applySavedConfiguration,
+              ),
+            if (controller.errorMessage case final message?)
+              _ConflictWarning(
+                navigatorKey: navigatorKey,
+                title: 'Device name: $message',
+                busy: controller.isBusy,
+                useSystem: controller.retry,
+              ),
           ],
         ),
       ),

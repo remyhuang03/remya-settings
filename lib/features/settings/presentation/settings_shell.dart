@@ -1,3 +1,4 @@
+import 'package:remya_settings_client/settings_contract.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -15,9 +16,13 @@ class SettingsShell extends StatefulWidget {
     this.navigation,
     this.scheduler,
     this.status,
+    this.topStatus,
+    this.systemInformation,
   });
   final SettingsCatalog catalog;
+  final SystemInformationReader? systemInformation;
   final Widget? status;
+  final Widget? topStatus;
   final SettingsScheduler? scheduler;
   final ValueNotifier<String?>? navigation;
 
@@ -62,7 +67,9 @@ class _SettingsShellState extends State<SettingsShell> {
         // Navigation returns early when the page is already open.
         setState(() => _expandAdvanced = advanced);
       }
-      _openPage(widget.catalog.page(target));
+      _openPage(
+        widget.catalog.page(target == 'system-information' ? 'about' : target),
+      );
     }
   }
 
@@ -139,13 +146,25 @@ class _SettingsShellState extends State<SettingsShell> {
                 child: _sidebar(constraints.maxWidth < 1000),
               ),
               Expanded(
-                child: Stack(
-                  key: const ValueKey('settings-main-content'),
-                  fit: .expand,
+                child: Column(
                   children: [
-                    _body(),
-                    if (widget.status case final status?)
-                      Positioned(left: 0, right: 0, bottom: 0, child: status),
+                    ?widget.topStatus,
+                    Expanded(
+                      child: Stack(
+                        key: const ValueKey('settings-main-content'),
+                        fit: .expand,
+                        children: [
+                          _body(),
+                          if (widget.status case final status?)
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: status,
+                            ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -375,6 +394,7 @@ class _SettingsShellState extends State<SettingsShell> {
       content = SettingsDetail(
         catalog: widget.catalog,
         page: _page!,
+        systemInformation: widget.systemInformation,
         onPage: _openFromUser,
         expandAdvanced: _expandAdvanced,
       );

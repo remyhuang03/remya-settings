@@ -1,3 +1,7 @@
+import 'package:remya_settings_client/settings_contract.dart';
+
+import '../../system_information/presentation/system_information_page.dart';
+
 import 'package:material_ui/material_ui.dart';
 
 import '../../date_time/application/date_time_controller.dart';
@@ -169,6 +173,7 @@ class SettingsDetail extends StatelessWidget {
     required this.page,
     required this.onPage,
     this.expandAdvanced = false,
+    this.systemInformation,
   });
   final SettingsCatalog catalog;
   final SettingsPageSpec page;
@@ -176,6 +181,7 @@ class SettingsDetail extends StatelessWidget {
 
   /// Opens collapsed advanced options when the Advanced display page was requested.
   final bool expandAdvanced;
+  final SystemInformationReader? systemInformation;
 
   static const _pageRows = {
     'display.e32be03e': 'night-light',
@@ -183,7 +189,11 @@ class SettingsDetail extends StatelessWidget {
   };
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context) => page.id == 'about'
+      ? SystemInformationPage(page: page, read: systemInformation)
+      : _preview(context);
+
+  Widget _preview(BuildContext context) => Column(
     crossAxisAlignment: .stretch,
     children: [
       if (page.id == 'date-time') const CurrentDateTime(),

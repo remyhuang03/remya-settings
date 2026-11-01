@@ -5,3 +5,4 @@ export 'src/dbus_client.dart';
 export 'src/launcher.dart';
 export 'src/paths.dart';
 export 'src/theme_config.dart';
+export 'src/system_information.dart';

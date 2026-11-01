@@ -15,7 +15,7 @@ metadata = json.loads(subprocess.check_output([
 packages = {package["id"]: package for package in metadata["packages"]}
 nodes = {node["id"]: node for node in metadata["resolve"]["nodes"]}
 backends = {package["id"] for package in packages.values()
-            if package["name"] in {"remya_settings_appearance", "remya_settings_date_time", "remya_settings_service"}}
+            if package["name"] in {"remya_settings_appearance", "remya_settings_date_time", "remya_settings_service", "remya_settings_display", "remya_settings_system_information"}}
 pending, included = list(backends), set()
 while pending:
     package_id = pending.pop()

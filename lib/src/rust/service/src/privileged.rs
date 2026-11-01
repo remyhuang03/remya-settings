@@ -6,6 +6,10 @@ use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
 #[derive(Serialize, Deserialize)]
 #[serde(tag = "operation", deny_unknown_fields)]
 pub enum Request {
+    Hostname {
+        expected_static: String,
+        hostname: String,
+    },
     Timezone {
         timezone: String,
     },
@@ -62,6 +66,16 @@ pub fn serve() -> Result<(), String> {
             .map_err(|e| e.to_string())
             .and_then(|request| {
                 let state = match request {
+                    Request::Hostname {
+                        expected_static,
+                        hostname,
+                    } => {
+                        return remya_settings_system_information::hostname::apply(
+                            &expected_static,
+                            &hostname,
+                        )
+                        .and_then(|state| serde_json::to_value(state).map_err(|e| e.to_string()));
+                    }
                     Request::Timezone { timezone } => clock::set_timezone(timezone),
                     Request::Manual {
                         local_time,

@@ -271,6 +271,16 @@
       "id": "fish-configuration-files",
       "title": "Current fish configuration files",
       "url": "https://fishshell.com/docs/current/language.html#configuration-files"
+    },
+    {
+      "id": "system-information",
+      "title": "sysinfo 0.40.1 system, product and motherboard APIs",
+      "url": "https://docs.rs/sysinfo/0.40.1/sysinfo/"
+    },
+    {
+      "id": "linux-dmi",
+      "title": "Linux DMI sysfs attributes",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/firmware/dmi-id.c"
     }
   ],
   "categories": [
@@ -2325,8 +2335,7 @@
       ],
       "children": [
         "battery-saver",
-        "battery-usage",
-        "energy"
+        "battery-usage"
       ]
     },
     {
@@ -2444,69 +2453,6 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": "Not read"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "energy",
-      "category": "system",
-      "title": "Energy recommendations",
-      "description": "Screen, sleep and energy consumption recommendations",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:energyrecommendations"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "energy.08ce1ee7",
-              "title": "Apply all suggestions",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "All applications"
-            },
-            {
-              "id": "energy.0e3095cb",
-              "title": "Adjust screen brightness",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "energy.60d9d90f",
-              "title": "Adjust screen off time",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "energy.066b21ab",
-              "title": "Adjust your sleep schedule",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "energy.bfee6a15",
-              "title": "Optimize power mode",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
             }
           ]
         }
@@ -2909,240 +2855,6 @@
       "children": []
     },
     {
-      "id": "multitasking",
-      "category": "system",
-      "title": "Multitasking",
-      "description": "Window arrangement, workspace and switching",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:multitasking",
-        "ms-settings:multitasking-sgupdate"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "multitasking.789ebfe1",
-              "title": "Snap to window",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "multitasking.49b7cb6a",
-              "title": "Show window suggestions when snapping",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "multitasking.335ca0a4",
-              "title": "Show layout when hovering maximize button",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "multitasking.5d8590f9",
-              "title": "Show layout when dragging to top of screen",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "multitasking.11f8a9c1",
-              "title": "Tabs in Alt + Tab",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Not showing tabs",
-                "Last 3",
-                "Last 5"
-              ],
-              "value": "Not showing tabs"
-            }
-          ]
-        },
-        {
-          "title": "Desktop",
-          "controls": [
-            {
-              "id": "multitasking.6b3b6f33",
-              "title": "Taskbar window range",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Current desktop only",
-                "All desktops"
-              ],
-              "value": "Current desktop only"
-            },
-            {
-              "id": "multitasking.88acef48",
-              "title": "Alt + Tab window range",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Current desktop only",
-                "All desktops"
-              ],
-              "value": "Current desktop only"
-            },
-            {
-              "id": "multitasking.3930eac4",
-              "title": "Title bar window shakes",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "multitasking.reference.1f0fd68e",
-              "title": "When I snap a window, suggest what I can snap next to it",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Multitasking",
-                "Snap Windows",
-                "When I snap a window, suggest what I can snap next to it"
-              ],
-              "value": false
-            },
-            {
-              "id": "multitasking.reference.7eb36360",
-              "title": "Show snap layouts when I hover over a window's maximize button",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Multitasking",
-                "Snap Windows",
-                "Show snap layouts when I hover over a window's maximize button"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "multitasking.reference.6adfd906",
-              "title": "Show snap layouts when I drag a window to the top of my screen",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Multitasking",
-                "Snap Windows",
-                "Show snap layouts when I drag a window to the top of my screen"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "multitasking.reference.b64a018f",
-              "title": "Show tabs from apps when snapping or pressing Alt+Tab",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Multitasking",
-                "Snap Windows",
-                "Show tabs from apps when snapping or pressing Alt+Tab"
-              ],
-              "value": false
-            },
-            {
-              "id": "multitasking.reference.22d30ff1",
-              "title": "Show my snapped windows when I hover over taskbar apps, in Task View, and when I press Alt+Tab",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Multitasking",
-                "Snap Windows",
-                "Show my snapped windows when I hover over taskbar apps, in Task View, and when I press Alt+Tab"
-              ],
-              "value": false
-            },
-            {
-              "id": "multitasking.reference.35f7e68f",
-              "title": "When I drag a window, let me snap it without dragging all the way to the screen edge",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Multitasking",
-                "Snap Windows",
-                "When I drag a window, let me snap it without dragging all the way to the screen edge"
-              ],
-              "value": false
-            },
-            {
-              "id": "multitasking.reference.c8540ba4",
-              "title": "On the task, show all the open windows",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Multitasking",
-                "Desktops",
-                "On the task, show all the open windows"
-              ],
-              "value": false
-            },
-            {
-              "id": "multitasking.reference.2d6a63c7",
-              "title": "Show all open windows when I press Alt+Tab",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Multitasking",
-                "Desktops",
-                "Show all open windows when I press Alt+Tab"
-              ],
-              "value": false
-            },
-            {
-              "id": "multitasking.reference.301a71a1",
-              "title": "Title bar window shake",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Multitasking",
-                "Title bar window shake"
-              ],
-              "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "recovery",
       "category": "system",
       "title": "Recovery",
@@ -3475,99 +3187,170 @@
       "title": "System information",
       "description": "Equipment specifications, system versions and related information",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Live Linux device information and verified hostname management through the Rust service.",
       "sources": [
-        "uris"
+        "uris",
+        "system-information",
+        "linux-dmi"
       ],
       "windowsUris": [
         "ms-settings:about"
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Device",
           "controls": [
             {
               "id": "about.4433eb13",
               "title": "Device name",
               "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
-            },
-            {
-              "id": "about.b4366749",
-              "title": "Processor",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
-            },
-            {
-              "id": "about.d014ab77",
-              "title": "Memory",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
-            },
-            {
-              "id": "about.96af9884",
-              "title": "System type",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Linux / Hyprland target platform"
-            },
-            {
-              "id": "about.d0a7f225",
-              "title": "Operating system version",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
-            },
-            {
-              "id": "about.5da0260f",
-              "title": "Device identifier",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Read-only system information from the Rust service.",
               "value": "Not read"
             },
             {
               "id": "about.0f142010",
               "title": "Rename device",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "about.92d0cfd9",
-              "title": "Advanced system settings",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Rename the static hostname through systemd-hostnamed with authorization and verified readback.",
+              "value": "Rename"
             }
           ]
         },
         {
-          "title": "Windows reference settings",
-          "collapsed": true,
+          "title": "Device specifications",
           "controls": [
             {
-              "id": "about.reference.9cc38bce",
-              "title": "Rename this PC",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "About",
-                "Rename this PC"
-              ],
-              "value": "Configuration"
+              "id": "about.manufacturer",
+              "title": "Manufacturer",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system or firmware information from the Rust service.",
+              "value": "Not read"
+            },
+            {
+              "id": "about.model",
+              "title": "Model",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system or firmware information from the Rust service.",
+              "value": "Not read"
+            },
+            {
+              "id": "about.model-version",
+              "title": "Model revision",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system or firmware information from the Rust service.",
+              "value": "Not read"
+            },
+            {
+              "id": "about.b4366749",
+              "title": "Processor",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system information from the Rust service.",
+              "value": "Not read"
+            },
+            {
+              "id": "about.cpu-cores",
+              "title": "Physical CPU cores",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system or firmware information from the Rust service.",
+              "value": "Not read"
+            },
+            {
+              "id": "about.cpu-threads",
+              "title": "Logical processors",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system or firmware information from the Rust service.",
+              "value": "Not read"
+            },
+            {
+              "id": "about.d014ab77",
+              "title": "Memory",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system information from the Rust service.",
+              "value": "Not read"
+            },
+            {
+              "id": "about.96af9884",
+              "title": "System type",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system information from the Rust service.",
+              "value": "Not read"
+            },
+            {
+              "id": "about.board-manufacturer",
+              "title": "Motherboard manufacturer",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system or firmware information from the Rust service.",
+              "value": "Not read"
+            },
+            {
+              "id": "about.board-model",
+              "title": "Motherboard model",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system or firmware information from the Rust service.",
+              "value": "Not read"
+            }
+          ]
+        },
+        {
+          "title": "Firmware",
+          "controls": [
+            {
+              "id": "about.firmware-manufacturer",
+              "title": "Firmware manufacturer",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system or firmware information from the Rust service.",
+              "value": "Not read"
+            },
+            {
+              "id": "about.firmware-version",
+              "title": "Firmware version",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system or firmware information from the Rust service.",
+              "value": "Not read"
+            },
+            {
+              "id": "about.firmware-date",
+              "title": "Firmware release date",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system or firmware information from the Rust service.",
+              "value": "Not read"
+            }
+          ]
+        },
+        {
+          "title": "System specifications",
+          "controls": [
+            {
+              "id": "about.d0a7f225",
+              "title": "Operating system version",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system information from the Rust service.",
+              "value": "Not read"
+            },
+            {
+              "id": "about.kernel-version",
+              "title": "Kernel version",
+              "type": "info",
+              "availability": "available",
+              "reason": "Read-only system or firmware information from the Rust service.",
+              "value": "Not read"
             }
           ]
         }

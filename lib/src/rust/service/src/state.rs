@@ -3,6 +3,7 @@ use gio::glib::{Variant, variant::ToVariant};
 use remya_settings_appearance::api as appearance;
 use remya_settings_date_time::api as clock;
 use remya_settings_display::{DisplayManager, Hyprctl, atomic_write, is_display_setting};
+use remya_settings_system_information::hostname::{self, HostnameManager};
 use serde_json::{Value, json};
 use std::{
     fs,
@@ -47,6 +48,7 @@ fn write(path: &std::path::Path, value: &Value) -> Result<(), String> {
 pub fn page_alias(page: &str) -> &str {
     match page {
         "advanced-display" | "hypr-monitor-fields" => "display",
+        "system-information" => "about",
         other => other,
     }
 }
@@ -120,6 +122,7 @@ pub struct State {
     pub theme: Value,
     pub system: Value,
     pub date: Value,
+    pub hostname: HostnameManager,
     config: PathBuf,
     saved: Value,
     pub theme_error: Option<String>,
@@ -142,6 +145,7 @@ impl State {
             theme: json!({"version":1,"theme":{"style_variant":"tonal_spot","theme_mode":"light"}}),
             system: json!({"mode":null,"targets":[]}),
             date: json!({}),
+            hostname: HostnameManager::new(config.with_file_name("hostname.toml"), atomic_write),
             display: DisplayManager::new(
                 Hyprctl,
                 hypr_config_dir(),
@@ -165,6 +169,7 @@ impl State {
     pub fn refresh(&mut self) {
         self.theme_error = self.refresh_theme().err();
         self.date_error = self.refresh_date().err();
+        let _ = self.hostname.refresh();
         // A detection failure is retained by the manager and reported in its state.
         let _ = self.display.refresh();
     }
@@ -290,10 +295,27 @@ impl State {
     fn privileged(&mut self, request: Request) -> Result<clock::DateTimeState, String> {
         serde_json::from_value(self.request(request)?).map_err(|e| e.to_string())
     }
+    pub fn hostname_state(&self) -> Value {
+        let mut value = self.hostname.state();
+        value["authorized"] = json!(self.privileged.is_some());
+        value["authorizing"] =
+            json!(self.auth_attempted && self.privileged.is_none() && self.auth_error.is_none());
+        value
+    }
+    fn rename_hostname(&mut self, name: &str, expected: String) -> Result<Value, String> {
+        let result = self
+            .request(Request::Hostname {
+                expected_static: expected,
+                hostname: name.into(),
+            })
+            .and_then(|value| serde_json::from_value(value).map_err(|e| e.to_string()));
+        self.hostname.finish(name, result)?;
+        Ok(self.hostname_state())
+    }
     pub fn configuration(&self) -> Value {
         let mut date = self.date.clone();
         date["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
-        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state()})
+        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"hostname":self.hostname_state()})
     }
     pub fn controls(&self) -> Vec<&Value> {
         self.catalog["pages"]
@@ -375,6 +397,30 @@ impl State {
                         )
                     }
                     "time-locales" => Ok(json!({"options":clock::list_time_locales()?})),
+                    "system-information" => {
+                        let _ = self.hostname.refresh();
+                        let mut value = remya_settings_system_information::read();
+                        value["hostname"] = self.hostname_state();
+                        Ok(value)
+                    }
+                    "hostname" | hostname::RENAME => {
+                        let _ = self.hostname.refresh();
+                        let mut value = self.hostname_state();
+                        if key == hostname::RENAME {
+                            value["id"] = json!(key);
+                            value["availability"] = json!("available");
+                            value["value"] = value["static_hostname"].clone();
+                        }
+                        Ok(value)
+                    }
+                    _ if remya_settings_system_information::IDS.contains(&key) => {
+                        let snapshot = remya_settings_system_information::read();
+                        let mut field = snapshot["values"][key].clone();
+                        field["id"] = json!(key);
+                        field["availability"] = json!("available");
+                        field["reason"] = json!("Read-only system information");
+                        Ok(field)
+                    }
                     "about" => Ok(
                         json!({"name":"Remy'a Settings","version":"0.1.0+2026-10-26","application_id":"top.remya.settings","repository":"https://github.com/remyhuang03/remya_settings","license":"PolyForm-Noncommercial-1.0.0","api_version":1}),
                     ),
@@ -513,6 +559,15 @@ impl State {
         if control["availability"] != "available" {
             return Err(format!("Unavailable:{}", control["reason"]));
         }
+        if key == hostname::RENAME {
+            hostname::validate_name(value)?;
+            self.hostname.refresh()?;
+            let expected = self.hostname.prepare(value)?;
+            return self.rename_hostname(value, expected);
+        }
+        if remya_settings_system_information::IDS.contains(&key) {
+            return Err("ReadOnly:System information cannot be changed".into());
+        }
         if is_display_setting(key) {
             return self.display.set(key, value);
         }
@@ -622,6 +677,19 @@ impl State {
         self.save_date(state, &keys)
     }
     fn resolve(&mut self, feature: &str, source: &str) -> Result<Value, String> {
+        if feature == "hostname" {
+            self.hostname.refresh()?;
+            match source {
+                "system" => self.hostname.adopt()?,
+                "settings" => {
+                    let name = self.hostname.saved()?;
+                    let expected = self.hostname.expected()?;
+                    self.rename_hostname(&name, expected)?;
+                }
+                _ => return Err(invalid("Unknown resolution")),
+            }
+            return Ok(self.configuration());
+        }
         if feature == "display" {
             self.display.resolve(source)?;
             return Ok(self.configuration());

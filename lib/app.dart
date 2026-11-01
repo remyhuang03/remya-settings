@@ -1,3 +1,6 @@
+import 'features/system_information/application/hostname_controller.dart';
+
+import 'package:remya_settings_client/settings_contract.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'features/date_time/application/date_time_controller.dart';
@@ -20,11 +23,15 @@ class RemyaSettingsApp extends StatefulWidget {
     this.dateTime,
     this.display,
     this.scheduler,
+    this.systemInformation,
+    this.hostname,
   });
   final AppPreferencesController? preferences;
   final DateTimeController? dateTime;
   final DisplayController? display;
   final SettingsScheduler? scheduler;
+  final SystemInformationReader? systemInformation;
+  final HostnameController? hostname;
   final ValueNotifier<String?>? navigation;
 
   @override
@@ -47,6 +54,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     _preferences.dispose();
     widget.dateTime?.dispose();
     widget.display?.dispose();
+    widget.hostname?.dispose();
     super.dispose();
   }
 
@@ -95,6 +103,13 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
                 catalog: snapshot.data!,
                 navigation: widget.navigation,
                 scheduler: widget.scheduler,
+                systemInformation: widget.systemInformation,
+                topStatus: widget.hostname == null
+                    ? null
+                    : HostnameStatus(
+                        controller: widget.hostname!,
+                        navigatorKey: _navigatorKey,
+                      ),
                 status: SettingsStatus(
                   navigatorKey: _navigatorKey,
                   preferences: _preferences,
@@ -107,9 +122,12 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
         ),
       ),
     );
-    final withDisplay = widget.display == null
+    final withHostname = widget.hostname == null
         ? app
-        : DisplayScope(controller: widget.display!, child: app);
+        : HostnameScope(controller: widget.hostname!, child: app);
+    final withDisplay = widget.display == null
+        ? withHostname
+        : DisplayScope(controller: widget.display!, child: withHostname);
     return widget.dateTime == null
         ? withDisplay
         : DateTimeScope(controller: widget.dateTime!, child: withDisplay);

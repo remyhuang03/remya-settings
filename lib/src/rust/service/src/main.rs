@@ -65,7 +65,7 @@ fn run() -> Result<(), String> {
                 let worker = state.clone();
                 let work_method = method.clone();
                 let work_args = args.clone();
-                let (result, theme, date, display, theme_changed, appearance_error) =
+                let (result, theme, date, display, hostname, theme_changed, appearance_error) =
                     gio::spawn_blocking(move || {
                         let mut state = worker.lock().unwrap();
                         let before = state.theme.clone();
@@ -87,6 +87,7 @@ fn run() -> Result<(), String> {
                             state.theme.clone(),
                             state.configuration()["date-time"].clone(),
                             state.display.state(),
+                            state.hostname_state(),
                             state.theme != before,
                             appearance_error,
                         )
@@ -109,6 +110,7 @@ fn run() -> Result<(), String> {
                     }
                     signal(&bus, "date-time", &date);
                     signal(&bus, "display", &display);
+                    signal(&bus, "hostname", &hostname);
                 }
                 if let Some(message) = appearance_error {
                     signal(&bus, "error", &serde_json::json!({"message":message}));
@@ -128,6 +130,9 @@ fn run() -> Result<(), String> {
                         "date-time",
                         &state.lock().unwrap().configuration()["date-time"],
                     );
+                }
+                if method == "Open" && args[0] != "repository" {
+                    signal(&bus, "hostname", &state.lock().unwrap().hostname_state());
                 }
                 if method == "Quit" {
                     let _ = bus.flush_future().await;
@@ -196,6 +201,7 @@ fn run() -> Result<(), String> {
                     signal(&bus, "error", &serde_json::json!({"message":s.theme_error}));
                 }
                 signal(&bus, "date-time", &s.configuration()["date-time"]);
+                signal(&bus, "hostname", &s.hostname_state());
                 signal(&bus, "display", &s.display.state());
             });
         }

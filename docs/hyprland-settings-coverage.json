@@ -12839,12 +12839,13 @@
     }
   ],
   "retired": {
-    "reason": "Implemented on the Display page; duplicates were removed and retired page IDs open Display.",
+    "reason": "Display duplicates were removed and retired page IDs open Display. The System information Windows reference duplicate was removed by owner request; its source maps to about.0f142010. Energy recommendations and Multitasking pages and their controls were removed by owner request. Device identifier and Advanced system settings were removed from System information by owner request.",
     "pages": [
       "advanced-display",
       "hypr-monitor-fields"
     ],
     "controls": [
+      "about.reference.9cc38bce",
       "display.2d0b8c7d",
       "hypr-monitor-fields.disabled",
       "hypr-monitor-fields.mode",
@@ -12853,7 +12854,35 @@
       "hypr-monitor-fields.mirror",
       "hypr-monitor-fields.bitdepth",
       "hypr-monitor-fields.cm",
-      "hypr-monitor-fields.vrr"
+      "hypr-monitor-fields.vrr",
+      "energy.08ce1ee7",
+      "energy.0e3095cb",
+      "energy.60d9d90f",
+      "energy.066b21ab",
+      "energy.bfee6a15",
+      "multitasking.789ebfe1",
+      "multitasking.49b7cb6a",
+      "multitasking.335ca0a4",
+      "multitasking.5d8590f9",
+      "multitasking.11f8a9c1",
+      "multitasking.6b3b6f33",
+      "multitasking.88acef48",
+      "multitasking.3930eac4",
+      "multitasking.reference.1f0fd68e",
+      "multitasking.reference.7eb36360",
+      "multitasking.reference.6adfd906",
+      "multitasking.reference.b64a018f",
+      "multitasking.reference.22d30ff1",
+      "multitasking.reference.35f7e68f",
+      "multitasking.reference.c8540ba4",
+      "multitasking.reference.2d6a63c7",
+      "multitasking.reference.301a71a1",
+      "about.5da0260f",
+      "about.92d0cfd9"
+    ],
+    "removedPages": [
+      "energy",
+      "multitasking"
     ]
   }
 }

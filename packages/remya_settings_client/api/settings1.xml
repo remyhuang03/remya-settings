@@ -1,5 +1,9 @@
 <node>
   <interface name="top.remya.settings.Settings1">
+    <!-- system-information returns api_version and per-ID value/error observations;
+         its 16 about.* info fields reject Set with ReadOnly. about is app metadata.
+         hostname reads static/runtime/saved names and conflict state.
+         Set about.0f142010 renames; Resolve hostname accepts system or settings. -->
     <method name="Get">
       <arg type="s" direction="in"/>
       <arg type="s" direction="out"/>
