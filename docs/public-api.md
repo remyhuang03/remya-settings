@@ -282,6 +282,23 @@ both debug and release and needs a registered polkit authentication agent.
 
 ## Display
 
+The GUI uses paired X/Y inputs for position and custom resolution. Resolution is
+Preferred or Custom; custom dimensions (1–32768 pixels per axis) snap in Rust to
+the reported mode with the smallest squared pixel distance. Ties follow the
+mode list's size/rate order; the current refresh rate is retained when offered at
+the chosen size, otherwise the highest reported rate is used. The same correction
+applies through CLI and D-Bus. The resulting dimensions are returned in display
+state, and risky changes still require keep/revert confirmation.
+
+Rotation and horizontal flip are independent GUI controls over the existing
+`0`–`7` transform: rotation is `transform % 4`, flip adds `4`. Hardware brightness
+is applied during dragging; queued writes to each output keep the newest value
+and run serially with system readback. The refresh icon in the arrangement header
+uses the existing `display.15697afc` operation, which remains in the catalog for
+CLI/D-Bus parity. There is no separate Detect displays row in the GUI. Advanced
+uses a separate collapsible heading above its settings surface.
+
+
 The Rust `display` crate drives Hyprland through `hyprctl` and needs a Lua
 configuration (`hyprctl status` reports `configProvider: lua`; `hl.monitor` is
 verified on Hyprland 0.57). Set values are JSON:
@@ -320,6 +337,12 @@ remya_settings set display.15697afc detect
 and `.device` are read-only. `Get(<setting-id>)` returns a `value` for each connected
 output. Page IDs `advanced-display` and `hypr-monitor-fields` were folded into the
 Display page and still open it; the GUI expands Advanced for `advanced-display`.
+The Display Windows reference section and its nine unavailable controls have been
+removed from the catalog; their former IDs are no longer returned by Get/List/Search.
+The retired System pages Additional settings, all Mixed Reality pages (including
+Uninstall Mixed Reality), Tablet mode, Phone, Where to save new content,
+Troubleshooting, Activation, and Control Center are also absent from the catalog,
+search, and navigation. Requests for their removed IDs fail as unknown IDs.
 
 **Applying.** A value is validated against the actual monitor, sent with `hyprctl
 eval 'hl.monitor({...})'`, and confirmed by polling readback for up to 5 seconds.

@@ -815,7 +815,7 @@ mod tests {
         }
         assert!(
             state
-                .execute("Set", &["display.4686de0d".into(), "true".into()])
+                .execute("Set", &["night-light.e32be03e".into(), "true".into()])
                 .unwrap_err()
                 .starts_with("Unavailable:")
         );

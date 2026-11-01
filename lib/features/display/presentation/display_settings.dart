@@ -20,16 +20,7 @@ const _colorPresets = {
 };
 const _wideOnlyPresets = {'dcip3', 'dp3', 'adobe', 'wide', 'edid'};
 const _hdrPresets = {'hdr', 'hdredid'};
-const _orientations = {
-  '0': 'Landscape',
-  '1': 'Portrait (90°)',
-  '2': 'Landscape, upside down (180°)',
-  '3': 'Portrait, upside down (270°)',
-  '4': 'Landscape, flipped',
-  '5': 'Portrait, flipped (90°)',
-  '6': 'Landscape, flipped (180°)',
-  '7': 'Portrait, flipped (270°)',
-};
+const _rotations = {'0': '0°', '1': '90°', '2': '180°', '3': '270°'};
 const _capability = {'0': 'Automatic', '1': 'Force on', '-1': 'Force off'};
 const _eotf = {'default': 'Default', 'gamma22': 'Gamma 2.2', 'srgb': 'sRGB'};
 
@@ -84,50 +75,26 @@ class _DisplayArrangementState extends State<DisplayArrangement> {
   @override
   Widget build(BuildContext context) {
     final controller = widget.controller;
-    final colors = Theme.of(context).colorScheme;
     final text = Theme.of(context).textTheme;
     final active = controller.outputs.where((o) => o.inLayout).toList();
     final idle = controller.outputs.where((o) => !o.inLayout).toList();
-    if (controller.outputs.isEmpty) {
-      return SettingsSurface(
-        child: Row(
-          children: [
-            Icon(Icons.desktop_access_disabled_outlined, color: colors.error),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                controller.errorMessage ?? 'Reading displays…',
-                style: text.bodyMedium,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
     return SettingsSurface(
       child: Column(
         crossAxisAlignment: .stretch,
         children: [
-          Text('Display arrangement', style: text.titleMedium),
-          const SizedBox(height: 4),
-          Text(
-            controller.canEdit && active.length > 1
-                ? 'Select a display to change it. Drag displays to match how they sit on your desk.'
-                : 'Select a display to change it.',
-            style: text.bodySmall,
+          Row(
+            children: [
+              Expanded(
+                child: Text('Display arrangement', style: text.titleMedium),
+              ),
+              IconButton(
+                key: const ValueKey('display-refresh'),
+                tooltip: 'Refresh displays',
+                onPressed: controller.isBusy ? null : controller.detect,
+                icon: const Icon(Icons.refresh_rounded),
+              ),
+            ],
           ),
-          if (controller.writeBlocked case final reason?) ...[
-            const SizedBox(height: 12),
-            Row(
-              key: const ValueKey('display-write-blocked'),
-              crossAxisAlignment: .start,
-              children: [
-                Icon(Icons.lock_outline_rounded, size: 18, color: colors.error),
-                const SizedBox(width: 8),
-                Expanded(child: Text(reason, style: text.bodySmall)),
-              ],
-            ),
-          ],
           const SizedBox(height: 16),
           SelectionContainer.disabled(
             child: LayoutBuilder(
@@ -407,6 +374,7 @@ class DisplaySettingRow extends StatelessWidget {
   String? _readout(DisplayOutput output) => switch (setting.id) {
     displayPositionId when !output.disabled =>
       'Now at ${output.x}, ${output.y}',
+    displayResolutionId => '${output.width} × ${output.height}',
     displayDesktopModeId => output.desktopMode,
     displaySignalModeId => output.signalMode,
     displayColorSpaceId => output.colorSpace,
@@ -497,17 +465,23 @@ class DisplaySettingRow extends StatelessWidget {
           entries: {for (final o in controller.outputs) o.name: o.label},
           onChanged: controller.select,
         );
-      case displayDetectId:
-        return OutlinedButton.icon(
-          key: const ValueKey('display-detect'),
-          onPressed: controller.isBusy ? null : controller.detect,
-          icon: const Icon(Icons.refresh_rounded),
-          label: const Text('Detect'),
+      case displayPositionId:
+        return _DisplayCoordinates(
+          key: ValueKey('display-position-${output.name}'),
+          id: setting.id,
+          x: output.x,
+          y: output.y,
+          enabled: _enabled(output),
+          onSubmitted: (value) =>
+              controller.change(setting.id, output.name, value),
         );
       case displayBrightnessId:
         return _BrightnessSlider(
-          key: ValueKey('display-brightness-${output.name}'),
+          key: ValueKey(
+            'display-brightness-${output.name}-${controller.revision}',
+          ),
           percent: controller.brightness[output.name]?.percent,
+          isBusy: controller.isBusy,
           onChanged: output.disabled
               ? null
               : (value) => controller.setBrightness(output.name, value),
@@ -541,15 +515,15 @@ class DisplaySettingRow extends StatelessWidget {
           for (final option in output.scaleOptions) option: _percent(option),
         });
       case displayResolutionId:
-        final mode = values['mode'] ?? '';
-        final symbolic = !mode.contains('@');
-        final size = '${output.width}x${output.height}';
-        final sizes = <String>{for (final m in output.modes) m.size};
-        return _choice(output, symbolic ? 'preferred' : size, {
-          'preferred': 'Preferred',
-          size: size.replaceFirst('x', ' × '),
-          for (final item in sizes) item: item.replaceFirst('x', ' × '),
-        });
+        return _ResolutionControl(
+          key: ValueKey(
+            'display-resolution-${output.name}-${controller.revision}',
+          ),
+          output: output,
+          enabled: _enabled(output),
+          onChanged: (value) =>
+              controller.change(setting.id, output.name, value),
+        );
       case displayRefreshId:
         final rates = <String, String>{
           for (final mode in output.modes)
@@ -560,7 +534,47 @@ class DisplaySettingRow extends StatelessWidget {
         rates.putIfAbsent(current, () => _rate(output.refreshRate));
         return _choice(output, current, rates);
       case displayOrientationId:
-        return _choice(output, '${output.transform}', _orientations);
+        return SizedBox(
+          width: 232,
+          child: Column(
+            crossAxisAlignment: .stretch,
+            children: [
+              DisplayChoice(
+                key: ValueKey(
+                  'display-rotation-${output.name}-${output.transform}-${controller.revision}',
+                ),
+                id: setting.id,
+                label: 'Rotation',
+                value: '${output.transform % 4}',
+                entries: _rotations,
+                onChanged: _enabled(output)
+                    ? (value) => controller.change(
+                        setting.id,
+                        output.name,
+                        '${int.parse(value) + (output.transform >= 4 ? 4 : 0)}',
+                      )
+                    : null,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Expanded(child: Text('Flip')),
+                  Switch(
+                    key: const ValueKey('display-flip'),
+                    value: output.transform >= 4,
+                    onChanged: _enabled(output)
+                        ? (flip) => controller.change(
+                            setting.id,
+                            output.name,
+                            '${output.transform % 4 + (flip ? 4 : 0)}',
+                          )
+                        : null,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
       case displayLayoutId:
         final others = controller.outputs.where(
           (o) => o.name != output.name && o.inLayout,
@@ -605,9 +619,7 @@ class DisplaySettingRow extends StatelessWidget {
           _capability,
         );
     }
-    final field = setting.id == displayPositionId
-        ? 'position'
-        : displayTextFields[setting.id]!;
+    final field = displayTextFields[setting.id]!;
     return DisplayTextField(
       key: ValueKey('display-text-${setting.id}-${output.name}'),
       id: setting.id,
@@ -618,6 +630,154 @@ class DisplaySettingRow extends StatelessWidget {
   }
 }
 
+class _DisplayCoordinates extends StatefulWidget {
+  const _DisplayCoordinates({
+    super.key,
+    required this.id,
+    required this.x,
+    required this.y,
+    required this.enabled,
+    required this.onSubmitted,
+  });
+  final String id;
+  final int x;
+  final int y;
+  final bool enabled;
+  final Future<void> Function(String) onSubmitted;
+
+  @override
+  State<_DisplayCoordinates> createState() => _DisplayCoordinatesState();
+}
+
+class _DisplayCoordinatesState extends State<_DisplayCoordinates> {
+  late final _x = TextEditingController(text: '${widget.x}');
+  late final _y = TextEditingController(text: '${widget.y}');
+  final _focus = FocusNode();
+  String? _submitted;
+
+  @override
+  void didUpdateWidget(covariant _DisplayCoordinates oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!_focus.hasFocus && _submitted == null) _readback();
+  }
+
+  void _readback() {
+    _x.text = '${widget.x}';
+    _y.text = '${widget.y}';
+  }
+
+  Future<void> _commit() async {
+    final value = '${_x.text.trim()}x${_y.text.trim()}';
+    if (value == '${widget.x}x${widget.y}' || value == _submitted) return;
+    _submitted = value;
+    await widget.onSubmitted(value);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _submitted != value) return;
+      _submitted = null;
+      if ('${_x.text.trim()}x${_y.text.trim()}' == value) _readback();
+    });
+  }
+
+  @override
+  void dispose() {
+    _focus.dispose();
+    _x.dispose();
+    _y.dispose();
+    super.dispose();
+  }
+
+  Widget _field(String label, TextEditingController text) => Expanded(
+    child: TextField(
+      key: ValueKey('display-control-${widget.id}-${label.toLowerCase()}'),
+      controller: text,
+      enabled: widget.enabled,
+      keyboardType: const TextInputType.numberWithOptions(signed: true),
+      decoration: InputDecoration(
+        labelText: label,
+        isDense: true,
+        border: const OutlineInputBorder(borderRadius: .all(.circular(14))),
+      ),
+      onSubmitted: (_) => _commit(),
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 232,
+    child: Focus(
+      focusNode: _focus,
+      onFocusChange: (focused) {
+        if (!focused && mounted) _commit();
+      },
+      child: Row(
+        children: [_field('X', _x), const SizedBox(width: 12), _field('Y', _y)],
+      ),
+    ),
+  );
+}
+
+class _ResolutionControl extends StatefulWidget {
+  const _ResolutionControl({
+    super.key,
+    required this.output,
+    required this.enabled,
+    required this.onChanged,
+  });
+  final DisplayOutput output;
+  final bool enabled;
+  final Future<void> Function(String) onChanged;
+
+  @override
+  State<_ResolutionControl> createState() => _ResolutionControlState();
+}
+
+class _ResolutionControlState extends State<_ResolutionControl> {
+  late bool _custom = widget.output.values['mode'] != 'preferred';
+
+  @override
+  void didUpdateWidget(covariant _ResolutionControl oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.output.values['mode'] != widget.output.values['mode']) {
+      _custom = widget.output.values['mode'] != 'preferred';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 232,
+    child: Column(
+      crossAxisAlignment: .stretch,
+      children: [
+        DisplayChoice(
+          id: displayResolutionId,
+          value: _custom ? 'custom' : 'preferred',
+          entries: const {'preferred': 'Preferred', 'custom': 'Custom'},
+          onChanged: widget.enabled
+              ? (value) {
+                  setState(() => _custom = value == 'custom');
+                  widget.onChanged(
+                    _custom
+                        ? '${widget.output.width}x${widget.output.height}'
+                        : 'preferred',
+                  );
+                }
+              : null,
+        ),
+        if (_custom) ...[
+          const SizedBox(height: 12),
+          _DisplayCoordinates(
+            id: displayResolutionId,
+            x: widget.output.width,
+            y: widget.output.height,
+            enabled: widget.enabled,
+            onSubmitted: widget.onChanged,
+          ),
+        ],
+      ],
+    ),
+  );
+}
+
 class DisplayChoice extends StatelessWidget {
   const DisplayChoice({
     super.key,
@@ -625,7 +785,9 @@ class DisplayChoice extends StatelessWidget {
     required this.value,
     required this.entries,
     required this.onChanged,
+    this.label,
   });
+  final String? label;
   final String id;
   final String value;
   final Map<String, String> entries;
@@ -638,7 +800,8 @@ class DisplayChoice extends StatelessWidget {
       key: ValueKey('display-control-$id'),
       initialValue: value,
       isExpanded: true,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
+        labelText: label,
         isDense: true,
         border: OutlineInputBorder(borderRadius: .all(.circular(14))),
       ),
@@ -728,9 +891,11 @@ class _BrightnessSlider extends StatefulWidget {
   const _BrightnessSlider({
     super.key,
     required this.percent,
+    required this.isBusy,
     required this.onChanged,
   });
   final int? percent;
+  final bool isBusy;
   final ValueChanged<int>? onChanged;
   @override
   State<_BrightnessSlider> createState() => _BrightnessSliderState();
@@ -738,6 +903,12 @@ class _BrightnessSlider extends StatefulWidget {
 
 class _BrightnessSliderState extends State<_BrightnessSlider> {
   double? _dragging;
+
+  @override
+  void didUpdateWidget(covariant _BrightnessSlider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!widget.isBusy) _dragging = null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -752,11 +923,8 @@ class _BrightnessSliderState extends State<_BrightnessSlider> {
         label: '${(_dragging ?? percent ?? 0).round()}%',
         onChanged: percent == null || widget.onChanged == null
             ? null
-            : (value) => setState(() => _dragging = value),
-        onChangeEnd: percent == null || widget.onChanged == null
-            ? null
             : (value) {
-                setState(() => _dragging = null);
+                setState(() => _dragging = value);
                 widget.onChanged!(value.round());
               },
       ),

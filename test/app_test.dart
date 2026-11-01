@@ -427,26 +427,28 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('persistent sidebar and reference controls remain accessible', (
-    tester,
-  ) async {
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-    await mount(
-      tester,
-      SettingsShell(catalog: catalog),
-      size: const Size(1000, 720),
-    );
-    expect(find.byType(Drawer), findsNothing);
-    expect(find.byTooltip('Open navigation'), findsNothing);
-    await tester.tap(find.byKey(const ValueKey('nav-system')));
-    await tester.pumpAndSettle();
-    expect(find.byKey(const ValueKey('nav-page-display')), findsOneWidget);
-    final reference = find.text('Windows reference settings');
-    await tester.ensureVisible(reference);
-    await tester.tap(reference);
-    await tester.pumpAndSettle();
-    expect(find.text('Ease cursor movement between displays'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+  testWidgets(
+    'persistent sidebar remains accessible without Display Windows references',
+    (tester) async {
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await mount(
+        tester,
+        SettingsShell(catalog: catalog),
+        size: const Size(1000, 720),
+      );
+      expect(find.byType(Drawer), findsNothing);
+      expect(find.byTooltip('Open navigation'), findsNothing);
+      await tester.tap(find.byKey(const ValueKey('nav-system')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('nav-page-display')), findsOneWidget);
+      expect(find.text('Windows reference settings'), findsNothing);
+      expect(
+        catalog.page('display').sections.map((section) => section.title),
+        isNot(contains('Windows reference settings')),
+      );
+      expect(find.text('Ease cursor movement between displays'), findsNothing);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

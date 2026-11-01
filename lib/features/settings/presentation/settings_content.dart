@@ -260,6 +260,7 @@ class _SectionCard extends StatelessWidget {
     final visible = section.controls
         .where(
           (setting) => switch (setting.id) {
+            displayDetectId => false,
             manualTimeSettingId =>
               DateTimeScope.maybeOf(context)?.hideManualTime != true,
             timeServerSettingId || syncNowSettingId =>
@@ -283,27 +284,36 @@ class _SectionCard extends StatelessWidget {
       ],
     );
     if (section.collapsed) {
+      final advanced = section.title == 'Advanced';
+      final tile = ExpansionTile(
+        key: PageStorageKey('reference-${section.controls.first.id}'),
+        initiallyExpanded: expanded,
+        tilePadding: advanced ? .zero : null,
+        shape: advanced ? const Border() : null,
+        collapsedShape: advanced ? const Border() : null,
+        title: Text(
+          section.title,
+          style: advanced ? Theme.of(context).textTheme.titleLarge : null,
+        ),
+        subtitle: advanced
+            ? null
+            : Text(
+                section.description ??
+                    'Additional reference options · Not implemented',
+              ),
+        // Keep expansion and nested scroll positions in separate storage slots.
+        children: [
+          KeyedSubtree(
+            key: PageStorageKey('body-${section.controls.first.id}'),
+            child: advanced
+                ? SettingsSurface(padding: .zero, child: controls)
+                : controls,
+          ),
+        ],
+      );
       return Padding(
         padding: const .only(top: 24),
-        child: SettingsSurface(
-          padding: .zero,
-          child: ExpansionTile(
-            key: PageStorageKey('reference-${section.controls.first.id}'),
-            initiallyExpanded: expanded,
-            title: Text(section.title),
-            subtitle: Text(
-              section.description ??
-                  'Additional reference options · Not implemented',
-            ),
-            // The tile stores its expansion here; nested scrollables need their own slot.
-            children: [
-              KeyedSubtree(
-                key: PageStorageKey('body-${section.controls.first.id}'),
-                child: controls,
-              ),
-            ],
-          ),
-        ),
+        child: advanced ? tile : SettingsSurface(padding: .zero, child: tile),
       );
     }
     return Column(

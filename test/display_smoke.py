@@ -230,7 +230,7 @@ def main():
         assert call("Get", "page:advanced-display")["id"] == "display"
         for bad in (request("SMOKE-1", "x"), "not json", request("NOPE", "1")):
             assert "InvalidArgument" in call("Set", TRANSFORM, bad, ok=False)
-        assert "Unavailable" in call("Set", "display.4686de0d", "true", ok=False)
+        assert "Unavailable" in call("Set", "night-light.e32be03e", "true", ok=False)
         assert call("Get", "configuration")["display"]["conflict"] is False
 
         # Malformed user files block writes without being replaced.

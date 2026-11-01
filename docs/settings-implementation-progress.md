@@ -10,8 +10,8 @@ Hyprland 内容包含 105 个页面、837 项设置及 2 个分类。来源与�
 
 ## 当前概况
 
-- 设置分类：12 个；详情页面：292 个；设置条目：2,105 项。
-- 已实现：37 项；未实现：1,931 项；不适用：137 项。
+- 设置分类：12 个；详情页面：280 个；设置条目：2,067 项。
+- 已实现：37 项；未实现：1,917 项；不适用：113 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。
@@ -43,7 +43,7 @@ Hyprland 内容包含 105 个页面、837 项设置及 2 个分类。来源与�
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 51 | 347 | 29 | 294 | 24 |
+| [系统](#category-system) | 39 | 309 | 29 | 280 | 0 |
 | [蓝牙和设备](#category-devices) | 25 | 224 | 0 | 220 | 4 |
 | [网络和 Internet](#category-network) | 15 | 90 | 0 | 88 | 2 |
 | [个性化](#category-personalization) | 45 | 282 | 2 | 270 | 10 |
@@ -66,7 +66,7 @@ Hyprland 内容包含 105 个页面、837 项设置及 2 个分类。来源与�
 
 排列、亮度、颜色、缩放、分辨率与刷新率
 
-页面状态：**未实现**（部分完成）；条目：40；已实现 29 / 未实现 7 / 不适用 4。
+页面状态：**未实现**（部分完成）；条目：31；已实现 29 / 未实现 2 / 不适用 0。
 
 原因：显示设置通过 Hyprland 实现；夜间模式与 Graphics 页面尚未实现。
 
@@ -78,13 +78,15 @@ Windows 参考入口：`ms-settings:display`、`ms-settings:screenrotation`、`m
 
 参考资料：[hypr-monitors](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/monitors/_index.md)。
 
+Display 交互：Position 使用 X/Y 输入；刷新操作移动到排列框右上角，移除框内操作提示；Brightness 拖动时合并串行硬件写入并回读；Resolution 支持 Preferred 或 X/Y，Rust 修正到最近的显示器支持模式；Orientation 分开选择 Rotation/Flip；Advanced 使用独立分组标题，展开后才显示设置卡片。验证：`test/display_test.dart`、Rust display 测试、隔离桌面 smoke tests。
+
 #### 排列
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Selected display | `hypr-monitor-fields.output` | 选择 | 已实现 | 实机 GUI；`test/display_test.dart` |
 | Position | `hypr-monitor-fields.position` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）；`test/display_test.dart`（拖动） |
-| Detect displays | `display.15697afc` | 操作 | 已实现 | 实机读取；`cargo test -p remya_settings_display` |
+| Refresh displays（排列框右上角按钮） | `display.15697afc` | 操作 | 已实现 | 实机读取；`cargo test -p remya_settings_display` |
 
 #### 亮度与颜色
 
@@ -133,20 +135,6 @@ Windows 参考入口：`ms-settings:display`、`ms-settings:screenrotation`、`m
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Graphics | `display.2f32a8c2` | 操作 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Adjust brightness based on content | `display.4686de0d` | 开关 | 不适用 | — |
-| Remember window locations based on monitor connection | `display.reference.45daf28f` | 开关 | 不适用 | — |
-| Minimize windows when a monitor is disconnected | `display.reference.b0b25287` | 开关 | 不适用 | — |
-| Ease cursor movement between displays | `display.reference.9c5f075f` | 开关 | 不适用 | — |
-| Show warmer colors on your display to help you sleep | `display.reference.5106967a` | 选择 | 未实现 | — |
-| Strength | `display.reference.b55908e7` | 开关 | 未实现 | — |
-| Schedule Night Light | `display.reference.613ad1ca` | 开关 | 未实现 | — |
-| Turn on | `display.reference.a303e647` | 开关 | 未实现 | — |
-| Turn off | `display.reference.0d998610` | 开关 | 未实现 | — |
 
 ### Night light — `night-light`
 
@@ -606,27 +594,6 @@ Windows 参考入口：`ms-settings:disksandvolumes`。
 | Resize the volume | `disks.6e9cf764` | 操作 | 未实现 | — |
 | Format the volume | `disks.c1481df0` | 操作 | 未实现 | — |
 
-### Where to save new content — `save-locations`
-
-应用与文件的默认目标
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:savelocations`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| New applications | `save-locations.fa399053` | 选择 | 未实现 | — |
-| New documentation | `save-locations.232eacc2` | 选择 | 未实现 | — |
-| New music | `save-locations.92016bde` | 选择 | 未实现 | — |
-| New photos and videos | `save-locations.0e457e66` | 选择 | 未实现 | — |
-| New Movies and TV Shows | `save-locations.e6a0ecd7` | 选择 | 未实现 | — |
-| Offline Maps | `save-locations.cfd0f9eb` | 选择 | 未实现 | — |
-
 ### Nearby sharing — `nearby`
 
 设备发现、共享范围与接收目录
@@ -687,42 +654,6 @@ Windows 参考入口：`ms-settings:multitasking`、`ms-settings:multitasking-sg
 | On the task, show all the open windows | `multitasking.reference.c8540ba4` | 开关 | 未实现 | — |
 | Show all open windows when I press Alt+Tab | `multitasking.reference.2d6a63c7` | 开关 | 未实现 | — |
 | Title bar window shake | `multitasking.reference.301a71a1` | 开关 | 未实现 | — |
-
-### Activation — `activation`
-
-Windows 许可证与产品密钥参考
-
-页面状态：**不适用**；条目：3；已实现 0 / 未实现 0 / 不适用 3。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:activation`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Activation status | `activation.b71fc2ba` | 信息展示 | 不适用 | — |
-| Change product key | `activation.5426ec32` | 操作 | 不适用 | — |
-| Upgrade system version | `activation.8e3c56ea` | 操作 | 不适用 | — |
-
-### Troubleshooting — `troubleshoot`
-
-推荐的诊断与其他疑难解答
-
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:troubleshoot`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Diagnostic operating mode | `troubleshoot.c521689a` | 选择 | 未实现 | — |
-| Other troubleshooting | `troubleshoot.4b4b161e` | 操作 | 未实现 | — |
-| Diagnostic history | `troubleshoot.f08a49da` | 操作 | 未实现 | — |
 
 ### Recovery — `recovery`
 
@@ -924,158 +855,6 @@ Windows 参考入口：`ms-settings:developers`。
 | Display delete confirmation dialog | `file-explorer.reference.163ce553` | 开关 | 未实现 | — |
 | View (Icon size, Auto arrange icons, Show desktop icons) | `file-explorer.reference.f24ca65a` | 选择 | 未实现 | — |
 | Sort by (Name, Size, Item type, Date modified) | `file-explorer.reference.ed11d482` | 选择 | 未实现 | — |
-
-### Control Center — `controlcenter`
-
-Windows 快速设置参考
-
-页面状态：**不适用**；条目：2；已实现 0 / 未实现 0 / 不适用 2。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:controlcenter`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Edit quick settings | `controlcenter.13fd7d4b` | 操作 | 不适用 | — |
-| Show quick actions | `controlcenter.d8e92750` | 开关 | 不适用 | — |
-
-### Additional settings — `extras`
-
-Windows OEM 或扩展应用设置参考
-
-页面状态：**不适用**；条目：2；已实现 0 / 未实现 0 / 不适用 2。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:extras`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Extended settings provider | `extras.b24f2fc7` | 信息展示 | 不适用 | — |
-| Manage extension settings | `extras.a049a211` | 操作 | 不适用 | — |
-
-### Mixed reality audio and speech — `holographic-audio`
-
-Windows Mixed Reality 参考
-
-页面状态：**不适用**；条目：3；已实现 0 / 未实现 0 / 不适用 3。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:holographic-audio`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Switch to headset audio | `holographic-audio.53f5cfbb` | 开关 | 不适用 | — |
-| Use the headset microphone | `holographic-audio.f0145c7a` | 开关 | 不适用 | — |
-| Voice recognition | `holographic-audio.df3dd6ab` | 开关 | 不适用 | — |
-
-### Mixed reality environments — `privacy-holographic-environment`
-
-Windows Mixed Reality 参考
-
-页面状态：**不适用**；条目：2；已实现 0 / 未实现 0 / 不适用 2。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:privacy-holographic-environment`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Clear environment data | `privacy-holographic-environment.839199fb` | 操作 | 不适用 | — |
-| Reset boundaries | `privacy-holographic-environment.d7b104e0` | 操作 | 不适用 | — |
-
-### Mixed reality headsets — `holographic-headset`
-
-Windows Mixed Reality 参考
-
-页面状态：**不适用**；条目：3；已实现 0 / 未实现 0 / 不适用 3。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:holographic-headset`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Visual quality | `holographic-headset.d62dba30` | 选择 | 不适用 | — |
-| Refresh rate | `holographic-headset.7bb8bba2` | 选择 | 不适用 | — |
-| Calibrate your monitor | `holographic-headset.c5d62d7f` | 操作 | 不适用 | — |
-
-### Uninstall Mixed Reality — `holographic-management`
-
-Windows Mixed Reality 参考
-
-页面状态：**不适用**；条目：1；已实现 0 / 未实现 0 / 不适用 1。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:holographic-management`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Uninstall Mixed Reality | `holographic-management.63443c74` | 操作 | 不适用 | — |
-
-### Mixed reality launch and desktop — `holographic-startupandesktop`
-
-Windows Mixed Reality 参考
-
-页面状态：**不适用**；条目：2；已实现 0 / 未实现 0 / 不适用 2。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:holographic-startupandesktop`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Launch when headset is connected | `holographic-startupandesktop.fb8aa3ee` | 开关 | 不适用 | — |
-| Enable virtual desktops | `holographic-startupandesktop.701239cf` | 开关 | 不适用 | — |
-
-### Tablet mode — `tabletmode`
-
-旧版页面，仅保留参考
-
-页面状态：**不适用**；条目：1；已实现 0 / 未实现 0 / 不适用 1。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:tabletmode`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Functional status | `tabletmode.540cc78d` | 信息展示 | 不适用 | — |
-
-### Phone — `phone`
-
-旧版页面，仅保留参考
-
-页面状态：**不适用**；条目：1；已实现 0 / 未实现 0 / 不适用 1。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:phone`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Functional status | `phone.540cc78d` | 信息展示 | 不适用 | — |
 
 ### Hyprland · XWayland Compatible — `hypr-xwayland`
 

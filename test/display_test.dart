@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -91,6 +92,8 @@ class FakeDisplayBackend implements DisplayBackend {
   final writes = <(String, Map<String, dynamic>)>[];
   final resolves = <String>[];
   int reads = 0;
+  Future<void>? brightnessDelay;
+  final brightnessValues = <String, int>{};
 
   Map<String, dynamic> get state => {
     'outputs': outputs,
@@ -111,7 +114,8 @@ class FakeDisplayBackend implements DisplayBackend {
       for (final o in outputs)
         {
           'output': o['name'],
-          'percent': o['name'] == 'eDP-1' ? 40 : null,
+          'percent':
+              brightnessValues[o['name']] ?? (o['name'] == 'eDP-1' ? 40 : null),
           'backend': o['name'] == 'eDP-1' ? 'backlight' : null,
           'reason': o['name'] == 'eDP-1' ? '' : 'Display lacks DDC/CI',
         },
@@ -127,7 +131,33 @@ class FakeDisplayBackend implements DisplayBackend {
     }
     final request = jsonDecode(value) as Map<String, dynamic>;
     writes.add((id, request));
-    if (id == displayBrightnessId) return brightness();
+    if (id == displayBrightnessId) {
+      await brightnessDelay;
+      brightnessValues[request['output'] as String] = int.parse(
+        request['value'] as String,
+      );
+      return brightness();
+    }
+    if (id == displayPositionId || id == displayResolutionId) {
+      final target = outputs.firstWhere((o) => o['name'] == request['output']);
+      if (id == displayPositionId) {
+        final parts = (request['value'] as String)
+            .split('x')
+            .map(int.parse)
+            .toList();
+        target['x'] = parts[0];
+        target['y'] = parts[1];
+      } else {
+        (target['values'] as Map<String, dynamic>)['mode'] =
+            request['value'] == 'preferred' ? 'preferred' : '1280x720@60.00';
+        target['width'] = request['value'] == 'preferred' ? 1920 : 1280;
+        target['height'] = request['value'] == 'preferred' ? 1080 : 720;
+      }
+    }
+    if (id == displayOrientationId) {
+      final target = outputs.firstWhere((o) => o['name'] == request['output']);
+      target['transform'] = int.parse(request['value'] as String);
+    }
     if (id == displayScaleId) {
       pending = {'output': request['output'], 'remaining_ms': 15000};
     }
@@ -281,6 +311,26 @@ void main() {
       },
     );
 
+    test(
+      'brightness writes serialize and keep only the newest pending value',
+      () async {
+        final gate = Completer<void>();
+        final backend = FakeDisplayBackend([output('eDP-1')])
+          ..brightnessDelay = gate.future;
+        final controller = DisplayController(backend);
+        await controller.reload();
+        final first = controller.setBrightness('eDP-1', 45);
+        controller.setBrightness('eDP-1', 60);
+        final last = controller.setBrightness('eDP-1', 70);
+        expect(backend.writes.length, 1);
+        gate.complete();
+        await Future.wait([first, last]);
+        expect(backend.writes.map((w) => w.$2['value']), ['45', '70']);
+        expect(controller.brightness['eDP-1']!.percent, 70);
+        expect(controller.isBusy, isFalse);
+      },
+    );
+
     test('detection errors reported by the service stay visible', () async {
       final backend = FakeDisplayBackend([])
         ..stateError = 'Hyprland is not running';
@@ -366,6 +416,115 @@ void main() {
       await tester.scrollUntilVisible(finder, 200, scrollable: mainScroll);
       await tester.pumpAndSettle();
     }
+
+    testWidgets(
+      'refresh lives in the arrangement header without instruction text',
+      (tester) async {
+        final backend = await pump(tester);
+        final refresh = find.byKey(const ValueKey('display-refresh'));
+        await scrollTo(tester, refresh);
+        expect(find.text('Detect displays'), findsNothing);
+        expect(
+          find.textContaining('Select a display to change it'),
+          findsNothing,
+        );
+        await tester.tap(refresh);
+        await tester.pumpAndSettle();
+        expect(backend.writes.single.$1, displayDetectId);
+      },
+    );
+
+    testWidgets('Position edits both coordinates together', (tester) async {
+      final backend = await pump(tester);
+      final x = find.byKey(
+        const ValueKey('display-control-$displayPositionId-x'),
+      );
+      final y = find.byKey(
+        const ValueKey('display-control-$displayPositionId-y'),
+      );
+      await scrollTo(tester, x);
+      await tester.enterText(x, '-120');
+      await tester.enterText(y, '240');
+      expect(
+        backend.writes,
+        isEmpty,
+        reason: 'switching axes must not submit a partial position',
+      );
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(backend.writes.single.$2['value'], '-120x240');
+    });
+
+    testWidgets(
+      'Resolution offers Preferred or custom coordinates and shows corrected readback',
+      (tester) async {
+        final backend = await pump(tester);
+        final x = find.byKey(
+          const ValueKey('display-control-$displayResolutionId-x'),
+        );
+        final y = find.byKey(
+          const ValueKey('display-control-$displayResolutionId-y'),
+        );
+        await scrollTo(tester, x);
+        await tester.enterText(x, '1300');
+        await tester.enterText(y, '730');
+        await tester.testTextInput.receiveAction(TextInputAction.done);
+        await tester.pumpAndSettle();
+        expect(backend.writes.single.$2['value'], '1300x730');
+        expect(tester.widget<TextField>(x).controller!.text, '1280');
+        expect(tester.widget<TextField>(y).controller!.text, '720');
+        final choice = find.byKey(
+          const ValueKey('display-control-$displayResolutionId'),
+        );
+        await scrollTo(tester, choice);
+        await tester.tap(choice);
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Preferred').last);
+        await tester.pumpAndSettle();
+        expect(backend.writes.last.$2['value'], 'preferred');
+        expect(x, findsNothing);
+      },
+    );
+
+    testWidgets('rotation preserves flip and flip preserves rotation', (
+      tester,
+    ) async {
+      final backend = await pump(
+        tester,
+        outputs: [output('eDP-1')..['transform'] = 5],
+      );
+      final rotation = find.byKey(
+        const ValueKey('display-control-$displayOrientationId'),
+      );
+      await scrollTo(tester, rotation);
+      await tester.tap(rotation);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('180°').last);
+      await tester.pumpAndSettle();
+      expect(backend.writes.last.$2['value'], '6');
+      await tester.tap(find.byKey(const ValueKey('display-flip')));
+      await tester.pumpAndSettle();
+      expect(backend.writes.last.$2['value'], '2');
+    });
+
+    testWidgets('brightness writes while the pointer is still dragging', (
+      tester,
+    ) async {
+      final backend = await pump(tester);
+      final slider = find.byKey(
+        const ValueKey('display-control-$displayBrightnessId'),
+      );
+      await scrollTo(tester, slider);
+      final drag = await tester.startGesture(tester.getCenter(slider));
+      await drag.moveBy(const Offset(40, 0));
+      await tester.pump();
+      expect(backend.writes.last.$1, displayBrightnessId);
+      expect(backend.writes.last.$2['value'], isNot('40'));
+      await drag.up();
+      await tester.pumpAndSettle();
+      final actual = backend.brightnessValues['eDP-1'];
+      expect(find.text('$actual%'), findsWidgets);
+    });
 
     testWidgets('shows real displays and hides advanced options by default', (
       tester,
@@ -560,6 +719,30 @@ void main() {
         ),
       );
       expect(field.onChanged, isNull);
+    });
+
+    testWidgets('paired controls and Advanced stay usable at minimum width', (
+      tester,
+    ) async {
+      await pump(tester);
+      tester.view.physicalSize = const Size(360, 800);
+      await tester.pumpAndSettle();
+      for (final key in [
+        'display-control-$displayPositionId-y',
+        'display-control-$displayResolutionId-y',
+        'display-flip',
+      ]) {
+        await scrollTo(tester, find.byKey(ValueKey(key)));
+        expect(tester.takeException(), isNull);
+      }
+      await scrollTo(tester, find.text('Advanced'));
+      await tester.tap(find.text('Advanced'));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Variable refresh rate', skipOffstage: false),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets('risky changes ask to keep or revert with a countdown', (

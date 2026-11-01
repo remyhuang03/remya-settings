@@ -251,6 +251,8 @@ class DisplayController extends ChangeNotifier {
   /// recreate a control the user is editing.
   int revision = 0;
   int _writes = 0;
+  final _brightnessQueue = <String, int>{};
+  Future<void>? _brightnessWrite;
 
   bool get hasConflict => outputs.any((o) => o.conflictFields.isNotEmpty);
   bool get canEdit => writeBlocked == null && pending == null;
@@ -364,21 +366,30 @@ class DisplayController extends ChangeNotifier {
     }
   });
 
-  Future<void> setBrightness(String output, int percent) => _run(() async {
-    try {
-      _acceptBrightness(
-        await backend.set(
-          displayBrightnessId,
-          jsonEncode({'output': output, 'value': '$percent'}),
-        ),
-      );
-      errorMessage = null;
-      _failed = null;
-    } catch (_) {
-      _failed = (displayBrightnessId, output, '$percent');
-      rethrow;
-    }
-  });
+  Future<void> setBrightness(String output, int percent) {
+    _brightnessQueue[output] = percent;
+    return _brightnessWrite ??= _run(() async {
+      while (_brightnessQueue.isNotEmpty) {
+        final request = _brightnessQueue.entries.first;
+        _brightnessQueue.remove(request.key);
+        try {
+          _acceptBrightness(
+            await backend.set(
+              displayBrightnessId,
+              jsonEncode({'output': request.key, 'value': '${request.value}'}),
+            ),
+          );
+          errorMessage = null;
+          _failed = null;
+          _notify();
+        } catch (_) {
+          _failed = (displayBrightnessId, request.key, '${request.value}');
+          _brightnessQueue.clear();
+          rethrow;
+        }
+      }
+    }).whenComplete(() => _brightnessWrite = null);
+  }
 
   Future<void> detect() => _run(() async {
     _accept(await backend.set(displayDetectId, 'detect'));

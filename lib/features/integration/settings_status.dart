@@ -81,6 +81,19 @@ class SettingsStatus extends StatelessWidget {
                   useSystem: controller.useSystemConfiguration,
                   useSettings: controller.applySavedConfiguration,
                 ),
+              if (controller.writeBlocked case final reason?)
+                _StatusCard(
+                  error: true,
+                  icon: Icons.lock_outline_rounded,
+                  title: 'Display configuration is read-only',
+                  message: reason,
+                  actions: [
+                    TextButton(
+                      onPressed: controller.isBusy ? null : controller.reload,
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
               if (controller.errorMessage case final message?)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,

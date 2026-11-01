@@ -295,16 +295,28 @@ impl<C: Compositor> DisplayManager<C> {
             .split_once('x')
             .and_then(|(w, h)| Some((w.parse::<i64>().ok()?, h.parse::<i64>().ok()?)))
             .ok_or_else(|| invalid("Use WIDTHxHEIGHT or preferred"))?;
-        let candidates = modes(monitor)
-            .into_iter()
-            .filter(|m| m.width == width && m.height == height)
+        if !(1..=32768).contains(&width) || !(1..=32768).contains(&height) {
+            return Err(invalid("Width and height must be between 1 and 32768"));
+        }
+        let distance = |m: &crate::model::Mode| {
+            (i128::from(m.width) - i128::from(width)).pow(2)
+                + (i128::from(m.height) - i128::from(height)).pow(2)
+        };
+        let available = modes(monitor);
+        let nearest = available
+            .iter()
+            .min_by_key(|m| distance(m))
+            .ok_or_else(|| invalid("This display reports no supported modes"))?;
+        let candidates = available
+            .iter()
+            .filter(|m| m.width == nearest.width && m.height == nearest.height)
             .collect::<Vec<_>>();
         let keeps_rate = candidates
             .iter()
             .find(|m| (m.refresh - monitor.refresh_rate).abs() < 0.1);
         keeps_rate
             .or(candidates.first())
-            .map(|m| format_mode(*m))
+            .map(|m| format_mode(**m))
             .ok_or_else(|| invalid("This display does not offer that resolution"))
     }
 
@@ -1166,7 +1178,19 @@ mod tests {
             assert_eq!(w.monitors[0].width, 1280);
             assert_eq!(w.monitors[0].refresh_rate, 60.0);
         }
-        assert!(s.manager.set(RESOLUTION, &request("A", "9x9")).is_err());
+        s.manager
+            .set(RESOLUTION, &request("A", "1300x730"))
+            .unwrap();
+        assert_eq!(s.world.0.lock().unwrap().monitors[0].width, 1280);
+        for value in [
+            "0x720",
+            "-1x720",
+            "32769x720",
+            "broken",
+            "9223372036854775807x1",
+        ] {
+            assert!(s.manager.set(RESOLUTION, &request("A", value)).is_err());
+        }
         assert!(s.manager.set(REFRESH, &request("A", "999")).is_err());
     }
 

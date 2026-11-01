@@ -142,12 +142,6 @@
       "title": "Video playback"
     },
     {
-      "uri": "ms-settings:controlcenter",
-      "page": "controlcenter",
-      "sourceCategory": "Control Center",
-      "title": "Control center"
-    },
-    {
       "uri": "ms-settings:autoplay",
       "page": "autoplay",
       "sourceCategory": "Devices",
@@ -346,46 +340,10 @@
       "title": "Visual Effects"
     },
     {
-      "uri": "ms-settings:extras",
-      "page": "extras",
-      "sourceCategory": "Extras",
-      "title": "Extras"
-    },
-    {
       "uri": "ms-settings:quietmomentsgame",
       "page": "quiet-schedule",
       "sourceCategory": "Gaming",
       "title": "Playing a game full screen"
-    },
-    {
-      "uri": "ms-settings:holographic-audio",
-      "page": "holographic-audio",
-      "sourceCategory": "Gaming",
-      "title": "Audio and speech"
-    },
-    {
-      "uri": "ms-settings:privacy-holographic-environment",
-      "page": "privacy-holographic-environment",
-      "sourceCategory": "Gaming",
-      "title": "Environment"
-    },
-    {
-      "uri": "ms-settings:holographic-headset",
-      "page": "holographic-headset",
-      "sourceCategory": "Gaming",
-      "title": "Headset display"
-    },
-    {
-      "uri": "ms-settings:holographic-management",
-      "page": "holographic-management",
-      "sourceCategory": "Gaming",
-      "title": "Uninstall"
-    },
-    {
-      "uri": "ms-settings:holographic-startupandesktop",
-      "page": "holographic-startupandesktop",
-      "sourceCategory": "Gaming",
-      "title": "Startup and desktop"
     },
     {
       "uri": "ms-settings:network-status",
@@ -898,12 +856,6 @@
       "title": "Clipboard"
     },
     {
-      "uri": "ms-settings:savelocations",
-      "page": "save-locations",
-      "sourceCategory": "System",
-      "title": "Default Save Locations"
-    },
-    {
       "uri": "ms-settings:display",
       "page": "display",
       "sourceCategory": "System",
@@ -988,12 +940,6 @@
       "title": "Shared experiences"
     },
     {
-      "uri": "ms-settings:tabletmode",
-      "page": "tabletmode",
-      "sourceCategory": "System",
-      "title": "Tablet mode"
-    },
-    {
       "uri": "ms-settings:notifications",
       "page": "notifications",
       "sourceCategory": "System",
@@ -1004,12 +950,6 @@
       "page": "remote-desktop",
       "sourceCategory": "System",
       "title": "Remote Desktop"
-    },
-    {
-      "uri": "ms-settings:phone",
-      "page": "phone",
-      "sourceCategory": "System",
-      "title": "Phone"
     },
     {
       "uri": "ms-settings:powersleep",
@@ -1150,12 +1090,6 @@
       "title": "Wubi IME settings"
     },
     {
-      "uri": "ms-settings:activation",
-      "page": "activation",
-      "sourceCategory": "Update and security",
-      "title": "Activation"
-    },
-    {
       "uri": "ms-settings:findmydevice",
       "page": "find-device",
       "sourceCategory": "Update and security",
@@ -1178,12 +1112,6 @@
       "page": "security-key",
       "sourceCategory": "Update and security",
       "title": "Launch Security Key Enrollment"
-    },
-    {
-      "uri": "ms-settings:troubleshoot",
-      "page": "troubleshoot",
-      "sourceCategory": "Update and security",
-      "title": "Troubleshoot"
     },
     {
       "uri": "ms-settings:windowsdefender",
@@ -1250,39 +1178,6 @@
       "area": "System",
       "path": [
         "Display",
-        "Multiple displays",
-        "Remember window locations based on monitor connection"
-      ],
-      "page": "display",
-      "coverage": "control",
-      "control": "display.reference.45daf28f"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Display",
-        "Multiple displays",
-        "Minimize windows when a monitor is disconnected"
-      ],
-      "page": "display",
-      "coverage": "control",
-      "control": "display.reference.b0b25287"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Display",
-        "Multiple displays",
-        "Ease cursor movement between displays"
-      ],
-      "page": "display",
-      "coverage": "control",
-      "control": "display.reference.9c5f075f"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Display",
         "Night Light"
       ],
       "page": "display",
@@ -1293,67 +1188,10 @@
       "path": [
         "Display",
         "Night Light",
-        "Show warmer colors on your display to help you sleep"
-      ],
-      "page": "display",
-      "coverage": "control",
-      "control": "display.reference.5106967a"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Display",
-        "Night Light",
-        "Strength"
-      ],
-      "page": "display",
-      "coverage": "control",
-      "control": "display.reference.b55908e7"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Display",
-        "Night Light",
-        "Schedule Night Light"
-      ],
-      "page": "display",
-      "coverage": "control",
-      "control": "display.reference.613ad1ca"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Display",
-        "Night Light",
         "Sunset to sunrise/ Set hours (Actual sunrise / sunset time depends on location)"
       ],
       "page": "display",
       "coverage": "section"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Display",
-        "Night Light",
-        "Sunset to sunrise/ Set hours (Actual sunrise / sunset time depends on location)",
-        "Turn on"
-      ],
-      "page": "display",
-      "coverage": "control",
-      "control": "display.reference.a303e647"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Display",
-        "Night Light",
-        "Sunset to sunrise/ Set hours (Actual sunrise / sunset time depends on location)",
-        "Turn off"
-      ],
-      "page": "display",
-      "coverage": "control",
-      "control": "display.reference.0d998610"
     },
     {
       "area": "System",
