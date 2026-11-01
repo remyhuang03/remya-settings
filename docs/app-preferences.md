@@ -76,7 +76,7 @@ Sources: [fish configuration](https://fishshell.com/docs/current/language.html#c
 
 Durable tests cover strict TOML, atomic persistence, controller ordering/error recovery, actual control bindings, retained navigation, installed theme matching, GSettings/file rollback, managed environment blocks, syntax validation, and missing optional targets. Native verification uses the real bridge and independent GTK/Qt probes, with exact restoration of personal files after temporary Light/Dark checks. Current verification evidence is recorded in [the implementation tracker](settings-implementation-progress.md).
 
-The appearance controls and two manual date/time controls are available (see public-api.md). The remaining 2,178 catalog controls remain disabled previews. The single-level sidebar is persistent, becomes icon-only below 1000 logical pixels, and uses wrapping connected page buttons with leading icons under the category title. The native minimum width is 360 logical pixels.
+The appearance, date/time, and Display controls are available (see public-api.md). The remaining catalog controls remain disabled previews. The single-level sidebar is persistent, becomes icon-only below 1000 logical pixels, and uses wrapping connected page buttons with leading icons under the category title. The native minimum width is 360 logical pixels.
 
 ## Dependent applications and public operations
 

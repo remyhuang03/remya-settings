@@ -2,7 +2,7 @@
 
 Research date: 2026-10-26. Target product: a global settings application for **Hyprland on Linux**, with **Material Design 3 Expressive** styling.
 
-This document describes the Windows-reference catalog (188 pages and 1,251 controls). The later additive Hyprland catalog extension is documented separately in [Hyprland research](hyprland-settings-research.md); the progress checklist tracks the combined catalog.
+This document describes the Windows-reference catalog as researched (188 pages and 1,251 controls); `advanced-display` later moved into a collapsed section of `display`, which also took over its `ms-settings:display-advanced` entry. The later additive Hyprland catalog extension is documented separately in [Hyprland research](hyprland-settings-research.md); the progress checklist tracks the combined catalog.
 
 ## Evidence and limits
 

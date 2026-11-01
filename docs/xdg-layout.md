@@ -53,6 +53,19 @@ Sources: [XDG Base Directory Specification](https://specifications.freedesktop.o
 [Desktop Entry Specification](https://specifications.freedesktop.org/desktop-entry-spec/latest/),
 and [D-Bus service activation](https://dbus.freedesktop.org/doc/dbus-specification.html#message-bus-starting-services).
 
+## Display configuration
+
+`display.toml` lives beside `config.toml` (debug: repository `config/display.toml`;
+profile/release: `$XDG_CONFIG_HOME/remya/settings/display.toml`). It contains
+`version = 1` and an `outputs` table of saved rule values per connector name. It uses
+the same atomic writer; invalid files are retained and reported.
+
+The display system target is `$XDG_CONFIG_HOME/hypr/monitors.lua` (fallback
+`~/.config/hypr/monitors.lua`), also in debug builds, written only after an explicit
+change. The first write keeps the original as `monitors.lua.remya-backup`. Symlinks
+and file permissions are preserved. Settings never edits `hyprland.lua`; it must
+already load `monitors.lua`.
+
 ## Date/time preference
 
 `date-time.toml` lives beside `config.toml` (debug: repository

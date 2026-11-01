@@ -42,8 +42,11 @@ No command evaluates shell input. IDs are stable catalog IDs, not translated lab
 | `get date-time` | `Get(s key)` with `date-time` | Actual clock, local time, NTP status, time zone, saved zone, and conflict |
 | `get timezones` | `Get(s key)` with `timezones` | Finite system time zone options |
 | `get configuration` | `Get(s key)` with `configuration` | Saved/system values, conflicts, and detection errors |
-| `resolve <appearance / date-time> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
+| `resolve <appearance / date-time / display> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
+| `resolve display <keep / revert>` | `Resolve(ss feature, source)` | Confirm or undo a pending display change |
 | `get system` | `Get(s key)` with `system` | Fresh system mode and target readback |
+| `get display` | `Get(s key)` with `display` | Outputs, modes, saved and actual values, conflicts, pending change, write blocker |
+| `get display-brightness` | `Get(s key)` with `display-brightness` | Hardware brightness per active output, or why it is unavailable |
 | `get catalog` | `Get(s key)` with `catalog` | Sources, categories, and page summaries |
 | `get page:<id>` | `Get(s key)` with `page:<id>` | Complete page, sections, and control metadata |
 | `get <setting-id>` | `Get(s key)` | ID, availability, reason, and current value where implemented |
@@ -78,6 +81,7 @@ All currently available system controls are writable through both interfaces:
 | `date-time.7e33a213` | JSON array of NTP host names/IP addresses; `[]` selects Default |
 | `date-time.format` | Installed locale from `get time-locales`; empty string inherits system language |
 | `date-time.6422d209` | JSON object with `local_time` and `timezone` |
+| Display settings | See [Display](#display) |
 
 The remaining catalog controls remain queryable disabled previews. Calling `Set`
 on a planned or unsupported control returns `Unavailable`; it never simulates a
@@ -115,6 +119,7 @@ Example theme response:
 
 `Changed("theme", json)` publishes successfully committed effective themes.
 `Changed("date-time", json)` publishes date/time readback, conflicts, and feature errors; `watch all` includes it.
+`Changed("display", json)` publishes display state after writes, confirmation expiry, reconciliation, and Hyprland output events; `watch all` includes it.
 `Changed("error", json)` reports a configuration/operation failure. The JSON error
 signal has a `message`. CLI `watch` prints `{"topic":"theme","value":{...}}`
 records, beginning with the current theme; `watch all` also prints error records.
@@ -274,6 +279,93 @@ Invalid input is `InvalidArgument`; system failures use `OperationFailed`.
 Startup authorization may wait for the system authentication dialog; the client deadline can expire
 first, so read actual state before retrying. The pkexec helper is bundled for
 both debug and release and needs a registered polkit authentication agent.
+
+## Display
+
+The Rust `display` crate drives Hyprland through `hyprctl` and needs a Lua
+configuration (`hyprctl status` reports `configProvider: lua`; `hl.monitor` is
+verified on Hyprland 0.57). Set values are JSON:
+
+```sh
+remya_settings get display
+remya_settings set display.12e2ed4d '{"output":"DP-1","value":"1.5","confirm_seconds":15}'
+remya_settings resolve display keep
+remya_settings set hypr-monitor-fields.position '{"output":"DP-1","value":"1920x0"}'
+remya_settings set display.5d419889 '{"output":"eDP-1","value":"40"}'
+remya_settings set display.15697afc detect
+```
+
+| Setting ID | `value` | Rule field |
+| --- | --- | --- |
+| `display.5d419889` Brightness | `0`–`100` (live, not saved) | Backlight or DDC/CI |
+| `display.af8e280d` Color preset | `auto`, `srgb`, `dcip3`, `dp3`, `adobe`, `wide`, `edid`, `hdr`, `hdredid` | `cm` |
+| `display.0ce92088` HDR | `true`, `false` (`hdr` or `srgb`) | `cm` |
+| `display.12e2ed4d` Scale | `auto` or a number; see `scale_options` | `scale` |
+| `display.44f6b9b0` Resolution | `WIDTHxHEIGHT` or `preferred` | `mode` |
+| `advanced-display.34d8396d` Refresh rate | Rate in Hz at the current resolution | `mode` |
+| `display.9843ad76` Orientation | `0`–`7` | `transform` |
+| `display.7cb5dc06` Multiple displays | `extend`, `disable`, `mirror:<output>` | `disabled`, `mirror` |
+| `hypr-monitor-fields.position` | `XxY` or `auto`, `auto-right`, ... | `position` |
+| `advanced-display.91720250` Bit depth | `8`, `10` | `bitdepth` |
+| `advanced-display.2d80c2c4` Variable refresh rate | empty (use `misc:vrr`), `0`–`3` | `vrr` |
+| `hypr-monitor-fields.sdr-eotf` | `default`, `gamma22`, `srgb` | `sdr_eotf` |
+| `hypr-monitor-fields.sdrbrightness`, `.sdrsaturation` | `0`–`5` | same name |
+| `hypr-monitor-fields.sdr-min-luminance`, `.sdr-max-luminance` | Nits | `sdr_min_luminance`, `sdr_max_luminance` |
+| `hypr-monitor-fields.min-luminance`, `.max-luminance`, `.max-avg-luminance` | Nits, `-1` for reported | same with underscores |
+| `hypr-monitor-fields.supports-hdr`, `.supports-wide-color` | `-1`, `0`, `1` | `supports_hdr`, `supports_wide_color` |
+| `hypr-monitor-fields.icc` | Absolute path of a file with an ICC signature, or empty | `icc` |
+| `hypr-monitor-fields.reserved-area` | `top right bottom left` | `reserved_area` |
+
+`hypr-monitor-fields.output`, `advanced-display.3b3ebb60`, `.761b7ac8`, `.3278abf9`,
+and `.device` are read-only. `Get(<setting-id>)` returns a `value` for each connected
+output. Page IDs `advanced-display` and `hypr-monitor-fields` were folded into the
+Display page and still open it; the GUI expands Advanced for `advanced-display`.
+
+**Applying.** A value is validated against the actual monitor, sent with `hyprctl
+eval 'hl.monitor({...})'`, and confirmed by polling readback for up to 5 seconds.
+A failed readback restores the previous value and reports the error. Hyprland merges
+named fields into the live rule, so only changed fields are sent. Fields with no
+readback (`vrr`, `sdr_eotf`, `icc`, `reserved_area`, `supports_*`, `min/max_luminance`)
+are verified by reading back `monitors.lua`. Clearing `icc` applies after the next
+configuration reload because `hl.monitor` rejects an empty path.
+
+**Confirmation.** With `confirm_seconds` (at most 60), changes to `mode`, `scale`,
+`transform`, `disabled`, `mirror`, `bitdepth`, `cm`, `supports_*`, and `icc` stay
+pending: `pending` reports them with `remaining_ms`, other writes are rejected, and
+nothing is written to disk. `resolve display keep` persists; `revert`, expiry, and
+service shutdown restore the previous value. The countdown runs in the service so it
+works if the GUI is on a blanked display or has exited. Without `confirm_seconds` a
+change persists immediately. The last display showing a desktop cannot be disabled or
+mirrored away, and a display being mirrored cannot be disabled.
+
+**Persistence.** `$XDG_CONFIG_HOME/hypr/monitors.lua` holds one `hl.monitor` rule per
+output, which `hyprland.lua` must load. Only the changed output's rule is rewritten;
+comments, other rules, disconnected outputs, and unknown fields are preserved. A
+`desc:` rule keeps its match. The first write leaves `monitors.lua.remya-backup`.
+Configuration reloads are not triggered because they would reset other runtime
+state. `write_blocked` explains why writes are refused: a non-Lua configuration, a
+file that does not load `monitors.lua`, or content beyond `hl.monitor` rules and
+comments. Such a file is never replaced.
+
+**Reconciliation.** `display.toml` saves each output's preferences. Symbolic values
+come from the rule (`scale = "auto"`, `mode = "preferred"`, automatic position), so a
+resolved 1.6 scale is not a conflict. Disconnected outputs keep their values and raise
+no conflict. A disabled output compares only `disabled` and `mirror`; a mirrored
+output skips its geometry. Empty geometry while an output wakes is a detection error.
+Hyprland `monitoradded`, `monitorremoved`, and `configreloaded` events trigger a check.
+
+**Brightness** is live hardware state and is excluded from reconciliation because
+keys and other tools change it. Built-in panels read `/sys/class/backlight` and write
+through logind `Session.SetBrightness`, without root; the value never goes below 1%
+so a panel cannot go fully dark. External displays use the optional `ddcutil` command
+through a separate process, which needs the `i2c-dev` module and I2C access. Other
+outputs report a `reason`. Brightness is read when the page opens, not while polling,
+because DDC/CI is slow.
+
+`cargo test -p remya_settings_display` covers parsing, validation, reconciliation,
+confirmation, and failures against a fake compositor. `test/display_test.dart` covers
+the controller and page. `python test/display_smoke.py` runs the real service against
+a nested Hyprland with headless outputs, a private bus, and isolated XDG roots.
 
 ## Initialization, conflicts, and scheduling
 

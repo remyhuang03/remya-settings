@@ -18,7 +18,7 @@
 - Put Rust crates under `lib/src/rust/<crate>/`. Group backend functionality by feature; create crates only for concrete responsibility or dependency boundaries.
 - `lib/src/rust/core/` is the initial empty backend crate. Do not turn it into a catch-all for unrelated features.
 - Extract shared code only when multiple features need it; avoid speculative layers and empty feature scaffolding.
-- Implement backend logic and complex or performance-critical computation in Rust. The appearance feature is connected through `flutter_rust_bridge` 2.13.0. Keep system appearance code in `lib/src/rust/appearance/`; do not move it into Dart or the empty core crate.
+- Implement backend logic and complex or performance-critical computation in Rust. The appearance feature is connected through `flutter_rust_bridge` 2.13.0. Keep system appearance code in `lib/src/rust/appearance/` and Hyprland display code in `lib/src/rust/display/`; do not move them into Dart or the empty core crate.
 - Keep generated bridge code separate from handwritten code and regenerate it instead of editing it manually. Use `flutter_rust_bridge.yaml`, the matching 2.13.0 generator, and FVM formatting after generation. Linux CMake builds and bundles the Rust shared library.
 
 ## Public Interfaces and Dependent Applications
@@ -31,6 +31,7 @@
 - Debug dependent applications may pass the Settings debug executable to the public opener; keep release launch on the D-Bus interface and document missing-build guidance.
 - `packages/remya_settings_client` is the public integration boundary for dependent apps. Keep its pure Dart contract usable without Flutter and its theme adapter free of Settings UI or backend dependencies. Preserve versioned wire contracts and stable setting IDs; use a new interface version for incompatible changes.
 - Keep debug application preferences in repository config/config.local.toml regardless of launch cwd. Profile/release preferences use XDG_CONFIG_HOME/remya/settings/config.toml with the standard HOME fallback. Keep installation bundles and desktop/service metadata under XDG_DATA_HOME and commands under HOME/.local/bin. Ignore relative XDG values.
+- Support Hyprland's Lua configuration only for display persistence: write only `hl.monitor` rules in `$XDG_CONFIG_HOME/hypr/monitors.lua`, and refuse to edit a file with content the strict reader cannot prove safe. Risky display changes need the service-owned keep-or-revert countdown, and persist only after confirmation.
 - Do not automatically migrate or remove prior installations or user configuration. Use `tool/install.py`; refuse to overwrite unrelated commands or update a running installed bundle.
 - Keep `docs/public-api.md` and `docs/xdg-layout.md` synchronized with implementation. Run `python test/interface_smoke.py` against both release bundles for interface or integration changes; use isolated XDG roots and GSettings state for system-write verification.
 
@@ -54,6 +55,7 @@
 
 ## Coding & UI
 - Keep setting labels, descriptions, status text, and value readouts in the left information column; reserve the right column for interactive controls. On narrow windows, keep information left-aligned and controls trailing-aligned below it.
+- Put a page's advanced options in a default-collapsed `Advanced` section of that same page, not in a separate second-level page or menu. Keep their stable control IDs; when an existing advanced page is folded in, keep its old page ID opening the section.
 - Apply setting changes immediately when the setting supports immediate application and doing so is appropriate; do not add an unnecessary Apply button.
 - For settings that require a system restart, show a global "Reboot to apply" status bar with Restart now and Later actions, and a local explanation beside the setting. State application restart or sign-in requirements accurately when a full reboot is unnecessary.
 - Use dot shorthand wherever supported and the expected type is unambiguous. Keep explicit types when shorthand cannot resolve correctly.
