@@ -4,19 +4,52 @@
 
 <h1 align="center">Remy'a Settings</h1>
 
-A global system settings application for **Hyprland on Linux**, using **Flutter**, **Material Design 3 Expressive**, and a **Rust workspace**. Layout and information architecture reference Windows 11 Settings.
+A global system settings application for **Hyprland on Linux**, built with **Flutter**, **Material Design 3 Expressive**, and a modular **Rust workspace**. Layout and information architecture reference Windows 11 Settings.
 
-## Current milestone: system appearance and host previews
+## Implemented Features & Integrations
 
-Browse Home, 12 categories, 258 detail pages, and About; search settings, follow related pages, and inspect third-party licenses. Date/time controls include automatic synchronization, persistent time servers with Default, time zone GMT offsets, manual time, and system LC_TIME. Display controls arrange real Hyprland outputs and set brightness, scale, resolution, refresh rate, orientation, mirroring, color, and HDR, with advanced options in a collapsed section; see [Display](docs/public-api.md#display). The catalog contains 2,105 controls; availability is tracked per setting in the catalog and implementation checklist. Appearance reads installed GNOME/GTK preferences and changes them only when explicitly selected; documented Qt Quick defaults are saved through fish and Hyprland Lua configuration. Other device/account values are examples, never detected host state, and preview controls do not persist values.
+Settings combines a Windows 11-inspired hierarchy with native Linux and Hyprland backend integrations. Real device and system settings are implemented in Rust and reconciled with the underlying host:
 
-The inventory covers the 204 unique names in Microsoft's public URI tables and 343 hierarchy entries (257 leaf controls) in its Windows 11 backup catalog. This is an application-owned UI schema, not an export of Windows' unpublished internal schema. See [research, sources, coverage, and limitations](docs/windows-settings-research.md).
+- **Personalization (Wallpaper, Accent, Fonts, & Themes)**:
+  - **Wallpaper**: Image backgrounds managed via `hyprpaper` IPC and video wallpapers managed through a dedicated `mpvpaper` systemd unit. Supports multi-monitor setups (per-display or grouped displays) and copies selected media into application storage.
+  - **Accent Color**: Dynamic Material palette extraction from the active wallpaper or manual selection using a color picker with presets.
+  - **Fonts**: Fontconfig-backed font browser with live previews, style and format inspection, font file installation (`.ttf`, `.otf`), and user font uninstallation.
+  - **System Appearance**: Synchronized Light/Dark theme switching for GNOME/GTK targets and official Qt Quick environment defaults persisted through fish and Hyprland Lua configuration.
+- **Display**:
+  - Live Hyprland monitor output detection, arrangement, resolution, refresh rate, scaling, rotation, mirroring, HDR, and color profiles.
+  - Hardware backlight brightness control via `logind` and external monitors via `ddcutil`.
+  - Atomic configuration persistence to `$XDG_CONFIG_HOME/hypr/monitors.lua` with strict Lua validation and a keep-or-revert countdown safety timer.
+- **System Information & Hostname**:
+  - Real-time specifications for OS distribution, Linux kernel, Hyprland version, CPU, GPU, memory, swap, disk usage, and uptime.
+  - Hostname inspection and editing with polkit authorization via `systemd-hostnamed`.
+- **Date & Time**:
+  - Clock synchronization via `systemd-timedated` with automatic NTP toggle.
+  - Manual date/time setting and system timezone selection from `ListTimezones`.
+  - Calendar date formatting adhering to system `LC_TIME`.
+- **System Configuration Reconciliation**:
+  - Reads and validates actual system state on first run without imposing arbitrary defaults.
+  - Compares saved preferences with fresh system readbacks at startup and on page navigation, alerting users to conflicts with explicit options to adopt system configuration or reapply saved settings.
 
-See the [item-by-item implementation progress checklist](docs/settings-implementation-progress.md) for every setting's stable ID, implementation status, and space for tracking and verification notes.
+## Settings Catalog & Coverage
 
-The Hyprland extension adds 90 pages and 784 controls based on official configuration documentation and existing settings tools; the current Windows-reference pages and controls remain covered. See [Hyprland sources, classifications, and version limits](docs/hyprland-settings-research.md).
+Browse Home, 12 categories, 258 detail pages, and About; search settings locally, follow related pages, and inspect third-party licenses.
 
-## Layout
+- **Current Catalog**: 12 categories, 258 pages, 1,979 controls (68 available with real system backends, 1,808 planned previews, 103 unsupported).
+- **Windows 11 Reference**: Covers the 204 unique names in Microsoft's public URI tables and 343 hierarchy entries (257 leaf controls) in its Windows 11 backup catalog. See [research, sources, coverage, and limitations](docs/windows-settings-research.md).
+- **Hyprland Extensions**: Adds 90 pages and 784 controls based on official configuration documentation and existing ecosystem tools. See [Hyprland sources, classifications, and version limits](docs/hyprland-settings-research.md).
+- **Availability & Tracking**: Every setting declares availability (`available`, `planned`, or `unsupported`). Unavailable controls remain disabled while allowing navigation to preview pages; contextually inapplicable options are hidden automatically. See the [item-by-item implementation progress checklist](docs/settings-implementation-progress.md).
+
+## Architecture & Resident Service
+
+Settings uses a client-service architecture to keep memory footprint minimal and provide full operation parity across GUI, CLI, and D-Bus interfaces:
+
+- **Resident User Service (`remya_settings`)**: An ordinary-user Rust service that owns production configuration, reconciliation, CLI dispatch, and the session D-Bus interface (`top.remya.settings.Settings1`).
+- **Disposable Flutter GUI**: The Flutter desktop application connects as a disposable client. Closing the window immediately terminates the Flutter process to release engine memory, while the resident service continues running for dependent clients.
+- **GPU Optimization**: The native runner prefers the integrated GPU for the Flutter settings window to avoid discrete GPU (e.g. NVIDIA) driver memory overhead.
+- **Privilege Separation**: Elevated operations (such as hostname changes) execute through a dedicated helper process authenticated via polkit (`polkit-kde-agent`) communicating over private bounded pipes.
+- **Dependent Applications**: Remya Bar (`top.remya.bar`) integrates via `packages/remya_settings_client` (pure Dart, zero Flutter/backend dependencies) for synchronized themes and settings observation over D-Bus. See [public API and process boundaries](docs/public-api.md).
+
+## Repository Layout
 
 ```text
 Cargo.toml                Root Rust workspace
@@ -24,27 +57,40 @@ lib/
   main.dart               Flutter startup
   app.dart                Application composition and theme
   features/
-    appearance/           App preferences, atomic TOML storage, theme state
-    settings/             Catalog model, navigation, search, page renderer
     about/                Product information and licenses
+    appearance/           App preferences, atomic TOML storage, theme state
+    background/           Wallpaper management (hyprpaper / mpvpaper) and accent color
+    date_time/            Date, time, NTP, and time zone management
+    display/              Hyprland display outputs, layout, and brightness
+    fonts/                Font browsing, preview, installation, and removal
+    integration/          Resident service controllers and status
+    settings/             Catalog model, navigation, search, page renderer
+    system_information/   Hardware/OS specifications and hostname management
   src/rust/
-    core/                 Empty future backend crate
     appearance/           GNOME/GTK settings and Qt toolkit environments
-    appearance_bridge/    Generated Flutter/Rust bridge
+    appearance_bridge/    Generated Flutter/Rust bridge for appearance
+    background/           Hyprpaper IPC, mpvpaper unit, media copying, accent extraction
+    core/                 Backend types and crate boundaries
+    date_time/            systemd-timedated client and calendar helpers
+    date_time_bridge/     Generated Flutter/Rust bridge for date/time
     display/              Hyprland monitor rules, monitors.lua, and brightness
+    fonts/                Fontconfig queries, font installation, and metadata
+    service/              Resident session D-Bus service and privileged helper
+    system_information/   Hardware/OS inspection and systemd-hostnamed client
+packages/
+  remya_settings_client/  Pure Dart D-Bus client library for Remya Bar and dependent apps
 assets/
-  icons/                  Owner-provided SVG and rendered PNG
+  icons/                  Application icon (SVG and rendered PNG)
   settings/               UI catalog and JSON Schema
-linux/                    Native runner and packaging templates
-docs/                     Research and coverage snapshot
-test/                     Catalog, interaction, and layout checks
+linux/                    Native runner, GPU preference, and packaging templates
+docs/                     Architecture, research snapshots, public API, and progress tracking
+test/                     Catalog, unit tests, and CLI/D-Bus interface smoke tests
+tool/                     Installer, CLI generator, and license notice tools
 ```
-
-Flutter stays at the repository root. Rust crates live under `lib/src/rust/` and are registered in the root workspace. The appearance feature uses `flutter_rust_bridge` 2.13.0; Linux CMake builds its shared library. The ordinary-user Rust service owns configuration and API dispatch; Flutter connects as a disposable GUI client. Closing the window releases the Flutter process while the small user service and its authorized helper stay resident. See [configuration architecture and supported settings](docs/app-preferences.md) and [the example configuration](config/config.example.toml).
 
 ## Development
 
-Install FVM, Rust via rustup, and Linux Flutter build prerequisites (Clang, CMake, Ninja, pkg-config, and GTK 3 development libraries, GLib/GIO 2.84+ headers, and GSettings tools). Current Arch packages are the target; GTK 4 appearance requires GTK 4.20+. fish and luac validate their respective environment configuration targets. From the repository root:
+Prerequisites: FVM, Rust via rustup, and Linux Flutter build prerequisites (Clang, CMake, Ninja, pkg-config, GTK 3 development libraries, GLib/GIO 2.84+ headers, and GSettings tools). Current Arch Linux packages are the target; GTK 4 appearance requires GTK 4.20+. fish and luac validate their respective configuration targets.
 
 ```bash
 fvm install
@@ -52,7 +98,11 @@ fvm flutter pub get
 fvm flutter run -d linux
 ```
 
-FVM pins Flutter to `3.47.8`; `rust-toolchain.toml` selects stable Rust with rustfmt and Clippy. Stable Rust follows installed toolchain updates. See `AGENTS.md` for project rules.
+FVM pins Flutter to `3.47.8`; `rust-toolchain.toml` selects stable Rust with rustfmt and Clippy. See `AGENTS.md` for project rules and guidelines.
+
+### Code Quality & Verification
+
+Run all checks before presenting changes:
 
 ```bash
 fvm dart format --output=none --set-exit-if-changed lib test
@@ -65,51 +115,29 @@ cargo test --workspace
 git diff --check
 ```
 
-After Rust dependency changes, run `python tool/generate_rust_notices.py` to refresh bundled third-party notices. GLib/GIO use dynamic system linking; generated notices are shown in the license view.
+After updating Rust dependencies, run `python tool/generate_rust_notices.py` to refresh bundled third-party notices.
 
-## Install in the user application menu
+## Installation
 
-The application ID is `top.remya.settings`; its executable remains `remya_settings`.
-Build and install into XDG_DATA_HOME with a user command in `~/.local/bin`:
+The application ID is `top.remya.settings`; its executable is `remya_settings`.
+Build and install into `XDG_DATA_HOME` with a user command in `~/.local/bin`:
 
 ```bash
 fvm flutter build linux --release
 python tool/install.py
 ```
 
-Launch **Remy'a Settings** from the menu, run `remya_settings`, or use
-`gtk-launch top.remya.settings`. `remya_settings --help` lists the CLI. The D-Bus
-service starts on demand without a window and stays available after the UI is
-closed; run `remya_settings quit` before updating. The installer preserves config
-and refuses to replace unrelated commands or a running bundle. See
-[the XDG directory layout](docs/xdg-layout.md) and
-[the complete CLI and D-Bus API](docs/public-api.md).
+- Launch **Remy'a Settings** from the application menu, run `remya_settings`, or use `gtk-launch top.remya.settings`.
+- CLI commands: `remya_settings --help` lists available commands. Implemented features provide full CLI parity (e.g. `remya_settings get theme`, `remya_settings get display`, `remya_settings get background`, `remya_settings get hostname`).
+- To exit the resident background service before updates, run `remya_settings quit`.
+- See [XDG directory layout](docs/xdg-layout.md) and [public API documentation](docs/public-api.md).
 
-Remya Bar is a separate dependent application. Its public integration boundary is
-`packages/remya_settings_client`: versioned contracts, D-Bus transport, shared MD3E
-theme, and observable theme state. GUI, CLI, and D-Bus operations share the same
-resident Rust service and its feature backends.
+## Usage & Keyboard Shortcuts
 
-Keyboard shortcuts: Ctrl+F or Ctrl+E focuses search, Escape clears search, and Alt+Left navigates back. The sidebar stays visible; the native window minimum size is 360 × 600 logical pixels, with an initial requested size of 1,251 × 720. The compositor controls placement and may override size hints when tiling. Themes → Material Design controls the app palette and system Light/Dark mode. Environment defaults affect new fish processes and the next Hyprland session; see the configuration document for supported targets and override limits.
+- **Search**: `Ctrl+F` or `Ctrl+E` focuses search; `Escape` clears search.
+- **Navigation**: `Alt+Left` navigates back through history.
+- **Window Geometry**: Minimum window size is 360 × 600 logical pixels; initial requested size is 1,251 × 720. Compositor tiling rules may override requested geometry.
 
-Licensed under [PolyForm Noncommercial License 1.0.0](LICENSE), matching `image_resizer`.
+## License
 
-
-Date/time settings use Rust and systemd-timedated's system D-Bus API for manual
-time and finite-list time zone selection. See [the API](docs/public-api.md) for
-input formats, authorization, first-use system adoption, conflict resolution,
-and the concurrent check scheduler. Other date/time controls remain previews.
-
-## Resident Settings
-
-The ordinary-user Rust service owns the public D-Bus interface, configuration,
-and system readback. The Flutter window is a separate client and exits completely
-on close. `remya_settings close` closes only the window; `remya_settings quit`
-stops Settings and its authorized helper. The first explicit GUI launch requests
-one system authorization using `polkit-kde-agent`; Bar's read-only activation does
-not. Reopening the GUI reuses a successful authorization while Settings remains
-resident. See [the public API and process boundaries](docs/public-api.md).
-
-`python test/resident_service_smoke.py` measures PSS and checks three real GUI
-close/reopen cycles on a private bus. `python test/interface_smoke.py` checks the
-installed CLI/D-Bus contract and three-output Bar theme propagation.
+Licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE).
