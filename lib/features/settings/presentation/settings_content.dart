@@ -2,6 +2,8 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../date_time/application/date_time_controller.dart';
 import '../../date_time/presentation/date_time_settings.dart';
+import '../../display/application/display_controller.dart';
+import '../../display/presentation/display_settings.dart';
 import '../domain/settings_catalog.dart';
 import 'settings_preview.dart';
 import 'settings_widgets.dart';
@@ -166,10 +168,19 @@ class SettingsDetail extends StatelessWidget {
     required this.catalog,
     required this.page,
     required this.onPage,
+    this.expandAdvanced = false,
   });
   final SettingsCatalog catalog;
   final SettingsPageSpec page;
   final ValueChanged<SettingsPageSpec> onPage;
+
+  /// Opens collapsed advanced options when the Advanced display page was requested.
+  final bool expandAdvanced;
+
+  static const _pageRows = {
+    'display.e32be03e': 'night-light',
+    'display.2f32a8c2': 'graphics',
+  };
 
   @override
   Widget build(BuildContext context) => Column(
@@ -189,9 +200,18 @@ class SettingsDetail extends StatelessWidget {
       Text(page.reason, style: Theme.of(context).textTheme.bodySmall),
       if (page.preview != 'none') ...[
         const SizedBox(height: 24),
-        SettingsPreview(page.preview),
+        if (page.id == 'display' && DisplayScope.maybeOf(context) != null)
+          DisplayArrangement(controller: DisplayScope.maybeOf(context)!)
+        else
+          SettingsPreview(page.preview),
       ],
-      for (final section in page.sections) _SectionCard(section),
+      for (final section in page.sections)
+        _SectionCard(
+          section,
+          expanded: expandAdvanced && section.title == 'Advanced',
+          onPageRow: (id) => onPage(catalog.page(_pageRows[id]!)),
+          pageRows: _pageRows.keys.toSet(),
+        ),
       if (page.children.isNotEmpty) ...[
         Padding(
           padding: const .only(top: 28, bottom: 12),
@@ -224,8 +244,16 @@ class SettingsDetail extends StatelessWidget {
 }
 
 class _SectionCard extends StatelessWidget {
-  const _SectionCard(this.section);
+  const _SectionCard(
+    this.section, {
+    required this.expanded,
+    required this.onPageRow,
+    required this.pageRows,
+  });
   final SettingsSection section;
+  final bool expanded;
+  final ValueChanged<String> onPageRow;
+  final Set<String> pageRows;
 
   @override
   Widget build(BuildContext context) {
@@ -245,7 +273,12 @@ class _SectionCard extends StatelessWidget {
       children: [
         for (var i = 0; i < visible.length; i++) ...[
           if (i != 0) const Divider(height: 1, indent: 20, endIndent: 20),
-          SettingControlTile(visible[i]),
+          SettingControlTile(
+            visible[i],
+            onOpenPage: pageRows.contains(visible[i].id)
+                ? () => onPageRow(visible[i].id)
+                : null,
+          ),
         ],
       ],
     );
@@ -256,11 +289,19 @@ class _SectionCard extends StatelessWidget {
           padding: .zero,
           child: ExpansionTile(
             key: PageStorageKey('reference-${section.controls.first.id}'),
+            initiallyExpanded: expanded,
             title: Text(section.title),
-            subtitle: const Text(
-              'Additional reference options · Not implemented',
+            subtitle: Text(
+              section.description ??
+                  'Additional reference options · Not implemented',
             ),
-            children: [controls],
+            // The tile stores its expansion here; nested scrollables need their own slot.
+            children: [
+              KeyedSubtree(
+                key: PageStorageKey('body-${section.controls.first.id}'),
+                child: controls,
+              ),
+            ],
           ),
         ),
       );

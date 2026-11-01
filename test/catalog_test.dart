@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:remya_settings/features/display/application/display_controller.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 
 Map<String, dynamic> readCatalog() =>
@@ -66,6 +67,7 @@ void main() {
               'date-time.098d06ec',
               'date-time.7e33a213',
               'date-time.format',
+              ...displaySettingIds,
             }.contains(control.id),
           );
           expect(control.reason, isNotEmpty);

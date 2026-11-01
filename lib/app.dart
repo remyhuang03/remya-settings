@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import 'features/date_time/application/date_time_controller.dart';
+import 'features/display/application/display_controller.dart';
 import 'features/integration/settings_status.dart';
 import 'features/integration/settings_scheduler.dart';
 import 'features/appearance/application/app_preferences_controller.dart';
@@ -17,10 +18,12 @@ class RemyaSettingsApp extends StatefulWidget {
     this.preferences,
     this.navigation,
     this.dateTime,
+    this.display,
     this.scheduler,
   });
   final AppPreferencesController? preferences;
   final DateTimeController? dateTime;
+  final DisplayController? display;
   final SettingsScheduler? scheduler;
   final ValueNotifier<String?>? navigation;
 
@@ -43,6 +46,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     widget.scheduler?.dispose();
     _preferences.dispose();
     widget.dateTime?.dispose();
+    widget.display?.dispose();
     super.dispose();
   }
 
@@ -95,6 +99,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
                   navigatorKey: _navigatorKey,
                   preferences: _preferences,
                   dateTime: widget.dateTime,
+                  display: widget.display,
                 ),
               );
             },
@@ -102,8 +107,11 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
         ),
       ),
     );
-    return widget.dateTime == null
+    final withDisplay = widget.display == null
         ? app
-        : DateTimeScope(controller: widget.dateTime!, child: app);
+        : DisplayScope(controller: widget.display!, child: app);
+    return widget.dateTime == null
+        ? withDisplay
+        : DateTimeScope(controller: widget.dateTime!, child: withDisplay);
   }
 }

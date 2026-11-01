@@ -17,15 +17,35 @@ void main() {
       catalog.categories.map((c) => c.id),
       containsAll(coverage['baselineCategories'] as List),
     );
+    final retired = coverage['retired'] as Map<String, dynamic>;
+    final retiredPages = (retired['pages'] as List).cast<String>().toSet();
+    final retiredControls = (retired['controls'] as List)
+        .cast<String>()
+        .toSet();
     expect(
       catalog.pages.map((p) => p.id),
-      containsAll(coverage['baselinePages'] as List),
+      containsAll(
+        (coverage['baselinePages'] as List).where(
+          (id) => !retiredPages.contains(id),
+        ),
+      ),
     );
+    for (final id in retiredPages) {
+      expect(catalog.page(id).id, 'display', reason: 'retired pages stay open');
+    }
     final controls = catalog.pages
         .expand((p) => p.controls)
         .map((c) => c.id)
         .toSet();
-    expect(controls, containsAll(coverage['baselineControls'] as List));
+    expect(
+      controls,
+      containsAll(
+        (coverage['baselineControls'] as List).where(
+          (id) => !retiredControls.contains(id),
+        ),
+      ),
+    );
+    expect(controls.intersection(retiredControls), isEmpty);
     expect(catalog.page('hypr-opengl').category, 'system');
     expect(catalog.page('hypr-render').category, 'system');
   });
@@ -42,8 +62,8 @@ void main() {
     };
     final evidence = (coverage['controls'] as List)
         .cast<Map<String, dynamic>>();
-    expect(addedPages.length, 106);
-    expect(evidence.length, 859);
+    expect(addedPages.length, 105);
+    expect(evidence.length, 837);
     expect(
       evidence.map((e) => e['control']).toSet(),
       addedControls.keys.toSet(),

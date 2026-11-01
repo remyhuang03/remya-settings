@@ -5,6 +5,8 @@ import '../../appearance/domain/app_preferences.dart';
 import '../domain/settings_catalog.dart';
 import '../../date_time/application/date_time_controller.dart';
 import '../../date_time/presentation/date_time_settings.dart';
+import '../../display/application/display_controller.dart';
+import '../../display/presentation/display_settings.dart';
 
 IconData categoryIcon(String icon) => switch (icon) {
   'computer' => Icons.computer_outlined,
@@ -34,7 +36,7 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'voice-access' => Icons.record_voice_over_outlined,
       final id when id.startsWith('regionlanguage-') =>
         Icons.keyboard_alt_outlined,
-      'advanced-display' || 'projection' => Icons.desktop_windows_outlined,
+      'projection' => Icons.desktop_windows_outlined,
       'night-light' => Icons.nightlight_outlined,
       'graphics' || 'hypr-multi-gpu' => Icons.memory_rounded,
       'volume-mixer' => Icons.tune_rounded,
@@ -139,17 +141,72 @@ class SettingsSurface extends StatelessWidget {
   );
 }
 
+/// Information on the left, the interactive control on the right; stacked when narrow.
+class SettingRow extends StatelessWidget {
+  const SettingRow({
+    super.key,
+    required this.id,
+    required this.label,
+    this.control,
+  });
+  final String id;
+  final Widget label;
+  final Widget? control;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    key: ValueKey(id),
+    padding: const .symmetric(horizontal: 20, vertical: 18),
+    child: LayoutBuilder(
+      builder: (context, constraints) {
+        final control = this.control;
+        if (control == null) {
+          return Align(alignment: .centerLeft, child: label);
+        }
+        if (constraints.maxWidth < 560) {
+          return Column(
+            crossAxisAlignment: .start,
+            children: [
+              label,
+              const SizedBox(height: 14),
+              Align(alignment: .centerRight, child: control),
+            ],
+          );
+        }
+        return Row(
+          children: [
+            Expanded(child: label),
+            const SizedBox(width: 24),
+            SizedBox(
+              width: 232,
+              child: Align(alignment: .centerRight, child: control),
+            ),
+          ],
+        );
+      },
+    ),
+  );
+}
+
 class SettingControlTile extends StatelessWidget {
-  const SettingControlTile(this.setting, {super.key});
+  const SettingControlTile(this.setting, {super.key, this.onOpenPage});
   final SettingSpec setting;
+
+  /// Opens a related preview page from an otherwise unavailable row.
+  final VoidCallback? onOpenPage;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      key: ValueKey(setting.id),
-      padding: const .symmetric(horizontal: 20, vertical: 18),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
+    if (displaySettingIds.contains(setting.id)) {
+      final controller = DisplayScope.maybeOf(context);
+      if (controller != null) {
+        return DisplaySettingRow(setting: setting, controller: controller);
+      }
+    }
+    return SettingRow(
+      id: setting.id,
+      label: Builder(
+        builder: (context) {
           final clock = DateTimeScope.maybeOf(context);
           final state = clock?.state;
           final detailStyle = Theme.of(context).textTheme.bodySmall;
@@ -185,38 +242,26 @@ class SettingControlTile extends StatelessWidget {
                 ),
             ],
           );
-          if (setting.kind == .info) return label;
-          final control = Semantics(
-            label:
-                '${setting.title}, ${setting.availability.label}. ${setting.reason}',
-            enabled: setting.availability == .available ? null : false,
-            child: Tooltip(
-              message: setting.reason,
-              child: _PreviewControl(setting),
-            ),
-          );
-          if (constraints.maxWidth < 560) {
-            return Column(
-              crossAxisAlignment: .start,
-              children: [
-                label,
-                const SizedBox(height: 14),
-                Align(alignment: .centerRight, child: control),
-              ],
-            );
-          }
-          return Row(
-            children: [
-              Expanded(child: label),
-              const SizedBox(width: 24),
-              SizedBox(
-                width: 232,
-                child: Align(alignment: .centerRight, child: control),
-              ),
-            ],
-          );
+          return label;
         },
       ),
+      control: setting.kind == .info
+          ? null
+          : Semantics(
+              label:
+                  '${setting.title}, ${setting.availability.label}. ${setting.reason}',
+              enabled: setting.availability == .available ? null : false,
+              child: Tooltip(
+                message: setting.reason,
+                child: onOpenPage == null
+                    ? _PreviewControl(setting)
+                    : OutlinedButton(
+                        key: ValueKey('open-page-${setting.id}'),
+                        onPressed: onOpenPage,
+                        child: Text(setting.value as String),
+                      ),
+              ),
+            ),
     );
   }
 }

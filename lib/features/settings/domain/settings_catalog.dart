@@ -62,7 +62,14 @@ class SettingsCatalog {
 
   SettingsCategory category(String id) =>
       categories.firstWhere((c) => c.id == id);
-  SettingsPageSpec page(String id) => pages.firstWhere((p) => p.id == id);
+
+  /// Page IDs retired when their controls moved; they keep opening the new home.
+  static const pageAliases = {
+    'advanced-display': 'display',
+    'hypr-monitor-fields': 'display',
+  };
+  SettingsPageSpec page(String id) =>
+      pages.firstWhere((p) => p.id == (pageAliases[id] ?? id));
   List<SettingsPageSpec> inCategory(String id) =>
       pages.where((p) => p.category == id).toList();
   int get controlCount => pages.fold(0, (sum, p) => sum + p.controls.length);
@@ -153,17 +160,20 @@ class SettingsSection {
     required this.title,
     required this.controls,
     this.collapsed = false,
+    this.description,
   });
 
   factory SettingsSection.fromJson(Map<String, dynamic> json) =>
       SettingsSection(
         title: _string(json, 'title'),
         collapsed: json['collapsed'] as bool? ?? false,
+        description: json['description'] as String?,
         controls: _objects(json, 'controls').map(SettingSpec.fromJson).toList(),
       );
 
   final String title;
   final bool collapsed;
+  final String? description;
   final List<SettingSpec> controls;
 }
 

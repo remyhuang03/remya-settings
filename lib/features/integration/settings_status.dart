@@ -2,21 +2,25 @@ import 'package:material_ui/material_ui.dart';
 
 import '../appearance/application/app_preferences_controller.dart';
 import '../date_time/application/date_time_controller.dart';
+import '../display/application/display_controller.dart';
+import '../display/presentation/display_settings.dart';
 
 class SettingsStatus extends StatelessWidget {
   const SettingsStatus({
     super.key,
     required this.preferences,
     this.dateTime,
+    this.display,
     this.navigatorKey,
   });
   final AppPreferencesController preferences;
   final DateTimeController? dateTime;
+  final DisplayController? display;
   final GlobalKey<NavigatorState>? navigatorKey;
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: Listenable.merge([preferences, dateTime]),
+    listenable: Listenable.merge([preferences, dateTime, display]),
     builder: (context, _) => ConstrainedBox(
       constraints: BoxConstraints(
         maxHeight: MediaQuery.sizeOf(context).height * 0.5,
@@ -58,6 +62,29 @@ class SettingsStatus extends StatelessWidget {
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
                   title: 'Date and time: ${controller.errorMessage}',
+                  busy: controller.isBusy,
+                  useSystem: controller.retry,
+                ),
+            ],
+            if (display case final controller?) ...[
+              DisplayConfirmation(
+                key: const ValueKey('display-confirmation'),
+                controller: controller,
+                navigatorKey: navigatorKey,
+              ),
+              if (controller.hasConflict)
+                _ConflictWarning(
+                  navigatorKey: navigatorKey,
+                  title:
+                      'Display configuration differs from saved Settings.\n${controller.conflictSummary}',
+                  busy: controller.isBusy,
+                  useSystem: controller.useSystemConfiguration,
+                  useSettings: controller.applySavedConfiguration,
+                ),
+              if (controller.errorMessage case final message?)
+                _ConflictWarning(
+                  navigatorKey: navigatorKey,
+                  title: 'Display: $message',
                   busy: controller.isBusy,
                   useSystem: controller.retry,
                 ),

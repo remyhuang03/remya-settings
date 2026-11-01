@@ -10,6 +10,7 @@ import '../appearance/data/system_appearance_backend.dart';
 import '../appearance/domain/app_preferences.dart';
 import '../date_time/application/date_time_controller.dart';
 import '../date_time/data/date_time_backend.dart';
+import '../display/data/display_backend.dart';
 
 class ServiceAppearanceBackend implements SystemAppearanceBackend {
   ServiceAppearanceBackend(this.client);
@@ -37,6 +38,22 @@ class ServiceAppearanceBackend implements SystemAppearanceBackend {
     await client.call('Set', [materialThemeModeSettingId, mode.name]);
     return read();
   }
+}
+
+class ServiceDisplayBackend implements DisplayBackend {
+  ServiceDisplayBackend(this.client);
+  final SettingsClient client;
+  @override
+  Future<Map<String, dynamic>> read() => client.call('Get', ['display']);
+  @override
+  Future<Map<String, dynamic>> brightness() =>
+      client.call('Get', ['display-brightness']);
+  @override
+  Future<Map<String, dynamic>> set(String id, String value) =>
+      client.call('Set', [id, value]);
+  @override
+  Future<Map<String, dynamic>> resolve(String source) =>
+      client.call('Resolve', ['display', source]);
 }
 
 class ServicePreferencesController extends AppPreferencesController {

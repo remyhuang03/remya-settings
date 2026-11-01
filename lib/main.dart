@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'features/display/application/display_controller.dart';
 import 'features/integration/settings_scheduler.dart';
 import 'app.dart';
 import 'features/integration/service_controllers.dart';
@@ -32,12 +33,18 @@ Future<void> main() async {
   final client = SettingsClient();
   final preferences = ServicePreferencesController(client);
   final dateTime = ServiceDateTimeController(client);
+  final display = DisplayController(ServiceDisplayBackend(client));
   final navigation = ValueNotifier<String?>(null);
-  final scheduler = SettingsScheduler([preferences.reload, dateTime.reload]);
+  final scheduler = SettingsScheduler([
+    preferences.reload,
+    dateTime.reload,
+    display.reload,
+  ]);
   runApp(
     RemyaSettingsApp(
       preferences: preferences,
       dateTime: dateTime,
+      display: display,
       navigation: navigation,
       scheduler: scheduler,
     ),
@@ -58,6 +65,8 @@ Future<void> main() async {
         preferences.reload();
       case 'date-time':
         dateTime.reload();
+      case 'display':
+        display.reload();
     }
   }); // The native runner forwards the initial page separately from VM arguments.
   final page = await const MethodChannel('top.remya.paths')
