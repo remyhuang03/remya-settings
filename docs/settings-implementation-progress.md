@@ -6,15 +6,17 @@
 
 清单覆盖现有目录中的全部设置项，包括主要中文控件和保留原名的 Windows 参考细项；相同概念可能存在多个展示位置。下述数量统计的是控件条目，不是去重后的独立后端功能数量。公开资料与内部 schema 的边界见 [调研说明](windows-settings-research.md)。
 
-Hyprland 内容包含 106 个页面、859 项设置及 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
+Hyprland 内容包含 105 个页面、837 项设置及 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
 
 ## 当前概况
 
-- 设置分类：12 个；详情页面：294 个；设置条目：2,113 项。
-- 已实现：8 项；未实现：1,972 项；不适用：133 项。
+- 设置分类：12 个；详情页面：292 个；设置条目：2,105 项。
+- 已实现：37 项；未实现：1,931 项；不适用：137 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。
+
+- 显示通过 Rust 经 `hyprctl` 读取并实时应用 Hyprland 显示规则，确认后写入 `monitors.lua`，并按系统配置同步规则处理冲突；亮度为实时值（logind 背光 / `ddcutil`），不保存。
 
 ### 已完成的界面能力（不计入系统功能进度）
 
@@ -41,7 +43,7 @@ Hyprland 内容包含 106 个页面、859 项设置及 2 个分类。来源与�
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 53 | 355 | 0 | 335 | 20 |
+| [系统](#category-system) | 51 | 347 | 29 | 294 | 24 |
 | [蓝牙和设备](#category-devices) | 25 | 224 | 0 | 220 | 4 |
 | [网络和 Internet](#category-network) | 15 | 90 | 0 | 88 | 2 |
 | [个性化](#category-personalization) | 45 | 282 | 2 | 270 | 10 |
@@ -62,76 +64,89 @@ Hyprland 内容包含 106 个页面、859 项设置及 2 个分类。来源与�
 
 ### Display — `display`
 
-亮度、缩放、显示器排列与图形
+排列、亮度、颜色、缩放、分辨率与刷新率
 
-页面状态：**未实现**；条目：20；已实现 0 / 未实现 20 / 不适用 0。
+页面状态：**未实现**（部分完成）；条目：40；已实现 29 / 未实现 7 / 不适用 4。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：显示设置通过 Hyprland 实现；夜间模式与 Graphics 页面尚未实现。
 
-Windows 参考入口：`ms-settings:display`、`ms-settings:screenrotation`。
+Windows 参考入口：`ms-settings:display`、`ms-settings:screenrotation`、`ms-settings:display-advanced`。
 
-相关页面 ID：`night-light`、`advanced-display`、`graphics`。
+相关页面 ID：`hypr-output-assignments`、`hypr-multi-gpu`。
 
-#### 设置
+退役 ID：页面 `advanced-display`、`hypr-monitor-fields` 并入本页，旧 ID 仍可打开本页；控件 `display.2d0b8c7d`（Advanced 入口）与重复字段 `hypr-monitor-fields.{disabled,mode,scale,transform,mirror,bitdepth,cm,vrr}` 已删除。
+
+参考资料：[hypr-monitors](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/monitors/_index.md)。
+
+#### 排列
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Brightness | `display.5d419889` | 滑块 | 未实现 | — |
-| Adjust brightness based on content | `display.4686de0d` | 开关 | 未实现 | — |
+| Selected display | `hypr-monitor-fields.output` | 选择 | 已实现 | 实机 GUI；`test/display_test.dart` |
+| Position | `hypr-monitor-fields.position` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）；`test/display_test.dart`（拖动） |
+| Detect displays | `display.15697afc` | 操作 | 已实现 | 实机读取；`cargo test -p remya_settings_display` |
+
+#### 亮度与颜色
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Brightness | `display.5d419889` | 滑块 | 已实现 | 实机：eDP-1 logind 背光、DP-1/DP-3 ddcutil 读写回读 |
+| Color preset | `display.af8e280d` | 选择 | 已实现 | Hyprland 0.57 实机（DP-1，含还原）；`test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| HDR | `display.0ce92088` | 开关 | 已实现 | 实机：DP-3 开启 HDR 回读 `hdr` 后还原 |
 | Night light | `display.e32be03e` | 操作 | 未实现 | — |
-| Color Profiles | `display.af8e280d` | 选择 | 未实现 | — |
-| HDR | `display.0ce92088` | 开关 | 未实现 | — |
 
-#### 缩放和布局
+#### 缩放与布局
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Zoom | `display.12e2ed4d` | 选择 | 未实现 | — |
-| Display resolution | `display.44f6b9b0` | 选择 | 未实现 | — |
-| Display direction | `display.9843ad76` | 选择 | 未实现 | — |
-| Multiple monitors | `display.7cb5dc06` | 选择 | 未实现 | — |
-| Detect other monitors | `display.15697afc` | 操作 | 未实现 | — |
+| Scale | `display.12e2ed4d` | 选择 | 已实现 | Hyprland 0.57 实机（DP-1，含还原）；`test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Resolution | `display.44f6b9b0` | 选择 | 已实现 | Hyprland 0.57 实机（DP-1，含还原）；`test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Refresh rate | `advanced-display.34d8396d` | 选择 | 已实现 | Hyprland 0.57 实机（DP-1，含还原）；`test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Orientation | `display.9843ad76` | 选择 | 已实现 | Hyprland 0.57 实机（DP-1，含还原）；`test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Multiple displays | `display.7cb5dc06` | 选择 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）；未在实机停用或镜像，以免移动工作区 |
 
-#### 相关设置
+#### Advanced（默认折叠）
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Advanced display | `display.2d0b8c7d` | 操作 | 未实现 | — |
+| Desktop mode | `advanced-display.3b3ebb60` | 信息展示 | 已实现 | 实机读取三台显示器 |
+| Active signal mode | `advanced-display.761b7ac8` | 信息展示 | 已实现 | 实机读取三台显示器 |
+| Color space | `advanced-display.3278abf9` | 信息展示 | 已实现 | 实机读取三台显示器 |
+| Display information | `advanced-display.device` | 信息展示 | 已实现 | 实机读取三台显示器 |
+| Bit depth | `advanced-display.91720250` | 选择 | 已实现 | Hyprland 0.57 实机（DP-1，含还原）；`test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Variable refresh rate | `advanced-display.2d80c2c4` | 选择 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）；本机显示器均不报告 VRR，仅验证默认与关闭 |
+| SDR transfer function | `hypr-monitor-fields.sdr-eotf` | 选择 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| SDR brightness in HDR | `hypr-monitor-fields.sdrbrightness` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| SDR saturation in HDR | `hypr-monitor-fields.sdrsaturation` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| SDR minimum luminance | `hypr-monitor-fields.sdr-min-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| SDR maximum luminance | `hypr-monitor-fields.sdr-max-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Display minimum luminance | `hypr-monitor-fields.min-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Display peak luminance | `hypr-monitor-fields.max-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Display average luminance | `hypr-monitor-fields.max-avg-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| HDR capability | `hypr-monitor-fields.supports-hdr` | 选择 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Wide color capability | `hypr-monitor-fields.supports-wide-color` | 选择 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| ICC profile | `hypr-monitor-fields.icc` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）（错误路径拒绝）；单元测试；未用真实 ICC 配置文件验证 |
+| Reserved area | `hypr-monitor-fields.reserved-area` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+
+#### 图形
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
 | Graphics | `display.2f32a8c2` | 操作 | 未实现 | — |
 
 #### Windows 参考细项
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Remember window locations based on monitor connection | `display.reference.45daf28f` | 开关 | 未实现 | — |
-| Minimize windows when a monitor is disconnected | `display.reference.b0b25287` | 开关 | 未实现 | — |
-| Ease cursor movement between displays | `display.reference.9c5f075f` | 开关 | 未实现 | — |
+| Adjust brightness based on content | `display.4686de0d` | 开关 | 不适用 | — |
+| Remember window locations based on monitor connection | `display.reference.45daf28f` | 开关 | 不适用 | — |
+| Minimize windows when a monitor is disconnected | `display.reference.b0b25287` | 开关 | 不适用 | — |
+| Ease cursor movement between displays | `display.reference.9c5f075f` | 开关 | 不适用 | — |
 | Show warmer colors on your display to help you sleep | `display.reference.5106967a` | 选择 | 未实现 | — |
 | Strength | `display.reference.b55908e7` | 开关 | 未实现 | — |
 | Schedule Night Light | `display.reference.613ad1ca` | 开关 | 未实现 | — |
 | Turn on | `display.reference.a303e647` | 开关 | 未实现 | — |
 | Turn off | `display.reference.0d998610` | 开关 | 未实现 | — |
-
-### Advanced display — `advanced-display`
-
-显示器信息、刷新率与动态刷新率
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:display-advanced`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Desktop mode | `advanced-display.3b3ebb60` | 信息展示 | 未实现 | — |
-| Active signal mode | `advanced-display.761b7ac8` | 信息展示 | 未实现 | — |
-| Bit depth | `advanced-display.91720250` | 信息展示 | 未实现 | — |
-| Color space | `advanced-display.3278abf9` | 信息展示 | 未实现 | — |
-| Select refresh rate | `advanced-display.34d8396d` | 选择 | 未实现 | — |
-| Dynamic refresh rate | `advanced-display.2d80c2c4` | 开关 | 未实现 | — |
 
 ### Night light — `night-light`
 
@@ -1097,45 +1112,6 @@ Windows 参考入口：`ms-settings:phone`。
 | --- | --- | --- | --- | --- |
 | prefer hdr · prefer_hdr | `hypr-quirks.prefer-hdr` | 滑块 | 未实现 | — |
 | skip non kms dmabuf formats · skip_non_kms_dmabuf_formats | `hypr-quirks.skip-non-kms-dmabuf-formats` | 开关 | 未实现 | — |
-
-### Hyprland display rules · Rule fields — `hypr-monitor-fields`
-
-按官方文档分类的组件参数 · Hyprland
-
-页面状态：**未实现**；条目：22；已实现 0 / 未实现 22 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-相关页面 ID：`hypr-output-assignments`、`hypr-multi-gpu`。
-
-参考资料：[hypr-monitors](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/monitors/_index.md)。
-
-#### 规则字段
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Target display · output | `hypr-monitor-fields.output` | 文本输入 | 未实现 | — |
-| Disable this output · disabled | `hypr-monitor-fields.disabled` | 开关 | 未实现 | — |
-| Working mode · mode | `hypr-monitor-fields.mode` | 文本输入 | 未实现 | — |
-| scale · scale | `hypr-monitor-fields.scale` | 文本输入 | 未实现 | — |
-| Rotation and flipping · transform | `hypr-monitor-fields.transform` | 文本输入 | 未实现 | — |
-| Virtual desktop position · position | `hypr-monitor-fields.position` | 文本输入 | 未实现 | — |
-| Mirror target · mirror | `hypr-monitor-fields.mirror` | 文本输入 | 未实现 | — |
-| Output bit depth · bitdepth | `hypr-monitor-fields.bitdepth` | 文本输入 | 未实现 | — |
-| Color Management Presets · cm | `hypr-monitor-fields.cm` | 文本输入 | 未实现 | — |
-| SDR transfer function · sdr_eotf | `hypr-monitor-fields.sdr-eotf` | 文本输入 | 未实现 | — |
-| Variable refresh rate mode · vrr | `hypr-monitor-fields.vrr` | 文本输入 | 未实现 | — |
-| ICC profile · icc | `hypr-monitor-fields.icc` | 文本输入 | 未实现 | — |
-| Tile reserved area · reserved_area | `hypr-monitor-fields.reserved-area` | 文本输入 | 未实现 | — |
-| Force wide color gamut capability · supports_wide_color | `hypr-monitor-fields.supports-wide-color` | 文本输入 | 未实现 | — |
-| Force HDR capability · supports_hdr | `hypr-monitor-fields.supports-hdr` | 文本输入 | 未实现 | — |
-| SDR brightness in HDR · sdrbrightness | `hypr-monitor-fields.sdrbrightness` | 文本输入 | 未实现 | — |
-| SDR saturation in HDR · sdrsaturation | `hypr-monitor-fields.sdrsaturation` | 文本输入 | 未实现 | — |
-| SDR minimum brightness mapping · sdr_min_luminance | `hypr-monitor-fields.sdr-min-luminance` | 文本输入 | 未实现 | — |
-| SDR maximum brightness mapping · sdr_max_luminance | `hypr-monitor-fields.sdr-max-luminance` | 文本输入 | 未实现 | — |
-| Display minimum brightness · min_luminance | `hypr-monitor-fields.min-luminance` | 文本输入 | 未实现 | — |
-| Display peak brightness · max_luminance | `hypr-monitor-fields.max-luminance` | 文本输入 | 未实现 | — |
-| Display average peak brightness · max_avg_luminance | `hypr-monitor-fields.max-avg-luminance` | 文本输入 | 未实现 | — |
 
 ### Idle and sleep · General — `hypr-idle-general`
 

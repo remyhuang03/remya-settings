@@ -869,7 +869,7 @@
     },
     {
       "uri": "ms-settings:display-advanced",
-      "page": "advanced-display",
+      "page": "display",
       "sourceCategory": "System",
       "title": "Advanced display settings"
     },

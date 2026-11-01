@@ -81,7 +81,7 @@ def session_checks():
         assert dbus('Set', 'themes.material-theme-mode', 'dark')['theme']['theme_mode'] == 'dark'
         assert cli('get', 'system')['mode'] == 'dark'
         controls = cli('list')['controls']
-        assert len([control for control in controls if control['availability'] == 'available']) == 8
+        assert len([control for control in controls if control['availability'] == 'available']) == 37
         unavailable = next(control for control in controls if control['availability'] != 'available')
         assert 'Unavailable' in cli('set', unavailable['id'], 'true', ok=False)
         assert 'InvalidArgument' in cli('set', 'themes.material-theme-mode', 'system', ok=False)

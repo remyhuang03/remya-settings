@@ -352,38 +352,93 @@
       "id": "display",
       "category": "system",
       "title": "Display",
-      "description": "Brightness, Scaling, Display Arrangement and Graphics",
+      "description": "Arrangement, brightness, color, scale, resolution, and refresh rate",
       "preview": "display",
       "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "reason": "Display controls work through Hyprland. Night light and Graphics are not implemented yet.",
       "sources": [
-        "uris"
+        "uris",
+        "hypr-monitors"
       ],
       "windowsUris": [
         "ms-settings:display",
-        "ms-settings:screenrotation"
+        "ms-settings:screenrotation",
+        "ms-settings:display-advanced"
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Arrangement",
+          "controls": [
+            {
+              "id": "hypr-monitor-fields.output",
+              "title": "Selected display",
+              "type": "choice",
+              "availability": "available",
+              "reason": "The settings below apply to this display.",
+              "value": "Current display",
+              "referencePath": [
+                "hypr-monitors",
+                "Fields",
+                "output"
+              ],
+              "options": [
+                "Current display"
+              ]
+            },
+            {
+              "id": "hypr-monitor-fields.position",
+              "title": "Position",
+              "type": "text",
+              "availability": "available",
+              "reason": "Top-left corner in the layout, in logical pixels. You can also drag the display above.",
+              "value": "",
+              "referencePath": [
+                "hypr-monitors",
+                "Fields",
+                "position"
+              ]
+            },
+            {
+              "id": "display.15697afc",
+              "title": "Detect displays",
+              "type": "action",
+              "availability": "available",
+              "reason": "Read the connected displays again. Hyprland also reports connections as they happen.",
+              "value": "Detect"
+            }
+          ]
+        },
+        {
+          "title": "Brightness and color",
           "controls": [
             {
               "id": "display.5d419889",
               "title": "Brightness",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Hardware brightness: kernel backlight on built-in panels, DDC/CI on external displays.",
               "value": 50,
               "min": 0,
               "max": 100,
               "unit": "%"
             },
             {
-              "id": "display.4686de0d",
-              "title": "Adjust brightness based on content",
+              "id": "display.af8e280d",
+              "title": "Color preset",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Hyprland color management preset for this display.",
+              "options": [
+                "sRGB"
+              ],
+              "value": "sRGB"
+            },
+            {
+              "id": "display.0ce92088",
+              "title": "HDR",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Use Hyprland's HDR preset. Available only when the display reports HDR support.",
               "value": false
             },
             {
@@ -391,117 +446,312 @@
               "title": "Night light",
               "type": "action",
               "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "display.af8e280d",
-              "title": "Color Profiles",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Default",
-                "Customization"
-              ],
-              "value": "Default"
-            },
-            {
-              "id": "display.0ce92088",
-              "title": "HDR",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
+              "reason": "Opens the Night light page; its controls are not implemented yet.",
+              "value": "Open"
             }
           ]
         },
         {
-          "title": "Scaling and layout",
+          "title": "Scale and layout",
           "controls": [
             {
               "id": "display.12e2ed4d",
-              "title": "Zoom",
+              "title": "Scale",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Lists sizes Hyprland keeps exact. Auto lets Hyprland decide from the pixel density.",
               "options": [
-                "100%",
-                "125%",
-                "150%",
-                "175%",
-                "200%"
+                "Auto"
               ],
-              "value": "100%"
+              "value": "Auto"
             },
             {
               "id": "display.44f6b9b0",
-              "title": "Display resolution",
+              "title": "Resolution",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Modes reported by this display. Preferred follows the display's own recommendation.",
               "options": [
-                "1920 × 1080",
-                "2560 × 1440",
-                "3840 × 2160"
+                "Preferred"
               ],
-              "value": "1920 × 1080"
+              "value": "Preferred"
+            },
+            {
+              "id": "advanced-display.34d8396d",
+              "title": "Refresh rate",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Rates available at the current resolution.",
+              "options": [
+                "60 Hz"
+              ],
+              "value": "60 Hz"
             },
             {
               "id": "display.9843ad76",
-              "title": "Display direction",
+              "title": "Orientation",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Rotate or flip the picture.",
               "options": [
-                "Horizontal",
-                "Portrait",
-                "Flip sideways",
-                "Flip vertically"
+                "Landscape"
               ],
-              "value": "Horizontal"
+              "value": "Landscape"
             },
             {
               "id": "display.7cb5dc06",
-              "title": "Multiple monitors",
+              "title": "Multiple displays",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Extend the desktop, mirror another display, or stop using this one.",
               "options": [
-                "Expand these displays",
-                "Duplicate these monitors",
-                "Show only one screen"
+                "Extend"
               ],
-              "value": "Expand these displays"
-            },
-            {
-              "id": "display.15697afc",
-              "title": "Detect other monitors",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "value": "Extend"
             }
           ]
         },
         {
-          "title": "Related settings",
+          "title": "Advanced",
+          "collapsed": true,
+          "description": "Display details and specialist Hyprland options",
           "controls": [
             {
-              "id": "display.2d0b8c7d",
-              "title": "Advanced display",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "id": "advanced-display.3b3ebb60",
+              "title": "Desktop mode",
+              "type": "info",
+              "availability": "available",
+              "reason": "Logical size after scale and rotation.",
+              "value": "Not read"
             },
+            {
+              "id": "advanced-display.761b7ac8",
+              "title": "Active signal mode",
+              "type": "info",
+              "availability": "available",
+              "reason": "Resolution and refresh rate sent to the display.",
+              "value": "Not read"
+            },
+            {
+              "id": "advanced-display.3278abf9",
+              "title": "Color space",
+              "type": "info",
+              "availability": "available",
+              "reason": "Active color preset and pixel format.",
+              "value": "Not read"
+            },
+            {
+              "id": "advanced-display.device",
+              "title": "Display information",
+              "type": "info",
+              "availability": "available",
+              "reason": "Manufacturer, model, serial number, and physical size reported by the display.",
+              "value": "Not read"
+            },
+            {
+              "id": "advanced-display.91720250",
+              "title": "Bit depth",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Color depth per channel on the display link.",
+              "value": "8-bit",
+              "options": [
+                "8-bit",
+                "10-bit"
+              ]
+            },
+            {
+              "id": "advanced-display.2d80c2c4",
+              "title": "Variable refresh rate",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Matches refresh to rendering on displays that support it. Use Hyprland default follows misc:vrr.",
+              "value": "Use Hyprland default",
+              "options": [
+                "Use Hyprland default"
+              ]
+            },
+            {
+              "id": "hypr-monitor-fields.sdr-eotf",
+              "title": "SDR transfer function",
+              "type": "choice",
+              "availability": "available",
+              "reason": "How SDR content is decoded when color management is active.",
+              "value": "Default",
+              "referencePath": [
+                "hypr-monitors",
+                "Fields",
+                "sdr_eotf"
+              ],
+              "options": [
+                "Default"
+              ]
+            },
+            {
+              "id": "hypr-monitor-fields.sdrbrightness",
+              "title": "SDR brightness in HDR",
+              "type": "text",
+              "availability": "available",
+              "reason": "Multiplier for SDR content while this display uses HDR. Saved when you press Enter or leave the field.",
+              "value": "",
+              "referencePath": [
+                "hypr-monitors",
+                "Fields",
+                "sdrbrightness"
+              ]
+            },
+            {
+              "id": "hypr-monitor-fields.sdrsaturation",
+              "title": "SDR saturation in HDR",
+              "type": "text",
+              "availability": "available",
+              "reason": "Multiplier for SDR saturation while this display uses HDR.",
+              "value": "",
+              "referencePath": [
+                "hypr-monitors",
+                "Fields",
+                "sdrsaturation"
+              ]
+            },
+            {
+              "id": "hypr-monitor-fields.sdr-min-luminance",
+              "title": "SDR minimum luminance",
+              "type": "text",
+              "availability": "available",
+              "reason": "Black level used when mapping SDR to HDR, in nits.",
+              "value": "",
+              "referencePath": [
+                "hypr-monitors",
+                "Fields",
+                "sdr_min_luminance"
+              ]
+            },
+            {
+              "id": "hypr-monitor-fields.sdr-max-luminance",
+              "title": "SDR maximum luminance",
+              "type": "text",
+              "availability": "available",
+              "reason": "White level used when mapping SDR to HDR, in nits.",
+              "value": "",
+              "referencePath": [
+                "hypr-monitors",
+                "Fields",
+                "sdr_max_luminance"
+              ]
+            },
+            {
+              "id": "hypr-monitor-fields.min-luminance",
+              "title": "Display minimum luminance",
+              "type": "text",
+              "availability": "available",
+              "reason": "Overrides the reported minimum, in nits. -1 uses the reported value.",
+              "value": "",
+              "referencePath": [
+                "hypr-monitors",
+                "Fields",
+                "min_luminance"
+              ]
+            },
+            {
+              "id": "hypr-monitor-fields.max-luminance",
+              "title": "Display peak luminance",
+              "type": "text",
+              "availability": "available",
+              "reason": "Overrides the reported peak, in nits. -1 uses the reported value.",
+              "value": "",
+              "referencePath": [
+                "hypr-monitors",
+                "Fields",
+                "max_luminance"
+              ]
+            },
+            {
+              "id": "hypr-monitor-fields.max-avg-luminance",
+              "title": "Display average luminance",
+              "type": "text",
+              "availability": "available",
+              "reason": "Overrides the reported maximum average, in nits. -1 uses the reported value.",
+              "value": "",
+              "referencePath": [
+                "hypr-monitors",
+                "Fields",
+                "max_avg_luminance"
+              ]
+            },
+            {
+              "id": "hypr-monitor-fields.supports-hdr",
+              "title": "HDR capability",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Override what the display reports. Forcing it on can produce a wrong picture.",
+              "value": "Automatic",
+              "referencePath": [
+                "hypr-monitors",
+                "Fields",
+                "supports_hdr"
+              ],
+              "options": [
+                "Automatic",
+                "Force on",
+                "Force off"
+              ]
+            },
+            {
+              "id": "hypr-monitor-fields.supports-wide-color",
+              "title": "Wide color capability",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Override what the display reports. Forcing it on can produce a wrong picture.",
+              "value": "Automatic",
+              "referencePath": [
+                "hypr-monitors",
+                "Fields",
+                "supports_wide_color"
+              ],
+              "options": [
+                "Automatic",
+                "Force on",
+                "Force off"
+              ]
+            },
+            {
+              "id": "hypr-monitor-fields.icc",
+              "title": "ICC profile",
+              "type": "text",
+              "availability": "available",
+              "reason": "Absolute path to a profile. Clearing it applies after the next Hyprland configuration reload.",
+              "value": "",
+              "referencePath": [
+                "hypr-monitors",
+                "Fields",
+                "icc"
+              ]
+            },
+            {
+              "id": "hypr-monitor-fields.reserved-area",
+              "title": "Reserved area",
+              "type": "text",
+              "availability": "available",
+              "reason": "Space kept free of tiled windows, as four numbers: top right bottom left.",
+              "value": "",
+              "referencePath": [
+                "hypr-monitors",
+                "Fields",
+                "reserved_area"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Graphics",
+          "controls": [
             {
               "id": "display.2f32a8c2",
               "title": "Graphics",
               "type": "action",
               "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "reason": "Opens the Graphics page; its controls are not implemented yet.",
+              "value": "Open"
             }
           ]
         },
@@ -510,11 +760,19 @@
           "collapsed": true,
           "controls": [
             {
+              "id": "display.4686de0d",
+              "title": "Adjust brightness based on content",
+              "type": "toggle",
+              "availability": "unsupported",
+              "reason": "Not applicable on Hyprland: the compositor has no equivalent option.",
+              "value": false
+            },
+            {
               "id": "display.reference.45daf28f",
               "title": "Remember window locations based on monitor connection",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "unsupported",
+              "reason": "Not applicable on Hyprland: the compositor has no equivalent option.",
               "referencePath": [
                 "Display",
                 "Multiple displays",
@@ -526,8 +784,8 @@
               "id": "display.reference.b0b25287",
               "title": "Minimize windows when a monitor is disconnected",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "unsupported",
+              "reason": "Not applicable on Hyprland: the compositor has no equivalent option.",
               "referencePath": [
                 "Display",
                 "Multiple displays",
@@ -539,8 +797,8 @@
               "id": "display.reference.9c5f075f",
               "title": "Ease cursor movement between displays",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "unsupported",
+              "reason": "Not applicable on Hyprland: the compositor has no equivalent option.",
               "referencePath": [
                 "Display",
                 "Multiple displays",
@@ -553,7 +811,7 @@
               "title": "Show warmer colors on your display to help you sleep",
               "type": "choice",
               "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "reason": "Part of Night light, which is not implemented yet.",
               "referencePath": [
                 "Display",
                 "Night Light",
@@ -569,7 +827,7 @@
               "title": "Strength",
               "type": "toggle",
               "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "reason": "Part of Night light, which is not implemented yet.",
               "referencePath": [
                 "Display",
                 "Night Light",
@@ -582,7 +840,7 @@
               "title": "Schedule Night Light",
               "type": "toggle",
               "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "reason": "Part of Night light, which is not implemented yet.",
               "referencePath": [
                 "Display",
                 "Night Light",
@@ -595,7 +853,7 @@
               "title": "Turn on",
               "type": "toggle",
               "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "reason": "Part of Night light, which is not implemented yet.",
               "referencePath": [
                 "Display",
                 "Night Light",
@@ -609,7 +867,7 @@
               "title": "Turn off",
               "type": "toggle",
               "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "reason": "Part of Night light, which is not implemented yet.",
               "referencePath": [
                 "Display",
                 "Night Light",
@@ -622,87 +880,9 @@
         }
       ],
       "children": [
-        "night-light",
-        "advanced-display",
-        "graphics"
+        "hypr-output-assignments",
+        "hypr-multi-gpu"
       ]
-    },
-    {
-      "id": "advanced-display",
-      "category": "system",
-      "title": "Advanced display",
-      "description": "Monitor information, refresh rate and dynamic refresh rate",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:display-advanced"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "advanced-display.3b3ebb60",
-              "title": "Desktop mode",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
-            },
-            {
-              "id": "advanced-display.761b7ac8",
-              "title": "Active signal mode",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
-            },
-            {
-              "id": "advanced-display.91720250",
-              "title": "Bit depth",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
-            },
-            {
-              "id": "advanced-display.3278abf9",
-              "title": "Color space",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
-            },
-            {
-              "id": "advanced-display.34d8396d",
-              "title": "Select refresh rate",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "60 Hz",
-                "120 Hz",
-                "144 Hz",
-                "165 Hz"
-              ],
-              "value": "60 Hz"
-            },
-            {
-              "id": "advanced-display.2d80c2c4",
-              "title": "Dynamic refresh rate",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
     },
     {
       "id": "night-light",
@@ -24149,316 +24329,6 @@
       "children": []
     },
     {
-      "id": "hypr-monitor-fields",
-      "category": "system",
-      "title": "Hyprland display rules · Rule fields",
-      "description": "Component parameters classified by official documents · Hyprland",
-      "preview": "display",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-monitors"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Rule fields",
-          "controls": [
-            {
-              "id": "hypr-monitor-fields.output",
-              "title": "Target display · output",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "output"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.disabled",
-              "title": "Disable this output · disabled",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "disabled"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.mode",
-              "title": "Working mode · mode",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "preferred",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "mode"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.scale",
-              "title": "scale · scale",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "auto",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "scale"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.transform",
-              "title": "Rotation and flipping · transform",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "0",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "transform"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.position",
-              "title": "Virtual desktop position · position",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "auto",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "position"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.mirror",
-              "title": "Mirror target · mirror",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "mirror"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.bitdepth",
-              "title": "Output bit depth · bitdepth",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "8",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "bitdepth"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.cm",
-              "title": "Color Management Presets · cm",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "srgb",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "cm"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.sdr-eotf",
-              "title": "SDR transfer function · sdr_eotf",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "default",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "sdr_eotf"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.vrr",
-              "title": "Variable refresh rate mode · vrr",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "0",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "vrr"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.icc",
-              "title": "ICC profile · icc",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "icc"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.reserved-area",
-              "title": "Tile reserved area · reserved_area",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "0",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "reserved_area"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.supports-wide-color",
-              "title": "Force wide color gamut capability · supports_wide_color",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "0",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "supports_wide_color"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.supports-hdr",
-              "title": "Force HDR capability · supports_hdr",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "0",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "supports_hdr"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.sdrbrightness",
-              "title": "SDR brightness in HDR · sdrbrightness",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "1.0",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "sdrbrightness"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.sdrsaturation",
-              "title": "SDR saturation in HDR · sdrsaturation",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "1.0",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "sdrsaturation"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.sdr-min-luminance",
-              "title": "SDR minimum brightness mapping · sdr_min_luminance",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "0.2",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "sdr_min_luminance"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.sdr-max-luminance",
-              "title": "SDR maximum brightness mapping · sdr_max_luminance",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "80",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "sdr_max_luminance"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.min-luminance",
-              "title": "Display minimum brightness · min_luminance",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "-1",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "min_luminance"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.max-luminance",
-              "title": "Display peak brightness · max_luminance",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "-1",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "max_luminance"
-              ]
-            },
-            {
-              "id": "hypr-monitor-fields.max-avg-luminance",
-              "title": "Display average peak brightness · max_avg_luminance",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "-1",
-              "referencePath": [
-                "hypr-monitors",
-                "Fields",
-                "max_avg_luminance"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": [
-        "hypr-output-assignments",
-        "hypr-multi-gpu"
-      ]
-    },
-    {
       "id": "hypr-workspace-rule-rules",
       "category": "hyprland",
       "title": "Workspace rules · Rule parameters",
@@ -29682,7 +29552,7 @@
               "title": "Output name or description match",
               "type": "text",
               "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "reason": "Set this for each display on the Display page. This page still previews the remaining layout options.",
               "value": "",
               "referencePath": [
                 "nwg-displays-project",
@@ -29694,7 +29564,7 @@
               "title": "Enable this output",
               "type": "toggle",
               "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "reason": "Set this for each display on the Display page. This page still previews the remaining layout options.",
               "value": false,
               "referencePath": [
                 "nwg-displays-project",
@@ -29706,7 +29576,7 @@
               "title": "Display logical coordinates",
               "type": "text",
               "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "reason": "Set this for each display on the Display page. This page still previews the remaining layout options.",
               "value": "",
               "referencePath": [
                 "nwg-displays-project",
@@ -29718,7 +29588,7 @@
               "title": "Mirror output target",
               "type": "text",
               "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "reason": "Set this for each display on the Display page. This page still previews the remaining layout options.",
               "value": "",
               "referencePath": [
                 "nwg-displays-project",

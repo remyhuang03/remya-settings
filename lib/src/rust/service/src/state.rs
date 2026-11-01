@@ -2,10 +2,10 @@ use crate::privileged::{Request, Session};
 use gio::glib::{Variant, variant::ToVariant};
 use remya_settings_appearance::api as appearance;
 use remya_settings_date_time::api as clock;
+use remya_settings_display::{DisplayManager, Hyprctl, atomic_write, is_display_setting};
 use serde_json::{Value, json};
 use std::{
     fs,
-    io::Write,
     path::PathBuf,
     process::{Child, Command},
 };
@@ -36,30 +36,19 @@ fn prefs(state: &clock::DateTimeState) -> Value {
     json!({"timezone":state.timezone,"ntp":state.ntp,"time_servers":state.time_servers,"time_locale":state.time_locale})
 }
 fn write(path: &std::path::Path, value: &Value) -> Result<(), String> {
-    let target = if path.is_symlink() {
-        path.canonicalize().map_err(|e| e.to_string())?
-    } else {
-        path.to_owned()
-    };
-    let parent = target.parent().ok_or("No configuration directory")?;
-    fs::create_dir_all(parent).map_err(|e| e.to_string())?;
-    let mut file = tempfile::NamedTempFile::new_in(parent).map_err(|e| e.to_string())?;
-    use std::os::unix::fs::PermissionsExt;
-    let mode = fs::metadata(&target)
-        .map(|m| m.permissions().mode() & 0o777)
-        .unwrap_or(0o600);
-    file.as_file()
-        .set_permissions(fs::Permissions::from_mode(mode))
-        .map_err(|e| e.to_string())?;
-    file.write_all(
+    atomic_write(
+        path,
         toml::to_string(value)
             .map_err(|e| e.to_string())?
             .as_bytes(),
     )
-    .and_then(|_| file.as_file().sync_all())
-    .map_err(|e| e.to_string())?;
-    file.persist(target).map_err(|e| e.to_string())?;
-    Ok(())
+}
+/// Page IDs retired when their controls moved into Display still open that page.
+pub fn page_alias(page: &str) -> &str {
+    match page {
+        "advanced-display" | "hypr-monitor-fields" => "display",
+        other => other,
+    }
 }
 fn load(path: &std::path::Path) -> Result<Option<Value>, String> {
     match fs::read_to_string(path) {
@@ -112,6 +101,20 @@ fn normalize_theme(value: Value) -> Result<Value, String> {
     Ok(json!({"version":1,"theme":{"style_variant":style,"theme_mode":mode}}))
 }
 
+/// Hyprland reads `$XDG_CONFIG_HOME/hypr`; relative XDG values are ignored.
+fn hypr_config_dir() -> PathBuf {
+    std::env::var_os("XDG_CONFIG_HOME")
+        .map(PathBuf::from)
+        .filter(|p| p.is_absolute())
+        .or_else(|| {
+            std::env::var_os("HOME")
+                .map(PathBuf::from)
+                .map(|p| p.join(".config"))
+        })
+        .unwrap_or_default()
+        .join("hypr")
+}
+
 pub struct State {
     pub catalog: Value,
     pub theme: Value,
@@ -121,6 +124,7 @@ pub struct State {
     saved: Value,
     pub theme_error: Option<String>,
     pub date_error: Option<String>,
+    pub display: DisplayManager<Hyprctl>,
     pub auth_error: Option<String>,
     privileged: Option<Session>,
     gui: Option<Child>,
@@ -138,6 +142,11 @@ impl State {
             theme: json!({"version":1,"theme":{"style_variant":"tonal_spot","theme_mode":"light"}}),
             system: json!({"mode":null,"targets":[]}),
             date: json!({}),
+            display: DisplayManager::new(
+                Hyprctl,
+                hypr_config_dir(),
+                config.with_file_name("display.toml"),
+            ),
             saved: Value::Null,
             theme_error: None,
             date_error: None,
@@ -156,6 +165,8 @@ impl State {
     pub fn refresh(&mut self) {
         self.theme_error = self.refresh_theme().err();
         self.date_error = self.refresh_date().err();
+        // A detection failure is retained by the manager and reported in its state.
+        let _ = self.display.refresh();
     }
     fn refresh_theme(&mut self) -> Result<(), String> {
         let system =
@@ -282,7 +293,7 @@ impl State {
     pub fn configuration(&self) -> Value {
         let mut date = self.date.clone();
         date["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
-        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date})
+        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state()})
     }
     pub fn controls(&self) -> Vec<&Value> {
         self.catalog["pages"]
@@ -334,6 +345,29 @@ impl State {
                         }
                         Ok(v)
                     }
+                    "display" => {
+                        let _ = self.display.refresh();
+                        Ok(self.display.state())
+                    }
+                    "display-brightness" => {
+                        self.display.refresh()?;
+                        Ok(self.display.brightness_state())
+                    }
+                    _ if is_display_setting(key) => {
+                        let _ = self.display.refresh();
+                        let control = self
+                            .controls()
+                            .into_iter()
+                            .find(|c| c["id"] == key)
+                            .ok_or_else(|| invalid("Unknown setting"))?;
+                        Ok(json!({
+                            "id": key,
+                            "availability": control["availability"],
+                            "reason": control["reason"],
+                            "value": self.display.setting_value(key),
+                            "error": self.display.error(),
+                        }))
+                    }
                     "timezones" => {
                         let zones = clock::list_timezones()?;
                         Ok(
@@ -353,7 +387,7 @@ impl State {
                         .as_array()
                         .unwrap()
                         .iter()
-                        .find(|p| p["id"] == key[5..])
+                        .find(|p| p["id"] == page_alias(&key[5..]))
                         .cloned()
                         .ok_or_else(|| invalid("Unknown page")),
                     _ => {
@@ -402,7 +436,7 @@ impl State {
                             .as_array()
                             .unwrap()
                             .iter()
-                            .any(|p| p["id"] == *page)
+                            .any(|p| p["id"] == page_alias(page))
                     {
                         return Err(invalid("Unknown page"));
                     }
@@ -478,6 +512,9 @@ impl State {
             .ok_or_else(|| invalid("Unknown setting"))?;
         if control["availability"] != "available" {
             return Err(format!("Unavailable:{}", control["reason"]));
+        }
+        if is_display_setting(key) {
+            return self.display.set(key, value);
         }
         if [STYLE, MODE].contains(&key) {
             self.refresh_theme()?;
@@ -585,6 +622,10 @@ impl State {
         self.save_date(state, &keys)
     }
     fn resolve(&mut self, feature: &str, source: &str) -> Result<Value, String> {
+        if feature == "display" {
+            self.display.resolve(source)?;
+            return Ok(self.configuration());
+        }
         if !["system", "settings"].contains(&source) {
             return Err(invalid("Unknown resolution"));
         }
@@ -655,6 +696,8 @@ impl State {
             let _ = gui.wait();
         }
         self.privileged = None;
+        // Never leave an unconfirmed display change behind when the service stops.
+        let _ = self.display.revert_pending();
     }
     pub fn open_gui(&mut self) -> Result<(), String> {
         if self
@@ -764,9 +807,15 @@ mod tests {
                 .starts_with("InvalidArgument:")
         );
         assert!(state.execute("Get", &["unknown".into()]).is_err());
+        for retired in ["page:advanced-display", "page:hypr-monitor-fields"] {
+            assert_eq!(
+                state.execute("Get", &[retired.into()]).unwrap()["id"],
+                "display"
+            );
+        }
         assert!(
             state
-                .execute("Set", &["display.5d419889".into(), "true".into()])
+                .execute("Set", &["display.4686de0d".into(), "true".into()])
                 .unwrap_err()
                 .starts_with("Unavailable:")
         );

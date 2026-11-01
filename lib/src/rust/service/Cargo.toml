@@ -17,3 +17,4 @@ toml = "0.9"
 tempfile = "3.23"
 remya_settings_appearance = { path = "../appearance", default-features = false }
 remya_settings_date_time = { path = "../date_time", default-features = false }
+remya_settings_display = { path = "../display" }

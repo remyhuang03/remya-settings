@@ -1,3 +1,4 @@
+mod events;
 mod privileged;
 mod state;
 use gio::glib::{self, variant::ToVariant};
@@ -64,7 +65,7 @@ fn run() -> Result<(), String> {
                 let worker = state.clone();
                 let work_method = method.clone();
                 let work_args = args.clone();
-                let (result, theme, date, theme_changed, appearance_error) =
+                let (result, theme, date, display, theme_changed, appearance_error) =
                     gio::spawn_blocking(move || {
                         let mut state = worker.lock().unwrap();
                         let before = state.theme.clone();
@@ -85,6 +86,7 @@ fn run() -> Result<(), String> {
                             result,
                             state.theme.clone(),
                             state.configuration()["date-time"].clone(),
+                            state.display.state(),
                             state.theme != before,
                             appearance_error,
                         )
@@ -106,6 +108,7 @@ fn run() -> Result<(), String> {
                         signal(&bus, "theme", &theme);
                     }
                     signal(&bus, "date-time", &date);
+                    signal(&bus, "display", &display);
                 }
                 if let Some(message) = appearance_error {
                     signal(&bus, "error", &serde_json::json!({"message":message}));
@@ -155,10 +158,28 @@ fn run() -> Result<(), String> {
     let polling = state.clone();
     let poll_bus = bus.clone();
     let mut ticks = 0u32;
+    events::watch(state.clone(), bus.clone());
     glib::timeout_add_seconds_local(1, move || {
         ticks += 1;
+        let mut expired = false;
         if let Ok(mut state) = polling.try_lock() {
             state.reap_gui();
+            expired = state.display.pending_expired();
+        }
+        if expired {
+            let state = polling.clone();
+            let bus = poll_bus.clone();
+            std::thread::spawn(move || {
+                let mut s = state.lock().unwrap();
+                // Another caller may have kept or reverted it first; this is then a no-op.
+                if s.display.pending_expired() {
+                    let result = s.display.revert_pending();
+                    if let Err(message) = result {
+                        signal(&bus, "error", &serde_json::json!({"message": message}));
+                    }
+                    signal(&bus, "display", &s.display.state());
+                }
+            });
         }
         let state = polling.clone();
         let bus = poll_bus.clone();
@@ -175,6 +196,7 @@ fn run() -> Result<(), String> {
                     signal(&bus, "error", &serde_json::json!({"message":s.theme_error}));
                 }
                 signal(&bus, "date-time", &s.configuration()["date-time"]);
+                signal(&bus, "display", &s.display.state());
             });
         }
         glib::ControlFlow::Continue

@@ -61,3 +61,4 @@ config/*.local.toml
 __pycache__/
 
 /config/date-time.toml
+/config/display.toml

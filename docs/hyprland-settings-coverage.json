@@ -1831,7 +1831,6 @@
     "hypr-layout-master-workspace",
     "hypr-layout-scrolling",
     "hypr-layout-scrolling-workspace",
-    "hypr-monitor-fields",
     "hypr-workspace-rule-rules",
     "hypr-window-rule-props",
     "hypr-window-rule-static-effects",
@@ -7533,314 +7532,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-monitor-fields.output",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "output",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "output"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Required]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.disabled",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "disabled",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "disabled"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.mode",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "mode",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "mode"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`\"preferred\"`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.scale",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "scale",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "scale"
-      ],
-      "nativeType": "float/string",
-      "documentedDefault": "`\"auto\"`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.transform",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "transform",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "transform"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "0",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.position",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "position",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "position"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`\"auto\"`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.mirror",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "mirror",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "mirror"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.bitdepth",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "bitdepth",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "bitdepth"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`8`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.cm",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "cm",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "cm"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`\"srgb\"`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.sdr-eotf",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "sdr-eotf",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "sdr_eotf"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`\"default\"`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.vrr",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "vrr",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "vrr"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.icc",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "icc",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "icc"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.reserved-area",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "reserved-area",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "reserved_area"
-      ],
-      "nativeType": "css_gaps",
-      "documentedDefault": "`0`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.supports-wide-color",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "supports-wide-color",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "supports_wide_color"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.supports-hdr",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "supports-hdr",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "supports_hdr"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.sdrbrightness",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "sdrbrightness",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "sdrbrightness"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.sdrsaturation",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "sdrsaturation",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "sdrsaturation"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.sdr-min-luminance",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "sdr-min-luminance",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "sdr_min_luminance"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.2`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.sdr-max-luminance",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "sdr-max-luminance",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "sdr_max_luminance"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`80`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.min-luminance",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "min-luminance",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "min_luminance"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`-1`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.max-luminance",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "max-luminance",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "max_luminance"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`-1`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-monitor-fields.max-avg-luminance",
-      "page": "hypr-monitor-fields",
-      "source": "hypr-monitors",
-      "key": "max-avg-luminance",
-      "reference": [
-        "hypr-monitors",
-        "Fields",
-        "max_avg_luminance"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`-1`",
-      "documentedLimits": ""
-    },
-    {
       "control": "hypr-workspace-rule-rules.animation",
       "page": "hypr-workspace-rule-rules",
       "source": "hypr-workspace-rules",
@@ -13196,5 +12887,23 @@
         "default"
       ]
     }
-  ]
+  ],
+  "retired": {
+    "reason": "Implemented on the Display page; duplicates were removed and retired page IDs open Display.",
+    "pages": [
+      "advanced-display",
+      "hypr-monitor-fields"
+    ],
+    "controls": [
+      "display.2d0b8c7d",
+      "hypr-monitor-fields.disabled",
+      "hypr-monitor-fields.mode",
+      "hypr-monitor-fields.scale",
+      "hypr-monitor-fields.transform",
+      "hypr-monitor-fields.mirror",
+      "hypr-monitor-fields.bitdepth",
+      "hypr-monitor-fields.cm",
+      "hypr-monitor-fields.vrr"
+    ]
+  }
 }

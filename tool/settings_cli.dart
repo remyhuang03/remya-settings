@@ -5,12 +5,13 @@ import 'package:dbus/dbus.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
 const usage = '''Usage: remya_settings <command> [arguments]
-  get <theme|system|catalog|about|page:id|setting-id>  Read state or metadata
+  get <theme|system|display|display-brightness|catalog|about|page:id|setting-id>  Read state or metadata
   set <setting-id> <value>             Apply an available setting
   list                               List all controls and availability
   search <query>                     Search settings pages
   open [page-id|home|about|licenses|repository]   Open a page or repository
-  resolve <appearance|date-time> <system|settings>  Resolve a configuration conflict
+  resolve <appearance|date-time|display> <system|settings>  Resolve a configuration conflict
+  resolve display <keep|revert>      Confirm or undo a pending display change
   reload                             Reload configuration and system state
   watch [theme|all]                   Stream changes as JSON lines
   restart                            Restart the system (save work first)

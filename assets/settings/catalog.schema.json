@@ -263,6 +263,10 @@
         },
         "collapsed": {
           "type": "boolean"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": [
