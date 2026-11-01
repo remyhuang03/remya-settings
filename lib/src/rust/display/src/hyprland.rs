@@ -61,8 +61,20 @@ pub trait Compositor: Send {
 
 /// Runs a command without a shell and enforces a deadline.
 pub(crate) fn run(program: &str, args: &[&str], timeout: Duration) -> Result<String, String> {
+    let bytes = run_bytes(program, args, &[], timeout)?;
+    Ok(String::from_utf8_lossy(&bytes).into_owned())
+}
+
+/// Like [`run`], with extra environment and raw output for binary-producing tools.
+pub fn run_bytes(
+    program: &str,
+    args: &[&str],
+    environment: &[(&str, &str)],
+    timeout: Duration,
+) -> Result<Vec<u8>, String> {
     let mut child = Command::new(program)
         .args(args)
+        .envs(environment.iter().copied())
         .stdin(Stdio::null())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -71,9 +83,9 @@ pub(crate) fn run(program: &str, args: &[&str], timeout: Duration) -> Result<Str
     let mut stdout = child.stdout.take().ok_or("Missing stdout")?;
     let mut stderr = child.stderr.take().ok_or("Missing stderr")?;
     let reader = thread::spawn(move || {
-        let mut text = String::new();
-        let _ = stdout.read_to_string(&mut text);
-        text
+        let mut bytes = Vec::new();
+        let _ = stdout.read_to_end(&mut bytes);
+        bytes
     });
     let errors = thread::spawn(move || {
         let mut text = String::new();
@@ -92,12 +104,12 @@ pub(crate) fn run(program: &str, args: &[&str], timeout: Duration) -> Result<Str
         }
         thread::sleep(Duration::from_millis(10));
     };
-    let text = reader.join().unwrap_or_default();
+    let output = reader.join().unwrap_or_default();
     let error = errors.join().unwrap_or_default();
-    if !status.success() && text.trim().is_empty() {
+    if !status.success() && output.iter().all(u8::is_ascii_whitespace) {
         return Err(format!("{program}: {}", error.trim()));
     }
-    Ok(text)
+    Ok(output)
 }
 
 #[derive(Deserialize)]

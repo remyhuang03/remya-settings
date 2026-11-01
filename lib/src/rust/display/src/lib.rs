@@ -8,5 +8,5 @@ pub mod model;
 pub mod rules;
 
 pub use files::atomic_write;
-pub use hyprland::{Compositor, Hyprctl, Monitor};
+pub use hyprland::{Compositor, Hyprctl, Monitor, run_bytes};
 pub use manager::{DisplayManager, is_display_setting};
