@@ -44,8 +44,13 @@ No command evaluates shell input. IDs are stable catalog IDs, not translated lab
 | `get date-time` | `Get(s key)` with `date-time` | Actual clock, local time, NTP status, time zone, saved zone, and conflict |
 | `get timezones` | `Get(s key)` with `timezones` | Finite system time zone options |
 | `get configuration` | `Get(s key)` with `configuration` | Saved/system values, conflicts, and detection errors |
-| `resolve <appearance / date-time / display / hostname> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
+| `resolve <appearance / date-time / display / hostname / background> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
 | `resolve display <keep / revert>` | `Resolve(ss feature, source)` | Confirm or undo a pending display change |
+| `get background` | `Get(s key)` with `background` | Saved and system background, displays, warnings, previews, conflict, write blocker, error |
+| `get accent` | `Get(s key)` with `accent` | Accent source, `#RRGGBB` seed, sampled file, sampling error |
+| `get fonts` | `Get(s key)` with `fonts` | User font directory and every installed family |
+| `get font-search:<query>` | `Get(s key)` with `font-search:<query>` | Families whose name contains the query |
+| `get font:<family>` | `Get(s key)` with `font:<family>` | One family's styles, formats, files and removability |
 | `get system` | `Get(s key)` with `system` | Fresh system mode and target readback |
 | `get display` | `Get(s key)` with `display` | Outputs, modes, saved and actual values, conflicts, pending change, write blocker |
 | `get display-brightness` | `Get(s key)` with `display-brightness` | Hardware brightness per active output, or why it is unavailable |
@@ -122,6 +127,7 @@ Example theme response:
 `Changed("theme", json)` publishes successfully committed effective themes.
 `Changed("date-time", json)` publishes date/time readback, conflicts, and feature errors; `watch all` includes it.
 `Changed("display", json)` publishes display state after writes, confirmation expiry, reconciliation, and Hyprland output events; `watch all` includes it.
+`Changed("background", json)` publishes background state after writes, reconciliation, and output events; `Changed("accent", json)` publishes accent changes; `Changed("fonts", {})` asks clients to read the font list again.
 `Changed("error", json)` reports a configuration/operation failure. The JSON error
 signal has a `message`. CLI `watch` prints `{"topic":"theme","value":{...}}`
 records, beginning with the current theme; `watch all` also prints error records.
@@ -163,6 +169,9 @@ Release bar clients use D-Bus signals and keep the last valid theme through
 service failures; a two-second refresh recovers after service restart. Debug
 clients may use a read-only repository config override. Both applications use
 the same seed, palette mapping, typography fallback, and expressive icon style.
+The seed comes from `Get("accent")` and the `accent` topic. The `theme` value and
+`config.toml` schema stay unchanged, so clients built before the accent setting keep
+working and simply stay on the default seed until rebuilt.
 
 The current local path dependency expects sibling repositories while developing.
 Installed bundles do not depend on either source tree. Before independently
@@ -540,3 +549,95 @@ names, denied writes and mismatched readback, feature-controller tests for
 initialization/conflicts/resolutions/persistence failures, and widget tests for
 input validation, failed renames and refresh after success at minimum width.
 These tests never rename the workstation.
+
+## Background
+
+hyprpaper shows images and cannot play video, so videos use mpvpaper as a separate
+process. Both are runtime tools of the desktop, not linked code; mpvpaper and ffmpeg
+are only needed for video and for sampling or previews.
+
+| Setting | ID | `Set` value |
+| --- | --- | --- |
+| Background type | `background.99b01ada` | `image` or `video`; needs an earlier file of that type |
+| Display | `background.display` | Read-only list of outputs; pass `display` with a file or fit |
+| Background file | `background.9e58290b` | Absolute path, or `{"path":"…","display":"DP-1"}`; `display` may be a list |
+| Fit | `background.56c289eb` | `cover`, `contain`, `tile`, `fill`, or `{"fit":"…","display":"DP-1"}`; `display` may be a list; video has no `tile` |
+| Video when covered | `background.video-pause` | `keep`, `pause`, `stop` |
+| Show splash text | `hypr-paper-misc-options.splash` | `true`, `false` |
+| Splash offset | `hypr-paper-misc-options.splash-offset` | 0 to 10000; the page's slider covers 0 to 200 |
+| Splash opacity | `hypr-paper-misc-options.splash-opacity` | 0 to 1 |
+
+A selected file is copied to the application's backgrounds directory (see
+[XDG layout](xdg-layout.md)) under its content hash plus a cleaned name. Saved
+configuration, `hyprpaper.conf` and the video unit reference only that copy; the
+selected path is not retained, and moving or deleting the original has no effect.
+Copies nothing references are removed after each successful change. The file type
+comes from `file --mime-type`. A display name omitted or `*` means all displays:
+choosing a file for all displays replaces per-display images. The page lists displays
+in a button group, connecting those with the same file and fit. A first click selects
+the group and a second click selects that display alone; a selection covering every
+display is sent as `*`, so it also applies to displays connected later.
+
+Images write `$XDG_CONFIG_HOME/hypr/hyprpaper.conf` atomically, then call `hyprctl
+hyprpaper wallpaper` for each connected output by name, because hyprpaper does not
+let a wildcard request replace a running wildcard entry, and wait for `listactive`
+to report the file. The strict reader accepts comments, splash keys, `ipc = true`,
+`wallpaper { … }` blocks and the `wallpaper[]:key` form. Rotation keys, `source`,
+variables, inline comments, directory-style entries, and anything else make the file
+read-only for Settings with a visible reason. The first rewrite keeps the original
+as `hyprpaper.conf.remya-backup`. The `hyprlang` crate was evaluated for reading and
+rejected: it cannot parse the `wallpaper[]:` form.
+
+Videos play on all displays through the user unit
+`top.remya.settings.video-background.service` in `$XDG_CONFIG_HOME/systemd/user`,
+enabled for `graphical-session.target`, on the bottom layer so they stay above
+hyprpaper whichever starts first. The unit is written only when video is selected
+and disabled when an image is selected. Choosing an image also stops other mpvpaper
+processes, because they would cover it. An mpvpaper started by another program is
+read as the actual video background and reported in `warnings`.
+
+First use records the actual configuration and applies nothing. Startup, page entry,
+polling and output events compare saved values with fresh readback: type, images,
+splash, and video while video is active. A remembered video is not a difference
+while an image shows. Conflicts keep both values and block writes until `Resolve
+("background", "system" | "settings")`. Failed application restores `hyprpaper.conf`,
+the previous images and the previous type, keeps the saved file, and stays in `error`.
+
+`warnings` also reports several running hyprpaper instances (changes reach only one)
+and full-screen layers drawn above the background.
+
+hyprpaper reads its configuration only at start and its IPC treats Fill as Cover, so
+splash changes and a newly chosen Fill restart it; everything else stays on IPC, sent
+only to outputs that changed so another output's Fill survives. A restart stops this
+Hyprland session's hyprpaper processes, identified by `HYPRLAND_INSTANCE_SIGNATURE`,
+which also clears duplicate instances. It starts one again through `hyprpaper.service`
+when that unit is enabled or active, otherwise through Hyprland with `hl.exec_cmd`. The
+background blanks for one to two seconds with a large image. Success requires hyprpaper
+to report the expected images; failure restores the file and restarts hyprpaper with it.
+While a video covers hyprpaper the file is written and the restart waits until the
+background returns to an image, happening under the video before it stops.
+
+## Accent color
+
+`colors.8983f367` takes `background` or `custom`. `colors.6f67371e` takes `#RRGGBB`
+and selects `custom`. `background` decodes the current background's first frame to at
+most 128 pixels per side with ffmpeg and picks the seed with `material-colors`: Celebi
+quantization followed by Score, the Material color utilities' source-color method. It
+resamples when the current background changes (the video, else the all-displays image,
+else the first image). A failed sample keeps the last color and fills `error`; it does
+not fail the background change. `accent.toml` is an application preference: missing
+means the default custom seed, and no system counterpart exists to reconcile.
+
+## Fonts
+
+The list comes from `fc-list` and is a live observation, so nothing is saved or
+reconciled. `Set("fonts.158ba0bb", path)` validates the extension (TTF, OTF, TTC, OTC,
+WOFF, WOFF2), size and `fc-query`, copies into `$XDG_DATA_HOME/fonts`, refuses to
+overwrite a file of the same name, runs `fc-cache`, confirms `fc-list` shows it, and
+removes the copy otherwise. `Set("fonts.f869cae5", family)` deletes that family's files
+inside the user font directory and verifies the removal; system-wide files stay, and a
+family with only system files is rejected. `fonts.65a8477b` and `fonts.fc3969c7` are
+reads, available through `font-search:` and `font:`, and reject `Set` with `ReadOnly`.
+Running applications may need reopening to see font changes.
+The page reads the list when opened and on the `fonts` change topic, and builds only
+rows near the viewport, because each preview loads a whole font file.

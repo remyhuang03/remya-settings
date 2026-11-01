@@ -3,7 +3,10 @@
     <!-- system-information returns api_version and per-ID value/error observations;
          its 16 about.* info fields reject Set with ReadOnly. about is app metadata.
          hostname reads static/runtime/saved names and conflict state.
-         Set about.0f142010 renames; Resolve hostname accepts system or settings. -->
+         Set about.0f142010 renames; Resolve hostname accepts system or settings.
+         background reads saved and system values; Resolve background accepts system or settings.
+         accent reads the Material seed. fonts, font-search:<query> and font:<family> read fonts.
+         Changed topics background, accent and fonts report updates. -->
     <method name="Get">
       <arg type="s" direction="in"/>
       <arg type="s" direction="out"/>

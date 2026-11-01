@@ -44,6 +44,8 @@ pub fn watch(state: Arc<Mutex<State>>, bus: gio::DBusConnection) {
                 let mut state = state.lock().unwrap();
                 let _ = state.display.refresh();
                 signal(&bus, "display", &state.display.state());
+                let _ = state.background.refresh();
+                signal(&bus, "background", &state.background.state());
             }
             thread::sleep(Duration::from_secs(1));
         }

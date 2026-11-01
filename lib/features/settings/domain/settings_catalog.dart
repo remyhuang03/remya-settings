@@ -67,6 +67,12 @@ class SettingsCatalog {
   static const pageAliases = {
     'advanced-display': 'display',
     'hypr-monitor-fields': 'display',
+    'colors': 'themes',
+    'hypr-wallpaper-outputs': 'background',
+    'hypr-paper-misc-options': 'background',
+    'hypr-cursor': 'cursor',
+    'hypr-cursor-theme': 'cursor',
+    'text-cursor': 'cursor',
   };
   SettingsPageSpec page(String id) =>
       pages.firstWhere((p) => p.id == (pageAliases[id] ?? id));

@@ -67,6 +67,12 @@ class ServicePreferencesController extends AppPreferencesController {
   SystemThemeState? _observed;
   bool _busy = false;
   (String, List<String>)? _failedChange;
+  String _accentSource = 'custom';
+  String? _accentError;
+  @override
+  String get accentSource => _accentSource;
+  @override
+  String? get accentError => _accentError;
   @override
   AppPreferences get preferences => _value;
   @override
@@ -84,14 +90,26 @@ class ServicePreferencesController extends AppPreferencesController {
   @override
   Future<void> reload() async {
     try {
-      final value = AppPreferences.fromMap(await client.call('Get', ['theme']));
+      final accent = await client.call('Get', ['accent']);
+      final value = AppPreferences.fromMap(await client.call('Get', ['theme']))
+          .copyWith(
+            seedColor: RemyaTheme.seedFromHex(
+              ThemeConfig.seedFromAccent(accent),
+            ),
+          );
       final observed = await systemAppearance.read();
+      final source = accent['source'] as String;
+      final accentError = accent['error'] as String?;
       final changed =
           value != _value ||
+          source != _accentSource ||
+          accentError != _accentError ||
           observed.mode != _observed?.mode ||
           errorMessage != null;
       _value = value;
       _observed = observed;
+      _accentSource = source;
+      _accentError = accentError;
       errorMessage = null;
       if (changed) notifyListeners();
     } catch (error) {
@@ -133,6 +151,12 @@ class ServicePreferencesController extends AppPreferencesController {
   @override
   Future<void> setThemeMode(SystemThemeMode value) =>
       _change('Set', [materialThemeModeSettingId, value.name]);
+  @override
+  Future<void> setAccentSource(String source) =>
+      _change('Set', [accentSourceSettingId, source]);
+  @override
+  Future<void> setAccentColor(String hex) =>
+      _change('Set', [accentColorSettingId, hex]);
   @override
   Future<void> useSystemConfiguration() =>
       _change('Resolve', ['appearance', 'system']);

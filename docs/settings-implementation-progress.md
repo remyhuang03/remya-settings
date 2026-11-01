@@ -6,14 +6,14 @@
 
 清单覆盖现有目录中的全部设置项，包括主要中文控件和保留原名的 Windows 参考细项；相同概念可能存在多个展示位置。下述数量统计的是控件条目，不是去重后的独立后端功能数量。公开资料与内部 schema 的边界见 [调研说明](windows-settings-research.md)。
 
-Hyprland 内容包含 105 个页面、837 项设置及 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
+Hyprland 内容包含 90 个页面、784 项设置及 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
 
-Energy recommendations（`energy`）与 Multitasking（`multitasking`）已按用户要求删除；原始 Windows 来源记录保留在覆盖文档的 removedPages 中，不再显示菜单、搜索结果或相关页面入口。
+Energy recommendations（`energy`）、Multitasking（`multitasking`）、Quick Facts、Navigation bar、Equipment usage、Copilot key、Qt application 与 Hyprland Blur variant 页面已按用户要求删除；光标相关页面已合并到 System 的 Cursor 页面；原始 Windows 来源记录保留在覆盖文档的 removedPages 中，不再显示菜单、搜索结果或相关页面入口。
 
 ## 当前概况
 
-- 设置分类：12 个；详情页面：278 个；设置条目：2053 项。
-- 已实现：54 项；未实现：1886 项；不适用：113 项。
+- 设置分类：12 个；详情页面：258 个；设置条目：1979 项。
+- 已实现：68 项；未实现：1808 项；不适用：103 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。
@@ -45,14 +45,14 @@ Energy recommendations（`energy`）与 Multitasking（`multitasking`）已按�
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 39 | 309 | 29 | 280 | 0 |
-| [蓝牙和设备](#category-devices) | 25 | 224 | 0 | 220 | 4 |
+| [系统](#category-system) | 38 | 336 | 46 | 290 | 0 |
+| [蓝牙和设备](#category-devices) | 24 | 201 | 0 | 197 | 4 |
 | [网络和 Internet](#category-network) | 15 | 90 | 0 | 88 | 2 |
-| [个性化](#category-personalization) | 45 | 282 | 2 | 270 | 10 |
+| [个性化](#category-personalization) | 26 | 202 | 16 | 186 | 0 |
 | [应用](#category-apps) | 14 | 59 | 0 | 59 | 0 |
 | [账户](#category-accounts) | 16 | 69 | 0 | 55 | 14 |
 | [时间和语言](#category-time) | 16 | 98 | 6 | 37 | 55 |
-| [辅助功能](#category-accessibility) | 15 | 242 | 0 | 242 | 0 |
+| [辅助功能](#category-accessibility) | 14 | 230 | 0 | 230 | 0 |
 | [隐私和安全性](#category-privacy) | 56 | 295 | 0 | 267 | 28 |
 | [系统更新](#category-update) | 4 | 21 | 0 | 21 | 0 |
 | [窗口与工作区](#category-hyprland) | 23 | 258 | 0 | 258 | 0 |
@@ -997,6 +997,82 @@ Windows 参考入口：`ms-settings:developers`。
 | xp mode · xp_mode | `hypr-render.xp-mode` | 开关 | 未实现 | — |
 
 
+### Cursor — `cursor`
+
+光标主题、指针外观、文本光标与光标行为；暂未实现
+
+页面状态：**未实现**；条目：41；已实现 0 / 未实现 41 / 不适用 0。
+
+原因：Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.
+
+Windows 参考入口：`ms-settings:easeofaccess-cursor`。
+
+#### Cursor theme
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Mouse cursor | `themes.cb5e32b2` | 操作 | 未实现 | — |
+| Hyprcursor theme name | `hypr-cursor-theme.theme` | 文本输入 | 未实现 | — |
+| Hyprcursor cursor size | `hypr-cursor-theme.size` | 文本输入 | 未实现 | — |
+| XCursor fallback theme | `hypr-cursor-theme.xcursor-theme` | 文本输入 | 未实现 | — |
+| XCursor rollback size | `hypr-cursor-theme.xcursor-size` | 文本输入 | 未实现 | — |
+| GTK application cursor theme | `hypr-cursor-theme.gtk` | 文本输入 | 未实现 | — |
+
+#### Pointer
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Pointer style | `pointer.6de7c60b` | 选择 | 未实现 | — |
+| Customize pointer color | `pointer.86209eba` | 颜色 | 未实现 | — |
+| Pointer size | `pointer.e8c2f48c` | 滑块 | 未实现 | — |
+
+#### Text cursor
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Text cursor indicator | `text-cursor.bb54f6b0` | 开关 | 未实现 | — |
+| Indicator size | `text-cursor.5829d690` | 滑块 | 未实现 | — |
+| Indicator color | `text-cursor.d04d1b72` | 颜色 | 未实现 | — |
+| Text cursor thickness | `text-cursor.60ececbf` | 滑块 | 未实现 | — |
+
+#### Windows reference settings
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Mouse pointer style | `pointer.reference.8a9af3b1` | 选择 | 未实现 | — |
+| Size | `pointer.reference.966d030b` | 选择 | 未实现 | — |
+| Text cursor indicator size | `text-cursor.reference.4c40f3ca` | 滑块 | 未实现 | — |
+| Text cursor indicator color | `text-cursor.reference.b0cd3942` | 选择 | 未实现 | — |
+| Text cursor thickness | `text-cursor.reference.7beee9f0` | 滑块 | 未实现 | — |
+
+#### Advanced
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| default monitor · default_monitor | `hypr-cursor.default-monitor` | 文本输入 | 未实现 | — |
+| Using Hyprcursor theme · enable_hyprcursor | `hypr-cursor.enable-hyprcursor` | 开关 | 未实现 | — |
+| Hide cursor on key press · hide_on_key_press | `hypr-cursor.hide-on-key-press` | 开关 | 未实现 | — |
+| hide on tablet · hide_on_tablet | `hypr-cursor.hide-on-tablet` | 开关 | 未实现 | — |
+| hide on touch · hide_on_touch | `hypr-cursor.hide-on-touch` | 开关 | 未实现 | — |
+| hotspot padding · hotspot_padding | `hypr-cursor.hotspot-padding` | 滑块 | 未实现 | — |
+| Idle hidden cursor timeout · inactive_timeout | `hypr-cursor.inactive-timeout` | 滑块 | 未实现 | — |
+| invisible · invisible | `hypr-cursor.invisible` | 开关 | 未实现 | — |
+| min refresh rate · min_refresh_rate | `hypr-cursor.min-refresh-rate` | 滑块 | 未实现 | — |
+| no break fs vrr · no_break_fs_vrr | `hypr-cursor.no-break-fs-vrr` | 滑块 | 未实现 | — |
+| Disable hardware cursors · no_hardware_cursors | `hypr-cursor.no-hardware-cursors` | 滑块 | 未实现 | — |
+| Disable automatic pointer movement · no_warps | `hypr-cursor.no-warps` | 开关 | 未实现 | — |
+| persistent warps · persistent_warps | `hypr-cursor.persistent-warps` | 开关 | 未实现 | — |
+| sync gsettings theme · sync_gsettings_theme | `hypr-cursor.sync-gsettings-theme` | 开关 | 未实现 | — |
+| use cpu buffer · use_cpu_buffer | `hypr-cursor.use-cpu-buffer` | 滑块 | 未实现 | — |
+| warp back after non mouse input · warp_back_after_non_mouse_input | `hypr-cursor.warp-back-after-non-mouse-input` | 开关 | 未实现 | — |
+| warp on change workspace · warp_on_change_workspace | `hypr-cursor.warp-on-change-workspace` | 滑块 | 未实现 | — |
+| warp on monitor change · warp_on_monitor_change | `hypr-cursor.warp-on-monitor-change` | 滑块 | 未实现 | — |
+| warp on toggle special · warp_on_toggle_special | `hypr-cursor.warp-on-toggle-special` | 滑块 | 未实现 | — |
+| zoom detached camera · zoom_detached_camera | `hypr-cursor.zoom-detached-camera` | 开关 | 未实现 | — |
+| zoom disable aa · zoom_disable_aa | `hypr-cursor.zoom-disable-aa` | 开关 | 未实现 | — |
+| Cursor zoom factor · zoom_factor | `hypr-cursor.zoom-factor` | 滑块 | 未实现 | — |
+| Fixed zoom anchor point · zoom_rigid | `hypr-cursor.zoom-rigid` | 开关 | 未实现 | — |
+
 <a id="category-devices"></a>
 
 ## 蓝牙和设备
@@ -1539,44 +1615,6 @@ Windows 参考入口：`ms-settings:wheel`。
 | move snap to grid · move_snap_to_grid | `hypr-gestures-scrolling.move-snap-to-grid` | 开关 | 未实现 | — |
 | move snap cursor · move_snap_cursor | `hypr-gestures-scrolling.move-snap-cursor` | 开关 | 未实现 | — |
 
-### Hyprland · Cursor engine — `hypr-cursor`
-
-合成器高级设置：cursor · Hyprland
-
-页面状态：**未实现**；条目：23；已实现 0 / 未实现 23 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 光标引擎
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| default monitor · default_monitor | `hypr-cursor.default-monitor` | 文本输入 | 未实现 | — |
-| Using Hyprcursor theme · enable_hyprcursor | `hypr-cursor.enable-hyprcursor` | 开关 | 未实现 | — |
-| Hide cursor on key press · hide_on_key_press | `hypr-cursor.hide-on-key-press` | 开关 | 未实现 | — |
-| hide on tablet · hide_on_tablet | `hypr-cursor.hide-on-tablet` | 开关 | 未实现 | — |
-| hide on touch · hide_on_touch | `hypr-cursor.hide-on-touch` | 开关 | 未实现 | — |
-| hotspot padding · hotspot_padding | `hypr-cursor.hotspot-padding` | 滑块 | 未实现 | — |
-| Idle hidden cursor timeout · inactive_timeout | `hypr-cursor.inactive-timeout` | 滑块 | 未实现 | — |
-| invisible · invisible | `hypr-cursor.invisible` | 开关 | 未实现 | — |
-| min refresh rate · min_refresh_rate | `hypr-cursor.min-refresh-rate` | 滑块 | 未实现 | — |
-| no break fs vrr · no_break_fs_vrr | `hypr-cursor.no-break-fs-vrr` | 滑块 | 未实现 | — |
-| Disable hardware cursors · no_hardware_cursors | `hypr-cursor.no-hardware-cursors` | 滑块 | 未实现 | — |
-| Disable automatic pointer movement · no_warps | `hypr-cursor.no-warps` | 开关 | 未实现 | — |
-| persistent warps · persistent_warps | `hypr-cursor.persistent-warps` | 开关 | 未实现 | — |
-| sync gsettings theme · sync_gsettings_theme | `hypr-cursor.sync-gsettings-theme` | 开关 | 未实现 | — |
-| use cpu buffer · use_cpu_buffer | `hypr-cursor.use-cpu-buffer` | 滑块 | 未实现 | — |
-| warp back after non mouse input · warp_back_after_non_mouse_input | `hypr-cursor.warp-back-after-non-mouse-input` | 开关 | 未实现 | — |
-| warp on change workspace · warp_on_change_workspace | `hypr-cursor.warp-on-change-workspace` | 滑块 | 未实现 | — |
-| warp on monitor change · warp_on_monitor_change | `hypr-cursor.warp-on-monitor-change` | 滑块 | 未实现 | — |
-| warp on toggle special · warp_on_toggle_special | `hypr-cursor.warp-on-toggle-special` | 滑块 | 未实现 | — |
-| zoom detached camera · zoom_detached_camera | `hypr-cursor.zoom-detached-camera` | 开关 | 未实现 | — |
-| zoom disable aa · zoom_disable_aa | `hypr-cursor.zoom-disable-aa` | 开关 | 未实现 | — |
-| Cursor zoom factor · zoom_factor | `hypr-cursor.zoom-factor` | 滑块 | 未实现 | — |
-| Fixed zoom anchor point · zoom_rigid | `hypr-cursor.zoom-rigid` | 开关 | 未实现 | — |
-
 ### Touchpad gesture binding · Rule field — `hypr-gesture-fields`
 
 按官方文档分类的组件参数 · Hyprland
@@ -1986,11 +2024,11 @@ Windows 参考入口：`ms-settings:wifi-provisioning`。
 
 ### Background — `background`
 
-壁纸、纯色与幻灯片
+桌面背景：图片（hyprpaper）或视频（mpvpaper）
 
-页面状态：**未实现**；条目：9；已实现 0 / 未实现 9 / 不适用 0。
+页面状态：**已实现**；条目：8；已实现 8 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Images use hyprpaper; videos use mpvpaper, because hyprpaper cannot play video.
 
 Windows 参考入口：`ms-settings:personalization-background`。
 
@@ -1998,87 +2036,55 @@ Windows 参考入口：`ms-settings:personalization-background`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Background type | `background.99b01ada` | 选择 | 未实现 | — |
-| Browse photos | `background.9e58290b` | 操作 | 未实现 | — |
-| Desktop picture adaptation method | `background.56c289eb` | 选择 | 未实现 | — |
-| Switch picture interval | `background.de8d2f50` | 选择 | 未实现 | — |
-| Shuffle | `background.eca2a518` | 开关 | 未实现 | — |
-| Background color | `background.4a2d8a28` | 颜色 | 未实现 | — |
+| Background type | `background.99b01ada` | 选择 | 已实现 | 见下文“Background, accent and fonts” |
+| Display | `background.display` | 选择 | 已实现 | 见下文“Background, accent and fonts” |
+| Background file | `background.9e58290b` | 操作 | 已实现 | 见下文“Background, accent and fonts” |
+| Fit | `background.56c289eb` | 选择 | 已实现 | 见下文“Background, accent and fonts” |
 
-#### Windows 参考细项
+#### Advanced
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Personalize your background | `background.reference.fdec0d3a` | 开关 | 未实现 | — |
-| Choose a photo | `background.reference.a8aee03d` | 选择 | 未实现 | — |
-| Choose a fit for your desktop image | `background.reference.0518a1f3` | 选择 | 未实现 | — |
+| Video when covered | `background.video-pause` | 选择 | 已实现 | 见下文“Background, accent and fonts” |
+| Show splash text | `hypr-paper-misc-options.splash` | 开关 | 已实现 | 见下文“Background, accent and fonts” |
+| Splash offset | `hypr-paper-misc-options.splash-offset` | 滑块 | 已实现 | 见下文“Background, accent and fonts” |
+| Splash opacity | `hypr-paper-misc-options.splash-opacity` | 滑块 | 已实现 | 见下文“Background, accent and fonts” |
 
-### Color — `colors`
+### Colors and themes — `themes`
 
-明暗模式、强调色与透明效果
+深浅色、强调色、Material 调色板与主题
 
-页面状态：**未实现**；条目：13；已实现 0 / 未实现 13 / 不适用 0。
+页面状态：**未实现**；条目：12；已实现 4 / 未实现 8 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Light/Dark, accent color and Material palette work. Other theme controls remain previews.
 
-Windows 参考入口：`ms-settings:personalization-colors`、`ms-settings:colors`。
+Windows 参考入口：`ms-settings:personalization-colors`、`ms-settings:colors`、`ms-settings:themes`。
 
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Pattern | `colors.ed0eea8f` | 选择 | 未实现 | — |
-| Transparency effect | `colors.3630e7d0` | 开关 | 未实现 | — |
-| Accent color source | `colors.8983f367` | 选择 | 未实现 | — |
-| Accent Color | `colors.6f67371e` | 颜色 | 未实现 | — |
-| Show accent color on taskbar | `colors.c3a39826` | 开关 | 未实现 | — |
-| Display accent color in title bar and window border | `colors.ac16e9e8` | 开关 | 未实现 | — |
-
-#### Windows 参考细项
+#### Color
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Choose your mode | `colors.reference.1232ca77` | 选择 | 未实现 | — |
-| Transparency Effects | `colors.reference.ed936eee` | 开关 | 未实现 | — |
-| Accent Color | `colors.reference.8fd43cc0` | 选择 | 未实现 | — |
-| Windows Color | `colors.reference.14bc5762` | 选择 | 未实现 | — |
-| Custom Color | `colors.reference.b4c97f0e` | 选择 | 未实现 | — |
-| Show Accent color on start and Taskbar | `colors.reference.990d69cf` | 选择 | 未实现 | — |
-| Show Accent color on Title bar and window border | `colors.reference.47f631a5` | 选择 | 未实现 | — |
-
-### Themes — `themes`
-
-主题组合、声音与指针
-
-页面状态：**未实现**；条目：10；已实现 2 / 未实现 8 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:themes`。
-
-#### Material Design
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Material style variant | `themes.material-style-variant` | 选择 | 已实现 | App-only TOML persistence and runtime theme; Tonal spot default; see app-preferences.md and appearance tests |
 | Dark theme | `themes.material-theme-mode` | 选择 | 已实现 | Rust GNOME/GTK Light/Dark and documented Qt Quick defaults via fish/Hyprland; Light/Dark icon buttons, backend target diagnostics hidden; see app-preferences.md and backend tests |
+| Accent color source | `colors.8983f367` | 选择 | 已实现 | 见下文“Background, accent and fonts” |
+| Accent Color | `colors.6f67371e` | 颜色 | 已实现 | 见下文“Background, accent and fonts” |
+| Material style variant | `themes.material-style-variant` | 选择 | 已实现 | App-only TOML persistence and runtime theme; Tonal spot default; see app-preferences.md and appearance tests |
+| Transparency effect | `colors.3630e7d0` | 开关 | 未实现 | — |
 
-#### 设置
+#### Themes
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Choose a topic | `themes.a9039704` | 操作 | 未实现 | — |
 | Save theme | `themes.d582c922` | 操作 | 未实现 | — |
 | Background | `themes.b13d33a5` | 操作 | 未实现 | — |
-| Color | `themes.8ef48860` | 操作 | 未实现 | — |
 | Sound | `themes.ab9ff81d` | 操作 | 未实现 | — |
-| Mouse cursor | `themes.cb5e32b2` | 操作 | 未实现 | — |
 | Desktop icon settings | `themes.26420e25` | 操作 | 未实现 | — |
 
-#### Windows 参考细项
+#### Windows reference settings
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
+| Transparency Effects | `colors.reference.ed936eee` | 开关 | 未实现 | — |
 | Themes | `themes.reference.94d5186b` | 选择 | 未实现 | — |
 
 ### Lock screen interface — `lockscreen`
@@ -2259,11 +2265,11 @@ Windows 参考入口：`ms-settings:taskbar`。
 
 ### Fonts — `fonts`
 
-字体预览、安装与字体目录
+浏览、预览、安装与卸载字体
 
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+页面状态：**已实现**；条目：4；已实现 4 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Reads the fontconfig font list. Installs and removes font files only in your user font directory.
 
 Windows 参考入口：`ms-settings:fonts`。
 
@@ -2271,10 +2277,10 @@ Windows 参考入口：`ms-settings:fonts`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Search fonts | `fonts.65a8477b` | 文本输入 | 未实现 | — |
-| Install fonts | `fonts.158ba0bb` | 操作 | 未实现 | — |
-| Font details | `fonts.fc3969c7` | 操作 | 未实现 | — |
-| Uninstall fonts | `fonts.f869cae5` | 操作 | 未实现 | — |
+| Search fonts | `fonts.65a8477b` | 文本输入 | 已实现 | 见下文“Background, accent and fonts” |
+| Install fonts | `fonts.158ba0bb` | 操作 | 已实现 | 见下文“Background, accent and fonts” |
+| Font details | `fonts.fc3969c7` | 操作 | 已实现 | 见下文“Background, accent and fonts” |
+| Uninstall fonts | `fonts.f869cae5` | 操作 | 已实现 | 见下文“Background, accent and fonts” |
 
 ### Dynamic light effects — `lighting`
 
@@ -2296,76 +2302,6 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 | Effect | `lighting.151ddd4f` | 选择 | 未实现 | — |
 | Light color | `lighting.bf0bca1e` | 颜色 | 未实现 | — |
 | Match with accent colors | `lighting.869e06ec` | 开关 | 未实现 | — |
-
-### Equipment usage — `device-usage`
-
-Windows 个性化建议参考
-
-页面状态：**不适用**；条目：6；已实现 0 / 未实现 0 / 不适用 6。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:deviceusage`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Development | `device-usage.eb3774e3` | 开关 | 不适用 | — |
-| Gaming | `device-usage.2305ee3c` | 开关 | 不适用 | — |
-| Family | `device-usage.7cc8d6a5` | 开关 | 不适用 | — |
-| Creativity | `device-usage.f3681782` | 开关 | 不适用 | — |
-| School | `device-usage.08610a85` | 开关 | 不适用 | — |
-| Business | `device-usage.60d5c2a0` | 开关 | 不适用 | — |
-
-### Copilot key — `copilot-key`
-
-专用键行为参考
-
-页面状态：**不适用**；条目：2；已实现 0 / 未实现 0 / 不适用 2。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:personalization-textinput-copilot-hardwarekey`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Dedicated key actions | `copilot-key.965faf7e` | 选择 | 不适用 | — |
-| Select application | `copilot-key.9ec480c1` | 操作 | 不适用 | — |
-
-### Quick Facts — `personalization-glance`
-
-旧版页面，仅保留参考
-
-页面状态：**不适用**；条目：1；已实现 0 / 未实现 0 / 不适用 1。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:personalization-glance`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Functional status | `personalization-glance.540cc78d` | 信息展示 | 不适用 | — |
-
-### Navigation bar — `personalization-navbar`
-
-旧版页面，仅保留参考
-
-页面状态：**不适用**；条目：1；已实现 0 / 未实现 0 / 不适用 1。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:personalization-navbar`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Functional status | `personalization-navbar.540cc78d` | 信息展示 | 不适用 | — |
 
 ### Personalization overview — `personalization`
 
@@ -2437,7 +2373,7 @@ Windows 参考入口：`ms-settings:personalization`。
 
 合成器高级设置：decoration.blur · Hyprland
 
-页面状态：**未实现**；条目：17；已实现 0 / 未实现 17 / 不适用 0。
+页面状态：**未实现**；条目：16；已实现 0 / 未实现 16 / 不适用 0。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -2460,177 +2396,9 @@ Windows 参考入口：`ms-settings:personalization`。
 | Pop-up window transparency threshold · popups_ignorealpha | `hypr-decoration-blur.popups-ignorealpha` | 滑块 | 未实现 | — |
 | Window or control size · size | `hypr-decoration-blur.size` | 文本输入 | 未实现 | — |
 | Special workspace is blurred · special | `hypr-decoration-blur.special` | 开关 | 未实现 | — |
-| Effect variant · variant | `hypr-decoration-blur.variant` | 选择 | 未实现 | — |
 | Blur color saturation improvement · vibrancy | `hypr-decoration-blur.vibrancy` | 滑块 | 未实现 | — |
 | Effect of dark area saturation · vibrancy_darkness | `hypr-decoration-blur.vibrancy-darkness` | 滑块 | 未实现 | — |
 | Penetration effect · xray | `hypr-decoration-blur.xray` | 开关 | 未实现 | — |
-
-### Hyprland · Blur variant: acrylic — `hypr-decoration-blur-acrylic`
-
-合成器高级设置：decoration.blur.acrylic · Hyprland
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### decoration.blur.acrylic
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| aberration · aberration | `hypr-decoration-blur-acrylic.aberration` | 滑块 | 未实现 | — |
-| bulb · bulb | `hypr-decoration-blur-acrylic.bulb` | 滑块 | 未实现 | — |
-| clarity · clarity | `hypr-decoration-blur-acrylic.clarity` | 滑块 | 未实现 | — |
-| refraction · refraction | `hypr-decoration-blur-acrylic.refraction` | 滑块 | 未实现 | — |
-| tint · tint | `hypr-decoration-blur-acrylic.tint` | 颜色 | 未实现 | — |
-
-### Hyprland · Blur variant: aurora — `hypr-decoration-blur-aurora`
-
-合成器高级设置：decoration.blur.aurora · Hyprland
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### decoration.blur.aurora
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| color1 · color1 | `hypr-decoration-blur-aurora.color1` | 颜色 | 未实现 | — |
-| color2 · color2 | `hypr-decoration-blur-aurora.color2` | 颜色 | 未实现 | — |
-| intensity · intensity | `hypr-decoration-blur-aurora.intensity` | 滑块 | 未实现 | — |
-| speed · speed | `hypr-decoration-blur-aurora.speed` | 滑块 | 未实现 | — |
-
-### Hyprland · Blur variant: drops — `hypr-decoration-blur-drops`
-
-合成器高级设置：decoration.blur.drops · Hyprland
-
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### decoration.blur.drops
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| speed · speed | `hypr-decoration-blur-drops.speed` | 滑块 | 未实现 | — |
-
-### Hyprland · Blur variant: fluid_jar — `hypr-decoration-blur-fluid-jar`
-
-合成器高级设置：decoration.blur.fluid_jar · Hyprland
-
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### decoration.blur.fluid_jar
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| color · color | `hypr-decoration-blur-fluid-jar.color` | 颜色 | 未实现 | — |
-| distortion · distortion | `hypr-decoration-blur-fluid-jar.distortion` | 滑块 | 未实现 | — |
-| fill amount · fill_amount | `hypr-decoration-blur-fluid-jar.fill-amount` | 滑块 | 未实现 | — |
-| mass · mass | `hypr-decoration-blur-fluid-jar.mass` | 滑块 | 未实现 | — |
-| precision · precision | `hypr-decoration-blur-fluid-jar.precision` | 滑块 | 未实现 | — |
-| speed · speed | `hypr-decoration-blur-fluid-jar.speed` | 滑块 | 未实现 | — |
-| turbulence · turbulence | `hypr-decoration-blur-fluid-jar.turbulence` | 滑块 | 未实现 | — |
-
-### Hyprland · Blur variant: glass — `hypr-decoration-blur-glass`
-
-合成器高级设置：decoration.blur.glass · Hyprland
-
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### decoration.blur.glass
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| refraction · refraction | `hypr-decoration-blur-glass.refraction` | 滑块 | 未实现 | — |
-| roughness · roughness | `hypr-decoration-blur-glass.roughness` | 滑块 | 未实现 | — |
-| Window or control size · size | `hypr-decoration-blur-glass.size` | 滑块 | 未实现 | — |
-
-### Hyprland · Blur variant: haze — `hypr-decoration-blur-haze`
-
-合成器高级设置：decoration.blur.haze · Hyprland
-
-页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### decoration.blur.haze
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| intensity · intensity | `hypr-decoration-blur-haze.intensity` | 滑块 | 未实现 | — |
-| iridescence · iridescence | `hypr-decoration-blur-haze.iridescence` | 滑块 | 未实现 | — |
-
-### Hyprland · Blur variant: heat_shimmer — `hypr-decoration-blur-heat-shimmer`
-
-合成器高级设置：decoration.blur.heat_shimmer · Hyprland
-
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### decoration.blur.heat_shimmer
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| speed · speed | `hypr-decoration-blur-heat-shimmer.speed` | 滑块 | 未实现 | — |
-
-### Hyprland · Blur variant: ripple — `hypr-decoration-blur-ripple`
-
-合成器高级设置：decoration.blur.ripple · Hyprland
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### decoration.blur.ripple
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| duration · duration | `hypr-decoration-blur-ripple.duration` | 滑块 | 未实现 | — |
-| radius · radius | `hypr-decoration-blur-ripple.radius` | 滑块 | 未实现 | — |
-| strength · strength | `hypr-decoration-blur-ripple.strength` | 滑块 | 未实现 | — |
-| width · width | `hypr-decoration-blur-ripple.width` | 滑块 | 未实现 | — |
-
-### Hyprland · Blur variant: water — `hypr-decoration-blur-water`
-
-合成器高级设置：decoration.blur.water · Hyprland
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### decoration.blur.water
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| damping · damping | `hypr-decoration-blur-water.damping` | 滑块 | 未实现 | — |
-| duration · duration | `hypr-decoration-blur-water.duration` | 滑块 | 未实现 | — |
-| radius · radius | `hypr-decoration-blur-water.radius` | 滑块 | 未实现 | — |
-| speed · speed | `hypr-decoration-blur-water.speed` | 滑块 | 未实现 | — |
-| strength · strength | `hypr-decoration-blur-water.strength` | 滑块 | 未实现 | — |
 
 ### Hyprland · Window Shadows — `hypr-decoration-shadow`
 
@@ -2786,25 +2554,6 @@ Windows 参考入口：`ms-settings:personalization`。
 | --- | --- | --- | --- | --- |
 | Display welcome banner · splash | `hypr-misc-col.splash` | 颜色 | 未实现 | — |
 
-### Hyprpaper wallpaper options · Other options — `hypr-paper-misc-options`
-
-按官方文档分类的组件参数 · 可选组件 hyprpaper
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprpaper 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-paper](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprpaper.md)。
-
-#### 其他选项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Display welcome banner · splash | `hypr-paper-misc-options.splash` | 开关 | 未实现 | — |
-| Welcome banner offset · splash_offset | `hypr-paper-misc-options.splash-offset` | 文本输入 | 未实现 | — |
-| Welcome banner transparency · splash_opacity | `hypr-paper-misc-options.splash-opacity` | 文本输入 | 未实现 | — |
-| Components IPC switch · ipc | `hypr-paper-misc-options.ipc` | 开关 | 未实现 | — |
-
 ### Hyprsunset color temperature · General configuration — `hypr-sunset-configuration`
 
 按官方文档分类的组件参数 · 可选组件 hyprsunset
@@ -2840,46 +2589,6 @@ Windows 参考入口：`ms-settings:personalization`。
 | Gamma brightness · gamma | `hypr-sunset-profile.gamma` | 文本输入 | 未实现 | — |
 | Disable color temperature changes · identity | `hypr-sunset-profile.identity` | 开关 | 未实现 | — |
 | Switch command · on-switch | `hypr-sunset-profile.on-switch` | 文本输入 | 未实现 | — |
-
-### Qt application appearance · Theme — `hypr-qt-theme`
-
-按官方文档分类的组件参数 · 可选组件 hyprqt6engine
-
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprqt6engine 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-qt](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprqt6engine.md)。
-
-#### 主题
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| color scheme · color_scheme | `hypr-qt-theme.color-scheme` | 文本输入 | 未实现 | — |
-| icon theme · icon_theme | `hypr-qt-theme.icon-theme` | 文本输入 | 未实现 | — |
-| style · style | `hypr-qt-theme.style` | 文本输入 | 未实现 | — |
-| font fixed · font_fixed | `hypr-qt-theme.font-fixed` | 文本输入 | 未实现 | — |
-| font fixed size · font_fixed_size | `hypr-qt-theme.font-fixed-size` | 文本输入 | 未实现 | — |
-| font · font | `hypr-qt-theme.font` | 文本输入 | 未实现 | — |
-| Font size · font_size | `hypr-qt-theme.font-size` | 文本输入 | 未实现 | — |
-
-### Qt application appearance · Other settings — `hypr-qt-misc`
-
-按官方文档分类的组件参数 · 可选组件 hyprqt6engine
-
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprqt6engine 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-qt](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprqt6engine.md)。
-
-#### 其他设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| single click activate · single_click_activate | `hypr-qt-misc.single-click-activate` | 开关 | 未实现 | — |
-| menus have icons · menus_have_icons | `hypr-qt-misc.menus-have-icons` | 开关 | 未实现 | — |
-| shortcuts for context menus · shortcuts_for_context_menus | `hypr-qt-misc.shortcuts-for-context-menus` | 开关 | 未实现 | — |
 
 ### Animation trees and curves — `hypr-animation-editor`
 
@@ -2924,47 +2633,6 @@ Windows 参考入口：`ms-settings:personalization`。
 | Gradient angle | `hypr-gradient-editor.angle` | 文本输入 | 未实现 | — |
 | Active and inactive color matching | `hypr-gradient-editor.active` | 文本输入 | 未实现 | — |
 | Preview gradient | `hypr-gradient-editor.preview` | 操作 | 未实现 | — |
-
-### Set wallpaper by monitor — `hypr-wallpaper-outputs`
-
-独立壁纸、目录轮换与后备壁纸 · 可选组件 hyprpaper
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprpaper 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-paper](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprpaper.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Monitor names or fallback rules | `hypr-wallpaper-outputs.monitor` | 文本输入 | 未实现 | — |
-| Picture files or directories | `hypr-wallpaper-outputs.path` | 文本输入 | 未实现 | — |
-| Filling method | `hypr-wallpaper-outputs.fit` | 选择 | 未实现 | — |
-| Directory rotation interval (seconds) | `hypr-wallpaper-outputs.timeout` | 文本输入 | 未实现 | — |
-| Rotation order | `hypr-wallpaper-outputs.order` | 选择 | 未实现 | — |
-| Scan subdirectories | `hypr-wallpaper-outputs.recursive` | 开关 | 未实现 | — |
-
-### Hyprcursor and XCursor themes — `hypr-cursor-theme`
-
-主题名称、尺寸与 GTK 应用兼容 · Hyprcursor / XCursor 主题组件
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；Hyprcursor / XCursor 主题组件 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-cursor](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprcursor.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Hyprcursor theme name | `hypr-cursor-theme.theme` | 文本输入 | 未实现 | — |
-| Hyprcursor cursor size | `hypr-cursor-theme.size` | 文本输入 | 未实现 | — |
-| XCursor fallback theme | `hypr-cursor-theme.xcursor-theme` | 文本输入 | 未实现 | — |
-| XCursor rollback size | `hypr-cursor-theme.xcursor-size` | 文本输入 | 未实现 | — |
-| GTK application cursor theme | `hypr-cursor-theme.gtk` | 文本输入 | 未实现 | — |
 
 ### Desktop components and style presets — `hypr-shell-components`
 
@@ -4000,13 +3668,13 @@ Windows 参考入口：`ms-settings:easeofaccess-visualeffects`。
 | Animation effects | `visual-effects.reference.6aa5bc02` | 开关 | 未实现 | — |
 | Dismiss notifications after preferred amount of time | `visual-effects.reference.5b6b06b4` | 选择 | 未实现 | — |
 
-### Mouse pointer and touch — `pointer`
+### Touch indicator — `pointer`
 
-指针样式、尺寸与触控提示
+触摸指示器外观
 
-页面状态：**未实现**；条目：9；已实现 0 / 未实现 9 / 不适用 0。
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.
 
 Windows 参考入口：`ms-settings:easeofaccess-mousepointer`。
 
@@ -4014,47 +3682,15 @@ Windows 参考入口：`ms-settings:easeofaccess-mousepointer`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Pointer style | `pointer.6de7c60b` | 选择 | 未实现 | — |
-| Customize pointer color | `pointer.86209eba` | 颜色 | 未实现 | — |
-| Pointer size | `pointer.e8c2f48c` | 滑块 | 未实现 | — |
 | Touch indicator | `pointer.09f053c7` | 开关 | 未实现 | — |
 | Darken and enlarge touch indicators | `pointer.14b7860f` | 开关 | 未实现 | — |
 
-#### Windows 参考细项
+#### Windows reference settings
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Mouse pointer style | `pointer.reference.8a9af3b1` | 选择 | 未实现 | — |
-| Size | `pointer.reference.966d030b` | 选择 | 未实现 | — |
 | Touch indicator | `pointer.reference.09b6b51e` | 开关 | 未实现 | — |
 | Make the touch indicator circle darker and larger | `pointer.reference.5ed3015e` | 开关 | 未实现 | — |
-
-### Text cursor — `text-cursor`
-
-指示器颜色与光标粗细
-
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:easeofaccess-cursor`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Text cursor indicator | `text-cursor.bb54f6b0` | 开关 | 未实现 | — |
-| Indicator size | `text-cursor.5829d690` | 滑块 | 未实现 | — |
-| Indicator color | `text-cursor.d04d1b72` | 颜色 | 未实现 | — |
-| Text cursor thickness | `text-cursor.60ececbf` | 滑块 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Text cursor indicator size | `text-cursor.reference.4c40f3ca` | 滑块 | 未实现 | — |
-| Text cursor indicator color | `text-cursor.reference.b0cd3942` | 选择 | 未实现 | — |
-| Text cursor thickness | `text-cursor.reference.7beee9f0` | 滑块 | 未实现 | — |
 
 ### Magnifier — `magnifier`
 
@@ -6743,3 +6379,19 @@ Wayland、XDG、主题与应用环境 · Hyprland
   read all three monitors through socket1 and received a real `openlayer` event
   through socket2. All task-started instances were stopped and reserved space
   returned to the existing desktop baseline.
+
+## Background, accent and fonts (2026-11-02)
+
+- Background: images through hyprpaper configuration and IPC, videos through a managed mpvpaper user unit. Selected files are copied into the application directory and only the copy is referenced. Slideshow and solid color were removed by owner request; `hypr-wallpaper-outputs` and `hypr-paper-misc-options` now open Background.
+- Color and Themes merged into `themes` (`colors` opens it). Accent follows the background through `material-colors` (Celebi and Score) or a `flex_color_picker` choice. Pattern, taskbar and title-bar accent toggles, Quick Facts, Navigation bar, Equipment usage, Copilot key and Qt application pages were removed by owner request.
+- Cursor settings moved unchanged to the System Cursor page, still unimplemented; feature-specific options such as touchpad cursor speed and magnifier following stay with their features.
+- Fonts: fontconfig list, search, details, install to and uninstall from the user font directory.
+- Automated: Rust unit tests with fake desktop and fontconfig (initialization, conflicts, both resolutions, rollback, copy cleanup, sampling failure), Flutter widget tests, and `test/interface_smoke.py` against the installed release with a previously built Bar, proving the unchanged `theme` contract.
+- Nested Hyprland with isolated XDG and D-Bus, using real hyprpaper, ffmpeg and fontconfig: first use recorded the `wallpaper[]:` form without changes; a selected image displayed, kept working after its original was deleted, and kept comments and a backup; pixel checks for cover, contain and tile passed and confirmed that hyprpaper IPC shows Fill as Cover; accent resampled on change; external edits raised a conflict that resolved. Pages were reviewed from screenshots.
+- Lock screen: Quickshell's desktop layer was replaced by a lock-only `LockBackground`. In a nested session with `session_lock_xray` the lock shows the blurred Quickshell wallpaper and clock above a different hyprpaper image.
+- Installed build on the real desktop: a test video ran through the managed unit above hyprpaper on all three outputs, and switching back to image stopped it; test files were then removed and configuration restored byte for byte.
+- A real smoke run on 2026-11-02 renamed the workstation because a rejected `Open` still requested authorization and the rename check ran after it. `Open` now authorizes only on success, and the smoke test refuses that check while authorized.
+- hyprpaper restarts automatically for splash changes and a newly chosen Fill, limited to the current Hyprland session; see public-api.md.
+- Nested Hyprland with two virtual outputs and the release build: Fill and splash changes restarted hyprpaper in about 1.6 s and reduced two instances to one; pixels confirmed Fill, Cover through IPC without a restart, and a per-display image; the workstation's hyprpaper kept its PID.
+- Fonts page performance: the list is lazy with no Show more. With 478 real families, opening loaded 21 font files instead of 50, and keyboard navigation scrolled through the list while loading only nearby fonts.
+- Untested: a real session lock on the workstation, per-display images on physical outputs, automatic hyprpaper restart on the workstation, video across a real sign-in, the native file and color picker dialogs, and `switchwall.sh` through the wallpaper selector. Real-desktop image changes wait for the duplicate hyprpaper instance to be resolved.

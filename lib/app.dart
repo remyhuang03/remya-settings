@@ -3,6 +3,8 @@ import 'features/system_information/application/hostname_controller.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 import 'package:material_ui/material_ui.dart';
 
+import 'features/background/application/background_controller.dart';
+import 'features/fonts/application/fonts_controller.dart';
 import 'features/date_time/application/date_time_controller.dart';
 import 'features/display/application/display_controller.dart';
 import 'features/integration/settings_status.dart';
@@ -25,7 +27,11 @@ class RemyaSettingsApp extends StatefulWidget {
     this.scheduler,
     this.systemInformation,
     this.hostname,
+    this.background,
+    this.fonts,
   });
+  final BackgroundController? background;
+  final FontsController? fonts;
   final AppPreferencesController? preferences;
   final DateTimeController? dateTime;
   final DisplayController? display;
@@ -55,6 +61,8 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     widget.dateTime?.dispose();
     widget.display?.dispose();
     widget.hostname?.dispose();
+    widget.background?.dispose();
+    widget.fonts?.dispose();
     super.dispose();
   }
 
@@ -115,6 +123,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
                   preferences: _preferences,
                   dateTime: widget.dateTime,
                   display: widget.display,
+                  background: widget.background,
                 ),
               );
             },
@@ -128,8 +137,14 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     final withDisplay = widget.display == null
         ? withHostname
         : DisplayScope(controller: widget.display!, child: withHostname);
-    return widget.dateTime == null
+    final withBackground = widget.background == null
         ? withDisplay
-        : DateTimeScope(controller: widget.dateTime!, child: withDisplay);
+        : BackgroundScope(controller: widget.background!, child: withDisplay);
+    final withFonts = widget.fonts == null
+        ? withBackground
+        : FontsScope(controller: widget.fonts!, child: withBackground);
+    return widget.dateTime == null
+        ? withFonts
+        : DateTimeScope(controller: widget.dateTime!, child: withFonts);
   }
 }

@@ -3,6 +3,7 @@ import '../system_information/application/hostname_controller.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../appearance/application/app_preferences_controller.dart';
+import '../background/application/background_controller.dart';
 import '../date_time/application/date_time_controller.dart';
 import '../display/application/display_controller.dart';
 import '../display/presentation/display_settings.dart';
@@ -13,16 +14,18 @@ class SettingsStatus extends StatelessWidget {
     required this.preferences,
     this.dateTime,
     this.display,
+    this.background,
     this.navigatorKey,
   });
   final AppPreferencesController preferences;
+  final BackgroundController? background;
   final DateTimeController? dateTime;
   final DisplayController? display;
   final GlobalKey<NavigatorState>? navigatorKey;
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: Listenable.merge([preferences, dateTime, display]),
+    listenable: Listenable.merge([preferences, dateTime, display, background]),
     builder: (context, _) => ConstrainedBox(
       constraints: BoxConstraints(
         maxHeight: MediaQuery.sizeOf(context).height * 0.5,
@@ -64,6 +67,37 @@ class SettingsStatus extends StatelessWidget {
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
                   title: 'Date and time: ${controller.errorMessage}',
+                  busy: controller.isBusy,
+                  useSystem: controller.retry,
+                ),
+            ],
+            if (background case final controller?) ...[
+              if (controller.hasConflict)
+                _ConflictWarning(
+                  navigatorKey: navigatorKey,
+                  title:
+                      'Background differs from saved Settings.\n${controller.conflictSummary}',
+                  busy: controller.isBusy,
+                  useSystem: controller.useSystemConfiguration,
+                  useSettings: controller.applySavedConfiguration,
+                ),
+              if (controller.writeBlocked case final reason?)
+                _StatusCard(
+                  error: true,
+                  icon: Icons.lock_outline_rounded,
+                  title: 'hyprpaper configuration is read-only',
+                  message: reason,
+                  actions: [
+                    TextButton(
+                      onPressed: controller.isBusy ? null : controller.reload,
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              if (controller.errorMessage case final message?)
+                _ConflictWarning(
+                  navigatorKey: navigatorKey,
+                  title: 'Background: $message',
                   busy: controller.isBusy,
                   useSystem: controller.retry,
                 ),

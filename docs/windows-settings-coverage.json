@@ -443,13 +443,13 @@
     },
     {
       "uri": "ms-settings:personalization-colors",
-      "page": "colors",
+      "page": "themes",
       "sourceCategory": "Personalization",
       "title": "Colors"
     },
     {
       "uri": "ms-settings:colors",
-      "page": "colors",
+      "page": "themes",
       "sourceCategory": "Personalization",
       "title": "Colors"
     },
@@ -2129,7 +2129,7 @@
       ],
       "page": "background",
       "coverage": "control",
-      "control": "background.reference.fdec0d3a"
+      "control": "background.99b01ada"
     },
     {
       "area": "Personalization",
@@ -2139,7 +2139,7 @@
       ],
       "page": "background",
       "coverage": "control",
-      "control": "background.reference.a8aee03d"
+      "control": "background.9e58290b"
     },
     {
       "area": "Personalization",
@@ -2149,14 +2149,14 @@
       ],
       "page": "background",
       "coverage": "control",
-      "control": "background.reference.0518a1f3"
+      "control": "background.56c289eb"
     },
     {
       "area": "Personalization",
       "path": [
         "Colors"
       ],
-      "page": "colors",
+      "page": "themes",
       "coverage": "section"
     },
     {
@@ -2165,9 +2165,9 @@
         "Colors",
         "Choose your mode"
       ],
-      "page": "colors",
+      "page": "themes",
       "coverage": "control",
-      "control": "colors.reference.1232ca77"
+      "control": "themes.material-theme-mode"
     },
     {
       "area": "Personalization",
@@ -2175,7 +2175,7 @@
         "Colors",
         "Transparency Effects"
       ],
-      "page": "colors",
+      "page": "themes",
       "coverage": "control",
       "control": "colors.reference.ed936eee"
     },
@@ -2185,9 +2185,9 @@
         "Colors",
         "Accent Color"
       ],
-      "page": "colors",
+      "page": "themes",
       "coverage": "control",
-      "control": "colors.reference.8fd43cc0"
+      "control": "colors.6f67371e"
     },
     {
       "area": "Personalization",
@@ -2195,9 +2195,9 @@
         "Colors",
         "Windows Color"
       ],
-      "page": "colors",
+      "page": "themes",
       "coverage": "control",
-      "control": "colors.reference.14bc5762"
+      "control": "colors.6f67371e"
     },
     {
       "area": "Personalization",
@@ -2205,9 +2205,9 @@
         "Colors",
         "Custom Color"
       ],
-      "page": "colors",
+      "page": "themes",
       "coverage": "control",
-      "control": "colors.reference.b4c97f0e"
+      "control": "colors.6f67371e"
     },
     {
       "area": "Personalization",
@@ -2215,9 +2215,8 @@
         "Colors",
         "Show Accent color on start and Taskbar"
       ],
-      "page": "colors",
-      "coverage": "control",
-      "control": "colors.reference.990d69cf"
+      "page": "themes",
+      "coverage": "removed"
     },
     {
       "area": "Personalization",
@@ -2225,9 +2224,8 @@
         "Colors",
         "Show Accent color on Title bar and window border"
       ],
-      "page": "colors",
-      "coverage": "control",
-      "control": "colors.reference.47f631a5"
+      "page": "themes",
+      "coverage": "removed"
     },
     {
       "area": "Personalization",
@@ -2995,7 +2993,7 @@
         "Mouse pointer and touch",
         "Mouse pointer style"
       ],
-      "page": "pointer",
+      "page": "cursor",
       "coverage": "control",
       "control": "pointer.reference.8a9af3b1"
     },
@@ -3005,7 +3003,7 @@
         "Mouse pointer and touch",
         "Size"
       ],
-      "page": "pointer",
+      "page": "cursor",
       "coverage": "control",
       "control": "pointer.reference.966d030b"
     },
@@ -3053,7 +3051,7 @@
         "Text cursor indicator",
         "Text cursor indicator size"
       ],
-      "page": "text-cursor",
+      "page": "cursor",
       "coverage": "control",
       "control": "text-cursor.reference.4c40f3ca"
     },
@@ -3064,7 +3062,7 @@
         "Text cursor indicator",
         "Text cursor indicator color"
       ],
-      "page": "text-cursor",
+      "page": "cursor",
       "coverage": "control",
       "control": "text-cursor.reference.b0cd3942"
     },
@@ -3074,7 +3072,7 @@
         "Text cursor",
         "Text cursor thickness"
       ],
-      "page": "text-cursor",
+      "page": "cursor",
       "coverage": "control",
       "control": "text-cursor.reference.7beee9f0"
     },
@@ -4519,6 +4517,10 @@
   ],
   "removedPages": [
     "energy",
-    "multitasking"
+    "multitasking",
+    "device-usage",
+    "copilot-key",
+    "personalization-glance",
+    "personalization-navbar"
   ]
 }

@@ -81,11 +81,49 @@ def session_checks():
         assert dbus('Set', 'themes.material-theme-mode', 'dark')['theme']['theme_mode'] == 'dark'
         assert cli('get', 'system')['mode'] == 'dark'
         controls = cli('list')['controls']
-        assert len([control for control in controls if control['availability'] == 'available']) == 54
+        assert len([control for control in controls if control['availability'] == 'available']) == 68
         unavailable = next(control for control in controls if control['availability'] != 'available')
         assert 'Unavailable' in cli('set', unavailable['id'], 'true', ok=False)
         assert 'InvalidArgument' in cli('set', 'themes.material-theme-mode', 'system', ok=False)
         assert cli('get', unavailable['id'])['availability'] != 'available'
+        for removed in ('device-usage', 'copilot-key', 'personalization-glance', 'personalization-navbar', 'hypr-qt-theme', 'hypr-qt-misc', 'hypr-decoration-blur-glass'):
+            assert 'InvalidArgument' in cli('open', removed, ok=False)
+        assert cli('get', 'page:hypr-cursor')['id'] == 'cursor'
+        assert cli('get', 'page:colors')['id'] == 'themes'
+        assert cli('get', 'page:hypr-wallpaper-outputs')['id'] == 'background'
+        # Background writes reach the real desktop, so only reads and rejections run here.
+        background = cli('get', 'background')
+        assert background['initialized'] and background == dbus('Get', 'background')
+        assert cli('get', 'configuration')['background']['initialized']
+        assert (Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/background.toml').exists()
+        assert 'InvalidArgument' in cli('set', 'background.56c289eb', 'stretch', ok=False)
+        assert 'InvalidArgument' in cli('set', 'background.99b01ada', 'slideshow', ok=False)
+        assert 'InvalidArgument' in cli('set', 'background.9e58290b', 'relative.png', ok=False)
+        assert 'InvalidArgument' in cli('set', 'background.display', 'DP-1', ok=False)
+        accent = cli('get', 'accent')
+        assert accent['source'] == 'custom' and accent == dbus('Get', 'accent')
+        assert not (Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/accent.toml').exists()
+        assert cli('set', 'colors.6f67371e', '#123abc')['color'] == '#123ABC'
+        assert dbus('Get', 'accent')['color'] == '#123ABC'
+        assert cli('get', 'theme')['theme'].keys() == {'style_variant', 'theme_mode'}
+        assert 'InvalidArgument' in cli('set', 'colors.6f67371e', 'blue', ok=False)
+        assert 'InvalidArgument' in cli('set', 'colors.8983f367', 'other', ok=False)
+        cli('set', 'colors.6f67371e', '#8054C9')
+        fonts = cli('get', 'fonts')
+        assert fonts == dbus('Get', 'fonts') and fonts['families']
+        assert fonts['directory'] == str(Path(os.environ['XDG_DATA_HOME']) / 'fonts')
+        system_font = next(f for f in fonts['families'] if f['user_files'] == 0 and f['files'][0].endswith(('.ttf', '.otf')))
+        assert cli('get', 'font-search:' + system_font['family'])['families']
+        assert cli('get', 'font:' + system_font['family']) == system_font
+        assert 'whole system' in cli('set', 'fonts.f869cae5', system_font['family'], ok=False)
+        assert 'ReadOnly' in cli('set', 'fonts.fc3969c7', system_font['family'], ok=False)
+        assert 'InvalidArgument' in cli('set', 'fonts.158ba0bb', '/etc/hostname', ok=False)
+        installed = cli('set', 'fonts.158ba0bb', system_font['files'][0])['installed']
+        assert installed.startswith(fonts['directory'])
+        assert 'already installed' in cli('set', 'fonts.158ba0bb', system_font['files'][0], ok=False)
+        assert any(f.startswith(fonts['directory']) for f in cli('get', 'font:' + system_font['family'])['files'])
+        assert installed in cli('set', 'fonts.f869cae5', system_font['family'])['removed']
+        assert not Path(installed).exists() and Path(system_font['files'][0]).exists()
         hostname = cli('get', 'hostname')
         assert hostname == dbus('Get', 'hostname')
         assert hostname['initialized'] and not hostname['conflict'] and hostname['error'] is None
@@ -99,6 +137,8 @@ def session_checks():
         assert 'Conflict' in cli('set', 'about.0f142010', 'new-hostname', ok=False)
         assert not dbus('Resolve', 'hostname', 'system')['hostname']['conflict']
         assert cli('get', 'hostname')['static_hostname'] == hostname['static_hostname']
+        # hostnamed is the real system service: never attempt this once authorized.
+        assert not cli('get', 'hostname')['authorized'], 'Refusing to test rename with an authorized helper'
         assert 'authorize' in cli('set', 'about.0f142010', 'new-hostname', ok=False).lower()
         assert cli('get', 'hostname')['error']
         cli('resolve', 'hostname', 'system')

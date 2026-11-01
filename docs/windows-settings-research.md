@@ -23,7 +23,7 @@ Supplemental pages come from [Advanced settings](https://learn.microsoft.com/en-
 | System | Display, audio, notifications, focus, power, storage, windows, sharing, recovery, remote access, clipboard, device information, developer tools | Future compositor and Linux service integrations |
 | Bluetooth & devices | Pairing, printers, cameras, mouse, touchpad, touch, pen, USB, phone and accessory devices | Future Linux device service integrations |
 | Network & Internet | Status, Wi-Fi, Ethernet, VPN, hotspot, airplane mode, cellular, proxy, adapters, usage | Future network service integration |
-| Personalization | Background, colors, themes, lock screen, text input, launcher, panel, fonts, lighting | Future Hyprland and desktop component configuration |
+| Personalization | Background (image or video), colors and themes (merged), lock screen, text input, launcher, panel, fonts, lighting | Future Hyprland and desktop component configuration |
 | Apps | Installed apps, defaults, optional features, startup, playback and website associations | Future package and XDG application integration |
 | Accounts | Identity, login, local users, backup, credentials and passkeys | Future Linux session and account integration |
 | Time & language | Clock, synchronization, region, languages, typing, IMEs, speech | Future locale and input method integration |

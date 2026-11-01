@@ -1,6 +1,6 @@
 # Appearance configuration and backend
 
-Themes → Material Design contains an application palette selector and a system Light/Dark selector. There is no Follow system option. Remy'a Settings immediately uses the selected mode and Material palette. Seed color remains fixed internally.
+Colors and themes contains the system Light/Dark selector, the accent color, and the application palette selector. There is no Follow system option. Remy'a Settings immediately uses the selected mode, accent and Material palette. The accent is stored separately in `accent.toml`; see [public interfaces](public-api.md#accent-color).
 
 ## Configuration ownership
 
@@ -35,7 +35,7 @@ theme_mode = "light"
 - `style_variant`: `tonal_spot`, `fidelity`, `monochrome`, `neutral`, `vibrant`, `expressive`, `content`, `rainbow`, or `fruit_salad`. These change the Material color scheme; widgets retain Material Design 3 Expressive styling.
 - `theme_mode`: last selected `light` or `dark`. First launch reads the current GNOME/GTK preference and atomically saves it. Startup and Reload subsequently compare saved and actual values without overwriting either side; a top warning offers adoption or application. Editing TOML never changes the desktop. A previous preview file containing `system` is accepted as migration input and saved as an explicit mode on the next successful edit.
 - Missing fields use Tonal spot/Light defaults. Existing explicit style selections are retained. Missing files do not trigger a write. Empty files, malformed TOML, unsupported versions, unknown keys, wrong types, and unknown enum values are rejected.
-- No seed-color configuration, image-derived colors, or automatic startup writes are included. The public service observes external configuration changes every 500 ms and reloads through the same controller. Invalid files retain the last valid live theme and produce an API/UI error. Removing a file and reloading retains the last valid live state.
+- `seed_color` is not part of this file, and no automatic startup writes are included. The public service observes external configuration changes every 500 ms and reloads through the same controller. Invalid files retain the last valid live theme and produce an API/UI error. Removing a file and reloading retains the last valid live state.
 
 `lib/features/appearance/` keeps the immutable model, file store, serialized controller, and Rust adapter together. `main.dart` initializes the bridge and reads state before startup. `app.dart` owns the controller, distributes it through an inherited notifier, and rebuilds both Material themes. Busy controls are disabled; failures appear in an English error banner with Reload. Navigation is retained across theme changes.
 
@@ -76,7 +76,7 @@ Sources: [fish configuration](https://fishshell.com/docs/current/language.html#c
 
 Durable tests cover strict TOML, atomic persistence, controller ordering/error recovery, actual control bindings, retained navigation, installed theme matching, GSettings/file rollback, managed environment blocks, syntax validation, and missing optional targets. Native verification uses the real bridge and independent GTK/Qt probes, with exact restoration of personal files after temporary Light/Dark checks. Current verification evidence is recorded in [the implementation tracker](settings-implementation-progress.md).
 
-The appearance, date/time, and Display controls are available (see public-api.md). The remaining catalog controls remain disabled previews. The single-level sidebar is persistent, becomes icon-only below 1000 logical pixels, and uses wrapping connected page buttons with leading icons under the category title. The native minimum width is 360 logical pixels.
+The appearance, accent, background, fonts, date/time, and Display controls are available (see public-api.md). The remaining catalog controls remain disabled previews. The single-level sidebar is persistent, becomes icon-only below 1000 logical pixels, and uses wrapping connected page buttons with leading icons under the category title. The native minimum width is 360 logical pixels.
 
 ## Dependent applications and public operations
 

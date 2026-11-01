@@ -1,8 +1,12 @@
 use crate::privileged::{Request, Session};
 use gio::glib::{Variant, variant::ToVariant};
 use remya_settings_appearance::api as appearance;
+use remya_settings_background::{
+    BackgroundManager, RealDesktop, is_accent_setting, is_background_setting, manager::Paths,
+};
 use remya_settings_date_time::api as clock;
 use remya_settings_display::{DisplayManager, Hyprctl, atomic_write, is_display_setting};
+use remya_settings_fonts::{self as fonts, FontManager, RealFontconfig};
 use remya_settings_system_information::hostname::{self, HostnameManager};
 use serde_json::{Value, json};
 use std::{
@@ -49,6 +53,9 @@ pub fn page_alias(page: &str) -> &str {
     match page {
         "advanced-display" | "hypr-monitor-fields" => "display",
         "system-information" => "about",
+        "colors" => "themes",
+        "hypr-cursor" | "hypr-cursor-theme" | "text-cursor" => "cursor",
+        "hypr-wallpaper-outputs" | "hypr-paper-misc-options" => "background",
         other => other,
     }
 }
@@ -117,6 +124,33 @@ fn hypr_config_dir() -> PathBuf {
         .join("hypr")
 }
 
+/// Debug builds keep owned files beside the repository's local configuration.
+fn background_paths(config: &std::path::Path) -> Paths {
+    let debug = config.file_name().is_some_and(|n| n == "config.local.toml");
+    let dirs = xdg::BaseDirectories::new();
+    let data = dirs.get_data_home().unwrap_or_default();
+    let cache = dirs.get_cache_home().unwrap_or_default();
+    let owned = |root: PathBuf, name: &str| {
+        if debug {
+            config.with_file_name(name)
+        } else {
+            root.join("remya/settings").join(name)
+        }
+    };
+    Paths {
+        config: config.with_file_name("background.toml"),
+        accent: config.with_file_name("accent.toml"),
+        media: owned(data, "backgrounds"),
+        cache: owned(cache, "background-previews"),
+        hyprpaper: hypr_config_dir().join("hyprpaper.conf"),
+        units: dirs
+            .get_config_home()
+            .unwrap_or_default()
+            .join("systemd/user"),
+        home: std::env::var_os("HOME").map(PathBuf::from),
+    }
+}
+
 pub struct State {
     pub catalog: Value,
     pub theme: Value,
@@ -128,6 +162,8 @@ pub struct State {
     pub theme_error: Option<String>,
     pub date_error: Option<String>,
     pub display: DisplayManager<Hyprctl>,
+    pub background: BackgroundManager<RealDesktop>,
+    fonts: FontManager<RealFontconfig>,
     pub auth_error: Option<String>,
     privileged: Option<Session>,
     gui: Option<Child>,
@@ -151,6 +187,11 @@ impl State {
                 hypr_config_dir(),
                 config.with_file_name("display.toml"),
             ),
+            background: BackgroundManager::new(RealDesktop, background_paths(&config)),
+            fonts: FontManager::new(
+                RealFontconfig,
+                fonts::user_font_directory().unwrap_or_default(),
+            ),
             saved: Value::Null,
             theme_error: None,
             date_error: None,
@@ -172,6 +213,8 @@ impl State {
         let _ = self.hostname.refresh();
         // A detection failure is retained by the manager and reported in its state.
         let _ = self.display.refresh();
+        // Failures stay in the manager's state for every reader.
+        let _ = self.background.refresh();
     }
     fn refresh_theme(&mut self) -> Result<(), String> {
         let system =
@@ -315,7 +358,7 @@ impl State {
     pub fn configuration(&self) -> Value {
         let mut date = self.date.clone();
         date["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
-        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"hostname":self.hostname_state()})
+        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"hostname":self.hostname_state(),"background":self.background.state()})
     }
     pub fn controls(&self) -> Vec<&Value> {
         self.catalog["pages"]
@@ -390,6 +433,34 @@ impl State {
                             "error": self.display.error(),
                         }))
                     }
+                    "background" => {
+                        let _ = self.background.refresh();
+                        Ok(self.background.state())
+                    }
+                    "accent" => Ok(self.background.accent_state()),
+                    _ if is_background_setting(key) || is_accent_setting(key) => {
+                        let _ = self.background.refresh();
+                        let control = self
+                            .controls()
+                            .into_iter()
+                            .find(|c| c["id"] == key)
+                            .ok_or_else(|| invalid("Unknown setting"))?;
+                        let value = if is_accent_setting(key) {
+                            self.background.accent_value(key)
+                        } else {
+                            self.background.setting_value(key)
+                        };
+                        Ok(json!({
+                            "id": key,
+                            "availability": control["availability"],
+                            "reason": control["reason"],
+                            "value": value,
+                            "error": self.background.error(),
+                        }))
+                    }
+                    "fonts" => self.fonts.families(),
+                    _ if key.starts_with("font-search:") => self.fonts.search(&key[12..]),
+                    _ if key.starts_with("font:") => self.fonts.details(&key[5..]),
                     "timezones" => {
                         let zones = clock::list_timezones()?;
                         Ok(
@@ -571,6 +642,19 @@ impl State {
         if is_display_setting(key) {
             return self.display.set(key, value);
         }
+        if is_background_setting(key) {
+            return self.background.set(key, value);
+        }
+        if is_accent_setting(key) {
+            return self.background.set_accent(key, value);
+        }
+        if fonts::IDS.contains(&key) {
+            return match key {
+                fonts::INSTALL => self.fonts.install(value),
+                fonts::UNINSTALL => self.fonts.uninstall(value),
+                _ => Err("ReadOnly:Use get font-search:<query> or get font:<family>".into()),
+            };
+        }
         if [STYLE, MODE].contains(&key) {
             self.refresh_theme()?;
             let before = self.theme.clone();
@@ -692,6 +776,10 @@ impl State {
         }
         if feature == "display" {
             self.display.resolve(source)?;
+            return Ok(self.configuration());
+        }
+        if feature == "background" {
+            self.background.resolve(source)?;
             return Ok(self.configuration());
         }
         if !["system", "settings"].contains(&source) {
@@ -875,6 +963,28 @@ mod tests {
                 .starts_with("InvalidArgument:")
         );
         assert!(state.execute("Get", &["unknown".into()]).is_err());
+        for (retired, home) in [
+            ("page:colors", "themes"),
+            ("page:hypr-wallpaper-outputs", "background"),
+            ("page:hypr-paper-misc-options", "background"),
+            ("page:hypr-cursor", "cursor"),
+            ("page:hypr-cursor-theme", "cursor"),
+            ("page:text-cursor", "cursor"),
+        ] {
+            assert_eq!(state.execute("Get", &[retired.into()]).unwrap()["id"], home);
+        }
+        for removed in [
+            "page:device-usage",
+            "page:copilot-key",
+            "page:personalization-glance",
+            "page:personalization-navbar",
+            "page:hypr-qt-theme",
+            "page:hypr-qt-misc",
+            "page:hypr-decoration-blur-acrylic",
+            "page:hypr-decoration-blur-water",
+        ] {
+            assert!(state.execute("Get", &[removed.into()]).is_err());
+        }
         for retired in ["page:advanced-display", "page:hypr-monitor-fields"] {
             assert_eq!(
                 state.execute("Get", &[retired.into()]).unwrap()["id"],

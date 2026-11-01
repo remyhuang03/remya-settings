@@ -1,9 +1,13 @@
+import 'dart:math' as math;
+
 import 'package:remya_settings_client/settings_contract.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../about/presentation/about_page.dart';
 import '../../about/presentation/licenses_view.dart';
+import '../../fonts/application/fonts_controller.dart';
+import '../../fonts/presentation/fonts_page.dart';
 import '../domain/settings_catalog.dart';
 import 'settings_content.dart';
 import '../../integration/settings_scheduler.dart';
@@ -62,7 +66,10 @@ class _SettingsShellState extends State<SettingsShell> {
     if (const {'home', 'about', 'licenses'}.contains(target)) {
       _navigate(target);
     } else {
-      final advanced = target == 'advanced-display';
+      final advanced = const {
+        'advanced-display',
+        'hypr-paper-misc-options',
+      }.contains(target);
       if (advanced != _expandAdvanced) {
         // Navigation returns early when the page is already open.
         setState(() => _expandAdvanced = advanced);
@@ -350,6 +357,11 @@ class _SettingsShellState extends State<SettingsShell> {
         ],
       );
     }
+    if (_query.trim().isEmpty && _page?.id == 'fonts') {
+      if (FontsScope.maybeOf(context) case final controller?) {
+        return _fontsBody(_page!, controller);
+      }
+    }
     final Widget content;
     if (_query.trim().isNotEmpty) {
       final results = widget.catalog.search(_query);
@@ -434,6 +446,36 @@ class _SettingsShellState extends State<SettingsShell> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// Same frame as other pages, on slivers so the long font list stays lazy.
+  Widget _fontsBody(SettingsPageSpec page, FontsController controller) {
+    final gutter = MediaQuery.sizeOf(context).width < 600 ? 16.0 : 32.0;
+    return SelectionArea(
+      child: CustomScrollView(
+        key: const ValueKey('content-fonts'),
+        slivers: [
+          SliverToBoxAdapter(child: _header()),
+          SliverLayoutBuilder(
+            builder: (context, constraints) {
+              final side = math.max(
+                gutter,
+                (constraints.crossAxisExtent - 1080) / 2,
+              );
+              return SliverPadding(
+                padding: .fromLTRB(
+                  side,
+                  8,
+                  side,
+                  widget.status == null ? 40 : 144,
+                ),
+                sliver: FontsPage(page: page, controller: controller),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

@@ -10,6 +10,12 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Debug Bar fallback | Sibling Settings repository's local config, then installed XDG config |
 | Installed/shared Settings preferences | `$XDG_CONFIG_HOME/remya/settings/config.toml` |
 | Config fallback | `$HOME/.config/remya/settings/config.toml` |
+| Background, accent settings | `background.toml` and `accent.toml` beside `config.toml` |
+| Background copies | `$XDG_DATA_HOME/remya/settings/backgrounds/`; debug: `<settings-repository>/config/backgrounds/` |
+| Background previews | `$XDG_CACHE_HOME/remya/settings/background-previews/`; debug: `<settings-repository>/config/background-previews/` |
+| hyprpaper configuration | `$XDG_CONFIG_HOME/hypr/hyprpaper.conf`, with one `hyprpaper.conf.remya-backup` |
+| Video background unit | `$XDG_CONFIG_HOME/systemd/user/top.remya.settings.video-background.service` |
+| Installed fonts | `$XDG_DATA_HOME/fonts/` |
 | Installed bundles | `$XDG_DATA_HOME/remya/remya_settings/` and `remya_bar/` |
 | Desktop entries | `$XDG_DATA_HOME/applications/top.remya.{settings,bar}.desktop` |
 | Settings icon | `$XDG_DATA_HOME/icons/hicolor/scalable/apps/top.remya.settings.svg` |
@@ -17,14 +23,18 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | User commands | `$HOME/.local/bin/remya_settings` and `remya_bar` |
 | Hyprland sockets | `$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket{,2}.sock` |
 
+Debug builds isolate only the Settings files listed above; hyprpaper, the video
+unit and fonts remain the real desktop's.
+
 An unset, empty, or relative `XDG_CONFIG_HOME`/`XDG_DATA_HOME` is ignored. Config
 falls back to `~/.config`; data falls back to `~/.local/share`. HOME must be
 absolute when a fallback or user command path needs it. User executable paths
 follow the XDG recommendation `~/.local/bin`; there is no invented `XDG_BIN_HOME`.
 XDG_DATA_DIRS is respected when checking for the Settings runtime dependency.
-No cache/state directories are created because neither current feature needs
-persistent caches or state. Future features must use XDG_CACHE_HOME,
-XDG_STATE_HOME, or XDG_RUNTIME_DIR for their actual responsibilities.
+Only background previews use a cache directory; they can be deleted at any time.
+Future features must use XDG_CACHE_HOME, XDG_STATE_HOME, or XDG_RUNTIME_DIR for
+their actual responsibilities. An unset, empty, or relative XDG_CACHE_HOME falls
+back to `~/.cache`.
 
 The native runner reports the debug repository root, so local configuration is
 independent of the launch working directory. Settings creates missing debug

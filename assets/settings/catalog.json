@@ -281,6 +281,16 @@
       "id": "linux-dmi",
       "title": "Linux DMI sysfs attributes",
       "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/firmware/dmi-id.c"
+    },
+    {
+      "id": "mpvpaper",
+      "title": "mpvpaper video wallpaper",
+      "url": "https://github.com/GhostNaN/mpvpaper"
+    },
+    {
+      "id": "fontconfig",
+      "title": "Fontconfig user documentation",
+      "url": "https://www.freedesktop.org/software/fontconfig/fontconfig-user.html"
     }
   ],
   "categories": [
@@ -3180,6 +3190,599 @@
         }
       ],
       "children": []
+    },
+    {
+      "id": "cursor",
+      "category": "system",
+      "title": "Cursor",
+      "description": "Cursor theme, pointer appearance, text cursor and cursor behavior",
+      "preview": "none",
+      "availability": "planned",
+      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "sources": [
+        "hypr-cursor",
+        "hypr-options",
+        "hyprviz-project",
+        "uris"
+      ],
+      "windowsUris": [
+        "ms-settings:easeofaccess-cursor"
+      ],
+      "children": [],
+      "sections": [
+        {
+          "title": "Cursor theme",
+          "controls": [
+            {
+              "id": "themes.cb5e32b2",
+              "title": "Mouse cursor",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Configuration"
+            },
+            {
+              "id": "hypr-cursor-theme.theme",
+              "title": "Hyprcursor theme name",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprcursor / XCursor theme component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-cursor",
+                "theme"
+              ]
+            },
+            {
+              "id": "hypr-cursor-theme.size",
+              "title": "Hyprcursor cursor size",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprcursor / XCursor theme component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-cursor",
+                "size"
+              ]
+            },
+            {
+              "id": "hypr-cursor-theme.xcursor-theme",
+              "title": "XCursor fallback theme",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprcursor / XCursor theme component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-cursor",
+                "xcursor-theme"
+              ]
+            },
+            {
+              "id": "hypr-cursor-theme.xcursor-size",
+              "title": "XCursor rollback size",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprcursor / XCursor theme component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-cursor",
+                "xcursor-size"
+              ]
+            },
+            {
+              "id": "hypr-cursor-theme.gtk",
+              "title": "GTK application cursor theme",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprcursor / XCursor theme component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-cursor",
+                "gtk"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Pointer",
+          "controls": [
+            {
+              "id": "pointer.6de7c60b",
+              "title": "Pointer style",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "options": [
+                "white",
+                "black",
+                "Reversal",
+                "Customization"
+              ],
+              "value": "white"
+            },
+            {
+              "id": "pointer.86209eba",
+              "title": "Customize pointer color",
+              "type": "color",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "#6750A4"
+            },
+            {
+              "id": "pointer.e8c2f48c",
+              "title": "Pointer size",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": 50,
+              "min": 0,
+              "max": 100,
+              "unit": "%"
+            }
+          ]
+        },
+        {
+          "title": "Text cursor",
+          "controls": [
+            {
+              "id": "text-cursor.bb54f6b0",
+              "title": "Text cursor indicator",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "text-cursor.5829d690",
+              "title": "Indicator size",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": 50,
+              "min": 0,
+              "max": 100,
+              "unit": "%"
+            },
+            {
+              "id": "text-cursor.d04d1b72",
+              "title": "Indicator color",
+              "type": "color",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "#6750A4"
+            },
+            {
+              "id": "text-cursor.60ececbf",
+              "title": "Text cursor thickness",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": 50,
+              "min": 0,
+              "max": 100,
+              "unit": "%"
+            }
+          ]
+        },
+        {
+          "title": "Windows reference settings",
+          "collapsed": true,
+          "controls": [
+            {
+              "id": "pointer.reference.8a9af3b1",
+              "title": "Mouse pointer style",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Mouse pointer and touch",
+                "Mouse pointer style"
+              ],
+              "value": "Not configured",
+              "options": [
+                "Not configured"
+              ]
+            },
+            {
+              "id": "pointer.reference.966d030b",
+              "title": "Size",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Mouse pointer and touch",
+                "Size"
+              ],
+              "value": "Not configured",
+              "options": [
+                "Not configured"
+              ]
+            },
+            {
+              "id": "text-cursor.reference.4c40f3ca",
+              "title": "Text cursor indicator size",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Text cursor",
+                "Text cursor indicator",
+                "Text cursor indicator size"
+              ],
+              "value": 50,
+              "min": 0,
+              "max": 100,
+              "unit": "%"
+            },
+            {
+              "id": "text-cursor.reference.b0cd3942",
+              "title": "Text cursor indicator color",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Text cursor",
+                "Text cursor indicator",
+                "Text cursor indicator color"
+              ],
+              "value": "Not configured",
+              "options": [
+                "Not configured"
+              ]
+            },
+            {
+              "id": "text-cursor.reference.7beee9f0",
+              "title": "Text cursor thickness",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Text cursor",
+                "Text cursor thickness"
+              ],
+              "value": 50,
+              "min": 0,
+              "max": 100,
+              "unit": "%"
+            }
+          ]
+        },
+        {
+          "title": "Advanced",
+          "collapsed": true,
+          "controls": [
+            {
+              "id": "hypr-cursor.default-monitor",
+              "title": "default monitor · default_monitor",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "default_monitor"
+              ]
+            },
+            {
+              "id": "hypr-cursor.enable-hyprcursor",
+              "title": "Using Hyprcursor theme · enable_hyprcursor",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": true,
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "enable_hyprcursor"
+              ]
+            },
+            {
+              "id": "hypr-cursor.hide-on-key-press",
+              "title": "Hide cursor on key press · hide_on_key_press",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "hide_on_key_press"
+              ]
+            },
+            {
+              "id": "hypr-cursor.hide-on-tablet",
+              "title": "hide on tablet · hide_on_tablet",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "hide_on_tablet"
+              ]
+            },
+            {
+              "id": "hypr-cursor.hide-on-touch",
+              "title": "hide on touch · hide_on_touch",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": true,
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "hide_on_touch"
+              ]
+            },
+            {
+              "id": "hypr-cursor.hotspot-padding",
+              "title": "hotspot padding · hotspot_padding",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 0.0,
+              "min": 0.0,
+              "max": 20.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "hotspot_padding"
+              ]
+            },
+            {
+              "id": "hypr-cursor.inactive-timeout",
+              "title": "Idle hidden cursor timeout · inactive_timeout",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 0.0,
+              "min": 0.0,
+              "max": 20.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "inactive_timeout"
+              ]
+            },
+            {
+              "id": "hypr-cursor.invisible",
+              "title": "invisible · invisible",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "invisible"
+              ]
+            },
+            {
+              "id": "hypr-cursor.min-refresh-rate",
+              "title": "min refresh rate · min_refresh_rate",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 24.0,
+              "min": 10.0,
+              "max": 500.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "min_refresh_rate"
+              ]
+            },
+            {
+              "id": "hypr-cursor.no-break-fs-vrr",
+              "title": "no break fs vrr · no_break_fs_vrr",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 2.0,
+              "min": 0.0,
+              "max": 2.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "no_break_fs_vrr"
+              ]
+            },
+            {
+              "id": "hypr-cursor.no-hardware-cursors",
+              "title": "Disable hardware cursors · no_hardware_cursors",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 2.0,
+              "min": 0.0,
+              "max": 2.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "no_hardware_cursors"
+              ]
+            },
+            {
+              "id": "hypr-cursor.no-warps",
+              "title": "Disable automatic pointer movement · no_warps",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "no_warps"
+              ]
+            },
+            {
+              "id": "hypr-cursor.persistent-warps",
+              "title": "persistent warps · persistent_warps",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "persistent_warps"
+              ]
+            },
+            {
+              "id": "hypr-cursor.sync-gsettings-theme",
+              "title": "sync gsettings theme · sync_gsettings_theme",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": true,
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "sync_gsettings_theme"
+              ]
+            },
+            {
+              "id": "hypr-cursor.use-cpu-buffer",
+              "title": "use cpu buffer · use_cpu_buffer",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 2.0,
+              "min": 0.0,
+              "max": 2.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "use_cpu_buffer"
+              ]
+            },
+            {
+              "id": "hypr-cursor.warp-back-after-non-mouse-input",
+              "title": "warp back after non mouse input · warp_back_after_non_mouse_input",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "warp_back_after_non_mouse_input"
+              ]
+            },
+            {
+              "id": "hypr-cursor.warp-on-change-workspace",
+              "title": "warp on change workspace · warp_on_change_workspace",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 0.0,
+              "min": 0.0,
+              "max": 2.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "warp_on_change_workspace"
+              ]
+            },
+            {
+              "id": "hypr-cursor.warp-on-monitor-change",
+              "title": "warp on monitor change · warp_on_monitor_change",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": -1.0,
+              "min": -1.0,
+              "max": 2.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "warp_on_monitor_change"
+              ]
+            },
+            {
+              "id": "hypr-cursor.warp-on-toggle-special",
+              "title": "warp on toggle special · warp_on_toggle_special",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 0.0,
+              "min": 0.0,
+              "max": 2.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "warp_on_toggle_special"
+              ]
+            },
+            {
+              "id": "hypr-cursor.zoom-detached-camera",
+              "title": "zoom detached camera · zoom_detached_camera",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": true,
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "zoom_detached_camera"
+              ]
+            },
+            {
+              "id": "hypr-cursor.zoom-disable-aa",
+              "title": "zoom disable aa · zoom_disable_aa",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "zoom_disable_aa"
+              ]
+            },
+            {
+              "id": "hypr-cursor.zoom-factor",
+              "title": "Cursor zoom factor · zoom_factor",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": 1.0,
+              "min": 1.0,
+              "max": 10.0,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "zoom_factor"
+              ]
+            },
+            {
+              "id": "hypr-cursor.zoom-rigid",
+              "title": "Fixed zoom anchor point · zoom_rigid",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "cursor",
+                "zoom_rigid"
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "about",
@@ -6368,12 +6971,14 @@
       "id": "background",
       "category": "personalization",
       "title": "Background",
-      "description": "Wallpapers, Solid Colors and Slideshows",
-      "preview": "personalization",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "description": "Image or video desktop background",
+      "preview": "none",
+      "availability": "available",
+      "reason": "Images use hyprpaper; videos use mpvpaper, because hyprpaper cannot play video.",
       "sources": [
-        "uris"
+        "uris",
+        "hypr-paper",
+        "mpvpaper"
       ],
       "windowsUris": [
         "ms-settings:personalization-background"
@@ -6386,305 +6991,95 @@
               "id": "background.99b01ada",
               "title": "Background type",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Images are shown by hyprpaper. Videos are played by mpvpaper on all displays.",
               "options": [
-                "Pictures",
-                "Solid color",
-                "Slides",
-                "Focus"
+                "Image",
+                "Video"
               ],
-              "value": "Pictures"
+              "value": "Image"
+            },
+            {
+              "id": "background.display",
+              "title": "Display",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Displays with the same background are grouped. Click a display to select its group, and click it again to select only that display.",
+              "options": [
+                "All displays"
+              ],
+              "value": "All displays"
             },
             {
               "id": "background.9e58290b",
-              "title": "Browse photos",
+              "title": "Background file",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "The selected file is copied into the application directory and that copy is used.",
               "value": "Browse"
             },
             {
               "id": "background.56c289eb",
-              "title": "Desktop picture adaptation method",
+              "title": "Fit",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "How the background fills the display. Choosing Fill restarts hyprpaper, so the background blanks briefly.",
               "options": [
-                "Filling",
-                "Adapt",
-                "Stretching",
+                "Cover",
+                "Contain",
                 "Tile",
-                "Center",
-                "Cross-region"
+                "Fill"
               ],
-              "value": "Filling"
-            },
-            {
-              "id": "background.de8d2f50",
-              "title": "Switch picture interval",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "30 minutes",
-                "1 hour",
-                "1 day"
-              ],
-              "value": "30 minutes"
-            },
-            {
-              "id": "background.eca2a518",
-              "title": "Shuffle",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "background.4a2d8a28",
-              "title": "Background color",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "#6750A4"
+              "value": "Cover"
             }
           ]
         },
         {
-          "title": "Windows reference settings",
+          "title": "Advanced",
           "collapsed": true,
           "controls": [
             {
-              "id": "background.reference.fdec0d3a",
-              "title": "Personalize your background",
+              "id": "background.video-pause",
+              "title": "Video when covered",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Reduces video work while windows hide the background.",
+              "options": [
+                "Keep playing",
+                "Pause",
+                "Stop"
+              ],
+              "value": "Keep playing"
+            },
+            {
+              "id": "hypr-paper-misc-options.splash",
+              "title": "Show splash text",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Background",
-                "Personalize your background"
-              ],
-              "value": false
+              "availability": "available",
+              "reason": "Hyprpaper splash line. Changing it restarts hyprpaper, so the background blanks briefly.",
+              "value": true
             },
             {
-              "id": "background.reference.a8aee03d",
-              "title": "Choose a photo",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Background",
-                "Choose a photo"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
+              "id": "hypr-paper-misc-options.splash-offset",
+              "title": "Splash offset",
+              "type": "slider",
+              "availability": "available",
+              "reason": "Distance from the bottom edge in pixels. Changing it restarts hyprpaper, so the background blanks briefly.",
+              "value": 20,
+              "min": 0,
+              "max": 200,
+              "unit": " px"
             },
             {
-              "id": "background.reference.0518a1f3",
-              "title": "Choose a fit for your desktop image",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Background",
-                "Choose a fit for your desktop image"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "colors",
-      "category": "personalization",
-      "title": "Color",
-      "description": "Light and dark modes, accent colors and transparency effects",
-      "preview": "personalization",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:personalization-colors",
-        "ms-settings:colors"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "colors.ed0eea8f",
-              "title": "Pattern",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "light color",
-                "Dark color",
-                "Customization"
-              ],
-              "value": "light color"
-            },
-            {
-              "id": "colors.3630e7d0",
-              "title": "Transparency effect",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "colors.8983f367",
-              "title": "Accent color source",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Manual",
-                "Automatic"
-              ],
-              "value": "Manual"
-            },
-            {
-              "id": "colors.6f67371e",
-              "title": "Accent Color",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "#6750A4"
-            },
-            {
-              "id": "colors.c3a39826",
-              "title": "Show accent color on taskbar",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "colors.ac16e9e8",
-              "title": "Display accent color in title bar and window border",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "colors.reference.1232ca77",
-              "title": "Choose your mode",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Colors",
-                "Choose your mode"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "colors.reference.ed936eee",
-              "title": "Transparency Effects",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Colors",
-                "Transparency Effects"
-              ],
-              "value": false
-            },
-            {
-              "id": "colors.reference.8fd43cc0",
-              "title": "Accent Color",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Colors",
-                "Accent Color"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "colors.reference.14bc5762",
-              "title": "Windows Color",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Colors",
-                "Windows Color"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "colors.reference.b4c97f0e",
-              "title": "Custom Color",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Colors",
-                "Custom Color"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "colors.reference.990d69cf",
-              "title": "Show Accent color on start and Taskbar",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Colors",
-                "Show Accent color on start and Taskbar"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "colors.reference.47f631a5",
-              "title": "Show Accent color on Title bar and window border",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Colors",
-                "Show Accent color on Title bar and window border"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
+              "id": "hypr-paper-misc-options.splash-opacity",
+              "title": "Splash opacity",
+              "type": "slider",
+              "availability": "available",
+              "reason": "From 0 to 1. Changing it restarts hyprpaper, so the background blanks briefly.",
+              "value": 0.8,
+              "min": 0,
+              "max": 1,
+              "unit": ""
             }
           ]
         }
@@ -6694,25 +7089,59 @@
     {
       "id": "themes",
       "category": "personalization",
-      "title": "Themes",
-      "description": "Material palette and system appearance",
-      "preview": "personalization",
+      "title": "Colors and themes",
+      "description": "Light and dark mode, accent color, Material palette and themes",
+      "preview": "none",
       "availability": "planned",
-      "reason": "Light/Dark changes supported system appearance settings. Other desktop theme controls remain previews.",
+      "reason": "Light/Dark, accent color and Material palette work. Other theme controls remain previews.",
       "sources": [
         "uris",
-        "app-appearance",
-        "gtk4-appearance",
         "gtk3-appearance",
-        "gnome-appearance"
+        "app-appearance",
+        "gnome-appearance",
+        "gtk4-appearance"
       ],
       "windowsUris": [
+        "ms-settings:personalization-colors",
+        "ms-settings:colors",
         "ms-settings:themes"
       ],
       "sections": [
         {
-          "title": "Material Design",
+          "title": "Color",
           "controls": [
+            {
+              "id": "themes.material-theme-mode",
+              "title": "Dark theme",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Changes GNOME, installed GTK toolkits, and documented Qt Quick Light/Dark defaults through the Rust backend.",
+              "value": "Light",
+              "options": [
+                "Light",
+                "Dark"
+              ]
+            },
+            {
+              "id": "colors.8983f367",
+              "title": "Accent color source",
+              "type": "choice",
+              "availability": "available",
+              "reason": "From background samples the current background using Material color rules.",
+              "options": [
+                "From background",
+                "Custom"
+              ],
+              "value": "Custom"
+            },
+            {
+              "id": "colors.6f67371e",
+              "title": "Accent Color",
+              "type": "color",
+              "availability": "available",
+              "reason": "Seed for the Material color scheme of Remya applications.",
+              "value": "#8054C9"
+            },
             {
               "id": "themes.material-style-variant",
               "title": "Material style variant",
@@ -6733,21 +7162,17 @@
               ]
             },
             {
-              "id": "themes.material-theme-mode",
-              "title": "Dark theme",
-              "type": "choice",
-              "availability": "available",
-              "reason": "Changes GNOME, installed GTK toolkits, and documented Qt Quick Light/Dark defaults through the Rust backend.",
-              "value": "Light",
-              "options": [
-                "Light",
-                "Dark"
-              ]
+              "id": "colors.3630e7d0",
+              "title": "Transparency effect",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
             }
           ]
         },
         {
-          "title": "Settings",
+          "title": "Themes",
           "controls": [
             {
               "id": "themes.a9039704",
@@ -6774,24 +7199,8 @@
               "value": "Configuration"
             },
             {
-              "id": "themes.8ef48860",
-              "title": "Color",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
               "id": "themes.ab9ff81d",
               "title": "Sound",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "themes.cb5e32b2",
-              "title": "Mouse cursor",
               "type": "action",
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
@@ -6811,6 +7220,18 @@
           "title": "Windows reference settings",
           "collapsed": true,
           "controls": [
+            {
+              "id": "colors.reference.ed936eee",
+              "title": "Transparency Effects",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Colors",
+                "Transparency Effects"
+              ],
+              "value": false
+            },
             {
               "id": "themes.reference.94d5186b",
               "title": "Themes",
@@ -7810,12 +8231,13 @@
       "id": "fonts",
       "category": "personalization",
       "title": "Fonts",
-      "description": "Font preview, installation and font directory",
+      "description": "Browse, preview, install and uninstall fonts",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Reads the fontconfig font list. Installs and removes font files only in your user font directory.",
       "sources": [
-        "uris"
+        "uris",
+        "fontconfig"
       ],
       "windowsUris": [
         "ms-settings:fonts"
@@ -7828,33 +8250,33 @@
               "id": "fonts.65a8477b",
               "title": "Search fonts",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Filters installed font families by name.",
               "value": ""
             },
             {
               "id": "fonts.158ba0bb",
               "title": "Install fonts",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Copies font files into your user font directory and refreshes the font cache.",
               "value": "Browse"
             },
             {
               "id": "fonts.fc3969c7",
               "title": "Font details",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Shows styles, formats, files and a preview.",
+              "value": "View"
             },
             {
               "id": "fonts.f869cae5",
               "title": "Uninstall fonts",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Removes files in your user font directory. Fonts installed system-wide stay.",
+              "value": "Uninstall"
             }
           ]
         }
@@ -7935,120 +8357,6 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "device-usage",
-      "category": "personalization",
-      "title": "Equipment usage",
-      "description": "Windows Personalization Suggestions Reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:deviceusage"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "device-usage.eb3774e3",
-              "title": "Development",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "device-usage.2305ee3c",
-              "title": "Gaming",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "device-usage.7cc8d6a5",
-              "title": "Family",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "device-usage.f3681782",
-              "title": "Creativity",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "device-usage.08610a85",
-              "title": "School",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "device-usage.60d5c2a0",
-              "title": "Business",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "copilot-key",
-      "category": "personalization",
-      "title": "Copilot key",
-      "description": "Special key behavior reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:personalization-textinput-copilot-hardwarekey"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "copilot-key.965faf7e",
-              "title": "Dedicated key actions",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Search",
-                "Custom applications"
-              ],
-              "value": "Search"
-            },
-            {
-              "id": "copilot-key.9ec480c1",
-              "title": "Select application",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
             }
           ]
         }
@@ -10169,8 +10477,8 @@
     {
       "id": "pointer",
       "category": "accessibility",
-      "title": "Mouse pointer and touch",
-      "description": "Pointer style, size and touch tips",
+      "title": "Touch indicator",
+      "description": "Touch indicator appearance",
       "preview": "none",
       "availability": "planned",
       "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
@@ -10184,39 +10492,6 @@
         {
           "title": "Settings",
           "controls": [
-            {
-              "id": "pointer.6de7c60b",
-              "title": "Pointer style",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "white",
-                "black",
-                "Reversal",
-                "Customization"
-              ],
-              "value": "white"
-            },
-            {
-              "id": "pointer.86209eba",
-              "title": "Customize pointer color",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "#6750A4"
-            },
-            {
-              "id": "pointer.e8c2f48c",
-              "title": "Pointer size",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
             {
               "id": "pointer.09f053c7",
               "title": "Touch indicator",
@@ -10240,36 +10515,6 @@
           "collapsed": true,
           "controls": [
             {
-              "id": "pointer.reference.8a9af3b1",
-              "title": "Mouse pointer style",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Mouse pointer and touch",
-                "Mouse pointer style"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "pointer.reference.966d030b",
-              "title": "Size",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Mouse pointer and touch",
-                "Size"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
               "id": "pointer.reference.09b6b51e",
               "title": "Touch indicator",
               "type": "toggle",
@@ -10292,120 +10537,6 @@
                 "Make the touch indicator circle darker and larger"
               ],
               "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "text-cursor",
-      "category": "accessibility",
-      "title": "Text cursor",
-      "description": "Indicator color and cursor thickness",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:easeofaccess-cursor"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "text-cursor.bb54f6b0",
-              "title": "Text cursor indicator",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "text-cursor.5829d690",
-              "title": "Indicator size",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "text-cursor.d04d1b72",
-              "title": "Indicator color",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "#6750A4"
-            },
-            {
-              "id": "text-cursor.60ececbf",
-              "title": "Text cursor thickness",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "text-cursor.reference.4c40f3ca",
-              "title": "Text cursor indicator size",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Text cursor",
-                "Text cursor indicator",
-                "Text cursor indicator size"
-              ],
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "text-cursor.reference.b0cd3942",
-              "title": "Text cursor indicator color",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Text cursor",
-                "Text cursor indicator",
-                "Text cursor indicator color"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "text-cursor.reference.7beee9f0",
-              "title": "Text cursor thickness",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Text cursor",
-                "Text cursor thickness"
-              ],
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
             }
           ]
         }
@@ -14382,68 +14513,6 @@
       "children": []
     },
     {
-      "id": "personalization-glance",
-      "category": "personalization",
-      "title": "Quick Facts",
-      "description": "Old version of the page, retained for reference only",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:personalization-glance"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "personalization-glance.540cc78d",
-              "title": "Functional status",
-              "type": "info",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Windows older versions are deprecated"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "personalization-navbar",
-      "category": "personalization",
-      "title": "Navigation bar",
-      "description": "Old version of the page, retained for reference only",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:personalization-navbar"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "personalization-navbar.540cc78d",
-              "title": "Functional status",
-              "type": "info",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "The old version of Windows Mobile has been deprecated"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "personalization",
       "category": "personalization",
       "title": "Personalization overview",
@@ -17762,32 +17831,6 @@
               ]
             },
             {
-              "id": "hypr-decoration-blur.variant",
-              "title": "Effect variant · variant",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "kawase",
-              "options": [
-                "kawase",
-                "acrylic",
-                "aurora",
-                "drops",
-                "fluid_jar",
-                "frost",
-                "haze",
-                "heat_shimmer",
-                "prism",
-                "ripple",
-                "water"
-              ],
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur",
-                "variant"
-              ]
-            },
-            {
               "id": "hypr-decoration-blur.vibrancy",
               "title": "Blur color saturation improvement · vibrancy",
               "type": "slider",
@@ -17830,704 +17873,6 @@
                 "hypr-options",
                 "decoration.blur",
                 "xray"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-decoration-blur-acrylic",
-      "category": "personalization",
-      "title": "Hyprland · Blur variant: acrylic",
-      "description": "Advanced compositor settings: decoration.blur.acrylic · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-options",
-        "hyprviz-project"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "decoration.blur.acrylic",
-          "controls": [
-            {
-              "id": "hypr-decoration-blur-acrylic.aberration",
-              "title": "aberration · aberration",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.025,
-              "min": 0.0,
-              "max": 0.25,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.acrylic",
-                "aberration"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-acrylic.bulb",
-              "title": "bulb · bulb",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 48.0,
-              "min": 4.0,
-              "max": 256.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.acrylic",
-                "bulb"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-acrylic.clarity",
-              "title": "clarity · clarity",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.82,
-              "min": 0.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.acrylic",
-                "clarity"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-acrylic.refraction",
-              "title": "refraction · refraction",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 24.0,
-              "min": 0.0,
-              "max": 48.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.acrylic",
-                "refraction"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-acrylic.tint",
-              "title": "tint · tint",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "#EEF5FF",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.acrylic",
-                "tint"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-decoration-blur-aurora",
-      "category": "personalization",
-      "title": "Hyprland · Blur variant: aurora",
-      "description": "Advanced compositor settings: decoration.blur.aurora · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-options",
-        "hyprviz-project"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "decoration.blur.aurora",
-          "controls": [
-            {
-              "id": "hypr-decoration-blur-aurora.color1",
-              "title": "color1 · color1",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "#F0A0FF",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.aurora",
-                "color1"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-aurora.color2",
-              "title": "color2 · color2",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "#4DFFFF",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.aurora",
-                "color2"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-aurora.intensity",
-              "title": "intensity · intensity",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.35,
-              "min": 0.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.aurora",
-                "intensity"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-aurora.speed",
-              "title": "speed · speed",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.0,
-              "min": 0.0,
-              "max": 10.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.aurora",
-                "speed"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-decoration-blur-drops",
-      "category": "personalization",
-      "title": "Hyprland · Blur variant: drops",
-      "description": "Advanced compositor settings: decoration.blur.drops · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-options",
-        "hyprviz-project"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "decoration.blur.drops",
-          "controls": [
-            {
-              "id": "hypr-decoration-blur-drops.speed",
-              "title": "speed · speed",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 3.0,
-              "min": 0.0,
-              "max": 10.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.drops",
-                "speed"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-decoration-blur-fluid-jar",
-      "category": "personalization",
-      "title": "Hyprland · Blur variant: fluid_jar",
-      "description": "Compositor advanced settings: decoration.blur.fluid_jar · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-options",
-        "hyprviz-project"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "decoration.blur.fluid_jar",
-          "controls": [
-            {
-              "id": "hypr-decoration-blur-fluid-jar.color",
-              "title": "color · color",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "#3399FF",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.fluid_jar",
-                "color"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-fluid-jar.distortion",
-              "title": "distortion · distortion",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 8.0,
-              "min": 0.0,
-              "max": 10.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.fluid_jar",
-                "distortion"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-fluid-jar.fill-amount",
-              "title": "fill amount · fill_amount",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.5,
-              "min": 0.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.fluid_jar",
-                "fill_amount"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-fluid-jar.mass",
-              "title": "mass · mass",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.4,
-              "min": 0.1,
-              "max": 10.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.fluid_jar",
-                "mass"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-fluid-jar.precision",
-              "title": "precision · precision",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 2.0,
-              "min": 0.5,
-              "max": 8.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.fluid_jar",
-                "precision"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-fluid-jar.speed",
-              "title": "speed · speed",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 3.7,
-              "min": 0.0,
-              "max": 10.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.fluid_jar",
-                "speed"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-fluid-jar.turbulence",
-              "title": "turbulence · turbulence",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.2,
-              "min": 0.0,
-              "max": 5.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.fluid_jar",
-                "turbulence"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-decoration-blur-glass",
-      "category": "personalization",
-      "title": "Hyprland · Blur variant: glass",
-      "description": "Advanced compositor settings: decoration.blur.glass · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-options",
-        "hyprviz-project"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "decoration.blur.glass",
-          "controls": [
-            {
-              "id": "hypr-decoration-blur-glass.refraction",
-              "title": "refraction · refraction",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 20.0,
-              "min": 0.0,
-              "max": 20.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.glass",
-                "refraction"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-glass.roughness",
-              "title": "roughness · roughness",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.0,
-              "min": 0.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.glass",
-                "roughness"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-glass.size",
-              "title": "Window or control size · size",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 40.0,
-              "min": 4.0,
-              "max": 512.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.glass",
-                "size"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-decoration-blur-haze",
-      "category": "personalization",
-      "title": "Hyprland · Blur variant: haze",
-      "description": "Advanced compositor settings: decoration.blur.haze · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-options",
-        "hyprviz-project"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "decoration.blur.haze",
-          "controls": [
-            {
-              "id": "hypr-decoration-blur-haze.intensity",
-              "title": "intensity · intensity",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.35,
-              "min": 0.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.haze",
-                "intensity"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-haze.iridescence",
-              "title": "iridescence · iridescence",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.7,
-              "min": 0.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.haze",
-                "iridescence"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-decoration-blur-heat-shimmer",
-      "category": "personalization",
-      "title": "Hyprland · Blur variant: heat_shimmer",
-      "description": "Advanced compositor settings: decoration.blur.heat_shimmer · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-options",
-        "hyprviz-project"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "decoration.blur.heat_shimmer",
-          "controls": [
-            {
-              "id": "hypr-decoration-blur-heat-shimmer.speed",
-              "title": "speed · speed",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.0,
-              "min": 0.0,
-              "max": 10.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.heat_shimmer",
-                "speed"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-decoration-blur-ripple",
-      "category": "personalization",
-      "title": "Hyprland · Blur variant: ripple",
-      "description": "Advanced compositor settings: decoration.blur.ripple · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-options",
-        "hyprviz-project"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "decoration.blur.ripple",
-          "controls": [
-            {
-              "id": "hypr-decoration-blur-ripple.duration",
-              "title": "duration · duration",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.45,
-              "min": 0.05,
-              "max": 5.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.ripple",
-                "duration"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-ripple.radius",
-              "title": "radius · radius",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 400.0,
-              "min": 1.0,
-              "max": 1000.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.ripple",
-                "radius"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-ripple.strength",
-              "title": "strength · strength",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 30.0,
-              "min": 0.0,
-              "max": 32.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.ripple",
-                "strength"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-ripple.width",
-              "title": "width · width",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 32.0,
-              "min": 1.0,
-              "max": 200.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.ripple",
-                "width"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-decoration-blur-water",
-      "category": "personalization",
-      "title": "Hyprland · Blur variant: water",
-      "description": "Advanced compositor settings: decoration.blur.water · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-options",
-        "hyprviz-project"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "decoration.blur.water",
-          "controls": [
-            {
-              "id": "hypr-decoration-blur-water.damping",
-              "title": "damping · damping",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.95,
-              "min": 0.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.water",
-                "damping"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-water.duration",
-              "title": "duration · duration",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 12.0,
-              "min": 0.5,
-              "max": 60.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.water",
-                "duration"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-water.radius",
-              "title": "radius · radius",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 20.0,
-              "min": 1.0,
-              "max": 1000.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.water",
-                "radius"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-water.speed",
-              "title": "speed · speed",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.76,
-              "min": 0.0,
-              "max": 10.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.water",
-                "speed"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur-water.strength",
-              "title": "strength · strength",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 32.0,
-              "min": 0.0,
-              "max": 32.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur.water",
-                "strength"
               ]
             }
           ]
@@ -21959,357 +21304,6 @@
                 "hypr-options",
                 "xwayland",
                 "use_nearest_neighbor"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-cursor",
-      "category": "devices",
-      "title": "Hyprland · Cursor engine",
-      "description": "Advanced compositor settings: cursor · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-options",
-        "hyprviz-project"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Cursor engine",
-          "controls": [
-            {
-              "id": "hypr-cursor.default-monitor",
-              "title": "default monitor · default_monitor",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "default_monitor"
-              ]
-            },
-            {
-              "id": "hypr-cursor.enable-hyprcursor",
-              "title": "Using Hyprcursor theme · enable_hyprcursor",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "enable_hyprcursor"
-              ]
-            },
-            {
-              "id": "hypr-cursor.hide-on-key-press",
-              "title": "Hide cursor on key press · hide_on_key_press",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "hide_on_key_press"
-              ]
-            },
-            {
-              "id": "hypr-cursor.hide-on-tablet",
-              "title": "hide on tablet · hide_on_tablet",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "hide_on_tablet"
-              ]
-            },
-            {
-              "id": "hypr-cursor.hide-on-touch",
-              "title": "hide on touch · hide_on_touch",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "hide_on_touch"
-              ]
-            },
-            {
-              "id": "hypr-cursor.hotspot-padding",
-              "title": "hotspot padding · hotspot_padding",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 20.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "hotspot_padding"
-              ]
-            },
-            {
-              "id": "hypr-cursor.inactive-timeout",
-              "title": "Idle hidden cursor timeout · inactive_timeout",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 20.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "inactive_timeout"
-              ]
-            },
-            {
-              "id": "hypr-cursor.invisible",
-              "title": "invisible · invisible",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "invisible"
-              ]
-            },
-            {
-              "id": "hypr-cursor.min-refresh-rate",
-              "title": "min refresh rate · min_refresh_rate",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 24.0,
-              "min": 10.0,
-              "max": 500.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "min_refresh_rate"
-              ]
-            },
-            {
-              "id": "hypr-cursor.no-break-fs-vrr",
-              "title": "no break fs vrr · no_break_fs_vrr",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 2.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "no_break_fs_vrr"
-              ]
-            },
-            {
-              "id": "hypr-cursor.no-hardware-cursors",
-              "title": "Disable hardware cursors · no_hardware_cursors",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 2.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "no_hardware_cursors"
-              ]
-            },
-            {
-              "id": "hypr-cursor.no-warps",
-              "title": "Disable automatic pointer movement · no_warps",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "no_warps"
-              ]
-            },
-            {
-              "id": "hypr-cursor.persistent-warps",
-              "title": "persistent warps · persistent_warps",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "persistent_warps"
-              ]
-            },
-            {
-              "id": "hypr-cursor.sync-gsettings-theme",
-              "title": "sync gsettings theme · sync_gsettings_theme",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "sync_gsettings_theme"
-              ]
-            },
-            {
-              "id": "hypr-cursor.use-cpu-buffer",
-              "title": "use cpu buffer · use_cpu_buffer",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 2.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "use_cpu_buffer"
-              ]
-            },
-            {
-              "id": "hypr-cursor.warp-back-after-non-mouse-input",
-              "title": "warp back after non mouse input · warp_back_after_non_mouse_input",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "warp_back_after_non_mouse_input"
-              ]
-            },
-            {
-              "id": "hypr-cursor.warp-on-change-workspace",
-              "title": "warp on change workspace · warp_on_change_workspace",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "warp_on_change_workspace"
-              ]
-            },
-            {
-              "id": "hypr-cursor.warp-on-monitor-change",
-              "title": "warp on monitor change · warp_on_monitor_change",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": -1.0,
-              "min": -1.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "warp_on_monitor_change"
-              ]
-            },
-            {
-              "id": "hypr-cursor.warp-on-toggle-special",
-              "title": "warp on toggle special · warp_on_toggle_special",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "warp_on_toggle_special"
-              ]
-            },
-            {
-              "id": "hypr-cursor.zoom-detached-camera",
-              "title": "zoom detached camera · zoom_detached_camera",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "zoom_detached_camera"
-              ]
-            },
-            {
-              "id": "hypr-cursor.zoom-disable-aa",
-              "title": "zoom disable aa · zoom_disable_aa",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "zoom_disable_aa"
-              ]
-            },
-            {
-              "id": "hypr-cursor.zoom-factor",
-              "title": "Cursor zoom factor · zoom_factor",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.0,
-              "min": 1.0,
-              "max": 10.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "zoom_factor"
-              ]
-            },
-            {
-              "id": "hypr-cursor.zoom-rigid",
-              "title": "Fixed zoom anchor point · zoom_rigid",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "cursor",
-                "zoom_rigid"
               ]
             }
           ]
@@ -26761,79 +25755,6 @@
       "children": []
     },
     {
-      "id": "hypr-paper-misc-options",
-      "category": "personalization",
-      "title": "Hyprpaper wallpaper options · Other options",
-      "description": "Component parameters classified by official documents · Optional component hyprpaper",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; the optional component hyprpaper settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-paper"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Other options",
-          "controls": [
-            {
-              "id": "hypr-paper-misc-options.splash",
-              "title": "Display welcome banner · splash",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprpaper settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-paper",
-                "Misc Options",
-                "splash"
-              ]
-            },
-            {
-              "id": "hypr-paper-misc-options.splash-offset",
-              "title": "Welcome banner offset · splash_offset",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprpaper settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "20",
-              "referencePath": [
-                "hypr-paper",
-                "Misc Options",
-                "splash_offset"
-              ]
-            },
-            {
-              "id": "hypr-paper-misc-options.splash-opacity",
-              "title": "Welcome banner transparency · splash_opacity",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprpaper settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "0.8",
-              "referencePath": [
-                "hypr-paper",
-                "Misc Options",
-                "splash_opacity"
-              ]
-            },
-            {
-              "id": "hypr-paper-misc-options.ipc",
-              "title": "Components IPC switch · ipc",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprpaper settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-paper",
-                "Misc Options",
-                "ipc"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "hypr-sunset-configuration",
       "category": "personalization",
       "title": "Hyprsunset color temperature · General configuration",
@@ -27160,178 +26081,6 @@
                 "hypr-launcher",
                 "UI",
                 "window_size"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-qt-theme",
-      "category": "personalization",
-      "title": "Qt application appearance · Theme",
-      "description": "Component parameters classified according to official documents · Optional component hyprqt6engine",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; the optional component hyprqt6engine settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-qt"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Topic",
-          "controls": [
-            {
-              "id": "hypr-qt-theme.color-scheme",
-              "title": "color scheme · color_scheme",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprqt6engine settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-qt",
-                "Theme",
-                "color_scheme"
-              ]
-            },
-            {
-              "id": "hypr-qt-theme.icon-theme",
-              "title": "icon theme · icon_theme",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprqt6engine settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-qt",
-                "Theme",
-                "icon_theme"
-              ]
-            },
-            {
-              "id": "hypr-qt-theme.style",
-              "title": "style · style",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprqt6engine settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Fusion",
-              "referencePath": [
-                "hypr-qt",
-                "Theme",
-                "style"
-              ]
-            },
-            {
-              "id": "hypr-qt-theme.font-fixed",
-              "title": "font fixed · font_fixed",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprqt6engine settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "monospace",
-              "referencePath": [
-                "hypr-qt",
-                "Theme",
-                "font_fixed"
-              ]
-            },
-            {
-              "id": "hypr-qt-theme.font-fixed-size",
-              "title": "font fixed size · font_fixed_size",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprqt6engine settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "11",
-              "referencePath": [
-                "hypr-qt",
-                "Theme",
-                "font_fixed_size"
-              ]
-            },
-            {
-              "id": "hypr-qt-theme.font",
-              "title": "font · font",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprqt6engine settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Sans Serif",
-              "referencePath": [
-                "hypr-qt",
-                "Theme",
-                "font"
-              ]
-            },
-            {
-              "id": "hypr-qt-theme.font-size",
-              "title": "Font size · font_size",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprqt6engine settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "11",
-              "referencePath": [
-                "hypr-qt",
-                "Theme",
-                "font_size"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-qt-misc",
-      "category": "personalization",
-      "title": "Qt application appearance · Other settings",
-      "description": "Component parameters classified according to official documents · Optional component hyprqt6engine",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; the optional component hyprqt6engine settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-qt"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Other settings",
-          "controls": [
-            {
-              "id": "hypr-qt-misc.single-click-activate",
-              "title": "single click activate · single_click_activate",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprqt6engine settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-qt",
-                "Misc",
-                "single_click_activate"
-              ]
-            },
-            {
-              "id": "hypr-qt-misc.menus-have-icons",
-              "title": "menus have icons · menus_have_icons",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprqt6engine settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-qt",
-                "Misc",
-                "menus_have_icons"
-              ]
-            },
-            {
-              "id": "hypr-qt-misc.shortcuts-for-context-menus",
-              "title": "shortcuts for context menus · shortcuts_for_context_menus",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprqt6engine settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-qt",
-                "Misc",
-                "shortcuts_for_context_menus"
               ]
             }
           ]
@@ -28453,189 +27202,6 @@
               "referencePath": [
                 "hyprsettings-project",
                 "preview"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-wallpaper-outputs",
-      "category": "personalization",
-      "title": "Set wallpaper by monitor",
-      "description": "Independent wallpapers, directory rotation and backup wallpapers · Optional component hyprpaper",
-      "preview": "personalization",
-      "availability": "planned",
-      "reason": "Not yet implemented; the optional component hyprpaper settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-paper"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "hypr-wallpaper-outputs.monitor",
-              "title": "Monitor names or fallback rules",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprpaper settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-paper",
-                "monitor"
-              ]
-            },
-            {
-              "id": "hypr-wallpaper-outputs.path",
-              "title": "Picture files or directories",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprpaper settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-paper",
-                "path"
-              ]
-            },
-            {
-              "id": "hypr-wallpaper-outputs.fit",
-              "title": "Filling method",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprpaper settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "cover",
-              "options": [
-                "cover",
-                "contain",
-                "tile",
-                "fill"
-              ],
-              "referencePath": [
-                "hypr-paper",
-                "fit"
-              ]
-            },
-            {
-              "id": "hypr-wallpaper-outputs.timeout",
-              "title": "Directory rotation interval (seconds)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprpaper settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-paper",
-                "timeout"
-              ]
-            },
-            {
-              "id": "hypr-wallpaper-outputs.order",
-              "title": "Rotation order",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprpaper settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "random",
-              "options": [
-                "random"
-              ],
-              "referencePath": [
-                "hypr-paper",
-                "order"
-              ]
-            },
-            {
-              "id": "hypr-wallpaper-outputs.recursive",
-              "title": "Scan subdirectories",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprpaper settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-paper",
-                "recursive"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-cursor-theme",
-      "category": "personalization",
-      "title": "Hyprcursor and XCursor themes",
-      "description": "Theme name and size are compatible with GTK applications · Hyprcursor / XCursor theme components",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprcursor / XCursor theme component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-cursor"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "hypr-cursor-theme.theme",
-              "title": "Hyprcursor theme name",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprcursor / XCursor theme component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-cursor",
-                "theme"
-              ]
-            },
-            {
-              "id": "hypr-cursor-theme.size",
-              "title": "Hyprcursor cursor size",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprcursor / XCursor theme component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-cursor",
-                "size"
-              ]
-            },
-            {
-              "id": "hypr-cursor-theme.xcursor-theme",
-              "title": "XCursor fallback theme",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprcursor / XCursor theme component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-cursor",
-                "xcursor-theme"
-              ]
-            },
-            {
-              "id": "hypr-cursor-theme.xcursor-size",
-              "title": "XCursor rollback size",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprcursor / XCursor theme component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-cursor",
-                "xcursor-size"
-              ]
-            },
-            {
-              "id": "hypr-cursor-theme.gtk",
-              "title": "GTK application cursor theme",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprcursor / XCursor theme component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-cursor",
-                "gtk"
               ]
             }
           ]

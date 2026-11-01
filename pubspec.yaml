@@ -16,6 +16,8 @@ dependencies:
   remya_settings_client:
     path: packages/remya_settings_client
   window_manager: ^0.5.2
+  file_selector: ^1.1.0
+  flex_color_picker: ^4.0.0
 
 dev_dependencies:
   flutter_test:

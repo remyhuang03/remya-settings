@@ -1,3 +1,4 @@
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../appearance/application/app_preferences_controller.dart';
@@ -51,7 +52,7 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'bluetooth' => Icons.bluetooth_rounded,
       'printers' => Icons.print_outlined,
       'cameras' => Icons.camera_alt_outlined,
-      'mouse' || 'pointer' => Icons.mouse_outlined,
+      'mouse' || 'pointer' || 'cursor' => Icons.mouse_outlined,
       'touchpad' => Icons.touch_app_outlined,
       'wifi' || 'known-networks' => Icons.wifi_outlined,
       'ethernet' => Icons.lan_outlined,
@@ -142,6 +143,63 @@ class SettingsSurface extends StatelessWidget {
   );
 }
 
+/// A page's default-collapsed advanced options, one rounded card with its rows.
+class AdvancedSection extends StatelessWidget {
+  const AdvancedSection({
+    super.key,
+    required this.storageKey,
+    required this.expanded,
+    required this.child,
+  });
+  final Key storageKey;
+  final bool expanded;
+  final Widget child;
+
+  static const _radius = BorderRadius.all(.circular(28));
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    const shape = RoundedRectangleBorder(borderRadius: _radius);
+    return Padding(
+      padding: const .only(top: 24),
+      child: Material(
+        color: colors.surfaceContainerLowest,
+        borderRadius: _radius,
+        clipBehavior: .antiAlias,
+        child: ExpansionTile(
+          key: storageKey,
+          initiallyExpanded: expanded,
+          tilePadding: const .symmetric(horizontal: 20, vertical: 6),
+          shape: shape,
+          collapsedShape: shape,
+          leading: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: colors.secondaryContainer,
+              shape: .circle,
+            ),
+            child: Icon(
+              Icons.tune_rounded,
+              size: 20,
+              color: colors.onSecondaryContainer,
+            ),
+          ),
+          title: Text(
+            'Advanced',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          children: [
+            const Divider(height: 1, indent: 20, endIndent: 20),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// Information on the left, the interactive control on the right; stacked when narrow.
 class SettingRow extends StatelessWidget {
   const SettingRow({
@@ -223,6 +281,7 @@ class SettingControlTile extends StatelessWidget {
                 )
               else
                 AvailabilityBadge(setting.availability, reason: setting.reason),
+              if (setting.id == accentColorSettingId) const _AccentReadout(),
               if (dateTimeSettingIds.contains(setting.id) && state == null)
                 Text('System settings unavailable', style: detailStyle),
               if (setting.id == syncNowSettingId && state != null)
@@ -246,7 +305,11 @@ class SettingControlTile extends StatelessWidget {
           return label;
         },
       ),
-      control: setting.kind == .info
+      control:
+          setting.kind == .info ||
+              // The sampled color is a readout; a picker only applies to Custom.
+              setting.id == accentColorSettingId &&
+                  AppPreferencesScope.of(context).accentSource == 'background'
           ? null
           : Semantics(
               label:
@@ -281,6 +344,12 @@ class _PreviewControl extends StatelessWidget {
     }
     if (setting.id == materialThemeModeSettingId) {
       return const _AppThemeModeChoice();
+    }
+    if (setting.id == accentSourceSettingId) {
+      return _AccentSourceChoice(setting);
+    }
+    if (setting.id == accentColorSettingId) {
+      return const _AccentColorButton();
     }
     // System previews stay disabled until real integrations are verified.
     return switch (setting.kind) {
@@ -415,6 +484,116 @@ class _AppThemeModeChoice extends StatelessWidget {
             }),
           ),
       ],
+    );
+  }
+}
+
+String _hex(Color color) =>
+    '#${(color.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase()}';
+
+class _AccentReadout extends StatelessWidget {
+  const _AccentReadout();
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = AppPreferencesScope.of(context);
+    final style = Theme.of(context).textTheme;
+    return Column(
+      crossAxisAlignment: .start,
+      children: [
+        const SizedBox(height: 4),
+        Text(
+          _hex(controller.preferences.seedColor),
+          key: const ValueKey('accent-readout'),
+          style: style.bodyMedium,
+        ),
+        if (controller.accentError case final error?)
+          Text(
+            'Could not sample the background. The last color is kept. $error',
+            style: style.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.error,
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _AccentSourceChoice extends StatelessWidget {
+  const _AccentSourceChoice(this.setting);
+  final SettingSpec setting;
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = AppPreferencesScope.of(context);
+    return SizedBox(
+      width: 232,
+      child: DropdownButtonFormField<String>(
+        key: ValueKey('control-${setting.id}-${controller.accentSource}'),
+        initialValue: controller.accentSource,
+        isExpanded: true,
+        decoration: const InputDecoration(
+          isDense: true,
+          border: OutlineInputBorder(borderRadius: .all(.circular(14))),
+        ),
+        items: const [
+          DropdownMenuItem(value: 'background', child: Text('From background')),
+          DropdownMenuItem(value: 'custom', child: Text('Custom')),
+        ],
+        onChanged: (value) {
+          if (value != null && !controller.isBusy) {
+            controller.setAccentSource(value);
+          }
+        },
+      ),
+    );
+  }
+}
+
+class _AccentColorButton extends StatelessWidget {
+  const _AccentColorButton();
+
+  Future<void> _pick(
+    BuildContext context,
+    AppPreferencesController controller,
+  ) async {
+    var picked = controller.preferences.seedColor;
+    final confirmed = await ColorPicker(
+      color: picked,
+      onColorChanged: (color) => picked = color,
+      pickersEnabled: const {
+        ColorPickerType.primary: true,
+        ColorPickerType.accent: false,
+        ColorPickerType.wheel: true,
+      },
+      enableShadesSelection: true,
+      showColorCode: true,
+      colorCodeHasColor: true,
+      heading: Text(
+        'Accent color',
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      subheading: const Text('Shades'),
+      wheelSubheading: const Text('Shades'),
+    ).showPickerDialog(context);
+    if (confirmed) await controller.setAccentColor(_hex(picked));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = AppPreferencesScope.of(context);
+    return OutlinedButton.icon(
+      key: const ValueKey('accent-color-button'),
+      onPressed: controller.isBusy ? null : () => _pick(context, controller),
+      icon: Container(
+        width: 20,
+        height: 20,
+        decoration: BoxDecoration(
+          color: controller.preferences.seedColor,
+          shape: .circle,
+        ),
+      ),
+      label: const Text('Choose color'),
     );
   }
 }

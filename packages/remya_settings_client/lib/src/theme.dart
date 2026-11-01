@@ -11,10 +11,25 @@ extension MaterialStyleKey on DynamicSchemeVariant {
 
 /// Shared with the settings writer. The bar only reads this configuration.
 class RemyaTheme {
-  const RemyaTheme({this.styleVariant = .tonalSpot, this.mode = .light});
+  const RemyaTheme({
+    this.styleVariant = .tonalSpot,
+    this.mode = .light,
+    this.seedColor = defaultSeed,
+  });
+
+  static const defaultSeed = Color(0xFF8054C9);
+
+  /// Parses `#RRGGBB`; anything else keeps the default seed.
+  static Color seedFromHex(String? hex) {
+    final value = hex == null
+        ? null
+        : int.tryParse(hex.substring(1), radix: 16);
+    return value == null ? defaultSeed : Color(0xFF000000 | value);
+  }
 
   final DynamicSchemeVariant styleVariant;
   final ThemeMode mode;
+  final Color seedColor;
 
   factory RemyaTheme.parse(String content) =>
       .fromConfig(ThemeConfig.parse(content));
@@ -27,12 +42,13 @@ class RemyaTheme {
       (value) => value.configKey == config.styleVariant,
     ),
     mode: config.mode == 'dark' ? .dark : .light,
+    seedColor: seedFromHex(config.seedColor),
   );
 
   ThemeData theme(Brightness brightness) => .new(
     useMaterial3: true,
     colorScheme: .fromSeed(
-      seedColor: const Color(0xFF8054C9),
+      seedColor: seedColor,
       brightness: brightness,
       dynamicSchemeVariant: styleVariant,
     ),

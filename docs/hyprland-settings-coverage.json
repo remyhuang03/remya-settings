@@ -1737,15 +1737,6 @@
     "hypr-general-snap",
     "hypr-decoration",
     "hypr-decoration-blur",
-    "hypr-decoration-blur-acrylic",
-    "hypr-decoration-blur-aurora",
-    "hypr-decoration-blur-drops",
-    "hypr-decoration-blur-fluid-jar",
-    "hypr-decoration-blur-glass",
-    "hypr-decoration-blur-haze",
-    "hypr-decoration-blur-heat-shimmer",
-    "hypr-decoration-blur-ripple",
-    "hypr-decoration-blur-water",
     "hypr-decoration-shadow",
     "hypr-decoration-glow",
     "hypr-decoration-motion-blur",
@@ -1770,7 +1761,6 @@
     "hypr-xwayland",
     "hypr-opengl",
     "hypr-render",
-    "hypr-cursor",
     "hypr-ecosystem",
     "hypr-quirks",
     "hypr-input-capture",
@@ -1800,15 +1790,12 @@
     "hypr-lock-shape",
     "hypr-lock-input-field",
     "hypr-lock-label",
-    "hypr-paper-misc-options",
     "hypr-sunset-configuration",
     "hypr-sunset-profile",
     "hypr-launcher-general",
     "hypr-launcher-cache",
     "hypr-launcher-finders",
     "hypr-launcher-ui",
-    "hypr-qt-theme",
-    "hypr-qt-misc",
     "hypr-layout-overview",
     "hypr-layout-monocle",
     "hypr-workspaces",
@@ -1819,8 +1806,6 @@
     "hypr-device-bindings",
     "hypr-animation-editor",
     "hypr-gradient-editor",
-    "hypr-wallpaper-outputs",
-    "hypr-cursor-theme",
     "hypr-output-assignments",
     "hypr-multi-gpu",
     "hypr-compositor-permissions",
@@ -2512,20 +2497,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-blur.variant",
-      "page": "hypr-decoration-blur",
-      "source": "hypr-options",
-      "key": "variant",
-      "reference": [
-        "hypr-options",
-        "decoration.blur",
-        "variant"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`kawase`",
-      "documentedLimits": "[see below](#blur-variants)"
-    },
-    {
       "control": "hypr-decoration-blur.vibrancy",
       "page": "hypr-decoration-blur",
       "source": "hypr-options",
@@ -2566,454 +2537,6 @@
       "nativeType": "bool",
       "documentedDefault": "`false`",
       "documentedLimits": ""
-    },
-    {
-      "control": "hypr-decoration-blur-acrylic.aberration",
-      "page": "hypr-decoration-blur-acrylic",
-      "source": "hypr-options",
-      "key": "aberration",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.acrylic",
-        "aberration"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.025`",
-      "documentedLimits": "[0.0 - 0.25]"
-    },
-    {
-      "control": "hypr-decoration-blur-acrylic.bulb",
-      "page": "hypr-decoration-blur-acrylic",
-      "source": "hypr-options",
-      "key": "bulb",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.acrylic",
-        "bulb"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`48.0`",
-      "documentedLimits": "[4.0 - 256.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-acrylic.clarity",
-      "page": "hypr-decoration-blur-acrylic",
-      "source": "hypr-options",
-      "key": "clarity",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.acrylic",
-        "clarity"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.82`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-acrylic.refraction",
-      "page": "hypr-decoration-blur-acrylic",
-      "source": "hypr-options",
-      "key": "refraction",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.acrylic",
-        "refraction"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`24.0`",
-      "documentedLimits": "[0.0 - 48.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-acrylic.tint",
-      "page": "hypr-decoration-blur-acrylic",
-      "source": "hypr-options",
-      "key": "tint",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.acrylic",
-        "tint"
-      ],
-      "nativeType": "color",
-      "documentedDefault": "`0x14EEF5FF`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-decoration-blur-aurora.color1",
-      "page": "hypr-decoration-blur-aurora",
-      "source": "hypr-options",
-      "key": "color1",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.aurora",
-        "color1"
-      ],
-      "nativeType": "color",
-      "documentedDefault": "`0x29F0A0FF`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-decoration-blur-aurora.color2",
-      "page": "hypr-decoration-blur-aurora",
-      "source": "hypr-options",
-      "key": "color2",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.aurora",
-        "color2"
-      ],
-      "nativeType": "color",
-      "documentedDefault": "`0x7A4DFFFF`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-decoration-blur-aurora.intensity",
-      "page": "hypr-decoration-blur-aurora",
-      "source": "hypr-options",
-      "key": "intensity",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.aurora",
-        "intensity"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.35`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-aurora.speed",
-      "page": "hypr-decoration-blur-aurora",
-      "source": "hypr-options",
-      "key": "speed",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.aurora",
-        "speed"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": "[0.0 - 10.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-drops.speed",
-      "page": "hypr-decoration-blur-drops",
-      "source": "hypr-options",
-      "key": "speed",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.drops",
-        "speed"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`3.0`",
-      "documentedLimits": "[0.0 - 10.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-fluid-jar.color",
-      "page": "hypr-decoration-blur-fluid-jar",
-      "source": "hypr-options",
-      "key": "color",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.fluid_jar",
-        "color"
-      ],
-      "nativeType": "color",
-      "documentedDefault": "`0xCC3399FF`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-decoration-blur-fluid-jar.distortion",
-      "page": "hypr-decoration-blur-fluid-jar",
-      "source": "hypr-options",
-      "key": "distortion",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.fluid_jar",
-        "distortion"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`8.0`",
-      "documentedLimits": "[0.0 - 10.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-fluid-jar.fill-amount",
-      "page": "hypr-decoration-blur-fluid-jar",
-      "source": "hypr-options",
-      "key": "fill-amount",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.fluid_jar",
-        "fill_amount"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.5`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-fluid-jar.mass",
-      "page": "hypr-decoration-blur-fluid-jar",
-      "source": "hypr-options",
-      "key": "mass",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.fluid_jar",
-        "mass"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.4`",
-      "documentedLimits": "[0.1 - 10.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-fluid-jar.precision",
-      "page": "hypr-decoration-blur-fluid-jar",
-      "source": "hypr-options",
-      "key": "precision",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.fluid_jar",
-        "precision"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`2.0`",
-      "documentedLimits": "[0.5 - 8.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-fluid-jar.speed",
-      "page": "hypr-decoration-blur-fluid-jar",
-      "source": "hypr-options",
-      "key": "speed",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.fluid_jar",
-        "speed"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`3.7`",
-      "documentedLimits": "[0.0 - 10.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-fluid-jar.turbulence",
-      "page": "hypr-decoration-blur-fluid-jar",
-      "source": "hypr-options",
-      "key": "turbulence",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.fluid_jar",
-        "turbulence"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.2`",
-      "documentedLimits": "[0.0 - 5.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-glass.refraction",
-      "page": "hypr-decoration-blur-glass",
-      "source": "hypr-options",
-      "key": "refraction",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.glass",
-        "refraction"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`20.0`",
-      "documentedLimits": "[0.0 - 20.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-glass.roughness",
-      "page": "hypr-decoration-blur-glass",
-      "source": "hypr-options",
-      "key": "roughness",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.glass",
-        "roughness"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-glass.size",
-      "page": "hypr-decoration-blur-glass",
-      "source": "hypr-options",
-      "key": "size",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.glass",
-        "size"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`40.0`",
-      "documentedLimits": "[4.0 - 512.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-haze.intensity",
-      "page": "hypr-decoration-blur-haze",
-      "source": "hypr-options",
-      "key": "intensity",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.haze",
-        "intensity"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.35`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-haze.iridescence",
-      "page": "hypr-decoration-blur-haze",
-      "source": "hypr-options",
-      "key": "iridescence",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.haze",
-        "iridescence"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.7`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-heat-shimmer.speed",
-      "page": "hypr-decoration-blur-heat-shimmer",
-      "source": "hypr-options",
-      "key": "speed",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.heat_shimmer",
-        "speed"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": "[0.0 - 10.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-ripple.duration",
-      "page": "hypr-decoration-blur-ripple",
-      "source": "hypr-options",
-      "key": "duration",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.ripple",
-        "duration"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.45`",
-      "documentedLimits": "[0.05 - 5.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-ripple.radius",
-      "page": "hypr-decoration-blur-ripple",
-      "source": "hypr-options",
-      "key": "radius",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.ripple",
-        "radius"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`400.0`",
-      "documentedLimits": "[1.0 - 1000.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-ripple.strength",
-      "page": "hypr-decoration-blur-ripple",
-      "source": "hypr-options",
-      "key": "strength",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.ripple",
-        "strength"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`30.0`",
-      "documentedLimits": "[0.0 - 32.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-ripple.width",
-      "page": "hypr-decoration-blur-ripple",
-      "source": "hypr-options",
-      "key": "width",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.ripple",
-        "width"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`32.0`",
-      "documentedLimits": "[1.0 - 200.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-water.damping",
-      "page": "hypr-decoration-blur-water",
-      "source": "hypr-options",
-      "key": "damping",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.water",
-        "damping"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.95`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-water.duration",
-      "page": "hypr-decoration-blur-water",
-      "source": "hypr-options",
-      "key": "duration",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.water",
-        "duration"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`12.0`",
-      "documentedLimits": "[0.5 - 60.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-water.radius",
-      "page": "hypr-decoration-blur-water",
-      "source": "hypr-options",
-      "key": "radius",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.water",
-        "radius"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`20.0`",
-      "documentedLimits": "[1.0 - 1000.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-water.speed",
-      "page": "hypr-decoration-blur-water",
-      "source": "hypr-options",
-      "key": "speed",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.water",
-        "speed"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.76`",
-      "documentedLimits": "[0.0 - 10.0]"
-    },
-    {
-      "control": "hypr-decoration-blur-water.strength",
-      "page": "hypr-decoration-blur-water",
-      "source": "hypr-options",
-      "key": "strength",
-      "reference": [
-        "hypr-options",
-        "decoration.blur.water",
-        "strength"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`32.0`",
-      "documentedLimits": "[0.0 - 32.0]"
     },
     {
       "control": "hypr-decoration-shadow.enabled",
@@ -6251,7 +5774,7 @@
     },
     {
       "control": "hypr-cursor.default-monitor",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "default-monitor",
       "reference": [
@@ -6265,7 +5788,7 @@
     },
     {
       "control": "hypr-cursor.enable-hyprcursor",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "enable-hyprcursor",
       "reference": [
@@ -6279,7 +5802,7 @@
     },
     {
       "control": "hypr-cursor.hide-on-key-press",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "hide-on-key-press",
       "reference": [
@@ -6293,7 +5816,7 @@
     },
     {
       "control": "hypr-cursor.hide-on-tablet",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "hide-on-tablet",
       "reference": [
@@ -6307,7 +5830,7 @@
     },
     {
       "control": "hypr-cursor.hide-on-touch",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "hide-on-touch",
       "reference": [
@@ -6321,7 +5844,7 @@
     },
     {
       "control": "hypr-cursor.hotspot-padding",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "hotspot-padding",
       "reference": [
@@ -6335,7 +5858,7 @@
     },
     {
       "control": "hypr-cursor.inactive-timeout",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "inactive-timeout",
       "reference": [
@@ -6349,7 +5872,7 @@
     },
     {
       "control": "hypr-cursor.invisible",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "invisible",
       "reference": [
@@ -6363,7 +5886,7 @@
     },
     {
       "control": "hypr-cursor.min-refresh-rate",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "min-refresh-rate",
       "reference": [
@@ -6377,7 +5900,7 @@
     },
     {
       "control": "hypr-cursor.no-break-fs-vrr",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "no-break-fs-vrr",
       "reference": [
@@ -6391,7 +5914,7 @@
     },
     {
       "control": "hypr-cursor.no-hardware-cursors",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "no-hardware-cursors",
       "reference": [
@@ -6405,7 +5928,7 @@
     },
     {
       "control": "hypr-cursor.no-warps",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "no-warps",
       "reference": [
@@ -6419,7 +5942,7 @@
     },
     {
       "control": "hypr-cursor.persistent-warps",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "persistent-warps",
       "reference": [
@@ -6433,7 +5956,7 @@
     },
     {
       "control": "hypr-cursor.sync-gsettings-theme",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "sync-gsettings-theme",
       "reference": [
@@ -6447,7 +5970,7 @@
     },
     {
       "control": "hypr-cursor.use-cpu-buffer",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "use-cpu-buffer",
       "reference": [
@@ -6461,7 +5984,7 @@
     },
     {
       "control": "hypr-cursor.warp-back-after-non-mouse-input",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "warp-back-after-non-mouse-input",
       "reference": [
@@ -6475,7 +5998,7 @@
     },
     {
       "control": "hypr-cursor.warp-on-change-workspace",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "warp-on-change-workspace",
       "reference": [
@@ -6489,7 +6012,7 @@
     },
     {
       "control": "hypr-cursor.warp-on-monitor-change",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "warp-on-monitor-change",
       "reference": [
@@ -6503,7 +6026,7 @@
     },
     {
       "control": "hypr-cursor.warp-on-toggle-special",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "warp-on-toggle-special",
       "reference": [
@@ -6517,7 +6040,7 @@
     },
     {
       "control": "hypr-cursor.zoom-detached-camera",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "zoom-detached-camera",
       "reference": [
@@ -6531,7 +6054,7 @@
     },
     {
       "control": "hypr-cursor.zoom-disable-aa",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "zoom-disable-aa",
       "reference": [
@@ -6545,7 +6068,7 @@
     },
     {
       "control": "hypr-cursor.zoom-factor",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "zoom-factor",
       "reference": [
@@ -6559,7 +6082,7 @@
     },
     {
       "control": "hypr-cursor.zoom-rigid",
-      "page": "hypr-cursor",
+      "page": "cursor",
       "source": "hypr-options",
       "key": "zoom-rigid",
       "reference": [
@@ -10618,62 +10141,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-paper-misc-options.splash",
-      "page": "hypr-paper-misc-options",
-      "source": "hypr-paper",
-      "key": "splash",
-      "reference": [
-        "hypr-paper",
-        "Misc Options",
-        "splash"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-paper-misc-options.splash-offset",
-      "page": "hypr-paper-misc-options",
-      "source": "hypr-paper",
-      "key": "splash-offset",
-      "reference": [
-        "hypr-paper",
-        "Misc Options",
-        "splash_offset"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`20`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-paper-misc-options.splash-opacity",
-      "page": "hypr-paper-misc-options",
-      "source": "hypr-paper",
-      "key": "splash-opacity",
-      "reference": [
-        "hypr-paper",
-        "Misc Options",
-        "splash_opacity"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.8`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-paper-misc-options.ipc",
-      "page": "hypr-paper-misc-options",
-      "source": "hypr-paper",
-      "key": "ipc",
-      "reference": [
-        "hypr-paper",
-        "Misc Options",
-        "ipc"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
       "control": "hypr-sunset-configuration.max-gamma",
       "page": "hypr-sunset-configuration",
       "source": "hypr-sunset",
@@ -10895,146 +10362,6 @@
       ],
       "nativeType": "vec2",
       "documentedDefault": "`400 260`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-qt-theme.color-scheme",
-      "page": "hypr-qt-theme",
-      "source": "hypr-qt",
-      "key": "color-scheme",
-      "reference": [
-        "hypr-qt",
-        "Theme",
-        "color_scheme"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-qt-theme.icon-theme",
-      "page": "hypr-qt-theme",
-      "source": "hypr-qt",
-      "key": "icon-theme",
-      "reference": [
-        "hypr-qt",
-        "Theme",
-        "icon_theme"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-qt-theme.style",
-      "page": "hypr-qt-theme",
-      "source": "hypr-qt",
-      "key": "style",
-      "reference": [
-        "hypr-qt",
-        "Theme",
-        "style"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`Fusion`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-qt-theme.font-fixed",
-      "page": "hypr-qt-theme",
-      "source": "hypr-qt",
-      "key": "font-fixed",
-      "reference": [
-        "hypr-qt",
-        "Theme",
-        "font_fixed"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`monospace`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-qt-theme.font-fixed-size",
-      "page": "hypr-qt-theme",
-      "source": "hypr-qt",
-      "key": "font-fixed-size",
-      "reference": [
-        "hypr-qt",
-        "Theme",
-        "font_fixed_size"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`11`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-qt-theme.font",
-      "page": "hypr-qt-theme",
-      "source": "hypr-qt",
-      "key": "font",
-      "reference": [
-        "hypr-qt",
-        "Theme",
-        "font"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`Sans Serif`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-qt-theme.font-size",
-      "page": "hypr-qt-theme",
-      "source": "hypr-qt",
-      "key": "font-size",
-      "reference": [
-        "hypr-qt",
-        "Theme",
-        "font_size"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`11`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-qt-misc.single-click-activate",
-      "page": "hypr-qt-misc",
-      "source": "hypr-qt",
-      "key": "single-click-activate",
-      "reference": [
-        "hypr-qt",
-        "Misc",
-        "single_click_activate"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-qt-misc.menus-have-icons",
-      "page": "hypr-qt-misc",
-      "source": "hypr-qt",
-      "key": "menus-have-icons",
-      "reference": [
-        "hypr-qt",
-        "Misc",
-        "menus_have_icons"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-qt-misc.shortcuts-for-context-menus",
-      "page": "hypr-qt-misc",
-      "source": "hypr-qt",
-      "key": "shortcuts-for-context-menus",
-      "reference": [
-        "hypr-qt",
-        "Misc",
-        "shortcuts_for_context_menus"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
       "documentedLimits": ""
     },
     {
@@ -11778,68 +11105,8 @@
       ]
     },
     {
-      "control": "hypr-wallpaper-outputs.monitor",
-      "page": "hypr-wallpaper-outputs",
-      "source": "hypr-paper",
-      "key": "monitor",
-      "reference": [
-        "hypr-paper",
-        "monitor"
-      ]
-    },
-    {
-      "control": "hypr-wallpaper-outputs.path",
-      "page": "hypr-wallpaper-outputs",
-      "source": "hypr-paper",
-      "key": "path",
-      "reference": [
-        "hypr-paper",
-        "path"
-      ]
-    },
-    {
-      "control": "hypr-wallpaper-outputs.fit",
-      "page": "hypr-wallpaper-outputs",
-      "source": "hypr-paper",
-      "key": "fit",
-      "reference": [
-        "hypr-paper",
-        "fit"
-      ]
-    },
-    {
-      "control": "hypr-wallpaper-outputs.timeout",
-      "page": "hypr-wallpaper-outputs",
-      "source": "hypr-paper",
-      "key": "timeout",
-      "reference": [
-        "hypr-paper",
-        "timeout"
-      ]
-    },
-    {
-      "control": "hypr-wallpaper-outputs.order",
-      "page": "hypr-wallpaper-outputs",
-      "source": "hypr-paper",
-      "key": "order",
-      "reference": [
-        "hypr-paper",
-        "order"
-      ]
-    },
-    {
-      "control": "hypr-wallpaper-outputs.recursive",
-      "page": "hypr-wallpaper-outputs",
-      "source": "hypr-paper",
-      "key": "recursive",
-      "reference": [
-        "hypr-paper",
-        "recursive"
-      ]
-    },
-    {
       "control": "hypr-cursor-theme.theme",
-      "page": "hypr-cursor-theme",
+      "page": "cursor",
       "source": "hypr-cursor",
       "key": "theme",
       "reference": [
@@ -11849,7 +11116,7 @@
     },
     {
       "control": "hypr-cursor-theme.size",
-      "page": "hypr-cursor-theme",
+      "page": "cursor",
       "source": "hypr-cursor",
       "key": "size",
       "reference": [
@@ -11859,7 +11126,7 @@
     },
     {
       "control": "hypr-cursor-theme.xcursor-theme",
-      "page": "hypr-cursor-theme",
+      "page": "cursor",
       "source": "hypr-cursor",
       "key": "xcursor-theme",
       "reference": [
@@ -11869,7 +11136,7 @@
     },
     {
       "control": "hypr-cursor-theme.xcursor-size",
-      "page": "hypr-cursor-theme",
+      "page": "cursor",
       "source": "hypr-cursor",
       "key": "xcursor-size",
       "reference": [
@@ -11879,7 +11146,7 @@
     },
     {
       "control": "hypr-cursor-theme.gtk",
-      "page": "hypr-cursor-theme",
+      "page": "cursor",
       "source": "hypr-cursor",
       "key": "gtk",
       "reference": [
@@ -12839,7 +12106,7 @@
     }
   ],
   "retired": {
-    "reason": "Display duplicates were removed and retired page IDs open Display. The System information Windows reference duplicate was removed by owner request; its source maps to about.0f142010. Energy recommendations and Multitasking pages and their controls were removed by owner request. Device identifier and Advanced system settings were removed from System information by owner request.",
+    "reason": "Display duplicates were removed and retired page IDs open Display. The System information Windows reference duplicate was removed by owner request; its source maps to about.0f142010. Energy recommendations and Multitasking pages and their controls were removed by owner request. Device identifier and Advanced system settings were removed from System information by owner request. Solid color and slideshow backgrounds, Colors merged into Themes (colors opens themes), taskbar and title-bar accent toggles, Pattern, Quick Facts, Navigation bar, Equipment usage, Copilot key and Qt application pages were removed by owner request. hypr-wallpaper-outputs and hypr-paper-misc-options were folded into Background; their splash controls keep their IDs there. Hyprland blur variant pages were removed by owner request. Cursor settings moved to the System Cursor page by owner request; hypr-cursor, hypr-cursor-theme and text-cursor open it and keep their control IDs.",
     "pages": [
       "advanced-display",
       "hypr-monitor-fields"
@@ -12878,11 +12145,43 @@
       "multitasking.reference.2d6a63c7",
       "multitasking.reference.301a71a1",
       "about.5da0260f",
-      "about.92d0cfd9"
+      "about.92d0cfd9",
+      "device-usage.eb3774e3",
+      "device-usage.2305ee3c",
+      "device-usage.7cc8d6a5",
+      "device-usage.f3681782",
+      "device-usage.08610a85",
+      "device-usage.60d5c2a0",
+      "copilot-key.965faf7e",
+      "copilot-key.9ec480c1",
+      "personalization-glance.540cc78d",
+      "personalization-navbar.540cc78d",
+      "colors.ed0eea8f",
+      "colors.c3a39826",
+      "colors.ac16e9e8",
+      "themes.8ef48860",
+      "colors.reference.1232ca77",
+      "colors.reference.8fd43cc0",
+      "colors.reference.14bc5762",
+      "colors.reference.b4c97f0e",
+      "colors.reference.990d69cf",
+      "colors.reference.47f631a5",
+      "background.de8d2f50",
+      "background.eca2a518",
+      "background.4a2d8a28",
+      "background.reference.fdec0d3a",
+      "background.reference.a8aee03d",
+      "background.reference.0518a1f3"
     ],
     "removedPages": [
       "energy",
-      "multitasking"
+      "multitasking",
+      "device-usage",
+      "copilot-key",
+      "personalization-glance",
+      "personalization-navbar",
+      "colors",
+      "text-cursor"
     ]
   }
 }

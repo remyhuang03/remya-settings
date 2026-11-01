@@ -22,6 +22,22 @@ class SettingsThemeController extends ChangeNotifier {
   Timer? _timer;
   bool _loading = false;
   bool _disposed = false;
+  String? _seed;
+
+  /// Accent is optional: an older service or a missing file keeps the default seed.
+  Future<String?> _readSeed(File? themeFile) async {
+    try {
+      if (_client case final client?) {
+        return ThemeConfig.seedFromAccent(await client.call('Get', ['accent']));
+      }
+      final file = File('${themeFile!.parent.path}/accent.toml');
+      return await file.exists()
+          ? ThemeConfig.seedFromAccentFile(await file.readAsString())
+          : null;
+    } catch (_) {
+      return null;
+    }
+  }
 
   Future<void> start() async {
     if (_client case final client?) {
@@ -30,7 +46,9 @@ class SettingsThemeController extends ChangeNotifier {
           if (_disposed) return;
           try {
             if (change.topic == 'theme') {
-              _apply(ThemeConfig.fromMap(change.value));
+              _apply(ThemeConfig.fromMap(change.value).withSeed(_seed));
+            } else if (change.topic == 'accent') {
+              reload();
             } else if (change.topic == 'error') {
               error =
                   change.value['message']?.toString() ??
@@ -65,15 +83,18 @@ class SettingsThemeController extends ChangeNotifier {
     var changed = false;
     try {
       ThemeConfig? config;
+      File? file;
       if (_client case final client?) {
         config = ThemeConfig.fromMap(await client.call('Get', ['theme']));
       } else {
-        final file = resolveFile!();
+        file = resolveFile!();
         if (await file.exists()) {
           config = ThemeConfig.parse(await file.readAsString());
         }
       }
       if (config != null) {
+        _seed = await _readSeed(file);
+        config = config.withSeed(_seed);
         final content = config.toJson();
         if (content != _content) {
           theme = RemyaTheme.fromConfig(config);

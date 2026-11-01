@@ -60,6 +60,12 @@ class AppPreferencesController extends ChangeNotifier {
 
   Future<void> retry() => reload();
 
+  /// `custom` or `background`.
+  String get accentSource => 'custom';
+  String? get accentError => null;
+  Future<void> setAccentSource(String source) async {}
+  Future<void> setAccentColor(String hex) async {}
+
   Future<void> reload() => _run(
     () async {
       final observed = await systemAppearance.read();

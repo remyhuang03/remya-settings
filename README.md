@@ -8,13 +8,13 @@ A global system settings application for **Hyprland on Linux**, using **Flutter*
 
 ## Current milestone: system appearance and host previews
 
-Browse Home, 12 categories, 292 detail pages, and About; search settings, follow related pages, and inspect third-party licenses. Date/time controls include automatic synchronization, persistent time servers with Default, time zone GMT offsets, manual time, and system LC_TIME. Display controls arrange real Hyprland outputs and set brightness, scale, resolution, refresh rate, orientation, mirroring, color, and HDR, with advanced options in a collapsed section; see [Display](docs/public-api.md#display). The catalog contains 2,105 controls; availability is tracked per setting in the catalog and implementation checklist. Appearance reads installed GNOME/GTK preferences and changes them only when explicitly selected; documented Qt Quick defaults are saved through fish and Hyprland Lua configuration. Other device/account values are examples, never detected host state, and preview controls do not persist values.
+Browse Home, 12 categories, 258 detail pages, and About; search settings, follow related pages, and inspect third-party licenses. Date/time controls include automatic synchronization, persistent time servers with Default, time zone GMT offsets, manual time, and system LC_TIME. Display controls arrange real Hyprland outputs and set brightness, scale, resolution, refresh rate, orientation, mirroring, color, and HDR, with advanced options in a collapsed section; see [Display](docs/public-api.md#display). The catalog contains 2,105 controls; availability is tracked per setting in the catalog and implementation checklist. Appearance reads installed GNOME/GTK preferences and changes them only when explicitly selected; documented Qt Quick defaults are saved through fish and Hyprland Lua configuration. Other device/account values are examples, never detected host state, and preview controls do not persist values.
 
 The inventory covers the 204 unique names in Microsoft's public URI tables and 343 hierarchy entries (257 leaf controls) in its Windows 11 backup catalog. This is an application-owned UI schema, not an export of Windows' unpublished internal schema. See [research, sources, coverage, and limitations](docs/windows-settings-research.md).
 
 See the [item-by-item implementation progress checklist](docs/settings-implementation-progress.md) for every setting's stable ID, implementation status, and space for tracking and verification notes.
 
-The Hyprland extension adds 105 pages and 837 controls based on official configuration documentation and existing settings tools; the current Windows-reference pages and controls remain covered. See [Hyprland sources, classifications, and version limits](docs/hyprland-settings-research.md).
+The Hyprland extension adds 90 pages and 784 controls based on official configuration documentation and existing settings tools; the current Windows-reference pages and controls remain covered. See [Hyprland sources, classifications, and version limits](docs/hyprland-settings-research.md).
 
 ## Layout
 

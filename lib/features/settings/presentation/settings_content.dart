@@ -4,6 +4,8 @@ import '../../system_information/presentation/system_information_page.dart';
 
 import 'package:material_ui/material_ui.dart';
 
+import '../../background/application/background_controller.dart';
+import '../../background/presentation/background_page.dart';
 import '../../date_time/application/date_time_controller.dart';
 import '../../date_time/presentation/date_time_settings.dart';
 import '../../display/application/display_controller.dart';
@@ -189,9 +191,21 @@ class SettingsDetail extends StatelessWidget {
   };
 
   @override
-  Widget build(BuildContext context) => page.id == 'about'
-      ? SystemInformationPage(page: page, read: systemInformation)
-      : _preview(context);
+  Widget build(BuildContext context) {
+    if (page.id == 'about') {
+      return SystemInformationPage(page: page, read: systemInformation);
+    }
+    if (page.id == 'background') {
+      if (BackgroundScope.maybeOf(context) case final controller?) {
+        return BackgroundPage(
+          page: page,
+          controller: controller,
+          expandAdvanced: expandAdvanced,
+        );
+      }
+    }
+    return _preview(context);
+  }
 
   Widget _preview(BuildContext context) => Column(
     crossAxisAlignment: .stretch,
@@ -294,36 +308,32 @@ class _SectionCard extends StatelessWidget {
       ],
     );
     if (section.collapsed) {
-      final advanced = section.title == 'Advanced';
-      final tile = ExpansionTile(
-        key: PageStorageKey('reference-${section.controls.first.id}'),
-        initiallyExpanded: expanded,
-        tilePadding: advanced ? .zero : null,
-        shape: advanced ? const Border() : null,
-        collapsedShape: advanced ? const Border() : null,
-        title: Text(
-          section.title,
-          style: advanced ? Theme.of(context).textTheme.titleLarge : null,
-        ),
-        subtitle: advanced
-            ? null
-            : Text(
-                section.description ??
-                    'Additional reference options · Not implemented',
-              ),
-        // Keep expansion and nested scroll positions in separate storage slots.
-        children: [
-          KeyedSubtree(
-            key: PageStorageKey('body-${section.controls.first.id}'),
-            child: advanced
-                ? SettingsSurface(padding: .zero, child: controls)
-                : controls,
-          ),
-        ],
-      );
+      final bodyKey = PageStorageKey('body-${section.controls.first.id}');
+      final tileKey = PageStorageKey('reference-${section.controls.first.id}');
+      // Keep expansion and nested scroll positions in separate storage slots.
+      final body = KeyedSubtree(key: bodyKey, child: controls);
+      if (section.title == 'Advanced') {
+        return AdvancedSection(
+          storageKey: tileKey,
+          expanded: expanded,
+          child: body,
+        );
+      }
       return Padding(
         padding: const .only(top: 24),
-        child: advanced ? tile : SettingsSurface(padding: .zero, child: tile),
+        child: SettingsSurface(
+          padding: .zero,
+          child: ExpansionTile(
+            key: tileKey,
+            initiallyExpanded: expanded,
+            title: Text(section.title),
+            subtitle: Text(
+              section.description ??
+                  'Additional reference options · Not implemented',
+            ),
+            children: [body],
+          ),
+        ),
       );
     }
     return Column(

@@ -65,35 +65,51 @@ fn run() -> Result<(), String> {
                 let worker = state.clone();
                 let work_method = method.clone();
                 let work_args = args.clone();
-                let (result, theme, date, display, hostname, theme_changed, appearance_error) =
-                    gio::spawn_blocking(move || {
-                        let mut state = worker.lock().unwrap();
-                        let before = state.theme.clone();
-                        let result = state.execute(&work_method, &work_args);
-                        let appearance_error =
-                            if work_method == "Set" && work_args[0].starts_with("themes.") {
-                                result.as_ref().err().cloned()
-                            } else {
-                                None
-                            };
-                        if let Err(error) = &result
-                            && work_method == "Set"
-                            && work_args[0].starts_with("date-time.")
-                        {
-                            state.date_error = Some(error.clone());
-                        }
-                        (
-                            result,
-                            state.theme.clone(),
-                            state.configuration()["date-time"].clone(),
-                            state.display.state(),
-                            state.hostname_state(),
-                            state.theme != before,
-                            appearance_error,
-                        )
-                    })
-                    .await
-                    .expect("service worker panicked");
+                let (
+                    result,
+                    theme,
+                    date,
+                    display,
+                    hostname,
+                    background,
+                    accent,
+                    theme_changed,
+                    accent_changed,
+                    appearance_error,
+                ) = gio::spawn_blocking(move || {
+                    let mut state = worker.lock().unwrap();
+                    let before = state.theme.clone();
+                    let accent_before = state.background.accent_state();
+                    let result = state.execute(&work_method, &work_args);
+                    let appearance_error =
+                        if work_method == "Set" && work_args[0].starts_with("themes.") {
+                            result.as_ref().err().cloned()
+                        } else {
+                            None
+                        };
+                    if let Err(error) = &result
+                        && work_method == "Set"
+                        && work_args[0].starts_with("date-time.")
+                    {
+                        state.date_error = Some(error.clone());
+                    }
+                    (
+                        result,
+                        state.theme.clone(),
+                        state.configuration()["date-time"].clone(),
+                        state.display.state(),
+                        state.hostname_state(),
+                        state.background.state(),
+                        state.background.accent_state(),
+                        state.theme != before,
+                        state.background.accent_state() != accent_before,
+                        appearance_error,
+                    )
+                })
+                .await
+                .expect("service worker panicked");
+                // A rejected page must not open anything or request authorization.
+                let opened = method == "Open" && args[0] != "repository" && result.is_ok();
                 match result {
                     Ok(value) => invocation.return_value(Some(&(value.to_string(),).to_variant())),
                     Err(error) => {
@@ -111,11 +127,18 @@ fn run() -> Result<(), String> {
                     signal(&bus, "date-time", &date);
                     signal(&bus, "display", &display);
                     signal(&bus, "hostname", &hostname);
+                    signal(&bus, "background", &background);
+                    if accent_changed {
+                        signal(&bus, "accent", &accent);
+                    }
+                    if args.first().is_some_and(|id| id.starts_with("fonts.")) {
+                        signal(&bus, "fonts", &serde_json::json!({}));
+                    }
                 }
                 if let Some(message) = appearance_error {
                     signal(&bus, "error", &serde_json::json!({"message":message}));
                 }
-                if method == "Open" && args[0] != "repository" {
+                if opened {
                     signal(&bus, "navigation", &serde_json::json!({"page":args[0]}));
                     let needed = state.lock().unwrap().begin_authorization();
                     if needed {
@@ -131,7 +154,7 @@ fn run() -> Result<(), String> {
                         &state.lock().unwrap().configuration()["date-time"],
                     );
                 }
-                if method == "Open" && args[0] != "repository" {
+                if opened {
                     signal(&bus, "hostname", &state.lock().unwrap().hostname_state());
                 }
                 if method == "Quit" {
@@ -193,7 +216,11 @@ fn run() -> Result<(), String> {
                 let mut s = state.lock().unwrap();
                 let before = s.theme.clone();
                 let errors = s.theme_error.clone();
+                let accent = s.background.accent_state();
                 s.refresh();
+                if s.background.accent_state() != accent {
+                    signal(&bus, "accent", &s.background.accent_state());
+                }
                 if s.theme != before {
                     signal(&bus, "theme", &s.theme);
                 }
@@ -203,6 +230,7 @@ fn run() -> Result<(), String> {
                 signal(&bus, "date-time", &s.configuration()["date-time"]);
                 signal(&bus, "hostname", &s.hostname_state());
                 signal(&bus, "display", &s.display.state());
+                signal(&bus, "background", &s.background.state());
             });
         }
         glib::ControlFlow::Continue

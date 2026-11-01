@@ -7,7 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'features/background/application/background_controller.dart';
 import 'features/display/application/display_controller.dart';
+import 'features/fonts/application/fonts_controller.dart';
 import 'features/integration/settings_scheduler.dart';
 import 'app.dart';
 import 'features/integration/service_controllers.dart';
@@ -41,12 +43,22 @@ Future<void> main() async {
     renameName: client.renameHostname,
     resolve: client.resolveHostname,
   );
+  final background = BackgroundController(
+    read: () => client.call('Get', ['background']),
+    write: (id, value) => client.call('Set', [id, value]),
+    resolve: (source) => client.call('Resolve', ['background', source]),
+  );
+  final fonts = FontsController(
+    read: () => client.call('Get', ['fonts']),
+    write: (id, value) => client.call('Set', [id, value]),
+  );
   final navigation = ValueNotifier<String?>(null);
   final scheduler = SettingsScheduler([
     preferences.reload,
     dateTime.reload,
     display.reload,
     hostname.reload,
+    background.reload,
   ]);
   runApp(
     RemyaSettingsApp(
@@ -54,6 +66,8 @@ Future<void> main() async {
       dateTime: dateTime,
       display: display,
       hostname: hostname,
+      background: background,
+      fonts: fonts,
       navigation: navigation,
       scheduler: scheduler,
       systemInformation: client.readSystemInformation,
@@ -71,8 +85,12 @@ Future<void> main() async {
         } else {
           preferences.reload();
         }
-      case 'theme':
+      case 'theme' || 'accent':
         preferences.reload();
+      case 'background':
+        background.apply(change.value);
+      case 'fonts':
+        fonts.reload();
       case 'date-time':
         dateTime.reload();
       case 'hostname':

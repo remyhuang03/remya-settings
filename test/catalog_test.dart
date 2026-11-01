@@ -4,7 +4,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:remya_settings/features/appearance/domain/app_preferences.dart';
+import 'package:remya_settings/features/background/application/background_controller.dart';
 import 'package:remya_settings/features/display/application/display_controller.dart';
+import 'package:remya_settings/features/fonts/application/fonts_controller.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 
 Map<String, dynamic> readCatalog() =>
@@ -50,9 +53,54 @@ void main() {
       }
       expect(catalog.search('Energy recommendations'), isEmpty);
       expect(catalog.search('Multitasking'), isEmpty);
+      for (final removed in [
+        'Quick Facts',
+        'Navigation bar',
+        'Equipment usage',
+        'Copilot key',
+        'Slides',
+      ]) {
+        expect(catalog.search(removed), isEmpty, reason: removed);
+      }
+      for (final id in ['device-usage', 'copilot-key', 'hypr-qt-theme']) {
+        expect(() => catalog.page(id), throwsStateError);
+      }
+      expect(catalog.search('Blur variant'), isEmpty);
+      expect(
+        () => catalog.page('hypr-decoration-blur-glass'),
+        throwsStateError,
+      );
+      expect(catalog.page('hypr-decoration-blur').id, 'hypr-decoration-blur');
+      final cursor = catalog.page('cursor');
+      expect(cursor.category, 'system');
+      expect(cursor.availability, SettingAvailability.planned);
+      for (final old in ['hypr-cursor', 'hypr-cursor-theme', 'text-cursor']) {
+        expect(catalog.page(old).id, 'cursor');
+      }
+      expect(
+        cursor.controls.map((c) => c.id),
+        containsAll([
+          'themes.cb5e32b2',
+          'hypr-cursor.inactive-timeout',
+          'hypr-cursor-theme.theme',
+          'pointer.e8c2f48c',
+          'text-cursor.bb54f6b0',
+        ]),
+      );
+      expect(cursor.windowsUris, contains('ms-settings:easeofaccess-cursor'));
+      expect(catalog.page('colors').id, 'themes');
+      expect(catalog.page('hypr-wallpaper-outputs').id, 'background');
+      expect(catalog.page('hypr-paper-misc-options').id, 'background');
+      expect(
+        catalog.page('themes').windowsUris,
+        contains('ms-settings:colors'),
+      );
       for (final page in catalog.pages) {
         expect(page.controls, isNotEmpty);
-        expect(page.availability == .available, page.id == 'about');
+        expect(
+          page.availability == .available,
+          const {'about', 'background', 'fonts'}.contains(page.id),
+        );
         for (final control in page.controls) {
           expect(
             control.availability == .available,
@@ -68,6 +116,20 @@ void main() {
               ...displaySettingIds,
               ...systemInformationSettingIds,
               hostnameSettingId,
+              accentSourceSettingId,
+              accentColorSettingId,
+              backgroundKindSettingId,
+              backgroundDisplaySettingId,
+              backgroundFileSettingId,
+              backgroundFitSettingId,
+              backgroundPauseSettingId,
+              splashSettingId,
+              splashOffsetSettingId,
+              splashOpacitySettingId,
+              fontsSearchSettingId,
+              fontsInstallSettingId,
+              fontsDetailsSettingId,
+              fontsUninstallSettingId,
             }.contains(control.id),
           );
           expect(control.reason, isNotEmpty);
@@ -155,19 +217,23 @@ void main() {
         source['id'] as String: source as Map<String, dynamic>,
     };
     final addedPages = (coverage['addedPages'] as List).cast<String>().toSet();
-    final addedControls = {
-      for (final page in catalog.pages.where((p) => addedPages.contains(p.id)))
-        for (final control in page.controls) control.id: control,
-    };
     final evidence = (coverage['controls'] as List)
         .cast<Map<String, dynamic>>();
-    expect(addedPages.length, 105);
-    expect(evidence.length, 837);
+    final evidenced = evidence.map((e) => e['control']).toSet();
+    // Cursor mixes Hyprland and Windows-reference controls, so it is not an added page.
+    final addedControls = {
+      for (final page in catalog.pages)
+        for (final control in page.controls)
+          if (addedPages.contains(page.id) || evidenced.contains(control.id))
+            control.id: control,
+    };
+    expect(addedPages.length, 90);
+    expect(evidence.length, 784);
     expect(
       evidence.map((e) => e['control']).toSet(),
       addedControls.keys.toSet(),
     );
-    expect(evidence.where((e) => e['source'] == 'hypr-options').length, 368);
+    expect(evidence.where((e) => e['source'] == 'hypr-options').length, 335);
     for (final entry in evidence) {
       final source = sources[entry['source']];
       expect(source, isNotNull, reason: entry['control'] as String);
