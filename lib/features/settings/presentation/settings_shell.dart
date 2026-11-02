@@ -1,3 +1,5 @@
+import '../../bluetooth/application/bluetooth_controller.dart';
+import '../../bluetooth/presentation/bluetooth_page.dart';
 import '../../applications/presentation/external_tools_page.dart';
 import '../../network/application/network_controller.dart';
 import '../../network/presentation/known_networks_page.dart';
@@ -421,6 +423,9 @@ class _SettingsShellState extends State<SettingsShell> {
       content = AppImagesPage(
         controller: ApplicationsScope.maybeOf(context)!.appImages!,
       );
+    } else if (_page?.id == 'bluetooth' &&
+        BluetoothScope.maybeOf(context) != null) {
+      content = BluetoothPage(controller: BluetoothScope.maybeOf(context)!);
     } else if (_networkPage(_page) case final page?) {
       content = page;
     } else if (_page?.id == 'defaults' &&

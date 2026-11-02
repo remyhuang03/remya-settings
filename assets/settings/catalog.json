@@ -4400,10 +4400,10 @@
       "id": "bluetooth",
       "category": "devices",
       "title": "Bluetooth",
-      "description": "Bluetooth switch, pairing and device catalog",
-      "preview": "devices",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "description": "Bluetooth adapters, pairing and connected devices",
+      "preview": "none",
+      "availability": "available",
+      "reason": "Uses system BlueZ through the Settings service.",
       "sources": [
         "uris"
       ],
@@ -4412,39 +4412,117 @@
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Bluetooth",
           "controls": [
             {
-              "id": "bluetooth.c4dc12d3",
+              "id": "bluetooth.enabled",
               "title": "Bluetooth",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses system BlueZ through the Settings service.",
               "value": false
             },
             {
-              "id": "bluetooth.9bf543c2",
-              "title": "Add Bluetooth device",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Add device"
+              "id": "bluetooth.adapter",
+              "title": "Adapter",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses system BlueZ through the Settings service.",
+              "value": "Detected adapter",
+              "options": [
+                "Detected adapter"
+              ]
             },
             {
-              "id": "bluetooth.222005b0",
-              "title": "Paired device",
+              "id": "bluetooth.scan",
+              "title": "Add device / scan",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Uses system BlueZ through the Settings service.",
+              "value": "Add device / scan"
+            }
+          ]
+        },
+        {
+          "title": "Devices",
+          "controls": [
+            {
+              "id": "bluetooth.devices",
+              "title": "Paired devices",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses system BlueZ through the Settings service.",
+              "value": "Read from BlueZ"
             },
             {
-              "id": "bluetooth.a54ec9a0",
-              "title": "Discovery Settings",
+              "id": "bluetooth.pair",
+              "title": "Pair",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Uses system BlueZ through the Settings service.",
+              "value": "Pair"
+            },
+            {
+              "id": "bluetooth.connect",
+              "title": "Connect",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses system BlueZ through the Settings service.",
+              "value": "Connect"
+            },
+            {
+              "id": "bluetooth.disconnect",
+              "title": "Disconnect",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses system BlueZ through the Settings service.",
+              "value": "Disconnect"
+            },
+            {
+              "id": "bluetooth.forget",
+              "title": "Remove device",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses system BlueZ through the Settings service.",
+              "value": "Remove device"
+            },
+            {
+              "id": "bluetooth.cancel",
+              "title": "Cancel pairing",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses system BlueZ through the Settings service.",
+              "value": "Cancel pairing"
+            },
+            {
+              "id": "bluetooth.respond",
+              "title": "Pairing response",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses system BlueZ through the Settings service.",
+              "value": "Pairing response"
+            }
+          ]
+        },
+        {
+          "title": "Advanced",
+          "collapsed": true,
+          "controls": [
+            {
+              "id": "bluetooth.information",
+              "title": "Adapter information",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses system BlueZ through the Settings service.",
+              "value": "Read from BlueZ"
+            },
+            {
+              "id": "bluetooth.discoverable",
+              "title": "Temporarily discoverable",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses system BlueZ through the Settings service.",
+              "value": "Temporarily discoverable"
             }
           ]
         }
@@ -6551,7 +6629,7 @@
       "description": "Wireless devices and independent wireless switches",
       "preview": "none",
       "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "reason": "Bluetooth opens its implemented page; airplane mode and Wi-Fi controls remain previews.",
       "sources": [
         "uris"
       ],
@@ -6580,12 +6658,12 @@
               "value": false
             },
             {
-              "id": "airplane.ce637a87",
-              "title": "Bluetooth wireless devices",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
+              "id": "airplane.bluetooth",
+              "title": "Bluetooth",
+              "type": "action",
+              "availability": "available",
+              "reason": "Open Bluetooth settings.",
+              "value": "Open"
             }
           ]
         }

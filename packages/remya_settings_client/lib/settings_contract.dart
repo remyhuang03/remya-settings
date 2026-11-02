@@ -9,3 +9,5 @@ export 'src/system_information.dart';
 export 'src/default_apps.dart';
 export 'src/applications.dart';
 export 'src/network.dart';
+
+export 'src/bluetooth.dart';

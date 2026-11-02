@@ -171,6 +171,7 @@ pub struct State {
     pub default_apps: DefaultApps<default_apps::RealDesktop>,
     pub appimages: applications::appimages::AppImages,
     pub network: NetworkManager,
+    pub bluetooth: remya_settings_bluetooth::Bluetooth,
     pub auth_error: Option<String>,
     privileged: Option<Session>,
     gui: Option<Child>,
@@ -208,6 +209,7 @@ impl State {
                 default_apps::RealDesktop,
                 config.with_file_name("default-apps.toml"),
             ),
+            bluetooth: remya_settings_bluetooth::Bluetooth::new(),
             network: NetworkManager::real(config.with_file_name("network.toml")),
             appimages: applications::appimages::AppImages::real(
                 config.with_file_name("appimages.toml"),
@@ -504,6 +506,13 @@ impl State {
                     }
                     // Polled every second: answered from the last state, without a NM read.
                     "network-traffic" => Ok(self.network.traffic()),
+                    "bluetooth" => self.bluetooth.read(),
+                    _ if remya_settings_bluetooth::is_setting(key) => {
+                        let state = self.bluetooth.read()?;
+                        Ok(
+                            json!({"id":key,"availability":"available","reason":"Uses system BlueZ.","value":state,"error":state["error"]}),
+                        )
+                    }
                     "network" => {
                         let _ = self.network.refresh();
                         Ok(self.network.state())
@@ -752,6 +761,15 @@ impl State {
             .ok_or_else(|| invalid("Unknown setting"))?;
         if control["availability"] != "available" {
             return Err(format!("Unavailable:{}", control["reason"]));
+        }
+        if key == "airplane.bluetooth" {
+            if value != "open" {
+                return Err(invalid("Use open to open Bluetooth settings"));
+            }
+            return self.execute("Open", &["bluetooth".into()]);
+        }
+        if remya_settings_bluetooth::is_setting(key) {
+            return self.bluetooth.set(key, value);
         }
         if is_network_setting(key) {
             return self.network.set(key, value);
@@ -1006,6 +1024,7 @@ impl State {
             .flatten()
             .is_some()
         {
+            self.bluetooth.cleanup();
             self.gui = None;
         }
     }
@@ -1016,6 +1035,7 @@ impl State {
         }
         self.privileged = None;
         self.appimages.shutdown();
+        self.bluetooth.cleanup();
         // Never leave an unconfirmed display change behind when the service stops.
         let _ = self.display.revert_pending();
     }

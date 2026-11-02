@@ -1,0 +1,499 @@
+import 'dart:async';
+
+import 'package:material_ui/material_ui.dart';
+import 'package:remya_settings_client/settings_contract.dart';
+
+import '../../settings/presentation/settings_widgets.dart';
+import '../application/bluetooth_controller.dart';
+
+class BluetoothPage extends StatefulWidget {
+  const BluetoothPage({super.key, required this.controller});
+  final BluetoothController controller;
+  @override
+  State<BluetoothPage> createState() => _BluetoothPageState();
+}
+
+class _BluetoothPageState extends State<BluetoothPage> {
+  BluetoothController get controller => widget.controller;
+  @override
+  void initState() {
+    super.initState();
+    controller.reload();
+  }
+
+  @override
+  void dispose() {
+    unawaited(controller.release());
+    super.dispose();
+  }
+
+  Future<void> _add({bool visible = false}) async {
+    await controller.scan(visible: visible);
+    if (!mounted) {
+      await controller.release();
+      return;
+    }
+    await showDialog<void>(
+      context: context,
+      builder: (_) => _AddDeviceDialog(controller: controller),
+    );
+    await controller.release();
+  }
+
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: controller,
+    builder: (context, _) {
+      final adapter = controller.adapter;
+      final paired = controller.devices.where(
+        (d) => d['paired'] == true || d['bonded'] == true,
+      );
+      return Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          _BluetoothStatus(controller: controller),
+          if (!controller.available)
+            const SettingsSurface(
+              child: Text(
+                'Bluetooth is unavailable. Check that the system Bluetooth service is running.',
+              ),
+            )
+          else if (adapter == null)
+            const SettingsSurface(child: Text('No Bluetooth adapter found.'))
+          else ...[
+            if (controller.adapters.length > 1)
+              SettingsSurface(
+                child: DropdownButtonFormField<String>(
+                  key: ValueKey(adapter['id']),
+                  initialValue: adapter['id'] as String,
+                  decoration: const InputDecoration(labelText: 'Adapter'),
+                  isExpanded: true,
+                  items: [
+                    for (final a in controller.adapters)
+                      DropdownMenuItem(
+                        value: a['id'] as String,
+                        child: Text(
+                          '${a['name']} (${a['address']})',
+                          overflow: .ellipsis,
+                        ),
+                      ),
+                  ],
+                  onChanged:
+                      controller.busy || adapter['hardware_blocked'] == true
+                      ? null
+                      : (id) {
+                          if (id != null) controller.selectAdapter(id);
+                        },
+                ),
+              ),
+            SettingsSurface(
+              child: SwitchListTile(
+                contentPadding: .zero,
+                title: const Text('Bluetooth'),
+                subtitle: Text(
+                  adapter['hardware_blocked'] == true
+                      ? 'Blocked by a hardware switch'
+                      : adapter['software_blocked'] == true
+                      ? 'Blocked by system radio control'
+                      : controller.powered
+                      ? 'On'
+                      : 'Off',
+                ),
+                value: controller.powered,
+                onChanged:
+                    controller.busy || adapter['hardware_blocked'] == true
+                    ? null
+                    : (enabled) => controller.set(bluetoothEnabledSettingId, {
+                        'enabled': enabled,
+                      }),
+              ),
+            ),
+            const SizedBox(height: 16),
+            if (controller.powered)
+              Align(
+                alignment: .centerLeft,
+                child: FilledButton.icon(
+                  key: const ValueKey('bluetooth.add'),
+                  onPressed: controller.busy ? null : _add,
+                  icon: const Icon(Icons.add_rounded),
+                  label: const Text('Add device'),
+                ),
+              ),
+            const SizedBox(height: 16),
+            Text(
+              'Paired devices',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            if (paired.isEmpty)
+              const SettingsSurface(child: Text('No paired devices.')),
+            for (final device in paired)
+              _DeviceCard(controller: controller, device: device),
+            const SizedBox(height: 16),
+            AdvancedSection(
+              storageKey: const PageStorageKey('bluetooth.advanced'),
+              child: Padding(
+                padding: const .all(20),
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    Text('Name: ${adapter['name']}'),
+                    Text('Address: ${adapter['address']}'),
+                    Text(
+                      'Discoverable: ${adapter['discoverable'] == true ? 'Yes' : 'No'}',
+                    ),
+                    if (controller.powered) ...[
+                      const SizedBox(height: 12),
+                      OutlinedButton.icon(
+                        onPressed: controller.busy
+                            ? null
+                            : () => _add(visible: true),
+                        icon: const Icon(Icons.visibility_outlined),
+                        label: const Text('Discoverable for 60 seconds'),
+                      ),
+                      const Text(
+                        'Incoming pairing uses your system pairing agent.',
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ],
+      );
+    },
+  );
+}
+
+class _BluetoothStatus extends StatelessWidget {
+  const _BluetoothStatus({required this.controller});
+  final BluetoothController controller;
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: .stretch,
+    children: [
+      if (controller.busy) ...[
+        const LinearProgressIndicator(),
+        Padding(
+          padding: const .symmetric(vertical: 8),
+          child: Text(
+            'In progress: ${controller.operation?['kind'] ?? 'Bluetooth'}',
+          ),
+        ),
+      ],
+      if (controller.errorMessage case final error?)
+        Padding(
+          padding: const .only(bottom: 12),
+          child: SettingsSurface(
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                const Icon(Icons.error_outline_rounded),
+                Text(error),
+                TextButton(
+                  onPressed: controller.sending ? null : controller.reload,
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          ),
+        ),
+    ],
+  );
+}
+
+IconData _deviceIcon(Map device) => switch (device['icon']) {
+  'input-keyboard' => Icons.keyboard_rounded,
+  'input-mouse' => Icons.mouse_rounded,
+  'audio-headphones' || 'audio-headset' => Icons.headphones_rounded,
+  'audio-card' => Icons.speaker_rounded,
+  'phone' => Icons.phone_android_rounded,
+  _ => Icons.bluetooth_rounded,
+};
+
+class _DeviceCard extends StatelessWidget {
+  const _DeviceCard({
+    required this.controller,
+    required this.device,
+    this.nearby = false,
+  });
+  final BluetoothController controller;
+  final Map device;
+  final bool nearby;
+  Future<void> _forget(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Remove ${device['name']}?'),
+        content: const Text(
+          'You will need to pair this device again to use it.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Remove'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      await controller.device(bluetoothForgetSettingId, device);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final connected = device['connected'] == true;
+    final blocked = device['blocked'] == true;
+    return Padding(
+      padding: const .only(bottom: 12),
+      child: SettingsSurface(
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            Row(
+              children: [
+                Icon(_deviceIcon(device)),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: .start,
+                    children: [
+                      Text(
+                        device['name'] as String? ?? 'Bluetooth device',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Text(device['address'] as String? ?? ''),
+                      Text(
+                        blocked
+                            ? 'Blocked by system'
+                            : connected
+                            ? 'Connected'
+                            : nearby
+                            ? 'Not connected'
+                            : 'Paired, not connected',
+                      ),
+                      if (device['battery'] case final num battery)
+                        Text('Battery: $battery%'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                if (controller.powered && !blocked)
+                  FilledButton.tonal(
+                    onPressed: controller.busy
+                        ? null
+                        : () => controller.device(
+                            nearby
+                                ? bluetoothPairSettingId
+                                : connected
+                                ? bluetoothDisconnectSettingId
+                                : bluetoothConnectSettingId,
+                            device,
+                          ),
+                    child: Text(
+                      nearby
+                          ? 'Pair'
+                          : connected
+                          ? 'Disconnect'
+                          : 'Connect',
+                    ),
+                  ),
+                if (!nearby)
+                  TextButton(
+                    onPressed: controller.busy ? null : () => _forget(context),
+                    child: const Text('Remove'),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AddDeviceDialog extends StatelessWidget {
+  const _AddDeviceDialog({required this.controller});
+  final BluetoothController controller;
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: controller,
+    builder: (context, _) => AlertDialog(
+      title: const Text('Add Bluetooth device'),
+      content: SizedBox(
+        width: 480,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: .min,
+            crossAxisAlignment: .stretch,
+            children: [
+              const Text(
+                'Put your device in pairing mode. Cached devices may be out of range.',
+              ),
+              const SizedBox(height: 12),
+              _BluetoothStatus(controller: controller),
+              if (controller.prompt case final prompt?)
+                _PairingPrompt(
+                  key: ValueKey(prompt['id']),
+                  controller: controller,
+                  prompt: prompt,
+                ),
+              if (controller.pairing)
+                TextButton(
+                  onPressed: controller.sending
+                      ? null
+                      : () => controller.set(bluetoothCancelSettingId),
+                  child: const Text('Cancel pairing'),
+                ),
+              Text(controller.scanning ? 'Scanning…' : 'Scan stopped'),
+              if (!controller.powered) const Text('Bluetooth is off.'),
+              if (controller.powered) ...[
+                for (final device in controller.devices.where(
+                  (d) => d['paired'] != true && d['bonded'] != true,
+                ))
+                  _DeviceCard(
+                    controller: controller,
+                    device: device,
+                    nearby: true,
+                  ),
+                if (controller.operation?['kind'] == 'pair' &&
+                    controller.operation?['status'] == 'completed')
+                  const Text('Device paired and connected.'),
+              ],
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        if (controller.powered)
+          TextButton(
+            onPressed: controller.busy ? null : controller.scan,
+            child: const Text('Scan again'),
+          ),
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Done'),
+        ),
+      ],
+    ),
+  );
+}
+
+class _PairingPrompt extends StatefulWidget {
+  const _PairingPrompt({
+    super.key,
+    required this.controller,
+    required this.prompt,
+  });
+  final BluetoothController controller;
+  final Map prompt;
+  @override
+  State<_PairingPrompt> createState() => _PairingPromptState();
+}
+
+class _PairingPromptState extends State<_PairingPrompt> {
+  final _input = TextEditingController();
+  String? _error;
+  @override
+  void dispose() {
+    _input.dispose();
+    super.dispose();
+  }
+
+  Future<void> _respond() async {
+    final kind = widget.prompt['kind'];
+    final value = _input.text;
+    final passkey = int.tryParse(value);
+    if (kind == 'RequestPinCode' &&
+        !RegExp(r'^[a-zA-Z0-9]{1,16}$').hasMatch(value)) {
+      setState(() => _error = 'Enter 1 to 16 letters or digits');
+      return;
+    }
+    if (kind == 'RequestPasskey' &&
+        (!RegExp(r'^\d{1,6}$').hasMatch(value) || passkey == null)) {
+      setState(() => _error = 'Enter up to six digits');
+      return;
+    }
+    await widget.controller.set(bluetoothRespondSettingId, {
+      'request': widget.prompt['id'],
+      'accept': true,
+      if (kind == 'RequestPinCode') 'pin': value,
+      if (kind == 'RequestPasskey') 'passkey': passkey,
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final kind = widget.prompt['kind'] as String;
+    final entry = kind == 'RequestPinCode' || kind == 'RequestPasskey';
+    final display = kind.startsWith('Display');
+    return SettingsSurface(
+      child: Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          Text(
+            entry
+                ? 'Enter the pairing code'
+                : kind == 'RequestConfirmation'
+                ? 'Do these numbers match on your device?'
+                : display
+                ? 'Type this code on the Bluetooth device'
+                : 'Allow pairing with this device?',
+          ),
+          if (widget.prompt['code'] case final String code)
+            SelectableText(
+              code,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          if (widget.prompt['entered'] case final num entered)
+            Text('Digits entered: $entered'),
+          if (widget.prompt['service'] case final String service)
+            Text('Service: $service'),
+          if (entry)
+            TextField(
+              controller: _input,
+              autofocus: true,
+              keyboardType: kind == 'RequestPasskey' ? .number : .text,
+              maxLength: kind == 'RequestPasskey' ? 6 : 16,
+              decoration: InputDecoration(
+                labelText: 'Pairing code',
+                errorText: _error,
+              ),
+              onSubmitted: (_) => _respond(),
+            ),
+          if (!display)
+            Wrap(
+              spacing: 8,
+              children: [
+                FilledButton(
+                  onPressed: widget.controller.sending ? null : _respond,
+                  child: Text(entry ? 'Submit' : 'Confirm'),
+                ),
+                TextButton(
+                  onPressed: widget.controller.sending
+                      ? null
+                      : () => widget.controller.set(bluetoothRespondSettingId, {
+                          'request': widget.prompt['id'],
+                          'accept': false,
+                        }),
+                  child: const Text('Reject'),
+                ),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+}

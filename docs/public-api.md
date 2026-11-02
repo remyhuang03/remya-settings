@@ -815,3 +815,59 @@ because other tools such as the shell's quick toggle change them routinely.
 The filter is a hardware color transform, so it is not part of screenshots or
 recordings. On an HDR output it may be applied to encoded values and look too strong;
 the page says so while any display uses HDR.
+
+## Bluetooth
+
+`Get("bluetooth")` returns `available`, `adapters`, `devices`, `scanning`,
+`operation`, `prompt`, and `error`. `scanning` contains only Settings-owned scan
+sessions; adapter `discovering` can also reflect another application's session.
+Adapters include `id`, `address`, `name`, `powered`, `discoverable`, `discovering`
+and `pairable`, with nullable `hardware_blocked` and `software_blocked` from Linux rfkill sysfs. Devices include `id`, `adapter`, `address`, `name`, `icon`, `paired`,
+`bonded`, `connected`, `blocked` and nullable `battery` (0–100). IDs are current
+BlueZ object paths and must be obtained again after hotplug or service restart.
+
+All Bluetooth writes accept a JSON object. Input is limited to 4096 bytes;
+unknown fields, unknown targets and incorrect adapter/device membership fail.
+
+| Setting ID | JSON input |
+| --- | --- |
+| `bluetooth.enabled` | `{"adapter":"<id>","enabled":true}` or false |
+| `bluetooth.scan` | `{"adapter":"<id>","enabled":true}` starts/renews a 60-second scan; false releases the own session |
+| `bluetooth.discoverable` | Same input; true requests a discoverable 60-second scan, false releases it |
+| `bluetooth.pair` | `{"adapter":"<id>","device":"<id>"}` pairs, then attempts to connect |
+| `bluetooth.connect` / `bluetooth.disconnect` | `{"adapter":"<id>","device":"<id>"}` |
+| `bluetooth.forget` | `{"adapter":"<id>","device":"<id>"}` removes the device and its bond |
+| `bluetooth.cancel` | `{}` cancels pending pairing |
+| `bluetooth.respond` | `{"request":<prompt-id>,"pin":"1234"}`, `{"request":<id>,"passkey":123456}`, or `{"request":<id>,"accept":true}`; `accept:false` rejects any pending request |
+| `airplane.bluetooth` | Literal `open`, equivalent to opening the Bluetooth page |
+
+`bluetooth.adapter`, `bluetooth.devices` and `bluetooth.information` are read-only
+catalog entries. Adapter selection is local to each client; each operation sends
+its adapter explicitly. `Get` on a Bluetooth setting returns catalog availability
+and the same complete Bluetooth state in `value`, with its error.
+
+Writes return the current state with an operation `id`, `kind`, `status`, `adapter`
+and optional `device`. Acceptance is `running`, not success. Completion is
+`completed`, `failed` or `cancelled`, reported through readback and
+`Changed("bluetooth", state)` (also included in CLI `watch all`). Only one device
+operation runs at a time; cancellation, scan cleanup and Agent responses remain
+available during it. Pair timeout is 120 seconds. Errors retain actual device state,
+including a successful bond whose subsequent connection failed.
+
+A prompt includes `id`, `device` and `kind` (BlueZ Agent method name). Display and
+comparison prompts carry a zero-padded `code`; DisplayPasskey also has `entered`.
+AuthorizeService includes `service`. Display prompts need no reply; other prompts
+require a matching request ID. PIN is 1–16 ASCII alphanumeric characters; passkeys
+are integers 0–999999. Input PINs are not stored, echoed or logged; display codes
+are intentionally visible to clients until their prompt ends. Use stdin to keep
+input PINs out of the process list:
+
+```bash
+remya_settings get bluetooth
+remya_settings set bluetooth.scan '{"adapter":"/org/bluez/hci0","enabled":true}'
+remya_settings set bluetooth.respond -
+```
+
+No API method signature or existing payload changes. There is no Bluetooth
+configuration snapshot or `Resolve` operation; see [Bluetooth](bluetooth.md) for
+state ownership and the explicit hardware verification limits.

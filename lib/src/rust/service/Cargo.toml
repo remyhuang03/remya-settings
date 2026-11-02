@@ -25,3 +25,4 @@ remya_settings_fonts = { path = "../fonts" }
 remya_settings_default_apps = { path = "../default_apps" }
 remya_settings_applications = { path = "../applications" }
 remya_settings_network = { path = "../network" }
+remya_settings_bluetooth = { path = "../bluetooth" }

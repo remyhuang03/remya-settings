@@ -186,6 +186,7 @@ class SettingsDetail extends StatelessWidget {
   final SystemInformationReader? systemInformation;
 
   static const _pageRows = {
+    'airplane.bluetooth': 'bluetooth',
     'display.e32be03e': 'night-light',
     'display.2f32a8c2': 'graphics',
   };

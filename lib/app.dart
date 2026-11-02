@@ -1,3 +1,4 @@
+import 'features/bluetooth/application/bluetooth_controller.dart';
 import 'features/applications/application/applications_controller.dart';
 import 'features/default_apps/application/default_apps_controller.dart';
 import 'features/network/application/network_controller.dart';
@@ -37,12 +38,14 @@ class RemyaSettingsApp extends StatefulWidget {
     this.defaultApps,
     this.applications,
     this.network,
+    this.bluetooth,
   });
   final BackgroundController? background;
   final FontsController? fonts;
   final DefaultAppsController? defaultApps;
   final ApplicationsController? applications;
   final NetworkController? network;
+  final BluetoothController? bluetooth;
   final AppPreferencesController? preferences;
   final DateTimeController? dateTime;
   final DisplayController? display;
@@ -79,6 +82,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     widget.defaultApps?.dispose();
     widget.applications?.dispose();
     widget.network?.dispose();
+    widget.bluetooth?.dispose();
     super.dispose();
   }
 
@@ -180,8 +184,11 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     final withNetwork = widget.network == null
         ? withApplications
         : NetworkScope(controller: widget.network!, child: withApplications);
-    return widget.dateTime == null
+    final withBluetooth = widget.bluetooth == null
         ? withNetwork
-        : DateTimeScope(controller: widget.dateTime!, child: withNetwork);
+        : BluetoothScope(controller: widget.bluetooth!, child: withNetwork);
+    return widget.dateTime == null
+        ? withBluetooth
+        : DateTimeScope(controller: widget.dateTime!, child: withBluetooth);
   }
 }

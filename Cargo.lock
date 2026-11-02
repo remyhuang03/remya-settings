@@ -1242,6 +1242,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "remya_settings_bluetooth"
+version = "0.1.0"
+dependencies = [
+ "gio",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "remya_settings_core"
 version = "0.1.0"
 
@@ -1310,6 +1319,7 @@ dependencies = [
  "remya_settings_appearance",
  "remya_settings_applications",
  "remya_settings_background",
+ "remya_settings_bluetooth",
  "remya_settings_date_time",
  "remya_settings_default_apps",
  "remya_settings_display",

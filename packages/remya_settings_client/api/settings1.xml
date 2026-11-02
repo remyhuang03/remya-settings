@@ -22,6 +22,10 @@
          Set the catalog tool ID with open launches only its fixed ordinary-user executable.
          input-method-tools lists installed input-method configurators. Set time-more.fcitx5 or
          time-more.ibus with open launches the fixed tool as the ordinary user. -->
+    <!-- Get bluetooth returns live BlueZ adapters/devices and asynchronous operation/prompt/error state.
+         Set bluetooth.* accepts JSON requests, including pairing responses and cancellation.
+         Changed bluetooth reports verified state and Agent prompts; see docs/public-api.md.
+         No Bluetooth preferences or keys are persisted by Settings. -->
     <method name="Get">
       <arg type="s" direction="in"/>
       <arg type="s" direction="out"/>

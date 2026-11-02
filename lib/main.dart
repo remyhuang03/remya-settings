@@ -1,3 +1,4 @@
+import 'features/bluetooth/application/bluetooth_controller.dart';
 import 'features/applications/application/applications_controller.dart';
 import 'features/default_apps/application/default_apps_controller.dart';
 import 'features/network/application/network_controller.dart';
@@ -83,6 +84,10 @@ Future<void> main() async {
     openExternalTool: client.openExternalTool,
     appImages: appImages,
   );
+  final bluetooth = BluetoothController(
+    read: client.readBluetooth,
+    write: (id, value) => client.call('Set', [id, value]),
+  );
   final network = NetworkController(
     read: client.readNetwork,
     write: (id, value) => client.call('Set', [id, value]),
@@ -99,6 +104,7 @@ Future<void> main() async {
     hostname.reload,
     background.reload,
     network.reload,
+    bluetooth.reload,
   ]);
   runApp(
     RemyaSettingsApp(
@@ -112,6 +118,7 @@ Future<void> main() async {
       defaultApps: defaultApps,
       applications: applications,
       network: network,
+      bluetooth: bluetooth,
       navigation: navigation,
       scheduler: scheduler,
       systemInformation: client.readSystemInformation,
@@ -144,6 +151,8 @@ Future<void> main() async {
         defaultApps.reload();
       case 'fonts':
         fonts.reload();
+      case 'bluetooth':
+        bluetooth.apply(change.value);
       case 'network':
         network.apply(change.value);
       case 'date-time':

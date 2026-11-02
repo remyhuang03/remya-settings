@@ -134,3 +134,10 @@ cache lives only in memory and is released with the GUI engine.
 External input-method configuration entries only launch installed tools. Settings
 does not create input-method preferences, migrate configuration, or persist input
 method environment variables. The external tool retains ownership of its files.
+
+## Bluetooth
+
+Bluetooth creates no Settings configuration, cache or state files. BlueZ owns
+bonds and secrets; power, discovery and connection state are read live. Settings
+retains only its temporary scan and pairing operation in service memory and never
+restores those operations at startup. See [Bluetooth](bluetooth.md).

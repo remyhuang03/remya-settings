@@ -44,6 +44,7 @@ fn run() -> Result<(), String> {
     };
     let initial = state::State::new(config);
     let appimages = initial.appimages.clone();
+    let bluetooth = initial.bluetooth.clone();
     let state = Arc::new(Mutex::new(initial));
     let xml = include_str!("../../../../../packages/remya_settings_client/api/settings1.xml");
     let info = gio::DBusNodeInfo::for_xml(xml)
@@ -112,7 +113,7 @@ fn run() -> Result<(), String> {
                 .await
                 .expect("service worker panicked");
                 // A rejected page must not open anything or request authorization.
-                let opened = method == "Open" && args[0] != "repository" && result.is_ok();
+                let opened = ((method == "Open" && args[0] != "repository") || (method == "Set" && args[0] == "airplane.bluetooth")) && result.is_ok();
                 match result {
                     Ok(value) => invocation.return_value(Some(&(value.to_string(),).to_variant())),
                     Err(error) => {
@@ -169,7 +170,7 @@ fn run() -> Result<(), String> {
                     signal(&bus, "error", &serde_json::json!({"message":message}));
                 }
                 if opened {
-                    signal(&bus, "navigation", &serde_json::json!({"page":args[0]}));
+                    signal(&bus, "navigation", &serde_json::json!({"page":if method == "Set" {"bluetooth"} else {&args[0]}}));
                     let needed = state.lock().unwrap().begin_authorization();
                     if needed {
                         signal(&bus, "date-time", &serde_json::json!({"authorizing":true}));
@@ -220,6 +221,9 @@ fn run() -> Result<(), String> {
     let _network_subscriptions = events::watch_network(state.clone(), bus.clone());
     glib::timeout_add_seconds_local(1, move || {
         ticks += 1;
+        if bluetooth.take_dirty() {
+            signal(&poll_bus, "bluetooth", &bluetooth.state());
+        }
         if appimages.take_dirty() {
             signal(&poll_bus, "appimages", &appimages.state());
         }

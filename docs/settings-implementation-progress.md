@@ -10,8 +10,8 @@ Hyprland 内容包含 83 个页面、762 项设置及 2 个分类。来源与版
 
 ## 当前概况
 
-- 设置分类：12 个；详情页面：217 个；设置条目：1813 项。
-- 已实现：139 项；未实现：1640 项；不适用：34 项。
+- 设置分类：12 个；详情页面：217 个；设置条目：1821 项。
+- 已实现：152 项；未实现：1635 项；不适用：34 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。
@@ -49,8 +49,8 @@ Hyprland 内容包含 83 个页面、762 项设置及 2 个分类。来源与版
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | [系统](#category-system) | 39 | 338 | 54 | 284 | 0 |
-| [蓝牙和设备](#category-devices) | 24 | 201 | 0 | 197 | 4 |
-| [网络和 Internet](#category-network) | 12 | 97 | 32 | 65 | 0 |
+| [蓝牙和设备](#category-devices) | 24 | 209 | 12 | 193 | 4 |
+| [网络和 Internet](#category-network) | 12 | 97 | 33 | 64 | 0 |
 | [外观](#category-appearance) | 23 | 184 | 20 | 164 | 0 |
 | [应用](#category-apps) | 5 | 38 | 25 | 13 | 0 |
 | [账户](#category-accounts) | 12 | 57 | 0 | 51 | 6 |
@@ -1093,22 +1093,42 @@ Windows 参考入口：`ms-settings:easeofaccess-cursor`。
 
 ### Bluetooth — `bluetooth`
 
-蓝牙开关、配对与设备目录
+蓝牙适配器、配对与设备连接
 
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+页面状态：**已实现**；条目：12；已实现 12 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Rust/GIO 通过系统 BlueZ 实现。写操作与配对由隔离 BlueZ 验证；真实硬件仅验证读取与扫描，不切断现有键鼠或删除配对。
 
 Windows 参考入口：`ms-settings:bluetooth`。
 
-#### 设置
+详见 [蓝牙功能与验证边界](bluetooth.md)。
+
+#### Bluetooth
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Bluetooth | `bluetooth.c4dc12d3` | 开关 | 未实现 | — |
-| Add Bluetooth device | `bluetooth.9bf543c2` | 操作 | 未实现 | — |
-| Paired device | `bluetooth.222005b0` | 操作 | 未实现 | — |
-| Discovery Settings | `bluetooth.a54ec9a0` | 操作 | 未实现 | — |
+| Bluetooth | `bluetooth.enabled` | 开关 | 已实现 | `test/bluetooth_test.dart`；`test/bluetooth_smoke.py`（隔离 BlueZ） |
+| Adapter | `bluetooth.adapter` | 选择 | 已实现 | `test/bluetooth_test.dart`；`test/bluetooth_smoke.py`（隔离 BlueZ） |
+| Add device / scan | `bluetooth.scan` | 操作 | 已实现 | `test/bluetooth_test.dart`；`test/bluetooth_smoke.py`（隔离 BlueZ） |
+
+#### Devices
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Paired devices | `bluetooth.devices` | 信息展示 | 已实现 | `test/bluetooth_test.dart`；`test/bluetooth_smoke.py`（隔离 BlueZ） |
+| Pair | `bluetooth.pair` | 操作 | 已实现 | `test/bluetooth_test.dart`；`test/bluetooth_smoke.py`（隔离 BlueZ） |
+| Connect | `bluetooth.connect` | 操作 | 已实现 | `test/bluetooth_test.dart`；`test/bluetooth_smoke.py`（隔离 BlueZ） |
+| Disconnect | `bluetooth.disconnect` | 操作 | 已实现 | `test/bluetooth_test.dart`；`test/bluetooth_smoke.py`（隔离 BlueZ） |
+| Remove device | `bluetooth.forget` | 操作 | 已实现 | `test/bluetooth_test.dart`；`test/bluetooth_smoke.py`（隔离 BlueZ） |
+| Cancel pairing | `bluetooth.cancel` | 操作 | 已实现 | `test/bluetooth_test.dart`；`test/bluetooth_smoke.py`（隔离 BlueZ） |
+| Pairing response | `bluetooth.respond` | 操作 | 已实现 | `test/bluetooth_test.dart`；`test/bluetooth_smoke.py`（隔离 BlueZ） |
+
+#### Advanced
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Adapter information | `bluetooth.information` | 信息展示 | 已实现 | `test/bluetooth_test.dart`；`test/bluetooth_smoke.py`（隔离 BlueZ） |
+| Temporarily discoverable | `bluetooth.discoverable` | 操作 | 已实现 | `test/bluetooth_test.dart`；`test/bluetooth_smoke.py`（隔离 BlueZ） |
 
 ### Devices — `device-list`
 
@@ -1893,9 +1913,9 @@ Windows 参考入口：`ms-settings:network-mobilehotspot`。
 
 无线设备与独立无线开关
 
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+页面状态：**未实现**；条目：3；已实现 1 / 未实现 2 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Bluetooth 入口可用；飞行模式及 Wi-Fi 控件仍为预览。
 
 Windows 参考入口：`ms-settings:network-airplanemode`、`ms-settings:proximity`。
 
@@ -1905,7 +1925,7 @@ Windows 参考入口：`ms-settings:network-airplanemode`、`ms-settings:proximi
 | --- | --- | --- | --- | --- |
 | Airplane mode | `airplane.599fbf62` | 开关 | 未实现 | — |
 | Wi-Fi wireless devices | `airplane.3d2af662` | 开关 | 未实现 | — |
-| Bluetooth wireless devices | `airplane.ce637a87` | 开关 | 未实现 | — |
+| Bluetooth | `airplane.bluetooth` | 操作 | 已实现 | 打开 Bluetooth 页面；`test/bluetooth_test.dart` |
 
 ### Proxy — `proxy`
 

@@ -144,3 +144,5 @@ python tool/install.py
 ## License
 
 Licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE).
+
+Bluetooth settings use system BlueZ through the Rust/GIO service. See [Bluetooth](docs/bluetooth.md) for features, API and hardware verification limits.
