@@ -18,23 +18,23 @@ use std::{
     time::{Duration, Instant},
 };
 
-pub const OUTPUT: &str = "hypr-monitor-fields.output";
+pub const OUTPUT: &str = "display.output";
 pub const BRIGHTNESS: &str = "display.5d419889";
 pub const CM: &str = "display.af8e280d";
 pub const HDR: &str = "display.0ce92088";
 pub const SCALE: &str = "display.12e2ed4d";
 pub const RESOLUTION: &str = "display.44f6b9b0";
-pub const REFRESH: &str = "advanced-display.34d8396d";
+pub const REFRESH: &str = "display.34d8396d";
 pub const TRANSFORM: &str = "display.9843ad76";
 pub const LAYOUT: &str = "display.7cb5dc06";
 pub const DETECT: &str = "display.15697afc";
-pub const POSITION: &str = "hypr-monitor-fields.position";
-pub const BIT_DEPTH: &str = "advanced-display.91720250";
-pub const VRR: &str = "advanced-display.2d80c2c4";
-pub const DESKTOP_MODE: &str = "advanced-display.3b3ebb60";
-pub const SIGNAL_MODE: &str = "advanced-display.761b7ac8";
-pub const COLOR_SPACE: &str = "advanced-display.3278abf9";
-pub const DEVICE: &str = "advanced-display.device";
+pub const POSITION: &str = "display.position";
+pub const BIT_DEPTH: &str = "display.91720250";
+pub const VRR: &str = "display.2d80c2c4";
+pub const DESKTOP_MODE: &str = "display.3b3ebb60";
+pub const SIGNAL_MODE: &str = "display.761b7ac8";
+pub const COLOR_SPACE: &str = "display.3278abf9";
+pub const DEVICE: &str = "display.device";
 
 /// Advanced rule fields that map one setting directly to one Hyprland field.
 const DIRECT: &[(&str, &str)] = &[
@@ -44,21 +44,18 @@ const DIRECT: &[(&str, &str)] = &[
     (CM, "cm"),
     (BIT_DEPTH, "bitdepth"),
     (VRR, "vrr"),
-    ("hypr-monitor-fields.sdr-eotf", "sdr_eotf"),
-    ("hypr-monitor-fields.icc", "icc"),
-    ("hypr-monitor-fields.reserved-area", "reserved_area"),
-    (
-        "hypr-monitor-fields.supports-wide-color",
-        "supports_wide_color",
-    ),
-    ("hypr-monitor-fields.supports-hdr", "supports_hdr"),
-    ("hypr-monitor-fields.sdrbrightness", "sdrbrightness"),
-    ("hypr-monitor-fields.sdrsaturation", "sdrsaturation"),
-    ("hypr-monitor-fields.sdr-min-luminance", "sdr_min_luminance"),
-    ("hypr-monitor-fields.sdr-max-luminance", "sdr_max_luminance"),
-    ("hypr-monitor-fields.min-luminance", "min_luminance"),
-    ("hypr-monitor-fields.max-luminance", "max_luminance"),
-    ("hypr-monitor-fields.max-avg-luminance", "max_avg_luminance"),
+    ("display.sdr-eotf", "sdr_eotf"),
+    ("display.icc", "icc"),
+    ("display.reserved-area", "reserved_area"),
+    ("display.supports-wide-color", "supports_wide_color"),
+    ("display.supports-hdr", "supports_hdr"),
+    ("display.sdrbrightness", "sdrbrightness"),
+    ("display.sdrsaturation", "sdrsaturation"),
+    ("display.sdr-min-luminance", "sdr_min_luminance"),
+    ("display.sdr-max-luminance", "sdr_max_luminance"),
+    ("display.min-luminance", "min_luminance"),
+    ("display.max-luminance", "max_luminance"),
+    ("display.max-avg-luminance", "max_avg_luminance"),
 ];
 const READ_ONLY: &[&str] = &[OUTPUT, DESKTOP_MODE, SIGNAL_MODE, COLOR_SPACE, DEVICE];
 
@@ -1258,23 +1255,17 @@ mod tests {
     fn write_only_fields_round_trip_through_the_rule_file() {
         let mut s = setup();
         s.manager
-            .set(
-                "hypr-monitor-fields.reserved-area",
-                &request("A", "1 2 3 4"),
-            )
+            .set("display.reserved-area", &request("A", "1 2 3 4"))
             .unwrap();
         s.manager
-            .set("hypr-monitor-fields.sdr-eotf", &request("A", "gamma22"))
+            .set("display.sdr-eotf", &request("A", "gamma22"))
             .unwrap();
         let state = s.manager.state();
         assert_eq!(state["outputs"][0]["values"]["reserved_area"], "1 2 3 4");
         assert_eq!(state["outputs"][0]["values"]["sdr_eotf"], "gamma22");
         assert_eq!(state["conflict"], false);
         s.manager
-            .set(
-                "hypr-monitor-fields.reserved-area",
-                &request("A", "0 0 0 0"),
-            )
+            .set("display.reserved-area", &request("A", "0 0 0 0"))
             .unwrap();
         assert!(!rules(&s).contains("reserved_area"));
     }

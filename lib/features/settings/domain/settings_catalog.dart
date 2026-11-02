@@ -63,20 +63,7 @@ class SettingsCatalog {
   SettingsCategory category(String id) =>
       categories.firstWhere((c) => c.id == id);
 
-  /// Page IDs retired when their controls moved; they keep opening the new home.
-  static const pageAliases = {
-    'advanced-display': 'display',
-    'update-options': 'updates',
-    'hypr-monitor-fields': 'display',
-    'colors': 'themes',
-    'hypr-wallpaper-outputs': 'background',
-    'hypr-paper-misc-options': 'background',
-    'hypr-cursor': 'cursor',
-    'hypr-cursor-theme': 'cursor',
-    'text-cursor': 'cursor',
-  };
-  SettingsPageSpec page(String id) =>
-      pages.firstWhere((p) => p.id == (pageAliases[id] ?? id));
+  SettingsPageSpec page(String id) => pages.firstWhere((p) => p.id == id);
   List<SettingsPageSpec> inCategory(String id) {
     final categoryPages = pages.where((p) => p.category == id);
     return [

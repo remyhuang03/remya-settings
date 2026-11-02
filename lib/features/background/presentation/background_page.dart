@@ -41,12 +41,10 @@ class BackgroundPage extends StatefulWidget {
     super.key,
     required this.page,
     required this.controller,
-    this.expandAdvanced = false,
     this.pickFile = _pickWithDialog,
   });
   final SettingsPageSpec page;
   final BackgroundController controller;
-  final bool expandAdvanced;
   final BackgroundFilePicker pickFile;
 
   @override
@@ -263,7 +261,6 @@ class _BackgroundPageState extends State<BackgroundPage> {
 
   Widget _advanced() => AdvancedSection(
     storageKey: const PageStorageKey('background-advanced'),
-    expanded: widget.expandAdvanced,
     child: Column(children: _advancedRows()),
   );
 }

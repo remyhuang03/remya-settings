@@ -5,38 +5,38 @@ import 'package:material_ui/material_ui.dart';
 
 import '../data/display_backend.dart';
 
-const displayOutputId = 'hypr-monitor-fields.output';
-const displayPositionId = 'hypr-monitor-fields.position';
+const displayOutputId = 'display.output';
+const displayPositionId = 'display.position';
 const displayDetectId = 'display.15697afc';
 const displayBrightnessId = 'display.5d419889';
 const displayColorId = 'display.af8e280d';
 const displayHdrId = 'display.0ce92088';
 const displayScaleId = 'display.12e2ed4d';
 const displayResolutionId = 'display.44f6b9b0';
-const displayRefreshId = 'advanced-display.34d8396d';
+const displayRefreshId = 'display.34d8396d';
 const displayOrientationId = 'display.9843ad76';
 const displayLayoutId = 'display.7cb5dc06';
-const displayDesktopModeId = 'advanced-display.3b3ebb60';
-const displaySignalModeId = 'advanced-display.761b7ac8';
-const displayColorSpaceId = 'advanced-display.3278abf9';
-const displayDeviceId = 'advanced-display.device';
-const displayBitDepthId = 'advanced-display.91720250';
-const displayVrrId = 'advanced-display.2d80c2c4';
-const displayEotfId = 'hypr-monitor-fields.sdr-eotf';
-const displaySupportsHdrId = 'hypr-monitor-fields.supports-hdr';
-const displaySupportsWideId = 'hypr-monitor-fields.supports-wide-color';
+const displayDesktopModeId = 'display.3b3ebb60';
+const displaySignalModeId = 'display.761b7ac8';
+const displayColorSpaceId = 'display.3278abf9';
+const displayDeviceId = 'display.device';
+const displayBitDepthId = 'display.91720250';
+const displayVrrId = 'display.2d80c2c4';
+const displayEotfId = 'display.sdr-eotf';
+const displaySupportsHdrId = 'display.supports-hdr';
+const displaySupportsWideId = 'display.supports-wide-color';
 
 /// Free-form advanced fields, mapped to their Hyprland rule field.
 const displayTextFields = {
-  'hypr-monitor-fields.sdrbrightness': 'sdrbrightness',
-  'hypr-monitor-fields.sdrsaturation': 'sdrsaturation',
-  'hypr-monitor-fields.sdr-min-luminance': 'sdr_min_luminance',
-  'hypr-monitor-fields.sdr-max-luminance': 'sdr_max_luminance',
-  'hypr-monitor-fields.min-luminance': 'min_luminance',
-  'hypr-monitor-fields.max-luminance': 'max_luminance',
-  'hypr-monitor-fields.max-avg-luminance': 'max_avg_luminance',
-  'hypr-monitor-fields.icc': 'icc',
-  'hypr-monitor-fields.reserved-area': 'reserved_area',
+  'display.sdrbrightness': 'sdrbrightness',
+  'display.sdrsaturation': 'sdrsaturation',
+  'display.sdr-min-luminance': 'sdr_min_luminance',
+  'display.sdr-max-luminance': 'sdr_max_luminance',
+  'display.min-luminance': 'min_luminance',
+  'display.max-luminance': 'max_luminance',
+  'display.max-avg-luminance': 'max_avg_luminance',
+  'display.icc': 'icc',
+  'display.reserved-area': 'reserved_area',
 };
 
 const displaySettingIds = {
@@ -61,15 +61,15 @@ const displaySettingIds = {
   displaySupportsHdrId,
   displaySupportsWideId,
   ...{
-    'hypr-monitor-fields.sdrbrightness',
-    'hypr-monitor-fields.sdrsaturation',
-    'hypr-monitor-fields.sdr-min-luminance',
-    'hypr-monitor-fields.sdr-max-luminance',
-    'hypr-monitor-fields.min-luminance',
-    'hypr-monitor-fields.max-luminance',
-    'hypr-monitor-fields.max-avg-luminance',
-    'hypr-monitor-fields.icc',
-    'hypr-monitor-fields.reserved-area',
+    'display.sdrbrightness',
+    'display.sdrsaturation',
+    'display.sdr-min-luminance',
+    'display.sdr-max-luminance',
+    'display.min-luminance',
+    'display.max-luminance',
+    'display.max-avg-luminance',
+    'display.icc',
+    'display.reserved-area',
   },
 };
 

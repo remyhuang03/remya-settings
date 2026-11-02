@@ -74,5 +74,3 @@ inkscape assets/icons/settings.svg --export-type=png --export-filename=assets/ic
 Flutter uses the PNG in navigation, Home, About, and license branding. The GTK runner loads the bundled PNG independently of the working directory. The desktop entry and scalable SVG are included in the build bundle for future packaging; nothing is installed into the user's desktop configuration. Wayland taskbar icon discovery depends on desktop entry installation by a future package.
 
 About shows product purpose, package version, UI-only status, a selectable private repository address, third-party licenses, and the PolyForm Noncommercial License 1.0.0 selected by the owner. The icon's ownership/licensing is not inferred from its appearance or filename.
-
-Energy recommendations (`energy`) and Multitasking (`multitasking`) were removed by owner request on 2026-11-02. `removedPages` in the coverage manifests records these explicit exclusions; their original source rows remain for provenance and do not imply live application routes.

@@ -5,9 +5,9 @@ const backgroundDisplaySettingId = 'background.display';
 const backgroundFileSettingId = 'background.9e58290b';
 const backgroundFitSettingId = 'background.56c289eb';
 const backgroundPauseSettingId = 'background.video-pause';
-const splashSettingId = 'hypr-paper-misc-options.splash';
-const splashOffsetSettingId = 'hypr-paper-misc-options.splash-offset';
-const splashOpacitySettingId = 'hypr-paper-misc-options.splash-opacity';
+const splashSettingId = 'background.splash';
+const splashOffsetSettingId = 'background.splash-offset';
+const splashOpacitySettingId = 'background.splash-opacity';
 const allDisplays = '*';
 
 typedef BackgroundReply = Future<Map<String, dynamic>>;

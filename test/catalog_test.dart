@@ -26,30 +26,17 @@ void main() {
         catalog.pages.expand((p) => p.controls).map((c) => c.kind).toSet(),
         SettingKind.values.toSet(),
       );
-      final removedPages = (coverage['removedPages'] as List).cast<String>();
       for (final entry in coverage['uris'] as List) {
-        if (removedPages.contains(entry['page'])) continue;
         expect(
           catalog.page(entry['page'] as String).windowsUris,
           contains(entry['uri']),
         );
       }
       for (final entry in coverage['backupSettings'] as List) {
-        if (removedPages.contains(entry['page'])) continue;
         final page = catalog.page(entry['page'] as String);
         if (entry['coverage'] == 'control') {
           expect(page.controls.map((c) => c.id), contains(entry['control']));
         }
-      }
-      for (final id in removedPages) {
-        expect(() => catalog.page(id), throwsStateError);
-        expect(
-          catalog.pages.any((page) => page.children.contains(id)),
-          isFalse,
-        );
-      }
-      for (final alias in SettingsCatalog.pageAliases.entries) {
-        expect(catalog.page(alias.key).id, alias.value);
       }
       for (final category in catalog.categories) {
         final original = catalog.pages.where((p) => p.category == category.id);
@@ -139,38 +126,14 @@ void main() {
       catalog.categories.map((c) => c.id),
       containsAll(coverage['baselineCategories'] as List),
     );
-    final retired = coverage['retired'] as Map<String, dynamic>;
-    final retiredPages = (retired['pages'] as List).cast<String>().toSet();
-    final removedPages = (retired['removedPages'] as List)
-        .cast<String>()
-        .toSet();
-    final retiredControls = (retired['controls'] as List)
-        .cast<String>()
-        .toSet();
     expect(
       catalog.pages.map((p) => p.id),
-      containsAll(
-        (coverage['baselinePages'] as List).where(
-          (id) => !retiredPages.contains(id) && !removedPages.contains(id),
-        ),
-      ),
+      containsAll(coverage['baselinePages'] as List),
     );
-    for (final id in retiredPages) {
-      expect(catalog.page(id).id, 'display', reason: 'retired pages stay open');
-    }
-    final controls = catalog.pages
-        .expand((p) => p.controls)
-        .map((c) => c.id)
-        .toSet();
     expect(
-      controls,
-      containsAll(
-        (coverage['baselineControls'] as List).where(
-          (id) => !retiredControls.contains(id),
-        ),
-      ),
+      catalog.pages.expand((p) => p.controls).map((c) => c.id),
+      containsAll(coverage['baselineControls'] as List),
     );
-    expect(controls.intersection(retiredControls), isEmpty);
   });
 
   test('every added control has a pinned source and stays unavailable', () {

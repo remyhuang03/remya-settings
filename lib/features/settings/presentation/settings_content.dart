@@ -174,15 +174,12 @@ class SettingsDetail extends StatelessWidget {
     required this.catalog,
     required this.page,
     required this.onPage,
-    this.expandAdvanced = false,
     this.systemInformation,
   });
   final SettingsCatalog catalog;
   final SettingsPageSpec page;
   final ValueChanged<SettingsPageSpec> onPage;
 
-  /// Opens collapsed advanced options when the Advanced display page was requested.
-  final bool expandAdvanced;
   final SystemInformationReader? systemInformation;
 
   static const _pageRows = {
@@ -197,11 +194,7 @@ class SettingsDetail extends StatelessWidget {
     }
     if (page.id == 'background') {
       if (BackgroundScope.maybeOf(context) case final controller?) {
-        return BackgroundPage(
-          page: page,
-          controller: controller,
-          expandAdvanced: expandAdvanced,
-        );
+        return BackgroundPage(page: page, controller: controller);
       }
     }
     return _preview(context);
@@ -232,7 +225,6 @@ class SettingsDetail extends StatelessWidget {
       for (final section in page.sections)
         _SectionCard(
           section,
-          expanded: expandAdvanced && section.title == 'Advanced',
           onPageRow: (id) => onPage(catalog.page(_pageRows[id]!)),
           pageRows: _pageRows.keys.toSet(),
         ),
@@ -270,12 +262,10 @@ class SettingsDetail extends StatelessWidget {
 class _SectionCard extends StatelessWidget {
   const _SectionCard(
     this.section, {
-    required this.expanded,
     required this.onPageRow,
     required this.pageRows,
   });
   final SettingsSection section;
-  final bool expanded;
   final ValueChanged<String> onPageRow;
   final Set<String> pageRows;
 
@@ -313,11 +303,7 @@ class _SectionCard extends StatelessWidget {
       // Keep expansion and nested scroll positions in separate storage slots.
       final body = KeyedSubtree(key: bodyKey, child: controls);
       if (section.title == 'Advanced') {
-        return AdvancedSection(
-          storageKey: tileKey,
-          expanded: expanded,
-          child: body,
-        );
+        return AdvancedSection(storageKey: tileKey, child: body);
       }
       return Padding(
         padding: const .only(top: 24),
@@ -325,7 +311,6 @@ class _SectionCard extends StatelessWidget {
           padding: .zero,
           child: ExpansionTile(
             key: tileKey,
-            initiallyExpanded: expanded,
             title: Text(section.title),
             subtitle: Text(
               section.description ??

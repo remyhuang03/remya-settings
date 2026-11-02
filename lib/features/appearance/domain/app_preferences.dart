@@ -8,8 +8,8 @@ export '../../../src/rust/appearance_bridge/api.dart' show SystemThemeMode;
 
 const materialStyleSettingId = 'themes.material-style-variant';
 const materialThemeModeSettingId = 'themes.material-theme-mode';
-const accentSourceSettingId = 'colors.8983f367';
-const accentColorSettingId = 'colors.6f67371e';
+const accentSourceSettingId = 'themes.8983f367';
+const accentColorSettingId = 'themes.6f67371e';
 
 extension MaterialStyleLabel on DynamicSchemeVariant {
   String get label => switch (this) {

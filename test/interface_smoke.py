@@ -177,6 +177,11 @@ def session_checks():
         assert initial == dbus('Get', 'theme')
         default_apps_checks()
         installed_apps_checks()
+        # Read-only here: test/network_smoke.py exercises writes on a private stub.
+        assert set(cli('get', 'network')) == set(dbus('Get', 'network'))
+        assert cli('get', 'wifi.enabled')['availability'] == 'available'
+        assert 'Unavailable' in cli('set', 'known-networks.mac', 'stable', ok=False)
+        assert 'InvalidArgument' in cli('set', 'wifi.connect', 'not json', ok=False)
         clock = cli('get', 'date-time')
         zone_options = cli('get', 'timezones')
         zones = zone_options['options']
@@ -206,9 +211,6 @@ def session_checks():
         assert 'Unavailable' in cli('set', unavailable['id'], 'true', ok=False)
         assert 'InvalidArgument' in cli('set', 'themes.material-theme-mode', 'system', ok=False)
         assert cli('get', unavailable['id'])['availability'] != 'available'
-        assert cli('get', 'page:hypr-cursor')['id'] == 'cursor'
-        assert cli('get', 'page:colors')['id'] == 'themes'
-        assert cli('get', 'page:hypr-wallpaper-outputs')['id'] == 'background'
         # Background writes reach the real desktop, so only reads and rejections run here.
         background = cli('get', 'background')
         assert background['initialized'] and background == dbus('Get', 'background')
@@ -221,12 +223,12 @@ def session_checks():
         accent = cli('get', 'accent')
         assert accent['source'] == 'custom' and accent == dbus('Get', 'accent')
         assert not (Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/accent.toml').exists()
-        assert cli('set', 'colors.6f67371e', '#123abc')['color'] == '#123ABC'
+        assert cli('set', 'themes.6f67371e', '#123abc')['color'] == '#123ABC'
         assert dbus('Get', 'accent')['color'] == '#123ABC'
         assert cli('get', 'theme')['theme'].keys() == {'style_variant', 'theme_mode'}
-        assert 'InvalidArgument' in cli('set', 'colors.6f67371e', 'blue', ok=False)
-        assert 'InvalidArgument' in cli('set', 'colors.8983f367', 'other', ok=False)
-        cli('set', 'colors.6f67371e', '#8054C9')
+        assert 'InvalidArgument' in cli('set', 'themes.6f67371e', 'blue', ok=False)
+        assert 'InvalidArgument' in cli('set', 'themes.8983f367', 'other', ok=False)
+        cli('set', 'themes.6f67371e', '#8054C9')
         fonts = cli('get', 'fonts')
         assert fonts == dbus('Get', 'fonts') and fonts['families']
         assert fonts['directory'] == str(Path(os.environ['XDG_DATA_HOME']) / 'fonts')
@@ -351,8 +353,7 @@ def session_checks():
             time.sleep(0.1)
         else:
             raise AssertionError('Open did not show the settings window')
-        assert cli('get', 'page:update-options')['id'] == 'updates'
-        for page in ('defaults', 'installed', 'date-time', 'update-options'):
+        for page in ('defaults', 'installed', 'date-time', 'updates'):
             assert cli('open', page) == {'opened': page}
         subprocess.run(['gtk-launch', 'top.remya.settings'], check=True, timeout=5)
         assert len([client for client in json.loads(subprocess.check_output(['hyprctl', 'clients', '-j'])) if client['class'] == 'top.remya.settings' and Path(f"/proc/{client['pid']}/exe").resolve().is_relative_to(Path(os.environ['XDG_DATA_HOME']))]) == 1

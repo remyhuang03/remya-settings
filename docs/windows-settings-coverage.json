@@ -286,12 +286,6 @@
       "title": "Speech"
     },
     {
-      "uri": "ms-settings:easeofaccess-cursor",
-      "page": "text-cursor",
-      "sourceCategory": "Ease of access",
-      "title": "Text cursor"
-    },
-    {
       "uri": "ms-settings:easeofaccess-visualeffects",
       "page": "visual-effects",
       "sourceCategory": "Ease of access",
@@ -334,18 +328,6 @@
       "title": "Cellular & SIM"
     },
     {
-      "uri": "ms-settings:network-dialup",
-      "page": "dialup",
-      "sourceCategory": "Network and internet",
-      "title": "Dial-up"
-    },
-    {
-      "uri": "ms-settings:network-directaccess",
-      "page": "directaccess",
-      "sourceCategory": "Network and internet",
-      "title": "DirectAccess"
-    },
-    {
       "uri": "ms-settings:network-ethernet",
       "page": "ethernet",
       "sourceCategory": "Network and internet",
@@ -382,12 +364,6 @@
       "title": "Wi-Fi"
     },
     {
-      "uri": "ms-settings:wifi-provisioning",
-      "page": "wifi-provisioning",
-      "sourceCategory": "Network and internet",
-      "title": "Wi-Fi provisioning"
-    },
-    {
       "uri": "ms-settings:personalization-background",
       "page": "background",
       "sourceCategory": "Personalization",
@@ -412,12 +388,6 @@
       "title": "Colors"
     },
     {
-      "uri": "ms-settings:personalization-textinput-copilot-hardwarekey",
-      "page": "copilot-key",
-      "sourceCategory": "Personalization",
-      "title": "Customize Copilot key on keyboard"
-    },
-    {
       "uri": "ms-settings:personalization-lighting",
       "page": "lighting",
       "sourceCategory": "Personalization",
@@ -430,22 +400,10 @@
       "title": "Fonts"
     },
     {
-      "uri": "ms-settings:personalization-glance",
-      "page": "personalization-glance",
-      "sourceCategory": "Personalization",
-      "title": "Glance"
-    },
-    {
       "uri": "ms-settings:lockscreen",
       "page": "lockscreen",
       "sourceCategory": "Personalization",
       "title": "Lock screen"
-    },
-    {
-      "uri": "ms-settings:personalization-navbar",
-      "page": "personalization-navbar",
-      "sourceCategory": "Personalization",
-      "title": "Navigation bar"
     },
     {
       "uri": "ms-settings:personalization-start",
@@ -476,12 +434,6 @@
       "page": "mobile",
       "sourceCategory": "Phone",
       "title": "Phone Link"
-    },
-    {
-      "uri": "ms-settings:deviceusage",
-      "page": "device-usage",
-      "sourceCategory": "Phone",
-      "title": "Device Usage"
     },
     {
       "uri": "ms-settings:privacy-accountinfo",
@@ -772,12 +724,6 @@
       "title": "Encryption"
     },
     {
-      "uri": "ms-settings:energyrecommendations",
-      "page": "energy",
-      "sourceCategory": "System",
-      "title": "Energy recommendations"
-    },
-    {
       "uri": "ms-settings:quiethours",
       "page": "focus",
       "sourceCategory": "System",
@@ -794,18 +740,6 @@
       "page": "graphics",
       "sourceCategory": "System",
       "title": "Graphics Default Settings"
-    },
-    {
-      "uri": "ms-settings:multitasking",
-      "page": "multitasking",
-      "sourceCategory": "System",
-      "title": "Multitasking"
-    },
-    {
-      "uri": "ms-settings:multitasking-sgupdate",
-      "page": "multitasking",
-      "sourceCategory": "System",
-      "title": "Multitasking"
     },
     {
       "uri": "ms-settings:nightlight",
@@ -1211,130 +1145,6 @@
       "page": "notifications",
       "coverage": "control",
       "control": "notifications.reference.7e9418df"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Multitasking"
-      ],
-      "page": "multitasking",
-      "coverage": "section"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Multitasking",
-        "Snap Windows"
-      ],
-      "page": "multitasking",
-      "coverage": "section"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Multitasking",
-        "Snap Windows",
-        "When I snap a window, suggest what I can snap next to it"
-      ],
-      "page": "multitasking",
-      "coverage": "control",
-      "control": "multitasking.reference.1f0fd68e"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Multitasking",
-        "Snap Windows",
-        "Show snap layouts when I hover over a window's maximize button"
-      ],
-      "page": "multitasking",
-      "coverage": "control",
-      "control": "multitasking.reference.7eb36360"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Multitasking",
-        "Snap Windows",
-        "Show snap layouts when I drag a window to the top of my screen"
-      ],
-      "page": "multitasking",
-      "coverage": "control",
-      "control": "multitasking.reference.6adfd906"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Multitasking",
-        "Snap Windows",
-        "Show tabs from apps when snapping or pressing Alt+Tab"
-      ],
-      "page": "multitasking",
-      "coverage": "control",
-      "control": "multitasking.reference.b64a018f"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Multitasking",
-        "Snap Windows",
-        "Show my snapped windows when I hover over taskbar apps, in Task View, and when I press Alt+Tab"
-      ],
-      "page": "multitasking",
-      "coverage": "control",
-      "control": "multitasking.reference.22d30ff1"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Multitasking",
-        "Snap Windows",
-        "When I drag a window, let me snap it without dragging all the way to the screen edge"
-      ],
-      "page": "multitasking",
-      "coverage": "control",
-      "control": "multitasking.reference.35f7e68f"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Multitasking",
-        "Desktops"
-      ],
-      "page": "multitasking",
-      "coverage": "section"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Multitasking",
-        "Desktops",
-        "On the task, show all the open windows"
-      ],
-      "page": "multitasking",
-      "coverage": "control",
-      "control": "multitasking.reference.c8540ba4"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Multitasking",
-        "Desktops",
-        "Show all open windows when I press Alt+Tab"
-      ],
-      "page": "multitasking",
-      "coverage": "control",
-      "control": "multitasking.reference.2d6a63c7"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Multitasking",
-        "Title bar window shake"
-      ],
-      "page": "multitasking",
-      "coverage": "control",
-      "control": "multitasking.reference.301a71a1"
     },
     {
       "area": "System",
@@ -1835,9 +1645,9 @@
         "Wi-Fi",
         "Random hardware addresses"
       ],
-      "page": "wifi",
+      "page": "known-networks",
       "coverage": "control",
-      "control": "wifi.reference.cc052043"
+      "control": "known-networks.mac"
     },
     {
       "area": "Network & internet",
@@ -1979,7 +1789,7 @@
       ],
       "page": "themes",
       "coverage": "control",
-      "control": "colors.reference.ed936eee"
+      "control": "themes.reference.ed936eee"
     },
     {
       "area": "Personalization",
@@ -1989,7 +1799,7 @@
       ],
       "page": "themes",
       "coverage": "control",
-      "control": "colors.6f67371e"
+      "control": "themes.6f67371e"
     },
     {
       "area": "Personalization",
@@ -1999,7 +1809,7 @@
       ],
       "page": "themes",
       "coverage": "control",
-      "control": "colors.6f67371e"
+      "control": "themes.6f67371e"
     },
     {
       "area": "Personalization",
@@ -2009,7 +1819,7 @@
       ],
       "page": "themes",
       "coverage": "control",
-      "control": "colors.6f67371e"
+      "control": "themes.6f67371e"
     },
     {
       "area": "Personalization",
@@ -2636,7 +2446,7 @@
       ],
       "page": "cursor",
       "coverage": "control",
-      "control": "pointer.reference.8a9af3b1"
+      "control": "cursor.reference.8a9af3b1"
     },
     {
       "area": "Vision",
@@ -2646,7 +2456,7 @@
       ],
       "page": "cursor",
       "coverage": "control",
-      "control": "pointer.reference.966d030b"
+      "control": "cursor.reference.966d030b"
     },
     {
       "area": "Vision",
@@ -2671,30 +2481,13 @@
     {
       "area": "Vision",
       "path": [
-        "Text cursor"
-      ],
-      "page": "text-cursor",
-      "coverage": "section"
-    },
-    {
-      "area": "Vision",
-      "path": [
-        "Text cursor",
-        "Text cursor indicator"
-      ],
-      "page": "text-cursor",
-      "coverage": "section"
-    },
-    {
-      "area": "Vision",
-      "path": [
         "Text cursor",
         "Text cursor indicator",
         "Text cursor indicator size"
       ],
       "page": "cursor",
       "coverage": "control",
-      "control": "text-cursor.reference.4c40f3ca"
+      "control": "cursor.reference.4c40f3ca"
     },
     {
       "area": "Vision",
@@ -2705,7 +2498,7 @@
       ],
       "page": "cursor",
       "coverage": "control",
-      "control": "text-cursor.reference.b0cd3942"
+      "control": "cursor.reference.b0cd3942"
     },
     {
       "area": "Vision",
@@ -2715,7 +2508,7 @@
       ],
       "page": "cursor",
       "coverage": "control",
-      "control": "text-cursor.reference.7beee9f0"
+      "control": "cursor.reference.7beee9f0"
     },
     {
       "area": "Vision",
@@ -4155,13 +3948,5 @@
       "coverage": "control",
       "control": "file-explorer.reference.ed11d482"
     }
-  ],
-  "removedPages": [
-    "energy",
-    "multitasking",
-    "device-usage",
-    "copilot-key",
-    "personalization-glance",
-    "personalization-navbar"
   ]
 }

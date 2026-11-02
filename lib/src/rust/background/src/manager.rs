@@ -24,11 +24,11 @@ pub const DISPLAY: &str = "background.display";
 pub const FILE: &str = "background.9e58290b";
 pub const FIT: &str = "background.56c289eb";
 pub const PAUSE: &str = "background.video-pause";
-pub const SPLASH: &str = "hypr-paper-misc-options.splash";
-pub const SPLASH_OFFSET: &str = "hypr-paper-misc-options.splash-offset";
-pub const SPLASH_OPACITY: &str = "hypr-paper-misc-options.splash-opacity";
-pub const ACCENT_SOURCE: &str = "colors.8983f367";
-pub const ACCENT_COLOR: &str = "colors.6f67371e";
+pub const SPLASH: &str = "background.splash";
+pub const SPLASH_OFFSET: &str = "background.splash-offset";
+pub const SPLASH_OPACITY: &str = "background.splash-opacity";
+pub const ACCENT_SOURCE: &str = "themes.8983f367";
+pub const ACCENT_COLOR: &str = "themes.6f67371e";
 const IDS: [&str; 8] = [
     KIND,
     DISPLAY,

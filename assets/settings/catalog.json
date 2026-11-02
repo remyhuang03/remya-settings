@@ -425,7 +425,7 @@
           "title": "Arrangement",
           "controls": [
             {
-              "id": "hypr-monitor-fields.output",
+              "id": "display.output",
               "title": "Selected display",
               "type": "choice",
               "availability": "available",
@@ -441,7 +441,7 @@
               ]
             },
             {
-              "id": "hypr-monitor-fields.position",
+              "id": "display.position",
               "title": "Position",
               "type": "text",
               "availability": "available",
@@ -532,7 +532,7 @@
               "value": "Preferred"
             },
             {
-              "id": "advanced-display.34d8396d",
+              "id": "display.34d8396d",
               "title": "Refresh rate",
               "type": "choice",
               "availability": "available",
@@ -572,7 +572,7 @@
           "description": "Display details and specialist Hyprland options",
           "controls": [
             {
-              "id": "advanced-display.3b3ebb60",
+              "id": "display.3b3ebb60",
               "title": "Desktop mode",
               "type": "info",
               "availability": "available",
@@ -580,7 +580,7 @@
               "value": "Not read"
             },
             {
-              "id": "advanced-display.761b7ac8",
+              "id": "display.761b7ac8",
               "title": "Active signal mode",
               "type": "info",
               "availability": "available",
@@ -588,7 +588,7 @@
               "value": "Not read"
             },
             {
-              "id": "advanced-display.3278abf9",
+              "id": "display.3278abf9",
               "title": "Color space",
               "type": "info",
               "availability": "available",
@@ -596,7 +596,7 @@
               "value": "Not read"
             },
             {
-              "id": "advanced-display.device",
+              "id": "display.device",
               "title": "Display information",
               "type": "info",
               "availability": "available",
@@ -604,7 +604,7 @@
               "value": "Not read"
             },
             {
-              "id": "advanced-display.91720250",
+              "id": "display.91720250",
               "title": "Bit depth",
               "type": "choice",
               "availability": "available",
@@ -616,7 +616,7 @@
               ]
             },
             {
-              "id": "advanced-display.2d80c2c4",
+              "id": "display.2d80c2c4",
               "title": "Variable refresh rate",
               "type": "choice",
               "availability": "available",
@@ -627,7 +627,7 @@
               ]
             },
             {
-              "id": "hypr-monitor-fields.sdr-eotf",
+              "id": "display.sdr-eotf",
               "title": "SDR transfer function",
               "type": "choice",
               "availability": "available",
@@ -643,7 +643,7 @@
               ]
             },
             {
-              "id": "hypr-monitor-fields.sdrbrightness",
+              "id": "display.sdrbrightness",
               "title": "SDR brightness in HDR",
               "type": "text",
               "availability": "available",
@@ -656,7 +656,7 @@
               ]
             },
             {
-              "id": "hypr-monitor-fields.sdrsaturation",
+              "id": "display.sdrsaturation",
               "title": "SDR saturation in HDR",
               "type": "text",
               "availability": "available",
@@ -669,7 +669,7 @@
               ]
             },
             {
-              "id": "hypr-monitor-fields.sdr-min-luminance",
+              "id": "display.sdr-min-luminance",
               "title": "SDR minimum luminance",
               "type": "text",
               "availability": "available",
@@ -682,7 +682,7 @@
               ]
             },
             {
-              "id": "hypr-monitor-fields.sdr-max-luminance",
+              "id": "display.sdr-max-luminance",
               "title": "SDR maximum luminance",
               "type": "text",
               "availability": "available",
@@ -695,7 +695,7 @@
               ]
             },
             {
-              "id": "hypr-monitor-fields.min-luminance",
+              "id": "display.min-luminance",
               "title": "Display minimum luminance",
               "type": "text",
               "availability": "available",
@@ -708,7 +708,7 @@
               ]
             },
             {
-              "id": "hypr-monitor-fields.max-luminance",
+              "id": "display.max-luminance",
               "title": "Display peak luminance",
               "type": "text",
               "availability": "available",
@@ -721,7 +721,7 @@
               ]
             },
             {
-              "id": "hypr-monitor-fields.max-avg-luminance",
+              "id": "display.max-avg-luminance",
               "title": "Display average luminance",
               "type": "text",
               "availability": "available",
@@ -734,7 +734,7 @@
               ]
             },
             {
-              "id": "hypr-monitor-fields.supports-hdr",
+              "id": "display.supports-hdr",
               "title": "HDR capability",
               "type": "choice",
               "availability": "available",
@@ -752,7 +752,7 @@
               ]
             },
             {
-              "id": "hypr-monitor-fields.supports-wide-color",
+              "id": "display.supports-wide-color",
               "title": "Wide color capability",
               "type": "choice",
               "availability": "available",
@@ -770,7 +770,7 @@
               ]
             },
             {
-              "id": "hypr-monitor-fields.icc",
+              "id": "display.icc",
               "title": "ICC profile",
               "type": "text",
               "availability": "available",
@@ -783,7 +783,7 @@
               ]
             },
             {
-              "id": "hypr-monitor-fields.reserved-area",
+              "id": "display.reserved-area",
               "title": "Reserved area",
               "type": "text",
               "availability": "available",
@@ -3249,7 +3249,7 @@
           "title": "Cursor theme",
           "controls": [
             {
-              "id": "themes.cb5e32b2",
+              "id": "cursor.cb5e32b2",
               "title": "Mouse cursor",
               "type": "action",
               "availability": "planned",
@@ -3257,7 +3257,7 @@
               "value": "Configuration"
             },
             {
-              "id": "hypr-cursor-theme.theme",
+              "id": "cursor.theme",
               "title": "Hyprcursor theme name",
               "type": "text",
               "availability": "planned",
@@ -3269,7 +3269,7 @@
               ]
             },
             {
-              "id": "hypr-cursor-theme.size",
+              "id": "cursor.size",
               "title": "Hyprcursor cursor size",
               "type": "text",
               "availability": "planned",
@@ -3281,7 +3281,7 @@
               ]
             },
             {
-              "id": "hypr-cursor-theme.xcursor-theme",
+              "id": "cursor.xcursor-theme",
               "title": "XCursor fallback theme",
               "type": "text",
               "availability": "planned",
@@ -3293,7 +3293,7 @@
               ]
             },
             {
-              "id": "hypr-cursor-theme.xcursor-size",
+              "id": "cursor.xcursor-size",
               "title": "XCursor rollback size",
               "type": "text",
               "availability": "planned",
@@ -3305,7 +3305,7 @@
               ]
             },
             {
-              "id": "hypr-cursor-theme.gtk",
+              "id": "cursor.gtk",
               "title": "GTK application cursor theme",
               "type": "text",
               "availability": "planned",
@@ -3322,7 +3322,7 @@
           "title": "Pointer",
           "controls": [
             {
-              "id": "pointer.6de7c60b",
+              "id": "cursor.6de7c60b",
               "title": "Pointer style",
               "type": "choice",
               "availability": "planned",
@@ -3336,7 +3336,7 @@
               "value": "white"
             },
             {
-              "id": "pointer.86209eba",
+              "id": "cursor.86209eba",
               "title": "Customize pointer color",
               "type": "color",
               "availability": "planned",
@@ -3344,7 +3344,7 @@
               "value": "#6750A4"
             },
             {
-              "id": "pointer.e8c2f48c",
+              "id": "cursor.e8c2f48c",
               "title": "Pointer size",
               "type": "slider",
               "availability": "planned",
@@ -3360,7 +3360,7 @@
           "title": "Text cursor",
           "controls": [
             {
-              "id": "text-cursor.bb54f6b0",
+              "id": "cursor.bb54f6b0",
               "title": "Text cursor indicator",
               "type": "toggle",
               "availability": "planned",
@@ -3368,7 +3368,7 @@
               "value": false
             },
             {
-              "id": "text-cursor.5829d690",
+              "id": "cursor.5829d690",
               "title": "Indicator size",
               "type": "slider",
               "availability": "planned",
@@ -3379,7 +3379,7 @@
               "unit": "%"
             },
             {
-              "id": "text-cursor.d04d1b72",
+              "id": "cursor.d04d1b72",
               "title": "Indicator color",
               "type": "color",
               "availability": "planned",
@@ -3387,7 +3387,7 @@
               "value": "#6750A4"
             },
             {
-              "id": "text-cursor.60ececbf",
+              "id": "cursor.60ececbf",
               "title": "Text cursor thickness",
               "type": "slider",
               "availability": "planned",
@@ -3404,7 +3404,7 @@
           "collapsed": true,
           "controls": [
             {
-              "id": "pointer.reference.8a9af3b1",
+              "id": "cursor.reference.8a9af3b1",
               "title": "Mouse pointer style",
               "type": "choice",
               "availability": "planned",
@@ -3419,7 +3419,7 @@
               ]
             },
             {
-              "id": "pointer.reference.966d030b",
+              "id": "cursor.reference.966d030b",
               "title": "Size",
               "type": "choice",
               "availability": "planned",
@@ -3434,7 +3434,7 @@
               ]
             },
             {
-              "id": "text-cursor.reference.4c40f3ca",
+              "id": "cursor.reference.4c40f3ca",
               "title": "Text cursor indicator size",
               "type": "slider",
               "availability": "planned",
@@ -3450,7 +3450,7 @@
               "unit": "%"
             },
             {
-              "id": "text-cursor.reference.b0cd3942",
+              "id": "cursor.reference.b0cd3942",
               "title": "Text cursor indicator color",
               "type": "choice",
               "availability": "planned",
@@ -3466,7 +3466,7 @@
               ]
             },
             {
-              "id": "text-cursor.reference.7beee9f0",
+              "id": "cursor.reference.7beee9f0",
               "title": "Text cursor thickness",
               "type": "slider",
               "availability": "planned",
@@ -3487,7 +3487,7 @@
           "collapsed": true,
           "controls": [
             {
-              "id": "hypr-cursor.default-monitor",
+              "id": "cursor.default-monitor",
               "title": "default monitor · default_monitor",
               "type": "text",
               "availability": "planned",
@@ -3500,7 +3500,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.enable-hyprcursor",
+              "id": "cursor.enable-hyprcursor",
               "title": "Using Hyprcursor theme · enable_hyprcursor",
               "type": "toggle",
               "availability": "planned",
@@ -3513,7 +3513,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.hide-on-key-press",
+              "id": "cursor.hide-on-key-press",
               "title": "Hide cursor on key press · hide_on_key_press",
               "type": "toggle",
               "availability": "planned",
@@ -3526,7 +3526,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.hide-on-tablet",
+              "id": "cursor.hide-on-tablet",
               "title": "hide on tablet · hide_on_tablet",
               "type": "toggle",
               "availability": "planned",
@@ -3539,7 +3539,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.hide-on-touch",
+              "id": "cursor.hide-on-touch",
               "title": "hide on touch · hide_on_touch",
               "type": "toggle",
               "availability": "planned",
@@ -3552,7 +3552,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.hotspot-padding",
+              "id": "cursor.hotspot-padding",
               "title": "hotspot padding · hotspot_padding",
               "type": "slider",
               "availability": "planned",
@@ -3568,7 +3568,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.inactive-timeout",
+              "id": "cursor.inactive-timeout",
               "title": "Idle hidden cursor timeout · inactive_timeout",
               "type": "slider",
               "availability": "planned",
@@ -3584,7 +3584,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.invisible",
+              "id": "cursor.invisible",
               "title": "invisible · invisible",
               "type": "toggle",
               "availability": "planned",
@@ -3597,7 +3597,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.min-refresh-rate",
+              "id": "cursor.min-refresh-rate",
               "title": "min refresh rate · min_refresh_rate",
               "type": "slider",
               "availability": "planned",
@@ -3613,7 +3613,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.no-break-fs-vrr",
+              "id": "cursor.no-break-fs-vrr",
               "title": "no break fs vrr · no_break_fs_vrr",
               "type": "slider",
               "availability": "planned",
@@ -3629,7 +3629,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.no-hardware-cursors",
+              "id": "cursor.no-hardware-cursors",
               "title": "Disable hardware cursors · no_hardware_cursors",
               "type": "slider",
               "availability": "planned",
@@ -3645,7 +3645,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.no-warps",
+              "id": "cursor.no-warps",
               "title": "Disable automatic pointer movement · no_warps",
               "type": "toggle",
               "availability": "planned",
@@ -3658,7 +3658,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.persistent-warps",
+              "id": "cursor.persistent-warps",
               "title": "persistent warps · persistent_warps",
               "type": "toggle",
               "availability": "planned",
@@ -3671,7 +3671,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.sync-gsettings-theme",
+              "id": "cursor.sync-gsettings-theme",
               "title": "sync gsettings theme · sync_gsettings_theme",
               "type": "toggle",
               "availability": "planned",
@@ -3684,7 +3684,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.use-cpu-buffer",
+              "id": "cursor.use-cpu-buffer",
               "title": "use cpu buffer · use_cpu_buffer",
               "type": "slider",
               "availability": "planned",
@@ -3700,7 +3700,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.warp-back-after-non-mouse-input",
+              "id": "cursor.warp-back-after-non-mouse-input",
               "title": "warp back after non mouse input · warp_back_after_non_mouse_input",
               "type": "toggle",
               "availability": "planned",
@@ -3713,7 +3713,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.warp-on-change-workspace",
+              "id": "cursor.warp-on-change-workspace",
               "title": "warp on change workspace · warp_on_change_workspace",
               "type": "slider",
               "availability": "planned",
@@ -3729,7 +3729,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.warp-on-monitor-change",
+              "id": "cursor.warp-on-monitor-change",
               "title": "warp on monitor change · warp_on_monitor_change",
               "type": "slider",
               "availability": "planned",
@@ -3745,7 +3745,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.warp-on-toggle-special",
+              "id": "cursor.warp-on-toggle-special",
               "title": "warp on toggle special · warp_on_toggle_special",
               "type": "slider",
               "availability": "planned",
@@ -3761,7 +3761,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.zoom-detached-camera",
+              "id": "cursor.zoom-detached-camera",
               "title": "zoom detached camera · zoom_detached_camera",
               "type": "toggle",
               "availability": "planned",
@@ -3774,7 +3774,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.zoom-disable-aa",
+              "id": "cursor.zoom-disable-aa",
               "title": "zoom disable aa · zoom_disable_aa",
               "type": "toggle",
               "availability": "planned",
@@ -3787,7 +3787,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.zoom-factor",
+              "id": "cursor.zoom-factor",
               "title": "Cursor zoom factor · zoom_factor",
               "type": "slider",
               "availability": "planned",
@@ -3803,7 +3803,7 @@
               ]
             },
             {
-              "id": "hypr-cursor.zoom-rigid",
+              "id": "cursor.zoom-rigid",
               "title": "Fixed zoom anchor point · zoom_rigid",
               "type": "toggle",
               "availability": "planned",
@@ -5831,10 +5831,10 @@
       "id": "network-status",
       "category": "network",
       "title": "Network status",
-      "description": "Connection information, adapters and data usage",
+      "description": "Connection details and network adapters",
       "preview": "network",
       "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "reason": "Connection details and adapters use NetworkManager; Data usage is not implemented.",
       "sources": [
         "uris"
       ],
@@ -5843,54 +5843,136 @@
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Connection",
           "controls": [
             {
-              "id": "network-status.b639d60c",
+              "id": "network-status.connection",
               "title": "Connection status",
               "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
             },
             {
-              "id": "network-status.e290dbc9",
+              "id": "network-status.name",
               "title": "Network name",
               "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
             },
             {
-              "id": "network-status.3854422a",
-              "title": "Network properties",
+              "id": "network-status.traffic",
+              "title": "Current speed",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from the active adapter"
+            },
+            {
+              "id": "network-status.type",
+              "title": "Connection type",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
+            },
+            {
+              "id": "network-status.ipv4",
+              "title": "IPv4 address",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
+            },
+            {
+              "id": "network-status.gateway",
+              "title": "Gateway",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
+            },
+            {
+              "id": "network-status.dns",
+              "title": "DNS servers",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
+            },
+            {
+              "id": "network-status.ipv6",
+              "title": "IPv6 address",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
+            },
+            {
+              "id": "network-status.link-speed",
+              "title": "Link speed",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
+            },
+            {
+              "id": "network-status.hardware-address",
+              "title": "Hardware address",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
+            },
+            {
+              "id": "network-status.sign-in",
+              "title": "Sign in to this network",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Open"
             },
             {
-              "id": "network-status.7d98a49a",
+              "id": "network-status.data-usage",
               "title": "Data usage",
               "type": "action",
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
+              "value": "Open"
+            }
+          ]
+        },
+        {
+          "title": "Adapters",
+          "controls": [
             {
-              "id": "network-status.b72985a7",
-              "title": "Advanced network settings",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "id": "network-status.adapters",
+              "title": "Network adapters",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
+            }
+          ]
+        },
+        {
+          "title": "Advanced",
+          "collapsed": true,
+          "controls": [
+            {
+              "id": "network-status.virtual-adapters",
+              "title": "Virtual adapters",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
             }
           ]
         }
       ],
       "children": [
-        "network-properties",
-        "data-usage",
+        "ip-dns",
         "network-advanced"
       ]
     },
@@ -5898,10 +5980,10 @@
       "id": "wifi",
       "category": "network",
       "title": "Wi-Fi",
-      "description": "Wireless network, random address and automatic connection",
+      "description": "Wireless networks and the current connection",
       "preview": "network",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Uses NetworkManager through the Settings service.",
       "sources": [
         "uris"
       ],
@@ -5910,82 +5992,103 @@
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Wi-Fi",
           "controls": [
             {
-              "id": "wifi.780ff71c",
+              "id": "wifi.enabled",
               "title": "Wi-Fi",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": true
             },
             {
-              "id": "wifi.3df9da60",
-              "title": "Show available networks",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "wifi.f64d0727",
-              "title": "Managing known networks",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "wifi.ad560280",
-              "title": "Random hardware address",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "wifi.1a8098ed",
-              "title": "Current network properties",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "id": "wifi.adapter",
+              "title": "Adapter",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Detected adapter",
+              "options": [
+                "Detected adapter"
+              ]
             }
           ]
         },
         {
-          "title": "Windows reference settings",
-          "collapsed": true,
+          "title": "Current connection",
           "controls": [
             {
-              "id": "wifi.reference.cc052043",
-              "title": "Random hardware addresses",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Wi-Fi",
-                "Random hardware addresses"
-              ],
-              "value": false
+              "id": "wifi.current",
+              "title": "Current network",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
+            },
+            {
+              "id": "wifi.disconnect",
+              "title": "Disconnect",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Disconnect"
+            }
+          ]
+        },
+        {
+          "title": "Available networks",
+          "controls": [
+            {
+              "id": "wifi.networks",
+              "title": "Available networks",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
+            },
+            {
+              "id": "wifi.refresh",
+              "title": "Refresh",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Refresh"
+            },
+            {
+              "id": "wifi.connect",
+              "title": "Connect",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Connect"
+            }
+          ]
+        },
+        {
+          "title": "Saved networks",
+          "controls": [
+            {
+              "id": "wifi.known-networks",
+              "title": "Known networks",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Open"
             }
           ]
         }
       ],
-      "children": [
-        "known-networks",
-        "network-properties"
-      ]
+      "children": []
     },
     {
       "id": "known-networks",
       "category": "network",
-      "title": "Managing known networks",
-      "description": "Saved network and connection preferences",
+      "title": "Known networks",
+      "description": "Saved networks and connection preferences",
       "preview": "none",
       "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "reason": "Saved networks use NetworkManager; Random hardware address and Connection priority are not implemented.",
       "sources": [
         "uris"
       ],
@@ -5994,60 +6097,137 @@
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Add a network",
           "controls": [
             {
-              "id": "known-networks.2120e5bc",
+              "id": "known-networks.add",
               "title": "Add network",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
               "value": "Add"
             },
             {
-              "id": "known-networks.e290dbc9",
+              "id": "known-networks.name",
               "title": "Network name",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
               "value": ""
             },
             {
-              "id": "known-networks.2f201b69",
+              "id": "known-networks.security",
               "title": "Security type",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "WPA2/WPA3 Personal",
+              "options": [
+                "Open",
+                "WPA2/WPA3 Personal",
+                "WPA3 Personal"
+              ]
+            },
+            {
+              "id": "known-networks.password",
+              "title": "Password",
+              "type": "text",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": ""
+            },
+            {
+              "id": "known-networks.hidden",
+              "title": "Hidden network",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": false
+            }
+          ]
+        },
+        {
+          "title": "Saved networks",
+          "controls": [
+            {
+              "id": "known-networks.search",
+              "title": "Search networks",
+              "type": "text",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": ""
+            },
+            {
+              "id": "known-networks.last-connected",
+              "title": "Last connected",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
+            },
+            {
+              "id": "known-networks.autoconnect",
+              "title": "Connect automatically",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": true
+            },
+            {
+              "id": "known-networks.metered",
+              "title": "Metered connection",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Automatic",
+              "options": [
+                "Automatic",
+                "Metered",
+                "Not metered"
+              ]
+            },
+            {
+              "id": "known-networks.mac",
+              "title": "Random hardware address",
               "type": "choice",
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Off",
               "options": [
-                "WPA2",
-                "WPA3",
-                "Open"
-              ],
-              "value": "WPA2"
+                "Off",
+                "Stable for this network",
+                "Random for each connection"
+              ]
             },
             {
-              "id": "known-networks.a034ebdf",
-              "title": "Automatic connection",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "known-networks.2bebdc73",
-              "title": "Billing based on traffic flow",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "known-networks.3359a795",
-              "title": "Forget about the Internet",
+              "id": "known-networks.change-password",
+              "title": "Change password",
               "type": "action",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Change"
+            },
+            {
+              "id": "known-networks.forget",
+              "title": "Forget",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Forget"
+            }
+          ]
+        },
+        {
+          "title": "Advanced",
+          "collapsed": true,
+          "controls": [
+            {
+              "id": "known-networks.priority",
+              "title": "Connection priority",
+              "type": "text",
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "value": "0"
             }
           ]
         }
@@ -6412,6 +6592,245 @@
       "children": []
     },
     {
+      "id": "proxy",
+      "category": "network",
+      "title": "Proxy",
+      "description": "Automatic detection, scripting and manual proxies",
+      "preview": "none",
+      "availability": "planned",
+      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "sources": [
+        "uris"
+      ],
+      "windowsUris": [
+        "ms-settings:network-proxy"
+      ],
+      "sections": [
+        {
+          "title": "Settings",
+          "controls": [
+            {
+              "id": "proxy.22b15396",
+              "title": "Automatically detect settings",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "proxy.bcc75aea",
+              "title": "Using setup scripts",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "proxy.58d46c1e",
+              "title": "Script address",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": ""
+            },
+            {
+              "id": "proxy.0727a1b1",
+              "title": "Use a proxy server",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "proxy.903f8d36",
+              "title": "Proxy address",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": ""
+            },
+            {
+              "id": "proxy.6cbb7335",
+              "title": "Port",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": ""
+            },
+            {
+              "id": "proxy.908eea6f",
+              "title": "Bypass proxy address",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": ""
+            },
+            {
+              "id": "proxy.f87cf52b",
+              "title": "Local address does not use proxy",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "ip-dns",
+      "category": "network",
+      "title": "IP and DNS",
+      "description": "Address allocation, name resolution and link information",
+      "preview": "none",
+      "availability": "planned",
+      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "sources": [
+        "uris"
+      ],
+      "windowsUris": [],
+      "sections": [
+        {
+          "title": "Settings",
+          "controls": [
+            {
+              "id": "ip-dns.allocation",
+              "title": "IP allocation",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "options": [
+                "Automatic DHCP",
+                "Manual"
+              ],
+              "value": "Automatic DHCP"
+            },
+            {
+              "id": "ip-dns.ipv4",
+              "title": "IPv4 address",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": ""
+            },
+            {
+              "id": "ip-dns.prefix",
+              "title": "Subnet prefix length",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": ""
+            },
+            {
+              "id": "ip-dns.gateway",
+              "title": "Gateway",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": ""
+            },
+            {
+              "id": "ip-dns.dns",
+              "title": "Preferred DNS",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": ""
+            },
+            {
+              "id": "ip-dns.backup-dns",
+              "title": "Backup DNS",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": ""
+            },
+            {
+              "id": "ip-dns.dns-over-https",
+              "title": "DNS over HTTPS",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "data-usage",
+      "category": "network",
+      "title": "Data usage",
+      "description": "Time range, traffic limit and application usage",
+      "preview": "none",
+      "availability": "planned",
+      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "sources": [
+        "uris"
+      ],
+      "windowsUris": [],
+      "sections": [
+        {
+          "title": "Settings",
+          "controls": [
+            {
+              "id": "data-usage.2be90408",
+              "title": "Time frame",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "options": [
+                "Past 30 days",
+                "Past 7 days",
+                "Past 24 hours"
+              ],
+              "value": "Past 30 days"
+            },
+            {
+              "id": "data-usage.55685047",
+              "title": "Enter traffic limit",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Configuration"
+            },
+            {
+              "id": "data-usage.45989fef",
+              "title": "Restriction types",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "options": [
+                "Monthly",
+                "Disposable",
+                "No restrictions"
+              ],
+              "value": "Monthly"
+            },
+            {
+              "id": "data-usage.a4d31b25",
+              "title": "Traffic restrictions",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": ""
+            },
+            {
+              "id": "data-usage.800eddaf",
+              "title": "Reset statistics",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Configuration"
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
       "id": "cellular",
       "category": "network",
       "title": "Mobile networks",
@@ -6552,187 +6971,6 @@
       "children": []
     },
     {
-      "id": "proxy",
-      "category": "network",
-      "title": "Proxy",
-      "description": "Automatic detection, scripting and manual proxies",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:network-proxy"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "proxy.22b15396",
-              "title": "Automatically detect settings",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "proxy.bcc75aea",
-              "title": "Using setup scripts",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "proxy.58d46c1e",
-              "title": "Script address",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "proxy.0727a1b1",
-              "title": "Use a proxy server",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "proxy.903f8d36",
-              "title": "Proxy address",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "proxy.6cbb7335",
-              "title": "Port",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "proxy.908eea6f",
-              "title": "Bypass proxy address",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "proxy.f87cf52b",
-              "title": "Local address does not use proxy",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "dialup",
-      "category": "network",
-      "title": "Dial-up",
-      "description": "Old style dial-up connection reference",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:network-dialup"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "dialup.17b3e40b",
-              "title": "Set up a new connection",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "dialup.07f7d35b",
-              "title": "Dial numbers",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "dialup.a1aaf352",
-              "title": "Username",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "dialup.c839a8ff",
-              "title": "Password",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "directaccess",
-      "category": "network",
-      "title": "DirectAccess",
-      "description": "Windows Enterprise Remote Access Reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:network-directaccess"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "directaccess.b639d60c",
-              "title": "Connection status",
-              "type": "info",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Not available for Linux"
-            },
-            {
-              "id": "directaccess.73eb799f",
-              "title": "Connection properties",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "network-advanced",
       "category": "network",
       "title": "Advanced network settings",
@@ -6775,227 +7013,12 @@
               "value": "Configuration"
             },
             {
-              "id": "network-advanced.95f512ab",
-              "title": "Hardware and connection properties",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
               "id": "network-advanced.bb3c0b53",
               "title": "Network reset",
               "type": "action",
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "network-properties",
-      "category": "network",
-      "title": "Network connection properties",
-      "description": "Address allocation, name resolution and link information",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "network-properties.0e517641",
-              "title": "IP allocation",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Automatic DHCP",
-                "Manual"
-              ],
-              "value": "Automatic DHCP"
-            },
-            {
-              "id": "network-properties.3aaacc78",
-              "title": "IPv4 address",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "network-properties.73ef4bcd",
-              "title": "Subnet prefix length",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "network-properties.86ab111e",
-              "title": "Gateway",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "network-properties.b10ffae1",
-              "title": "Preferred DNS",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "network-properties.ba1b830a",
-              "title": "Backup DNS",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "network-properties.90d50c67",
-              "title": "DNS over HTTPS",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "network-properties.ab79d605",
-              "title": "Link speed",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
-            },
-            {
-              "id": "network-properties.aaf3aebe",
-              "title": "Hardware address",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "data-usage",
-      "category": "network",
-      "title": "Data usage",
-      "description": "Time range, traffic limit and application usage",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "data-usage.2be90408",
-              "title": "Time frame",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Past 30 days",
-                "Past 7 days",
-                "Past 24 hours"
-              ],
-              "value": "Past 30 days"
-            },
-            {
-              "id": "data-usage.55685047",
-              "title": "Enter traffic limit",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "data-usage.45989fef",
-              "title": "Restriction types",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Monthly",
-                "Disposable",
-                "No restrictions"
-              ],
-              "value": "Monthly"
-            },
-            {
-              "id": "data-usage.a4d31b25",
-              "title": "Traffic restrictions",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "data-usage.800eddaf",
-              "title": "Reset statistics",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "wifi-provisioning",
-      "category": "network",
-      "title": "Wi-Fi configuration",
-      "description": "Configuration file installation reference",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:wifi-provisioning"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "wifi-provisioning.6473ace4",
-              "title": "Import wireless network configuration",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "wifi-provisioning.0b38bb02",
-              "title": "Configuration file path",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
             }
           ]
         }
@@ -7087,7 +7110,7 @@
               "value": "Keep playing"
             },
             {
-              "id": "hypr-paper-misc-options.splash",
+              "id": "background.splash",
               "title": "Show splash text",
               "type": "toggle",
               "availability": "available",
@@ -7095,7 +7118,7 @@
               "value": true
             },
             {
-              "id": "hypr-paper-misc-options.splash-offset",
+              "id": "background.splash-offset",
               "title": "Splash offset",
               "type": "slider",
               "availability": "available",
@@ -7106,7 +7129,7 @@
               "unit": " px"
             },
             {
-              "id": "hypr-paper-misc-options.splash-opacity",
+              "id": "background.splash-opacity",
               "title": "Splash opacity",
               "type": "slider",
               "availability": "available",
@@ -7158,7 +7181,7 @@
               ]
             },
             {
-              "id": "colors.8983f367",
+              "id": "themes.8983f367",
               "title": "Accent color source",
               "type": "choice",
               "availability": "available",
@@ -7170,7 +7193,7 @@
               "value": "Custom"
             },
             {
-              "id": "colors.6f67371e",
+              "id": "themes.6f67371e",
               "title": "Accent Color",
               "type": "color",
               "availability": "available",
@@ -7197,7 +7220,7 @@
               ]
             },
             {
-              "id": "colors.3630e7d0",
+              "id": "themes.3630e7d0",
               "title": "Transparency effect",
               "type": "toggle",
               "availability": "planned",
@@ -7256,7 +7279,7 @@
           "collapsed": true,
           "controls": [
             {
-              "id": "colors.reference.ed936eee",
+              "id": "themes.reference.ed936eee",
               "title": "Transparency Effects",
               "type": "toggle",
               "availability": "planned",
@@ -13418,7 +13441,7 @@
           "collapsed": true,
           "controls": [
             {
-              "id": "update-options.0a009ef6",
+              "id": "updates.0a009ef6",
               "title": "Restart as soon as possible",
               "type": "toggle",
               "availability": "planned",
@@ -13426,7 +13449,7 @@
               "value": false
             },
             {
-              "id": "update-options.1439f298",
+              "id": "updates.1439f298",
               "title": "Notify me when a reboot is needed",
               "type": "toggle",
               "availability": "planned",
@@ -13434,7 +13457,7 @@
               "value": false
             },
             {
-              "id": "update-options.abe0ecdb",
+              "id": "updates.abe0ecdb",
               "title": "Activity time",
               "type": "action",
               "availability": "planned",

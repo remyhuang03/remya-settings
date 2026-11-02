@@ -2,7 +2,7 @@
 
 Research date: 2026-10-26. Baseline: commit `44679b271497c40a0d37dd40299f89ae59c7aa6f`.
 
-This extension adds **2 categories, 85 pages, and 768 controls** (wallpaper-per-output and Hyprpaper misc pages were folded into Background, Qt application and blur variant pages were removed by owner request, and cursor pages moved to the System Cursor page). The combined catalog has **12 categories, 225 pages, and 1,814 controls**. The current reference catalog contains **140 pages and 1,074 controls**. The former `hypr-monitor-fields` page moved into Display: its implemented fields left this extension, and duplicates are listed under `retired` in the coverage file. Coverage files describe the current included controls.
+This extension adds **2 categories, 85 pages, and 768 controls**. The combined catalog has **12 categories, 222 pages, and 1,821 controls**. The current reference catalog contains **140 pages and 1,074 controls**. The former `hypr-monitor-fields` page moved into Display: its implemented fields left this extension, and duplicates are listed under `retired` in the coverage file. Coverage files describe the current included controls.
 
 Apart from the implemented Display fields, this extension remains **UI only**. Every remaining addition is `planned`, operation controls remain disabled, and no configuration, process, device, or service is read or modified by the application. Optional components are identified in each page's availability reason. Their presence and compatibility have not been detected.
 

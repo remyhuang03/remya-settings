@@ -21,7 +21,7 @@ SERVICE = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "target/debug/remya
 DEST = ("--session", "--dest", "top.remya.settings.Service1", "--object-path", "/top/remya/settings")
 METHOD = "top.remya.settings.Settings1."
 SCALE, TRANSFORM, LAYOUT = "display.12e2ed4d", "display.9843ad76", "display.7cb5dc06"
-POSITION, RESERVED = "hypr-monitor-fields.position", "hypr-monitor-fields.reserved-area"
+POSITION, RESERVED = "display.position", "display.reserved-area"
 
 
 def run(*args, env=None, check=True):
@@ -166,28 +166,28 @@ def main():
         icc = home / "profile.icc"
         icc.write_bytes(b"")
         for setting, value, literal in (
-            ("advanced-display.2d80c2c4", "0", "vrr = 0"),
-            ("hypr-monitor-fields.sdr-eotf", "gamma22", 'sdr_eotf = "gamma22"'),
-            ("hypr-monitor-fields.supports-hdr", "-1", "supports_hdr = -1"),
-            ("hypr-monitor-fields.supports-wide-color", "-1", "supports_wide_color = -1"),
-            ("hypr-monitor-fields.min-luminance", "0", "min_luminance = 0"),
-            ("hypr-monitor-fields.max-luminance", "400", "max_luminance = 400"),
-            ("hypr-monitor-fields.max-avg-luminance", "300", "max_avg_luminance = 300"),
-            ("hypr-monitor-fields.sdrbrightness", "1.2", "sdrbrightness = 1.2"),
-            ("hypr-monitor-fields.sdrsaturation", "0.9", "sdrsaturation = 0.9"),
-            ("hypr-monitor-fields.sdr-min-luminance", "0.5", "sdr_min_luminance = 0.5"),
-            ("hypr-monitor-fields.sdr-max-luminance", "100", "sdr_max_luminance = 100"),
-            ("advanced-display.91720250", "10", "bitdepth = 10"),
+            ("display.2d80c2c4", "0", "vrr = 0"),
+            ("display.sdr-eotf", "gamma22", 'sdr_eotf = "gamma22"'),
+            ("display.supports-hdr", "-1", "supports_hdr = -1"),
+            ("display.supports-wide-color", "-1", "supports_wide_color = -1"),
+            ("display.min-luminance", "0", "min_luminance = 0"),
+            ("display.max-luminance", "400", "max_luminance = 400"),
+            ("display.max-avg-luminance", "300", "max_avg_luminance = 300"),
+            ("display.sdrbrightness", "1.2", "sdrbrightness = 1.2"),
+            ("display.sdrsaturation", "0.9", "sdrsaturation = 0.9"),
+            ("display.sdr-min-luminance", "0.5", "sdr_min_luminance = 0.5"),
+            ("display.sdr-max-luminance", "100", "sdr_max_luminance = 100"),
+            ("display.91720250", "10", "bitdepth = 10"),
         ):
             call("Set", setting, request("SMOKE-1", value))
             assert literal in rules.read_text(), literal
             assert not state()["conflict"], setting
         assert monitors()["SMOKE-1"]["sdrBrightness"] == 1.2
         assert "2101010" in monitors()["SMOKE-1"]["currentFormat"]
-        call("Set", "advanced-display.2d80c2c4", request("SMOKE-1", ""))
+        call("Set", "display.2d80c2c4", request("SMOKE-1", ""))
         assert "vrr" not in rules.read_text()
-        assert "InvalidArgument" in call("Set", "advanced-display.2d80c2c4", request("SMOKE-1", "1"), ok=False)
-        assert "not an ICC profile" in call("Set", "hypr-monitor-fields.icc", request("SMOKE-1", str(icc)), ok=False)
+        assert "InvalidArgument" in call("Set", "display.2d80c2c4", request("SMOKE-1", "1"), ok=False)
+        assert "not an ICC profile" in call("Set", "display.icc", request("SMOKE-1", str(icc)), ok=False)
         assert str(icc) not in rules.read_text(), "a rejected ICC profile was persisted"
         hypr_ctl("reload")
         time.sleep(1.5)
@@ -227,7 +227,6 @@ def main():
         # Parity with catalog metadata and errors.
         value = call("Get", SCALE)
         assert value["availability"] == "available" and "SMOKE-1" in value["value"]
-        assert call("Get", "page:advanced-display")["id"] == "display"
         for bad in (request("SMOKE-1", "x"), "not json", request("NOPE", "1")):
             assert "InvalidArgument" in call("Set", TRANSFORM, bad, ok=False)
         assert "Unavailable" in call("Set", "night-light.e32be03e", "true", ok=False)

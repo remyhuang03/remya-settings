@@ -8,15 +8,15 @@
 
 Hyprland 内容包含 85 个页面、768 项设置及 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
 
-Energy recommendations（`energy`）、Multitasking（`multitasking`）、Quick Facts、Navigation bar、Equipment usage、Copilot key、Qt application 与 Hyprland Blur variant 页面已按用户要求删除；光标相关页面已合并到 System 的 Cursor 页面；原始 Windows 来源记录保留在覆盖文档的 removedPages 中，不再显示菜单、搜索结果或相关页面入口。
-
 ## 当前概况
 
-- 设置分类：12 个；详情页面：225 个；设置条目：1814 项。
-- 已实现：91 项；未实现：1683 项；不适用：40 项。
+- 设置分类：12 个；详情页面：222 个；设置条目：1821 项。
+- 已实现：123 项；未实现：1660 项；不适用：38 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。
+
+- 网络通过 Rust / system D-Bus 连接 NetworkManager，提供网络状态、Wi-Fi 与已知网络；设置项见[网络文档](network.md)。
 
 - 显示通过 Rust 经 `hyprctl` 读取并实时应用 Hyprland 显示规则，确认后写入 `monitors.lua`，并按系统配置同步规则处理冲突；亮度为实时值（logind 背光 / `ddcutil`），不保存。
 
@@ -38,7 +38,7 @@ Energy recommendations（`energy`）、Multitasking（`multitasking`）、Quick 
 | 已实现 | 已接入可用的真实系统功能，并有验证依据 | 在“跟踪 / 验证”中记录提交、问题单、测试或实机验证记录 |
 | 不适用 | Windows 专属、旧版或当前平台没有确定对应能力 | 保留条目；确认 Linux 替代方案后，记录决策并改为未实现 |
 
-实现一个小项时，同步更新本表与目录中的 `availability` / `reason`，并更新页面汇总状态；不能只修改徽标或让示例控件响应。部分完成的页面应保持未实现，逐项记录已接入能力。使用稳定 ID 对齐记录，不因重命名、翻译或排序而修改 ID。新增或删除控件时也同步清单与分类统计；保留已有跟踪和验证记录。
+实现一个小项时，同步更新本表与目录中的 `availability` / `reason`，并更新页面汇总状态；不能只修改徽标或让示例控件响应。部分完成的页面应保持未实现，逐项记录已接入能力。开发阶段 ID 可以变动，变动时同步本表。新增或删除控件时也同步清单与分类统计；已删除的页面和控件不保留记录。
 
 同一后端能力服务多个展示条目时，逐个登记所覆盖的 ID，并链接同一实现与验证依据。`不适用` 不代表承诺实现 Windows 服务；是否纳入 Hyprland 的产品范围需要另作决定。参考区域的选项和范围仍需在接入时核实。
 
@@ -48,7 +48,7 @@ Energy recommendations（`energy`）、Multitasking（`multitasking`）、Quick 
 | --- | ---: | ---: | ---: | ---: | ---: |
 | [系统](#category-system) | 39 | 338 | 48 | 290 | 0 |
 | [蓝牙和设备](#category-devices) | 24 | 201 | 0 | 197 | 4 |
-| [网络和 Internet](#category-network) | 15 | 90 | 0 | 88 | 2 |
+| [网络和 Internet](#category-network) | 12 | 97 | 32 | 65 | 0 |
 | [外观](#category-appearance) | 25 | 190 | 20 | 170 | 0 |
 | [应用](#category-apps) | 5 | 32 | 15 | 17 | 0 |
 | [账户](#category-accounts) | 15 | 65 | 0 | 55 | 10 |
@@ -77,8 +77,6 @@ Windows 参考入口：`ms-settings:display`、`ms-settings:screenrotation`、`m
 
 相关页面 ID：`hypr-output-assignments`、`hypr-multi-gpu`。
 
-退役 ID：页面 `advanced-display`、`hypr-monitor-fields` 并入本页，旧 ID 仍可打开本页；控件 `display.2d0b8c7d`（Advanced 入口）与重复字段 `hypr-monitor-fields.{disabled,mode,scale,transform,mirror,bitdepth,cm,vrr}` 已删除。
-
 参考资料：[hypr-monitors](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/monitors/_index.md)。
 
 Display 交互：Position 使用 X/Y 输入；刷新操作移动到排列框右上角，移除框内操作提示；Brightness 拖动时合并串行硬件写入并回读；Resolution 支持 Preferred 或 X/Y，Rust 修正到最近的显示器支持模式；Orientation 分开选择 Rotation/Flip；Advanced 使用独立分组标题，展开后才显示设置卡片。验证：`test/display_test.dart`、Rust display 测试、隔离桌面 smoke tests。
@@ -87,8 +85,8 @@ Display 交互：Position 使用 X/Y 输入；刷新操作移动到排列框右�
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Selected display | `hypr-monitor-fields.output` | 选择 | 已实现 | 实机 GUI；`test/display_test.dart` |
-| Position | `hypr-monitor-fields.position` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）；`test/display_test.dart`（布局计算） |
+| Selected display | `display.output` | 选择 | 已实现 | 实机 GUI；`test/display_test.dart` |
+| Position | `display.position` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）；`test/display_test.dart`（布局计算） |
 | Refresh displays（排列框右上角按钮） | `display.15697afc` | 操作 | 已实现 | 实机读取；`cargo test -p remya_settings_display` |
 
 #### 亮度与颜色
@@ -106,7 +104,7 @@ Display 交互：Position 使用 X/Y 输入；刷新操作移动到排列框右�
 | --- | --- | --- | --- | --- |
 | Scale | `display.12e2ed4d` | 选择 | 已实现 | Hyprland 0.57 实机（DP-1，含还原）；`test/display_smoke.py`（嵌套 Hyprland 0.57） |
 | Resolution | `display.44f6b9b0` | 选择 | 已实现 | Hyprland 0.57 实机（DP-1，含还原）；`test/display_smoke.py`（嵌套 Hyprland 0.57） |
-| Refresh rate | `advanced-display.34d8396d` | 选择 | 已实现 | Hyprland 0.57 实机（DP-1，含还原）；`test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Refresh rate | `display.34d8396d` | 选择 | 已实现 | Hyprland 0.57 实机（DP-1，含还原）；`test/display_smoke.py`（嵌套 Hyprland 0.57） |
 | Orientation | `display.9843ad76` | 选择 | 已实现 | Hyprland 0.57 实机（DP-1，含还原）；`test/display_smoke.py`（嵌套 Hyprland 0.57） |
 | Multiple displays | `display.7cb5dc06` | 选择 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）；未在实机停用或镜像，以免移动工作区 |
 
@@ -114,24 +112,24 @@ Display 交互：Position 使用 X/Y 输入；刷新操作移动到排列框右�
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Desktop mode | `advanced-display.3b3ebb60` | 信息展示 | 已实现 | 实机读取三台显示器 |
-| Active signal mode | `advanced-display.761b7ac8` | 信息展示 | 已实现 | 实机读取三台显示器 |
-| Color space | `advanced-display.3278abf9` | 信息展示 | 已实现 | 实机读取三台显示器 |
-| Display information | `advanced-display.device` | 信息展示 | 已实现 | 实机读取三台显示器 |
-| Bit depth | `advanced-display.91720250` | 选择 | 已实现 | Hyprland 0.57 实机（DP-1，含还原）；`test/display_smoke.py`（嵌套 Hyprland 0.57） |
-| Variable refresh rate | `advanced-display.2d80c2c4` | 选择 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）；本机显示器均不报告 VRR，仅验证默认与关闭 |
-| SDR transfer function | `hypr-monitor-fields.sdr-eotf` | 选择 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
-| SDR brightness in HDR | `hypr-monitor-fields.sdrbrightness` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
-| SDR saturation in HDR | `hypr-monitor-fields.sdrsaturation` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
-| SDR minimum luminance | `hypr-monitor-fields.sdr-min-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
-| SDR maximum luminance | `hypr-monitor-fields.sdr-max-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
-| Display minimum luminance | `hypr-monitor-fields.min-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
-| Display peak luminance | `hypr-monitor-fields.max-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
-| Display average luminance | `hypr-monitor-fields.max-avg-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
-| HDR capability | `hypr-monitor-fields.supports-hdr` | 选择 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
-| Wide color capability | `hypr-monitor-fields.supports-wide-color` | 选择 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
-| ICC profile | `hypr-monitor-fields.icc` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）（错误路径拒绝）；单元测试；未用真实 ICC 配置文件验证 |
-| Reserved area | `hypr-monitor-fields.reserved-area` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Desktop mode | `display.3b3ebb60` | 信息展示 | 已实现 | 实机读取三台显示器 |
+| Active signal mode | `display.761b7ac8` | 信息展示 | 已实现 | 实机读取三台显示器 |
+| Color space | `display.3278abf9` | 信息展示 | 已实现 | 实机读取三台显示器 |
+| Display information | `display.device` | 信息展示 | 已实现 | 实机读取三台显示器 |
+| Bit depth | `display.91720250` | 选择 | 已实现 | Hyprland 0.57 实机（DP-1，含还原）；`test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Variable refresh rate | `display.2d80c2c4` | 选择 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）；本机显示器均不报告 VRR，仅验证默认与关闭 |
+| SDR transfer function | `display.sdr-eotf` | 选择 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| SDR brightness in HDR | `display.sdrbrightness` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| SDR saturation in HDR | `display.sdrsaturation` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| SDR minimum luminance | `display.sdr-min-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| SDR maximum luminance | `display.sdr-max-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Display minimum luminance | `display.min-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Display peak luminance | `display.max-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Display average luminance | `display.max-avg-luminance` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| HDR capability | `display.supports-hdr` | 选择 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| Wide color capability | `display.supports-wide-color` | 选择 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
+| ICC profile | `display.icc` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）（错误路径拒绝）；单元测试；未用真实 ICC 配置文件验证 |
+| Reserved area | `display.reserved-area` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57） |
 
 #### 图形
 
@@ -1012,67 +1010,67 @@ Windows 参考入口：`ms-settings:easeofaccess-cursor`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Mouse cursor | `themes.cb5e32b2` | 操作 | 未实现 | — |
-| Hyprcursor theme name | `hypr-cursor-theme.theme` | 文本输入 | 未实现 | — |
-| Hyprcursor cursor size | `hypr-cursor-theme.size` | 文本输入 | 未实现 | — |
-| XCursor fallback theme | `hypr-cursor-theme.xcursor-theme` | 文本输入 | 未实现 | — |
-| XCursor rollback size | `hypr-cursor-theme.xcursor-size` | 文本输入 | 未实现 | — |
-| GTK application cursor theme | `hypr-cursor-theme.gtk` | 文本输入 | 未实现 | — |
+| Mouse cursor | `cursor.cb5e32b2` | 操作 | 未实现 | — |
+| Hyprcursor theme name | `cursor.theme` | 文本输入 | 未实现 | — |
+| Hyprcursor cursor size | `cursor.size` | 文本输入 | 未实现 | — |
+| XCursor fallback theme | `cursor.xcursor-theme` | 文本输入 | 未实现 | — |
+| XCursor rollback size | `cursor.xcursor-size` | 文本输入 | 未实现 | — |
+| GTK application cursor theme | `cursor.gtk` | 文本输入 | 未实现 | — |
 
 #### Pointer
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Pointer style | `pointer.6de7c60b` | 选择 | 未实现 | — |
-| Customize pointer color | `pointer.86209eba` | 颜色 | 未实现 | — |
-| Pointer size | `pointer.e8c2f48c` | 滑块 | 未实现 | — |
+| Pointer style | `cursor.6de7c60b` | 选择 | 未实现 | — |
+| Customize pointer color | `cursor.86209eba` | 颜色 | 未实现 | — |
+| Pointer size | `cursor.e8c2f48c` | 滑块 | 未实现 | — |
 
 #### Text cursor
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Text cursor indicator | `text-cursor.bb54f6b0` | 开关 | 未实现 | — |
-| Indicator size | `text-cursor.5829d690` | 滑块 | 未实现 | — |
-| Indicator color | `text-cursor.d04d1b72` | 颜色 | 未实现 | — |
-| Text cursor thickness | `text-cursor.60ececbf` | 滑块 | 未实现 | — |
+| Text cursor indicator | `cursor.bb54f6b0` | 开关 | 未实现 | — |
+| Indicator size | `cursor.5829d690` | 滑块 | 未实现 | — |
+| Indicator color | `cursor.d04d1b72` | 颜色 | 未实现 | — |
+| Text cursor thickness | `cursor.60ececbf` | 滑块 | 未实现 | — |
 
 #### Windows reference settings
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Mouse pointer style | `pointer.reference.8a9af3b1` | 选择 | 未实现 | — |
-| Size | `pointer.reference.966d030b` | 选择 | 未实现 | — |
-| Text cursor indicator size | `text-cursor.reference.4c40f3ca` | 滑块 | 未实现 | — |
-| Text cursor indicator color | `text-cursor.reference.b0cd3942` | 选择 | 未实现 | — |
-| Text cursor thickness | `text-cursor.reference.7beee9f0` | 滑块 | 未实现 | — |
+| Mouse pointer style | `cursor.reference.8a9af3b1` | 选择 | 未实现 | — |
+| Size | `cursor.reference.966d030b` | 选择 | 未实现 | — |
+| Text cursor indicator size | `cursor.reference.4c40f3ca` | 滑块 | 未实现 | — |
+| Text cursor indicator color | `cursor.reference.b0cd3942` | 选择 | 未实现 | — |
+| Text cursor thickness | `cursor.reference.7beee9f0` | 滑块 | 未实现 | — |
 
 #### Advanced
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| default monitor · default_monitor | `hypr-cursor.default-monitor` | 文本输入 | 未实现 | — |
-| Using Hyprcursor theme · enable_hyprcursor | `hypr-cursor.enable-hyprcursor` | 开关 | 未实现 | — |
-| Hide cursor on key press · hide_on_key_press | `hypr-cursor.hide-on-key-press` | 开关 | 未实现 | — |
-| hide on tablet · hide_on_tablet | `hypr-cursor.hide-on-tablet` | 开关 | 未实现 | — |
-| hide on touch · hide_on_touch | `hypr-cursor.hide-on-touch` | 开关 | 未实现 | — |
-| hotspot padding · hotspot_padding | `hypr-cursor.hotspot-padding` | 滑块 | 未实现 | — |
-| Idle hidden cursor timeout · inactive_timeout | `hypr-cursor.inactive-timeout` | 滑块 | 未实现 | — |
-| invisible · invisible | `hypr-cursor.invisible` | 开关 | 未实现 | — |
-| min refresh rate · min_refresh_rate | `hypr-cursor.min-refresh-rate` | 滑块 | 未实现 | — |
-| no break fs vrr · no_break_fs_vrr | `hypr-cursor.no-break-fs-vrr` | 滑块 | 未实现 | — |
-| Disable hardware cursors · no_hardware_cursors | `hypr-cursor.no-hardware-cursors` | 滑块 | 未实现 | — |
-| Disable automatic pointer movement · no_warps | `hypr-cursor.no-warps` | 开关 | 未实现 | — |
-| persistent warps · persistent_warps | `hypr-cursor.persistent-warps` | 开关 | 未实现 | — |
-| sync gsettings theme · sync_gsettings_theme | `hypr-cursor.sync-gsettings-theme` | 开关 | 未实现 | — |
-| use cpu buffer · use_cpu_buffer | `hypr-cursor.use-cpu-buffer` | 滑块 | 未实现 | — |
-| warp back after non mouse input · warp_back_after_non_mouse_input | `hypr-cursor.warp-back-after-non-mouse-input` | 开关 | 未实现 | — |
-| warp on change workspace · warp_on_change_workspace | `hypr-cursor.warp-on-change-workspace` | 滑块 | 未实现 | — |
-| warp on monitor change · warp_on_monitor_change | `hypr-cursor.warp-on-monitor-change` | 滑块 | 未实现 | — |
-| warp on toggle special · warp_on_toggle_special | `hypr-cursor.warp-on-toggle-special` | 滑块 | 未实现 | — |
-| zoom detached camera · zoom_detached_camera | `hypr-cursor.zoom-detached-camera` | 开关 | 未实现 | — |
-| zoom disable aa · zoom_disable_aa | `hypr-cursor.zoom-disable-aa` | 开关 | 未实现 | — |
-| Cursor zoom factor · zoom_factor | `hypr-cursor.zoom-factor` | 滑块 | 未实现 | — |
-| Fixed zoom anchor point · zoom_rigid | `hypr-cursor.zoom-rigid` | 开关 | 未实现 | — |
+| default monitor · default_monitor | `cursor.default-monitor` | 文本输入 | 未实现 | — |
+| Using Hyprcursor theme · enable_hyprcursor | `cursor.enable-hyprcursor` | 开关 | 未实现 | — |
+| Hide cursor on key press · hide_on_key_press | `cursor.hide-on-key-press` | 开关 | 未实现 | — |
+| hide on tablet · hide_on_tablet | `cursor.hide-on-tablet` | 开关 | 未实现 | — |
+| hide on touch · hide_on_touch | `cursor.hide-on-touch` | 开关 | 未实现 | — |
+| hotspot padding · hotspot_padding | `cursor.hotspot-padding` | 滑块 | 未实现 | — |
+| Idle hidden cursor timeout · inactive_timeout | `cursor.inactive-timeout` | 滑块 | 未实现 | — |
+| invisible · invisible | `cursor.invisible` | 开关 | 未实现 | — |
+| min refresh rate · min_refresh_rate | `cursor.min-refresh-rate` | 滑块 | 未实现 | — |
+| no break fs vrr · no_break_fs_vrr | `cursor.no-break-fs-vrr` | 滑块 | 未实现 | — |
+| Disable hardware cursors · no_hardware_cursors | `cursor.no-hardware-cursors` | 滑块 | 未实现 | — |
+| Disable automatic pointer movement · no_warps | `cursor.no-warps` | 开关 | 未实现 | — |
+| persistent warps · persistent_warps | `cursor.persistent-warps` | 开关 | 未实现 | — |
+| sync gsettings theme · sync_gsettings_theme | `cursor.sync-gsettings-theme` | 开关 | 未实现 | — |
+| use cpu buffer · use_cpu_buffer | `cursor.use-cpu-buffer` | 滑块 | 未实现 | — |
+| warp back after non mouse input · warp_back_after_non_mouse_input | `cursor.warp-back-after-non-mouse-input` | 开关 | 未实现 | — |
+| warp on change workspace · warp_on_change_workspace | `cursor.warp-on-change-workspace` | 滑块 | 未实现 | — |
+| warp on monitor change · warp_on_monitor_change | `cursor.warp-on-monitor-change` | 滑块 | 未实现 | — |
+| warp on toggle special · warp_on_toggle_special | `cursor.warp-on-toggle-special` | 滑块 | 未实现 | — |
+| zoom detached camera · zoom_detached_camera | `cursor.zoom-detached-camera` | 开关 | 未实现 | — |
+| zoom disable aa · zoom_disable_aa | `cursor.zoom-disable-aa` | 开关 | 未实现 | — |
+| Cursor zoom factor · zoom_factor | `cursor.zoom-factor` | 滑块 | 未实现 | — |
+| Fixed zoom anchor point · zoom_rigid | `cursor.zoom-rigid` | 开关 | 未实现 | — |
 
 ### More — `system-more`
 
@@ -1700,74 +1698,120 @@ Wi-Fi、以太网与 VPN
 
 ### Network status — `network-status`
 
-连接信息、适配器与数据使用量
+连接详情与网络适配器
 
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+页面状态：**未实现**；条目：14；已实现 13 / 未实现 1 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：已通过 NetworkManager 实现；Data usage 未实现。
 
 Windows 参考入口：`ms-settings:network-status`。
 
-相关页面 ID：`network-properties`、`data-usage`、`network-advanced`。
+相关页面 ID：`ip-dns`、`network-advanced`。
 
-#### 设置
+#### Connection
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Connection status | `network-status.b639d60c` | 信息展示 | 未实现 | — |
-| Network name | `network-status.e290dbc9` | 信息展示 | 未实现 | — |
-| Network properties | `network-status.3854422a` | 操作 | 未实现 | — |
-| Data usage | `network-status.7d98a49a` | 操作 | 未实现 | — |
-| Advanced network settings | `network-status.b72985a7` | 操作 | 未实现 | — |
+| Connection status | `network-status.connection` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Network name | `network-status.name` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Current speed | `network-status.traffic` | 信息展示 | 已实现 | Rust 假后端；已安装应用实测 |
+| Connection type | `network-status.type` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| IPv4 address | `network-status.ipv4` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Gateway | `network-status.gateway` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| DNS servers | `network-status.dns` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| IPv6 address | `network-status.ipv6` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Link speed | `network-status.link-speed` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Hardware address | `network-status.hardware-address` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Sign in to this network | `network-status.sign-in` | 操作 | 已实现 | 仅桩验证（Rust 假后端与 `test/network_smoke.py`），按用户授权标记，未在真机切断当前网络测试 |
+| Data usage | `network-status.data-usage` | 操作 | 未实现 | — |
+
+#### Adapters
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Network adapters | `network-status.adapters` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+
+#### Advanced
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Virtual adapters | `network-status.virtual-adapters` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
 
 ### Wi-Fi — `wifi`
 
-无线网络、随机地址与自动连接
+无线网络与当前连接
 
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+页面状态：**已实现**；条目：8；已实现 8 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：已通过 NetworkManager 实现。
 
 Windows 参考入口：`ms-settings:network-wifi`。
 
-相关页面 ID：`known-networks`、`network-properties`。
-
-#### 设置
+#### Wi-Fi
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Wi-Fi | `wifi.780ff71c` | 开关 | 未实现 | — |
-| Show available networks | `wifi.3df9da60` | 操作 | 未实现 | — |
-| Managing known networks | `wifi.f64d0727` | 操作 | 未实现 | — |
-| Random hardware address | `wifi.ad560280` | 开关 | 未实现 | — |
-| Current network properties | `wifi.1a8098ed` | 操作 | 未实现 | — |
+| Wi-Fi | `wifi.enabled` | 开关 | 已实现 | 仅桩验证（Rust 假后端与 `test/network_smoke.py`），按用户授权标记，未在真机切断当前网络测试 |
+| Adapter | `wifi.adapter` | 选择 | 已实现 | 仅桩验证（Rust 假后端与 `test/network_smoke.py`），按用户授权标记，未在真机切断当前网络测试 |
 
-#### Windows 参考细项
+#### Current connection
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Random hardware addresses | `wifi.reference.cc052043` | 开关 | 未实现 | — |
+| Current network | `wifi.current` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Disconnect | `wifi.disconnect` | 操作 | 已实现 | 仅桩验证（Rust 假后端与 `test/network_smoke.py`），按用户授权标记，未在真机切断当前网络测试 |
 
-### Managing known networks — `known-networks`
+#### Available networks
 
-保存的网络与连接偏好
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Available networks | `wifi.networks` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Refresh | `wifi.refresh` | 操作 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Connect | `wifi.connect` | 操作 | 已实现 | 仅桩验证（Rust 假后端与 `test/network_smoke.py`），按用户授权标记，未在真机切断当前网络测试 |
 
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+#### Saved networks
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Known networks | `wifi.known-networks` | 操作 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+
+### Known networks — `known-networks`
+
+已保存的网络与连接偏好
+
+页面状态：**未实现**；条目：13；已实现 11 / 未实现 2 / 不适用 0。
+
+原因：已通过 NetworkManager 实现；随机硬件地址和连接优先级未实现。
 
 Windows 参考入口：`ms-settings:network-wifisettings`。
 
-#### 设置
+#### Add a network
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Add network | `known-networks.2120e5bc` | 操作 | 未实现 | — |
-| Network name | `known-networks.e290dbc9` | 文本输入 | 未实现 | — |
-| Security type | `known-networks.2f201b69` | 选择 | 未实现 | — |
-| Automatic connection | `known-networks.a034ebdf` | 开关 | 未实现 | — |
-| Billing based on traffic flow | `known-networks.2bebdc73` | 开关 | 未实现 | — |
-| Forget about the Internet | `known-networks.3359a795` | 操作 | 未实现 | — |
+| Add network | `known-networks.add` | 操作 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Network name | `known-networks.name` | 文本输入 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Security type | `known-networks.security` | 选择 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Password | `known-networks.password` | 文本输入 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Hidden network | `known-networks.hidden` | 开关 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+
+#### Saved networks
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Search networks | `known-networks.search` | 文本输入 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Last connected | `known-networks.last-connected` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Connect automatically | `known-networks.autoconnect` | 开关 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Metered connection | `known-networks.metered` | 选择 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Random hardware address | `known-networks.mac` | 选择 | 未实现 | — |
+| Change password | `known-networks.change-password` | 操作 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Forget | `known-networks.forget` | 操作 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+
+#### Advanced
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Connection priority | `known-networks.priority` | 文本输入 | 未实现 | — |
 
 ### Ethernet — `ethernet`
 
@@ -1861,6 +1905,67 @@ Windows 参考入口：`ms-settings:network-airplanemode`、`ms-settings:proximi
 | Wi-Fi wireless devices | `airplane.3d2af662` | 开关 | 未实现 | — |
 | Bluetooth wireless devices | `airplane.ce637a87` | 开关 | 未实现 | — |
 
+### Proxy — `proxy`
+
+自动检测、脚本与手动代理
+
+页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+
+原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+
+Windows 参考入口：`ms-settings:network-proxy`。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Automatically detect settings | `proxy.22b15396` | 开关 | 未实现 | — |
+| Using setup scripts | `proxy.bcc75aea` | 开关 | 未实现 | — |
+| Script address | `proxy.58d46c1e` | 文本输入 | 未实现 | — |
+| Use a proxy server | `proxy.0727a1b1` | 开关 | 未实现 | — |
+| Proxy address | `proxy.903f8d36` | 文本输入 | 未实现 | — |
+| Port | `proxy.6cbb7335` | 文本输入 | 未实现 | — |
+| Bypass proxy address | `proxy.908eea6f` | 文本输入 | 未实现 | — |
+| Local address does not use proxy | `proxy.f87cf52b` | 开关 | 未实现 | — |
+
+### IP and DNS — `ip-dns`
+
+地址分配与名称解析
+
+页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+
+原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| IP allocation | `ip-dns.allocation` | 选择 | 未实现 | — |
+| IPv4 address | `ip-dns.ipv4` | 文本输入 | 未实现 | — |
+| Subnet prefix length | `ip-dns.prefix` | 文本输入 | 未实现 | — |
+| Gateway | `ip-dns.gateway` | 文本输入 | 未实现 | — |
+| Preferred DNS | `ip-dns.dns` | 文本输入 | 未实现 | — |
+| Backup DNS | `ip-dns.backup-dns` | 文本输入 | 未实现 | — |
+| DNS over HTTPS | `ip-dns.dns-over-https` | 开关 | 未实现 | — |
+
+### Data usage — `data-usage`
+
+时间范围、流量限额与应用用量
+
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+
+原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Time frame | `data-usage.2be90408` | 选择 | 未实现 | — |
+| Enter traffic limit | `data-usage.55685047` | 操作 | 未实现 | — |
+| Restriction types | `data-usage.45989fef` | 选择 | 未实现 | — |
+| Traffic restrictions | `data-usage.a4d31b25` | 文本输入 | 未实现 | — |
+| Reset statistics | `data-usage.800eddaf` | 操作 | 未实现 | — |
+
 ### Mobile networks — `cellular`
 
 SIM、流量、漫游与 APN
@@ -1892,70 +1997,11 @@ Windows 参考入口：`ms-settings:network-cellular`。
 | Data roaming options (dropdown) | `cellular.reference.120ca531` | 选择 | 未实现 | — |
 | Use cellular whenever Wi-Fi is poor | `cellular.reference.a4a32b75` | 开关 | 未实现 | — |
 
-### Proxy — `proxy`
-
-自动检测、脚本与手动代理
-
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:network-proxy`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Automatically detect settings | `proxy.22b15396` | 开关 | 未实现 | — |
-| Using setup scripts | `proxy.bcc75aea` | 开关 | 未实现 | — |
-| Script address | `proxy.58d46c1e` | 文本输入 | 未实现 | — |
-| Use a proxy server | `proxy.0727a1b1` | 开关 | 未实现 | — |
-| Proxy address | `proxy.903f8d36` | 文本输入 | 未实现 | — |
-| Port | `proxy.6cbb7335` | 文本输入 | 未实现 | — |
-| Bypass proxy address | `proxy.908eea6f` | 文本输入 | 未实现 | — |
-| Local address does not use proxy | `proxy.f87cf52b` | 开关 | 未实现 | — |
-
-### Dial-up — `dialup`
-
-旧式拨号连接参考
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:network-dialup`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Set up a new connection | `dialup.17b3e40b` | 操作 | 未实现 | — |
-| Dial numbers | `dialup.07f7d35b` | 文本输入 | 未实现 | — |
-| Username | `dialup.a1aaf352` | 文本输入 | 未实现 | — |
-| Password | `dialup.c839a8ff` | 文本输入 | 未实现 | — |
-
-### DirectAccess — `directaccess`
-
-Windows 企业远程访问参考
-
-页面状态：**不适用**；条目：2；已实现 0 / 未实现 0 / 不适用 2。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:network-directaccess`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Connection status | `directaccess.b639d60c` | 信息展示 | 不适用 | — |
-| Connection properties | `directaccess.73eb799f` | 操作 | 不适用 | — |
-
 ### Advanced network settings — `network-advanced`
 
 适配器、共享与网络重置
 
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1968,65 +2014,7 @@ Windows 参考入口：`ms-settings:network-advancedsettings`。
 | Network adapter | `network-advanced.f6baeffd` | 操作 | 未实现 | — |
 | Advanced sharing settings | `network-advanced.40e1a0e7` | 操作 | 未实现 | — |
 | Data usage | `network-advanced.7d98a49a` | 操作 | 未实现 | — |
-| Hardware and connection properties | `network-advanced.95f512ab` | 操作 | 未实现 | — |
 | Network reset | `network-advanced.bb3c0b53` | 操作 | 未实现 | — |
-
-### Network connection properties — `network-properties`
-
-地址分配、名称解析与链路信息
-
-页面状态：**未实现**；条目：9；已实现 0 / 未实现 9 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| IP allocation | `network-properties.0e517641` | 选择 | 未实现 | — |
-| IPv4 address | `network-properties.3aaacc78` | 文本输入 | 未实现 | — |
-| Subnet prefix length | `network-properties.73ef4bcd` | 文本输入 | 未实现 | — |
-| Gateway | `network-properties.86ab111e` | 文本输入 | 未实现 | — |
-| Preferred DNS | `network-properties.b10ffae1` | 文本输入 | 未实现 | — |
-| Backup DNS | `network-properties.ba1b830a` | 文本输入 | 未实现 | — |
-| DNS over HTTPS | `network-properties.90d50c67` | 开关 | 未实现 | — |
-| Link speed | `network-properties.ab79d605` | 信息展示 | 未实现 | — |
-| Hardware address | `network-properties.aaf3aebe` | 信息展示 | 未实现 | — |
-
-### Data usage — `data-usage`
-
-时间范围、流量限额与应用用量
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Time frame | `data-usage.2be90408` | 选择 | 未实现 | — |
-| Enter traffic limit | `data-usage.55685047` | 操作 | 未实现 | — |
-| Restriction types | `data-usage.45989fef` | 选择 | 未实现 | — |
-| Traffic restrictions | `data-usage.a4d31b25` | 文本输入 | 未实现 | — |
-| Reset statistics | `data-usage.800eddaf` | 操作 | 未实现 | — |
-
-### Wi-Fi configuration — `wifi-provisioning`
-
-配置文件安装参考
-
-页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:wifi-provisioning`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Import wireless network configuration | `wifi-provisioning.6473ace4` | 操作 | 未实现 | — |
-| Configuration file path | `wifi-provisioning.0b38bb02` | 文本输入 | 未实现 | — |
 
 <a id="category-appearance"></a>
 
@@ -2058,9 +2046,9 @@ Windows 参考入口：`ms-settings:personalization-background`。
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Video when covered | `background.video-pause` | 选择 | 已实现 | 见下文“Background, accent and fonts” |
-| Show splash text | `hypr-paper-misc-options.splash` | 开关 | 已实现 | 见下文“Background, accent and fonts” |
-| Splash offset | `hypr-paper-misc-options.splash-offset` | 滑块 | 已实现 | 见下文“Background, accent and fonts” |
-| Splash opacity | `hypr-paper-misc-options.splash-opacity` | 滑块 | 已实现 | 见下文“Background, accent and fonts” |
+| Show splash text | `background.splash` | 开关 | 已实现 | 见下文“Background, accent and fonts” |
+| Splash offset | `background.splash-offset` | 滑块 | 已实现 | 见下文“Background, accent and fonts” |
+| Splash opacity | `background.splash-opacity` | 滑块 | 已实现 | 见下文“Background, accent and fonts” |
 
 ### Colors and themes — `themes`
 
@@ -2077,10 +2065,10 @@ Windows 参考入口：`ms-settings:personalization-colors`、`ms-settings:color
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Dark theme | `themes.material-theme-mode` | 选择 | 已实现 | Rust GNOME/GTK Light/Dark and documented Qt Quick defaults via fish/Hyprland; Light/Dark icon buttons, backend target diagnostics hidden; see app-preferences.md and backend tests |
-| Accent color source | `colors.8983f367` | 选择 | 已实现 | 见下文“Background, accent and fonts” |
-| Accent Color | `colors.6f67371e` | 颜色 | 已实现 | 见下文“Background, accent and fonts” |
+| Accent color source | `themes.8983f367` | 选择 | 已实现 | 见下文“Background, accent and fonts” |
+| Accent Color | `themes.6f67371e` | 颜色 | 已实现 | 见下文“Background, accent and fonts” |
 | Material style variant | `themes.material-style-variant` | 选择 | 已实现 | App-only TOML persistence and runtime theme; Tonal spot default; see app-preferences.md and appearance tests |
-| Transparency effect | `colors.3630e7d0` | 开关 | 未实现 | — |
+| Transparency effect | `themes.3630e7d0` | 开关 | 未实现 | — |
 
 #### Themes
 
@@ -2096,7 +2084,7 @@ Windows 参考入口：`ms-settings:personalization-colors`、`ms-settings:color
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Transparency Effects | `colors.reference.ed936eee` | 开关 | 未实现 | — |
+| Transparency Effects | `themes.reference.ed936eee` | 开关 | 未实现 | — |
 | Themes | `themes.reference.94d5186b` | 选择 | 未实现 | — |
 
 ### Lock screen interface — `lockscreen`
@@ -4659,9 +4647,9 @@ Windows 参考入口：`ms-settings:windowsupdate`、`ms-settings:windowsupdate-
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Restart as soon as possible | `update-options.0a009ef6` | 开关 | 未实现 | — |
-| Notify me when a reboot is needed | `update-options.1439f298` | 开关 | 未实现 | — |
-| Activity time | `update-options.abe0ecdb` | 操作 | 未实现 | — |
+| Restart as soon as possible | `updates.0a009ef6` | 开关 | 未实现 | — |
+| Notify me when a reboot is needed | `updates.1439f298` | 开关 | 未实现 | — |
+| Activity time | `updates.abe0ecdb` | 操作 | 未实现 | — |
 
 ### Active hours — `active-hours`
 
@@ -5697,7 +5685,7 @@ Wayland、XDG、主题与应用环境 · Hyprland
 ## Background, accent and fonts (2026-11-02)
 
 - Background: images through hyprpaper configuration and IPC, videos through a managed mpvpaper user unit. Selected files are copied into the application directory and only the copy is referenced. Slideshow and solid color were removed by owner request; `hypr-wallpaper-outputs` and `hypr-paper-misc-options` now open Background.
-- Color and Themes merged into `themes` (`colors` opens it). Accent follows the background through `material-colors` (Celebi and Score) or a `flex_color_picker` choice. Pattern, taskbar and title-bar accent toggles, Quick Facts, Navigation bar, Equipment usage, Copilot key and Qt application pages were removed by owner request.
+- Color and Themes share the `themes` page. Accent follows the background through `material-colors` (Celebi and Score) or a `flex_color_picker` choice. Pattern, taskbar and title-bar accent toggles, Quick Facts, Navigation bar, Equipment usage, Copilot key and Qt application pages were removed by owner request.
 - Cursor settings moved unchanged to the System Cursor page, still unimplemented; feature-specific options such as touchpad cursor speed and magnifier following stay with their features.
 - Fonts: fontconfig list, search, details, install to and uninstall from the user font directory.
 - Automated: Rust unit tests with fake desktop and fontconfig (initialization, conflicts, both resolutions, rollback, copy cleanup, sampling failure), Flutter widget tests, and `test/interface_smoke.py` against the installed release with a previously built Bar, proving the unchanged `theme` contract.

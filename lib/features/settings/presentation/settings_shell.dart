@@ -48,7 +48,6 @@ class _SettingsShellState extends State<SettingsShell> {
   SettingsPageSpec? _page;
   String _query = '';
   bool _searchOpen = false;
-  bool _expandAdvanced = false;
 
   void _focusSearch() {
     setState(() => _searchOpen = true);
@@ -72,15 +71,6 @@ class _SettingsShellState extends State<SettingsShell> {
     if (const {'home', 'about', 'licenses'}.contains(target)) {
       _navigate(target);
     } else {
-      final advanced = const {
-        'advanced-display',
-        'update-options',
-        'hypr-paper-misc-options',
-      }.contains(target);
-      if (advanced != _expandAdvanced) {
-        // Navigation returns early when the page is already open.
-        setState(() => _expandAdvanced = advanced);
-      }
       _openPage(
         widget.catalog.page(target == 'system-information' ? 'about' : target),
       );
@@ -113,11 +103,6 @@ class _SettingsShellState extends State<SettingsShell> {
   }
 
   void _openPage(SettingsPageSpec page) => _navigate(page.category, page);
-
-  void _openFromUser(SettingsPageSpec page) {
-    _expandAdvanced = false;
-    _openPage(page);
-  }
 
   void _back() {
     if (_query.isNotEmpty) {
@@ -342,7 +327,7 @@ class _SettingsShellState extends State<SettingsShell> {
               category: widget.catalog.category(_category),
               pages: widget.catalog.inCategory(_category),
               selected: _page!.id,
-              onPage: _openFromUser,
+              onPage: _openPage,
             ),
           ],
         ],
@@ -407,7 +392,7 @@ class _SettingsShellState extends State<SettingsShell> {
                       ),
                       subtitle:
                           '${widget.catalog.category(page.category).title} · ${page.description}',
-                      onTap: () => _openFromUser(page),
+                      onTap: () => _openPage(page),
                     ),
                 ],
               ),
@@ -437,8 +422,7 @@ class _SettingsShellState extends State<SettingsShell> {
         catalog: widget.catalog,
         page: _page!,
         systemInformation: widget.systemInformation,
-        onPage: _openFromUser,
-        expandAdvanced: _expandAdvanced,
+        onPage: _openPage,
       );
     } else if (_category == 'home') {
       content = SettingsHome(catalog: widget.catalog, onCategory: _navigate);
@@ -453,7 +437,7 @@ class _SettingsShellState extends State<SettingsShell> {
     return SelectionArea(
       child: SingleChildScrollView(
         key: ValueKey(
-          'content-$_category-${_page?.id}-${_query.trim().isNotEmpty}-$_expandAdvanced',
+          'content-$_category-${_page?.id}-${_query.trim().isNotEmpty}',
         ),
         child: Column(
           crossAxisAlignment: .stretch,

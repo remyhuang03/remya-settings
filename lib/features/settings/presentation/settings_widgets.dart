@@ -46,15 +46,16 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'audio-output' || 'sound-devices' => Icons.speaker_outlined,
       'notifications' => Icons.notifications_none_rounded,
       'focus' || 'quiet-schedule' => Icons.do_not_disturb_on_outlined,
-      'themes' || 'colors' => Icons.palette_outlined,
-      'background' || 'hypr-wallpaper-outputs' => Icons.wallpaper_outlined,
+      'themes' => Icons.palette_outlined,
+      'background' => Icons.wallpaper_outlined,
       'fonts' || 'text-size' => Icons.text_fields_rounded,
       'bluetooth' => Icons.bluetooth_rounded,
       'printers' => Icons.print_outlined,
       'cameras' => Icons.camera_alt_outlined,
       'mouse' || 'pointer' || 'cursor' => Icons.mouse_outlined,
       'touchpad' => Icons.touch_app_outlined,
-      'wifi' || 'known-networks' => Icons.wifi_outlined,
+      'wifi' => Icons.wifi_outlined,
+      'known-networks' => Icons.bookmark_outline_rounded,
       'ethernet' => Icons.lan_outlined,
       'vpn' => Icons.vpn_lock_outlined,
       'lockscreen' ||
@@ -148,11 +149,9 @@ class AdvancedSection extends StatelessWidget {
   const AdvancedSection({
     super.key,
     required this.storageKey,
-    required this.expanded,
     required this.child,
   });
   final Key storageKey;
-  final bool expanded;
   final Widget child;
 
   static const _radius = BorderRadius.all(.circular(28));
@@ -169,7 +168,6 @@ class AdvancedSection extends StatelessWidget {
         clipBehavior: .antiAlias,
         child: ExpansionTile(
           key: storageKey,
-          initiallyExpanded: expanded,
           tilePadding: const .symmetric(horizontal: 20, vertical: 6),
           shape: shape,
           collapsedShape: shape,
