@@ -5,8 +5,10 @@ pub mod files;
 pub mod hyprland;
 pub mod manager;
 pub mod model;
+pub mod night_light;
 pub mod rules;
 
 pub use files::atomic_write;
 pub use hyprland::{Compositor, Hyprctl, Monitor, run_bytes};
 pub use manager::{DisplayManager, is_display_setting};
+pub use night_light::{NightLight, RealSunset, is_night_light_setting};

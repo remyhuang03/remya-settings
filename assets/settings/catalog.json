@@ -174,7 +174,7 @@
     },
     {
       "id": "hypr-sunset",
-      "title": "hyprsunset color temperature and gamma",
+      "title": "hyprsunset color temperature",
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprsunset.md"
     },
     {
@@ -410,7 +410,7 @@
       "description": "Arrangement, brightness, color, scale, resolution, and refresh rate",
       "preview": "display",
       "availability": "planned",
-      "reason": "Display controls work through Hyprland. Night light and Graphics are not implemented yet.",
+      "reason": "Display controls work through Hyprland. Graphics is not implemented yet.",
       "sources": [
         "uris",
         "hypr-monitors"
@@ -500,8 +500,8 @@
               "id": "display.e32be03e",
               "title": "Night light",
               "type": "action",
-              "availability": "planned",
-              "reason": "Opens the Night light page; its controls are not implemented yet.",
+              "availability": "available",
+              "reason": "Opens the Night light page.",
               "value": "Open"
             }
           ]
@@ -823,9 +823,10 @@
       "description": "Warm color display and time arrangement",
       "preview": "none",
       "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "reason": "Night light and fixed-hours scheduling use hyprsunset. Sunset to sunrise is not implemented yet.",
       "sources": [
-        "uris"
+        "uris",
+        "hypr-sunset"
       ],
       "windowsUris": [
         "ms-settings:nightlight"
@@ -838,27 +839,27 @@
               "id": "night-light.e32be03e",
               "title": "Night light",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses hyprsunset through the Settings service.",
               "value": false
             },
             {
-              "id": "night-light.2fa4c751",
-              "title": "Strength",
+              "id": "night-light.temperature",
+              "title": "Color temperature",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
+              "availability": "available",
+              "reason": "Uses hyprsunset through the Settings service.",
+              "value": 2600,
+              "min": 1000,
+              "max": 6500,
+              "unit": "K"
             },
             {
               "id": "night-light.7e6239c9",
-              "title": "Schedule night mode",
+              "title": "Schedule",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses hyprsunset through the Settings service.",
               "value": false
             },
             {
@@ -866,27 +867,27 @@
               "title": "Timing",
               "type": "choice",
               "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "reason": "Sunset to sunrise is not implemented yet; the schedule uses set hours.",
               "options": [
                 "Sunset to sunrise",
                 "Set hours"
               ],
-              "value": "Sunset to sunrise"
+              "value": "Set hours"
             },
             {
               "id": "night-light.e8868af6",
               "title": "Start time",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses hyprsunset through the Settings service.",
               "value": ""
             },
             {
               "id": "night-light.a0bb9f49",
               "title": "End time",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses hyprsunset through the Settings service.",
               "value": ""
             }
           ]
@@ -23642,126 +23643,6 @@
                 "hypr-lock",
                 "Label",
                 "valign"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-sunset-configuration",
-      "category": "appearance",
-      "title": "Hyprsunset color temperature · General configuration",
-      "description": "Component parameters classified according to official documents · Optional component hyprsunset",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; the optional component hyprsunset setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-sunset"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "General configuration",
-          "controls": [
-            {
-              "id": "hypr-sunset-configuration.max-gamma",
-              "title": "Gamma upper limit · max-gamma",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprsunset setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "100",
-              "referencePath": [
-                "hypr-sunset",
-                "Configuration",
-                "max-gamma"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-sunset-profile",
-      "category": "appearance",
-      "title": "Hyprsunset color temperature · Schedules",
-      "description": "Component parameters classified according to official documents · Optional component hyprsunset",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; the optional component hyprsunset setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-sunset"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Time plan",
-          "controls": [
-            {
-              "id": "hypr-sunset-profile.time",
-              "title": "Switching time · time",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprsunset setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "00:00",
-              "referencePath": [
-                "hypr-sunset",
-                "Profile",
-                "time"
-              ]
-            },
-            {
-              "id": "hypr-sunset-profile.temperature",
-              "title": "color temperature · temperature",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprsunset setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "6000",
-              "referencePath": [
-                "hypr-sunset",
-                "Profile",
-                "temperature"
-              ]
-            },
-            {
-              "id": "hypr-sunset-profile.gamma",
-              "title": "Gamma brightness · gamma",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprsunset setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "1.0",
-              "referencePath": [
-                "hypr-sunset",
-                "Profile",
-                "gamma"
-              ]
-            },
-            {
-              "id": "hypr-sunset-profile.identity",
-              "title": "Disable color temperature changes · identity",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprsunset setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-sunset",
-                "Profile",
-                "identity"
-              ]
-            },
-            {
-              "id": "hypr-sunset-profile.on-switch",
-              "title": "Switch command · on-switch",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprsunset setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-sunset",
-                "Profile",
-                "on-switch"
               ]
             }
           ]

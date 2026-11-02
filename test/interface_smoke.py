@@ -61,6 +61,17 @@ def default_apps_fixtures(environment):
     (config / 'mimeapps.list').write_text('[Default Applications]\napplication/x-remya-smoke=remya-smoke-a.desktop;\n')
 
 
+def night_light_checks():
+    # Isolated XDG roots do not isolate the user's systemd, so only paths that cannot
+    # restart hyprsunset run here; writes are covered by the Rust tests and on the desktop.
+    state = cli('get', 'night-light')
+    assert state == dbus('Get', 'night-light')
+    assert state['conflict'] is False and state['temperature'] == 6000
+    for bad in ('999', 'warm'):
+        assert 'InvalidArgument' in cli('set', 'night-light.temperature', bad, ok=False)
+    assert 'Unavailable' in cli('set', 'night-light.50840111', 'Set hours', ok=False)
+
+
 def default_apps_checks():
     mime = 'application/x-remya-smoke'
     setting = 'defaults.b131ac5a'
@@ -176,6 +187,7 @@ def session_checks():
         pid = service_pid()
         assert initial == dbus('Get', 'theme')
         default_apps_checks()
+        night_light_checks()
         installed_apps_checks()
         # Read-only here: test/network_smoke.py exercises writes on a private stub.
         assert set(cli('get', 'network')) == set(dbus('Get', 'network'))

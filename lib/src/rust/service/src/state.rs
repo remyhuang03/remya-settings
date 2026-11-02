@@ -7,7 +7,10 @@ use remya_settings_background::{
 };
 use remya_settings_date_time::api as clock;
 use remya_settings_default_apps::{self as default_apps, DefaultApps};
-use remya_settings_display::{DisplayManager, Hyprctl, atomic_write, is_display_setting};
+use remya_settings_display::{
+    DisplayManager, Hyprctl, NightLight, RealSunset, atomic_write, is_display_setting,
+    is_night_light_setting,
+};
 use remya_settings_fonts::{self as fonts, FontManager, RealFontconfig};
 use remya_settings_network::{NetworkManager, is_network_setting};
 use remya_settings_system_information::hostname::{self, HostnameManager};
@@ -162,6 +165,7 @@ pub struct State {
     pub theme_error: Option<String>,
     pub date_error: Option<String>,
     pub display: DisplayManager<Hyprctl>,
+    pub night_light: NightLight<RealSunset>,
     pub background: BackgroundManager<RealDesktop>,
     fonts: FontManager<RealFontconfig>,
     pub default_apps: DefaultApps<default_apps::RealDesktop>,
@@ -188,6 +192,11 @@ impl State {
                 Hyprctl,
                 hypr_config_dir(),
                 config.with_file_name("display.toml"),
+            ),
+            night_light: NightLight::new(
+                RealSunset,
+                hypr_config_dir().join("hyprsunset.conf"),
+                config.with_file_name("night-light.toml"),
             ),
             background: BackgroundManager::new(RealDesktop, background_paths(&config)),
             fonts: FontManager::new(
@@ -224,6 +233,7 @@ impl State {
         // A detection failure is retained by the manager and reported in its state.
         let _ = self.display.refresh();
         // Failures stay in the manager's state for every reader.
+        let _ = self.night_light.refresh();
         let _ = self.background.refresh();
     }
     fn refresh_theme(&mut self) -> Result<(), String> {
@@ -368,7 +378,7 @@ impl State {
     pub fn configuration(&self) -> Value {
         let mut date = self.date.clone();
         date["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
-        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"network":self.network.state()})
+        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"network":self.network.state()})
     }
     pub fn controls(&self) -> Vec<&Value> {
         self.catalog["pages"]
@@ -441,6 +451,25 @@ impl State {
                             "reason": control["reason"],
                             "value": self.display.setting_value(key),
                             "error": self.display.error(),
+                        }))
+                    }
+                    "night-light" => {
+                        let _ = self.night_light.refresh();
+                        Ok(self.night_light.state())
+                    }
+                    _ if is_night_light_setting(key) => {
+                        let _ = self.night_light.refresh();
+                        let control = self
+                            .controls()
+                            .into_iter()
+                            .find(|c| c["id"] == key)
+                            .ok_or_else(|| invalid("Unknown setting"))?;
+                        Ok(json!({
+                            "id": key,
+                            "availability": control["availability"],
+                            "reason": control["reason"],
+                            "value": self.night_light.setting_value(key),
+                            "error": self.night_light.state()["error"],
                         }))
                     }
                     "background" => {
@@ -749,6 +778,9 @@ impl State {
         if is_display_setting(key) {
             return self.display.set(key, value);
         }
+        if is_night_light_setting(key) {
+            return self.night_light.set(key, value);
+        }
         if is_background_setting(key) {
             return self.background.set(key, value);
         }
@@ -889,6 +921,10 @@ impl State {
         }
         if feature == "display" {
             self.display.resolve(source)?;
+            return Ok(self.configuration());
+        }
+        if feature == "night-light" {
+            self.night_light.resolve(source)?;
             return Ok(self.configuration());
         }
         if feature == "background" {
@@ -1078,7 +1114,7 @@ mod tests {
         assert!(state.execute("Get", &["unknown".into()]).is_err());
         assert!(
             state
-                .execute("Set", &["night-light.e32be03e".into(), "true".into()])
+                .execute("Set", &["night-light.50840111".into(), "Set hours".into()])
                 .unwrap_err()
                 .starts_with("Unavailable:")
         );

@@ -131,6 +131,15 @@ fn run() -> Result<(), String> {
                     signal(&bus, "hostname", &hostname);
                     if method == "Reload"
                         || args.first().is_some_and(|id| {
+                            id == "night-light"
+                                || remya_settings_display::is_night_light_setting(id)
+                        })
+                    {
+                        let night_light = state.lock().unwrap().night_light.state();
+                        signal(&bus, "night-light", &night_light);
+                    }
+                    if method == "Reload"
+                        || args.first().is_some_and(|id| {
                             id == "network" || remya_settings_network::is_network_setting(id)
                         })
                     {
@@ -239,7 +248,11 @@ fn run() -> Result<(), String> {
                 let errors = s.theme_error.clone();
                 let accent = s.background.accent_state();
                 let network = s.network.state();
+                let night_light = s.night_light.state();
                 s.refresh();
+                if s.night_light.state() != night_light {
+                    signal(&bus, "night-light", &s.night_light.state());
+                }
                 if s.network.state() != network {
                     signal(&bus, "network", &s.network.state());
                 }

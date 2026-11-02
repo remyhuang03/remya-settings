@@ -166,7 +166,7 @@
     "display.34d8396d",
     "display.2d80c2c4",
     "night-light.e32be03e",
-    "night-light.2fa4c751",
+    "night-light.temperature",
     "night-light.7e6239c9",
     "night-light.50840111",
     "night-light.e8868af6",
@@ -1514,8 +1514,6 @@
     "hypr-lock-shape",
     "hypr-lock-input-field",
     "hypr-lock-label",
-    "hypr-sunset-configuration",
-    "hypr-sunset-profile",
     "hypr-layout-overview",
     "hypr-layout-monocle",
     "hypr-workspaces",
@@ -9829,90 +9827,6 @@
       ],
       "nativeType": "string",
       "documentedDefault": "`center`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-sunset-configuration.max-gamma",
-      "page": "hypr-sunset-configuration",
-      "source": "hypr-sunset",
-      "key": "max-gamma",
-      "reference": [
-        "hypr-sunset",
-        "Configuration",
-        "max-gamma"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`100`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-sunset-profile.time",
-      "page": "hypr-sunset-profile",
-      "source": "hypr-sunset",
-      "key": "time",
-      "reference": [
-        "hypr-sunset",
-        "Profile",
-        "time"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`00:00`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-sunset-profile.temperature",
-      "page": "hypr-sunset-profile",
-      "source": "hypr-sunset",
-      "key": "temperature",
-      "reference": [
-        "hypr-sunset",
-        "Profile",
-        "temperature"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`6000`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-sunset-profile.gamma",
-      "page": "hypr-sunset-profile",
-      "source": "hypr-sunset",
-      "key": "gamma",
-      "reference": [
-        "hypr-sunset",
-        "Profile",
-        "gamma"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-sunset-profile.identity",
-      "page": "hypr-sunset-profile",
-      "source": "hypr-sunset",
-      "key": "identity",
-      "reference": [
-        "hypr-sunset",
-        "Profile",
-        "identity"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-sunset-profile.on-switch",
-      "page": "hypr-sunset-profile",
-      "source": "hypr-sunset",
-      "key": "on-switch",
-      "reference": [
-        "hypr-sunset",
-        "Profile",
-        "on-switch"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
       "documentedLimits": ""
     },
     {
