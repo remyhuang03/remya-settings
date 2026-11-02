@@ -679,6 +679,41 @@ Uninstall JSON is `{"id":"org.example.App.desktop","token":"<observed-version>"}
 
 The private helper's typed Uninstall request contains only an ID and token; it verifies package ownership itself and never accepts arbitrary privileged paths or commands.
 
+## AppImages
+
+See [AppImages](appimages.md) for the folder, sources, update and safety rules.
+
+| CLI | D-Bus | Result |
+| --- | --- | --- |
+| `get appimages` | `Get("appimages")` | `api_version`, `directory`, `auto_check`, `auto_update`, `last_check`, `installing` file names, `error`, and `apps` |
+| `get <appimages-setting-id>` | `Get(id)` | `id`, `availability`, toggle `value` and the full `state` |
+| `set appimages.install <absolute-path>` | `Set(id, path)` | `{"installing":"<file>"}`; the result arrives through `installing` and `error` |
+| `install-appimage <path>` | `Set("appimages.install", absolute)` then `Open("appimages")` | Same, for the file-manager handler |
+| `set appimages.check <id or all>` | `Set(id, value)` | `{"started":[ids]}`; `all` checks apps whose updates are on |
+| `set appimages.update <id or all>` | `Set(id, value)` | `{"started":[ids]}`; checks, then downloads and installs only when newer |
+| `set appimages.cancel <id>` | `Set(id, value)` | `{"cancelling":"<id>"}` |
+| `set appimages.source <json>` | `Set(id, json)` | `{"id":"<id>"}`. JSON is `{"id","source":null or string,"updates":bool}`; `null` restores the published source |
+| `set appimages.integrate <id>` | `Set(id, value)` | `{"integrated":"<id>"}` after the launcher is written |
+| `set appimages.open <id>` | `Set(id, value)` | `{"opened":"<id>","pid":n}` |
+| `set appimages.uninstall <id>` | `Set(id, value)` | `{"removed":"<id>"}` after Trash and launcher cleanup |
+| `set appimages.auto-check <true/false>` | `Set(id, value)` | `{"id","value"}` |
+| `set appimages.auto-update <true/false>` | `Set(id, value)` | `{"id","value"}` |
+
+Each `apps` entry has these fields:
+
+- `id`: the file name;
+- `name`, `icon` and `version`: from the launcher, or `null`;
+- `path` and `size`;
+- `integrated`;
+- `source` and `source_origin` (`custom`, `embedded` or `desktop`), or `null`;
+- `updates`;
+- `job`: `null`, or `{status, bytes, total, speed}`;
+- `checked`;
+- `available`: `null`, or `{version, size}`;
+- `error`.
+
+Checks, updates and installs run on service worker threads, so `Set` returns as soon as the job is accepted. While anything changes, `Changed("appimages", state)` is published at most once a second. Unknown IDs, relative or non-AppImage paths, non-https sources and busy apps are rejected. `Get` never starts network work. The Dart `AppImagesClient` exposes read and source writes; other operations use `Set` with the exported setting IDs.
+
 ## External input-method configuration
 
 Time & language > More contains only detected configuration tools. `get input-method-tools`

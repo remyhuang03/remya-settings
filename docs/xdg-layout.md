@@ -20,9 +20,11 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Default application snapshot | `default-apps.toml` beside `config.toml` (debug: repository `config/`) |
 | Network preference snapshot | `network.toml` beside `config.toml` (debug: repository `config/`) |
 | XDG default associations | GIO-managed `mimeapps.list` with standard desktop-specific/config/data precedence |
+| AppImage preferences | `appimages.toml` beside `config.toml` (debug: repository `config/`) |
+| AppImage folder | `$HOME/AppImages/`; launchers in `$XDG_DATA_HOME/applications/`, icons in `$XDG_DATA_HOME/icons/` |
 | Installed fonts | `$XDG_DATA_HOME/fonts/` |
 | Installed bundles | `$XDG_DATA_HOME/remya/remya_settings/` and `remya_bar/` |
-| Desktop entries | `$XDG_DATA_HOME/applications/top.remya.{settings,bar}.desktop` |
+| Desktop entries | `$XDG_DATA_HOME/applications/top.remya.{settings,bar}.desktop`, plus the hidden AppImage handler `top.remya.settings.appimage.desktop` |
 | Settings icon | `$XDG_DATA_HOME/icons/hicolor/scalable/apps/top.remya.settings.svg` |
 | D-Bus activation | `$XDG_DATA_HOME/dbus-1/services/top.remya.settings.Service1.service` |
 | User commands | `$HOME/.local/bin/remya_settings` and `remya_bar` |

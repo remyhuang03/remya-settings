@@ -19,7 +19,7 @@ A global system settings application for **Hyprland on Linux**, built with **Flu
 Settings combines a Windows 11-inspired hierarchy with native Linux and Hyprland backend integrations, reconciled with host state via Rust:
 
 - **Appearance**: Wallpaper management (`hyprpaper` images & `mpvpaper` videos), dynamic Material accent color extraction, Fontconfig font manager, and synchronized Light/Dark switching for GNOME/GTK and Qt Quick.
-- **Apps**: XDG default MIME associations (`mimeapps.list`), installed desktop applications inventory with guarded pacman/flatpak uninstallation, and detected external configuration tools under More.
+- **Apps**: XDG default MIME associations (`mimeapps.list`), installed desktop applications inventory with guarded pacman/flatpak uninstallation, an AppImage library with zsync delta updates and live progress, and detected external configuration tools under More.
 - **Display**: Hyprland monitor arrangement, resolution, scaling, rotation, HDR, backlight brightness (`logind` / `ddcutil`), and safe atomic persistence to `monitors.lua` with a keep-or-revert countdown timer.
 - **Night light**: Color temperature, on/off and fixed-hours schedule through `hyprsunset`.
 - **Network**: Real-time connection status, Wi-Fi radio power toggle, access point scanning, connection handling, and saved NetworkManager profiles.
