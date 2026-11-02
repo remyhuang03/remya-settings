@@ -10,6 +10,7 @@ import 'features/background/application/background_controller.dart';
 import 'features/fonts/application/fonts_controller.dart';
 import 'features/date_time/application/date_time_controller.dart';
 import 'features/display/application/display_controller.dart';
+import 'features/night_light/application/night_light_controller.dart';
 import 'features/integration/settings_status.dart';
 import 'features/integration/settings_scheduler.dart';
 import 'features/appearance/application/app_preferences_controller.dart';
@@ -27,6 +28,7 @@ class RemyaSettingsApp extends StatefulWidget {
     this.navigation,
     this.dateTime,
     this.display,
+    this.nightLight,
     this.scheduler,
     this.systemInformation,
     this.hostname,
@@ -44,6 +46,7 @@ class RemyaSettingsApp extends StatefulWidget {
   final AppPreferencesController? preferences;
   final DateTimeController? dateTime;
   final DisplayController? display;
+  final NightLightController? nightLight;
   final SettingsScheduler? scheduler;
   final SystemInformationReader? systemInformation;
   final HostnameController? hostname;
@@ -69,6 +72,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     _preferences.dispose();
     widget.dateTime?.dispose();
     widget.display?.dispose();
+    widget.nightLight?.dispose();
     widget.hostname?.dispose();
     widget.background?.dispose();
     widget.fonts?.dispose();
@@ -135,6 +139,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
                   preferences: _preferences,
                   dateTime: widget.dateTime,
                   display: widget.display,
+                  nightLight: widget.nightLight,
                   background: widget.background,
                   defaultApps: widget.defaultApps,
                   network: widget.network,
@@ -151,9 +156,15 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     final withDisplay = widget.display == null
         ? withHostname
         : DisplayScope(controller: widget.display!, child: withHostname);
-    final withBackground = widget.background == null
+    final withNightLight = widget.nightLight == null
         ? withDisplay
-        : BackgroundScope(controller: widget.background!, child: withDisplay);
+        : NightLightScope(controller: widget.nightLight!, child: withDisplay);
+    final withBackground = widget.background == null
+        ? withNightLight
+        : BackgroundScope(
+            controller: widget.background!,
+            child: withNightLight,
+          );
     final withFonts = widget.fonts == null
         ? withBackground
         : FontsScope(controller: widget.fonts!, child: withBackground);

@@ -14,6 +14,7 @@ import 'features/background/application/background_controller.dart';
 import 'features/display/application/display_controller.dart';
 import 'features/fonts/application/fonts_controller.dart';
 import 'features/integration/settings_scheduler.dart';
+import 'features/night_light/application/night_light_controller.dart';
 import 'app.dart';
 import 'features/integration/service_controllers.dart';
 
@@ -41,6 +42,11 @@ Future<void> main() async {
   final preferences = ServicePreferencesController(client);
   final dateTime = ServiceDateTimeController(client);
   final display = DisplayController(ServiceDisplayBackend(client));
+  final nightLight = NightLightController(
+    read: () => client.call('Get', ['night-light']),
+    write: (id, value) => client.call('Set', [id, value]),
+    resolve: (source) => client.call('Resolve', ['night-light', source]),
+  );
   final hostname = HostnameController(
     read: client.readHostname,
     renameName: client.renameHostname,
@@ -82,6 +88,7 @@ Future<void> main() async {
     preferences.reload,
     dateTime.reload,
     display.reload,
+    nightLight.reload,
     hostname.reload,
     background.reload,
     network.reload,
@@ -91,6 +98,7 @@ Future<void> main() async {
       preferences: preferences,
       dateTime: dateTime,
       display: display,
+      nightLight: nightLight,
       hostname: hostname,
       background: background,
       fonts: fonts,
@@ -133,6 +141,8 @@ Future<void> main() async {
         hostname.reload();
       case 'display':
         display.reload();
+      case 'night-light':
+        nightLight.apply(change.value);
     }
   }); // The native runner forwards the initial page separately from VM arguments.
   final page = await const MethodChannel('top.remya.paths')

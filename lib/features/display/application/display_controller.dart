@@ -255,6 +255,9 @@ class DisplayController extends ChangeNotifier {
   Future<void>? _brightnessWrite;
 
   bool get hasConflict => outputs.any((o) => o.conflictFields.isNotEmpty);
+  bool get hdrActive => outputs.any(
+    (o) => o.inLayout && const {'hdr', 'hdredid'}.contains(o.values['cm']),
+  );
   bool get canEdit => writeBlocked == null && pending == null;
 
   DisplayOutput? get selected =>

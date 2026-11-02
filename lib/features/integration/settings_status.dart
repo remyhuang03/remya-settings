@@ -9,6 +9,7 @@ import '../background/application/background_controller.dart';
 import '../date_time/application/date_time_controller.dart';
 import '../display/application/display_controller.dart';
 import '../display/presentation/display_settings.dart';
+import '../night_light/application/night_light_controller.dart';
 
 class SettingsStatus extends StatelessWidget {
   const SettingsStatus({
@@ -16,6 +17,7 @@ class SettingsStatus extends StatelessWidget {
     required this.preferences,
     this.dateTime,
     this.display,
+    this.nightLight,
     this.background,
     this.defaultApps,
     this.network,
@@ -27,6 +29,7 @@ class SettingsStatus extends StatelessWidget {
   final NetworkController? network;
   final DateTimeController? dateTime;
   final DisplayController? display;
+  final NightLightController? nightLight;
   final GlobalKey<NavigatorState>? navigatorKey;
 
   @override
@@ -35,6 +38,7 @@ class SettingsStatus extends StatelessWidget {
       preferences,
       dateTime,
       display,
+      nightLight,
       background,
       defaultApps,
       network,
@@ -97,6 +101,24 @@ class SettingsStatus extends StatelessWidget {
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
                   title: 'Default apps: $message',
+                  busy: controller.isBusy,
+                  useSystem: controller.reload,
+                ),
+            ],
+            if (nightLight case final controller?) ...[
+              if (controller.hasConflict)
+                _ConflictWarning(
+                  navigatorKey: navigatorKey,
+                  title:
+                      'Night light differs from saved Settings.\n${controller.conflictSummary}',
+                  busy: controller.isBusy,
+                  useSystem: controller.useSystemConfiguration,
+                  useSettings: controller.applySavedConfiguration,
+                ),
+              if (controller.errorMessage case final message?)
+                _ConflictWarning(
+                  navigatorKey: navigatorKey,
+                  title: 'Night light: $message',
                   busy: controller.isBusy,
                   useSystem: controller.reload,
                 ),

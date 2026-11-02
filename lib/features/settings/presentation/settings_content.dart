@@ -4,6 +4,9 @@ import '../../system_information/presentation/system_information_page.dart';
 
 import 'package:material_ui/material_ui.dart';
 
+import '../../night_light/application/night_light_controller.dart';
+import '../../night_light/presentation/night_light_page.dart';
+
 import '../../background/application/background_controller.dart';
 import '../../background/presentation/background_page.dart';
 import '../../date_time/application/date_time_controller.dart';
@@ -191,6 +194,15 @@ class SettingsDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     if (page.id == 'about') {
       return SystemInformationPage(page: page, read: systemInformation);
+    }
+    if (page.id == 'night-light') {
+      if (NightLightScope.maybeOf(context) case final controller?) {
+        return NightLightPage(
+          page: page,
+          controller: controller,
+          hdrActive: DisplayScope.maybeOf(context)?.hdrActive ?? false,
+        );
+      }
     }
     if (page.id == 'background') {
       if (BackgroundScope.maybeOf(context) case final controller?) {
