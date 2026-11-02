@@ -1,4 +1,5 @@
 import '../default_apps/application/default_apps_controller.dart';
+import '../network/application/network_controller.dart';
 import '../system_information/application/hostname_controller.dart';
 
 import 'package:material_ui/material_ui.dart';
@@ -17,11 +18,13 @@ class SettingsStatus extends StatelessWidget {
     this.display,
     this.background,
     this.defaultApps,
+    this.network,
     this.navigatorKey,
   });
   final AppPreferencesController preferences;
   final BackgroundController? background;
   final DefaultAppsController? defaultApps;
+  final NetworkController? network;
   final DateTimeController? dateTime;
   final DisplayController? display;
   final GlobalKey<NavigatorState>? navigatorKey;
@@ -34,6 +37,7 @@ class SettingsStatus extends StatelessWidget {
       display,
       background,
       defaultApps,
+      network,
     ]),
     builder: (context, _) => ConstrainedBox(
       constraints: BoxConstraints(
@@ -93,6 +97,24 @@ class SettingsStatus extends StatelessWidget {
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
                   title: 'Default apps: $message',
+                  busy: controller.isBusy,
+                  useSystem: controller.reload,
+                ),
+            ],
+            if (network case final controller?) ...[
+              if (controller.hasConflict)
+                _ConflictWarning(
+                  navigatorKey: navigatorKey,
+                  title:
+                      'Saved network preferences differ from NetworkManager.\n${controller.conflictSummary}',
+                  busy: controller.isBusy,
+                  useSystem: controller.useSystemConfiguration,
+                  useSettings: controller.applySavedConfiguration,
+                ),
+              if (controller.errorMessage case final message?)
+                _ConflictWarning(
+                  navigatorKey: navigatorKey,
+                  title: 'Network: $message',
                   busy: controller.isBusy,
                   useSystem: controller.reload,
                 ),

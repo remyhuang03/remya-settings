@@ -1,5 +1,6 @@
 import 'features/applications/application/applications_controller.dart';
 import 'features/default_apps/application/default_apps_controller.dart';
+import 'features/network/application/network_controller.dart';
 import 'features/system_information/application/hostname_controller.dart';
 
 import 'dart:io';
@@ -69,6 +70,13 @@ Future<void> main() async {
     readExternalTools: client.readExternalTools,
     openExternalTool: client.openExternalTool,
   );
+  final network = NetworkController(
+    read: client.readNetwork,
+    write: (id, value) => client.call('Set', [id, value]),
+    resolve: client.resolveNetwork,
+    formatDate: client.formatCalendarDate,
+    readTraffic: client.readNetworkTraffic,
+  );
   final navigation = ValueNotifier<String?>(null);
   final scheduler = SettingsScheduler([
     preferences.reload,
@@ -76,6 +84,7 @@ Future<void> main() async {
     display.reload,
     hostname.reload,
     background.reload,
+    network.reload,
   ]);
   runApp(
     RemyaSettingsApp(
@@ -87,6 +96,7 @@ Future<void> main() async {
       fonts: fonts,
       defaultApps: defaultApps,
       applications: applications,
+      network: network,
       navigation: navigation,
       scheduler: scheduler,
       systemInformation: client.readSystemInformation,
@@ -115,6 +125,8 @@ Future<void> main() async {
         defaultApps.reload();
       case 'fonts':
         fonts.reload();
+      case 'network':
+        network.apply(change.value);
       case 'date-time':
         dateTime.reload();
       case 'hostname':

@@ -1,5 +1,6 @@
 import 'features/applications/application/applications_controller.dart';
 import 'features/default_apps/application/default_apps_controller.dart';
+import 'features/network/application/network_controller.dart';
 import 'features/system_information/application/hostname_controller.dart';
 
 import 'package:remya_settings_client/settings_contract.dart';
@@ -33,11 +34,13 @@ class RemyaSettingsApp extends StatefulWidget {
     this.fonts,
     this.defaultApps,
     this.applications,
+    this.network,
   });
   final BackgroundController? background;
   final FontsController? fonts;
   final DefaultAppsController? defaultApps;
   final ApplicationsController? applications;
+  final NetworkController? network;
   final AppPreferencesController? preferences;
   final DateTimeController? dateTime;
   final DisplayController? display;
@@ -71,6 +74,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     widget.fonts?.dispose();
     widget.defaultApps?.dispose();
     widget.applications?.dispose();
+    widget.network?.dispose();
     super.dispose();
   }
 
@@ -133,6 +137,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
                   display: widget.display,
                   background: widget.background,
                   defaultApps: widget.defaultApps,
+                  network: widget.network,
                 ),
               );
             },
@@ -161,8 +166,11 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
             controller: widget.applications!,
             child: withDefaultApps,
           );
-    return widget.dateTime == null
+    final withNetwork = widget.network == null
         ? withApplications
-        : DateTimeScope(controller: widget.dateTime!, child: withApplications);
+        : NetworkScope(controller: widget.network!, child: withApplications);
+    return widget.dateTime == null
+        ? withNetwork
+        : DateTimeScope(controller: widget.dateTime!, child: withNetwork);
   }
 }

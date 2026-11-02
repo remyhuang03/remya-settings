@@ -1,4 +1,8 @@
 import '../../applications/presentation/external_tools_page.dart';
+import '../../network/application/network_controller.dart';
+import '../../network/presentation/known_networks_page.dart';
+import '../../network/presentation/network_status_page.dart';
+import '../../network/presentation/wifi_page.dart';
 import '../../applications/application/applications_controller.dart';
 import '../../applications/presentation/installed_apps_page.dart';
 import '../../default_apps/application/default_apps_controller.dart';
@@ -411,6 +415,8 @@ class _SettingsShellState extends State<SettingsShell> {
             controller.readExternalTools(_page!.id.split('-more').first),
         open: controller.openExternalTool,
       );
+    } else if (_networkPage(_page) case final page?) {
+      content = page;
     } else if (_page?.id == 'defaults' &&
         DefaultAppsScope.maybeOf(context) != null) {
       content = DefaultAppsPage(
@@ -462,6 +468,27 @@ class _SettingsShellState extends State<SettingsShell> {
         ),
       ),
     );
+  }
+
+  Widget? _networkPage(SettingsPageSpec? page) {
+    final controller = NetworkScope.maybeOf(context);
+    if (page == null || controller == null) return null;
+    return switch (page.id) {
+      'network-status' => NetworkStatusPage(
+        controller: controller,
+        catalog: widget.catalog,
+        page: page,
+        onPage: _openPage,
+      ),
+      'wifi' => WifiPage(
+        controller: controller,
+        catalog: widget.catalog,
+        page: page,
+        onPage: _openPage,
+      ),
+      'known-networks' => KnownNetworksPage(controller: controller, page: page),
+      _ => null,
+    };
   }
 
   Widget _installedBody(ApplicationsController controller) {
