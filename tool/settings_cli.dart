@@ -7,6 +7,7 @@ import 'package:remya_settings_client/settings_contract.dart';
 const usage = '''Usage: remya_settings <command> [arguments]
   get <theme|system|system-information|hostname|display|display-brightness|background|accent|fonts|network|font-search:query|font:family|catalog|about|page:id|setting-id>  Read state or metadata
   set <setting-id> <value|->           Apply an available setting; - reads the value from stdin
+  install-appimage <path>            Install an AppImage and show its progress in Settings
   list                               List all controls and availability
   search <query>                     Search settings pages
   open [page-id|home|about|licenses|repository]   Open a page or repository
@@ -55,6 +56,18 @@ Future<void> main(List<String> arguments) async {
           );
         }
       }
+      return;
+    }
+    if (command == 'install-appimage') {
+      if (args.length != 1) {
+        throw ArgumentError('install-appimage takes one path');
+      }
+      // Relative paths come from a shell; the service only accepts absolute ones.
+      final path = File(args.single).absolute.path;
+      stdout.writeln(
+        jsonEncode(await client.call('Set', ['appimages.install', path])),
+      );
+      await client.call('Open', ['appimages']);
       return;
     }
     const methods = {

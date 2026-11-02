@@ -31,7 +31,7 @@ Settings combines a Windows 11-inspired hierarchy with native Linux and Hyprland
 
 Browse Home, 12 categories, 220 detail pages, and About; search settings locally, follow related pages, and inspect third-party licenses.
 
-- **Current Catalog**: 12 categories, 216 pages, 1,803 controls (129 available with real system backends, 1,640 planned previews, 34 unsupported).
+- **Current Catalog**: 12 categories, 217 pages, 1,813 controls (139 available with real system backends, 1,640 planned previews, 34 unsupported).
 - **Windows 11 Reference**: Covers 140 pages, 1,074 reference controls, 155 unique URI names from reference tables, and 335 hierarchy entries (247 leaf controls) in its backup catalog. See [research, sources, and limitations](docs/windows-settings-research.md).
 - **Hyprland Extensions**: Adds 2 categories, 83 pages, and 762 controls based on official configuration documentation and ecosystem tools. See [Hyprland sources and version limits](docs/hyprland-settings-research.md).
 - **Availability & Tracking**: Every setting declares availability (`available`, `planned`, or `unsupported`). Unavailable controls remain disabled while allowing navigation to preview pages; contextually inapplicable options are hidden automatically. See the [implementation progress checklist](docs/settings-implementation-progress.md).

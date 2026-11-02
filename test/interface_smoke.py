@@ -61,6 +61,82 @@ def default_apps_fixtures(environment):
     (config / 'mimeapps.list').write_text('[Default Applications]\napplication/x-remya-smoke=remya-smoke-a.desktop;\n')
 
 
+def appimage_fixture(home):
+    """A real release with damaged blocks, so the update must fetch a zsync delta."""
+    source = Path.home() / 'AppImages/GridCraft.AppImage'
+    target = home / 'Downloads %/Grid Craft.AppImage'
+    target.parent.mkdir()
+    data = bytearray(source.read_bytes())
+    data[len(data) // 2:len(data) // 2 + 65536] = bytes(65536)
+    target.write_bytes(data)
+    return target
+
+
+def appimages_wait(predicate, timeout=180):
+    deadline = time.monotonic() + timeout
+    seen = []
+    while time.monotonic() < deadline:
+        state = cli('get', 'appimages')
+        seen.append(state)
+        if predicate(state):
+            return state, seen
+        time.sleep(0.15)
+    raise AssertionError(('AppImage state did not settle', seen[-1]))
+
+
+def appimages_checks():
+    home = Path(os.environ['HOME'])
+    data = Path(os.environ['XDG_DATA_HOME'])
+    fixture = home / 'Downloads %/Grid Craft.AppImage'
+    assert 'InvalidArgument' in cli('set', 'appimages.install', 'relative.AppImage', ok=False)
+    assert 'InvalidArgument' in cli('set', 'appimages.install', str(home / 'hyprland.lua'), ok=False)
+    assert cli('install-appimage', str(fixture)) == {'installing': fixture.name}
+    state, _ = appimages_wait(lambda s: not s['installing'] and s['apps'])
+    assert state['error'] is None and fixture.exists(), state
+    app = state['apps'][0]
+    image = home / 'AppImages/GridCraft.AppImage'
+    assert app['id'] == image.name and app['integrated'] and app['source_origin'] == 'embedded', app
+    # Exec escapes the '%' in this HOME as '%%', so match the file name.
+    entries = [e for e in (data / 'applications').glob('*.desktop') if '/AppImages/GridCraft.AppImage' in e.read_text()]
+    assert len(entries) == 1, entries
+    subprocess.run(['desktop-file-validate', str(entries[0])], check=True)
+    assert 'Icon=' + str(data / 'icons') in entries[0].read_text()
+    assert cli('get', 'appimages') == dbus('Get', 'appimages')
+    assert 'InvalidArgument' in cli('set', 'appimages.uninstall', 'missing.AppImage', ok=False)
+    assert 'InvalidArgument' in cli('set', 'appimages.source', json.dumps({'id': app['id'], 'source': 'http://example.org/a.zsync', 'updates': True}), ok=False)
+    cli('set', 'appimages.source', json.dumps({'id': app['id'], 'source': 'https://github.com/storytold/gridcraft', 'updates': True}))
+    assert cli('get', 'appimages')['apps'][0]['source_origin'] == 'custom'
+    dbus('Set', 'appimages.source', json.dumps({'id': app['id'], 'source': None, 'updates': True}))
+    assert cli('get', 'appimages')['apps'][0]['source_origin'] == 'embedded'
+    monitor = subprocess.Popen(['gdbus', 'monitor', '--session', '--dest', BUS], stdout=subprocess.PIPE, text=True)
+    try:
+        assert cli('set', 'appimages.check', app['id']) == {'started': [app['id']]}
+        state, _ = appimages_wait(lambda s: s['apps'][0]['job'] is None)
+        assert state['apps'][0]['available'] and state['apps'][0]['error'] is None, state
+        assert dbus('Set', 'appimages.update', 'all') == {'started': [app['id']]}
+        state, seen = appimages_wait(lambda s: s['apps'][0]['job'] is None, timeout=900)
+    finally:
+        monitor.terminate()
+        signals = monitor.communicate(timeout=5)[0]
+    assert state['apps'][0]['error'] is None and state['apps'][0]['available'] is None, state
+    jobs = [s['apps'][0]['job'] for s in seen if s['apps'][0]['job']]
+    assert any(j['status'] == 'downloading' and 0 < j['bytes'] <= j['total'] for j in jobs), jobs
+    assert signals.count("'appimages'") >= 3, signals[-2000:]
+    # The re-check below compares the file with the release's published checksum.
+    assert os.access(image, os.X_OK)
+    assert not [p for p in image.parent.iterdir() if p.name.startswith('.')]
+    cli('set', 'appimages.check', 'all')
+    state, _ = appimages_wait(lambda s: s['apps'][0]['job'] is None)
+    assert state['apps'][0]['checked'] and not state['apps'][0]['available'] and state['last_check'] > 0, state
+    assert cli('set', 'appimages.auto-update', 'true') == {'id': 'appimages.auto-update', 'value': True}
+    assert 'InvalidArgument' in cli('set', 'appimages.auto-check', 'maybe', ok=False)
+    assert cli('set', 'appimages.uninstall', app['id']) == {'removed': app['id']}
+    assert not image.exists() and not entries[0].exists()
+    assert (data / 'Trash/files/GridCraft.AppImage').exists()
+    assert cli('get', 'appimages')['apps'] == []
+    print('PASS: AppImage install without execution, launcher, sources, zsync delta update with live progress signals, checksum readback, Trash removal and CLI/D-Bus parity', flush=True)
+
+
 def night_light_checks():
     # Isolated XDG roots do not isolate the user's systemd, so only paths that cannot
     # restart hyprsunset run here; writes are covered by the Rust tests and on the desktop.
@@ -189,6 +265,7 @@ def session_checks():
         default_apps_checks()
         night_light_checks()
         installed_apps_checks()
+        appimages_checks()
         # Read-only here: test/network_smoke.py exercises writes on a private stub.
         assert set(cli('get', 'network')) == set(dbus('Get', 'network'))
         assert cli('get', 'wifi.enabled')['availability'] == 'available'
@@ -403,11 +480,13 @@ def main():
         (home / 'hyprland.lua').write_text('-- Isolated appearance smoke-test entrypoint\n')
         subprocess.run([sys.executable, str(ROOT / 'tool/install.py')], env=environment, check=True)
         subprocess.run([sys.executable, str(ROOT.parent / 'remya_bar/tool/install.py')], env=environment, check=True)
-        subprocess.run(['desktop-file-validate', str(home / 'data $/applications/top.remya.settings.desktop')], check=True)
+        for entry in ('top.remya.settings', 'top.remya.settings.appimage'):
+            subprocess.run(['desktop-file-validate', str(home / f'data $/applications/{entry}.desktop')], check=True)
         default_apps_fixtures(environment)
         installed_apps_fixture(environment)
+        appimage_fixture(home)
         subprocess.run(['dbus-run-session', '--', sys.executable, str(Path(__file__).resolve()), '--session'],
-                       env=environment, check=True, timeout=100)
+                       env=environment, check=True, timeout=1200)
 
 
 if __name__ == '__main__':

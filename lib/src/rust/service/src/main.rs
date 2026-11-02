@@ -43,6 +43,7 @@ fn run() -> Result<(), String> {
             .join("remya/settings/config.toml")
     };
     let initial = state::State::new(config);
+    let appimages = initial.appimages.clone();
     let state = Arc::new(Mutex::new(initial));
     let xml = include_str!("../../../../../packages/remya_settings_client/api/settings1.xml");
     let info = gio::DBusNodeInfo::for_xml(xml)
@@ -219,6 +220,12 @@ fn run() -> Result<(), String> {
     let _network_subscriptions = events::watch_network(state.clone(), bus.clone());
     glib::timeout_add_seconds_local(1, move || {
         ticks += 1;
+        if appimages.take_dirty() {
+            signal(&poll_bus, "appimages", &appimages.state());
+        }
+        if ticks.is_multiple_of(60) {
+            appimages.auto_tick();
+        }
         let mut expired = false;
         if let Ok(mut state) = polling.try_lock() {
             state.reap_gui();

@@ -71,6 +71,10 @@ def install(root, environment):
     # env lets Gio validate the launcher before expanding literal %% in path arguments.
     entry = entry.replace(f"Exec={APP_ID}", f"Exec=/usr/bin/env {desktop_quote(destination / APP_ID)}")
     (applications / f"{PACKAGE}.desktop").write_text(entry)
+    # Separate hidden entry: opening a file must not change how the main launcher behaves.
+    handler = (root / f"linux/packaging/{PACKAGE}.appimage.desktop").read_text()
+    handler = handler.replace(f"Exec={APP_ID}", f"Exec=/usr/bin/env {desktop_quote(destination / APP_ID)}")
+    (applications / f"{PACKAGE}.appimage.desktop").write_text(handler)
     icons = data / "icons/hicolor/scalable/apps"
     icons.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(root / "assets/icons/settings.svg", icons / f"{PACKAGE}.svg")

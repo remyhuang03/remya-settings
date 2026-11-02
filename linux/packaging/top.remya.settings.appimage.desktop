@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Install AppImage
+Comment=Install an AppImage with Remy'a Settings
+Exec=remya_settings install-appimage %f
+Icon=top.remya.settings
+Terminal=false
+NoDisplay=true
+MimeType=application/vnd.appimage;application/x-iso9660-appimage;

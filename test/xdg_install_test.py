@@ -39,8 +39,9 @@ class InstallTest(unittest.TestCase):
                 executable.write_text('version one')
                 packaging = root / 'linux/packaging'
                 packaging.mkdir(parents=True)
-                (packaging / f'{installer.PACKAGE}.desktop').write_text(
-                    f'[Desktop Entry]\nType=Application\nName=Test\nExec={installer.APP_ID}\n')
+                for entry in (installer.PACKAGE, f'{installer.PACKAGE}.appimage'):
+                    (packaging / f'{entry}.desktop').write_text(
+                        f'[Desktop Entry]\nType=Application\nName=Test\nExec={installer.APP_ID} %f\n')
                 (root / 'assets/icons').mkdir(parents=True)
                 icon = 'bar.svg' if installer.APP_ID == 'remya_bar' else 'settings.svg'
                 (root / 'assets/icons' / icon).write_text('<svg/>')

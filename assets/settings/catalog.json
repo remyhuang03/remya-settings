@@ -8358,6 +8358,110 @@
       ]
     },
     {
+      "id": "appimages",
+      "category": "apps",
+      "title": "AppImages",
+      "description": "Install, update and remove AppImage applications",
+      "preview": "none",
+      "availability": "available",
+      "reason": "Manages AppImages in one folder through the Rust service; reads images without executing them and verifies downloads before replacing a file.",
+      "sources": [],
+      "windowsUris": [],
+      "sections": [
+        {
+          "title": "Library",
+          "controls": [
+            {
+              "id": "appimages.install",
+              "title": "Install AppImage",
+              "type": "action",
+              "availability": "available",
+              "reason": "Manages AppImages in one folder through the Rust service; reads images without executing them and verifies downloads before replacing a file.",
+              "value": "Browse"
+            },
+            {
+              "id": "appimages.open",
+              "title": "Open",
+              "type": "action",
+              "availability": "available",
+              "reason": "Manages AppImages in one folder through the Rust service; reads images without executing them and verifies downloads before replacing a file.",
+              "value": "Open"
+            },
+            {
+              "id": "appimages.integrate",
+              "title": "Add to launcher",
+              "type": "action",
+              "availability": "available",
+              "reason": "Manages AppImages in one folder through the Rust service; reads images without executing them and verifies downloads before replacing a file.",
+              "value": "Add"
+            },
+            {
+              "id": "appimages.uninstall",
+              "title": "Move to Trash",
+              "type": "action",
+              "availability": "available",
+              "reason": "Manages AppImages in one folder through the Rust service; reads images without executing them and verifies downloads before replacing a file.",
+              "value": "Move"
+            }
+          ]
+        },
+        {
+          "title": "Updates",
+          "controls": [
+            {
+              "id": "appimages.check",
+              "title": "Check for updates",
+              "type": "action",
+              "availability": "available",
+              "reason": "Manages AppImages in one folder through the Rust service; reads images without executing them and verifies downloads before replacing a file.",
+              "value": "Check"
+            },
+            {
+              "id": "appimages.update",
+              "title": "Update",
+              "type": "action",
+              "availability": "available",
+              "reason": "Manages AppImages in one folder through the Rust service; reads images without executing them and verifies downloads before replacing a file.",
+              "value": "Update"
+            },
+            {
+              "id": "appimages.cancel",
+              "title": "Cancel update",
+              "type": "action",
+              "availability": "available",
+              "reason": "Manages AppImages in one folder through the Rust service; reads images without executing them and verifies downloads before replacing a file.",
+              "value": "Cancel"
+            },
+            {
+              "id": "appimages.source",
+              "title": "Update source",
+              "type": "text",
+              "availability": "available",
+              "reason": "Manages AppImages in one folder through the Rust service; reads images without executing them and verifies downloads before replacing a file.",
+              "value": ""
+            },
+            {
+              "id": "appimages.auto-check",
+              "title": "Check automatically",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Manages AppImages in one folder through the Rust service; reads images without executing them and verifies downloads before replacing a file.",
+              "value": true
+            },
+            {
+              "id": "appimages.auto-update",
+              "title": "Install updates automatically",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Manages AppImages in one folder through the Rust service; reads images without executing them and verifies downloads before replacing a file.",
+              "value": false
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
       "id": "app-properties",
       "category": "apps",
       "title": "Advanced app options",

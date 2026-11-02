@@ -1,3 +1,4 @@
+pub mod appimages;
 pub mod external_tools;
 // Desktop application discovery and package-manager-owned installation information.
 use gio::prelude::*;

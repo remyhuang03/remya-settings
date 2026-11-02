@@ -10,8 +10,8 @@ Hyprland 内容包含 83 个页面、762 项设置及 2 个分类。来源与版
 
 ## 当前概况
 
-- 设置分类：12 个；详情页面：216 个；设置条目：1803 项。
-- 已实现：129 项；未实现：1640 项；不适用：34 项。
+- 设置分类：12 个；详情页面：217 个；设置条目：1813 项。
+- 已实现：139 项；未实现：1640 项；不适用：34 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。
@@ -52,7 +52,7 @@ Hyprland 内容包含 83 个页面、762 项设置及 2 个分类。来源与版
 | [蓝牙和设备](#category-devices) | 24 | 201 | 0 | 197 | 4 |
 | [网络和 Internet](#category-network) | 12 | 97 | 32 | 65 | 0 |
 | [外观](#category-appearance) | 23 | 184 | 20 | 164 | 0 |
-| [应用](#category-apps) | 4 | 28 | 15 | 13 | 0 |
+| [应用](#category-apps) | 5 | 38 | 25 | 13 | 0 |
 | [账户](#category-accounts) | 12 | 57 | 0 | 51 | 6 |
 | [时间和语言](#category-time) | 4 | 22 | 8 | 14 | 0 |
 | [辅助功能](#category-accessibility) | 14 | 230 | 0 | 230 | 0 |
@@ -2611,6 +2611,29 @@ Windows 参考入口：`ms-settings:appsfeatures`。
 | Filter source | `installed.765cf6c3` | 选择 | 已实现 | Rust ALPM 解析测试、`test/service_controllers_test.dart`、隔离 Flatpak 实际卸载与数据保留验证；原生包实机读取及未授权拒绝验证（未执行本机原生包卸载） |
 | Application details | `installed.32098ab2` | 操作 | 已实现 | Rust ALPM 解析测试、`test/service_controllers_test.dart`、隔离 Flatpak 实际卸载与数据保留验证；原生包实机读取及未授权拒绝验证（未执行本机原生包卸载） |
 | Uninstall apps | `installed.c3c4a29c` | 操作 | 已实现 | Rust ALPM 解析测试、`test/service_controllers_test.dart`、隔离 Flatpak 实际卸载与数据保留验证；原生包实机读取及未授权拒绝验证（未执行本机原生包卸载） |
+
+### AppImages — `appimages`
+
+AppImage 集中目录、安装、更新源与实时更新进度
+
+页面状态：**已实现**；条目：10；已实现 10 / 未实现 0 / 不适用 0。
+
+原因：Rust 服务管理 `~/AppImages`；用 `appimage` crate 读取元数据（不执行镜像），用 `zsync-rs` 增量更新，校验后才替换文件。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Install AppImage | `appimages.install` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、`test/appimages_smoke.py`、本机接管实机验证 |
+| Open | `appimages.open` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、`test/appimages_smoke.py`、本机接管实机验证 |
+| Add to launcher | `appimages.integrate` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、`test/appimages_smoke.py`、本机接管实机验证 |
+| Move to Trash | `appimages.uninstall` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、`test/appimages_smoke.py`、本机接管实机验证 |
+| Check for updates | `appimages.check` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、`test/appimages_smoke.py`、本机接管实机验证 |
+| Update | `appimages.update` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、`test/appimages_smoke.py`、本机接管实机验证 |
+| Cancel update | `appimages.cancel` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、`test/appimages_smoke.py`、本机接管实机验证 |
+| Update source | `appimages.source` | 文本输入 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、`test/appimages_smoke.py`、本机接管实机验证 |
+| Check automatically | `appimages.auto-check` | 开关 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、`test/appimages_smoke.py`、本机接管实机验证 |
+| Install updates automatically | `appimages.auto-update` | 开关 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、`test/appimages_smoke.py`、本机接管实机验证 |
 
 ### Advanced app options — `app-properties`
 

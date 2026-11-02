@@ -169,6 +169,7 @@ pub struct State {
     pub background: BackgroundManager<RealDesktop>,
     fonts: FontManager<RealFontconfig>,
     pub default_apps: DefaultApps<default_apps::RealDesktop>,
+    pub appimages: applications::appimages::AppImages,
     pub network: NetworkManager,
     pub auth_error: Option<String>,
     privileged: Option<Session>,
@@ -208,6 +209,10 @@ impl State {
                 config.with_file_name("default-apps.toml"),
             ),
             network: NetworkManager::real(config.with_file_name("network.toml")),
+            appimages: applications::appimages::AppImages::real(
+                config.with_file_name("appimages.toml"),
+            )
+            .expect("absolute HOME"),
             saved: Value::Null,
             theme_error: None,
             date_error: None,
@@ -561,6 +566,12 @@ impl State {
                     _ if applications::external_tools::IDS.contains(&key) => {
                         applications::external_tools::read_setting(key)
                     }
+                    "appimages" => Ok(self.appimages.state()),
+                    _ if applications::appimages::is_setting(key)
+                        && self.controls().iter().any(|c| c["id"] == key) =>
+                    {
+                        Ok(self.appimages.read_setting(key))
+                    }
                     "installed-apps" => applications::read(),
                     _ if key.starts_with("installed-apps:") => applications::search(&key[15..]),
                     _ if key.starts_with("installed-app:") => applications::details(&key[14..]),
@@ -747,6 +758,9 @@ impl State {
         }
         if default_apps::IDS.contains(&key) {
             return self.default_apps.set(key, value);
+        }
+        if applications::appimages::is_setting(key) {
+            return self.appimages.set(key, value);
         }
         if applications::external_tools::IDS.contains(&key) {
             if value != "open" {
@@ -1001,6 +1015,7 @@ impl State {
             let _ = gui.wait();
         }
         self.privileged = None;
+        self.appimages.shutdown();
         // Never leave an unconfirmed display change behind when the service stops.
         let _ = self.display.revert_pending();
     }

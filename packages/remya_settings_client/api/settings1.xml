@@ -16,7 +16,8 @@
          calendar-date:<YYYY-MM-DD> formats a date under system LC_TIME.
          Set installed.c3c4a29c accepts JSON id/token and returns removed after readback.
          Native/system uninstall uses the authorized private helper; manual entries reject uninstall.
-         Changed topics background, accent, fonts, default-apps and installed-apps report updates. -->
+         Get appimages reads the AppImage library; appimages.* Set values are documented in docs/public-api.md.
+         Changed topics background, accent, fonts, default-apps, installed-apps and appimages report updates. -->
     <!-- external-tools:time/system/appearance lists installed external configurators.
          Set the catalog tool ID with open launches only its fixed ordinary-user executable.
          input-method-tools lists installed input-method configurators. Set time-more.fcitx5 or

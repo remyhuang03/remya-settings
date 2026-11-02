@@ -32,6 +32,29 @@ extension ApplicationsClient on SettingsClient {
       ]);
 }
 
+const appImagesInstallSettingId = 'appimages.install';
+const appImagesCheckSettingId = 'appimages.check';
+const appImagesUpdateSettingId = 'appimages.update';
+const appImagesCancelSettingId = 'appimages.cancel';
+const appImagesSourceSettingId = 'appimages.source';
+const appImagesIntegrateSettingId = 'appimages.integrate';
+const appImagesOpenSettingId = 'appimages.open';
+const appImagesUninstallSettingId = 'appimages.uninstall';
+const appImagesAutoCheckSettingId = 'appimages.auto-check';
+const appImagesAutoUpdateSettingId = 'appimages.auto-update';
+
+extension AppImagesClient on SettingsClient {
+  Future<Map<String, dynamic>> readAppImages() => call('Get', ['appimages']);
+  Future<Map<String, dynamic>> setAppImageSource(
+    String id,
+    String? source,
+    bool updates,
+  ) => call('Set', [
+    appImagesSourceSettingId,
+    jsonEncode({'id': id, 'source': source, 'updates': updates}),
+  ]);
+}
+
 const inputMethodToolSettingIds = {'time-more.fcitx5', 'time-more.ibus'};
 
 extension InputMethodToolsClient on SettingsClient {
