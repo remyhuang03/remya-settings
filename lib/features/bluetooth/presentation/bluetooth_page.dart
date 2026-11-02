@@ -191,9 +191,10 @@ class _BluetoothStatus extends StatelessWidget {
               children: [
                 const Icon(Icons.error_outline_rounded),
                 Text(error),
-                TextButton(
+                TextButton.icon(
                   onPressed: controller.sending ? null : controller.reload,
-                  child: const Text('Retry'),
+                  icon: const Icon(Icons.refresh_rounded),
+                  label: const Text('Retry'),
                 ),
               ],
             ),
@@ -234,10 +235,11 @@ class _DeviceCard extends StatelessWidget {
             onPressed: () => Navigator.pop(context, false),
             child: const Text('Cancel'),
           ),
-          FilledButton(
+          FilledButton.icon(
             style: destructiveFilledButtonStyle(context),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Remove'),
+            icon: const Icon(Icons.delete_outline_rounded),
+            label: const Text('Remove'),
           ),
         ],
       ),
@@ -292,7 +294,14 @@ class _DeviceCard extends StatelessWidget {
               runSpacing: 8,
               children: [
                 if (controller.powered && !blocked)
-                  FilledButton.tonal(
+                  FilledButton.tonalIcon(
+                    icon: Icon(
+                      nearby
+                          ? Icons.link_rounded
+                          : connected
+                          ? Icons.link_off_rounded
+                          : Icons.link_rounded,
+                    ),
                     onPressed: controller.busy
                         ? null
                         : () => controller.device(
@@ -303,7 +312,7 @@ class _DeviceCard extends StatelessWidget {
                                 : bluetoothConnectSettingId,
                             device,
                           ),
-                    child: Text(
+                    label: Text(
                       nearby
                           ? 'Pair'
                           : connected
@@ -312,10 +321,11 @@ class _DeviceCard extends StatelessWidget {
                     ),
                   ),
                 if (!nearby)
-                  TextButton(
+                  TextButton.icon(
                     style: destructiveTextButtonStyle(context),
                     onPressed: controller.busy ? null : () => _forget(context),
-                    child: const Text('Remove'),
+                    icon: const Icon(Icons.delete_outline_rounded),
+                    label: const Text('Remove'),
                   ),
               ],
             ),
@@ -380,9 +390,10 @@ class _AddDeviceDialog extends StatelessWidget {
       ),
       actions: [
         if (controller.powered)
-          TextButton(
+          IconButton(
+            tooltip: 'Scan again',
             onPressed: controller.busy ? null : controller.scan,
-            child: const Text('Scan again'),
+            icon: const Icon(Icons.refresh_rounded),
           ),
         TextButton(
           onPressed: () => Navigator.pop(context),

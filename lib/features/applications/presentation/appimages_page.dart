@@ -77,7 +77,7 @@ class _AppImagesPageState extends State<AppImagesPage> {
                     spacing: 8,
                     runSpacing: 8,
                     children: [
-                      OutlinedButton(
+                      OutlinedButton.icon(
                         key: const ValueKey('appimages-check'),
                         onPressed: controller.checking
                             ? null
@@ -85,14 +85,16 @@ class _AppImagesPageState extends State<AppImagesPage> {
                                 appImagesCheckSettingId,
                                 'all',
                               ),
-                        child: const Text('Check now'),
+                        icon: const Icon(Icons.refresh_rounded),
+                        label: const Text('Check now'),
                       ),
                       if (controller.updatable.isNotEmpty)
-                        FilledButton(
+                        FilledButton.icon(
                           key: const ValueKey('appimages-update-all'),
                           onPressed: () =>
                               controller.run(appImagesUpdateSettingId, 'all'),
-                          child: const Text('Update all'),
+                          icon: const Icon(Icons.system_update_alt_rounded),
+                          label: const Text('Update all'),
                         ),
                     ],
                   ),
@@ -336,11 +338,12 @@ class _AppCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   if (app.available != null && app.job == null)
-                    FilledButton.tonal(
+                    FilledButton.tonalIcon(
                       key: ValueKey('appimage-update-${app.id}'),
                       onPressed: () =>
                           controller.run(appImagesUpdateSettingId, app.id),
-                      child: const Text('Update'),
+                      icon: const Icon(Icons.system_update_alt_rounded),
+                      label: const Text('Update'),
                     )
                   else
                     const Icon(Icons.chevron_right_rounded),
@@ -477,10 +480,11 @@ class _AppDetailsState extends State<_AppDetails> {
             onPressed: () => Navigator.pop(context, false),
             child: const Text('Cancel'),
           ),
-          FilledButton(
+          FilledButton.icon(
             style: destructiveFilledButtonStyle(context),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Move to Trash'),
+            icon: const Icon(Icons.delete_outline_rounded),
+            label: const Text('Move to Trash'),
           ),
         ],
       ),
@@ -560,10 +564,11 @@ class _AppDetailsState extends State<_AppDetails> {
                 const SizedBox(height: 8),
                 Align(
                   alignment: .centerRight,
-                  child: TextButton(
+                  child: TextButton.icon(
                     key: const ValueKey('appimage-source-save'),
                     onPressed: () => _saveSource(app),
-                    child: const Text('Save source'),
+                    icon: const Icon(Icons.save_outlined),
+                    label: const Text('Save source'),
                   ),
                 ),
                 if (app.source != null)
@@ -583,14 +588,15 @@ class _AppDetailsState extends State<_AppDetails> {
           ),
         ),
         actions: [
-          TextButton(
+          TextButton.icon(
             key: const ValueKey('appimage-trash'),
             style: destructiveTextButtonStyle(context),
             onPressed: busy ? null : () => _trash(app),
-            child: const Text('Move to Trash'),
+            icon: const Icon(Icons.delete_outline_rounded),
+            label: const Text('Move to Trash'),
           ),
           if (!app.integrated)
-            TextButton(
+            TextButton.icon(
               key: const ValueKey('appimage-integrate'),
               onPressed: busy
                   ? null
@@ -598,17 +604,19 @@ class _AppDetailsState extends State<_AppDetails> {
                       appImagesIntegrateSettingId,
                       app.id,
                     ),
-              child: const Text('Add to launcher'),
+              icon: const Icon(Icons.add_box_outlined),
+              label: const Text('Add to launcher'),
             ),
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Close'),
           ),
-          FilledButton(
+          FilledButton.icon(
             key: const ValueKey('appimage-open'),
             onPressed: () =>
                 widget.controller.run(appImagesOpenSettingId, app.id),
-            child: const Text('Open'),
+            icon: const Icon(Icons.open_in_new_rounded),
+            label: const Text('Open'),
           ),
         ],
       );

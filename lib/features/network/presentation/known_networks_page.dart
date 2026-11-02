@@ -59,13 +59,14 @@ class _KnownNetworksPageState extends State<KnownNetworksPage> {
             SettingRow(
               id: knownNetworkAddSettingId,
               label: const Text('Add a network, including a hidden one'),
-              control: FilledButton(
+              control: FilledButton.icon(
                 onPressed:
                     _controller.isBusy ||
                         !_controller.allowed('settings.modify.system')
                     ? null
                     : _add,
-                child: const Text('Add network'),
+                icon: const Icon(Icons.add_rounded),
+                label: const Text('Add network'),
               ),
             ),
             Padding(
@@ -144,10 +145,11 @@ class _ProfileTile extends StatelessWidget {
             onPressed: () => Navigator.pop(context, false),
             child: const Text('Cancel'),
           ),
-          FilledButton(
+          FilledButton.icon(
             style: destructiveFilledButtonStyle(context),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Forget'),
+            icon: const Icon(Icons.delete_outline_rounded),
+            label: const Text('Forget'),
           ),
         ],
       ),
@@ -187,7 +189,7 @@ class _ProfileTile extends StatelessWidget {
                 ? 'Connect to this hidden network'
                 : 'Connect to this network',
           ),
-          control: FilledButton(
+          control: FilledButton.icon(
             onPressed:
                 controller.isBusy ||
                     controller.connecting != null ||
@@ -200,7 +202,8 @@ class _ProfileTile extends StatelessWidget {
                       ssid: profile['ssid'] as String,
                     ),
                   ),
-            child: const Text('Connect'),
+            icon: const Icon(Icons.wifi_rounded),
+            label: const Text('Connect'),
           ),
         ),
       if (profile['read_only'] == true)
@@ -245,15 +248,16 @@ class _ProfileTile extends StatelessWidget {
         SettingRow(
           id: knownNetworkPasswordSettingId,
           label: const Text('Password'),
-          control: FilledButton.tonal(
+          control: FilledButton.tonalIcon(
             onPressed: _editable ? () => _changePassword(context) : null,
-            child: const Text('Change'),
+            icon: const Icon(Icons.edit_outlined),
+            label: const Text('Change'),
           ),
         ),
       SettingRow(
         id: knownNetworkForgetSettingId,
         label: const Text('Forget this network'),
-        control: FilledButton.tonal(
+        control: FilledButton.tonalIcon(
           style: destructiveTonalButtonStyle(context),
           onPressed:
               controller.isBusy ||
@@ -261,7 +265,8 @@ class _ProfileTile extends StatelessWidget {
                   !controller.allowed('settings.modify.system')
               ? null
               : () => _forget(context),
-          child: const Text('Forget'),
+          icon: const Icon(Icons.delete_outline_rounded),
+          label: const Text('Forget'),
         ),
       ),
     ]),

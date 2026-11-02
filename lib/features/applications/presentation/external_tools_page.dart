@@ -64,9 +64,10 @@ class _ExternalToolsPageState extends State<ExternalToolsPage> {
             children: [
               const Icon(Icons.error_outline_rounded),
               Text(error),
-              TextButton(
+              TextButton.icon(
                 onPressed: _busy ? null : _reload,
-                child: const Text('Retry'),
+                icon: const Icon(Icons.refresh_rounded),
+                label: const Text('Retry'),
               ),
             ],
           ),

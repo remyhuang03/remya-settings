@@ -289,11 +289,12 @@ class _DetailsDialog extends StatelessWidget {
             onPressed: () => Navigator.pop(context, false),
             child: const Text('Cancel'),
           ),
-          FilledButton(
+          FilledButton.icon(
             key: const ValueKey('fonts-uninstall-confirm'),
             style: destructiveFilledButtonStyle(context),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Uninstall'),
+            icon: const Icon(Icons.delete_outline_rounded),
+            label: const Text('Uninstall'),
           ),
         ],
       ),
@@ -350,11 +351,12 @@ class _DetailsDialog extends StatelessWidget {
     ),
     actions: [
       if (family.removable)
-        TextButton(
+        TextButton.icon(
           key: const ValueKey('fonts-uninstall'),
           style: destructiveTextButtonStyle(context),
           onPressed: controller.isBusy ? null : () => _uninstall(context),
-          child: const Text('Uninstall'),
+          icon: const Icon(Icons.delete_outline_rounded),
+          label: const Text('Uninstall'),
         ),
       TextButton(
         onPressed: () => Navigator.pop(context),

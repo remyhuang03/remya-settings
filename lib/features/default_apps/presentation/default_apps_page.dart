@@ -139,11 +139,12 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
       types: [type],
       controller: widget.controller,
     ),
-    control: FilledButton(
+    control: FilledButton.icon(
       onPressed: widget.controller.canChange
           ? () => _choose(defaultAppsTypeSettingId, [type])
           : null,
-      child: const Text('Change'),
+      icon: const Icon(Icons.edit_outlined),
+      label: const Text('Change'),
     ),
   );
 
@@ -205,9 +206,10 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
                 children: [
                   const Icon(Icons.error_outline_rounded),
                   Text(error),
-                  TextButton(
+                  TextButton.icon(
                     onPressed: controller.isBusy ? null : controller.reload,
-                    child: const Text('Retry'),
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: const Text('Retry'),
                   ),
                 ],
               ),
@@ -232,7 +234,7 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
                         controller: controller,
                       ),
                     ),
-                    control: FilledButton(
+                    control: FilledButton.icon(
                       key: ValueKey("choose-${group['id']}"),
                       onPressed: controller.canChange
                           ? () => _associations(
@@ -241,7 +243,8 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
                               group['id'] as String,
                             )
                           : null,
-                      child: const Text('Manage'),
+                      icon: const Icon(Icons.tune_rounded),
+                      label: const Text('Manage'),
                     ),
                   ),
               ],
@@ -582,11 +585,12 @@ class _AssociationsDialogState extends State<_AssociationsDialog> {
                                 ),
                               ],
                             ),
-                            control: FilledButton(
+                            control: FilledButton.icon(
                               onPressed: controller.canChange
                                   ? () => widget.choose(entry.type)
                                   : null,
-                              child: const Text('Change'),
+                              icon: const Icon(Icons.edit_outlined),
+                              label: const Text('Change'),
                             ),
                           );
                         },
@@ -690,11 +694,12 @@ class _ApplicationPickerState extends State<_ApplicationPicker> {
           onPressed: () => Navigator.pop(context),
           child: const Text('Cancel'),
         ),
-        FilledButton(
+        FilledButton.icon(
           onPressed: selected == null
               ? null
               : () => Navigator.pop(context, selected),
-          child: const Text('Set default'),
+          icon: const Icon(Icons.check_circle_outline_rounded),
+          label: const Text('Set default'),
         ),
       ],
     );

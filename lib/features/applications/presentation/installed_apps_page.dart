@@ -107,6 +107,7 @@ class _InstalledAppsPageState extends State<InstalledAppsPage> {
                         label: const Text('Sort by'),
                         control: DropdownMenu<String>(
                           initialSelection: _sort,
+                          leadingIcon: const Icon(Icons.sort_rounded),
                           dropdownMenuEntries: [
                             for (final name in [
                               'Name',
@@ -125,6 +126,7 @@ class _InstalledAppsPageState extends State<InstalledAppsPage> {
                         label: const Text('Filter source'),
                         control: DropdownMenu<String>(
                           initialSelection: _source,
+                          leadingIcon: const Icon(Icons.filter_list_rounded),
                           dropdownMenuEntries: [
                             for (final name in [
                               'All sources',
@@ -152,11 +154,12 @@ class _InstalledAppsPageState extends State<InstalledAppsPage> {
                       children: [
                         const Icon(Icons.error_outline_rounded),
                         Text(error),
-                        TextButton(
+                        TextButton.icon(
                           onPressed: controller.isBusy
                               ? null
                               : controller.reload,
-                          child: const Text('Retry'),
+                          icon: const Icon(Icons.refresh_rounded),
+                          label: const Text('Retry'),
                         ),
                       ],
                     ),
@@ -291,10 +294,11 @@ class _AppDetailsState extends State<_AppDetails> {
             onPressed: () => Navigator.pop(context, false),
             child: const Text('Cancel'),
           ),
-          FilledButton(
+          FilledButton.icon(
             style: destructiveFilledButtonStyle(context),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Uninstall'),
+            icon: const Icon(Icons.delete_outline_rounded),
+            label: const Text('Uninstall'),
           ),
         ],
       ),
@@ -363,12 +367,13 @@ class _AppDetailsState extends State<_AppDetails> {
           onPressed: () => Navigator.pop(context),
           child: const Text('Close'),
         ),
-        FilledButton(
+        FilledButton.icon(
           style: destructiveFilledButtonStyle(context),
           onPressed: app.canUninstall && !widget.controller.isBusy
               ? _remove
               : null,
-          child: const Text('Uninstall'),
+          icon: const Icon(Icons.delete_outline_rounded),
+          label: const Text('Uninstall'),
         ),
       ],
     );

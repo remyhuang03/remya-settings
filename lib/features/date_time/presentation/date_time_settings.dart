@@ -95,7 +95,7 @@ class DateTimeSettingControl extends StatelessWidget {
       case syncNowSettingId:
         return _SyncNowButton(controller: controller);
     }
-    return FilledButton(
+    return FilledButton.icon(
       key: ValueKey('control-$id'),
       onPressed: controller.hideManualTime
           ? null
@@ -106,7 +106,8 @@ class DateTimeSettingControl extends StatelessWidget {
                 builder: (_) => _ManualTimeDialog(controller: controller),
               );
             },
-      child: const Text('Set date and time'),
+      icon: const Icon(Icons.edit_calendar_rounded),
+      label: const Text('Set date and time'),
     );
   }
 }

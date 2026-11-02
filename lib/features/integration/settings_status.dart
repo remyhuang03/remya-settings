@@ -158,9 +158,10 @@ class SettingsStatus extends StatelessWidget {
                   title: 'hyprpaper configuration is read-only',
                   message: reason,
                   actions: [
-                    TextButton(
+                    TextButton.icon(
                       onPressed: controller.isBusy ? null : controller.reload,
-                      child: const Text('Retry'),
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: const Text('Retry'),
                     ),
                   ],
                 ),
@@ -194,9 +195,10 @@ class SettingsStatus extends StatelessWidget {
                   title: 'Display configuration is read-only',
                   message: reason,
                   actions: [
-                    TextButton(
+                    TextButton.icon(
                       onPressed: controller.isBusy ? null : controller.reload,
-                      child: const Text('Retry'),
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: const Text('Retry'),
                     ),
                   ],
                 ),
@@ -315,12 +317,13 @@ class _ConflictWarning extends StatelessWidget {
             child: const Text('Use system configuration'),
           ),
         if (isError)
-          TextButton(
+          TextButton.icon(
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.onErrorContainer,
             ),
             onPressed: busy ? null : () => _resolve(useSystem),
-            child: const Text('Retry'),
+            icon: const Icon(Icons.refresh_rounded),
+            label: const Text('Retry'),
           )
         else
           FilledButton.tonal(
@@ -431,7 +434,7 @@ class _RestartNotice extends StatelessWidget {
         onPressed: controller.isBusy ? null : () => controller.deferRestart(),
         child: const Text('Later'),
       ),
-      FilledButton(
+      FilledButton.icon(
         onPressed: controller.isBusy
             ? null
             : () async {
@@ -461,7 +464,8 @@ class _RestartNotice extends StatelessWidget {
                   } catch (_) {}
                 }
               },
-        child: const Text('Restart now'),
+        icon: const Icon(Icons.restart_alt_rounded),
+        label: const Text('Restart now'),
       ),
     ],
   );
