@@ -71,6 +71,7 @@ fn run() -> Result<(), String> {
                     date,
                     display,
                     hostname,
+                    default_apps,
                     background,
                     accent,
                     theme_changed,
@@ -99,6 +100,7 @@ fn run() -> Result<(), String> {
                         state.configuration()["date-time"].clone(),
                         state.display.state(),
                         state.hostname_state(),
+                        state.default_apps.state(),
                         state.background.state(),
                         state.background.accent_state(),
                         state.theme != before,
@@ -127,9 +129,19 @@ fn run() -> Result<(), String> {
                     signal(&bus, "date-time", &date);
                     signal(&bus, "display", &display);
                     signal(&bus, "hostname", &hostname);
+                    if method == "Reload"
+                        || args
+                            .first()
+                            .is_some_and(|id| id.starts_with("defaults.") || id == "default-apps")
+                    {
+                        signal(&bus, "default-apps", &default_apps);
+                    }
                     signal(&bus, "background", &background);
                     if accent_changed {
                         signal(&bus, "accent", &accent);
+                    }
+                    if args.first().is_some_and(|id| id.starts_with("installed.")) {
+                        signal(&bus, "installed-apps", &serde_json::json!({}));
                     }
                     if args.first().is_some_and(|id| id.starts_with("fonts.")) {
                         signal(&bus, "fonts", &serde_json::json!({}));

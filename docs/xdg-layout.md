@@ -15,6 +15,8 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Background previews | `$XDG_CACHE_HOME/remya/settings/background-previews/`; debug: `<settings-repository>/config/background-previews/` |
 | hyprpaper configuration | `$XDG_CONFIG_HOME/hypr/hyprpaper.conf`, with one `hyprpaper.conf.remya-backup` |
 | Video background unit | `$XDG_CONFIG_HOME/systemd/user/top.remya.settings.video-background.service` |
+| Default application snapshot | `default-apps.toml` beside `config.toml` (debug: repository `config/`) |
+| XDG default associations | GIO-managed `mimeapps.list` with standard desktop-specific/config/data precedence |
 | Installed fonts | `$XDG_DATA_HOME/fonts/` |
 | Installed bundles | `$XDG_DATA_HOME/remya/remya_settings/` and `remya_bar/` |
 | Desktop entries | `$XDG_DATA_HOME/applications/top.remya.{settings,bar}.desktop` |
@@ -24,7 +26,9 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Hyprland sockets | `$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket{,2}.sock` |
 
 Debug builds isolate only the Settings files listed above; hyprpaper, the video
-unit and fonts remain the real desktop's.
+unit, fonts and XDG default application associations remain the real desktop's.
+The default-apps snapshot uses the selected debug/release Settings config directory;
+only isolated HOME/XDG roots isolate association writes during tests.
 
 An unset, empty, or relative `XDG_CONFIG_HOME`/`XDG_DATA_HOME` is ignored. Config
 falls back to `~/.config`; data falls back to `~/.local/share`. HOME must be
@@ -115,3 +119,13 @@ malformed files are retained and reported. Writes use the existing atomic writer
 and permissions policy. Runtime hostname, PrettyHostname, and hardware
 specifications are never saved. No system hostname files are written directly;
 systemd-hostnamed owns those changes through the existing authorized helper.
+
+Installed-app inventory has no Settings snapshot: it reads GIO desktop entries,
+the configured ALPM local database, and Flatpak's selected installations. Search,
+sort, and source filters are session-local. Uninstall preserves user application
+data, Flatpak runtimes, and unrelated desktop entries. The UI's rendered icon
+cache lives only in memory and is released with the GUI engine.
+
+External input-method configuration entries only launch installed tools. Settings
+does not create input-method preferences, migrate configuration, or persist input
+method environment variables. The external tool retains ownership of its files.

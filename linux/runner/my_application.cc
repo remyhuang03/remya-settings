@@ -1,4 +1,5 @@
 #include "my_application.h"
+#include <cstring>
 
 #include <flutter_linux/flutter_linux.h>
 
@@ -11,6 +12,36 @@ struct _MyApplication {
 };
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
+
+// Icon rendering belongs to the GUI's existing GTK 3 runner, not the headless service.
+static void application_icon(FlMethodCall* call) {
+  FlValue* args = fl_method_call_get_args(call);
+  if (args == nullptr || fl_value_get_type(args) != FL_VALUE_TYPE_STRING) {
+    fl_method_call_respond_error(call, "InvalidArgument", "Expected a serialized GIcon", nullptr, nullptr);
+    return;
+  }
+  const gchar* name = fl_value_get_string(args);
+  if (strlen(name) > 4096) {
+    fl_method_call_respond_error(call, "InvalidArgument", "Icon name too long", nullptr, nullptr);
+    return;
+  }
+  g_autoptr(GIcon) icon = g_icon_new_for_string(name, nullptr);
+  g_autoptr(GtkIconInfo) info = icon == nullptr ? nullptr : gtk_icon_theme_lookup_by_gicon(
+      gtk_icon_theme_get_default(), icon, 96, GTK_ICON_LOOKUP_FORCE_SIZE);
+  if (info == nullptr) { fl_method_call_respond_success(call, nullptr, nullptr); return; }
+  g_object_ref(call);
+  gtk_icon_info_load_icon_async(info, nullptr, [](GObject* source, GAsyncResult* result, gpointer data) {
+    auto* call = FL_METHOD_CALL(data);
+    g_autoptr(GdkPixbuf) pixels = gtk_icon_info_load_icon_finish(GTK_ICON_INFO(source), result, nullptr);
+    g_autofree gchar* bytes = nullptr;
+    gsize length = 0;
+    if (pixels != nullptr && gdk_pixbuf_save_to_buffer(pixels, &bytes, &length, "png", nullptr, nullptr)) {
+      g_autoptr(FlValue) value = fl_value_new_uint8_list(reinterpret_cast<const uint8_t*>(bytes), length);
+      fl_method_call_respond_success(call, value, nullptr);
+    } else { fl_method_call_respond_success(call, nullptr, nullptr); }
+    g_object_unref(call);
+  }, call);
+}
 
 // Called when first Flutter frame received.
 static void first_frame_cb(MyApplication* self, FlView* view) {
@@ -80,7 +111,9 @@ static void my_application_activate(GApplication* application) {
   fl_method_channel_set_method_call_handler(
       paths_channel,
       [](FlMethodChannel* channel, FlMethodCall* call, gpointer data) {
-        if (g_strcmp0(fl_method_call_get_name(call), "initialPage") == 0) {
+        if (g_strcmp0(fl_method_call_get_name(call), "applicationIcon") == 0) {
+          application_icon(call);
+        } else if (g_strcmp0(fl_method_call_get_name(call), "initialPage") == 0) {
           auto* self = MY_APPLICATION(data);
           const char* page = self->dart_entrypoint_arguments && self->dart_entrypoint_arguments[0] && self->dart_entrypoint_arguments[1] ? self->dart_entrypoint_arguments[1] : "home";
           g_autoptr(FlValue) value = fl_value_new_string(page);

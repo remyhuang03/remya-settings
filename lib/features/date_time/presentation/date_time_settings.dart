@@ -95,7 +95,7 @@ class DateTimeSettingControl extends StatelessWidget {
       case syncNowSettingId:
         return _SyncNowButton(controller: controller);
     }
-    return OutlinedButton(
+    return FilledButton(
       key: ValueKey('control-$id'),
       onPressed: controller.hideManualTime
           ? null
@@ -161,7 +161,7 @@ class _SyncNowButtonState extends State<_SyncNowButton>
     final state = controller.state!;
     return Semantics(
       liveRegion: true,
-      child: IconButton.outlined(
+      child: IconButton.filled(
         key: const ValueKey('control-$syncNowSettingId'),
         tooltip: controller.isSyncing ? 'Syncing…' : 'Sync now',
         onPressed: !controller.isSyncing && state.ntp && state.syncError == null
@@ -241,25 +241,121 @@ class _DateTimeChoiceState extends State<_DateTimeChoice> {
     }
   }
 
+  Future<void> _chooseTimezone() async {
+    final controller = widget.controller;
+    if (controller.isBusy) return;
+    final value = await showDialog<String>(
+      context: context,
+      builder: (_) => _TimezonePicker(controller: controller),
+    );
+    if (mounted && !controller.isBusy) await _select(value);
+  }
+
   @override
-  Widget build(BuildContext context) => DropdownMenu<String>(
-    key: ValueKey(_timezone ? 'timezone-combobox' : 'time-locale-combobox'),
-    controller: _text,
-    width: 232,
-    menuHeight: 300,
-    initialSelection: _value,
-    enableFilter: _timezone,
-    enableSearch: _timezone,
-    requestFocusOnTap: _timezone,
-    dropdownMenuEntries: [
-      for (final value
-          in _timezone
-              ? widget.controller.timezones
-              : widget.controller.timeLocales)
-        DropdownMenuEntry(value: value, label: _label(value)),
-    ],
-    onSelected: _select,
-  );
+  Widget build(BuildContext context) {
+    if (_timezone) {
+      return FilledButton.icon(
+        key: const ValueKey('timezone-combobox'),
+        onPressed: widget.controller.isBusy ? null : _chooseTimezone,
+        icon: const Icon(Icons.expand_more_rounded),
+        label: Text(_label(_value)),
+      );
+    }
+    return DropdownMenu<String>(
+      key: const ValueKey('time-locale-combobox'),
+      controller: _text,
+      width: 232,
+      menuHeight: 300,
+      initialSelection: _value,
+      dropdownMenuEntries: [
+        for (final value in widget.controller.timeLocales)
+          DropdownMenuEntry(value: value, label: _label(value)),
+      ],
+      onSelected: _select,
+    );
+  }
+}
+
+class _TimezonePicker extends StatefulWidget {
+  const _TimezonePicker({required this.controller});
+  final DateTimeController controller;
+  @override
+  State<_TimezonePicker> createState() => _TimezonePickerState();
+}
+
+class _TimezonePickerState extends State<_TimezonePicker> {
+  String _query = '';
+  @override
+  Widget build(BuildContext context) {
+    final controller = widget.controller;
+    final matches = controller.timezones
+        .where(
+          (id) => controller.timezoneLabels[id]!.toLowerCase().contains(
+            _query.toLowerCase(),
+          ),
+        )
+        .toList();
+    return AlertDialog(
+      title: const Text('Choose a time zone'),
+      content: SizedBox(
+        width: 480,
+        height: 400,
+        child: Column(
+          children: [
+            TextField(
+              key: const ValueKey('timezone-search'),
+              autofocus: true,
+              decoration: const InputDecoration(
+                labelText: 'Search time zones',
+                prefixIcon: Icon(Icons.search_rounded),
+              ),
+              onChanged: (value) => setState(() => _query = value),
+              onSubmitted: (_) {
+                if (matches.length == 1) Navigator.pop(context, matches.single);
+              },
+            ),
+            const SizedBox(height: 12),
+            Expanded(
+              child: matches.isEmpty
+                  ? const Center(child: Text('No time zones found'))
+                  : ListView.builder(
+                      prototypeItem: const ListTile(
+                        title: Text('UTC (GMT+00:00)', maxLines: 1),
+                        trailing: Icon(Icons.check_rounded),
+                      ),
+                      itemCount: matches.length,
+                      itemBuilder: (context, index) {
+                        final id = matches[index];
+                        return ListTile(
+                          key: ValueKey('timezone-$id'),
+                          selected: id == controller.state!.timezone,
+                          title: Tooltip(
+                            message: controller.timezoneLabels[id]!,
+                            child: Text(
+                              controller.timezoneLabels[id]!,
+                              maxLines: 1,
+                              overflow: .ellipsis,
+                            ),
+                          ),
+                          trailing: id == controller.state!.timezone
+                              ? const Icon(Icons.check_rounded)
+                              : null,
+                          onTap: () => Navigator.pop(context, id),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+      ],
+    );
+  }
 }
 
 class _TimeServers extends StatefulWidget {

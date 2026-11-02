@@ -1,3 +1,5 @@
+import 'features/applications/application/applications_controller.dart';
+import 'features/default_apps/application/default_apps_controller.dart';
 import 'features/system_information/application/hostname_controller.dart';
 
 import 'package:remya_settings_client/settings_contract.dart';
@@ -29,9 +31,13 @@ class RemyaSettingsApp extends StatefulWidget {
     this.hostname,
     this.background,
     this.fonts,
+    this.defaultApps,
+    this.applications,
   });
   final BackgroundController? background;
   final FontsController? fonts;
+  final DefaultAppsController? defaultApps;
+  final ApplicationsController? applications;
   final AppPreferencesController? preferences;
   final DateTimeController? dateTime;
   final DisplayController? display;
@@ -63,6 +69,8 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     widget.hostname?.dispose();
     widget.background?.dispose();
     widget.fonts?.dispose();
+    widget.defaultApps?.dispose();
+    widget.applications?.dispose();
     super.dispose();
   }
 
@@ -124,6 +132,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
                   dateTime: widget.dateTime,
                   display: widget.display,
                   background: widget.background,
+                  defaultApps: widget.defaultApps,
                 ),
               );
             },
@@ -143,8 +152,17 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     final withFonts = widget.fonts == null
         ? withBackground
         : FontsScope(controller: widget.fonts!, child: withBackground);
-    return widget.dateTime == null
+    final withDefaultApps = widget.defaultApps == null
         ? withFonts
-        : DateTimeScope(controller: widget.dateTime!, child: withFonts);
+        : DefaultAppsScope(controller: widget.defaultApps!, child: withFonts);
+    final withApplications = widget.applications == null
+        ? withDefaultApps
+        : ApplicationsScope(
+            controller: widget.applications!,
+            child: withDefaultApps,
+          );
+    return widget.dateTime == null
+        ? withApplications
+        : DateTimeScope(controller: widget.dateTime!, child: withApplications);
   }
 }

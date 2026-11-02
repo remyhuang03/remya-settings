@@ -6,7 +6,21 @@
          Set about.0f142010 renames; Resolve hostname accepts system or settings.
          background reads saved and system values; Resolve background accepts system or settings.
          accent reads the Material seed. fonts, font-search:<query> and font:<family> read fonts.
-         Changed topics background, accent and fonts report updates. -->
+         default-apps reads saved/system associations and conflict state.
+         default-applications:<query>, default-types:<query>, default-candidates:<comma-separated-types>
+         read applications, MIME/scheme types and supported candidates.
+         Set defaults.* accepts JSON application and types; shortcut types are fixed.
+         Resolve default-apps accepts system or settings.
+         installed-apps and installed-app:<id> read desktop/package inventory.
+         installed-apps:<JSON query/source/sort> filters and sorts the same inventory.
+         calendar-date:<YYYY-MM-DD> formats a date under system LC_TIME.
+         Set installed.c3c4a29c accepts JSON id/token and returns removed after readback.
+         Native/system uninstall uses the authorized private helper; manual entries reject uninstall.
+         Changed topics background, accent, fonts, default-apps and installed-apps report updates. -->
+    <!-- external-tools:time/system/appearance lists installed external configurators.
+         Set the catalog tool ID with open launches only its fixed ordinary-user executable.
+         input-method-tools lists installed input-method configurators. Set time-more.fcitx5 or
+         time-more.ibus with open launches the fixed tool as the ordinary user. -->
     <method name="Get">
       <arg type="s" direction="in"/>
       <arg type="s" direction="out"/>

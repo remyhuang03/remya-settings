@@ -183,11 +183,6 @@
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprcursor.md"
     },
     {
-      "id": "hypr-launcher",
-      "title": "hyprlauncher application launcher",
-      "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlauncher.md"
-    },
-    {
       "id": "hypr-qt",
       "title": "Hyprland Qt theme",
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprqt6engine.md"
@@ -291,6 +286,46 @@
       "id": "fontconfig",
       "title": "Fontconfig user documentation",
       "url": "https://www.freedesktop.org/software/fontconfig/fontconfig-user.html"
+    },
+    {
+      "id": "fcitx5-configtool",
+      "title": "Fcitx 5 configuration tool",
+      "url": "https://fcitx-im.org/wiki/Configtool_(Fcitx_5)"
+    },
+    {
+      "id": "ibus-setup",
+      "title": "IBus configuration tool",
+      "url": "https://github.com/ibus/ibus"
+    },
+    {
+      "id": "kde-settings",
+      "title": "KDE System Settings",
+      "url": "https://apps.kde.org/systemsettings/"
+    },
+    {
+      "id": "gnome-settings",
+      "title": "GNOME Settings",
+      "url": "https://apps.gnome.org/Settings/"
+    },
+    {
+      "id": "qt6ct",
+      "title": "Qt 6 Configuration Utility",
+      "url": "https://www.opencode.net/trialuser/qt6ct"
+    },
+    {
+      "id": "kvantum",
+      "title": "Kvantum",
+      "url": "https://github.com/tsujan/Kvantum"
+    },
+    {
+      "id": "nwg-look",
+      "title": "GTK Settings",
+      "url": "https://github.com/nwg-piotr/nwg-look"
+    },
+    {
+      "id": "gnome-tweaks",
+      "title": "GNOME Tweaks",
+      "url": "https://gitlab.gnome.org/GNOME/gnome-tweaks"
     }
   ],
   "categories": [
@@ -313,8 +348,8 @@
       "icon": "wifi"
     },
     {
-      "id": "personalization",
-      "title": "Personalization",
+      "id": "appearance",
+      "title": "Appearance",
       "description": "Background, theme and desktop appearance",
       "icon": "palette"
     },
@@ -351,7 +386,7 @@
     {
       "id": "update",
       "title": "System updates",
-      "description": "Update history, maintenance and preview plans",
+      "description": "Update status and maintenance",
       "icon": "update"
     },
     {
@@ -6969,7 +7004,7 @@
     },
     {
       "id": "background",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Background",
       "description": "Image or video desktop background",
       "preview": "none",
@@ -7088,7 +7123,7 @@
     },
     {
       "id": "themes",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Colors and themes",
       "description": "Light and dark mode, accent color, Material palette and themes",
       "preview": "none",
@@ -7253,7 +7288,7 @@
     },
     {
       "id": "lockscreen",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Lock screen interface",
       "description": "Lock screen background, status and login screen",
       "preview": "personalization",
@@ -7367,146 +7402,8 @@
       "children": []
     },
     {
-      "id": "text-input",
-      "category": "personalization",
-      "title": "Text input",
-      "description": "Touch keyboard themes and text appearance",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:personalization-textinput",
-        "ms-settings:personalization-touchkeyboard"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "text-input.8c7d4c60",
-              "title": "Choose a keyboard theme",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "text-input.885e69f4",
-              "title": "Keyboard size",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "text-input.1d7e859f",
-              "title": "Button background",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "text-input.bb1a22e2",
-              "title": "Button text size",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "small",
-                "Medium",
-                "Big"
-              ],
-              "value": "small"
-            },
-            {
-              "id": "text-input.99f25205",
-              "title": "Edit a custom theme",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "text-input.reference.e71b3bbe",
-              "title": "Theme for touch keyboard",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Text Input",
-                "Theme for touch keyboard"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "text-input.reference.3fb1e372",
-              "title": "Touch keyboard size",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Text Input",
-                "Touch keyboard",
-                "Touch keyboard size"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "text-input.reference.0a8ab202",
-              "title": "Show key background",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Text Input",
-                "Touch keyboard",
-                "Show key background"
-              ],
-              "value": false
-            },
-            {
-              "id": "text-input.reference.1fc1438b",
-              "title": "Key text size",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Text Input",
-                "Touch keyboard",
-                "Key text size"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "start",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Start menu",
       "description": "Layout, recent content and folder reference",
       "preview": "none",
@@ -7799,7 +7696,7 @@
     },
     {
       "id": "start-folders",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Start menu folder",
       "description": "Quick entry reference next to the power button",
       "preview": "none",
@@ -7894,7 +7791,7 @@
     },
     {
       "id": "taskbar",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Taskbar",
       "description": "Taskbar items, trays, and multi-monitor behavior",
       "preview": "none",
@@ -8229,7 +8126,7 @@
     },
     {
       "id": "fonts",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Fonts",
       "description": "Browse, preview, install and uninstall fonts",
       "preview": "none",
@@ -8285,7 +8182,7 @@
     },
     {
       "id": "lighting",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Dynamic light effects",
       "description": "Lighting and effects for compatible devices",
       "preview": "none",
@@ -8369,8 +8266,8 @@
       "title": "Installed apps",
       "description": "Application directory, uninstallation and advanced options",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Read installed desktop applications and real pacman/Flatpak metadata through the Rust service; package-manager uninstall requires confirmation and verifies removal.",
       "sources": [
         "uris"
       ],
@@ -8385,16 +8282,16 @@
               "id": "installed.15735a25",
               "title": "Search installed apps",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Read installed desktop applications and real pacman/Flatpak metadata through the Rust service; package-manager uninstall requires confirmation and verifies removal.",
               "value": ""
             },
             {
               "id": "installed.3bf3689a",
               "title": "Sort by",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Read installed desktop applications and real pacman/Flatpak metadata through the Rust service; package-manager uninstall requires confirmation and verifies removal.",
               "options": [
                 "Name",
                 "Size",
@@ -8404,30 +8301,29 @@
             },
             {
               "id": "installed.765cf6c3",
-              "title": "Filter drives",
+              "title": "Filter source",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Read installed desktop applications and real pacman/Flatpak metadata through the Rust service; package-manager uninstall requires confirmation and verifies removal.",
               "options": [
-                "All drives",
-                "Local disk"
+                "All sources"
               ],
-              "value": "All drives"
+              "value": "All sources"
             },
             {
               "id": "installed.32098ab2",
-              "title": "Apply advanced options",
+              "title": "Application details",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Read installed desktop applications and real pacman/Flatpak metadata through the Rust service; package-manager uninstall requires confirmation and verifies removal.",
               "value": "Configuration"
             },
             {
               "id": "installed.c3c4a29c",
               "title": "Uninstall apps",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Read installed desktop applications and real pacman/Flatpak metadata through the Rust service; package-manager uninstall requires confirmation and verifies removal.",
               "value": "Configuration"
             }
           ]
@@ -8580,14 +8476,6 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": "Configuration"
-            },
-            {
-              "id": "advanced-apps.bcc84021",
-              "title": "Applications for websites",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
             }
           ]
         }
@@ -8617,61 +8505,81 @@
               "id": "defaults.b131ac5a",
               "title": "Search for file type or link type",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Manage verified XDG default applications through the ordinary-user Rust service and GIO, with fresh system readback and explicit configuration conflict resolution.",
               "value": ""
             },
             {
               "id": "defaults.897fdfef",
               "title": "Search applications",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Manage verified XDG default applications through the ordinary-user Rust service and GIO, with fresh system readback and explicit configuration conflict resolution.",
               "value": ""
             },
             {
               "id": "defaults.ccac113f",
               "title": "Default browser",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Not set"
-              ],
-              "value": "Not set"
+              "type": "action",
+              "availability": "available",
+              "reason": "Manage verified XDG default applications through the ordinary-user Rust service and GIO, with fresh system readback and explicit configuration conflict resolution.",
+              "value": "Choose app"
             },
             {
               "id": "defaults.3adc9929",
               "title": "Default Mail App",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Not set"
-              ],
-              "value": "Not set"
+              "type": "action",
+              "availability": "available",
+              "reason": "Manage verified XDG default applications through the ordinary-user Rust service and GIO, with fresh system readback and explicit configuration conflict resolution.",
+              "value": "Choose app"
             },
             {
               "id": "defaults.c0b97974",
               "title": "Default Photos App",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Not set"
-              ],
-              "value": "Not set"
+              "type": "action",
+              "availability": "available",
+              "reason": "Manage verified XDG default applications through the ordinary-user Rust service and GIO, with fresh system readback and explicit configuration conflict resolution.",
+              "value": "Choose app"
             },
             {
               "id": "defaults.e7fe6be6",
               "title": "Default video app",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Not set"
-              ],
-              "value": "Not set"
+              "type": "action",
+              "availability": "available",
+              "reason": "Manage verified XDG default applications through the ordinary-user Rust service and GIO, with fresh system readback and explicit configuration conflict resolution.",
+              "value": "Choose app"
+            },
+            {
+              "id": "defaults.audio",
+              "title": "Audio",
+              "type": "action",
+              "availability": "available",
+              "reason": "Manage verified XDG default applications through the ordinary-user Rust service and GIO, with fresh system readback and explicit configuration conflict resolution.",
+              "value": "Choose app"
+            },
+            {
+              "id": "defaults.text",
+              "title": "Text editor",
+              "type": "action",
+              "availability": "available",
+              "reason": "Manage verified XDG default applications through the ordinary-user Rust service and GIO, with fresh system readback and explicit configuration conflict resolution.",
+              "value": "Choose app"
+            },
+            {
+              "id": "defaults.pdf",
+              "title": "PDF",
+              "type": "action",
+              "availability": "available",
+              "reason": "Manage verified XDG default applications through the ordinary-user Rust service and GIO, with fresh system readback and explicit configuration conflict resolution.",
+              "value": "Choose app"
+            },
+            {
+              "id": "defaults.file-manager",
+              "title": "File manager",
+              "type": "action",
+              "availability": "available",
+              "reason": "Manage verified XDG default applications through the ordinary-user Rust service and GIO, with fresh system readback and explicit configuration conflict resolution.",
+              "value": "Choose app"
             },
             {
               "id": "defaults.ff4c4bec",
@@ -8680,235 +8588,6 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "optional",
-      "category": "apps",
-      "title": "Optional features",
-      "description": "Function installation and history",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:optionalfeatures"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "optional.3316f05b",
-              "title": "View optional features",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Add features"
-            },
-            {
-              "id": "optional.4ba5eede",
-              "title": "Search for installed features",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "optional.d8aed3a7",
-              "title": "Feature installation history",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "optional.bd2c3619",
-              "title": "More system functions",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "websites",
-      "category": "apps",
-      "title": "Applications for websites",
-      "description": "Connect your website to your app",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:appsforwebsites"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "websites.897fdfef",
-              "title": "Search applications",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "websites.8cd31008",
-              "title": "Allow apps to open associated websites",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "websites.93e2b941",
-              "title": "Manage website associations",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "maps",
-      "category": "apps",
-      "title": "Offline Maps",
-      "description": "Map download, save location and update",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:maps",
-        "ms-settings:maps-downloadmaps"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "maps.215e569e",
-              "title": "Download maps",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Download"
-            },
-            {
-              "id": "maps.c445d42b",
-              "title": "Storage location",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Local disk",
-                "Other disks"
-              ],
-              "value": "Local disk"
-            },
-            {
-              "id": "maps.3f139dcf",
-              "title": "Download via metered connection",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "maps.49291dd0",
-              "title": "Automatically update maps",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "maps.bbecded0",
-              "title": "Delete all maps",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "video",
-      "category": "apps",
-      "title": "Video playback",
-      "description": "Video enhancement and battery preference",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:videoplayback"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "video.0cb26c39",
-              "title": "Automatically process videos to enhance effects",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "video.c96f936e",
-              "title": "Reduce resolution to save bandwidth",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "video.7d6e4e4f",
-              "title": "Battery Play Preferences",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Optimize battery life",
-                "Optimize video quality"
-              ],
-              "value": "Optimize battery life"
-            },
-            {
-              "id": "video.00912570",
-              "title": "Allow HDR when using battery",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
             }
           ]
         }
@@ -9924,279 +9603,37 @@
       "children": []
     },
     {
-      "id": "typing",
+      "id": "time-more",
       "category": "time",
-      "title": "Typing",
-      "description": "Spelling, text suggestions and touch keyboard",
+      "title": "More",
+      "description": "External input-method configuration tools",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Open an installed external input-method configuration tool. Settings does not change or own its configuration.",
       "sources": [
-        "uris"
+        "fcitx5-configtool",
+        "ibus-setup"
       ],
-      "windowsUris": [
-        "ms-settings:typing",
-        "ms-settings:devicestyping-hwkbtextsuggestions"
-      ],
+      "windowsUris": [],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Input methods",
           "controls": [
             {
-              "id": "typing.207b56c1",
-              "title": "Physical keyboard text suggestions",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "typing.b2ad8556",
-              "title": "Multilingual text suggestions",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "typing.6928bd78",
-              "title": "Automatically correct spelling errors",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "typing.6069542b",
-              "title": "Highlight spelling errors",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "typing.081118d6",
-              "title": "Key sound",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "typing.247b1cdd",
-              "title": "Capitalize the first letter of a sentence",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "typing.59c75352",
-              "title": "Double-click a space to add a period",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "typing.0bc4c2d7",
-              "title": "Double-click Shift to use uppercase",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "typing.509b2541",
-              "title": "Enter insights",
+              "id": "time-more.fcitx5",
+              "title": "Fcitx 5 Configuration",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Open an installed external input-method configuration tool. Settings does not change or own its configuration.",
+              "value": "Open"
             },
             {
-              "id": "typing.4709bab2",
-              "title": "Advanced keyboard settings",
+              "id": "time-more.ibus",
+              "title": "IBus Preferences",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "typing.reference.f2b8f9a3",
-              "title": "Play key sounds as I type",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Typing",
-                "Touch Keyboard",
-                "Play key sounds as I type"
-              ],
-              "value": false
-            },
-            {
-              "id": "typing.reference.60050a6c",
-              "title": "Capitalize the first letter of each sentence",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Typing",
-                "Touch Keyboard",
-                "Capitalize the first letter of each sentence"
-              ],
-              "value": false
-            },
-            {
-              "id": "typing.reference.e553e73c",
-              "title": "Add a period after I double-tap the Spacebar",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Typing",
-                "Touch Keyboard",
-                "Add a period after I double-tap the Spacebar"
-              ],
-              "value": false
-            },
-            {
-              "id": "typing.reference.f932de70",
-              "title": "Use all uppercase letters when I double-tap Shift",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Typing",
-                "Touch Keyboard",
-                "Use all uppercase letters when I double-tap Shift"
-              ],
-              "value": false
-            },
-            {
-              "id": "typing.reference.c7d6bbd6",
-              "title": "Show text suggestions when typing on the physical keyboard",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Typing",
-                "Show text suggestions when typing on the physical keyboard"
-              ],
-              "value": false
-            },
-            {
-              "id": "typing.reference.27daeccc",
-              "title": "Multilingual text suggestions",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Typing",
-                "Multilingual text suggestions"
-              ],
-              "value": false
-            },
-            {
-              "id": "typing.reference.0fa3afa7",
-              "title": "Autocorrect misspelled words",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Typing",
-                "Autocorrect misspelled words"
-              ],
-              "value": false
-            },
-            {
-              "id": "typing.reference.f924c774",
-              "title": "Highlight misspelled words",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Typing",
-                "Highlight misspelled words"
-              ],
-              "value": false
-            }
-          ]
-        }
-      ],
-      "children": [
-        "keyboard"
-      ]
-    },
-    {
-      "id": "keyboard",
-      "category": "time",
-      "title": "Advanced keyboard settings",
-      "description": "Input method switching and default input method",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:keyboard",
-        "ms-settings:keyboard-advanced"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "keyboard.9a05b740",
-              "title": "Replace the default input method",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Use language lists",
-                "Specify input method"
-              ],
-              "value": "Use language lists"
-            },
-            {
-              "id": "keyboard.0a36a21a",
-              "title": "Use different input methods for each application",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "keyboard.c7f2c70f",
-              "title": "Use the desktop language bar",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "keyboard.a6a3d5c6",
-              "title": "Input language hotkeys",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "keyboard.5c8d8c52",
-              "title": "Language bar options",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Open an installed external input-method configuration tool. Settings does not change or own its configuration.",
+              "value": "Open"
             }
           ]
         }
@@ -13557,53 +12994,6 @@
       "children": []
     },
     {
-      "id": "inking",
-      "category": "privacy",
-      "title": "Inking and typing personalization",
-      "description": "Personal dictionary and input improvements",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:privacy-speechtyping"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "inking.db87cccf",
-              "title": "Personal inking and typing dictionary",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "inking.a2290b51",
-              "title": "View personal dictionary",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "inking.af3aefc5",
-              "title": "Clear dictionary",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "diagnostics",
       "category": "privacy",
       "title": "Diagnostics & feedback",
@@ -13998,7 +13388,8 @@
       "windowsUris": [
         "ms-settings:windowsupdate",
         "ms-settings:windowsupdate-action",
-        "ms-settings:windowsupdate-seekerondemand"
+        "ms-settings:windowsupdate-seekerondemand",
+        "ms-settings:windowsupdate-options"
       ],
       "sections": [
         {
@@ -14019,158 +13410,13 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": "Check for updates"
-            },
-            {
-              "id": "updates.999d9943",
-              "title": "Get the latest updates as early as possible",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "updates.70b991bf",
-              "title": "Pause updates",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "1 week",
-                "2 weeks",
-                "3 weeks",
-                "4 weeks"
-              ],
-              "value": "1 week"
-            },
-            {
-              "id": "updates.0c4e326b",
-              "title": "Update history",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "updates.378a5408",
-              "title": "Advanced options",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
             }
           ]
-        }
-      ],
-      "children": [
-        "update-history",
-        "update-options"
-      ]
-    },
-    {
-      "id": "update-history",
-      "category": "update",
-      "title": "Update history",
-      "description": "Function, quality and driver updates",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:windowsupdate-history"
-      ],
-      "sections": [
+        },
         {
-          "title": "Settings",
+          "title": "Advanced",
+          "collapsed": true,
           "controls": [
-            {
-              "id": "update-history.019e680d",
-              "title": "Function updates",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "update-history.02ffa466",
-              "title": "Quality updates",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "update-history.96574344",
-              "title": "Driver updates",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "update-history.09e476b4",
-              "title": "Definition update",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "update-history.7cf8d3a1",
-              "title": "Other updates",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "update-history.ffac73c3",
-              "title": "Uninstall updates",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "update-options",
-      "category": "update",
-      "title": "Update advanced options",
-      "description": "Download and update preferences",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:windowsupdate-options"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "update-options.7bd2f5b5",
-              "title": "Receive other product updates",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "update-options.3f139dcf",
-              "title": "Download via metered connection",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
             {
               "id": "update-options.0a009ef6",
               "title": "Restart as soon as possible",
@@ -14190,14 +13436,6 @@
             {
               "id": "update-options.abe0ecdb",
               "title": "Activity time",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "update-options.79748ca1",
-              "title": "Recovery",
               "type": "action",
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
@@ -14453,177 +13691,6 @@
               "availability": "unsupported",
               "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
               "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "subscriptions",
-      "category": "accounts",
-      "title": "Subscription",
-      "description": "Windows Home Microsoft 365 and Xbox Card Reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "navigation"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "subscriptions.1fafdfea",
-              "title": "Microsoft 365",
-              "type": "info",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Not logged in"
-            },
-            {
-              "id": "subscriptions.462bee9f",
-              "title": "Xbox Game Pass",
-              "type": "info",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Not logged in"
-            },
-            {
-              "id": "subscriptions.2e529b53",
-              "title": "Manage subscriptions",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "subscriptions.a0f44278",
-              "title": "View subscription benefits",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "personalization",
-      "category": "personalization",
-      "title": "Personalization overview",
-      "description": "Appearance and desktop settings entrance",
-      "preview": "personalization",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:personalization"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "personalization.b13d33a5",
-              "title": "Background",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "personalization.8ef48860",
-              "title": "Color",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "personalization.e848ddd4",
-              "title": "Topic",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "personalization.355caa83",
-              "title": "Lock screen interface",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "personalization.3405fcce",
-              "title": "Taskbar",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "privacy-accessoryapps",
-      "category": "privacy",
-      "title": "Accessory apps",
-      "description": "App access and recent activity",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "privacy"
-      ],
-      "windowsUris": [
-        "ms-settings:privacy-accessoryapps"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "privacy-accessoryapps.17592407",
-              "title": "Accessory application permissions",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "privacy-accessoryapps.3cdc5c32",
-              "title": "Allow the app to access accessory apps",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "privacy-accessoryapps.abbd3539",
-              "title": "Allow desktop apps to access accessory apps",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "privacy-accessoryapps.bc0f5a5a",
-              "title": "Application access records",
-              "type": "info",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Not yet accessed the permission service"
             }
           ]
         }
@@ -14906,61 +13973,6 @@
       "children": []
     },
     {
-      "id": "privacy-calendar",
-      "category": "privacy",
-      "title": "Calendar",
-      "description": "App access and recent activity",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "privacy"
-      ],
-      "windowsUris": [
-        "ms-settings:privacy-calendar"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "privacy-calendar.592b49d7",
-              "title": "Calendar permissions",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-calendar.a6e2d578",
-              "title": "Allow apps to access calendar",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-calendar.4f84b48b",
-              "title": "Allow desktop apps to access calendar",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-calendar.bc0f5a5a",
-              "title": "Application access records",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not yet accessed the permission service"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "privacy-callhistory",
       "category": "privacy",
       "title": "Call records",
@@ -15059,171 +14071,6 @@
             },
             {
               "id": "privacy-webcam.bc0f5a5a",
-              "title": "Application access records",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not yet accessed the permission service"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "privacy-contacts",
-      "category": "privacy",
-      "title": "Contacts",
-      "description": "App access and recent activity",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "privacy"
-      ],
-      "windowsUris": [
-        "ms-settings:privacy-contacts"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "privacy-contacts.1c5f9f91",
-              "title": "Contact permissions",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-contacts.99623b2d",
-              "title": "Allow apps to access contacts",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-contacts.45a2b39a",
-              "title": "Allow desktop apps to access contacts",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-contacts.bc0f5a5a",
-              "title": "Application access records",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not yet accessed the permission service"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "privacy-documents",
-      "category": "privacy",
-      "title": "Documents",
-      "description": "App access and recent activity",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "privacy"
-      ],
-      "windowsUris": [
-        "ms-settings:privacy-documents"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "privacy-documents.8835bb59",
-              "title": "Document permissions",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-documents.9dc435b3",
-              "title": "Allow apps to access documents",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-documents.408a98a0",
-              "title": "Allow desktop apps to access documents",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-documents.bc0f5a5a",
-              "title": "Application access records",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not yet accessed the permission service"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "privacy-downloadsfolder",
-      "category": "privacy",
-      "title": "Downloads folder",
-      "description": "App access and recent activity",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "privacy"
-      ],
-      "windowsUris": [
-        "ms-settings:privacy-downloadsfolder"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "privacy-downloadsfolder.d7359a4d",
-              "title": "Download folder permissions",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-downloadsfolder.5d935f1c",
-              "title": "Allow apps to access downloads folder",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-downloadsfolder.0f87cc9c",
-              "title": "Allow desktop apps to access download folders",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-downloadsfolder.bc0f5a5a",
               "title": "Application access records",
               "type": "info",
               "availability": "planned",
@@ -15755,61 +14602,6 @@
       "children": []
     },
     {
-      "id": "privacy-musiclibrary",
-      "category": "privacy",
-      "title": "Music Library",
-      "description": "App access and recent activity",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "privacy"
-      ],
-      "windowsUris": [
-        "ms-settings:privacy-musiclibrary"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "privacy-musiclibrary.e44d696b",
-              "title": "Music library permissions",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-musiclibrary.25913a47",
-              "title": "Allow the app to access the music library",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-musiclibrary.88c26df1",
-              "title": "Allow desktop apps to access your music library",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-musiclibrary.bc0f5a5a",
-              "title": "Application access records",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not yet accessed the permission service"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "privacy-notifications",
       "category": "privacy",
       "title": "Notification access",
@@ -16085,116 +14877,6 @@
       "children": []
     },
     {
-      "id": "privacy-tasks",
-      "category": "privacy",
-      "title": "Tasks",
-      "description": "App access and recent activity",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "privacy"
-      ],
-      "windowsUris": [
-        "ms-settings:privacy-tasks"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "privacy-tasks.0fafdae2",
-              "title": "Task permissions",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-tasks.8fd4d927",
-              "title": "Allow apps to access tasks",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-tasks.86b78432",
-              "title": "Allow desktop apps to access tasks",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-tasks.bc0f5a5a",
-              "title": "Application access records",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not yet accessed the permission service"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "privacy-videos",
-      "category": "privacy",
-      "title": "Video",
-      "description": "App access and recent activity",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "privacy"
-      ],
-      "windowsUris": [
-        "ms-settings:privacy-videos"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "privacy-videos.feacfffa",
-              "title": "Video permissions",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-videos.0e261070",
-              "title": "Allow apps to access videos",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-videos.5b20e2b2",
-              "title": "Allow desktop apps to access videos",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "privacy-videos.bc0f5a5a",
-              "title": "Application access records",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not yet accessed the permission service"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "privacy-voiceactivation",
       "category": "privacy",
       "title": "Voice activation",
@@ -16251,787 +14933,6 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "regionlanguage-jpnime",
-      "category": "time",
-      "title": "Japanese Microsoft IME",
-      "description": "Windows input method options reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:regionlanguage-jpnime"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "regionlanguage-jpnime.59c4e62a",
-              "title": "Default input mode",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Chinese",
-                "English"
-              ],
-              "value": "Chinese"
-            },
-            {
-              "id": "regionlanguage-jpnime.00473b0c",
-              "title": "Candidate window",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Default",
-                "Customization"
-              ],
-              "value": "Default"
-            },
-            {
-              "id": "regionlanguage-jpnime.01c381ff",
-              "title": "Cloud Candidate Suggestions",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "regionlanguage-jpnime.953dcd7c",
-              "title": "User Dictionary",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "regionlanguage-jpnime.9be757c1",
-              "title": "Button settings",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "regionlanguage-bpmfime",
-      "category": "time",
-      "title": "Zhuyin input method",
-      "description": "Windows input method options reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:regionlanguage-bpmfime"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "regionlanguage-bpmfime.59c4e62a",
-              "title": "Default input mode",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Chinese",
-                "English"
-              ],
-              "value": "Chinese"
-            },
-            {
-              "id": "regionlanguage-bpmfime.00473b0c",
-              "title": "Candidate window",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Default",
-                "Customization"
-              ],
-              "value": "Default"
-            },
-            {
-              "id": "regionlanguage-bpmfime.01c381ff",
-              "title": "Cloud Candidate Suggestions",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "regionlanguage-bpmfime.953dcd7c",
-              "title": "User Dictionary",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "regionlanguage-bpmfime.9be757c1",
-              "title": "Button settings",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "regionlanguage-cangjieime",
-      "category": "time",
-      "title": "Cangjie input method",
-      "description": "Windows input method options reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:regionlanguage-cangjieime"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "regionlanguage-cangjieime.59c4e62a",
-              "title": "Default input mode",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Chinese",
-                "English"
-              ],
-              "value": "Chinese"
-            },
-            {
-              "id": "regionlanguage-cangjieime.00473b0c",
-              "title": "Candidate window",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Default",
-                "Customization"
-              ],
-              "value": "Default"
-            },
-            {
-              "id": "regionlanguage-cangjieime.01c381ff",
-              "title": "Cloud Candidate Suggestions",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "regionlanguage-cangjieime.953dcd7c",
-              "title": "User Dictionary",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "regionlanguage-cangjieime.9be757c1",
-              "title": "Button settings",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "regionlanguage-chsime-wubi-udp",
-      "category": "time",
-      "title": "Wubi User Dictionary",
-      "description": "Windows input method options reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:regionlanguage-chsime-wubi-udp"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "regionlanguage-chsime-wubi-udp.59c4e62a",
-              "title": "Default input mode",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Chinese",
-                "English"
-              ],
-              "value": "Chinese"
-            },
-            {
-              "id": "regionlanguage-chsime-wubi-udp.00473b0c",
-              "title": "Candidate window",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Default",
-                "Customization"
-              ],
-              "value": "Default"
-            },
-            {
-              "id": "regionlanguage-chsime-wubi-udp.01c381ff",
-              "title": "Cloud Candidate Suggestions",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "regionlanguage-chsime-wubi-udp.953dcd7c",
-              "title": "User Dictionary",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "regionlanguage-chsime-wubi-udp.9be757c1",
-              "title": "Button settings",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "regionlanguage-quickime",
-      "category": "time",
-      "title": "Quick input method",
-      "description": "Windows input method options reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:regionlanguage-quickime"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "regionlanguage-quickime.59c4e62a",
-              "title": "Default input mode",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Chinese",
-                "English"
-              ],
-              "value": "Chinese"
-            },
-            {
-              "id": "regionlanguage-quickime.00473b0c",
-              "title": "Candidate window",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Default",
-                "Customization"
-              ],
-              "value": "Default"
-            },
-            {
-              "id": "regionlanguage-quickime.01c381ff",
-              "title": "Cloud Candidate Suggestions",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "regionlanguage-quickime.953dcd7c",
-              "title": "User Dictionary",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "regionlanguage-quickime.9be757c1",
-              "title": "Button settings",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "regionlanguage-korime",
-      "category": "time",
-      "title": "Korean Microsoft IME",
-      "description": "Windows input method options reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:regionlanguage-korime"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "regionlanguage-korime.59c4e62a",
-              "title": "Default input mode",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Chinese",
-                "English"
-              ],
-              "value": "Chinese"
-            },
-            {
-              "id": "regionlanguage-korime.00473b0c",
-              "title": "Candidate window",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Default",
-                "Customization"
-              ],
-              "value": "Default"
-            },
-            {
-              "id": "regionlanguage-korime.01c381ff",
-              "title": "Cloud Candidate Suggestions",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "regionlanguage-korime.953dcd7c",
-              "title": "User Dictionary",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "regionlanguage-korime.9be757c1",
-              "title": "Button settings",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "regionlanguage-chsime-pinyin",
-      "category": "time",
-      "title": "Microsoft Pinyin",
-      "description": "Windows input method options reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:regionlanguage-chsime-pinyin"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "regionlanguage-chsime-pinyin.59c4e62a",
-              "title": "Default input mode",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Chinese",
-                "English"
-              ],
-              "value": "Chinese"
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin.00473b0c",
-              "title": "Candidate window",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Default",
-                "Customization"
-              ],
-              "value": "Default"
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin.01c381ff",
-              "title": "Cloud Candidate Suggestions",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin.953dcd7c",
-              "title": "User Dictionary",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin.9be757c1",
-              "title": "Button settings",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "regionlanguage-chsime-pinyin-domainlexicon",
-      "category": "time",
-      "title": "Pinyin Professional Dictionary",
-      "description": "Windows input method options reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:regionlanguage-chsime-pinyin-domainlexicon"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "regionlanguage-chsime-pinyin-domainlexicon.59c4e62a",
-              "title": "Default input mode",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Chinese",
-                "English"
-              ],
-              "value": "Chinese"
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin-domainlexicon.00473b0c",
-              "title": "Candidate window",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Default",
-                "Customization"
-              ],
-              "value": "Default"
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin-domainlexicon.01c381ff",
-              "title": "Cloud Candidate Suggestions",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin-domainlexicon.953dcd7c",
-              "title": "User Dictionary",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin-domainlexicon.9be757c1",
-              "title": "Button settings",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "regionlanguage-chsime-pinyin-keyconfig",
-      "category": "time",
-      "title": "Pinyin button settings",
-      "description": "Windows input method options reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:regionlanguage-chsime-pinyin-keyconfig"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "regionlanguage-chsime-pinyin-keyconfig.59c4e62a",
-              "title": "Default input mode",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Chinese",
-                "English"
-              ],
-              "value": "Chinese"
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin-keyconfig.00473b0c",
-              "title": "Candidate window",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Default",
-                "Customization"
-              ],
-              "value": "Default"
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin-keyconfig.01c381ff",
-              "title": "Cloud Candidate Suggestions",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin-keyconfig.953dcd7c",
-              "title": "User Dictionary",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin-keyconfig.9be757c1",
-              "title": "Button settings",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "regionlanguage-chsime-pinyin-udp",
-      "category": "time",
-      "title": "Pinyin User Dictionary",
-      "description": "Windows input method options reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:regionlanguage-chsime-pinyin-udp"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "regionlanguage-chsime-pinyin-udp.59c4e62a",
-              "title": "Default input mode",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Chinese",
-                "English"
-              ],
-              "value": "Chinese"
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin-udp.00473b0c",
-              "title": "Candidate window",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Default",
-                "Customization"
-              ],
-              "value": "Default"
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin-udp.01c381ff",
-              "title": "Cloud Candidate Suggestions",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin-udp.953dcd7c",
-              "title": "User Dictionary",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "regionlanguage-chsime-pinyin-udp.9be757c1",
-              "title": "Button settings",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "regionlanguage-chsime-wubi",
-      "category": "time",
-      "title": "Microsoft Wubi",
-      "description": "Windows input method options reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:regionlanguage-chsime-wubi"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "regionlanguage-chsime-wubi.59c4e62a",
-              "title": "Default input mode",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Chinese",
-                "English"
-              ],
-              "value": "Chinese"
-            },
-            {
-              "id": "regionlanguage-chsime-wubi.00473b0c",
-              "title": "Candidate window",
-              "type": "choice",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "options": [
-                "Default",
-                "Customization"
-              ],
-              "value": "Default"
-            },
-            {
-              "id": "regionlanguage-chsime-wubi.01c381ff",
-              "title": "Cloud Candidate Suggestions",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "regionlanguage-chsime-wubi.953dcd7c",
-              "title": "User Dictionary",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "regionlanguage-chsime-wubi.9be757c1",
-              "title": "Button settings",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
             }
           ]
         }
@@ -17262,7 +15163,7 @@
     },
     {
       "id": "hypr-general-col",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Hyprland · Window border gradient",
       "description": "Advanced compositor settings: general.col · Hyprland",
       "preview": "none",
@@ -17429,7 +15330,7 @@
     },
     {
       "id": "hypr-decoration",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Hyprland · Window decoration and transparency",
       "description": "Advanced compositor settings: decoration · Hyprland",
       "preview": "none",
@@ -17628,7 +15529,7 @@
     },
     {
       "id": "hypr-decoration-blur",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Hyprland · Background blur",
       "description": "Advanced compositor settings: decoration.blur · Hyprland",
       "preview": "none",
@@ -17699,35 +15600,6 @@
                 "hypr-options",
                 "decoration.blur",
                 "ignore_opacity"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur.input-methods",
-              "title": "Blurred input method pop-up window · input_methods",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur",
-                "input_methods"
-              ]
-            },
-            {
-              "id": "hypr-decoration-blur.input-methods-ignorealpha",
-              "title": "Input method blur transparency threshold · input_methods_ignorealpha",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.2,
-              "min": 0.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur",
-                "input_methods_ignorealpha"
               ]
             },
             {
@@ -17882,7 +15754,7 @@
     },
     {
       "id": "hypr-decoration-shadow",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Hyprland · Window Shadows",
       "description": "Advanced compositor settings: decoration.shadow · Hyprland",
       "preview": "none",
@@ -18017,7 +15889,7 @@
     },
     {
       "id": "hypr-decoration-glow",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Hyprland · Window Glow",
       "description": "Advanced compositor settings: decoration.glow · Hyprland",
       "preview": "none",
@@ -18110,7 +15982,7 @@
     },
     {
       "id": "hypr-decoration-motion-blur",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Hyprland · Motion Blur",
       "description": "Advanced compositor settings: decoration.motion_blur · Hyprland",
       "preview": "none",
@@ -18161,7 +16033,7 @@
     },
     {
       "id": "hypr-decoration-wobble",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Hyprland · Window elastic deformation",
       "description": "Advanced compositor settings: decoration.wobble · Hyprland",
       "preview": "none",
@@ -18308,7 +16180,7 @@
     },
     {
       "id": "hypr-animations",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Hyprland · Animation global options",
       "description": "Advanced compositor settings: animations · Hyprland",
       "preview": "none",
@@ -19727,7 +17599,7 @@
     },
     {
       "id": "hypr-group-col",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Hyprland · Window group border color",
       "description": "Advanced compositor settings: group.col · Hyprland",
       "preview": "none",
@@ -20265,7 +18137,7 @@
     },
     {
       "id": "hypr-group-groupbar-col",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Hyprland · Window group tab bar color",
       "description": "Advanced compositor settings: group.groupbar.col · Hyprland",
       "preview": "none",
@@ -20937,7 +18809,7 @@
     },
     {
       "id": "hypr-misc-col",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Hyprland · Compositor miscellaneous colors",
       "description": "Advanced compositor settings: misc.col · Hyprland",
       "preview": "none",
@@ -25756,7 +23628,7 @@
     },
     {
       "id": "hypr-sunset-configuration",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Hyprsunset color temperature · General configuration",
       "description": "Component parameters classified according to official documents · Optional component hyprsunset",
       "preview": "none",
@@ -25790,7 +23662,7 @@
     },
     {
       "id": "hypr-sunset-profile",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Hyprsunset color temperature · Schedules",
       "description": "Component parameters classified according to official documents · Optional component hyprsunset",
       "preview": "none",
@@ -25867,220 +23739,6 @@
                 "hypr-sunset",
                 "Profile",
                 "on-switch"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-launcher-general",
-      "category": "apps",
-      "title": "Hyprlauncher · General",
-      "description": "Component parameters classified according to official documents · Optional component hyprlauncher",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; the optional component hyprlauncher setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-launcher"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "General",
-          "controls": [
-            {
-              "id": "hypr-launcher-general.grab-focus",
-              "title": "grab focus · grab_focus",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprlauncher setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-launcher",
-                "General",
-                "grab_focus"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-launcher-cache",
-      "category": "apps",
-      "title": "Hyprlauncher Launcher · Cache",
-      "description": "Component parameters classified according to official documents · Optional component hyprlauncher",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; the optional component hyprlauncher setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-launcher"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Caching",
-          "controls": [
-            {
-              "id": "hypr-launcher-cache.enabled",
-              "title": "enabled · enabled",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprlauncher setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-launcher",
-                "Cache",
-                "enabled"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-launcher-finders",
-      "category": "apps",
-      "title": "Hyprlauncher Launcher · Search Source",
-      "description": "Component parameters classified according to official documents · Optional component hyprlauncher",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; the optional component hyprlauncher setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-launcher"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Search sources",
-          "controls": [
-            {
-              "id": "hypr-launcher-finders.default-finder",
-              "title": "default finder · default_finder",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprlauncher setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "desktop",
-              "referencePath": [
-                "hypr-launcher",
-                "Finders",
-                "default_finder"
-              ]
-            },
-            {
-              "id": "hypr-launcher-finders.desktop-prefix",
-              "title": "desktop prefix · desktop_prefix",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprlauncher setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-launcher",
-                "Finders",
-                "desktop_prefix"
-              ]
-            },
-            {
-              "id": "hypr-launcher-finders.unicode-prefix",
-              "title": "unicode prefix · unicode_prefix",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprlauncher setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": ".",
-              "referencePath": [
-                "hypr-launcher",
-                "Finders",
-                "unicode_prefix"
-              ]
-            },
-            {
-              "id": "hypr-launcher-finders.math-prefix",
-              "title": "math prefix · math_prefix",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprlauncher setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "=",
-              "referencePath": [
-                "hypr-launcher",
-                "Finders",
-                "math_prefix"
-              ]
-            },
-            {
-              "id": "hypr-launcher-finders.font-prefix",
-              "title": "font prefix · font_prefix",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprlauncher setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "'",
-              "referencePath": [
-                "hypr-launcher",
-                "Finders",
-                "font_prefix"
-              ]
-            },
-            {
-              "id": "hypr-launcher-finders.desktop-launch-prefix",
-              "title": "desktop launch prefix · desktop_launch_prefix",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprlauncher setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-launcher",
-                "Finders",
-                "desktop_launch_prefix"
-              ]
-            },
-            {
-              "id": "hypr-launcher-finders.desktop-icons",
-              "title": "desktop icons · desktop_icons",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprlauncher setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-launcher",
-                "Finders",
-                "desktop_icons"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-launcher-ui",
-      "category": "apps",
-      "title": "Hyprlauncher Launcher · Interface",
-      "description": "Component parameters classified according to official documents · Optional component hyprlauncher",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; the optional component hyprlauncher setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-launcher"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Interface",
-          "controls": [
-            {
-              "id": "hypr-launcher-ui.window-size",
-              "title": "window size · window_size",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hyprlauncher setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "400 260",
-              "referencePath": [
-                "hypr-launcher",
-                "UI",
-                "window_size"
               ]
             }
           ]
@@ -27001,7 +24659,7 @@
     },
     {
       "id": "hypr-animation-editor",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Animation trees and curves",
       "description": "Window, layer, workspace animation and Bézier / Spring · Hyprland",
       "preview": "none",
@@ -27142,7 +24800,7 @@
     },
     {
       "id": "hypr-gradient-editor",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Color and Gradient Editing",
       "description": "Borders, window groups and multi-color gradients · Hyprland",
       "preview": "none",
@@ -28480,77 +26138,8 @@
       "children": []
     },
     {
-      "id": "hypr-default-apps",
-      "category": "apps",
-      "title": "Desktop Default Tools",
-      "description": "Terminal, file manager and editor called by shortcut keys · Default application configuration of desktop components",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; the default application configuration settings of desktop components are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "nwg-config-project"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "hypr-default-apps.terminal",
-              "title": "Default terminal",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the default application configuration settings of desktop components are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "nwg-config-project",
-                "terminal"
-              ]
-            },
-            {
-              "id": "hypr-default-apps.file-manager",
-              "title": "Default file manager",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the default application configuration settings of desktop components are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "nwg-config-project",
-                "file-manager"
-              ]
-            },
-            {
-              "id": "hypr-default-apps.editor",
-              "title": "Default text editor",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the default application configuration settings of desktop components are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "nwg-config-project",
-                "editor"
-              ]
-            },
-            {
-              "id": "hypr-default-apps.browser",
-              "title": "Default browser shortcut commands",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the default application configuration settings of desktop components are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "nwg-config-project",
-                "browser"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "hypr-shell-components",
-      "category": "personalization",
+      "category": "appearance",
       "title": "Desktop components and style presets",
       "description": "Panel, Dock, app drawer, notification and exit menu · Optional desktop shell component; nwg-shell is not required by default",
       "preview": "none",
@@ -28728,6 +26317,100 @@
                 "hypr-audio",
                 "default"
               ]
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "system-more",
+      "category": "system",
+      "title": "More",
+      "description": "External settings applications",
+      "preview": "none",
+      "availability": "available",
+      "reason": "Open an installed external configuration application. Each tool owns its settings; unavailable tools are hidden.",
+      "sources": [
+        "kde-settings",
+        "gnome-settings"
+      ],
+      "windowsUris": [],
+      "sections": [
+        {
+          "title": "External settings",
+          "controls": [
+            {
+              "id": "system-more.kde",
+              "title": "KDE System Settings",
+              "type": "action",
+              "availability": "available",
+              "reason": "Open an installed external configuration application. Each tool owns its settings; unavailable tools are hidden.",
+              "value": "Open"
+            },
+            {
+              "id": "system-more.gnome",
+              "title": "GNOME Settings",
+              "type": "action",
+              "availability": "available",
+              "reason": "Open an installed external configuration application. Each tool owns its settings; unavailable tools are hidden.",
+              "value": "Open"
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "appearance-more",
+      "category": "appearance",
+      "title": "More",
+      "description": "External settings applications",
+      "preview": "none",
+      "availability": "available",
+      "reason": "Open an installed external configuration application. Each tool owns its settings; unavailable tools are hidden.",
+      "sources": [
+        "qt6ct",
+        "kvantum",
+        "nwg-look",
+        "gnome-tweaks"
+      ],
+      "windowsUris": [],
+      "sections": [
+        {
+          "title": "External settings",
+          "controls": [
+            {
+              "id": "appearance-more.qt6ct",
+              "title": "Qt 6 Settings",
+              "type": "action",
+              "availability": "available",
+              "reason": "Open an installed external configuration application. Each tool owns its settings; unavailable tools are hidden.",
+              "value": "Open"
+            },
+            {
+              "id": "appearance-more.kvantum",
+              "title": "Kvantum Manager",
+              "type": "action",
+              "availability": "available",
+              "reason": "Open an installed external configuration application. Each tool owns its settings; unavailable tools are hidden.",
+              "value": "Open"
+            },
+            {
+              "id": "appearance-more.gtk",
+              "title": "GTK Settings",
+              "type": "action",
+              "availability": "available",
+              "reason": "Open an installed external configuration application. Each tool owns its settings; unavailable tools are hidden.",
+              "value": "Open"
+            },
+            {
+              "id": "appearance-more.gnome-tweaks",
+              "title": "GNOME Tweaks",
+              "type": "action",
+              "availability": "available",
+              "reason": "Open an installed external configuration application. Each tool owns its settings; unavailable tools are hidden.",
+              "value": "Open"
             }
           ]
         }

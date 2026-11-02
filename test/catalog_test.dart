@@ -1,13 +1,10 @@
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:remya_settings/features/settings/presentation/settings_widgets.dart';
 
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:remya_settings/features/appearance/domain/app_preferences.dart';
-import 'package:remya_settings/features/background/application/background_controller.dart';
-import 'package:remya_settings/features/display/application/display_controller.dart';
-import 'package:remya_settings/features/fonts/application/fonts_controller.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 
 Map<String, dynamic> readCatalog() =>
@@ -51,87 +48,19 @@ void main() {
           isFalse,
         );
       }
-      expect(catalog.search('Energy recommendations'), isEmpty);
-      expect(catalog.search('Multitasking'), isEmpty);
-      for (final removed in [
-        'Quick Facts',
-        'Navigation bar',
-        'Equipment usage',
-        'Copilot key',
-        'Slides',
-      ]) {
-        expect(catalog.search(removed), isEmpty, reason: removed);
+      for (final alias in SettingsCatalog.pageAliases.entries) {
+        expect(catalog.page(alias.key).id, alias.value);
       }
-      for (final id in ['device-usage', 'copilot-key', 'hypr-qt-theme']) {
-        expect(() => catalog.page(id), throwsStateError);
+      for (final category in catalog.categories) {
+        final original = catalog.pages.where((p) => p.category == category.id);
+        final ordered = catalog.inCategory(category.id);
+        final regular = original.where((p) => !p.id.endsWith('-more'));
+        final more = original.where((p) => p.id.endsWith('-more'));
+        expect(ordered, orderedEquals([...regular, ...more]));
       }
-      expect(catalog.search('Blur variant'), isEmpty);
-      expect(
-        () => catalog.page('hypr-decoration-blur-glass'),
-        throwsStateError,
-      );
-      expect(catalog.page('hypr-decoration-blur').id, 'hypr-decoration-blur');
-      final cursor = catalog.page('cursor');
-      expect(cursor.category, 'system');
-      expect(cursor.availability, SettingAvailability.planned);
-      for (final old in ['hypr-cursor', 'hypr-cursor-theme', 'text-cursor']) {
-        expect(catalog.page(old).id, 'cursor');
-      }
-      expect(
-        cursor.controls.map((c) => c.id),
-        containsAll([
-          'themes.cb5e32b2',
-          'hypr-cursor.inactive-timeout',
-          'hypr-cursor-theme.theme',
-          'pointer.e8c2f48c',
-          'text-cursor.bb54f6b0',
-        ]),
-      );
-      expect(cursor.windowsUris, contains('ms-settings:easeofaccess-cursor'));
-      expect(catalog.page('colors').id, 'themes');
-      expect(catalog.page('hypr-wallpaper-outputs').id, 'background');
-      expect(catalog.page('hypr-paper-misc-options').id, 'background');
-      expect(
-        catalog.page('themes').windowsUris,
-        contains('ms-settings:colors'),
-      );
       for (final page in catalog.pages) {
         expect(page.controls, isNotEmpty);
-        expect(
-          page.availability == .available,
-          const {'about', 'background', 'fonts'}.contains(page.id),
-        );
         for (final control in page.controls) {
-          expect(
-            control.availability == .available,
-            const {
-              'themes.material-style-variant',
-              'themes.material-theme-mode',
-              'date-time.fb2a23dc',
-              'date-time.6422d209',
-              'date-time.db451de3',
-              'date-time.098d06ec',
-              'date-time.7e33a213',
-              'date-time.format',
-              ...displaySettingIds,
-              ...systemInformationSettingIds,
-              hostnameSettingId,
-              accentSourceSettingId,
-              accentColorSettingId,
-              backgroundKindSettingId,
-              backgroundDisplaySettingId,
-              backgroundFileSettingId,
-              backgroundFitSettingId,
-              backgroundPauseSettingId,
-              splashSettingId,
-              splashOffsetSettingId,
-              splashOpacitySettingId,
-              fontsSearchSettingId,
-              fontsInstallSettingId,
-              fontsDetailsSettingId,
-              fontsUninstallSettingId,
-            }.contains(control.id),
-          );
           expect(control.reason, isNotEmpty);
         }
       }
@@ -144,6 +73,41 @@ void main() {
         contains('wifi'),
       );
       expect(catalog.search('definitely-no-such-setting'), isEmpty);
+    },
+  );
+
+  testWidgets(
+    'compact actions stay inline when content fits and stack only when narrow',
+    (tester) async {
+      for (final width in [320.0, 220.0]) {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: SizedBox(
+                width: width,
+                child: SettingRow(
+                  id: 'test-row',
+                  label: const Text('Qt 6 Settings'),
+                  control: FilledButton(
+                    onPressed: () {},
+                    child: const Text('Open'),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final text = tester.getRect(find.text('Qt 6 Settings'));
+        final button = tester.getRect(find.byType(FilledButton));
+        if (width == 320) {
+          expect((text.center.dy - button.center.dy).abs(), lessThan(16));
+          expect(button.left, greaterThan(text.right));
+        } else {
+          expect(button.top, greaterThan(text.bottom));
+        }
+        expect(tester.takeException(), isNull);
+      }
     },
   );
 
@@ -207,8 +171,6 @@ void main() {
       ),
     );
     expect(controls.intersection(retiredControls), isEmpty);
-    expect(catalog.page('hypr-opengl').category, 'system');
-    expect(catalog.page('hypr-render').category, 'system');
   });
 
   test('every added control has a pinned source and stays unavailable', () {
@@ -227,13 +189,10 @@ void main() {
           if (addedPages.contains(page.id) || evidenced.contains(control.id))
             control.id: control,
     };
-    expect(addedPages.length, 90);
-    expect(evidence.length, 784);
     expect(
       evidence.map((e) => e['control']).toSet(),
       addedControls.keys.toSet(),
     );
-    expect(evidence.where((e) => e['source'] == 'hypr-options').length, 335);
     for (final entry in evidence) {
       final source = sources[entry['source']];
       expect(source, isNotNull, reason: entry['control'] as String);

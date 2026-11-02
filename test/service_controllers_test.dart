@@ -9,6 +9,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/date_time/presentation/date_time_settings.dart';
 import 'package:remya_settings/features/integration/service_controllers.dart';
 import 'package:remya_settings/features/date_time/application/date_time_controller.dart';
+import 'package:remya_settings/features/applications/application/applications_controller.dart';
+import 'package:remya_settings/features/default_apps/application/default_apps_controller.dart';
 import 'package:remya_settings_client/remya_settings_client.dart';
 
 class FakeService extends SettingsClient {
@@ -58,6 +60,92 @@ class FakeService extends SettingsClient {
 }
 
 void main() {
+  test(
+    'failed app operations retain fresh state and unresolved conflicts',
+    () async {
+      final snapshot = <String, dynamic>{
+        'initialized': true,
+        'writable': true,
+        'conflict': true,
+        'saved': {'application/pdf': 'saved.desktop'},
+        'system': {'application/pdf': 'system.desktop'},
+        'groups': <Object>[],
+      };
+      final defaults = DefaultAppsController(
+        read: () async => snapshot,
+        applications: (_) async => {'applications': []},
+        searchTypes: (_) async => {'types': []},
+        write: (_, _, _) async => throw StateError('write denied'),
+        resolve: (_) async => snapshot,
+      );
+      addTearDown(defaults.dispose);
+      await defaults.set('defaults.pdf', 'new.desktop', []);
+      expect(defaults.errorMessage, contains('write denied'));
+      expect(defaults.system, snapshot['system']);
+      expect(defaults.hasConflict, isTrue);
+      expect(defaults.canChange, isFalse);
+      expect(defaults.isBusy, isFalse);
+
+      final manual = {
+        'id': 'manual.desktop',
+        'name': 'Manual application',
+        'uninstallable': false,
+      };
+      final installed = ApplicationsController(
+        readExternalTools: (_) async => {'tools': []},
+        openExternalTool: (_) async => {},
+        read: () async => {
+          'applications': [manual],
+          'warnings': [],
+        },
+        remove: (_, _) async => throw StateError('package is required'),
+        formatDate: (v) async => v,
+      );
+      addTearDown(installed.dispose);
+      await installed.uninstall(
+        InstalledApplication({
+          'id': 'native.desktop',
+          'name': 'Native application',
+          'token': '1.0',
+          'uninstallable': true,
+        }),
+      );
+      expect(installed.errorMessage, contains('package is required'));
+      expect(installed.applications.single.id, 'manual.desktop');
+      expect(installed.applications.single.canUninstall, isFalse);
+      expect(installed.isBusy, isFalse);
+    },
+  );
+  test(
+    'the theme contract carries a seed without changing the theme schema',
+    () {
+      final config = ThemeConfig.fromMap({
+        'version': 1,
+        'theme': {'style_variant': 'vibrant', 'theme_mode': 'dark'},
+      });
+      expect(config.seedColor, isNull);
+      expect(
+        (config.toMap()['theme'] as Map).keys,
+        isNot(contains('seed_color')),
+      );
+      final seeded = config.withSeed('#123456');
+      expect(
+        (seeded.toMap()['theme'] as Map).keys,
+        isNot(contains('seed_color')),
+      );
+      expect(seeded.toJson(), contains('#123456'));
+      expect(RemyaTheme.fromConfig(seeded).seedColor, const Color(0xFF123456));
+      expect(RemyaTheme.fromConfig(config).seedColor, RemyaTheme.defaultSeed);
+      expect(ThemeConfig.seedFromAccent({'color': '#ABCDEF'}), '#ABCDEF');
+      expect(ThemeConfig.seedFromAccent({'color': 'red'}), isNull);
+      expect(
+        ThemeConfig.seedFromAccentFile(
+          'version = 1\nsource = "custom"\ncolor = "#010203"\n',
+        ),
+        '#010203',
+      );
+    },
+  );
   test('GUI delegates normalized locale and conflict operations without local persistence', () async {
     final service = FakeService();
     final controller = ServiceDateTimeController(service);
@@ -140,11 +228,13 @@ void main() {
     final locale = find.byKey(const ValueKey('time-locale-combobox'));
     final zoneState = tester.state(zone);
     final localeState = tester.state(locale);
-    final field = find.descendant(of: zone, matching: find.byType(TextField));
+    await tester.tap(zone);
+    await tester.pumpAndSettle();
+    final field = find.byKey(const ValueKey('timezone-search'));
     await tester.enterText(field, 'draft');
     await tester.pumpAndSettle();
     final editable = find.descendant(
-      of: zone,
+      of: field,
       matching: find.byType(EditableText),
     );
     expect(tester.widget<EditableText>(editable).focusNode.hasFocus, isTrue);
@@ -153,7 +243,7 @@ void main() {
     await tester.pump();
     expect(identical(tester.state(zone), zoneState), isTrue);
     expect(identical(tester.state(locale), localeState), isTrue);
-    expect(tester.widget<DropdownMenu<String>>(zone).enabled, isTrue);
+    expect(tester.widget<ButtonStyleButton>(zone).onPressed, isNull);
     expect(tester.widget<Switch>(find.byType(Switch)).onChanged, isNotNull);
     await controller.reload();
     await tester.pump();

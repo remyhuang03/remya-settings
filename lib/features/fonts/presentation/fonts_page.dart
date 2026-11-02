@@ -95,7 +95,7 @@ class _FontsPageState extends State<FontsPage> {
               SettingRow(
                 id: fontsInstallSettingId,
                 label: _label(context, _setting(fontsInstallSettingId)),
-                control: OutlinedButton.icon(
+                control: FilledButton.icon(
                   key: const ValueKey('fonts-install'),
                   onPressed: controller.isBusy ? null : _install,
                   icon: const Icon(Icons.add_rounded),

@@ -161,7 +161,7 @@ class _BackgroundPageState extends State<BackgroundPage> {
         _Row(
           setting: _setting(backgroundFileSettingId),
           readout: _controller.nameOf(path) ?? 'No file selected',
-          control: OutlinedButton.icon(
+          control: FilledButton.icon(
             key: const ValueKey('background-browse'),
             onPressed: enabled ? () => _choose(_controller.isVideo) : null,
             icon: const Icon(Icons.folder_open_outlined),

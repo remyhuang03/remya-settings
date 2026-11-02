@@ -1,3 +1,9 @@
+import '../../applications/presentation/external_tools_page.dart';
+import '../../applications/application/applications_controller.dart';
+import '../../applications/presentation/installed_apps_page.dart';
+import '../../default_apps/application/default_apps_controller.dart';
+import '../../default_apps/presentation/default_apps_page.dart';
+
 import 'dart:math' as math;
 
 import 'package:remya_settings_client/settings_contract.dart';
@@ -68,6 +74,7 @@ class _SettingsShellState extends State<SettingsShell> {
     } else {
       final advanced = const {
         'advanced-display',
+        'update-options',
         'hypr-paper-misc-options',
       }.contains(target);
       if (advanced != _expandAdvanced) {
@@ -357,6 +364,11 @@ class _SettingsShellState extends State<SettingsShell> {
         ],
       );
     }
+    if (_query.trim().isEmpty &&
+        _page?.id == 'installed' &&
+        ApplicationsScope.maybeOf(context) != null) {
+      return _installedBody(ApplicationsScope.maybeOf(context)!);
+    }
     if (_query.trim().isEmpty && _page?.id == 'fonts') {
       if (FontsScope.maybeOf(context) case final controller?) {
         return _fontsBody(_page!, controller);
@@ -401,6 +413,24 @@ class _SettingsShellState extends State<SettingsShell> {
               ),
             ),
         ],
+      );
+    } else if (const {
+          'time-more',
+          'system-more',
+          'appearance-more',
+        }.contains(_page?.id) &&
+        ApplicationsScope.maybeOf(context) != null) {
+      final controller = ApplicationsScope.maybeOf(context)!;
+      content = ExternalToolsPage(
+        read: () =>
+            controller.readExternalTools(_page!.id.split('-more').first),
+        open: controller.openExternalTool,
+      );
+    } else if (_page?.id == 'defaults' &&
+        DefaultAppsScope.maybeOf(context) != null) {
+      content = DefaultAppsPage(
+        key: const ValueKey('default-apps-page'),
+        controller: DefaultAppsScope.maybeOf(context)!,
       );
     } else if (_page != null) {
       content = SettingsDetail(
@@ -447,6 +477,36 @@ class _SettingsShellState extends State<SettingsShell> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _installedBody(ApplicationsController controller) {
+    final gutter = MediaQuery.sizeOf(context).width < 600 ? 16.0 : 32.0;
+    return CustomScrollView(
+      key: const ValueKey('content-installed'),
+      slivers: [
+        SliverToBoxAdapter(child: _header()),
+        SliverLayoutBuilder(
+          builder: (context, constraints) {
+            final side = math.max(
+              gutter,
+              (constraints.crossAxisExtent - 1080) / 2,
+            );
+            return SliverPadding(
+              padding: .fromLTRB(
+                side,
+                8,
+                side,
+                widget.status == null ? 40 : 144,
+              ),
+              sliver: InstalledAppsPage(
+                controller: controller,
+                formatDate: controller.formatDate,
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 

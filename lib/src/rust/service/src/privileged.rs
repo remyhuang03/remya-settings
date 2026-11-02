@@ -6,6 +6,9 @@ use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
 #[derive(Serialize, Deserialize)]
 #[serde(tag = "operation", deny_unknown_fields)]
 pub enum Request {
+    Uninstall {
+        removal: remya_settings_applications::Removal,
+    },
     Hostname {
         expected_static: String,
         hostname: String,
@@ -66,6 +69,9 @@ pub fn serve() -> Result<(), String> {
             .map_err(|e| e.to_string())
             .and_then(|request| {
                 let state = match request {
+                    Request::Uninstall { removal } => {
+                        return remya_settings_applications::uninstall(&removal, true);
+                    }
                     Request::Hostname {
                         expected_static,
                         hostname,

@@ -30,8 +30,8 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'about' => Icons.info_outline_rounded,
       'language' => Icons.translate_rounded,
       'typing' || 'text-input' => Icons.edit_note_rounded,
-      'keyboard' ||
-      'accessibility-keyboard' ||
+      'keyboard' || 'accessibility-keyboard' => Icons.keyboard_outlined,
+      'time-more' || 'system-more' || 'appearance-more' => Icons.add_rounded,
       'hypr-keybinds' => Icons.keyboard_outlined,
       'speech' ||
       'online-speech' ||
@@ -222,7 +222,12 @@ class SettingRow extends StatelessWidget {
         if (control == null) {
           return Align(alignment: .centerLeft, child: label);
         }
-        if (constraints.maxWidth < 560) {
+        final compact =
+            control is ButtonStyleButton ||
+            control is IconButton ||
+            control is Switch ||
+            control is Checkbox;
+        if (constraints.maxWidth < (compact ? 240 : 560)) {
           return Column(
             crossAxisAlignment: .start,
             children: [
@@ -236,10 +241,13 @@ class SettingRow extends StatelessWidget {
           children: [
             Expanded(child: label),
             const SizedBox(width: 24),
-            SizedBox(
-              width: 232,
-              child: Align(alignment: .centerRight, child: control),
-            ),
+            if (compact)
+              control
+            else
+              SizedBox(
+                width: 232,
+                child: Align(alignment: .centerRight, child: control),
+              ),
           ],
         );
       },
@@ -319,7 +327,7 @@ class SettingControlTile extends StatelessWidget {
                 message: setting.reason,
                 child: onOpenPage == null
                     ? _PreviewControl(setting)
-                    : OutlinedButton(
+                    : FilledButton(
                         key: ValueKey('open-page-${setting.id}'),
                         onPressed: onOpenPage,
                         child: Text(setting.value as String),
@@ -382,7 +390,7 @@ class _PreviewControl extends StatelessWidget {
           onChanged: null,
         ),
       ),
-      .action => OutlinedButton(
+      .action => FilledButton(
         onPressed: null,
         child: Text(setting.value as String),
       ),
@@ -398,7 +406,7 @@ class _PreviewControl extends StatelessWidget {
         ),
       ),
       .info => const SizedBox.shrink(),
-      .color => OutlinedButton.icon(
+      .color => FilledButton.icon(
         onPressed: null,
         icon: Container(
           width: 20,
@@ -582,7 +590,7 @@ class _AccentColorButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = AppPreferencesScope.of(context);
-    return OutlinedButton.icon(
+    return FilledButton.icon(
       key: const ValueKey('accent-color-button'),
       onPressed: controller.isBusy ? null : () => _pick(context, controller),
       icon: Container(

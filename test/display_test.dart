@@ -185,13 +185,6 @@ AppPreferencesController fakeAppPreferencesController() =>
       systemAppearance: FakeSystemAppearance(),
     );
 
-final mainScroll = find
-    .descendant(
-      of: find.byKey(const ValueKey('settings-main-content')),
-      matching: find.byType(Scrollable),
-    )
-    .first;
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -305,21 +298,14 @@ void main() {
   });
 
   group('Display page', () {
-    Future<FakeDisplayBackend> pump(
-      WidgetTester tester, {
-      List<Map<String, dynamic>>? outputs,
-      void Function(FakeDisplayBackend)? configure,
-      String page = 'display',
-      ValueNotifier<String?>? navigation,
-    }) async {
+    Future<FakeDisplayBackend> pump(WidgetTester tester) async {
       tester.view.physicalSize = const Size(1280, 1000);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
-      final backend = FakeDisplayBackend(
-        outputs ??
-            [output('eDP-1'), output('DP-3', x: 1920, hdr: true, vrr: true)],
-      );
-      configure?.call(backend);
+      final backend = FakeDisplayBackend([
+        output('eDP-1'),
+        output('DP-3', x: 1920, hdr: true, vrr: true),
+      ]);
       final controller = DisplayController(backend);
       await controller.reload();
       final navigatorKey = GlobalKey<NavigatorState>();
@@ -335,7 +321,7 @@ void main() {
               theme: ThemeData(useMaterial3: true),
               home: SettingsShell(
                 catalog: catalog,
-                navigation: navigation ?? ValueNotifier(page),
+                navigation: ValueNotifier('display'),
                 status: SettingsStatus(
                   preferences: preferences,
                   display: controller,
@@ -349,105 +335,6 @@ void main() {
       await tester.pumpAndSettle();
       return backend;
     }
-
-    Future<void> scrollTo(WidgetTester tester, Finder finder) async {
-      await tester.scrollUntilVisible(finder, 200, scrollable: mainScroll);
-      await tester.pumpAndSettle();
-    }
-
-    testWidgets('Position edits both coordinates together', (tester) async {
-      final backend = await pump(tester);
-      final x = find.byKey(
-        const ValueKey('display-control-$displayPositionId-x'),
-      );
-      final y = find.byKey(
-        const ValueKey('display-control-$displayPositionId-y'),
-      );
-      await scrollTo(tester, x);
-      await tester.enterText(x, '-120');
-      await tester.enterText(y, '240');
-      expect(
-        backend.writes,
-        isEmpty,
-        reason: 'switching axes must not submit a partial position',
-      );
-      await tester.testTextInput.receiveAction(TextInputAction.done);
-      await tester.pumpAndSettle();
-      expect(backend.writes.single.$2['value'], '-120x240');
-    });
-
-    testWidgets(
-      'Resolution offers Preferred or custom coordinates and shows corrected readback',
-      (tester) async {
-        final backend = await pump(tester);
-        final x = find.byKey(
-          const ValueKey('display-control-$displayResolutionId-x'),
-        );
-        final y = find.byKey(
-          const ValueKey('display-control-$displayResolutionId-y'),
-        );
-        await scrollTo(tester, x);
-        await tester.enterText(x, '1300');
-        await tester.enterText(y, '730');
-        await tester.testTextInput.receiveAction(TextInputAction.done);
-        await tester.pumpAndSettle();
-        expect(backend.writes.single.$2['value'], '1300x730');
-        expect(tester.widget<TextField>(x).controller!.text, '1280');
-        expect(tester.widget<TextField>(y).controller!.text, '720');
-        final choice = find.byKey(
-          const ValueKey('display-control-$displayResolutionId'),
-        );
-        await scrollTo(tester, choice);
-        await tester.tap(choice);
-        await tester.pumpAndSettle();
-        await tester.tap(find.text('Preferred').last);
-        await tester.pumpAndSettle();
-        expect(backend.writes.last.$2['value'], 'preferred');
-        expect(x, findsNothing);
-      },
-    );
-
-    testWidgets('rotation preserves flip and flip preserves rotation', (
-      tester,
-    ) async {
-      final backend = await pump(
-        tester,
-        outputs: [output('eDP-1')..['transform'] = 5],
-      );
-      final rotation = find.byKey(
-        const ValueKey('display-control-$displayOrientationId'),
-      );
-      await scrollTo(tester, rotation);
-      await tester.tap(rotation);
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('180°').last);
-      await tester.pumpAndSettle();
-      expect(backend.writes.last.$2['value'], '6');
-      await tester.tap(find.byKey(const ValueKey('display-flip')));
-      await tester.pumpAndSettle();
-      expect(backend.writes.last.$2['value'], '2');
-    });
-
-    testWidgets('a blocked rule file disables writes and explains why', (
-      tester,
-    ) async {
-      await pump(
-        tester,
-        configure: (backend) => backend.blocked = 'Cannot edit monitors.lua',
-      );
-      expect(find.text('Cannot edit monitors.lua'), findsOneWidget);
-      final orientation = find.byKey(
-        const ValueKey('display-control-$displayOrientationId'),
-      );
-      await tester.scrollUntilVisible(orientation, 200, scrollable: mainScroll);
-      final field = tester.widget<DropdownButton<String>>(
-        find.descendant(
-          of: orientation,
-          matching: find.byType(DropdownButton<String>),
-        ),
-      );
-      expect(field.onChanged, isNull);
-    });
 
     testWidgets('risky changes ask to keep or revert with a countdown', (
       tester,

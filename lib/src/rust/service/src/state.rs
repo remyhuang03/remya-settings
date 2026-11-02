@@ -1,10 +1,12 @@
 use crate::privileged::{Request, Session};
 use gio::glib::{Variant, variant::ToVariant};
 use remya_settings_appearance::api as appearance;
+use remya_settings_applications as applications;
 use remya_settings_background::{
     BackgroundManager, RealDesktop, is_accent_setting, is_background_setting, manager::Paths,
 };
 use remya_settings_date_time::api as clock;
+use remya_settings_default_apps::{self as default_apps, DefaultApps};
 use remya_settings_display::{DisplayManager, Hyprctl, atomic_write, is_display_setting};
 use remya_settings_fonts::{self as fonts, FontManager, RealFontconfig};
 use remya_settings_system_information::hostname::{self, HostnameManager};
@@ -52,6 +54,7 @@ fn write(path: &std::path::Path, value: &Value) -> Result<(), String> {
 pub fn page_alias(page: &str) -> &str {
     match page {
         "advanced-display" | "hypr-monitor-fields" => "display",
+        "update-options" => "updates",
         "system-information" => "about",
         "colors" => "themes",
         "hypr-cursor" | "hypr-cursor-theme" | "text-cursor" => "cursor",
@@ -164,6 +167,7 @@ pub struct State {
     pub display: DisplayManager<Hyprctl>,
     pub background: BackgroundManager<RealDesktop>,
     fonts: FontManager<RealFontconfig>,
+    pub default_apps: DefaultApps<default_apps::RealDesktop>,
     pub auth_error: Option<String>,
     privileged: Option<Session>,
     gui: Option<Child>,
@@ -192,6 +196,10 @@ impl State {
                 RealFontconfig,
                 fonts::user_font_directory().unwrap_or_default(),
             ),
+            default_apps: DefaultApps::new(
+                default_apps::RealDesktop,
+                config.with_file_name("default-apps.toml"),
+            ),
             saved: Value::Null,
             theme_error: None,
             date_error: None,
@@ -211,6 +219,7 @@ impl State {
         self.theme_error = self.refresh_theme().err();
         self.date_error = self.refresh_date().err();
         let _ = self.hostname.refresh();
+        let _ = self.default_apps.refresh();
         // A detection failure is retained by the manager and reported in its state.
         let _ = self.display.refresh();
         // Failures stay in the manager's state for every reader.
@@ -358,7 +367,7 @@ impl State {
     pub fn configuration(&self) -> Value {
         let mut date = self.date.clone();
         date["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
-        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"hostname":self.hostname_state(),"background":self.background.state()})
+        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state()})
     }
     pub fn controls(&self) -> Vec<&Value> {
         self.catalog["pages"]
@@ -457,6 +466,62 @@ impl State {
                             "value": value,
                             "error": self.background.error(),
                         }))
+                    }
+                    "default-apps" => {
+                        let _ = self.default_apps.refresh();
+                        Ok(self.default_apps.state())
+                    }
+                    _ if key.starts_with("default-applications:") => {
+                        self.default_apps.applications(&key[21..])
+                    }
+                    _ if key.starts_with("default-types:") => self.default_apps.search(&key[14..]),
+                    _ if key.starts_with("default-candidates:") => self
+                        .default_apps
+                        .candidates(&key[19..].split(',').map(str::to_owned).collect::<Vec<_>>()),
+                    _ if default_apps::IDS.contains(&key) => {
+                        let _ = self.default_apps.refresh();
+                        let mut state = self.default_apps.state();
+                        state["id"] = json!(key);
+                        state["availability"] = json!("available");
+                        state["value"] = state["groups"]
+                            .as_array()
+                            .unwrap()
+                            .iter()
+                            .find(|group| group["id"] == key)
+                            .map(|group| {
+                                json!(
+                                    group["types"]
+                                        .as_array()
+                                        .unwrap()
+                                        .iter()
+                                        .map(|t| (
+                                            t.as_str().unwrap().to_string(),
+                                            state["system"][t.as_str().unwrap()].clone()
+                                        ))
+                                        .collect::<std::collections::BTreeMap<_, _>>()
+                                )
+                            })
+                            .unwrap_or(Value::Null);
+                        Ok(state)
+                    }
+                    _ if key.starts_with("calendar-date:") => Ok(
+                        json!({"value":remya_settings_date_time::format_calendar_date(&key[14..])?}),
+                    ),
+                    "input-method-tools" => applications::external_tools::read("time"),
+                    _ if key.starts_with("external-tools:") => {
+                        applications::external_tools::read(&key[15..])
+                    }
+                    _ if applications::external_tools::IDS.contains(&key) => {
+                        applications::external_tools::read_setting(key)
+                    }
+                    "installed-apps" => applications::read(),
+                    _ if key.starts_with("installed-apps:") => applications::search(&key[15..]),
+                    _ if key.starts_with("installed-app:") => applications::details(&key[14..]),
+                    _ if applications::IDS.contains(&key) => {
+                        let mut state = applications::read()?;
+                        state["id"] = json!(key);
+                        state["availability"] = json!("available");
+                        Ok(state)
                     }
                     "fonts" => self.fonts.families(),
                     _ if key.starts_with("font-search:") => self.fonts.search(&key[12..]),
@@ -630,6 +695,27 @@ impl State {
         if control["availability"] != "available" {
             return Err(format!("Unavailable:{}", control["reason"]));
         }
+        if default_apps::IDS.contains(&key) {
+            return self.default_apps.set(key, value);
+        }
+        if applications::external_tools::IDS.contains(&key) {
+            if value != "open" {
+                return Err(invalid("Use open to launch the configuration tool"));
+            }
+            return applications::external_tools::open(key);
+        }
+        if applications::IDS.contains(&key) {
+            if key != applications::UNINSTALL {
+                return Err("ReadOnly:Read installed-apps or installed-app:<desktop-id>".into());
+            }
+            let removal: applications::Removal = serde_json::from_str(value)
+                .map_err(|e| invalid(&format!("Invalid uninstall request: {e}")))?;
+            return if applications::needs_authorization(&removal.id) {
+                self.request(Request::Uninstall { removal })
+            } else {
+                applications::uninstall(&removal, false)
+            };
+        }
         if key == hostname::RENAME {
             hostname::validate_name(value)?;
             self.hostname.refresh()?;
@@ -761,6 +847,9 @@ impl State {
         self.save_date(state, &keys)
     }
     fn resolve(&mut self, feature: &str, source: &str) -> Result<Value, String> {
+        if feature == "default-apps" {
+            return self.default_apps.resolve(source);
+        }
         if feature == "hostname" {
             self.hostname.refresh()?;
             match source {

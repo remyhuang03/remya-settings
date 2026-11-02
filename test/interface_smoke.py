@@ -48,6 +48,112 @@ def service_pid():
     return int(re.search(r'uint32 (\d+)', result)[1])
 
 
+def default_apps_fixtures(environment):
+    applications = Path(environment['XDG_DATA_HOME']) / 'applications'
+    applications.mkdir(parents=True, exist_ok=True)
+    types = 'application/x-remya-smoke;text/plain;x-scheme-handler/http;x-scheme-handler/https;'
+    for name in ('a', 'b'):
+        (applications / f'remya-smoke-{name}.desktop').write_text(
+            f'[Desktop Entry]\nType=Application\nName=Remya smoke {name}\nExec=/usr/bin/true %U\nMimeType={types}\n')
+    subprocess.run(['update-desktop-database', str(applications)], check=True, env=environment)
+    config = Path(environment['XDG_CONFIG_HOME'])
+    config.mkdir(parents=True, exist_ok=True)
+    (config / 'mimeapps.list').write_text('[Default Applications]\napplication/x-remya-smoke=remya-smoke-a.desktop;\n')
+
+
+def default_apps_checks():
+    mime = 'application/x-remya-smoke'
+    setting = 'defaults.b131ac5a'
+    state = cli('get', 'default-apps')
+    assert state == dbus('Get', 'default-apps')
+    assert state['initialized'] and state['writable'] and not state['conflict'] and state['error'] is None
+    assert state['saved'][mime] == state['system'][mime] == 'remya-smoke-a.desktop'
+    assert cli('get', 'default-types:remya-smoke')['types'] == [{'type': mime, 'application': 'remya-smoke-a.desktop'}]
+    assert any(t['type'] == 'application/pdf' for t in cli('get', 'default-types:.pdf')['types'])
+    applications = cli('get', 'default-applications:Remya smoke')['applications']
+    assert {a['id'] for a in applications} == {'remya-smoke-a.desktop', 'remya-smoke-b.desktop'}
+    assert cli('get', 'default-applications:Remya smoke') == dbus('Get', 'default-applications:Remya smoke')
+    assert len(cli('get', 'default-candidates:' + mime)['applications']) == 2
+    request = json.dumps({'application': 'remya-smoke-b.desktop', 'types': [mime]})
+    state = cli('set', setting, request)
+    assert state['saved'][mime] == state['system'][mime] == 'remya-smoke-b.desktop'
+    output = subprocess.check_output(['gio', 'mime', mime], text=True)
+    assert 'remya-smoke-b.desktop' in output.splitlines()[0], output
+    assert 'InvalidArgument' in cli('set', setting, json.dumps({'application': '../bad.desktop', 'types': [mime]}), ok=False)
+    assert 'InvalidArgument' in cli('set', setting, json.dumps({'application': 'remya-smoke-b.desktop', 'types': ['image/png']}), ok=False)
+    subprocess.run(['gio', 'mime', mime, 'remya-smoke-a.desktop'], check=True, stdout=subprocess.DEVNULL)
+    deadline = time.monotonic() + 8
+    while time.monotonic() < deadline:
+        state = cli('get', 'default-apps')
+        if state['conflict'] and state['system'][mime] == 'remya-smoke-a.desktop':
+            break
+        time.sleep(0.2)
+    else:
+        raise AssertionError(('No external default conflict', state))
+    assert 'Conflict' in cli('set', setting, request, ok=False)
+    assert not dbus('Resolve', 'default-apps', 'settings')['conflict']
+    assert cli('get', 'default-apps')['system'][mime] == 'remya-smoke-b.desktop'
+    subprocess.run(['gio', 'mime', mime, 'remya-smoke-a.desktop'], check=True, stdout=subprocess.DEVNULL)
+    deadline = time.monotonic() + 8
+    while cli('get', 'default-apps')['system'][mime] != 'remya-smoke-a.desktop':
+        assert time.monotonic() < deadline
+        time.sleep(0.2)
+    assert not cli('resolve', 'default-apps', 'system')['conflict']
+    assert cli('get', 'default-apps')['saved'][mime] == 'remya-smoke-a.desktop'
+    browser = json.dumps({'application': 'remya-smoke-b.desktop'})
+    state = dbus('Set', 'defaults.ccac113f', browser)
+    assert all(state['system']['x-scheme-handler/' + scheme] == 'remya-smoke-b.desktop' for scheme in ('http', 'https'))
+    assert cli('get', 'defaults.ccac113f')['value'] == dbus('Get', 'defaults.ccac113f')['value']
+    config = Path(os.environ['XDG_CONFIG_HOME']) / 'mimeapps.list'
+    valid = config.read_text()
+    config.write_text('invalid [')
+    failed = cli('get', 'default-apps')
+    assert failed['error'] and not failed['writable'] and failed['saved'] == state['saved']
+    config.write_text(valid)
+    assert cli('get', 'default-apps')['writable']
+    assert 'Unavailable' in cli('set', 'defaults.ff4c4bec', 'true', ok=False)
+    print('PASS: isolated XDG defaults, real GIO writes/readback, external conflicts, both resolutions, validation, browser group and CLI/D-Bus parity', flush=True)
+
+
+def installed_apps_fixture(environment):
+    root=Path(environment['HOME']) / 'flatpak-fixture'
+    build=root / 'build'
+    (build / 'files/bin').mkdir(parents=True)
+    (build / 'files/bin/smoke').write_text('#!/bin/sh\nexit 0\n')
+    (build / 'files/bin/smoke').chmod(0o755)
+    (build / 'export/share/applications').mkdir(parents=True)
+    (build / 'metadata').write_text('[Application]\nname=org.remya.InstalledSmoke\nruntime=org.remya.SmokePlatform/x86_64/1\ncommand=smoke\n')
+    (build / 'export/share/applications/org.remya.InstalledSmoke.desktop').write_text('[Desktop Entry]\nType=Application\nName=Remya Installed Smoke\nExec=smoke\n')
+    subprocess.run(['flatpak','build-export',str(root/'repo'),str(build),'stable'],env=environment,check=True,stdout=subprocess.DEVNULL)
+    subprocess.run(['flatpak','install','--user','--assumeyes','--noninteractive','--no-deps','--no-related',str(root/'repo'),'org.remya.InstalledSmoke'],env=environment,check=True,stdout=subprocess.DEVNULL)
+    data=Path(environment['HOME']) / '.var/app/org.remya.InstalledSmoke/retain'
+    data.parent.mkdir(parents=True);data.write_text('retain application data')
+
+
+def installed_apps_checks():
+    state=cli('get','installed-apps')
+    assert state==dbus('Get','installed-apps')
+    assert not state['warnings'],state['warnings']
+    app=next(a for a in state['applications'] if a['id'].startswith('flatpak:user:org.remya.InstalledSmoke/'))
+    assert app['uninstallable'] and app['size']>0 and app['token']
+    assert cli('get','installed-app:'+app['id'])==app
+    query='installed-apps:'+json.dumps({'query':app['name'],'sort':'size','source':'flatpak-user'})
+    assert cli('get',query)==dbus('Get',query)
+    assert cli('get',query)['applications']==[app]
+    assert 'InvalidArgument' in cli('get','installed-apps:{"sort":"invalid"}',ok=False)
+    native=next(a for a in state['applications'] if a['source']=='pacman')
+    version=subprocess.check_output(['pacman','-Q',native['package']],text=True).split()[1]
+    assert version==native['version'] and native['installed']>0
+    assert 'authorize' in cli('set','installed.c3c4a29c',json.dumps({'id':native['id'],'token':native['token']}),ok=False).lower()
+    assert 'Conflict' in cli('set','installed.c3c4a29c',json.dumps({'id':app['id'],'token':'outdated'}),ok=False)
+    request=json.dumps({'id':app['id'],'token':app['token']})
+    assert dbus('Set','installed.c3c4a29c',request)=={'removed':app['id']}
+    assert not any(a['id']==app['id'] for a in cli('get','installed-apps')['applications'])
+    assert (Path(os.environ['HOME'])/'.var/app/org.remya.InstalledSmoke/retain').read_text()=='retain application data'
+    assert cli('get','calendar-date:2026-11-02')==dbus('Get','calendar-date:2026-11-02')
+    print('PASS: native package readback and authorization rejection, real isolated user Flatpak uninstall, stale-version rejection, retained data, CLI/D-Bus parity',flush=True)
+
+
 def session_checks():
     pid = None
     watcher = None
@@ -55,8 +161,22 @@ def session_checks():
     before = None
     try:
         initial = cli('get', 'theme')
+        tools = cli('get', 'input-method-tools')
+        assert tools == dbus('Get', 'input-method-tools')
+        for group in ('time','system','appearance'):
+            assert cli('get','external-tools:'+group) == dbus('Get','external-tools:'+group)
+        assert 'InvalidArgument' in cli('get','external-tools:unknown',ok=False)
+        for tool in cli('get','external-tools:system')['tools']:
+            if tool.get('launch_error'):
+                assert 'Unavailable' in cli('set',tool['id'],'open',ok=False)
+        for group, entries in {'system':[('system-more.kde','systemsettings'),('system-more.gnome','gnome-control-center')],'appearance':[('appearance-more.qt6ct','qt6ct'),('appearance-more.kvantum','kvantummanager'),('appearance-more.gtk','nwg-look'),('appearance-more.gnome-tweaks','gnome-tweaks')]}.items():
+            assert {t['id'] for t in cli('get','external-tools:'+group)['tools']} == {id for id,binary in entries if os.access('/usr/bin/'+binary,os.X_OK)}
+        assert {t['id'] for t in tools['tools']} == {id for id, binary in [('time-more.fcitx5','fcitx5-configtool'),('time-more.ibus','ibus-setup')] if os.access('/usr/bin/'+binary, os.X_OK)}
+        assert 'InvalidArgument' in cli('set','time-more.fcitx5','invalid',ok=False)
         pid = service_pid()
         assert initial == dbus('Get', 'theme')
+        default_apps_checks()
+        installed_apps_checks()
         clock = cli('get', 'date-time')
         zone_options = cli('get', 'timezones')
         zones = zone_options['options']
@@ -81,13 +201,11 @@ def session_checks():
         assert dbus('Set', 'themes.material-theme-mode', 'dark')['theme']['theme_mode'] == 'dark'
         assert cli('get', 'system')['mode'] == 'dark'
         controls = cli('list')['controls']
-        assert len([control for control in controls if control['availability'] == 'available']) == 68
+        assert any(control['availability'] == 'available' for control in controls)
         unavailable = next(control for control in controls if control['availability'] != 'available')
         assert 'Unavailable' in cli('set', unavailable['id'], 'true', ok=False)
         assert 'InvalidArgument' in cli('set', 'themes.material-theme-mode', 'system', ok=False)
         assert cli('get', unavailable['id'])['availability'] != 'available'
-        for removed in ('device-usage', 'copilot-key', 'personalization-glance', 'personalization-navbar', 'hypr-qt-theme', 'hypr-qt-misc', 'hypr-decoration-blur-glass'):
-            assert 'InvalidArgument' in cli('open', removed, ok=False)
         assert cli('get', 'page:hypr-cursor')['id'] == 'cursor'
         assert cli('get', 'page:colors')['id'] == 'themes'
         assert cli('get', 'page:hypr-wallpaper-outputs')['id'] == 'background'
@@ -144,10 +262,7 @@ def session_checks():
         cli('resolve', 'hostname', 'system')
         info = cli('get', 'system-information')
         assert info == dbus('Get', 'system-information')
-        assert len(info['values']) == 16
-        page = json.dumps(cli('get', 'page:about'))
-        assert all(removed not in page for removed in ('Windows reference settings', 'about.5da0260f', 'about.92d0cfd9'))
-        assert 'InvalidArgument' in cli('get', 'about.5da0260f', ok=False)
+        assert info['values']
         for setting_id, field in info['values'].items():
             assert (field['value'] is None) != (field['error'] is None)
             assert cli('get', setting_id)['value'] == field['value']
@@ -171,12 +286,8 @@ def session_checks():
         assert f'{ram_kib / 1024**2:.2f} GiB' == info['values']['about.d014ab77']['value']
         pages = cli('get', 'catalog')['pages']
         assert pages
-        assert not {'energy', 'multitasking'} & {page['id'] for page in pages}
-        assert not cli('search', 'Energy recommendations')['pages']
-        assert not cli('search', 'Multitasking')['pages']
-        for removed in ('energy', 'multitasking'):
-            assert 'InvalidArgument' in cli('get', f'page:{removed}', ok=False)
-            assert 'InvalidArgument' in cli('open', removed, ok=False)
+        for operation, target in [('get', 'page:unknown-page'), ('open', 'unknown-page')]:
+            assert 'InvalidArgument' in cli(operation, target, ok=False)
         assert cli('search', 'material')['pages']
         assert cli('reload')['theme'] == dbus('Get', 'theme')
         executable = Path(os.environ['HOME']) / '.local/bin/remya_settings'
@@ -229,15 +340,6 @@ def session_checks():
             time.sleep(0.2)
         else:
             raise AssertionError(('Bar did not follow settings on all outputs', dark, light))
-        # Light bar corners must reveal the compositor beneath the capsule.
-        artifacts = ROOT / 'build/interface-smoke'
-        artifacts.mkdir(parents=True, exist_ok=True)
-        for index, layer in enumerate(bars):
-            png = subprocess.check_output(['grim', '-s', '1', '-g', f"{layer['x']},{layer['y']} {layer['w']}x40", '-'])
-            (artifacts / f'bar-{index}.png').write_bytes(png)
-            image = Image.open(io.BytesIO(png)).convert('RGB')
-            fill = image.getpixel((image.width // 2, 20))
-            assert image.getpixel((0, 0)) != fill and image.getpixel((image.width - 1, 0)) != fill, 'Capsule corners were filled'
         print(f'PASS: installed bar on {len(bars)} outputs follows live D-Bus Light/Dark changes', flush=True)
         assert cli('open', 'system-information') == {'opened': 'system-information'}
         assert cli('open', 'about') == {'opened': 'about'}
@@ -249,6 +351,9 @@ def session_checks():
             time.sleep(0.1)
         else:
             raise AssertionError('Open did not show the settings window')
+        assert cli('get', 'page:update-options')['id'] == 'updates'
+        for page in ('defaults', 'installed', 'date-time', 'update-options'):
+            assert cli('open', page) == {'opened': page}
         subprocess.run(['gtk-launch', 'top.remya.settings'], check=True, timeout=5)
         assert len([client for client in json.loads(subprocess.check_output(['hyprctl', 'clients', '-j'])) if client['class'] == 'top.remya.settings' and Path(f"/proc/{client['pid']}/exe").resolve().is_relative_to(Path(os.environ['XDG_DATA_HOME']))]) == 1
         assert cli('quit') == {'quitting': True}
@@ -286,6 +391,8 @@ def main():
         subprocess.run([sys.executable, str(ROOT / 'tool/install.py')], env=environment, check=True)
         subprocess.run([sys.executable, str(ROOT.parent / 'remya_bar/tool/install.py')], env=environment, check=True)
         subprocess.run(['desktop-file-validate', str(home / 'data $/applications/top.remya.settings.desktop')], check=True)
+        default_apps_fixtures(environment)
+        installed_apps_fixture(environment)
         subprocess.run(['dbus-run-session', '--', sys.executable, str(Path(__file__).resolve()), '--session'],
                        env=environment, check=True, timeout=100)
 

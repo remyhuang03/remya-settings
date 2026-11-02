@@ -1,3 +1,5 @@
+import 'features/applications/application/applications_controller.dart';
+import 'features/default_apps/application/default_apps_controller.dart';
 import 'features/system_information/application/hostname_controller.dart';
 
 import 'dart:io';
@@ -52,6 +54,21 @@ Future<void> main() async {
     read: () => client.call('Get', ['fonts']),
     write: (id, value) => client.call('Set', [id, value]),
   );
+  final defaultApps = DefaultAppsController(
+    read: client.readDefaultApps,
+    applications: client.searchDefaultApplications,
+    searchTypes: client.searchDefaultTypes,
+    write: (id, app, types) =>
+        client.setDefaultApplication(id, app, types: types),
+    resolve: client.resolveDefaultApps,
+  );
+  final applications = ApplicationsController(
+    read: client.readInstalledApplications,
+    remove: client.uninstallApplication,
+    formatDate: client.formatCalendarDate,
+    readExternalTools: client.readExternalTools,
+    openExternalTool: client.openExternalTool,
+  );
   final navigation = ValueNotifier<String?>(null);
   final scheduler = SettingsScheduler([
     preferences.reload,
@@ -68,6 +85,8 @@ Future<void> main() async {
       hostname: hostname,
       background: background,
       fonts: fonts,
+      defaultApps: defaultApps,
+      applications: applications,
       navigation: navigation,
       scheduler: scheduler,
       systemInformation: client.readSystemInformation,
@@ -89,6 +108,11 @@ Future<void> main() async {
         preferences.reload();
       case 'background':
         background.apply(change.value);
+      case 'installed-apps':
+        applications.reload();
+        defaultApps.reload();
+      case 'default-apps':
+        defaultApps.reload();
       case 'fonts':
         fonts.reload();
       case 'date-time':
@@ -102,5 +126,5 @@ Future<void> main() async {
   final page = await const MethodChannel('top.remya.paths')
       .invokeMethod<String>('initialPage');
   navigation.value = page ?? 'home';
-  await scheduler.refresh();
+  await Future.wait([scheduler.refresh(), defaultApps.reload()]);
 }

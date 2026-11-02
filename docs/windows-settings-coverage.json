@@ -94,12 +94,6 @@
       "title": "App features"
     },
     {
-      "uri": "ms-settings:appsforwebsites",
-      "page": "websites",
-      "sourceCategory": "Apps",
-      "title": "Apps for websites"
-    },
-    {
       "uri": "ms-settings:defaultapps",
       "page": "defaults",
       "sourceCategory": "Apps",
@@ -112,34 +106,10 @@
       "title": "Default browser settings"
     },
     {
-      "uri": "ms-settings:optionalfeatures",
-      "page": "optional",
-      "sourceCategory": "Apps",
-      "title": "Manage optional features"
-    },
-    {
-      "uri": "ms-settings:maps",
-      "page": "maps",
-      "sourceCategory": "Apps",
-      "title": "Offline Maps"
-    },
-    {
-      "uri": "ms-settings:maps-downloadmaps",
-      "page": "maps",
-      "sourceCategory": "Apps",
-      "title": "Offline Maps"
-    },
-    {
       "uri": "ms-settings:startupapps",
       "page": "startup",
       "sourceCategory": "Apps",
       "title": "Startup apps"
-    },
-    {
-      "uri": "ms-settings:videoplayback",
-      "page": "video",
-      "sourceCategory": "Apps",
-      "title": "Video playback"
     },
     {
       "uri": "ms-settings:autoplay",
@@ -200,18 +170,6 @@
       "page": "touchpad",
       "sourceCategory": "Devices",
       "title": "Touchpad"
-    },
-    {
-      "uri": "ms-settings:devicestyping-hwkbtextsuggestions",
-      "page": "typing",
-      "sourceCategory": "Devices",
-      "title": "Text Suggestions"
-    },
-    {
-      "uri": "ms-settings:typing",
-      "page": "typing",
-      "sourceCategory": "Devices",
-      "title": "Typing"
     },
     {
       "uri": "ms-settings:usb",
@@ -490,12 +448,6 @@
       "title": "Navigation bar"
     },
     {
-      "uri": "ms-settings:personalization",
-      "page": "personalization",
-      "sourceCategory": "Personalization",
-      "title": "Personalization (category)"
-    },
-    {
       "uri": "ms-settings:personalization-start",
       "page": "start",
       "sourceCategory": "Personalization",
@@ -506,18 +458,6 @@
       "page": "taskbar",
       "sourceCategory": "Personalization",
       "title": "Taskbar"
-    },
-    {
-      "uri": "ms-settings:personalization-textinput",
-      "page": "text-input",
-      "sourceCategory": "Personalization",
-      "title": "Text input"
-    },
-    {
-      "uri": "ms-settings:personalization-touchkeyboard",
-      "page": "text-input",
-      "sourceCategory": "Personalization",
-      "title": "Touch Keyboard"
     },
     {
       "uri": "ms-settings:themes",
@@ -542,12 +482,6 @@
       "page": "device-usage",
       "sourceCategory": "Phone",
       "title": "Device Usage"
-    },
-    {
-      "uri": "ms-settings:privacy-accessoryapps",
-      "page": "privacy-accessoryapps",
-      "sourceCategory": "Privacy",
-      "title": "Accessory apps"
     },
     {
       "uri": "ms-settings:privacy-accountinfo",
@@ -592,12 +526,6 @@
       "title": "Background Spatial Perception"
     },
     {
-      "uri": "ms-settings:privacy-calendar",
-      "page": "privacy-calendar",
-      "sourceCategory": "Privacy",
-      "title": "Calendar"
-    },
-    {
       "uri": "ms-settings:privacy-callhistory",
       "page": "privacy-callhistory",
       "sourceCategory": "Privacy",
@@ -608,24 +536,6 @@
       "page": "privacy-webcam",
       "sourceCategory": "Privacy",
       "title": "Camera"
-    },
-    {
-      "uri": "ms-settings:privacy-contacts",
-      "page": "privacy-contacts",
-      "sourceCategory": "Privacy",
-      "title": "Contacts"
-    },
-    {
-      "uri": "ms-settings:privacy-documents",
-      "page": "privacy-documents",
-      "sourceCategory": "Privacy",
-      "title": "Documents"
-    },
-    {
-      "uri": "ms-settings:privacy-downloadsfolder",
-      "page": "privacy-downloadsfolder",
-      "sourceCategory": "Privacy",
-      "title": "Downloads folder"
     },
     {
       "uri": "ms-settings:privacy-email",
@@ -676,12 +586,6 @@
       "title": "Graphics"
     },
     {
-      "uri": "ms-settings:privacy-speechtyping",
-      "page": "inking",
-      "sourceCategory": "Privacy",
-      "title": "Inking & typing"
-    },
-    {
       "uri": "ms-settings:privacy-location",
       "page": "privacy-location",
       "sourceCategory": "Privacy",
@@ -704,12 +608,6 @@
       "page": "privacy-motion",
       "sourceCategory": "Privacy",
       "title": "Motion"
-    },
-    {
-      "uri": "ms-settings:privacy-musiclibrary",
-      "page": "privacy-musiclibrary",
-      "sourceCategory": "Privacy",
-      "title": "Music Library"
     },
     {
       "uri": "ms-settings:privacy-notifications",
@@ -746,18 +644,6 @@
       "page": "online-speech",
       "sourceCategory": "Privacy",
       "title": "Speech"
-    },
-    {
-      "uri": "ms-settings:privacy-tasks",
-      "page": "privacy-tasks",
-      "sourceCategory": "Privacy",
-      "title": "Tasks"
-    },
-    {
-      "uri": "ms-settings:privacy-videos",
-      "page": "privacy-videos",
-      "sourceCategory": "Privacy",
-      "title": "Videos"
     },
     {
       "uri": "ms-settings:privacy-voiceactivation",
@@ -994,28 +880,10 @@
       "title": "Date & time"
     },
     {
-      "uri": "ms-settings:regionlanguage-jpnime",
-      "page": "regionlanguage-jpnime",
-      "sourceCategory": "Time and language",
-      "title": "Japan IME settings"
-    },
-    {
       "uri": "ms-settings:regionformatting",
       "page": "language",
       "sourceCategory": "Time and language",
       "title": "Region"
-    },
-    {
-      "uri": "ms-settings:keyboard",
-      "page": "keyboard",
-      "sourceCategory": "Time and language",
-      "title": "Language"
-    },
-    {
-      "uri": "ms-settings:keyboard-advanced",
-      "page": "keyboard",
-      "sourceCategory": "Time and language",
-      "title": "Language"
     },
     {
       "uri": "ms-settings:regionlanguage",
@@ -1024,70 +892,10 @@
       "title": "Language"
     },
     {
-      "uri": "ms-settings:regionlanguage-bpmfime",
-      "page": "regionlanguage-bpmfime",
-      "sourceCategory": "Time and language",
-      "title": "Language"
-    },
-    {
-      "uri": "ms-settings:regionlanguage-cangjieime",
-      "page": "regionlanguage-cangjieime",
-      "sourceCategory": "Time and language",
-      "title": "Language"
-    },
-    {
-      "uri": "ms-settings:regionlanguage-chsime-wubi-udp",
-      "page": "regionlanguage-chsime-wubi-udp",
-      "sourceCategory": "Time and language",
-      "title": "Language"
-    },
-    {
-      "uri": "ms-settings:regionlanguage-quickime",
-      "page": "regionlanguage-quickime",
-      "sourceCategory": "Time and language",
-      "title": "Language"
-    },
-    {
-      "uri": "ms-settings:regionlanguage-korime",
-      "page": "regionlanguage-korime",
-      "sourceCategory": "Time and language",
-      "title": "Language"
-    },
-    {
-      "uri": "ms-settings:regionlanguage-chsime-pinyin",
-      "page": "regionlanguage-chsime-pinyin",
-      "sourceCategory": "Time and language",
-      "title": "Pinyin IME settings"
-    },
-    {
-      "uri": "ms-settings:regionlanguage-chsime-pinyin-domainlexicon",
-      "page": "regionlanguage-chsime-pinyin-domainlexicon",
-      "sourceCategory": "Time and language",
-      "title": "Pinyin IME settings"
-    },
-    {
-      "uri": "ms-settings:regionlanguage-chsime-pinyin-keyconfig",
-      "page": "regionlanguage-chsime-pinyin-keyconfig",
-      "sourceCategory": "Time and language",
-      "title": "Pinyin IME settings"
-    },
-    {
-      "uri": "ms-settings:regionlanguage-chsime-pinyin-udp",
-      "page": "regionlanguage-chsime-pinyin-udp",
-      "sourceCategory": "Time and language",
-      "title": "Pinyin IME settings"
-    },
-    {
       "uri": "ms-settings:speech",
       "page": "speech",
       "sourceCategory": "Time and language",
       "title": "Speech"
-    },
-    {
-      "uri": "ms-settings:regionlanguage-chsime-wubi",
-      "page": "regionlanguage-chsime-wubi",
-      "sourceCategory": "Time and language",
-      "title": "Wubi IME settings"
     },
     {
       "uri": "ms-settings:findmydevice",
@@ -1139,7 +947,7 @@
     },
     {
       "uri": "ms-settings:windowsupdate-options",
-      "page": "update-options",
+      "page": "updates",
       "sourceCategory": "Update and security",
       "title": "Windows Update-Advanced options"
     },
@@ -1148,12 +956,6 @@
       "page": "updates",
       "sourceCategory": "Update and security",
       "title": "Windows Update-Seeker on demand"
-    },
-    {
-      "uri": "ms-settings:windowsupdate-history",
-      "page": "update-history",
-      "sourceCategory": "Update and security",
-      "title": "Windows Update-View update history"
     }
   ],
   "backupSettings": [
@@ -2634,66 +2436,6 @@
       "control": "taskbar.reference.e7e5a003"
     },
     {
-      "area": "Personalization",
-      "path": [
-        "Text Input"
-      ],
-      "page": "text-input",
-      "coverage": "section"
-    },
-    {
-      "area": "Personalization",
-      "path": [
-        "Text Input",
-        "Theme for touch keyboard"
-      ],
-      "page": "text-input",
-      "coverage": "control",
-      "control": "text-input.reference.e71b3bbe"
-    },
-    {
-      "area": "Personalization",
-      "path": [
-        "Text Input",
-        "Touch keyboard"
-      ],
-      "page": "text-input",
-      "coverage": "section"
-    },
-    {
-      "area": "Personalization",
-      "path": [
-        "Text Input",
-        "Touch keyboard",
-        "Touch keyboard size"
-      ],
-      "page": "text-input",
-      "coverage": "control",
-      "control": "text-input.reference.3fb1e372"
-    },
-    {
-      "area": "Personalization",
-      "path": [
-        "Text Input",
-        "Touch keyboard",
-        "Show key background"
-      ],
-      "page": "text-input",
-      "coverage": "control",
-      "control": "text-input.reference.0a8ab202"
-    },
-    {
-      "area": "Personalization",
-      "path": [
-        "Text Input",
-        "Touch keyboard",
-        "Key text size"
-      ],
-      "page": "text-input",
-      "coverage": "control",
-      "control": "text-input.reference.1fc1438b"
-    },
-    {
       "area": "Accounts",
       "path": [
         "Windows Backup"
@@ -2811,107 +2553,6 @@
       ],
       "page": "date-time",
       "coverage": "section"
-    },
-    {
-      "area": "Time & language",
-      "path": [
-        "Typing"
-      ],
-      "page": "typing",
-      "coverage": "section"
-    },
-    {
-      "area": "Time & language",
-      "path": [
-        "Typing",
-        "Touch Keyboard"
-      ],
-      "page": "typing",
-      "coverage": "section"
-    },
-    {
-      "area": "Time & language",
-      "path": [
-        "Typing",
-        "Touch Keyboard",
-        "Play key sounds as I type"
-      ],
-      "page": "typing",
-      "coverage": "control",
-      "control": "typing.reference.f2b8f9a3"
-    },
-    {
-      "area": "Time & language",
-      "path": [
-        "Typing",
-        "Touch Keyboard",
-        "Capitalize the first letter of each sentence"
-      ],
-      "page": "typing",
-      "coverage": "control",
-      "control": "typing.reference.60050a6c"
-    },
-    {
-      "area": "Time & language",
-      "path": [
-        "Typing",
-        "Touch Keyboard",
-        "Add a period after I double-tap the Spacebar"
-      ],
-      "page": "typing",
-      "coverage": "control",
-      "control": "typing.reference.e553e73c"
-    },
-    {
-      "area": "Time & language",
-      "path": [
-        "Typing",
-        "Touch Keyboard",
-        "Use all uppercase letters when I double-tap Shift"
-      ],
-      "page": "typing",
-      "coverage": "control",
-      "control": "typing.reference.f932de70"
-    },
-    {
-      "area": "Time & language",
-      "path": [
-        "Typing",
-        "Show text suggestions when typing on the physical keyboard"
-      ],
-      "page": "typing",
-      "coverage": "control",
-      "control": "typing.reference.c7d6bbd6"
-    },
-    {
-      "area": "Time & language",
-      "path": [
-        "Typing",
-        "Multilingual text suggestions"
-      ],
-      "page": "typing",
-      "coverage": "control",
-      "control": "typing.reference.27daeccc"
-    },
-    {
-      "area": "Time & language",
-      "path": [
-        "Typing",
-        "Autocorrect misspelled words"
-      ],
-      "page": "typing",
-      "coverage": "control",
-      "control": "typing.reference.0fa3afa7"
-    },
-    {
-      "area": "Time & language",
-      "path": [
-        "Typing",
-        "Highlight misspelled words"
-      ],
-      "page": "typing",
-      "coverage": "control",
-      "control": "typing.reference.f924c774"
     },
     {
       "area": "Vision",

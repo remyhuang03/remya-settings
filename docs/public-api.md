@@ -44,7 +44,7 @@ No command evaluates shell input. IDs are stable catalog IDs, not translated lab
 | `get date-time` | `Get(s key)` with `date-time` | Actual clock, local time, NTP status, time zone, saved zone, and conflict |
 | `get timezones` | `Get(s key)` with `timezones` | Finite system time zone options |
 | `get configuration` | `Get(s key)` with `configuration` | Saved/system values, conflicts, and detection errors |
-| `resolve <appearance / date-time / display / hostname / background> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
+| `resolve <appearance / date-time / display / hostname / background / default-apps> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
 | `resolve display <keep / revert>` | `Resolve(ss feature, source)` | Confirm or undo a pending display change |
 | `get background` | `Get(s key)` with `background` | Saved and system background, displays, warnings, previews, conflict, write blocker, error |
 | `get accent` | `Get(s key)` with `accent` | Accent source, `#RRGGBB` seed, sampled file, sampling error |
@@ -195,7 +195,8 @@ additions; use a new interface version for incompatible wire/schema changes.
 - The smoke test uses a keyfile GSettings backend and a temporary HOME/config root;
   it does not change personal appearance configuration.
 
-Screenshots are saved under `build/interface-smoke/`. Pointer clicks are checked
+The smoke test samples Bar colors to verify theme propagation without retaining
+page screenshots or checking decorative geometry. Pointer clicks are checked
 manually; automated interface tests do not move the user's pointer. A timed-out
 write may still finish at the service; read the effective value before retrying.
 
@@ -641,3 +642,87 @@ reads, available through `font-search:` and `font:`, and reject `Set` with `Read
 Running applications may need reopening to see font changes.
 The page reads the list when opened and on the `fonts` change topic, and builds only
 rows near the viewport, because each preview loads a whole font file.
+
+
+## Default applications
+
+See [Default apps](default-apps.md) for type groups, conflict handling, and rollback limitations.
+All operations run in the ordinary-user service with GIO; no authorization prompt is needed for reads or association writes.
+
+| CLI | D-Bus | Result |
+| --- | --- | --- |
+| `get default-apps` | `Get("default-apps")` | `api_version`, `initialized`, `writable`, `saved`, `system`, `conflict`, `error`, `groups`, `handlers`, MIME-to-extension `extensions` |
+| `get default-applications:<query>` | `Get("default-applications:<query>")` | `applications`: desktop `id`, display `name`, serialized GIcon `icon`, declared `types` |
+| `get default-types:<query>` | `Get("default-types:<query>")` | `types`: matching MIME/scheme `type` and current desktop-ID `application`; `.pdf` searches extension globs |
+| `get default-candidates:<comma-separated-types>` | `Get("default-candidates:<comma-separated-types>")` | Applications declaring at least one requested type; the browser UI requires both HTTP and HTTPS |
+| `get <defaults-setting-id>` | `Get(id)` | Feature state, ID, availability, and per-type `value` for a shortcut |
+| `set defaults.b131ac5a <json>` | `Set(id, json)` | Set explicit MIME/scheme types and save verified outcomes |
+| `set defaults.897fdfef <json>` | `Set(id, json)` | Same operation for an application's supported-type selection |
+| `set <shortcut-id> <json>` | `Set(id, json)` | Fixed group, filtered to the selected application's declared types; omit `types` |
+| `resolve default-apps system` | `Resolve("default-apps", "system")` | Adopt actual associations; returns default-apps state |
+| `resolve default-apps settings` | `Resolve("default-apps", "settings")` | Apply differing saved associations with readback; returns default-apps state |
+
+Write JSON is `{"application":"org.example.Reader.desktop","types":["application/pdf"]}`.
+Shortcut JSON is `{"application":"org.example.Browser.desktop"}`. Unknown fields, invalid or absent applications, unsupported types, conflicts, and unverifiable writes fail. Explicit selections contain 1–256 types.
+`Get("configuration")` includes `default-apps`; `Changed("default-apps", json)` reports relevant Set/Resolve/Reload outcomes, including errors. The public Dart extension exposes these operations without Flutter dependencies.
+
+Empty desktop-ID strings represent unset defaults; they are not application IDs. Failed reads carry `error` and `writable:false`; old values are retained and must not be presented as fresh detections. `defaults.ff4c4bec` remains unavailable and rejects Set.
+
+## Installed applications
+
+See [Installed apps](installed-apps.md) for package scope, metadata limits, and verification boundaries.
+
+| CLI | D-Bus | Result |
+| --- | --- | --- |
+| `get installed-apps` | `Get("installed-apps")` | `api_version`, `applications`, source-specific `warnings` |
+| `get installed-apps:<json>` | `Get("installed-apps:<json>")` | Filter/sort inventory: optional `query`, `source`, and `sort` (`name`, `size`, `installed`); missing numeric values sort last |
+| `get installed-app:<id>` | `Get("installed-app:<id>")` | One observed application with `id`, `name`, serialized GIcon `icon`, `source`, nullable `version`, byte `size`, epoch-seconds `installed`, `package`, `location`, `token`, `uninstallable`, `reason`, and `related` launchers |
+| `get <installed-setting-id>` | `Get(id)` | Observed inventory with the setting's ID and availability |
+| `set installed.c3c4a29c <json>` | `Set(id, json)` | `{"removed":"<id>"}` after package-manager success and readback |
+| `get calendar-date:<YYYY-MM-DD>` | `Get("calendar-date:<date>")` | `value` formatted under the current system LC_TIME, with LANG fallback |
+
+Uninstall JSON is `{"id":"org.example.App.desktop","token":"<observed-version>"}` or a Flatpak inventory ID `flatpak:<installation>:<app>/<arch>/<branch>` with its observed commit token. Do not invent IDs or tokens. The four inspection/view control IDs reject Set with ReadOnly. Manual installations cannot be uninstalled. Native and system-Flatpak changes require the existing explicitly authorized GUI session. `Changed("installed-apps", {})` invalidates inventory after uninstall attempts. The Dart ApplicationsClient exposes the same operations.
+
+The private helper's typed Uninstall request contains only an ID and token; it verifies package ownership itself and never accepts arbitrary privileged paths or commands.
+
+## External input-method configuration
+
+Time & language > More contains only detected configuration tools. `get input-method-tools`
+(`Get("input-method-tools")`) returns `tools` with stable `id`, `name` and serialized
+GIcon `icon`. `Get` on either setting ID provides the same inspection data.
+`set time-more.fcitx5 open` and `set time-more.ibus open` (the corresponding `Set` calls)
+spawn `/usr/bin/fcitx5-configtool` and `/usr/bin/ibus-setup`, respectively. Missing or
+non-executable tools are hidden in the GUI and reject launch. Unknown IDs and values
+are rejected. The response `opened` and `pid` confirms process creation, not a change
+to input-method preferences. The service reaps the child when it exits.
+
+No command line, executable path, elevation, daemon activation, environment change,
+or input-method configuration write is exposed. The external application owns its
+configuration; Settings has no system preference snapshot to reconcile here.
+The pure Dart InputMethodToolsClient exposes read and launch parity.
+
+Tool interfaces: [Fcitx 5 Configtool](https://fcitx-im.org/wiki/Configtool_(Fcitx_5)),
+[IBus](https://github.com/ibus/ibus).
+
+## Other external settings applications
+
+`Get("external-tools:<group>")` lists installed tools for `time`, `system` or
+`appearance`. Unknown groups fail. The input-method-tools key remains an alias
+for the time group. Each tool is a fixed ordinary-user executable under /usr/bin;
+`Set(<id>, "open")` launches it with no command arguments. Missing executables
+are hidden and reject launch. More pages do not own or reconcile external preferences.
+
+| More page | Setting ID | Executable |
+| --- | --- | --- |
+| System | `system-more.kde` | `systemsettings` |
+| System | `system-more.gnome` | `gnome-control-center` |
+| Appearance | `appearance-more.qt6ct` | `qt6ct` |
+| Appearance | `appearance-more.kvantum` | `kvantummanager` |
+| Appearance | `appearance-more.gtk` | `nwg-look` |
+| Appearance | `appearance-more.gnome-tweaks` | `gnome-tweaks` |
+
+The former personalization category is now named Appearance and has category ID
+`appearance` by owner request. Page/control IDs and user preference files remain
+unchanged. ExternalToolsClient exposes grouped discovery and launch without Flutter.
+
+External-tool discovery includes nullable `launch_error`. GNOME Settings is listed as an informative readout without an Open control outside GNOME/Unity; launch is rejected with the platform reason. No desktop environment variables are spoofed.

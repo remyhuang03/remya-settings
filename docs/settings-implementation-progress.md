@@ -6,14 +6,14 @@
 
 清单覆盖现有目录中的全部设置项，包括主要中文控件和保留原名的 Windows 参考细项；相同概念可能存在多个展示位置。下述数量统计的是控件条目，不是去重后的独立后端功能数量。公开资料与内部 schema 的边界见 [调研说明](windows-settings-research.md)。
 
-Hyprland 内容包含 90 个页面、784 项设置及 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
+Hyprland 内容包含 85 个页面、768 项设置及 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
 
 Energy recommendations（`energy`）、Multitasking（`multitasking`）、Quick Facts、Navigation bar、Equipment usage、Copilot key、Qt application 与 Hyprland Blur variant 页面已按用户要求删除；光标相关页面已合并到 System 的 Cursor 页面；原始 Windows 来源记录保留在覆盖文档的 removedPages 中，不再显示菜单、搜索结果或相关页面入口。
 
 ## 当前概况
 
-- 设置分类：12 个；详情页面：258 个；设置条目：1979 项。
-- 已实现：68 项；未实现：1808 项；不适用：103 项。
+- 设置分类：12 个；详情页面：225 个；设置条目：1814 项。
+- 已实现：91 项；未实现：1683 项；不适用：40 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。
@@ -23,6 +23,7 @@ Energy recommendations（`energy`）、Multitasking（`multitasking`）、Quick 
 ### 已完成的界面能力（不计入系统功能进度）
 
 - [x] 首页、常驻分类侧栏与自适应内容布局（窄窗口常驻图标侧栏）。
+- [x] 各分类的 More 统一放在二级选项末尾，其余选项保持目录顺序。
 - [x] 按页面、设置名称和参考 URI 进行本地搜索。
 - [x] 相关页面跳转、Alt+Left 键盘历史导航及参考细项展开。
 - [x] 已实现 / 未实现 / 不适用的文字、图标和控件禁用状态。
@@ -45,16 +46,16 @@ Energy recommendations（`energy`）、Multitasking（`multitasking`）、Quick 
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 38 | 336 | 46 | 290 | 0 |
+| [系统](#category-system) | 39 | 338 | 48 | 290 | 0 |
 | [蓝牙和设备](#category-devices) | 24 | 201 | 0 | 197 | 4 |
 | [网络和 Internet](#category-network) | 15 | 90 | 0 | 88 | 2 |
-| [个性化](#category-personalization) | 26 | 202 | 16 | 186 | 0 |
-| [应用](#category-apps) | 14 | 59 | 0 | 59 | 0 |
-| [账户](#category-accounts) | 16 | 69 | 0 | 55 | 14 |
-| [时间和语言](#category-time) | 16 | 98 | 6 | 37 | 55 |
+| [外观](#category-appearance) | 25 | 190 | 20 | 170 | 0 |
+| [应用](#category-apps) | 5 | 32 | 15 | 17 | 0 |
+| [账户](#category-accounts) | 15 | 65 | 0 | 55 | 10 |
+| [时间和语言](#category-time) | 4 | 22 | 8 | 14 | 0 |
 | [辅助功能](#category-accessibility) | 14 | 230 | 0 | 230 | 0 |
-| [隐私和安全性](#category-privacy) | 56 | 295 | 0 | 267 | 28 |
-| [系统更新](#category-update) | 4 | 21 | 0 | 21 | 0 |
+| [隐私和安全性](#category-privacy) | 47 | 260 | 0 | 236 | 24 |
+| [系统更新](#category-update) | 2 | 8 | 0 | 8 | 0 |
 | [窗口与工作区](#category-hyprland) | 23 | 258 | 0 | 258 | 0 |
 | [会话与配置](#category-session) | 12 | 120 | 0 | 120 | 0 |
 
@@ -68,7 +69,7 @@ Energy recommendations（`energy`）、Multitasking（`multitasking`）、Quick 
 
 排列、亮度、颜色、缩放、分辨率与刷新率
 
-页面状态：**未实现**（部分完成）；条目：31；已实现 29 / 未实现 2 / 不适用 0。
+页面状态：**未实现**；条目：31；已实现 29 / 未实现 2 / 不适用 0。
 
 原因：显示设置通过 Hyprland 实现；夜间模式与 Graphics 页面尚未实现。
 
@@ -87,7 +88,7 @@ Display 交互：Position 使用 X/Y 输入；刷新操作移动到排列框右�
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Selected display | `hypr-monitor-fields.output` | 选择 | 已实现 | 实机 GUI；`test/display_test.dart` |
-| Position | `hypr-monitor-fields.position` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）；`test/display_test.dart`（拖动） |
+| Position | `hypr-monitor-fields.position` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）；`test/display_test.dart`（布局计算） |
 | Refresh displays（排列框右上角按钮） | `display.15697afc` | 操作 | 已实现 | 实机读取；`cargo test -p remya_settings_display` |
 
 #### 亮度与颜色
@@ -385,7 +386,7 @@ Windows 参考入口：`ms-settings:quiethours`。
 
 时间、全屏与演示条件
 
-页面状态：**未实现**（包含 2 个本应用外观控件）；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1072,6 +1073,17 @@ Windows 参考入口：`ms-settings:easeofaccess-cursor`。
 | zoom disable aa · zoom_disable_aa | `hypr-cursor.zoom-disable-aa` | 开关 | 未实现 | — |
 | Cursor zoom factor · zoom_factor | `hypr-cursor.zoom-factor` | 滑块 | 未实现 | — |
 | Fixed zoom anchor point · zoom_rigid | `hypr-cursor.zoom-rigid` | 开关 | 未实现 | — |
+
+### More — `system-more`
+
+打开实际已安装的外部设置应用。未安装的入口自动隐藏。
+
+页面状态：**已实现**；条目：2；已实现 2 / 未实现 0 / 不适用 0。
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| KDE System Settings | `system-more.kde` | 操作 | 已实现 | Rust 检测测试、CLI/D-Bus 对等与实机打开验证 |
+| GNOME Settings | `system-more.gnome` | 操作 | 已实现 | 检测与 GNOME/Unity 会话限制验证；Hyprland 下显示原因而不启动 |
 
 <a id="category-devices"></a>
 
@@ -2016,9 +2028,9 @@ Windows 参考入口：`ms-settings:wifi-provisioning`。
 | Import wireless network configuration | `wifi-provisioning.6473ace4` | 操作 | 未实现 | — |
 | Configuration file path | `wifi-provisioning.0b38bb02` | 文本输入 | 未实现 | — |
 
-<a id="category-personalization"></a>
+<a id="category-appearance"></a>
 
-## 个性化
+## 外观
 
 背景、主题与桌面外观
 
@@ -2114,35 +2126,6 @@ Windows 参考入口：`ms-settings:lockscreen`。
 | Personalize your lock screen | `lockscreen.reference.3ada0526` | 开关 | 未实现 | — |
 | Get fun facts, tips, tricks, and more on your lock screen | `lockscreen.reference.252498b5` | 开关 | 未实现 | — |
 | Show the lock screen background picture on the sign-in screen | `lockscreen.reference.6437619e` | 开关 | 未实现 | — |
-
-### Text input — `text-input`
-
-触摸键盘主题与文字外观
-
-页面状态：**未实现**；条目：9；已实现 0 / 未实现 9 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:personalization-textinput`、`ms-settings:personalization-touchkeyboard`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Choose a keyboard theme | `text-input.8c7d4c60` | 操作 | 未实现 | — |
-| Keyboard size | `text-input.885e69f4` | 滑块 | 未实现 | — |
-| Button background | `text-input.1d7e859f` | 开关 | 未实现 | — |
-| Button text size | `text-input.bb1a22e2` | 选择 | 未实现 | — |
-| Edit a custom theme | `text-input.99f25205` | 操作 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Theme for touch keyboard | `text-input.reference.e71b3bbe` | 选择 | 未实现 | — |
-| Touch keyboard size | `text-input.reference.3fb1e372` | 选择 | 未实现 | — |
-| Show key background | `text-input.reference.0a8ab202` | 开关 | 未实现 | — |
-| Key text size | `text-input.reference.1fc1438b` | 选择 | 未实现 | — |
 
 ### Start menu — `start`
 
@@ -2303,26 +2286,6 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 | Light color | `lighting.bf0bca1e` | 颜色 | 未实现 | — |
 | Match with accent colors | `lighting.869e06ec` | 开关 | 未实现 | — |
 
-### Personalization overview — `personalization`
-
-外观与桌面设置入口
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:personalization`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Background | `personalization.b13d33a5` | 操作 | 未实现 | — |
-| Color | `personalization.8ef48860` | 操作 | 未实现 | — |
-| Topic | `personalization.e848ddd4` | 操作 | 未实现 | — |
-| Lock screen interface | `personalization.355caa83` | 操作 | 未实现 | — |
-| Taskbar | `personalization.3405fcce` | 操作 | 未实现 | — |
-
 ### Hyprland · Window border gradient — `hypr-general-col`
 
 合成器高级设置：general.col · Hyprland
@@ -2373,7 +2336,7 @@ Windows 参考入口：`ms-settings:personalization`。
 
 合成器高级设置：decoration.blur · Hyprland
 
-页面状态：**未实现**；条目：16；已实现 0 / 未实现 16 / 不适用 0。
+页面状态：**未实现**；条目：14；已实现 0 / 未实现 14 / 不适用 0。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -2387,8 +2350,6 @@ Windows 参考入口：`ms-settings:personalization`。
 | Brightness adjustment · brightness | `hypr-decoration-blur.brightness` | 滑块 | 未实现 | — |
 | Contrast · contrast | `hypr-decoration-blur.contrast` | 滑块 | 未实现 | — |
 | Ignore window transparency · ignore_opacity | `hypr-decoration-blur.ignore-opacity` | 开关 | 未实现 | — |
-| Blurred input method pop-up window · input_methods | `hypr-decoration-blur.input-methods` | 开关 | 未实现 | — |
-| Input method blur transparency threshold · input_methods_ignorealpha | `hypr-decoration-blur.input-methods-ignorealpha` | 滑块 | 未实现 | — |
 | Fuzzy performance optimization · new_optimizations | `hypr-decoration-blur.new-optimizations` | 开关 | 未实现 | — |
 | Noise intensity · noise | `hypr-decoration-blur.noise` | 滑块 | 未实现 | — |
 | Number of fuzzy iterations · passes | `hypr-decoration-blur.passes` | 滑块 | 未实现 | — |
@@ -2656,6 +2617,19 @@ Windows 参考入口：`ms-settings:personalization`。
 | Exit menu style | `hypr-shell-components.exit-menu` | 文本输入 | 未实现 | — |
 | System Tray Module | `hypr-shell-components.tray` | 操作 | 未实现 | — |
 
+### More — `appearance-more`
+
+打开实际已安装的外部设置应用。未安装的入口自动隐藏。
+
+页面状态：**已实现**；条目：4；已实现 4 / 未实现 0 / 不适用 0。
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Qt 6 Settings | `appearance-more.qt6ct` | 操作 | 已实现 | Rust 检测测试、CLI/D-Bus 对等与实机打开验证 |
+| Kvantum Manager | `appearance-more.kvantum` | 操作 | 已实现 | Rust 检测测试、CLI/D-Bus 对等与实机打开验证 |
+| GTK Settings | `appearance-more.gtk` | 操作 | 已实现 | 未安装时隐藏与拒绝启动的检测测试；本机未安装 nwg-look，未验证其窗口 |
+| GNOME Tweaks | `appearance-more.gnome-tweaks` | 操作 | 已实现 | Rust 检测测试、CLI/D-Bus 对等与实机打开验证 |
+
 <a id="category-apps"></a>
 
 ## 应用
@@ -2664,11 +2638,11 @@ Windows 参考入口：`ms-settings:personalization`。
 
 ### Installed apps — `installed`
 
-应用目录、卸载与高级选项
+应用目录、真实包信息、搜索排序与包管理器卸载
 
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Rust 读取 GIO 应用目录与 ALPM/Flatpak 元数据；详情显示真实版本、大小与安装日期；卸载交由包管理器并回读确认。
 
 Windows 参考入口：`ms-settings:appsfeatures`。
 
@@ -2678,11 +2652,11 @@ Windows 参考入口：`ms-settings:appsfeatures`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Search installed apps | `installed.15735a25` | 文本输入 | 未实现 | — |
-| Sort by | `installed.3bf3689a` | 选择 | 未实现 | — |
-| Filter drives | `installed.765cf6c3` | 选择 | 未实现 | — |
-| Apply advanced options | `installed.32098ab2` | 操作 | 未实现 | — |
-| Uninstall apps | `installed.c3c4a29c` | 操作 | 未实现 | — |
+| Search installed apps | `installed.15735a25` | 文本输入 | 已实现 | Rust ALPM 解析测试、`test/service_controllers_test.dart`、隔离 Flatpak 实际卸载与数据保留验证；原生包实机读取及未授权拒绝验证（未执行本机原生包卸载） |
+| Sort by | `installed.3bf3689a` | 选择 | 已实现 | Rust ALPM 解析测试、`test/service_controllers_test.dart`、隔离 Flatpak 实际卸载与数据保留验证；原生包实机读取及未授权拒绝验证（未执行本机原生包卸载） |
+| Filter source | `installed.765cf6c3` | 选择 | 已实现 | Rust ALPM 解析测试、`test/service_controllers_test.dart`、隔离 Flatpak 实际卸载与数据保留验证；原生包实机读取及未授权拒绝验证（未执行本机原生包卸载） |
+| Application details | `installed.32098ab2` | 操作 | 已实现 | Rust ALPM 解析测试、`test/service_controllers_test.dart`、隔离 Flatpak 实际卸载与数据保留验证；原生包实机读取及未授权拒绝验证（未执行本机原生包卸载） |
+| Uninstall apps | `installed.c3c4a29c` | 操作 | 已实现 | Rust ALPM 解析测试、`test/service_controllers_test.dart`、隔离 Flatpak 实际卸载与数据保留验证；原生包实机读取及未授权拒绝验证（未执行本机原生包卸载） |
 
 ### Advanced app options — `app-properties`
 
@@ -2711,7 +2685,7 @@ Windows 参考入口：`ms-settings:appsfeatures-app`。
 
 应用来源、存档与执行别名
 
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2723,15 +2697,14 @@ Windows 参考入口：`ms-settings:appsfeatures-app`。
 | Archiving Applications | `advanced-apps.c13be40a` | 开关 | 未实现 | — |
 | Application execution alias | `advanced-apps.cb756d20` | 操作 | 未实现 | — |
 | Share across devices | `advanced-apps.ee408d1b` | 操作 | 未实现 | — |
-| Applications for websites | `advanced-apps.bcc84021` | 操作 | 未实现 | — |
 
 ### Default apps — `defaults`
 
-文件类型、协议与应用默认值
+文件类型、协议与应用默认值，详见 [Default apps 实现说明](default-apps.md)。
 
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+页面状态：**未实现**；条目：11；已实现 10 / 未实现 1 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：XDG 关联由普通用户 Rust 服务通过 GIO 读取、修改并回读；首次采用系统配置，冲突支持双向解决。整体重置尚未实现。
 
 Windows 参考入口：`ms-settings:defaultapps`、`ms-settings:defaultbrowsersettings`。
 
@@ -2739,89 +2712,17 @@ Windows 参考入口：`ms-settings:defaultapps`、`ms-settings:defaultbrowserse
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Search for file type or link type | `defaults.b131ac5a` | 文本输入 | 未实现 | — |
-| Search applications | `defaults.897fdfef` | 文本输入 | 未实现 | — |
-| Default browser | `defaults.ccac113f` | 选择 | 未实现 | — |
-| Default Mail App | `defaults.3adc9929` | 选择 | 未实现 | — |
-| Default Photos App | `defaults.c0b97974` | 选择 | 未实现 | — |
-| Default video app | `defaults.e7fe6be6` | 选择 | 未实现 | — |
+| Search for file type or link type | `defaults.b131ac5a` | 文本输入 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、隔离 XDG `test/interface_smoke.py` 实际读写及 CLI/D-Bus 对等验证 |
+| Search applications | `defaults.897fdfef` | 文本输入 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、隔离 XDG `test/interface_smoke.py` 实际读写及 CLI/D-Bus 对等验证 |
+| Default browser | `defaults.ccac113f` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、隔离 XDG `test/interface_smoke.py` 实际读写及 CLI/D-Bus 对等验证 |
+| Default Mail App | `defaults.3adc9929` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、隔离 XDG `test/interface_smoke.py` 实际读写及 CLI/D-Bus 对等验证 |
+| Default Photos App | `defaults.c0b97974` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、隔离 XDG `test/interface_smoke.py` 实际读写及 CLI/D-Bus 对等验证 |
+| Default video app | `defaults.e7fe6be6` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、隔离 XDG `test/interface_smoke.py` 实际读写及 CLI/D-Bus 对等验证 |
+| Audio | `defaults.audio` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、隔离 XDG `test/interface_smoke.py` 实际读写及 CLI/D-Bus 对等验证 |
+| Text editor | `defaults.text` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、隔离 XDG `test/interface_smoke.py` 实际读写及 CLI/D-Bus 对等验证 |
+| PDF | `defaults.pdf` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、隔离 XDG `test/interface_smoke.py` 实际读写及 CLI/D-Bus 对等验证 |
+| File manager | `defaults.file-manager` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、隔离 XDG `test/interface_smoke.py` 实际读写及 CLI/D-Bus 对等验证 |
 | Reset all default apps | `defaults.ff4c4bec` | 操作 | 未实现 | — |
-
-### Optional features — `optional`
-
-功能安装与历史记录
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:optionalfeatures`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| View optional features | `optional.3316f05b` | 操作 | 未实现 | — |
-| Search for installed features | `optional.4ba5eede` | 文本输入 | 未实现 | — |
-| Feature installation history | `optional.d8aed3a7` | 操作 | 未实现 | — |
-| More system functions | `optional.bd2c3619` | 操作 | 未实现 | — |
-
-### Applications for websites — `websites`
-
-将网站关联到应用
-
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:appsforwebsites`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Search applications | `websites.897fdfef` | 文本输入 | 未实现 | — |
-| Allow apps to open associated websites | `websites.8cd31008` | 开关 | 未实现 | — |
-| Manage website associations | `websites.93e2b941` | 操作 | 未实现 | — |
-
-### Offline Maps — `maps`
-
-地图下载、保存位置与更新
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:maps`、`ms-settings:maps-downloadmaps`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Download maps | `maps.215e569e` | 操作 | 未实现 | — |
-| Storage location | `maps.c445d42b` | 选择 | 未实现 | — |
-| Download via metered connection | `maps.3f139dcf` | 开关 | 未实现 | — |
-| Automatically update maps | `maps.49291dd0` | 开关 | 未实现 | — |
-| Delete all maps | `maps.bbecded0` | 操作 | 未实现 | — |
-
-### Video playback — `video`
-
-视频增强与电池偏好
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:videoplayback`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Automatically process videos to enhance effects | `video.0cb26c39` | 开关 | 未实现 | — |
-| Reduce resolution to save bandwidth | `video.c96f936e` | 开关 | 未实现 | — |
-| Battery Play Preferences | `video.7d6e4e4f` | 选择 | 未实现 | — |
-| Allow HDR when using battery | `video.00912570` | 开关 | 未实现 | — |
 
 ### Startup apps — `startup`
 
@@ -2841,95 +2742,6 @@ Windows 参考入口：`ms-settings:startupapps`。
 | Sort by | `startup.3bf3689a` | 选择 | 未实现 | — |
 | Sample application starts at boot | `startup.bf13c9a3` | 开关 | 未实现 | — |
 | Launch Impact | `startup.e46804cd` | 信息展示 | 未实现 | — |
-
-### Hyprlauncher · General — `hypr-launcher-general`
-
-按官方文档分类的组件参数 · 可选组件 hyprlauncher
-
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprlauncher 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-launcher](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlauncher.md)。
-
-#### 通用
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| grab focus · grab_focus | `hypr-launcher-general.grab-focus` | 开关 | 未实现 | — |
-
-### Hyprlauncher Launcher · Cache — `hypr-launcher-cache`
-
-按官方文档分类的组件参数 · 可选组件 hyprlauncher
-
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprlauncher 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-launcher](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlauncher.md)。
-
-#### 缓存
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| enabled · enabled | `hypr-launcher-cache.enabled` | 开关 | 未实现 | — |
-
-### Hyprlauncher Launcher · Search Source — `hypr-launcher-finders`
-
-按官方文档分类的组件参数 · 可选组件 hyprlauncher
-
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprlauncher 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-launcher](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlauncher.md)。
-
-#### 搜索来源
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| default finder · default_finder | `hypr-launcher-finders.default-finder` | 文本输入 | 未实现 | — |
-| desktop prefix · desktop_prefix | `hypr-launcher-finders.desktop-prefix` | 文本输入 | 未实现 | — |
-| unicode prefix · unicode_prefix | `hypr-launcher-finders.unicode-prefix` | 文本输入 | 未实现 | — |
-| math prefix · math_prefix | `hypr-launcher-finders.math-prefix` | 文本输入 | 未实现 | — |
-| font prefix · font_prefix | `hypr-launcher-finders.font-prefix` | 文本输入 | 未实现 | — |
-| desktop launch prefix · desktop_launch_prefix | `hypr-launcher-finders.desktop-launch-prefix` | 文本输入 | 未实现 | — |
-| desktop icons · desktop_icons | `hypr-launcher-finders.desktop-icons` | 开关 | 未实现 | — |
-
-### Hyprlauncher Launcher · Interface — `hypr-launcher-ui`
-
-按官方文档分类的组件参数 · 可选组件 hyprlauncher
-
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprlauncher 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-launcher](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlauncher.md)。
-
-#### 界面
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| window size · window_size | `hypr-launcher-ui.window-size` | 文本输入 | 未实现 | — |
-
-### Desktop Default Tools — `hypr-default-apps`
-
-快捷键调用的终端、文件管理器与编辑器 · 桌面组件默认应用配置
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；桌面组件默认应用配置 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[nwg-config-project](https://github.com/nwg-piotr/nwg-shell-config/blob/99dc0e00aa8b0931cd2b1be562ef950fbcc337f8/README.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Default terminal | `hypr-default-apps.terminal` | 文本输入 | 未实现 | — |
-| Default file manager | `hypr-default-apps.file-manager` | 文本输入 | 未实现 | — |
-| Default text editor | `hypr-default-apps.editor` | 文本输入 | 未实现 | — |
-| Default browser shortcut commands | `hypr-default-apps.browser` | 文本输入 | 未实现 | — |
 
 <a id="category-accounts"></a>
 
@@ -3233,23 +3045,6 @@ Windows 首页云存储卡片参考
 | Manage cloud storage | `cloud-storage.1cc744fa` | 操作 | 不适用 | — |
 | Upgrade cloud storage | `cloud-storage.9d773e3a` | 操作 | 不适用 | — |
 
-### Subscription — `subscriptions`
-
-Windows 首页 Microsoft 365 和 Xbox 卡片参考
-
-页面状态：**不适用**；条目：4；已实现 0 / 未实现 0 / 不适用 4。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Microsoft 365 | `subscriptions.1fafdfea` | 信息展示 | 不适用 | — |
-| Xbox Game Pass | `subscriptions.462bee9f` | 信息展示 | 不适用 | — |
-| Manage subscriptions | `subscriptions.2e529b53` | 操作 | 不适用 | — |
-| View subscription benefits | `subscriptions.a0f44278` | 操作 | 不适用 | — |
-
 <a id="category-time"></a>
 
 ## 时间和语言
@@ -3260,7 +3055,7 @@ Windows 首页 Microsoft 365 和 Xbox 卡片参考
 
 时间同步、时区与区域日期时间格式
 
-页面状态：**部分实现**；条目：7；已实现 6 / 未实现 1 / 不适用 0。
+页面状态：**未实现**；条目：7；已实现 6 / 未实现 1 / 不适用 0。
 
 原因：自动时区检测仍为预览；其他选项通过系统服务读取和修改。
 
@@ -3309,65 +3104,16 @@ Windows 参考入口：`ms-settings:regionlanguage`、`ms-settings:regionformatt
 | Language options | `language.feb9d380` | 操作 | 未实现 | — |
 | Manage language settings | `language.5f7e5146` | 操作 | 未实现 | — |
 
-### Typing — `typing`
+### More — `time-more`
 
-拼写、文本建议与触摸键盘
+打开实际已安装的输入法配置工具；不接管或修改外部输入法配置。未安装的入口自动隐藏。
 
-页面状态：**未实现**；条目：18；已实现 0 / 未实现 18 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:typing`、`ms-settings:devicestyping-hwkbtextsuggestions`。
-
-相关页面 ID：`keyboard`。
-
-#### 设置
+页面状态：**已实现**；条目：2；已实现 2 / 未实现 0 / 不适用 0。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Physical keyboard text suggestions | `typing.207b56c1` | 开关 | 未实现 | — |
-| Multilingual text suggestions | `typing.b2ad8556` | 开关 | 未实现 | — |
-| Automatically correct spelling errors | `typing.6928bd78` | 开关 | 未实现 | — |
-| Highlight spelling errors | `typing.6069542b` | 开关 | 未实现 | — |
-| Key sound | `typing.081118d6` | 开关 | 未实现 | — |
-| Capitalize the first letter of a sentence | `typing.247b1cdd` | 开关 | 未实现 | — |
-| Double-click a space to add a period | `typing.59c75352` | 开关 | 未实现 | — |
-| Double-click Shift to use uppercase | `typing.0bc4c2d7` | 开关 | 未实现 | — |
-| Enter insights | `typing.509b2541` | 操作 | 未实现 | — |
-| Advanced keyboard settings | `typing.4709bab2` | 操作 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Play key sounds as I type | `typing.reference.f2b8f9a3` | 开关 | 未实现 | — |
-| Capitalize the first letter of each sentence | `typing.reference.60050a6c` | 开关 | 未实现 | — |
-| Add a period after I double-tap the Spacebar | `typing.reference.e553e73c` | 开关 | 未实现 | — |
-| Use all uppercase letters when I double-tap Shift | `typing.reference.f932de70` | 开关 | 未实现 | — |
-| Show text suggestions when typing on the physical keyboard | `typing.reference.c7d6bbd6` | 开关 | 未实现 | — |
-| Multilingual text suggestions | `typing.reference.27daeccc` | 开关 | 未实现 | — |
-| Autocorrect misspelled words | `typing.reference.0fa3afa7` | 开关 | 未实现 | — |
-| Highlight misspelled words | `typing.reference.f924c774` | 开关 | 未实现 | — |
-
-### Advanced keyboard settings — `keyboard`
-
-输入法切换与默认输入法
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:keyboard`、`ms-settings:keyboard-advanced`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Replace the default input method | `keyboard.9a05b740` | 选择 | 未实现 | — |
-| Use different input methods for each application | `keyboard.0a36a21a` | 开关 | 未实现 | — |
-| Use the desktop language bar | `keyboard.c7f2c70f` | 开关 | 未实现 | — |
-| Input language hotkeys | `keyboard.a6a3d5c6` | 操作 | 未实现 | — |
-| Language bar options | `keyboard.5c8d8c52` | 操作 | 未实现 | — |
+| Fcitx 5 Configuration | `time-more.fcitx5` | 操作 | 已实现 | Rust 检测测试、CLI/D-Bus 检查与实机启动验证 |
+| IBus Preferences | `time-more.ibus` | 操作 | 已实现 | Rust 检测测试、CLI/D-Bus 检查与实机启动验证 |
 
 ### Speech — `speech`
 
@@ -3390,226 +3136,6 @@ Windows 参考入口：`ms-settings:speech`。
 | Preview sounds | `speech.3e0d83e2` | 操作 | 未实现 | — |
 | Add voice | `speech.c47063f5` | 操作 | 未实现 | — |
 | Set up the microphone | `speech.56f17992` | 操作 | 未实现 | — |
-
-### Japanese Microsoft IME — `regionlanguage-jpnime`
-
-Windows 输入法选项参考
-
-页面状态：**不适用**；条目：5；已实现 0 / 未实现 0 / 不适用 5。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:regionlanguage-jpnime`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Default input mode | `regionlanguage-jpnime.59c4e62a` | 选择 | 不适用 | — |
-| Candidate window | `regionlanguage-jpnime.00473b0c` | 选择 | 不适用 | — |
-| Cloud Candidate Suggestions | `regionlanguage-jpnime.01c381ff` | 开关 | 不适用 | — |
-| User Dictionary | `regionlanguage-jpnime.953dcd7c` | 操作 | 不适用 | — |
-| Button settings | `regionlanguage-jpnime.9be757c1` | 操作 | 不适用 | — |
-
-### Zhuyin input method — `regionlanguage-bpmfime`
-
-Windows 输入法选项参考
-
-页面状态：**不适用**；条目：5；已实现 0 / 未实现 0 / 不适用 5。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:regionlanguage-bpmfime`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Default input mode | `regionlanguage-bpmfime.59c4e62a` | 选择 | 不适用 | — |
-| Candidate window | `regionlanguage-bpmfime.00473b0c` | 选择 | 不适用 | — |
-| Cloud Candidate Suggestions | `regionlanguage-bpmfime.01c381ff` | 开关 | 不适用 | — |
-| User Dictionary | `regionlanguage-bpmfime.953dcd7c` | 操作 | 不适用 | — |
-| Button settings | `regionlanguage-bpmfime.9be757c1` | 操作 | 不适用 | — |
-
-### Cangjie input method — `regionlanguage-cangjieime`
-
-Windows 输入法选项参考
-
-页面状态：**不适用**；条目：5；已实现 0 / 未实现 0 / 不适用 5。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:regionlanguage-cangjieime`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Default input mode | `regionlanguage-cangjieime.59c4e62a` | 选择 | 不适用 | — |
-| Candidate window | `regionlanguage-cangjieime.00473b0c` | 选择 | 不适用 | — |
-| Cloud Candidate Suggestions | `regionlanguage-cangjieime.01c381ff` | 开关 | 不适用 | — |
-| User Dictionary | `regionlanguage-cangjieime.953dcd7c` | 操作 | 不适用 | — |
-| Button settings | `regionlanguage-cangjieime.9be757c1` | 操作 | 不适用 | — |
-
-### Wubi User Dictionary — `regionlanguage-chsime-wubi-udp`
-
-Windows 输入法选项参考
-
-页面状态：**不适用**；条目：5；已实现 0 / 未实现 0 / 不适用 5。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:regionlanguage-chsime-wubi-udp`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Default input mode | `regionlanguage-chsime-wubi-udp.59c4e62a` | 选择 | 不适用 | — |
-| Candidate window | `regionlanguage-chsime-wubi-udp.00473b0c` | 选择 | 不适用 | — |
-| Cloud Candidate Suggestions | `regionlanguage-chsime-wubi-udp.01c381ff` | 开关 | 不适用 | — |
-| User Dictionary | `regionlanguage-chsime-wubi-udp.953dcd7c` | 操作 | 不适用 | — |
-| Button settings | `regionlanguage-chsime-wubi-udp.9be757c1` | 操作 | 不适用 | — |
-
-### Quick input method — `regionlanguage-quickime`
-
-Windows 输入法选项参考
-
-页面状态：**不适用**；条目：5；已实现 0 / 未实现 0 / 不适用 5。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:regionlanguage-quickime`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Default input mode | `regionlanguage-quickime.59c4e62a` | 选择 | 不适用 | — |
-| Candidate window | `regionlanguage-quickime.00473b0c` | 选择 | 不适用 | — |
-| Cloud Candidate Suggestions | `regionlanguage-quickime.01c381ff` | 开关 | 不适用 | — |
-| User Dictionary | `regionlanguage-quickime.953dcd7c` | 操作 | 不适用 | — |
-| Button settings | `regionlanguage-quickime.9be757c1` | 操作 | 不适用 | — |
-
-### Korean Microsoft IME — `regionlanguage-korime`
-
-Windows 输入法选项参考
-
-页面状态：**不适用**；条目：5；已实现 0 / 未实现 0 / 不适用 5。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:regionlanguage-korime`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Default input mode | `regionlanguage-korime.59c4e62a` | 选择 | 不适用 | — |
-| Candidate window | `regionlanguage-korime.00473b0c` | 选择 | 不适用 | — |
-| Cloud Candidate Suggestions | `regionlanguage-korime.01c381ff` | 开关 | 不适用 | — |
-| User Dictionary | `regionlanguage-korime.953dcd7c` | 操作 | 不适用 | — |
-| Button settings | `regionlanguage-korime.9be757c1` | 操作 | 不适用 | — |
-
-### Microsoft Pinyin — `regionlanguage-chsime-pinyin`
-
-Windows 输入法选项参考
-
-页面状态：**不适用**；条目：5；已实现 0 / 未实现 0 / 不适用 5。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:regionlanguage-chsime-pinyin`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Default input mode | `regionlanguage-chsime-pinyin.59c4e62a` | 选择 | 不适用 | — |
-| Candidate window | `regionlanguage-chsime-pinyin.00473b0c` | 选择 | 不适用 | — |
-| Cloud Candidate Suggestions | `regionlanguage-chsime-pinyin.01c381ff` | 开关 | 不适用 | — |
-| User Dictionary | `regionlanguage-chsime-pinyin.953dcd7c` | 操作 | 不适用 | — |
-| Button settings | `regionlanguage-chsime-pinyin.9be757c1` | 操作 | 不适用 | — |
-
-### Pinyin Professional Dictionary — `regionlanguage-chsime-pinyin-domainlexicon`
-
-Windows 输入法选项参考
-
-页面状态：**不适用**；条目：5；已实现 0 / 未实现 0 / 不适用 5。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:regionlanguage-chsime-pinyin-domainlexicon`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Default input mode | `regionlanguage-chsime-pinyin-domainlexicon.59c4e62a` | 选择 | 不适用 | — |
-| Candidate window | `regionlanguage-chsime-pinyin-domainlexicon.00473b0c` | 选择 | 不适用 | — |
-| Cloud Candidate Suggestions | `regionlanguage-chsime-pinyin-domainlexicon.01c381ff` | 开关 | 不适用 | — |
-| User Dictionary | `regionlanguage-chsime-pinyin-domainlexicon.953dcd7c` | 操作 | 不适用 | — |
-| Button settings | `regionlanguage-chsime-pinyin-domainlexicon.9be757c1` | 操作 | 不适用 | — |
-
-### Pinyin button settings — `regionlanguage-chsime-pinyin-keyconfig`
-
-Windows 输入法选项参考
-
-页面状态：**不适用**；条目：5；已实现 0 / 未实现 0 / 不适用 5。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:regionlanguage-chsime-pinyin-keyconfig`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Default input mode | `regionlanguage-chsime-pinyin-keyconfig.59c4e62a` | 选择 | 不适用 | — |
-| Candidate window | `regionlanguage-chsime-pinyin-keyconfig.00473b0c` | 选择 | 不适用 | — |
-| Cloud Candidate Suggestions | `regionlanguage-chsime-pinyin-keyconfig.01c381ff` | 开关 | 不适用 | — |
-| User Dictionary | `regionlanguage-chsime-pinyin-keyconfig.953dcd7c` | 操作 | 不适用 | — |
-| Button settings | `regionlanguage-chsime-pinyin-keyconfig.9be757c1` | 操作 | 不适用 | — |
-
-### Pinyin User Dictionary — `regionlanguage-chsime-pinyin-udp`
-
-Windows 输入法选项参考
-
-页面状态：**不适用**；条目：5；已实现 0 / 未实现 0 / 不适用 5。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:regionlanguage-chsime-pinyin-udp`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Default input mode | `regionlanguage-chsime-pinyin-udp.59c4e62a` | 选择 | 不适用 | — |
-| Candidate window | `regionlanguage-chsime-pinyin-udp.00473b0c` | 选择 | 不适用 | — |
-| Cloud Candidate Suggestions | `regionlanguage-chsime-pinyin-udp.01c381ff` | 开关 | 不适用 | — |
-| User Dictionary | `regionlanguage-chsime-pinyin-udp.953dcd7c` | 操作 | 不适用 | — |
-| Button settings | `regionlanguage-chsime-pinyin-udp.9be757c1` | 操作 | 不适用 | — |
-
-### Microsoft Wubi — `regionlanguage-chsime-wubi`
-
-Windows 输入法选项参考
-
-页面状态：**不适用**；条目：5；已实现 0 / 未实现 0 / 不适用 5。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:regionlanguage-chsime-wubi`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Default input mode | `regionlanguage-chsime-wubi.59c4e62a` | 选择 | 不适用 | — |
-| Candidate window | `regionlanguage-chsime-wubi.00473b0c` | 选择 | 不适用 | — |
-| Cloud Candidate Suggestions | `regionlanguage-chsime-wubi.01c381ff` | 开关 | 不适用 | — |
-| User Dictionary | `regionlanguage-chsime-wubi.953dcd7c` | 操作 | 不适用 | — |
-| Button settings | `regionlanguage-chsime-wubi.9be757c1` | 操作 | 不适用 | — |
 
 <a id="category-accessibility"></a>
 
@@ -4232,24 +3758,6 @@ Windows 参考入口：`ms-settings:privacy-speech`。
 | Online speech recognition | `online-speech.0a66701f` | 开关 | 不适用 | — |
 | Manage voice data in the cloud | `online-speech.20caf0a6` | 操作 | 不适用 | — |
 
-### Inking and typing personalization — `inking`
-
-个人词典与输入改进
-
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-speechtyping`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Personal inking and typing dictionary | `inking.db87cccf` | 开关 | 未实现 | — |
-| View personal dictionary | `inking.a2290b51` | 操作 | 未实现 | — |
-| Clear dictionary | `inking.af3aefc5` | 操作 | 未实现 | — |
-
 ### Diagnostics & feedback — `diagnostics`
 
 诊断数据、改进体验与反馈
@@ -4374,25 +3882,6 @@ Windows AI+ 专属快照参考
 | Allow desktop apps to access presence sensors | `presence-permissions.77c98092` | 开关 | 未实现 | — |
 | Recent visits | `presence-permissions.249b0d1c` | 信息展示 | 未实现 | — |
 
-### Accessory apps — `privacy-accessoryapps`
-
-应用访问权限与最近活动
-
-页面状态：**不适用**；条目：4；已实现 0 / 未实现 0 / 不适用 4。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:privacy-accessoryapps`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Accessory application permissions | `privacy-accessoryapps.17592407` | 开关 | 不适用 | — |
-| Allow the app to access accessory apps | `privacy-accessoryapps.3cdc5c32` | 开关 | 不适用 | — |
-| Allow desktop apps to access accessory apps | `privacy-accessoryapps.abbd3539` | 开关 | 不适用 | — |
-| Application access records | `privacy-accessoryapps.bc0f5a5a` | 信息展示 | 不适用 | — |
-
 ### Access to account information — `privacy-accountinfo`
 
 应用访问权限与最近活动
@@ -4488,25 +3977,6 @@ Windows 参考入口：`ms-settings:privacy-backgroundspatialperception`。
 | Allow desktop apps to access background spatial awareness | `privacy-backgroundspatialperception.efd56719` | 开关 | 不适用 | — |
 | Application access records | `privacy-backgroundspatialperception.bc0f5a5a` | 信息展示 | 不适用 | — |
 
-### Calendar — `privacy-calendar`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-calendar`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Calendar permissions | `privacy-calendar.592b49d7` | 开关 | 未实现 | — |
-| Allow apps to access calendar | `privacy-calendar.a6e2d578` | 开关 | 未实现 | — |
-| Allow desktop apps to access calendar | `privacy-calendar.4f84b48b` | 开关 | 未实现 | — |
-| Application access records | `privacy-calendar.bc0f5a5a` | 信息展示 | 未实现 | — |
-
 ### Call records — `privacy-callhistory`
 
 应用访问权限与最近活动
@@ -4544,63 +4014,6 @@ Windows 参考入口：`ms-settings:privacy-webcam`。
 | Allow apps to access camera access | `privacy-webcam.c68d5137` | 开关 | 未实现 | — |
 | Allow desktop apps to access camera access | `privacy-webcam.1dfd1d96` | 开关 | 未实现 | — |
 | Application access records | `privacy-webcam.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Contacts — `privacy-contacts`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-contacts`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Contact permissions | `privacy-contacts.1c5f9f91` | 开关 | 未实现 | — |
-| Allow apps to access contacts | `privacy-contacts.99623b2d` | 开关 | 未实现 | — |
-| Allow desktop apps to access contacts | `privacy-contacts.45a2b39a` | 开关 | 未实现 | — |
-| Application access records | `privacy-contacts.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Documents — `privacy-documents`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-documents`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Document permissions | `privacy-documents.8835bb59` | 开关 | 未实现 | — |
-| Allow apps to access documents | `privacy-documents.9dc435b3` | 开关 | 未实现 | — |
-| Allow desktop apps to access documents | `privacy-documents.408a98a0` | 开关 | 未实现 | — |
-| Application access records | `privacy-documents.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Downloads folder — `privacy-downloadsfolder`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-downloadsfolder`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Download folder permissions | `privacy-downloadsfolder.d7359a4d` | 开关 | 未实现 | — |
-| Allow apps to access downloads folder | `privacy-downloadsfolder.5d935f1c` | 开关 | 未实现 | — |
-| Allow desktop apps to access download folders | `privacy-downloadsfolder.0f87cc9c` | 开关 | 未实现 | — |
-| Application access records | `privacy-downloadsfolder.bc0f5a5a` | 信息展示 | 未实现 | — |
 
 ### Email access — `privacy-email`
 
@@ -4776,25 +4189,6 @@ Windows 参考入口：`ms-settings:privacy-motion`。
 | Allow desktop apps to access sports | `privacy-motion.7dadf4d9` | 开关 | 未实现 | — |
 | Application access records | `privacy-motion.bc0f5a5a` | 信息展示 | 未实现 | — |
 
-### Music Library — `privacy-musiclibrary`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-musiclibrary`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Music library permissions | `privacy-musiclibrary.e44d696b` | 开关 | 未实现 | — |
-| Allow the app to access the music library | `privacy-musiclibrary.25913a47` | 开关 | 未实现 | — |
-| Allow desktop apps to access your music library | `privacy-musiclibrary.88c26df1` | 开关 | 未实现 | — |
-| Application access records | `privacy-musiclibrary.bc0f5a5a` | 信息展示 | 未实现 | — |
-
 ### Notification access — `privacy-notifications`
 
 应用访问权限与最近活动
@@ -4889,44 +4283,6 @@ Windows 参考入口：`ms-settings:privacy-radios`。
 | Allow applications to access wireless communications | `privacy-radios.11a432f0` | 开关 | 未实现 | — |
 | Allow desktop applications to access wireless communications | `privacy-radios.6792cc19` | 开关 | 未实现 | — |
 | Application access records | `privacy-radios.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Tasks — `privacy-tasks`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-tasks`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Task permissions | `privacy-tasks.0fafdae2` | 开关 | 未实现 | — |
-| Allow apps to access tasks | `privacy-tasks.8fd4d927` | 开关 | 未实现 | — |
-| Allow desktop apps to access tasks | `privacy-tasks.86b78432` | 开关 | 未实现 | — |
-| Application access records | `privacy-tasks.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Video — `privacy-videos`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-videos`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Video permissions | `privacy-videos.feacfffa` | 开关 | 未实现 | — |
-| Allow apps to access videos | `privacy-videos.0e261070` | 开关 | 未实现 | — |
-| Allow desktop apps to access videos | `privacy-videos.5b20e2b2` | 开关 | 未实现 | — |
-| Application access records | `privacy-videos.bc0f5a5a` | 信息展示 | 未实现 | — |
 
 ### Voice activation — `privacy-voiceactivation`
 
@@ -5284,70 +4640,28 @@ Windows 参考入口：`ms-settings:privacy-voiceactivation`。
 
 ### System updates — `updates`
 
-更新状态与维护安排
+更新状态与维护计划；高级选项已合入本页默认折叠的 Advanced 区域，旧页面 ID `update-options` 打开此区域。
 
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
-Windows 参考入口：`ms-settings:windowsupdate`、`ms-settings:windowsupdate-action`、`ms-settings:windowsupdate-seekerondemand`。
+Windows 参考入口：`ms-settings:windowsupdate`、`ms-settings:windowsupdate-action`、`ms-settings:windowsupdate-seekerondemand`、`ms-settings:windowsupdate-options`。
 
-相关页面 ID：`update-history`、`update-options`。
-
-#### 设置
+#### Settings
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Update status | `updates.69d14924` | 信息展示 | 未实现 | — |
 | Check for updates | `updates.a6df3858` | 操作 | 未实现 | — |
-| Get the latest updates as early as possible | `updates.999d9943` | 开关 | 未实现 | — |
-| Pause updates | `updates.70b991bf` | 选择 | 未实现 | — |
-| Update history | `updates.0c4e326b` | 操作 | 未实现 | — |
-| Advanced options | `updates.378a5408` | 操作 | 未实现 | — |
 
-### Update history — `update-history`
-
-功能、质量与驱动更新
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:windowsupdate-history`。
-
-#### 设置
+#### Advanced
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Function updates | `update-history.019e680d` | 操作 | 未实现 | — |
-| Quality updates | `update-history.02ffa466` | 操作 | 未实现 | — |
-| Driver updates | `update-history.96574344` | 操作 | 未实现 | — |
-| Definition update | `update-history.09e476b4` | 操作 | 未实现 | — |
-| Other updates | `update-history.7cf8d3a1` | 操作 | 未实现 | — |
-| Uninstall updates | `update-history.ffac73c3` | 操作 | 未实现 | — |
-
-### Update advanced options — `update-options`
-
-下载与更新偏好
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:windowsupdate-options`。
-
-相关页面 ID：`active-hours`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Receive other product updates | `update-options.7bd2f5b5` | 开关 | 未实现 | — |
-| Download via metered connection | `update-options.3f139dcf` | 开关 | 未实现 | — |
 | Restart as soon as possible | `update-options.0a009ef6` | 开关 | 未实现 | — |
 | Notify me when a reboot is needed | `update-options.1439f298` | 开关 | 未实现 | — |
 | Activity time | `update-options.abe0ecdb` | 操作 | 未实现 | — |
-| Recovery | `update-options.79748ca1` | 操作 | 未实现 | — |
 
 ### Active hours — `active-hours`
 

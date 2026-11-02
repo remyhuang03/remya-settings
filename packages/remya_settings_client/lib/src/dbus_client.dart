@@ -46,7 +46,14 @@ class SettingsClient {
           arguments.map(DBusString.new),
           replySignature: DBusSignature('s'),
         )
-        .timeout(const Duration(seconds: 30));
+        .timeout(
+          Duration(
+            seconds:
+                method == 'Set' && arguments.firstOrNull == 'installed.c3c4a29c'
+                ? 300
+                : 30,
+          ),
+        );
     return jsonDecode(reply.returnValues.single.asString())
         as Map<String, dynamic>;
   }

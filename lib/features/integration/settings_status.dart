@@ -1,3 +1,4 @@
+import '../default_apps/application/default_apps_controller.dart';
 import '../system_information/application/hostname_controller.dart';
 
 import 'package:material_ui/material_ui.dart';
@@ -15,17 +16,25 @@ class SettingsStatus extends StatelessWidget {
     this.dateTime,
     this.display,
     this.background,
+    this.defaultApps,
     this.navigatorKey,
   });
   final AppPreferencesController preferences;
   final BackgroundController? background;
+  final DefaultAppsController? defaultApps;
   final DateTimeController? dateTime;
   final DisplayController? display;
   final GlobalKey<NavigatorState>? navigatorKey;
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: Listenable.merge([preferences, dateTime, display, background]),
+    listenable: Listenable.merge([
+      preferences,
+      dateTime,
+      display,
+      background,
+      defaultApps,
+    ]),
     builder: (context, _) => ConstrainedBox(
       constraints: BoxConstraints(
         maxHeight: MediaQuery.sizeOf(context).height * 0.5,
@@ -69,6 +78,23 @@ class SettingsStatus extends StatelessWidget {
                   title: 'Date and time: ${controller.errorMessage}',
                   busy: controller.isBusy,
                   useSystem: controller.retry,
+                ),
+            ],
+            if (defaultApps case final controller?) ...[
+              if (controller.hasConflict)
+                _ConflictWarning(
+                  navigatorKey: navigatorKey,
+                  title: 'Default apps differ from saved Settings. Open Apps > Default apps to inspect each association.',
+                  busy: controller.isBusy,
+                  useSystem: controller.useSystemConfiguration,
+                  useSettings: controller.applySavedConfiguration,
+                ),
+              if (controller.errorMessage case final message?)
+                _ConflictWarning(
+                  navigatorKey: navigatorKey,
+                  title: 'Default apps: $message',
+                  busy: controller.isBusy,
+                  useSystem: controller.reload,
                 ),
             ],
             if (background case final controller?) ...[

@@ -66,6 +66,7 @@ class SettingsCatalog {
   /// Page IDs retired when their controls moved; they keep opening the new home.
   static const pageAliases = {
     'advanced-display': 'display',
+    'update-options': 'updates',
     'hypr-monitor-fields': 'display',
     'colors': 'themes',
     'hypr-wallpaper-outputs': 'background',
@@ -76,8 +77,14 @@ class SettingsCatalog {
   };
   SettingsPageSpec page(String id) =>
       pages.firstWhere((p) => p.id == (pageAliases[id] ?? id));
-  List<SettingsPageSpec> inCategory(String id) =>
-      pages.where((p) => p.category == id).toList();
+  List<SettingsPageSpec> inCategory(String id) {
+    final categoryPages = pages.where((p) => p.category == id);
+    return [
+      ...categoryPages.where((p) => !p.id.endsWith('-more')),
+      ...categoryPages.where((p) => p.id.endsWith('-more')),
+    ];
+  }
+
   int get controlCount => pages.fold(0, (sum, p) => sum + p.controls.length);
 
   List<SettingsPageSpec> search(String query) {

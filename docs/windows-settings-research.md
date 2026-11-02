@@ -8,9 +8,9 @@ This document describes the Windows-reference catalog as researched (188 pages a
 
 Microsoft publishes a [Settings navigation guide](https://support.microsoft.com/en-us/windows/experience/exploring-windows-settings), a [page URI reference](https://learn.microsoft.com/en-us/windows/apps/develop/launch/launch-settings), and a [Windows 11 backup settings catalog](https://learn.microsoft.com/en-us/windows/configuration/windows-backup/catalog?pivots=windows-11). These are complementary inventories, not a published internal schema for every Windows Settings control. Availability varies by OS release, edition, hardware, installed applications, organization policy, account, and staged feature rollout.
 
-The checked-in catalog includes **192 unique URI names** found in the reference's tables at research time. Query parameters selecting individual apps, cameras, or audio endpoints belong to the same page; aliases are recorded on their target page. Remaining Windows-only entries are clearly unavailable reference previews. A URI that redirects to another view is not evidence of an independent current Windows 11 page.
+The current catalog includes **155 unique URI names** from the reference tables. Query parameters selecting individual apps, cameras, or audio endpoints belong to the same page; aliases are recorded on their target page. Remaining Windows-only entries are clearly unavailable reference previews. A URI that redirects to another view is not evidence of an independent current Windows 11 page.
 
-The retained backup coverage contains **335 hierarchy entries**, including **249 leaf entries** represented by individually identified controls in collapsible "Windows reference settings" sections; the other entries identify groups. Original English names are retained there for traceability. This catalog includes some File Explorer settings, which are treated as reference content rather than additional Settings categories. Backup checkmarks describe Windows backup coverage, not implementation status in this application.
+The retained backup coverage contains **335 hierarchy entries**, including **247 leaf entries** represented by individually identified controls in collapsible "Windows reference settings" sections; the other entries identify groups. Original English names are retained there for traceability. This catalog includes some File Explorer settings, which are treated as reference content rather than additional Settings categories. Backup checkmarks describe Windows backup coverage, not implementation status in this application.
 
 There are **188 detail pages**, **1,251 reference controls**, **10 settings categories**, and a separate Home and About view. All controls are authored UI previews. Control types, ranges, sample values, grouping, and option lists are this project's initial model, not Microsoft's internal types, actual hardware capabilities, live defaults, or a guarantee of an exact match to every Windows build. In particular, source-only reference fields whose choices are not documented use an explicit "未配置" option. Future implementation must verify real platform contracts and replace illustrative ranges and choices before enabling them.
 
@@ -23,10 +23,10 @@ Supplemental pages come from [Advanced settings](https://learn.microsoft.com/en-
 | System | Display, audio, notifications, focus, power, storage, windows, sharing, recovery, remote access, clipboard, device information, developer tools | Future compositor and Linux service integrations |
 | Bluetooth & devices | Pairing, printers, cameras, mouse, touchpad, touch, pen, USB, phone and accessory devices | Future Linux device service integrations |
 | Network & Internet | Status, Wi-Fi, Ethernet, VPN, hotspot, airplane mode, cellular, proxy, adapters, usage | Future network service integration |
-| Personalization | Background (image or video), colors and themes (merged), lock screen, text input, launcher, panel, fonts, lighting | Future Hyprland and desktop component configuration |
-| Apps | Installed apps, defaults, optional features, startup, playback and website associations | Future package and XDG application integration |
+| Appearance | Background (image or video), colors and themes (merged), lock screen, launcher, panel, fonts, lighting | Future Hyprland and desktop component configuration |
+| Apps | Installed apps, defaults and startup | Future package and XDG application integration |
 | Accounts | Identity, login, local users, backup, credentials and passkeys | Future Linux session and account integration |
-| Time & language | Clock, synchronization, region, languages, typing, IMEs, speech | Future locale and input method integration |
+| Time & language | Clock, synchronization, region, languages, speech and external input-method configuration tools | Future locale and input method integration |
 | Accessibility | Text, visual effects, pointer, cursor, magnification, contrast, reader, audio, captions, voice, keyboard, mouse and eye control | Future compositor and assistive technology integration |
 | Privacy & security | Security, encryption, activity, diagnostics, search and per-capability application permissions | Future Linux security and portal integration |
 | System updates | Status, history and update preferences | Future distribution-aware update integration |
@@ -61,7 +61,7 @@ Availability always has a readable label and an icon:
 
 No system setting is currently `available`. The renderer deliberately keeps operation controls disabled. Adding an integration requires real read/write bindings, error handling, validation and tests, then updating the control state and availability together. Changing a status string alone must never enable a simulated setting. About labels implemented navigation/license UI separately from system functionality.
 
-Tests resolve every recorded URI and backup leaf to an actual page/control, reject malformed data and broken references, exercise navigation/search/back/About/licenses, render every detail page at three widths, and assert operation controls are disabled.
+Retained tests resolve recorded URI and backup references, reject malformed data and broken routes, check source and progress-document parity, and cover shared row layout. Local presentation checks were removed after verification.
 
 ## Application icon and About
 

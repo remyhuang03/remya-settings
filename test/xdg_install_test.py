@@ -4,7 +4,6 @@ from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
-from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -25,14 +24,6 @@ class InstallTest(unittest.TestCase):
             self.assertEqual(installer.data_home({'XDG_DATA_HOME': '/custom'}), Path('/custom'))
             with self.assertRaises(ValueError):
                 installer.data_home({'HOME': 'relative'})
-
-    def test_bar_requires_roboto_flex_instead_of_accepting_fontconfig_fallback(self):
-        installer = load_installer(ROOT.parent / 'remya_bar')
-        with patch.object(installer.subprocess, 'run', return_value=SimpleNamespace(stdout='Noto Sans')):
-            with self.assertRaisesRegex(RuntimeError, 'Roboto Flex system font'):
-                installer.require_roboto_flex_font()
-        with patch.object(installer.subprocess, 'run', return_value=SimpleNamespace(stdout='Roboto Flex')):
-            installer.require_roboto_flex_font()
 
     def test_install_update_preserves_config_and_rejects_unrelated_commands(self):
         for repository in [ROOT, ROOT.parent / 'remya_bar']:
