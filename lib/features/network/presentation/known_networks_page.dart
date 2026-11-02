@@ -145,6 +145,7 @@ class _ProfileTile extends StatelessWidget {
             child: const Text('Cancel'),
           ),
           FilledButton(
+            style: destructiveFilledButtonStyle(context),
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Forget'),
           ),
@@ -253,6 +254,7 @@ class _ProfileTile extends StatelessWidget {
         id: knownNetworkForgetSettingId,
         label: const Text('Forget this network'),
         control: FilledButton.tonal(
+          style: destructiveTonalButtonStyle(context),
           onPressed:
               controller.isBusy ||
                   profile['read_only'] == true ||

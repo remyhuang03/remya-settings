@@ -131,6 +131,25 @@ class AvailabilityBadge extends StatelessWidget {
   }
 }
 
+ButtonStyle destructiveFilledButtonStyle(BuildContext context) {
+  final colors = Theme.of(context).colorScheme;
+  return FilledButton.styleFrom(
+    backgroundColor: colors.error,
+    foregroundColor: colors.onError,
+  );
+}
+
+ButtonStyle destructiveTonalButtonStyle(BuildContext context) {
+  final colors = Theme.of(context).colorScheme;
+  return FilledButton.styleFrom(
+    backgroundColor: colors.errorContainer,
+    foregroundColor: colors.onErrorContainer,
+  );
+}
+
+ButtonStyle destructiveTextButtonStyle(BuildContext context) =>
+    TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.error);
+
 class SettingsSurface extends StatelessWidget {
   const SettingsSurface({
     super.key,

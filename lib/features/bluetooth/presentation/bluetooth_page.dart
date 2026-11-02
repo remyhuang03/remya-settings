@@ -235,6 +235,7 @@ class _DeviceCard extends StatelessWidget {
             child: const Text('Cancel'),
           ),
           FilledButton(
+            style: destructiveFilledButtonStyle(context),
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Remove'),
           ),
@@ -312,6 +313,7 @@ class _DeviceCard extends StatelessWidget {
                   ),
                 if (!nearby)
                   TextButton(
+                    style: destructiveTextButtonStyle(context),
                     onPressed: controller.busy ? null : () => _forget(context),
                     child: const Text('Remove'),
                   ),

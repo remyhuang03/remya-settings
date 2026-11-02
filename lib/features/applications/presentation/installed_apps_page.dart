@@ -292,6 +292,7 @@ class _AppDetailsState extends State<_AppDetails> {
             child: const Text('Cancel'),
           ),
           FilledButton(
+            style: destructiveFilledButtonStyle(context),
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Uninstall'),
           ),
@@ -363,6 +364,7 @@ class _AppDetailsState extends State<_AppDetails> {
           child: const Text('Close'),
         ),
         FilledButton(
+          style: destructiveFilledButtonStyle(context),
           onPressed: app.canUninstall && !widget.controller.isBusy
               ? _remove
               : null,

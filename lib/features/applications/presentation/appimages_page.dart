@@ -478,6 +478,7 @@ class _AppDetailsState extends State<_AppDetails> {
             child: const Text('Cancel'),
           ),
           FilledButton(
+            style: destructiveFilledButtonStyle(context),
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Move to Trash'),
           ),
@@ -584,6 +585,7 @@ class _AppDetailsState extends State<_AppDetails> {
         actions: [
           TextButton(
             key: const ValueKey('appimage-trash'),
+            style: destructiveTextButtonStyle(context),
             onPressed: busy ? null : () => _trash(app),
             child: const Text('Move to Trash'),
           ),

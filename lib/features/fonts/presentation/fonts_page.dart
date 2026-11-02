@@ -291,6 +291,7 @@ class _DetailsDialog extends StatelessWidget {
           ),
           FilledButton(
             key: const ValueKey('fonts-uninstall-confirm'),
+            style: destructiveFilledButtonStyle(context),
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Uninstall'),
           ),
@@ -351,6 +352,7 @@ class _DetailsDialog extends StatelessWidget {
       if (family.removable)
         TextButton(
           key: const ValueKey('fonts-uninstall'),
+          style: destructiveTextButtonStyle(context),
           onPressed: controller.isBusy ? null : () => _uninstall(context),
           child: const Text('Uninstall'),
         ),
