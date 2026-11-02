@@ -4,42 +4,36 @@
 
 <h1 align="center">Remy'a Settings</h1>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Platform-Arch%20Linux%20%7C%20Hyprland-1793D1?logo=archlinux" alt="Platform">
+  <img src="https://img.shields.io/badge/Flutter-3.47.8-02569B?logo=flutter" alt="Flutter">
+  <img src="https://img.shields.io/badge/Rust-2024-dea584?logo=rust" alt="Rust">
+  <a href="docs/public-api.md"><img src="https://img.shields.io/badge/D--Bus-top.remya.settings-5865F2" alt="D-Bus"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue" alt="License"></a>
+</p>
+
 A global system settings application for **Hyprland on Linux**, built with **Flutter**, **Material Design 3 Expressive**, and a modular **Rust workspace**. Layout and information architecture reference Windows 11 Settings.
 
-## Implemented Features & Integrations
+## Implemented Features
 
-Settings combines a Windows 11-inspired hierarchy with native Linux and Hyprland backend integrations. Real device and system settings are implemented in Rust and reconciled with the underlying host:
+Settings combines a Windows 11-inspired hierarchy with native Linux and Hyprland backend integrations, reconciled with host state via Rust:
 
-- **Personalization (Wallpaper, Accent, Fonts, & Themes)**:
-  - **Wallpaper**: Image backgrounds managed via `hyprpaper` IPC and video wallpapers managed through a dedicated `mpvpaper` systemd unit. Supports multi-monitor setups (per-display or grouped displays) and copies selected media into application storage.
-  - **Accent Color**: Dynamic Material palette extraction from the active wallpaper or manual selection using a color picker with presets.
-  - **Fonts**: Fontconfig-backed font browser with live previews, style and format inspection, font file installation (`.ttf`, `.otf`), and user font uninstallation.
-  - **System Appearance**: Synchronized Light/Dark theme switching for GNOME/GTK targets and official Qt Quick environment defaults persisted through fish and Hyprland Lua configuration.
-- **Network**:
-  - Network status, Wi-Fi radio, scanning and connecting, and saved-network management through NetworkManager, which is required.
-- **Display**:
-  - Live Hyprland monitor output detection, arrangement, resolution, refresh rate, scaling, rotation, mirroring, HDR, and color profiles.
-  - Hardware backlight brightness control via `logind` and external monitors via `ddcutil`.
-  - Atomic configuration persistence to `$XDG_CONFIG_HOME/hypr/monitors.lua` with strict Lua validation and a keep-or-revert countdown safety timer.
-- **System Information & Hostname**:
-  - Real-time specifications for OS distribution, Linux kernel, Hyprland version, CPU, GPU, memory, swap, disk usage, and uptime.
-  - Hostname inspection and editing with polkit authorization via `systemd-hostnamed`.
-- **Date & Time**:
-  - Clock synchronization via `systemd-timedated` with automatic NTP toggle.
-  - Manual date/time setting and system timezone selection from `ListTimezones`.
-  - Calendar date formatting adhering to system `LC_TIME`.
-- **System Configuration Reconciliation**:
-  - Reads and validates actual system state on first run without imposing arbitrary defaults.
-  - Compares saved preferences with fresh system readbacks at startup and on page navigation, alerting users to conflicts with explicit options to adopt system configuration or reapply saved settings.
+- **Appearance**: Wallpaper management (`hyprpaper` images & `mpvpaper` videos), dynamic Material accent color extraction, Fontconfig font manager, and synchronized Light/Dark switching for GNOME/GTK and Qt Quick.
+- **Apps**: XDG default MIME associations (`mimeapps.list`), installed desktop applications inventory with guarded pacman/flatpak uninstallation, and detected external configuration tools under More.
+- **Display**: Hyprland monitor arrangement, resolution, scaling, rotation, HDR, backlight brightness (`logind` / `ddcutil`), and safe atomic persistence to `monitors.lua` with a keep-or-revert countdown timer.
+- **Network**: Real-time connection status, Wi-Fi radio power toggle, access point scanning, connection handling, and saved NetworkManager profiles.
+- **System & Hostname**: Real-time hardware/OS specifications (CPU, GPU, memory, swap, disk, uptime) and polkit-authorized hostname editing.
+- **Date & Time**: NTP synchronization via `systemd-timedated`, timezone selection (`ListTimezones`), manual clock setting, and `LC_TIME` calendar formatting.
+- **Configuration Reconciliation**: Non-destructive system detection on launch and automatic conflict resolution prompts between saved preferences and live system state.
 
 ## Settings Catalog & Coverage
 
-Browse Home, 12 categories, 258 detail pages, and About; search settings locally, follow related pages, and inspect third-party licenses.
+Browse Home, 12 categories, 222 detail pages, and About; search settings locally, follow related pages, and inspect third-party licenses.
 
-- **Current Catalog**: 12 categories, 258 pages, 1,979 controls (68 available with real system backends, 1,808 planned previews, 103 unsupported).
-- **Windows 11 Reference**: Covers the 204 unique names in Microsoft's public URI tables and 343 hierarchy entries (257 leaf controls) in its Windows 11 backup catalog. See [research, sources, coverage, and limitations](docs/windows-settings-research.md).
-- **Hyprland Extensions**: Adds 90 pages and 784 controls based on official configuration documentation and existing ecosystem tools. See [Hyprland sources, classifications, and version limits](docs/hyprland-settings-research.md).
-- **Availability & Tracking**: Every setting declares availability (`available`, `planned`, or `unsupported`). Unavailable controls remain disabled while allowing navigation to preview pages; contextually inapplicable options are hidden automatically. See the [item-by-item implementation progress checklist](docs/settings-implementation-progress.md).
+- **Current Catalog**: 12 categories, 222 pages, 1,821 controls (123 available with real system backends, 1,660 planned previews, 38 unsupported).
+- **Windows 11 Reference**: Covers 140 pages, 1,074 reference controls, 155 unique URI names from reference tables, and 335 hierarchy entries (247 leaf controls) in its backup catalog. See [research, sources, and limitations](docs/windows-settings-research.md).
+- **Hyprland Extensions**: Adds 2 categories, 85 pages, and 768 controls based on official configuration documentation and ecosystem tools. See [Hyprland sources and version limits](docs/hyprland-settings-research.md).
+- **Availability & Tracking**: Every setting declares availability (`available`, `planned`, or `unsupported`). Unavailable controls remain disabled while allowing navigation to preview pages; contextually inapplicable options are hidden automatically. See the [implementation progress checklist](docs/settings-implementation-progress.md).
 
 ## Architecture & Resident Service
 
@@ -48,7 +42,7 @@ Settings uses a client-service architecture to keep memory footprint minimal and
 - **Resident User Service (`remya_settings`)**: An ordinary-user Rust service that owns production configuration, reconciliation, CLI dispatch, and the session D-Bus interface (`top.remya.settings.Settings1`).
 - **Disposable Flutter GUI**: The Flutter desktop application connects as a disposable client. Closing the window immediately terminates the Flutter process to release engine memory, while the resident service continues running for dependent clients.
 - **GPU Optimization**: The native runner prefers the integrated GPU for the Flutter settings window to avoid discrete GPU (e.g. NVIDIA) driver memory overhead.
-- **Privilege Separation**: Elevated operations (such as hostname changes) execute through a dedicated helper process authenticated via polkit (`polkit-kde-agent`) communicating over private bounded pipes.
+- **Privilege Separation**: Elevated operations (such as hostname changes and package uninstallation) execute through a dedicated helper process authenticated via polkit communicating over private bounded pipes.
 - **Dependent Applications**: Remya Bar (`top.remya.bar`) integrates via `packages/remya_settings_client` (pure Dart, zero Flutter/backend dependencies) for synchronized themes and settings observation over D-Bus. See [public API and process boundaries](docs/public-api.md).
 
 ## Repository Layout
@@ -61,8 +55,10 @@ lib/
   features/
     about/                Product information and licenses
     appearance/           App preferences, atomic TOML storage, theme state
+    applications/         Installed application inventory and external tools
     background/           Wallpaper management (hyprpaper / mpvpaper) and accent color
     date_time/            Date, time, NTP, and time zone management
+    default_apps/         XDG MIME default application associations
     display/              Hyprland display outputs, layout, and brightness
     fonts/                Font browsing, preview, installation, and removal
     integration/          Resident service controllers and status
@@ -72,10 +68,12 @@ lib/
   src/rust/
     appearance/           GNOME/GTK settings and Qt toolkit environments
     appearance_bridge/    Generated Flutter/Rust bridge for appearance
+    applications/         Desktop entry parsing, icon lookup, package uninstall
     background/           Hyprpaper IPC, mpvpaper unit, media copying, accent extraction
     core/                 Backend types and crate boundaries
     date_time/            systemd-timedated client and calendar helpers
     date_time_bridge/     Generated Flutter/Rust bridge for date/time
+    default_apps/         mimeapps.list reader/writer and MIME associations
     display/              Hyprland monitor rules, monitors.lua, and brightness
     fonts/                Fontconfig queries, font installation, and metadata
     network/              NetworkManager client and saved-network reconciliation
@@ -132,7 +130,7 @@ python tool/install.py
 ```
 
 - Launch **Remy'a Settings** from the application menu, run `remya_settings`, or use `gtk-launch top.remya.settings`.
-- CLI commands: `remya_settings --help` lists available commands. Implemented features provide full CLI parity (e.g. `remya_settings get theme`, `remya_settings get display`, `remya_settings get background`, `remya_settings get hostname`).
+- CLI commands: `remya_settings --help` lists available commands. Implemented features provide full CLI parity (e.g. `remya_settings get theme`, `remya_settings get display`, `remya_settings get background`, `remya_settings get hostname`, `remya_settings get default-app`).
 - To exit the resident background service before updates, run `remya_settings quit`.
 - See [XDG directory layout](docs/xdg-layout.md) and [public API documentation](docs/public-api.md).
 
