@@ -15,6 +15,8 @@ Settings combines a Windows 11-inspired hierarchy with native Linux and Hyprland
   - **Accent Color**: Dynamic Material palette extraction from the active wallpaper or manual selection using a color picker with presets.
   - **Fonts**: Fontconfig-backed font browser with live previews, style and format inspection, font file installation (`.ttf`, `.otf`), and user font uninstallation.
   - **System Appearance**: Synchronized Light/Dark theme switching for GNOME/GTK targets and official Qt Quick environment defaults persisted through fish and Hyprland Lua configuration.
+- **Network**:
+  - Network status, Wi-Fi radio, scanning and connecting, and saved-network management through NetworkManager, which is required.
 - **Display**:
   - Live Hyprland monitor output detection, arrangement, resolution, refresh rate, scaling, rotation, mirroring, HDR, and color profiles.
   - Hardware backlight brightness control via `logind` and external monitors via `ddcutil`.
@@ -64,6 +66,7 @@ lib/
     display/              Hyprland display outputs, layout, and brightness
     fonts/                Font browsing, preview, installation, and removal
     integration/          Resident service controllers and status
+    network/              Network status, Wi-Fi, and known networks
     settings/             Catalog model, navigation, search, page renderer
     system_information/   Hardware/OS specifications and hostname management
   src/rust/
@@ -75,6 +78,7 @@ lib/
     date_time_bridge/     Generated Flutter/Rust bridge for date/time
     display/              Hyprland monitor rules, monitors.lua, and brightness
     fonts/                Fontconfig queries, font installation, and metadata
+    network/              NetworkManager client and saved-network reconciliation
     service/              Resident session D-Bus service and privileged helper
     system_information/   Hardware/OS inspection and systemd-hostnamed client
 packages/

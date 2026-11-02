@@ -16,6 +16,7 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | hyprpaper configuration | `$XDG_CONFIG_HOME/hypr/hyprpaper.conf`, with one `hyprpaper.conf.remya-backup` |
 | Video background unit | `$XDG_CONFIG_HOME/systemd/user/top.remya.settings.video-background.service` |
 | Default application snapshot | `default-apps.toml` beside `config.toml` (debug: repository `config/`) |
+| Network preference snapshot | `network.toml` beside `config.toml` (debug: repository `config/`) |
 | XDG default associations | GIO-managed `mimeapps.list` with standard desktop-specific/config/data precedence |
 | Installed fonts | `$XDG_DATA_HOME/fonts/` |
 | Installed bundles | `$XDG_DATA_HOME/remya/remya_settings/` and `remya_bar/` |

@@ -44,7 +44,7 @@ No command evaluates shell input. IDs are stable catalog IDs, not translated lab
 | `get date-time` | `Get(s key)` with `date-time` | Actual clock, local time, NTP status, time zone, saved zone, and conflict |
 | `get timezones` | `Get(s key)` with `timezones` | Finite system time zone options |
 | `get configuration` | `Get(s key)` with `configuration` | Saved/system values, conflicts, and detection errors |
-| `resolve <appearance / date-time / display / hostname / background / default-apps> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
+| `resolve <appearance / date-time / display / hostname / background / default-apps / network> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
 | `resolve display <keep / revert>` | `Resolve(ss feature, source)` | Confirm or undo a pending display change |
 | `get background` | `Get(s key)` with `background` | Saved and system background, displays, warnings, previews, conflict, write blocker, error |
 | `get accent` | `Get(s key)` with `accent` | Accent source, `#RRGGBB` seed, sampled file, sampling error |
@@ -320,7 +320,7 @@ verified on Hyprland 0.57). Set values are JSON:
 remya_settings get display
 remya_settings set display.12e2ed4d '{"output":"DP-1","value":"1.5","confirm_seconds":15}'
 remya_settings resolve display keep
-remya_settings set hypr-monitor-fields.position '{"output":"DP-1","value":"1920x0"}'
+remya_settings set display.position '{"output":"DP-1","value":"1920x0"}'
 remya_settings set display.5d419889 '{"output":"eDP-1","value":"40"}'
 remya_settings set display.15697afc detect
 ```
@@ -332,30 +332,23 @@ remya_settings set display.15697afc detect
 | `display.0ce92088` HDR | `true`, `false` (`hdr` or `srgb`) | `cm` |
 | `display.12e2ed4d` Scale | `auto` or a number; see `scale_options` | `scale` |
 | `display.44f6b9b0` Resolution | `WIDTHxHEIGHT` or `preferred` | `mode` |
-| `advanced-display.34d8396d` Refresh rate | Rate in Hz at the current resolution | `mode` |
+| `display.34d8396d` Refresh rate | Rate in Hz at the current resolution | `mode` |
 | `display.9843ad76` Orientation | `0`–`7` | `transform` |
 | `display.7cb5dc06` Multiple displays | `extend`, `disable`, `mirror:<output>` | `disabled`, `mirror` |
-| `hypr-monitor-fields.position` | `XxY` or `auto`, `auto-right`, ... | `position` |
-| `advanced-display.91720250` Bit depth | `8`, `10` | `bitdepth` |
-| `advanced-display.2d80c2c4` Variable refresh rate | empty (use `misc:vrr`), `0`–`3` | `vrr` |
-| `hypr-monitor-fields.sdr-eotf` | `default`, `gamma22`, `srgb` | `sdr_eotf` |
-| `hypr-monitor-fields.sdrbrightness`, `.sdrsaturation` | `0`–`5` | same name |
-| `hypr-monitor-fields.sdr-min-luminance`, `.sdr-max-luminance` | Nits | `sdr_min_luminance`, `sdr_max_luminance` |
-| `hypr-monitor-fields.min-luminance`, `.max-luminance`, `.max-avg-luminance` | Nits, `-1` for reported | same with underscores |
-| `hypr-monitor-fields.supports-hdr`, `.supports-wide-color` | `-1`, `0`, `1` | `supports_hdr`, `supports_wide_color` |
-| `hypr-monitor-fields.icc` | Absolute path of a file with an ICC signature, or empty | `icc` |
-| `hypr-monitor-fields.reserved-area` | `top right bottom left` | `reserved_area` |
+| `display.position` | `XxY` or `auto`, `auto-right`, ... | `position` |
+| `display.91720250` Bit depth | `8`, `10` | `bitdepth` |
+| `display.2d80c2c4` Variable refresh rate | empty (use `misc:vrr`), `0`–`3` | `vrr` |
+| `display.sdr-eotf` | `default`, `gamma22`, `srgb` | `sdr_eotf` |
+| `display.sdrbrightness`, `.sdrsaturation` | `0`–`5` | same name |
+| `display.sdr-min-luminance`, `.sdr-max-luminance` | Nits | `sdr_min_luminance`, `sdr_max_luminance` |
+| `display.min-luminance`, `.max-luminance`, `.max-avg-luminance` | Nits, `-1` for reported | same with underscores |
+| `display.supports-hdr`, `.supports-wide-color` | `-1`, `0`, `1` | `supports_hdr`, `supports_wide_color` |
+| `display.icc` | Absolute path of a file with an ICC signature, or empty | `icc` |
+| `display.reserved-area` | `top right bottom left` | `reserved_area` |
 
-`hypr-monitor-fields.output`, `advanced-display.3b3ebb60`, `.761b7ac8`, `.3278abf9`,
+`display.output`, `display.3b3ebb60`, `.761b7ac8`, `.3278abf9`,
 and `.device` are read-only. `Get(<setting-id>)` returns a `value` for each connected
-output. Page IDs `advanced-display` and `hypr-monitor-fields` were folded into the
-Display page and still open it; the GUI expands Advanced for `advanced-display`.
-The Display Windows reference section and its nine unavailable controls have been
-removed from the catalog; their former IDs are no longer returned by Get/List/Search.
-The retired System pages Additional settings, all Mixed Reality pages (including
-Uninstall Mixed Reality), Tablet mode, Phone, Where to save new content,
-Troubleshooting, Activation, and Control Center are also absent from the catalog,
-search, and navigation. Requests for their removed IDs fail as unknown IDs.
+output.
 
 **Applying.** A value is validated against the actual monitor, sent with `hyprctl
 eval 'hl.monitor({...})'`, and confirmed by polling readback for up to 5 seconds.
@@ -489,9 +482,8 @@ placeholders are reported as unavailable. Read failures remain per-field errors.
 
 The GUI reads on page entry and offers Refresh. No observations are persisted or
 reconciled, no elevation is requested by the reader, and no system writes occur.
-Rename device is implemented through the shared hostname controller. Device identifier and Advanced system settings were removed by owner request; the reader does not access machine-id.
-The duplicate Windows reference Rename control was removed, with source coverage
-mapped to the existing `about.0f142010` control. Use `open system-information`
+Rename device is implemented through the shared hostname controller. The reader does not access machine-id.
+Use `open system-information`
 to open this page; `open about` retains the application About page behavior.
 
 The page follows the Windows Settings About hierarchy: a device header followed
@@ -564,9 +556,9 @@ are only needed for video and for sampling or previews.
 | Background file | `background.9e58290b` | Absolute path, or `{"path":"…","display":"DP-1"}`; `display` may be a list |
 | Fit | `background.56c289eb` | `cover`, `contain`, `tile`, `fill`, or `{"fit":"…","display":"DP-1"}`; `display` may be a list; video has no `tile` |
 | Video when covered | `background.video-pause` | `keep`, `pause`, `stop` |
-| Show splash text | `hypr-paper-misc-options.splash` | `true`, `false` |
-| Splash offset | `hypr-paper-misc-options.splash-offset` | 0 to 10000; the page's slider covers 0 to 200 |
-| Splash opacity | `hypr-paper-misc-options.splash-opacity` | 0 to 1 |
+| Show splash text | `background.splash` | `true`, `false` |
+| Splash offset | `background.splash-offset` | 0 to 10000; the page's slider covers 0 to 200 |
+| Splash opacity | `background.splash-opacity` | 0 to 1 |
 
 A selected file is copied to the application's backgrounds directory (see
 [XDG layout](xdg-layout.md)) under its content hash plus a cleaned name. Saved
@@ -620,7 +612,7 @@ background returns to an image, happening under the video before it stops.
 
 ## Accent color
 
-`colors.8983f367` takes `background` or `custom`. `colors.6f67371e` takes `#RRGGBB`
+`themes.8983f367` takes `background` or `custom`. `themes.6f67371e` takes `#RRGGBB`
 and selects `custom`. `background` decodes the current background's first frame to at
 most 128 pixels per side with ffmpeg and picks the seed with `material-colors`: Celebi
 quantization followed by Score, the Material color utilities' source-color method. It
@@ -721,8 +713,33 @@ are hidden and reject launch. More pages do not own or reconcile external prefer
 | Appearance | `appearance-more.gtk` | `nwg-look` |
 | Appearance | `appearance-more.gnome-tweaks` | `gnome-tweaks` |
 
-The former personalization category is now named Appearance and has category ID
-`appearance` by owner request. Page/control IDs and user preference files remain
-unchanged. ExternalToolsClient exposes grouped discovery and launch without Flutter.
+ExternalToolsClient exposes grouped discovery and launch without Flutter.
 
 External-tool discovery includes nullable `launch_error`. GNOME Settings is listed as an informative readout without an Open control outside GNOME/Unity; launch is rejected with the platform reason. No desktop environment variables are spoofed.
+
+## Network
+
+See [Network settings](network.md) for behavior, secrets and limits. NetworkManager is required.
+
+| CLI | D-Bus | Result |
+| --- | --- | --- |
+| `get network` | `Get("network")` | Fresh `api_version`, `available`, `initialized`, `writable`, `conflict`, `conflicts`, `error`, `failure`, `connecting`, `adapter`, `connectivity`, `connectivity_check`, `check_uri`, `wifi_enabled`, `wifi_hardware_enabled`, `primary_uuid`, `permissions`, `devices`, `profiles`, `active` |
+| `get network-traffic` | `Get("network-traffic")` | `interface`, `rx_bytes`, `tx_bytes` of the active adapter since it came up, or nulls. Clients derive speeds; does not read NetworkManager |
+| `get <control-id>` | `Get(id)` | Readable controls return `id`, `availability`, `reason`, `value`, `error` |
+| `set wifi.enabled <true/false>` | `Set(id, value)` | Radio, verified by readback |
+| `set wifi.adapter <interface>` | `Set(id, value)` | Adapter for later Wi-Fi operations in this service session |
+| `set wifi.refresh scan` | `Set(id, value)` | Requests a scan; results arrive in `Changed` |
+| `set wifi.connect <json>` | `Set(id, json)` | `{"ssid"\|"uuid", "password"?}`. Starts activation and returns with `connecting` set |
+| `set wifi.disconnect disconnect` | `Set(id, value)` | Disconnects the selected adapter |
+| `set known-networks.add <json>` | `Set(id, json)` | `{"ssid","security":"open"\|"wpa2"\|"wpa3","password"?,"hidden"?,"autoconnect"?}`. Saves without activating |
+| `set known-networks.autoconnect <json>` | `Set(id, json)` | `{"uuid","value":true\|false}` |
+| `set known-networks.metered <json>` | `Set(id, json)` | `{"uuid","value":"automatic"\|"yes"\|"no"}` |
+| `set known-networks.change-password <json>` | `Set(id, json)` | `{"uuid","value":"password"}` for personal networks |
+| `set known-networks.forget <uuid>` | `Set(id, uuid)` | Deletes the profile, verified by readback |
+| `set network-status.sign-in open` | `Set(id, value)` | Opens the connectivity address in a captive portal |
+| `resolve network <system/settings>` | `Resolve("network", source)` | Adopts system preferences, or applies saved ones with readback |
+
+Use `-` as the CLI value to read it from stdin, so a password does not appear in the process list:
+`printf '%s' '{"ssid":"Cafe","password":"..."}' | remya_settings set wifi.connect -`
+
+Every other `network-status.*`, `wifi.*` and `known-networks.*` control is read-only or `planned`. `known-networks.mac`, `known-networks.priority` and `network-status.data-usage` return `Unavailable`. `Get("configuration")` includes `network`. `Changed("network", state)` reports NetworkManager changes, excluding signal strength between scans. `NetworkClient` in `packages/remya_settings_client` exposes these without Flutter.
