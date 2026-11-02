@@ -21,6 +21,7 @@ Settings combines a Windows 11-inspired hierarchy with native Linux and Hyprland
 - **Appearance**: Wallpaper management (`hyprpaper` images & `mpvpaper` videos), dynamic Material accent color extraction, Fontconfig font manager, and synchronized Light/Dark switching for GNOME/GTK and Qt Quick.
 - **Apps**: XDG default MIME associations (`mimeapps.list`), installed desktop applications inventory with guarded pacman/flatpak uninstallation, and detected external configuration tools under More.
 - **Display**: Hyprland monitor arrangement, resolution, scaling, rotation, HDR, backlight brightness (`logind` / `ddcutil`), and safe atomic persistence to `monitors.lua` with a keep-or-revert countdown timer.
+- **Night light**: Color temperature, on/off and fixed-hours schedule through `hyprsunset`.
 - **Network**: Real-time connection status, Wi-Fi radio power toggle, access point scanning, connection handling, and saved NetworkManager profiles.
 - **System & Hostname**: Real-time hardware/OS specifications (CPU, GPU, memory, swap, disk, uptime) and polkit-authorized hostname editing.
 - **Date & Time**: NTP synchronization via `systemd-timedated`, timezone selection (`ListTimezones`), manual clock setting, and `LC_TIME` calendar formatting.
@@ -28,11 +29,11 @@ Settings combines a Windows 11-inspired hierarchy with native Linux and Hyprland
 
 ## Settings Catalog & Coverage
 
-Browse Home, 12 categories, 222 detail pages, and About; search settings locally, follow related pages, and inspect third-party licenses.
+Browse Home, 12 categories, 220 detail pages, and About; search settings locally, follow related pages, and inspect third-party licenses.
 
-- **Current Catalog**: 12 categories, 222 pages, 1,821 controls (123 available with real system backends, 1,660 planned previews, 38 unsupported).
+- **Current Catalog**: 12 categories, 220 pages, 1,815 controls (129 available with real system backends, 1,648 planned previews, 38 unsupported).
 - **Windows 11 Reference**: Covers 140 pages, 1,074 reference controls, 155 unique URI names from reference tables, and 335 hierarchy entries (247 leaf controls) in its backup catalog. See [research, sources, and limitations](docs/windows-settings-research.md).
-- **Hyprland Extensions**: Adds 2 categories, 85 pages, and 768 controls based on official configuration documentation and ecosystem tools. See [Hyprland sources and version limits](docs/hyprland-settings-research.md).
+- **Hyprland Extensions**: Adds 2 categories, 83 pages, and 762 controls based on official configuration documentation and ecosystem tools. See [Hyprland sources and version limits](docs/hyprland-settings-research.md).
 - **Availability & Tracking**: Every setting declares availability (`available`, `planned`, or `unsupported`). Unavailable controls remain disabled while allowing navigation to preview pages; contextually inapplicable options are hidden automatically. See the [implementation progress checklist](docs/settings-implementation-progress.md).
 
 ## Architecture & Resident Service

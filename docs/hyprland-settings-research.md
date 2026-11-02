@@ -2,7 +2,7 @@
 
 Research date: 2026-10-26. Baseline: commit `44679b271497c40a0d37dd40299f89ae59c7aa6f`.
 
-This extension adds **2 categories, 85 pages, and 768 controls**. The combined catalog has **12 categories, 222 pages, and 1,821 controls**. The current reference catalog contains **140 pages and 1,074 controls**. The former `hypr-monitor-fields` page moved into Display: its implemented fields left this extension, and duplicates are listed under `retired` in the coverage file. Coverage files describe the current included controls.
+This extension adds **2 categories, 83 pages, and 762 controls**. The combined catalog has **12 categories, 220 pages, and 1,815 controls**. The current reference catalog contains **140 pages and 1,074 controls**. The former `hypr-monitor-fields` page moved into Display: its implemented fields left this extension, and duplicates are listed under `retired` in the coverage file. Coverage files describe the current included controls.
 
 Apart from the implemented Display fields, this extension remains **UI only**. Every remaining addition is `planned`, operation controls remain disabled, and no configuration, process, device, or service is read or modified by the application. Optional components are identified in each page's availability reason. Their presence and compatibility have not been detected.
 
@@ -41,7 +41,7 @@ No unrelated network, account, language, accessibility, or update category was c
 
 The pinned official **Config options** table contains **368 real option rows**; 366 remain represented once in the current added controls. The example table under Syntax is excluded. Layout-specific options come from the separate Dwindle, Master and Scrolling pages; Monocle's documented operations are represented as an operation preview rather than inventing nonexistent configuration keys.
 
-Additional tables cover monitor fields, workspace rules, window match conditions and static/dynamic effects, layer match/effects, gesture definition fields, and documented configuration fields for hypridle, hyprlock, hyprpaper, hyprsunset and hyprqt6engine. Repeated lock-screen widget properties retain distinct widget-specific identities. Gesture runtime callback payloads are not treated as persisted user settings.
+Additional tables cover monitor fields, workspace rules, window match conditions and static/dynamic effects, layer match/effects, gesture definition fields, and documented configuration fields for hypridle, hyprlock, hyprpaper and hyprqt6engine. Repeated lock-screen widget properties retain distinct widget-specific identities. Gesture runtime callback payloads are not treated as persisted user settings.
 
 Non-tabular features use explicit workflow previews: shortcut creation and conflict inspection, bind flags/submaps, device selection/tags, lid and tablet-mode switches, animation curves, wallpaper directory rotation, config include graphs and comment preservation, archive backup/restore, portal/provider choice, permission policies, plugin lifecycle, environment variables, service/session diagnostics, and exit actions. These are draft task boundaries, not claims of implemented services.
 

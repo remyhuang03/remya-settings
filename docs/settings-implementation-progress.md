@@ -6,17 +6,19 @@
 
 清单覆盖现有目录中的全部设置项，包括主要中文控件和保留原名的 Windows 参考细项；相同概念可能存在多个展示位置。下述数量统计的是控件条目，不是去重后的独立后端功能数量。公开资料与内部 schema 的边界见 [调研说明](windows-settings-research.md)。
 
-Hyprland 内容包含 85 个页面、768 项设置及 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
+Hyprland 内容包含 83 个页面、762 项设置及 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
 
 ## 当前概况
 
-- 设置分类：12 个；详情页面：222 个；设置条目：1821 项。
-- 已实现：123 项；未实现：1660 项；不适用：38 项。
+- 设置分类：12 个；详情页面：220 个；设置条目：1815 项。
+- 已实现：129 项；未实现：1648 项；不适用：38 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。
 
 - 网络通过 Rust / system D-Bus 连接 NetworkManager，提供网络状态、Wi-Fi 与已知网络；设置项见[网络文档](network.md)。
+
+- Night light 通过 Rust 写 `hyprsunset.conf` 并经 `hyprctl hyprsunset` 控制运行状态，定时由 hyprsunset 原生 profile 执行；见[公开接口](public-api.md)。
 
 - 显示通过 Rust 经 `hyprctl` 读取并实时应用 Hyprland 显示规则，确认后写入 `monitors.lua`，并按系统配置同步规则处理冲突；亮度为实时值（logind 背光 / `ddcutil`），不保存。
 
@@ -46,10 +48,10 @@ Hyprland 内容包含 85 个页面、768 项设置及 2 个分类。来源与版
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 39 | 338 | 48 | 290 | 0 |
+| [系统](#category-system) | 39 | 338 | 54 | 284 | 0 |
 | [蓝牙和设备](#category-devices) | 24 | 201 | 0 | 197 | 4 |
 | [网络和 Internet](#category-network) | 12 | 97 | 32 | 65 | 0 |
-| [外观](#category-appearance) | 25 | 190 | 20 | 170 | 0 |
+| [外观](#category-appearance) | 23 | 184 | 20 | 164 | 0 |
 | [应用](#category-apps) | 5 | 32 | 15 | 17 | 0 |
 | [账户](#category-accounts) | 15 | 65 | 0 | 55 | 10 |
 | [时间和语言](#category-time) | 4 | 22 | 8 | 14 | 0 |
@@ -96,7 +98,7 @@ Display 交互：Position 使用 X/Y 输入；刷新操作移动到排列框右�
 | Brightness | `display.5d419889` | 滑块 | 已实现 | 实机：eDP-1 logind 背光、DP-1/DP-3 ddcutil 读写回读 |
 | Color preset | `display.af8e280d` | 选择 | 已实现 | Hyprland 0.57 实机（DP-1，含还原）；`test/display_smoke.py`（嵌套 Hyprland 0.57） |
 | HDR | `display.0ce92088` | 开关 | 已实现 | 实机：DP-3 开启 HDR 回读 `hdr` 后还原 |
-| Night light | `display.e32be03e` | 操作 | 未实现 | — |
+| Night light | `display.e32be03e` | 操作 | 已实现 | 打开 Night light 页面 |
 
 #### 缩放与布局
 
@@ -141,9 +143,9 @@ Display 交互：Position 使用 X/Y 输入；刷新操作移动到排列框右�
 
 暖色显示与时间安排
 
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+页面状态：**未实现**；条目：6；已实现 5 / 未实现 1 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：开关、色温和固定时段通过 hyprsunset 实现；Sunset to sunrise 尚未实现。
 
 Windows 参考入口：`ms-settings:nightlight`。
 
@@ -151,12 +153,12 @@ Windows 参考入口：`ms-settings:nightlight`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Night light | `night-light.e32be03e` | 开关 | 未实现 | — |
-| Strength | `night-light.2fa4c751` | 滑块 | 未实现 | — |
-| Schedule night mode | `night-light.7e6239c9` | 开关 | 未实现 | — |
+| Night light | `night-light.e32be03e` | 开关 | 已实现 | `cargo test -p remya_settings_display night_light`；Hyprland 0.57 实机 |
+| Color temperature | `night-light.temperature` | 滑块 | 已实现 | `cargo test -p remya_settings_display night_light`；Hyprland 0.57 实机 |
+| Schedule | `night-light.7e6239c9` | 开关 | 已实现 | `cargo test -p remya_settings_display night_light`；Hyprland 0.57 实机 |
 | Timing | `night-light.50840111` | 选择 | 未实现 | — |
-| Start time | `night-light.e8868af6` | 文本输入 | 未实现 | — |
-| End time | `night-light.a0bb9f49` | 文本输入 | 未实现 | — |
+| Start time | `night-light.e8868af6` | 文本输入 | 已实现 | `cargo test -p remya_settings_display night_light`；Hyprland 0.57 实机 |
+| End time | `night-light.a0bb9f49` | 文本输入 | 已实现 | `cargo test -p remya_settings_display night_light`；Hyprland 0.57 实机 |
 
 ### Graphics — `graphics`
 
@@ -2502,42 +2504,6 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Display welcome banner · splash | `hypr-misc-col.splash` | 颜色 | 未实现 | — |
-
-### Hyprsunset color temperature · General configuration — `hypr-sunset-configuration`
-
-按官方文档分类的组件参数 · 可选组件 hyprsunset
-
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprsunset 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-sunset](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprsunset.md)。
-
-#### 通用配置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Gamma upper limit · max-gamma | `hypr-sunset-configuration.max-gamma` | 文本输入 | 未实现 | — |
-
-### Hyprsunset color temperature · Schedules — `hypr-sunset-profile`
-
-按官方文档分类的组件参数 · 可选组件 hyprsunset
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprsunset 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-sunset](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprsunset.md)。
-
-#### 时间计划
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Switching time · time | `hypr-sunset-profile.time` | 文本输入 | 未实现 | — |
-| color temperature · temperature | `hypr-sunset-profile.temperature` | 文本输入 | 未实现 | — |
-| Gamma brightness · gamma | `hypr-sunset-profile.gamma` | 文本输入 | 未实现 | — |
-| Disable color temperature changes · identity | `hypr-sunset-profile.identity` | 开关 | 未实现 | — |
-| Switch command · on-switch | `hypr-sunset-profile.on-switch` | 文本输入 | 未实现 | — |
 
 ### Animation trees and curves — `hypr-animation-editor`
 

@@ -44,7 +44,7 @@ No command evaluates shell input. IDs are stable catalog IDs, not translated lab
 | `get date-time` | `Get(s key)` with `date-time` | Actual clock, local time, NTP status, time zone, saved zone, and conflict |
 | `get timezones` | `Get(s key)` with `timezones` | Finite system time zone options |
 | `get configuration` | `Get(s key)` with `configuration` | Saved/system values, conflicts, and detection errors |
-| `resolve <appearance / date-time / display / hostname / background / default-apps / network> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
+| `resolve <appearance / date-time / display / night-light / hostname / background / default-apps / network> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
 | `resolve display <keep / revert>` | `Resolve(ss feature, source)` | Confirm or undo a pending display change |
 | `get background` | `Get(s key)` with `background` | Saved and system background, displays, warnings, previews, conflict, write blocker, error |
 | `get accent` | `Get(s key)` with `accent` | Accent source, `#RRGGBB` seed, sampled file, sampling error |
@@ -53,6 +53,7 @@ No command evaluates shell input. IDs are stable catalog IDs, not translated lab
 | `get font:<family>` | `Get(s key)` with `font:<family>` | One family's styles, formats, files and removability |
 | `get system` | `Get(s key)` with `system` | Fresh system mode and target readback |
 | `get display` | `Get(s key)` with `display` | Outputs, modes, saved and actual values, conflicts, pending change, write blocker |
+| `get night-light` | `Get(s key)` with `night-light` | Saved and system preferences, live state, conflict, write blocker, error |
 | `get display-brightness` | `Get(s key)` with `display-brightness` | Hardware brightness per active output, or why it is unavailable |
 | `get catalog` | `Get(s key)` with `catalog` | Sources, categories, and page summaries |
 | `get page:<id>` | `Get(s key)` with `page:<id>` | Complete page, sections, and control metadata |
@@ -126,6 +127,7 @@ Example theme response:
 
 `Changed("theme", json)` publishes successfully committed effective themes.
 `Changed("date-time", json)` publishes date/time readback, conflicts, and feature errors; `watch all` includes it.
+`Changed("night-light", json)` publishes Night light state after writes, reconciliation and detected changes; `watch all` includes it.
 `Changed("display", json)` publishes display state after writes, confirmation expiry, reconciliation, and Hyprland output events; `watch all` includes it.
 `Changed("background", json)` publishes background state after writes, reconciliation, and output events; `Changed("accent", json)` publishes accent changes; `Changed("fonts", {})` asks clients to read the font list again.
 `Changed("error", json)` reports a configuration/operation failure. The JSON error
@@ -743,3 +745,38 @@ Use `-` as the CLI value to read it from stdin, so a password does not appear in
 `printf '%s' '{"ssid":"Cafe","password":"..."}' | remya_settings set wifi.connect -`
 
 Every other `network-status.*`, `wifi.*` and `known-networks.*` control is read-only or `planned`. `known-networks.mac`, `known-networks.priority` and `network-status.data-usage` return `Unavailable`. `Get("configuration")` includes `network`. `Changed("network", state)` reports NetworkManager changes, excluding signal strength between scans. `NetworkClient` in `packages/remya_settings_client` exposes these without Flutter.
+
+## Night light
+
+Night light requires hyprsunset. Settings writes only
+`$XDG_CONFIG_HOME/hypr/hyprsunset.conf`, keeps a snapshot in `night-light.toml` and
+runs hyprsunset through its packaged `hyprsunset.service`, which a write enables and
+restarts. hyprsunset cannot reload, so every configuration change replaces the
+process; gamma and a manual override on a schedule are carried across.
+
+```text
+remya_settings get night-light
+remya_settings set night-light.e32be03e true
+remya_settings set night-light.temperature 2600
+remya_settings set night-light.7e6239c9 true
+remya_settings set night-light.e8868af6 19:00
+remya_settings set night-light.a0bb9f49 06:30
+remya_settings resolve night-light system
+```
+
+| Setting | Values | Effect |
+| --- | --- | --- |
+| `night-light.e32be03e` Night light | `true`, `false` | Saved without a schedule; on a schedule, a live override until the next boundary |
+| `night-light.temperature` | `1000`-`6500` K | Saved in every profile |
+| `night-light.7e6239c9` Schedule | `true`, `false` | Fixed hours through two native profiles, 19:00 to 06:30 at first; turning it off leaves Night light on |
+| `night-light.e8868af6`, `.a0bb9f49` Start, End | `HH:MM`, different from each other | Profile times; rejected without a schedule |
+| `night-light.50840111` Timing | Unavailable | Sunset to sunrise is planned |
+
+The file is parsed strictly: anything other than comments, `max-gamma` and the one
+or two profiles Settings can express blocks writes and leaves it untouched. Only the
+file is reconciled with the snapshot. The live on/off state and temperature are not,
+because other tools such as the shell's quick toggle change them routinely.
+
+The filter is a hardware color transform, so it is not part of screenshots or
+recordings. On an HDR output it may be applied to encoded values and look too strong;
+the page says so while any display uses HDR.

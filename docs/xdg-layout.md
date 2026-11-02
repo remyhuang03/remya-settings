@@ -14,6 +14,8 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Background copies | `$XDG_DATA_HOME/remya/settings/backgrounds/`; debug: `<settings-repository>/config/backgrounds/` |
 | Background previews | `$XDG_CACHE_HOME/remya/settings/background-previews/`; debug: `<settings-repository>/config/background-previews/` |
 | hyprpaper configuration | `$XDG_CONFIG_HOME/hypr/hyprpaper.conf`, with one `hyprpaper.conf.remya-backup` |
+| Night light snapshot | `night-light.toml` beside `config.toml` (debug: repository `config/`) |
+| hyprsunset configuration | `$XDG_CONFIG_HOME/hypr/hyprsunset.conf`, run by the packaged `hyprsunset.service` |
 | Video background unit | `$XDG_CONFIG_HOME/systemd/user/top.remya.settings.video-background.service` |
 | Default application snapshot | `default-apps.toml` beside `config.toml` (debug: repository `config/`) |
 | Network preference snapshot | `network.toml` beside `config.toml` (debug: repository `config/`) |
@@ -26,7 +28,7 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | User commands | `$HOME/.local/bin/remya_settings` and `remya_bar` |
 | Hyprland sockets | `$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket{,2}.sock` |
 
-Debug builds isolate only the Settings files listed above; hyprpaper, the video
+Debug builds isolate only the Settings files listed above; hyprpaper, hyprsunset, the video
 unit, fonts and XDG default application associations remain the real desktop's.
 The default-apps snapshot uses the selected debug/release Settings config directory;
 only isolated HOME/XDG roots isolate association writes during tests.
