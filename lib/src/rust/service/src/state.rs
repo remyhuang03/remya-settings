@@ -9,6 +9,7 @@ use remya_settings_date_time::api as clock;
 use remya_settings_default_apps::{self as default_apps, DefaultApps};
 use remya_settings_display::{DisplayManager, Hyprctl, atomic_write, is_display_setting};
 use remya_settings_fonts::{self as fonts, FontManager, RealFontconfig};
+use remya_settings_network::{NetworkManager, is_network_setting};
 use remya_settings_system_information::hostname::{self, HostnameManager};
 use serde_json::{Value, json};
 use std::{
@@ -50,16 +51,12 @@ fn write(path: &std::path::Path, value: &Value) -> Result<(), String> {
             .as_bytes(),
     )
 }
-/// Page IDs retired when their controls moved into Display still open that page.
+/// `system-information` is the public name of the About page.
 pub fn page_alias(page: &str) -> &str {
-    match page {
-        "advanced-display" | "hypr-monitor-fields" => "display",
-        "update-options" => "updates",
-        "system-information" => "about",
-        "colors" => "themes",
-        "hypr-cursor" | "hypr-cursor-theme" | "text-cursor" => "cursor",
-        "hypr-wallpaper-outputs" | "hypr-paper-misc-options" => "background",
-        other => other,
+    if page == "system-information" {
+        "about"
+    } else {
+        page
     }
 }
 fn load(path: &std::path::Path) -> Result<Option<Value>, String> {
@@ -168,6 +165,7 @@ pub struct State {
     pub background: BackgroundManager<RealDesktop>,
     fonts: FontManager<RealFontconfig>,
     pub default_apps: DefaultApps<default_apps::RealDesktop>,
+    pub network: NetworkManager,
     pub auth_error: Option<String>,
     privileged: Option<Session>,
     gui: Option<Child>,
@@ -200,6 +198,7 @@ impl State {
                 default_apps::RealDesktop,
                 config.with_file_name("default-apps.toml"),
             ),
+            network: NetworkManager::real(config.with_file_name("network.toml")),
             saved: Value::Null,
             theme_error: None,
             date_error: None,
@@ -220,6 +219,8 @@ impl State {
         self.date_error = self.refresh_date().err();
         let _ = self.hostname.refresh();
         let _ = self.default_apps.refresh();
+        // Failures stay in the manager's state for every reader.
+        let _ = self.network.refresh();
         // A detection failure is retained by the manager and reported in its state.
         let _ = self.display.refresh();
         // Failures stay in the manager's state for every reader.
@@ -367,7 +368,7 @@ impl State {
     pub fn configuration(&self) -> Value {
         let mut date = self.date.clone();
         date["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
-        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state()})
+        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"network":self.network.state()})
     }
     pub fn controls(&self) -> Vec<&Value> {
         self.catalog["pages"]
@@ -466,6 +467,23 @@ impl State {
                             "value": value,
                             "error": self.background.error(),
                         }))
+                    }
+                    // Polled every second: answered from the last state, without a NM read.
+                    "network-traffic" => Ok(self.network.traffic()),
+                    "network" => {
+                        let _ = self.network.refresh();
+                        Ok(self.network.state())
+                    }
+                    _ if is_network_setting(key)
+                        && self
+                            .controls()
+                            .iter()
+                            .any(|c| c["id"] == key && c["availability"] == "available") =>
+                    {
+                        let _ = self.network.refresh();
+                        Ok(
+                            json!({"id":key,"availability":"available","reason":"Uses NetworkManager through the Settings service.","value":self.network.read_value(key),"error":self.network.state()["error"]}),
+                        )
                     }
                     "default-apps" => {
                         let _ = self.default_apps.refresh();
@@ -695,6 +713,9 @@ impl State {
         if control["availability"] != "available" {
             return Err(format!("Unavailable:{}", control["reason"]));
         }
+        if is_network_setting(key) {
+            return self.network.set(key, value);
+        }
         if default_apps::IDS.contains(&key) {
             return self.default_apps.set(key, value);
         }
@@ -847,6 +868,9 @@ impl State {
         self.save_date(state, &keys)
     }
     fn resolve(&mut self, feature: &str, source: &str) -> Result<Value, String> {
+        if feature == "network" {
+            return self.network.resolve(source);
+        }
         if feature == "default-apps" {
             return self.default_apps.resolve(source);
         }
@@ -1052,34 +1076,6 @@ mod tests {
                 .starts_with("InvalidArgument:")
         );
         assert!(state.execute("Get", &["unknown".into()]).is_err());
-        for (retired, home) in [
-            ("page:colors", "themes"),
-            ("page:hypr-wallpaper-outputs", "background"),
-            ("page:hypr-paper-misc-options", "background"),
-            ("page:hypr-cursor", "cursor"),
-            ("page:hypr-cursor-theme", "cursor"),
-            ("page:text-cursor", "cursor"),
-        ] {
-            assert_eq!(state.execute("Get", &[retired.into()]).unwrap()["id"], home);
-        }
-        for removed in [
-            "page:device-usage",
-            "page:copilot-key",
-            "page:personalization-glance",
-            "page:personalization-navbar",
-            "page:hypr-qt-theme",
-            "page:hypr-qt-misc",
-            "page:hypr-decoration-blur-acrylic",
-            "page:hypr-decoration-blur-water",
-        ] {
-            assert!(state.execute("Get", &[removed.into()]).is_err());
-        }
-        for retired in ["page:advanced-display", "page:hypr-monitor-fields"] {
-            assert_eq!(
-                state.execute("Get", &[retired.into()]).unwrap()["id"],
-                "display"
-            );
-        }
         assert!(
             state
                 .execute("Set", &["night-light.e32be03e".into(), "true".into()])

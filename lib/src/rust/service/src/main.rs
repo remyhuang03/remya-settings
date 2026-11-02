@@ -83,7 +83,7 @@ fn run() -> Result<(), String> {
                     let accent_before = state.background.accent_state();
                     let result = state.execute(&work_method, &work_args);
                     let appearance_error =
-                        if work_method == "Set" && work_args[0].starts_with("themes.") {
+                        if work_method == "Set" && work_args[0].starts_with("themes.material-") {
                             result.as_ref().err().cloned()
                         } else {
                             None
@@ -129,6 +129,14 @@ fn run() -> Result<(), String> {
                     signal(&bus, "date-time", &date);
                     signal(&bus, "display", &display);
                     signal(&bus, "hostname", &hostname);
+                    if method == "Reload"
+                        || args.first().is_some_and(|id| {
+                            id == "network" || remya_settings_network::is_network_setting(id)
+                        })
+                    {
+                        let network = state.lock().unwrap().network.state();
+                        signal(&bus, "network", &network);
+                    }
                     if method == "Reload"
                         || args
                             .first()
@@ -199,6 +207,7 @@ fn run() -> Result<(), String> {
     let poll_bus = bus.clone();
     let mut ticks = 0u32;
     events::watch(state.clone(), bus.clone());
+    let _network_subscriptions = events::watch_network(state.clone(), bus.clone());
     glib::timeout_add_seconds_local(1, move || {
         ticks += 1;
         let mut expired = false;
@@ -229,7 +238,11 @@ fn run() -> Result<(), String> {
                 let before = s.theme.clone();
                 let errors = s.theme_error.clone();
                 let accent = s.background.accent_state();
+                let network = s.network.state();
                 s.refresh();
+                if s.network.state() != network {
+                    signal(&bus, "network", &s.network.state());
+                }
                 if s.background.accent_state() != accent {
                     signal(&bus, "accent", &s.background.accent_state());
                 }

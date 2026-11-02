@@ -8,3 +8,4 @@ export 'src/theme_config.dart';
 export 'src/system_information.dart';
 export 'src/default_apps.dart';
 export 'src/applications.dart';
+export 'src/network.dart';

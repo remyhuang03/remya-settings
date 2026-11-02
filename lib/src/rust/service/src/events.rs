@@ -5,7 +5,7 @@ use std::{
     io::{BufRead, BufReader},
     os::unix::net::UnixStream,
     path::PathBuf,
-    sync::{Arc, Mutex},
+    sync::{Arc, Mutex, mpsc},
     thread,
     time::Duration,
 };
@@ -50,6 +50,35 @@ pub fn watch(state: Arc<Mutex<State>>, bus: gio::DBusConnection) {
             thread::sleep(Duration::from_secs(1));
         }
     });
+}
+
+/// Follows NetworkManager; a burst of changes settles into one read and one signal.
+pub fn watch_network(
+    state: Arc<Mutex<State>>,
+    bus: gio::DBusConnection,
+) -> Option<[gio::SignalSubscription; 2]> {
+    let (sender, receiver) = mpsc::channel::<Option<(String, u32)>>();
+    let subscriptions =
+        remya_settings_network::nm::subscribe(move |change| drop(sender.send(change))).ok()?;
+    thread::spawn(move || {
+        while let Ok(first) = receiver.recv() {
+            thread::sleep(Duration::from_millis(500));
+            let changes = std::iter::once(first).chain(receiver.try_iter());
+            let failures = changes.flatten().collect::<Vec<_>>();
+            let mut state = state.lock().unwrap();
+            let before = state.network.state();
+            for (device, reason) in failures {
+                state.network.device_failed(&device, reason);
+            }
+            // A failed read stays in the state and is reported like any other change.
+            let _ = state.network.refresh();
+            let after = state.network.state();
+            if after != before {
+                signal(&bus, "network", &after);
+            }
+        }
+    });
+    Some(subscriptions)
 }
 
 #[cfg(test)]
