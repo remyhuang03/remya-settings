@@ -58,6 +58,11 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'known-networks' => Icons.bookmark_outline_rounded,
       'ethernet' => Icons.lan_outlined,
       'vpn' => Icons.vpn_lock_outlined,
+      'installed' => Icons.apps_rounded,
+      'appimages' => Icons.inventory_2_outlined,
+      'app-properties' => Icons.tune_rounded,
+      'defaults' => Icons.task_alt_rounded,
+      'startup' => Icons.rocket_launch_outlined,
       'lockscreen' ||
       'signin' ||
       'hypr-lock-authentication' => Icons.lock_outline_rounded,

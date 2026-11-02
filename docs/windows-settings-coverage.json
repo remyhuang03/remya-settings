@@ -10,30 +10,6 @@
       "title": "Email & app accounts"
     },
     {
-      "uri": "ms-settings:otherusers",
-      "page": "other-users",
-      "sourceCategory": "Accounts",
-      "title": "Family & other people"
-    },
-    {
-      "uri": "ms-settings:provisioning",
-      "page": "provisioning",
-      "sourceCategory": "Accounts",
-      "title": "Provisioning"
-    },
-    {
-      "uri": "ms-settings:workplace-provisioning",
-      "page": "provisioning",
-      "sourceCategory": "Accounts",
-      "title": "Provisioning"
-    },
-    {
-      "uri": "ms-settings:workplace-repairtoken",
-      "page": "repair-token",
-      "sourceCategory": "Accounts",
-      "title": "Repair token"
-    },
-    {
       "uri": "ms-settings:assignedaccess",
       "page": "kiosk",
       "sourceCategory": "Accounts",

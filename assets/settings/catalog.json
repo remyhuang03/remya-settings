@@ -362,7 +362,7 @@
     {
       "id": "accounts",
       "title": "Accounts",
-      "description": "Personal information, logins and other users",
+      "description": "Personal information and logins",
       "icon": "person"
     },
     {
@@ -8450,63 +8450,6 @@
       "children": []
     },
     {
-      "id": "advanced-apps",
-      "category": "apps",
-      "title": "Advanced application settings",
-      "description": "Application sources, archives and execution aliases",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "advanced-apps.5aa2062e",
-              "title": "Application sources",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Any source",
-                "App Store Only"
-              ],
-              "value": "Any source"
-            },
-            {
-              "id": "advanced-apps.c13be40a",
-              "title": "Archiving Applications",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "advanced-apps.cb756d20",
-              "title": "Application execution alias",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "advanced-apps.ee408d1b",
-              "title": "Share across devices",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "defaults",
       "category": "apps",
       "title": "Default apps",
@@ -9081,61 +9024,6 @@
       "children": []
     },
     {
-      "id": "other-users",
-      "category": "accounts",
-      "title": "Other users",
-      "description": "Local users and account types",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:otherusers"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "other-users.4f965d49",
-              "title": "Add user",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Add"
-            },
-            {
-              "id": "other-users.bcb938ac",
-              "title": "Change account type",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "other-users.b15b73d2",
-              "title": "Remove account",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "other-users.bf429391",
-              "title": "Set up self-service terminals",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "backup",
       "category": "accounts",
       "title": "System backup",
@@ -9359,85 +9247,6 @@
               "type": "action",
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "provisioning",
-      "category": "accounts",
-      "title": "Provisioning packages",
-      "description": "Enterprise configuration package reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:provisioning",
-        "ms-settings:workplace-provisioning"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "provisioning.2588f918",
-              "title": "Add provisioning package",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Add"
-            },
-            {
-              "id": "provisioning.bceb2cc7",
-              "title": "Remove the provisioning package",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "repair-token",
-      "category": "accounts",
-      "title": "Repair token",
-      "description": "Enterprise identity restoration reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:workplace-repairtoken"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "repair-token.ad0f71f6",
-              "title": "Repair token",
-              "type": "text",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": ""
-            },
-            {
-              "id": "repair-token.6006fa6c",
-              "title": "Application token",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
               "value": "Configuration"
             }
           ]

@@ -10,8 +10,8 @@ Hyprland 内容包含 83 个页面、762 项设置及 2 个分类。来源与版
 
 ## 当前概况
 
-- 设置分类：12 个；详情页面：220 个；设置条目：1815 项。
-- 已实现：129 项；未实现：1648 项；不适用：38 项。
+- 设置分类：12 个；详情页面：216 个；设置条目：1803 项。
+- 已实现：129 项；未实现：1640 项；不适用：34 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。
@@ -52,8 +52,8 @@ Hyprland 内容包含 83 个页面、762 项设置及 2 个分类。来源与版
 | [蓝牙和设备](#category-devices) | 24 | 201 | 0 | 197 | 4 |
 | [网络和 Internet](#category-network) | 12 | 97 | 32 | 65 | 0 |
 | [外观](#category-appearance) | 23 | 184 | 20 | 164 | 0 |
-| [应用](#category-apps) | 5 | 32 | 15 | 17 | 0 |
-| [账户](#category-accounts) | 15 | 65 | 0 | 55 | 10 |
+| [应用](#category-apps) | 4 | 28 | 15 | 13 | 0 |
+| [账户](#category-accounts) | 12 | 57 | 0 | 51 | 6 |
 | [时间和语言](#category-time) | 4 | 22 | 8 | 14 | 0 |
 | [辅助功能](#category-accessibility) | 14 | 230 | 0 | 230 | 0 |
 | [隐私和安全性](#category-privacy) | 47 | 260 | 0 | 236 | 24 |
@@ -2635,23 +2635,6 @@ Windows 参考入口：`ms-settings:appsfeatures-app`。
 | Reset application | `app-properties.2888e689` | 操作 | 未实现 | — |
 | Uninstall apps | `app-properties.c3c4a29c` | 操作 | 未实现 | — |
 
-### Advanced application settings — `advanced-apps`
-
-应用来源、存档与执行别名
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Application sources | `advanced-apps.5aa2062e` | 选择 | 未实现 | — |
-| Archiving Applications | `advanced-apps.c13be40a` | 开关 | 未实现 | — |
-| Application execution alias | `advanced-apps.cb756d20` | 操作 | 未实现 | — |
-| Share across devices | `advanced-apps.ee408d1b` | 操作 | 未实现 | — |
-
 ### Default apps — `defaults`
 
 文件类型、协议与应用默认值，详见 [Default apps 实现说明](default-apps.md)。
@@ -2701,7 +2684,7 @@ Windows 参考入口：`ms-settings:startupapps`。
 
 ## 账户
 
-个人信息、登录与其他用户
+个人信息与登录
 
 ### Account information — `your-info`
 
@@ -2840,25 +2823,6 @@ Windows 参考入口：`ms-settings:signinoptions-launchsecuritykeyenrollment`�
 | Reset security keys | `security-key.9d94adb9` | 操作 | 未实现 | — |
 
 
-### Other users — `other-users`
-
-本地用户与账户类型
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:otherusers`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Add user | `other-users.4f965d49` | 操作 | 未实现 | — |
-| Change account type | `other-users.bcb938ac` | 操作 | 未实现 | — |
-| Remove account | `other-users.b15b73d2` | 操作 | 未实现 | — |
-| Set up self-service terminals | `other-users.bf429391` | 操作 | 未实现 | — |
-
 
 ### System backup — `backup`
 
@@ -2912,40 +2876,6 @@ Windows 参考入口：`ms-settings:assignedaccess`。
 | Start setup | `kiosk.279497bb` | 操作 | 未实现 | — |
 | Session name | `kiosk.864aff36` | 文本输入 | 未实现 | — |
 | Select application | `kiosk.9ec480c1` | 操作 | 未实现 | — |
-
-### Provisioning packages — `provisioning`
-
-企业配置包参考
-
-页面状态：**不适用**；条目：2；已实现 0 / 未实现 0 / 不适用 2。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:provisioning`、`ms-settings:workplace-provisioning`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Add provisioning package | `provisioning.2588f918` | 操作 | 不适用 | — |
-| Remove the provisioning package | `provisioning.bceb2cc7` | 操作 | 不适用 | — |
-
-### Repair token — `repair-token`
-
-企业身份修复参考
-
-页面状态：**不适用**；条目：2；已实现 0 / 未实现 0 / 不适用 2。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:workplace-repairtoken`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Repair token | `repair-token.ad0f71f6` | 文本输入 | 不适用 | — |
-| Application token | `repair-token.6006fa6c` | 操作 | 不适用 | — |
 
 
 ### Passkeys — `passkeys`
