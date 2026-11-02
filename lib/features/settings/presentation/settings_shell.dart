@@ -4,6 +4,7 @@ import '../../network/presentation/known_networks_page.dart';
 import '../../network/presentation/network_status_page.dart';
 import '../../network/presentation/wifi_page.dart';
 import '../../applications/application/applications_controller.dart';
+import '../../applications/presentation/appimages_page.dart';
 import '../../applications/presentation/installed_apps_page.dart';
 import '../../default_apps/application/default_apps_controller.dart';
 import '../../default_apps/presentation/default_apps_page.dart';
@@ -414,6 +415,11 @@ class _SettingsShellState extends State<SettingsShell> {
         read: () =>
             controller.readExternalTools(_page!.id.split('-more').first),
         open: controller.openExternalTool,
+      );
+    } else if (_page?.id == 'appimages' &&
+        ApplicationsScope.maybeOf(context)?.appImages != null) {
+      content = AppImagesPage(
+        controller: ApplicationsScope.maybeOf(context)!.appImages!,
       );
     } else if (_networkPage(_page) case final page?) {
       content = page;

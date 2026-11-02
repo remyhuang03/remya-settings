@@ -69,12 +69,19 @@ Future<void> main() async {
         client.setDefaultApplication(id, app, types: types),
     resolve: client.resolveDefaultApps,
   );
+  final appImages = AppImagesController(
+    read: client.readAppImages,
+    write: (id, value) => client.call('Set', [id, value]),
+    setSource: client.setAppImageSource,
+    formatDate: client.formatCalendarDate,
+  );
   final applications = ApplicationsController(
     read: client.readInstalledApplications,
     remove: client.uninstallApplication,
     formatDate: client.formatCalendarDate,
     readExternalTools: client.readExternalTools,
     openExternalTool: client.openExternalTool,
+    appImages: appImages,
   );
   final network = NetworkController(
     read: client.readNetwork,
@@ -127,6 +134,10 @@ Future<void> main() async {
       case 'background':
         background.apply(change.value);
       case 'installed-apps':
+        applications.reload();
+        defaultApps.reload();
+      case 'appimages':
+        appImages.apply(change.value);
         applications.reload();
         defaultApps.reload();
       case 'default-apps':

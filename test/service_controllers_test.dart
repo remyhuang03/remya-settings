@@ -60,6 +60,64 @@ class FakeService extends SettingsClient {
 }
 
 void main() {
+  group('AppImagesController', () {
+    Map<String, dynamic> state({Object? job, Object? available}) => {
+      'apps': [
+        {
+          'id': 'A.AppImage',
+          'name': 'A',
+          'path': '/h/A.AppImage',
+          'size': 1,
+          'integrated': true,
+          'source': 'https://github.com/o/r',
+          'source_origin': 'custom',
+          'updates': true,
+          'checked': false,
+          'job': job,
+          'available': available,
+        },
+      ],
+      'installing': <String>[],
+      'directory': '/h',
+      'auto_check': true,
+      'auto_update': false,
+      'last_check': 0,
+      'error': null,
+    };
+    test(
+      'live progress replaces state and rejected writes stay visible',
+      () async {
+        final writes = <String>[];
+        final controller = AppImagesController(
+          read: () async => state(),
+          write: (id, value) async {
+            writes.add('$id=$value');
+            if (id.endsWith('cancel')) throw StateError('refused');
+            return {};
+          },
+          setSource: (_, _, _) async => throw StateError('bad source'),
+          formatDate: (v) async => v,
+        );
+        addTearDown(controller.dispose);
+        controller.apply(
+          state(job: {'status': 'downloading', 'bytes': 5, 'total': 10}),
+        );
+        expect(controller.checking, isTrue);
+        expect(controller.apps.single.job!['bytes'], 5);
+        controller.apply(state(available: {'version': '2', 'size': 3}));
+        expect(controller.updatable.single.id, 'A.AppImage');
+        expect(await controller.run('appimages.update', 'A.AppImage'), isTrue);
+        expect(writes.single, 'appimages.update=A.AppImage');
+        expect(await controller.run('appimages.cancel', 'A.AppImage'), isFalse);
+        expect(controller.errorMessage, contains('refused'));
+        expect(
+          await controller.saveSource(controller.apps.single, 'x', true),
+          isFalse,
+        );
+        expect(controller.errorMessage, contains('bad source'));
+      },
+    );
+  });
   test(
     'failed app operations retain fresh state and unresolved conflicts',
     () async {

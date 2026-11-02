@@ -1,5 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 
+import 'appimages_controller.dart';
+
+export 'appimages_controller.dart';
+
 class InstalledApplication {
   const InstalledApplication(this.raw);
   final Map raw;
@@ -22,7 +26,9 @@ class ApplicationsController extends ChangeNotifier {
     required this.formatDate,
     required this.readExternalTools,
     required this.openExternalTool,
+    this.appImages,
   });
+  final AppImagesController? appImages;
   final Future<Map<String, dynamic>> Function() read;
   final Future<String> Function(String) formatDate;
   final Future<Map<String, dynamic>> Function(String) readExternalTools;
