@@ -34,7 +34,7 @@
 - Keep debug application preferences in repository config/config.local.toml regardless of launch cwd. Profile/release preferences use XDG_CONFIG_HOME/remya/settings/config.toml with the standard HOME fallback. Keep installation bundles and desktop/service metadata under XDG_DATA_HOME and commands under HOME/.local/bin. Ignore relative XDG values.
 - Support Hyprland's Lua configuration only for display persistence: write only `hl.monitor` rules in `$XDG_CONFIG_HOME/hypr/monitors.lua`, and refuse to edit a file with content the strict reader cannot prove safe. Risky display changes need the service-owned keep-or-revert countdown, and persist only after confirmation.
 - Do not automatically migrate or remove prior installations or user configuration. Use `tool/install.py`; refuse to overwrite unrelated commands or update a running installed bundle.
-- Keep `docs/public-api.md` and `docs/xdg-layout.md` synchronized with implementation. Run `python test/interface_smoke.py` against both release bundles for interface or integration changes; use isolated XDG roots and GSettings state for system-write verification.
+- Keep `docs/public-api.md` and `docs/xdg-layout.md` synchronized with implementation. Use isolated XDG roots and GSettings state for system-write verification.
 
 ## System Configuration Reconciliation
 - Apply this rule to every implemented system-backed setting, including future integrations; app-only preferences and unavailable previews have no system counterpart and must not be synchronized.
@@ -92,7 +92,7 @@
 
 ## Git Workflow
 - Develop and validate on a separate branch using `<type>/<short-description>` with lowercase words and hyphens, such as `feat/appearance` or `chore/initialize-project`.
-- Use stacked commits when appropriate to split multi-step, dependent changes into small, focused, reviewable commits.
+- Use stacked commits when appropriate. Keep each commit small, focused, and independently reviewable, with dependent changes ordered in the stack.
 - Follow Conventional Commits: `<type>(<scope>): <description>`. Use a lowercase imperative description without a final period; mark breaking changes with `!` or a `BREAKING CHANGE:` footer.
 - Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, and `revert`.
 - Inspect diffs, stage only intended paths, and preserve unrelated changes.
