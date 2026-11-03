@@ -28,49 +28,9 @@ class SettingsHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: .stretch,
       children: [
-        Container(
-          padding: const .all(28),
-          decoration: BoxDecoration(
-            color: colors.primaryContainer,
-            borderRadius: .circular(32),
-          ),
-          child: Row(
-            children: [
-              Image.asset(
-                'assets/icons/settings.png',
-                width: 72,
-                height: 72,
-                semanticLabel: 'Settings',
-              ),
-              const SizedBox(width: 24),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: .start,
-                  children: [
-                    Text(
-                      'Your desktop, your way.',
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(color: colors.onPrimaryContainer),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Unavailable settings are previews',
-                      style: TextStyle(
-                        color: colors.onPrimaryContainer,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 28),
         Text('All settings', style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 12),
         LayoutBuilder(
