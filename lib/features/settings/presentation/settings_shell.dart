@@ -1,3 +1,5 @@
+import '../../account/application/account_controller.dart';
+import '../../account/presentation/account_information_page.dart';
 import '../../bluetooth/application/bluetooth_controller.dart';
 import '../../bluetooth/presentation/bluetooth_page.dart';
 import '../../applications/presentation/external_tools_page.dart';
@@ -33,7 +35,9 @@ class SettingsShell extends StatefulWidget {
     this.status,
     this.topStatus,
     this.systemInformation,
+    this.account,
   });
+  final AccountController? account;
   final SettingsCatalog catalog;
   final SystemInformationReader? systemInformation;
   final Widget? status;
@@ -419,6 +423,11 @@ class _SettingsShellState extends State<SettingsShell> {
       content = BluetoothPage(controller: BluetoothScope.maybeOf(context)!);
     } else if (_networkPage(_page) case final page?) {
       content = page;
+    } else if (_page?.id == 'your-info' && widget.account != null) {
+      content = AccountInformationPage(
+        page: _page!,
+        controller: widget.account!,
+      );
     } else if (_page?.id == 'defaults' &&
         DefaultAppsScope.maybeOf(context) != null) {
       content = DefaultAppsPage(

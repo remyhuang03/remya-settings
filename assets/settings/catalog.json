@@ -8807,10 +8807,10 @@
       "id": "your-info",
       "category": "accounts",
       "title": "Account information",
-      "description": "Avatar, account type and identity information",
+      "description": "Avatar and identity information",
       "preview": "none",
       "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "reason": "Username and the Settings-owned avatar are implemented; account management and login remain unavailable previews.",
       "sources": [
         "uris"
       ],
@@ -8825,24 +8825,16 @@
               "id": "your-info.a1aaf352",
               "title": "Username",
               "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Example User"
-            },
-            {
-              "id": "your-info.082c31df",
-              "title": "Account Type",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
+              "availability": "available",
+              "reason": "Read-only username of the Settings service user, read from GLib/NSS.",
+              "value": "Read from the system"
             },
             {
               "id": "your-info.58484bbb",
               "title": "Change avatar",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Crop and zoom an image, then atomically save a 512 × 512 PNG owned by Settings; no desktop avatar or login changes.",
               "value": "Configuration"
             },
             {

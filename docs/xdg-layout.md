@@ -20,6 +20,7 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Default application snapshot | `default-apps.toml` beside `config.toml` (debug: repository `config/`) |
 | Network preference snapshot | `network.toml` beside `config.toml` (debug: repository `config/`) |
 | XDG default associations | GIO-managed `mimeapps.list` with standard desktop-specific/config/data precedence |
+| Settings avatar | `avatar.png` beside `config.toml`; debug: `<settings-repository>/config/avatar.png` |
 | AppImage preferences | `appimages.toml` beside `config.toml` (debug: repository `config/`) |
 | AppImage folder | `$HOME/AppImages/`; launchers in `$XDG_DATA_HOME/applications/`, icons in `$XDG_DATA_HOME/icons/` |
 | Installed fonts | `$XDG_DATA_HOME/fonts/` |
@@ -141,3 +142,8 @@ Bluetooth creates no Settings configuration, cache or state files. BlueZ owns
 bonds and secrets; power, discovery and connection state are read live. Settings
 retains only its temporary scan and pairing operation in service memory and never
 restores those operations at startup. See [Bluetooth](bluetooth.md).
+
+
+## Settings account avatar
+
+The ordinary-user service owns `avatar.png` beside its selected Settings configuration: `$XDG_CONFIG_HOME/remya/settings/avatar.png` (HOME fallback) in profile/release, or repository `config/avatar.png` in debug. A confirmed crop atomically replaces only this file, with mode 0600 on first creation and existing permissions retained. It rejects an avatar-file symlink rather than following it. The picker source is not changed, copied to the library or saved as a path preference. Username is a live read-only process-user observation and creates no files. The avatar is not synchronized to AccountsService, a desktop shell or a login system.

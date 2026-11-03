@@ -11,3 +11,5 @@ export 'src/applications.dart';
 export 'src/network.dart';
 
 export 'src/bluetooth.dart';
+
+export 'src/account.dart';

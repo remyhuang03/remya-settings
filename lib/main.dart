@@ -1,3 +1,4 @@
+import 'features/account/application/account_controller.dart';
 import 'features/bluetooth/application/bluetooth_controller.dart';
 import 'features/applications/application/applications_controller.dart';
 import 'features/default_apps/application/default_apps_controller.dart';
@@ -38,6 +39,9 @@ Future<void> main() async {
     yield LicenseEntryWithLineBreaks([
       'Rust backend dependencies',
     ], await rootBundle.loadString('assets/licenses/rust-dependencies.txt'));
+    yield LicenseEntryWithLineBreaks([
+      'Croppy native solver: Kiwi',
+    ], await rootBundle.loadString('assets/licenses/croppy-kiwi.txt'));
   });
   final client = SettingsClient();
   final preferences = ServicePreferencesController(client);
@@ -95,6 +99,10 @@ Future<void> main() async {
     formatDate: client.formatCalendarDate,
     readTraffic: client.readNetworkTraffic,
   );
+  final account = AccountController(
+    read: client.readAccountInformation,
+    save: client.saveAccountAvatar,
+  );
   final navigation = ValueNotifier<String?>(null);
   final scheduler = SettingsScheduler([
     preferences.reload,
@@ -108,6 +116,7 @@ Future<void> main() async {
   ]);
   runApp(
     RemyaSettingsApp(
+      account: account,
       preferences: preferences,
       dateTime: dateTime,
       display: display,
@@ -157,6 +166,8 @@ Future<void> main() async {
         network.apply(change.value);
       case 'date-time':
         dateTime.reload();
+      case 'account-information':
+        account.reload();
       case 'hostname':
         hostname.reload();
       case 'display':

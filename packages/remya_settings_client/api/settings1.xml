@@ -26,6 +26,9 @@
          Set bluetooth.* accepts JSON requests, including pairing responses and cancellation.
          Changed bluetooth reports verified state and Agent prompts; see docs/public-api.md.
          No Bluetooth preferences or keys are persisted by Settings. -->
+    <!-- Get account-information reads the service username and Settings-owned avatar.
+         The username readout rejects Set; Set your-info.58484bbb accepts an image path
+         and normalized crop rectangle. Changed account-information reports avatar updates. -->
     <method name="Get">
       <arg type="s" direction="in"/>
       <arg type="s" direction="out"/>

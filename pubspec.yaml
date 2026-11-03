@@ -18,6 +18,7 @@ dependencies:
   window_manager: ^0.5.2
   file_selector: ^1.1.0
   flex_color_picker: ^4.0.0
+  croppy: ^1.5.3
 
 dev_dependencies:
   flutter_test:
@@ -32,3 +33,4 @@ flutter:
     - assets/icons/settings.png
     - LICENSE
     - assets/licenses/rust-dependencies.txt
+    - assets/licenses/croppy-kiwi.txt

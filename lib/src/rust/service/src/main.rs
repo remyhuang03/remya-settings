@@ -162,6 +162,10 @@ fn run() -> Result<(), String> {
                     if args.first().is_some_and(|id| id.starts_with("installed.")) {
                         signal(&bus, "installed-apps", &serde_json::json!({}));
                     }
+                    if args.first().is_some_and(|id| remya_settings_system_information::account::IDS.contains(&id.as_str()))
+                        && let Ok(account) = state.lock().unwrap().account.read() {
+                        signal(&bus, "account-information", &account);
+                    }
                     if args.first().is_some_and(|id| id.starts_with("fonts.")) {
                         signal(&bus, "fonts", &serde_json::json!({}));
                     }

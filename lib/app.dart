@@ -1,3 +1,4 @@
+import 'features/account/application/account_controller.dart';
 import 'features/bluetooth/application/bluetooth_controller.dart';
 import 'features/applications/application/applications_controller.dart';
 import 'features/default_apps/application/default_apps_controller.dart';
@@ -26,6 +27,7 @@ class RemyaSettingsApp extends StatefulWidget {
   const RemyaSettingsApp({
     super.key,
     this.preferences,
+    this.account,
     this.navigation,
     this.dateTime,
     this.display,
@@ -46,6 +48,7 @@ class RemyaSettingsApp extends StatefulWidget {
   final ApplicationsController? applications;
   final NetworkController? network;
   final BluetoothController? bluetooth;
+  final AccountController? account;
   final AppPreferencesController? preferences;
   final DateTimeController? dateTime;
   final DisplayController? display;
@@ -73,6 +76,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
   void dispose() {
     widget.scheduler?.dispose();
     _preferences.dispose();
+    widget.account?.dispose();
     widget.dateTime?.dispose();
     widget.display?.dispose();
     widget.nightLight?.dispose();
@@ -129,6 +133,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
               }
               return SettingsShell(
                 catalog: snapshot.data!,
+                account: widget.account,
                 navigation: widget.navigation,
                 scheduler: widget.scheduler,
                 systemInformation: widget.systemInformation,

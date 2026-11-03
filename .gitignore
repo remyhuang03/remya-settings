@@ -68,3 +68,5 @@ __pycache__/
 /config/background-previews/
 
 /config/default-apps.toml
+
+/config/avatar.png

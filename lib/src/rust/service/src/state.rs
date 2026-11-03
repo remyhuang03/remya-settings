@@ -13,6 +13,7 @@ use remya_settings_display::{
 };
 use remya_settings_fonts::{self as fonts, FontManager, RealFontconfig};
 use remya_settings_network::{NetworkManager, is_network_setting};
+use remya_settings_system_information::account::{self, AccountInformation};
 use remya_settings_system_information::hostname::{self, HostnameManager};
 use serde_json::{Value, json};
 use std::{
@@ -160,6 +161,7 @@ pub struct State {
     pub system: Value,
     pub date: Value,
     pub hostname: HostnameManager,
+    pub account: AccountInformation,
     config: PathBuf,
     saved: Value,
     pub theme_error: Option<String>,
@@ -190,6 +192,7 @@ impl State {
             system: json!({"mode":null,"targets":[]}),
             date: json!({}),
             hostname: HostnameManager::new(config.with_file_name("hostname.toml"), atomic_write),
+            account: AccountInformation::new(config.with_file_name("avatar.png")),
             display: DisplayManager::new(
                 Hyprctl,
                 hypr_config_dir(),
@@ -575,6 +578,8 @@ impl State {
                     _ if applications::external_tools::IDS.contains(&key) => {
                         applications::external_tools::read_setting(key)
                     }
+                    "account-information" => self.account.read(),
+                    _ if account::IDS.contains(&key) => self.account.read_setting(key),
                     "appimages" => Ok(self.appimages.state()),
                     _ if applications::appimages::is_setting(key)
                         && self.controls().iter().any(|c| c["id"] == key) =>
@@ -767,6 +772,9 @@ impl State {
                 return Err(invalid("Use open to open Bluetooth settings"));
             }
             return self.execute("Open", &["bluetooth".into()]);
+        }
+        if account::IDS.contains(&key) {
+            return self.account.set(key, value, atomic_write);
         }
         if remya_settings_bluetooth::is_setting(key) {
             return self.bluetooth.set(key, value);
