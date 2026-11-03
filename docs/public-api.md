@@ -488,7 +488,7 @@ Rename device is implemented through the shared hostname controller. The reader 
 Use `open system-information`
 to open this page; `open about` retains the application About page behavior.
 
-The page follows the Windows Settings About hierarchy: a device header followed
+The page layout is inspired by modern desktop settings patterns (referencing the About hierarchy found in Windows Settings): a device header followed
 by labeled Device specifications, Firmware, and System specifications groups.
 Independent facts have their own rows; text information never uses U+00B7 as a
 separator. No serial numbers, UUIDs, or device identifiers are read.
@@ -676,6 +676,8 @@ See [Installed apps](installed-apps.md) for package scope, metadata limits, and 
 | `get calendar-date:<YYYY-MM-DD>` | `Get("calendar-date:<date>")` | `value` formatted under the current system LC_TIME, with LANG fallback |
 
 Uninstall JSON is `{"id":"org.example.App.desktop","token":"<observed-version>"}` or a Flatpak inventory ID `flatpak:<installation>:<app>/<arch>/<branch>` with its observed commit token. Do not invent IDs or tokens. The four inspection/view control IDs reject Set with ReadOnly. Manual installations cannot be uninstalled. Native and system-Flatpak changes require the existing explicitly authorized GUI session. `Changed("installed-apps", {})` invalidates inventory after uninstall attempts. The Dart ApplicationsClient exposes the same operations.
+
+Managed AppImage launchers have `source: "appimage"`, with `X-AppImage-Version` and file size when available. They remain `uninstallable: false` in Installed apps; use the existing AppImages update/removal operations. Other manual launchers keep `source: "manual"`. This adds a source value without changing the versioned payload shape.
 
 The private helper's typed Uninstall request contains only an ID and token; it verifies package ownership itself and never accepts arbitrary privileged paths or commands.
 
@@ -871,3 +873,77 @@ remya_settings set bluetooth.respond -
 No API method signature or existing payload changes. There is no Bluetooth
 configuration snapshot or `Resolve` operation; see [Bluetooth](bluetooth.md) for
 state ownership and the explicit hardware verification limits.
+
+
+## Account information and Settings avatar
+
+| CLI | D-Bus | Result |
+| --- | --- | --- |
+| `get account-information` | `Get("account-information")` | `api_version`, read-only `username`, nullable `avatar_path`/`avatar_revision`, and nullable `error` |
+| `get your-info.a1aaf352` | `Get(id)` | Service user's GLib/NSS username and the same account state |
+| `get your-info.58484bbb` | `Get(id)` | Saved Settings avatar path and the same account state |
+| `set your-info.58484bbb <json>` | `Set(id, json)` | Updated account state after atomic avatar persistence |
+
+Avatar JSON is `{"path":"/absolute/image.png","crop":{"left":0,"top":0,"right":1,"bottom":1}}`. Crop edges are finite normalized coordinates in the source image after EXIF orientation; require `0 <= left < right <= 1` and `0 <= top < bottom <= 1`. PNG, JPEG and WebP input is bounded to 32 MiB, 64 megapixels and 16,384 pixels per side. The ordinary-user Rust service decodes, crops and resizes with system GdkPixbuf and saves a 512 × 512 PNG beside its configuration. No source image is changed or retained. Invalid input, unsupported decoding and failed persistence leave the last saved avatar intact. Avatar destination symlinks are rejected.
+
+
+The GUI uses the MIT-licensed Croppy crop component with its public pure-Dart Cassowary solver option. A small Flutter input adapter sends drag, pinch, vertical mouse wheel and slider changes through the same public controller and square crop rectangle, with 1–8× zoom. Scrolling up zooms in; scrolling down zooms out. The package's native asset is still built and bundled, and its Kiwi/Loki notices are retained, but avatar geometry does not depend on loading that native library. The service continues to own decoding and saved output.
+
+Username rejects Set with ReadOnly. `Changed("account-information", state)` reports avatar changes through the same versioned interface; `AccountInformationClient` supplies pure Dart helpers. The avatar is app-owned data: it has no system counterpart, reconciliation or elevation, does not change a desktop/account picture, and does not enable login. Manage Account and Login options remain unavailable previews.
+
+## Sound
+
+`Get("sound")` and the pure Dart `SoundClient.readSound()` return version-1 state:
+`available`, `initialized`, `conflict`, nullable `error`, `saved` and live `system`.
+`system` contains nullable `default_output`/`default_input`, `devices` and `streams`.
+Devices have stable `name`, current `index`, `description`, `direction` (`output` or
+`input`), `rate`, `channels`, `state` and `preferences`. Stream records have current
+`index`, nullable `client`, `name`, `application`, `direction`, `device`,
+`has_volume`, `volume_writable` and `preferences`. Preferences contain raw
+PulseAudio channel volumes (`65536` is 100%) and `muted`.
+
+All writes are bounded to 4096 bytes and use the existing `Set(id, json)` / `remya_settings set id '<json>'`
+contract. `SoundClient.changeSound` encodes a Dart map; `setSound` accepts JSON.
+
+| Setting IDs | JSON input |
+| --- | --- |
+| `sound.output-device`, `sound.input-device` | `{"name":"stable-server-device-name"}` |
+| `sound.output-volume`, `sound.input-volume` | `{"percent":50}`; optional `name` selects a particular device |
+| `sound.output-muted`, `sound.input-muted` | `{"muted":true}`; optional `name` selects a particular device |
+| `sound.device-volume` | `{"direction":"output","name":"device-name","percent":50}` |
+| `sound.device-muted` | `{"direction":"input","name":"device-name","muted":true}` |
+| `sound.stream-volume` | `{"direction":"output","index":42,"client":17,"percent":50}` |
+| `sound.stream-muted` | `{"direction":"input","index":42,"client":17,"muted":true}` |
+| `sound.stream-device` | `{"direction":"output","index":42,"client":17,"device":"destination-name"}` |
+| `sound.refresh` | `{}` |
+
+Volume must be finite and between 0 and 150%; scaling preserves channel balance.
+Unknown fields, unavailable devices, stale streams and unwritable stream volume
+fail explicitly. `client:null` is required for a stream without a client index.
+`sound.devices` and `sound.streams` are read-only inventory catalog entries.
+Getting any available Sound setting returns the same state with its ID and
+availability. Writes return verified readback; `Changed("sound", state)` reports
+changes. The configuration summary includes the same Sound conflict/error state.
+
+`Resolve("sound", "system")` adopts actual defaults and device preferences;
+`Resolve("sound", "settings")` applies saved preferences with readback validation.
+CLI uses `remya_settings resolve sound system|settings`; Dart uses `resolveSound`.
+Stream operations are ephemeral and do not resolve or persist device conflicts.
+No D-Bus method signatures or existing payloads change. See [Sound](sound.md)
+for configuration ownership, dependencies and verification boundaries.
+
+## System updates
+
+`Get("updates")` and `Get("updates.<id>")` read the service-owned async updater without running commands. CLI uses the same keys. `Changed("updates", state)` publishes changes at most once per second. The existing Settings1 method signatures are unchanged.
+
+| Setting | Set value | Behavior |
+| --- | --- | --- |
+| `updates.check` | `check` | Start isolated repository and AUR checks; no upgrade |
+| `updates.upgrade` | `upgrade` | Start ordinary-user yay with the reused GUI authorization for fixed pacman operations |
+| `updates.include-held` | `true` / `false` | Include kernel, firmware, mkinitcpio and live-driver NVIDIA packages for this session; rejected while busy |
+| `updates.retry` | `true` / `false` | Retry failed upgrade attempts, with a 5-second-per-attempt delay capped at 60 seconds; can be turned off while busy |
+| `updates.status`, `updates.output` | read-only | Reject Set with ReadOnly |
+
+State contains `api_version: 1`, monotonic `revision`, `available`, `missing`, `authorized`, `authorizing`, `auth_error`, `all`, `retry`, `busy`, `phase`, `kind`, `attempt`, `retry_at`, `checked_at`, `held`, `packages`, `output`, and `error`. Times are Unix seconds or null. A candidate contains `name`, `installed`, `available`, `source` (`repository` or `AUR`) and `held`. Phases are idle, checking, upgrading, retrying, completed or failed; kind is none, check or upgrade. Logs are chronological bounded plain-text lines; terminal color/control sequences are removed. Missing tools and authorization or operation failures remain visible. Failed checks retain prior candidates; successful upgrades invalidate them.
+
+`Close` closes only the GUI; `Quit` rejects while an updater job runs. Turning retry off prevents future attempts without interrupting an active package transaction. No operation is started by Get, page navigation or service startup, and session exclusions never modify saved system configuration. The pure Dart `UpdatesClient` exports the six IDs and operation helpers. See [System updates](updates.md) for authorization and verification boundaries.

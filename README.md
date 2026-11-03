@@ -12,28 +12,31 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue" alt="License"></a>
 </p>
 
-A global system settings application for **Hyprland on Linux**, built with **Flutter**, **Material Design 3 Expressive**, and a modular **Rust workspace**. Layout and information architecture reference Windows 11 Settings.
+A global system settings application for **Hyprland on Linux**, built with **Flutter**, **Material Design 3 Expressive**, and a modular **Rust workspace**. Layout and information architecture are inspired by modern desktop settings benchmarks like Windows 11 Settings, while tailored and diverged for native Linux and Hyprland workflows.
 
 ## Implemented Features
 
-Settings combines a Windows 11-inspired hierarchy with native Linux and Hyprland backend integrations, reconciled with host state via Rust:
+Settings combines an information architecture inspired by modern desktop settings with native Linux and Hyprland backend integrations, reconciled with host state via Rust:
 
 - **Appearance**: Wallpaper management (`hyprpaper` images & `mpvpaper` videos), dynamic Material accent color extraction, Fontconfig font manager, and synchronized Light/Dark switching for GNOME/GTK and Qt Quick.
 - **Apps**: XDG default MIME associations (`mimeapps.list`), installed desktop applications inventory with guarded pacman/flatpak uninstallation, an AppImage library with zsync delta updates and live progress, and detected external configuration tools under More.
 - **Display**: Hyprland monitor arrangement, resolution, scaling, rotation, HDR, backlight brightness (`logind` / `ddcutil`), and safe atomic persistence to `monitors.lua` with a keep-or-revert countdown timer.
 - **Night light**: Color temperature, on/off and fixed-hours schedule through `hyprsunset`.
 - **Network**: Real-time connection status, Wi-Fi radio power toggle, access point scanning, connection handling, and saved NetworkManager profiles.
+- **Sound**: Native PipeWire output/input defaults, device volume and mute, application volume mixer/routing and all sound devices, with persisted preference reconciliation through the per-user PulseAudio API. See [Sound](docs/sound.md).
 - **System & Hostname**: Real-time hardware/OS specifications (CPU, GPU, memory, swap, disk, uptime) and polkit-authorized hostname editing.
+- **Account information**: Read-only username, plus a Settings-owned avatar with square crop, pan and zoom.
+- **System updates**: Repository/AUR checks and service-owned yay upgrades with held packages, retry and live output. See [updates and verification limits](docs/updates.md).
 - **Date & Time**: NTP synchronization via `systemd-timedated`, timezone selection (`ListTimezones`), manual clock setting, and `LC_TIME` calendar formatting.
 - **Configuration Reconciliation**: Non-destructive system detection on launch and automatic conflict resolution prompts between saved preferences and live system state.
 
 ## Settings Catalog & Coverage
 
-Browse Home, 12 categories, 220 detail pages, and About; search settings locally, follow related pages, and inspect third-party licenses.
+Browse Home, category pages, and About; search settings locally, follow related pages, and inspect third-party licenses.
 
-- **Current Catalog**: 12 categories, 217 pages, 1,813 controls (139 available with real system backends, 1,640 planned previews, 34 unsupported).
-- **Windows 11 Reference**: Covers 140 pages, 1,074 reference controls, 155 unique URI names from reference tables, and 335 hierarchy entries (247 leaf controls) in its backup catalog. See [research, sources, and limitations](docs/windows-settings-research.md).
-- **Hyprland Extensions**: Adds 2 categories, 83 pages, and 762 controls based on official configuration documentation and ecosystem tools. See [Hyprland sources and version limits](docs/hyprland-settings-research.md).
+- **Current Catalog**: 13 categories, 138 pages, 1,668 controls (174 available, 1,480 planned previews, 14 unsupported).
+- **Desktop Reference & Inspiration**: Draws reference from applicable desktop settings benchmarks (including Windows 11 reference taxonomies), retaining relevant pages, controls, URI names, and hierarchy structures as design inspiration while departing where native Linux and Hyprland workflows differ. Removed Windows-only features are excluded from coverage records. See [research, sources, and limitations](docs/windows-settings-research.md).
+- **Hyprland Extensions**: Retains 762 controls based on official configuration documentation and ecosystem tools, merging related previews into ordinary pages’ Advanced sections. See [Hyprland sources and version limits](docs/hyprland-settings-research.md).
 - **Availability & Tracking**: Every setting declares availability (`available`, `planned`, or `unsupported`). Unavailable controls remain disabled while allowing navigation to preview pages; contextually inapplicable options are hidden automatically. See the [implementation progress checklist](docs/settings-implementation-progress.md).
 
 ## Architecture & Resident Service
@@ -55,6 +58,7 @@ lib/
   app.dart                Application composition and theme
   features/
     about/                Product information and licenses
+    account/              Read-only identity and Settings-owned avatar
     appearance/           App preferences, atomic TOML storage, theme state
     applications/         Installed application inventory and external tools
     background/           Wallpaper management (hyprpaper / mpvpaper) and accent color
@@ -64,7 +68,9 @@ lib/
     fonts/                Font browsing, preview, installation, and removal
     integration/          Resident service controllers and status
     network/              Network status, Wi-Fi, and known networks
-    settings/             Catalog model, navigation, search, page renderer
+    sound/                Output/input, application mixer and sound-device controls
+    settings/             Catalog model, navigation, search, shared list and renderer
+    updates/              Update status, explicit actions and live output
     system_information/   Hardware/OS specifications and hostname management
   src/rust/
     appearance/           GNOME/GTK settings and Qt toolkit environments
@@ -78,8 +84,10 @@ lib/
     display/              Hyprland monitor rules, monitors.lua, and brightness
     fonts/                Fontconfig queries, font installation, and metadata
     network/              NetworkManager client and saved-network reconciliation
+    sound/                Native libpulse audio client and preference reconciliation
     service/              Resident session D-Bus service and privileged helper
-    system_information/   Hardware/OS inspection and systemd-hostnamed client
+    system_information/   Hardware/OS, hostname, account identity and avatar
+    updates/              Yay jobs and bounded private pacman authorization
 packages/
   remya_settings_client/  Pure Dart D-Bus client library for Remya Bar and dependent apps
 assets/
@@ -93,7 +101,7 @@ tool/                     Installer, CLI generator, and license notice tools
 
 ## Development
 
-Prerequisites: FVM, Rust via rustup, and Linux Flutter build prerequisites (Clang, CMake, Ninja, pkg-config, GTK 3 development libraries, GLib/GIO 2.84+ headers, and GSettings tools). Current Arch Linux packages are the target; GTK 4 appearance requires GTK 4.20+. fish and luac validate their respective configuration targets.
+Prerequisites: FVM, Rust via rustup, and Linux Flutter build prerequisites (Clang, CMake, Ninja, pkg-config, GTK 3 development libraries, GLib/GIO 2.84+, GdkPixbuf and libpulse headers, and GSettings tools). Current Arch Linux packages are the target; GTK 4 appearance requires GTK 4.20+. fish and luac validate their respective configuration targets. Sound requires dynamically linked system `libpulse` (PulseAudio 15+ API) and the current PipeWire, pipewire-pulse and WirePlumber services.
 
 ```bash
 fvm install
@@ -105,18 +113,7 @@ FVM pins Flutter to `3.47.8`; `rust-toolchain.toml` selects stable Rust with rus
 
 ### Code Quality & Verification
 
-Run all checks before presenting changes:
-
-```bash
-fvm dart format --output=none --set-exit-if-changed lib test
-fvm flutter analyze
-fvm flutter test
-fvm flutter build linux --debug
-cargo fmt --all -- --check
-cargo clippy --workspace --all-targets -- -D warnings
-cargo test --workspace
-git diff --check
-```
+Choose checks for the actual change. Keep focused tests for non-trivial logic and regressions, and check affected interactions on the real desktop. Application changes are delivered through a rebuilt, locally installed release for review; see `AGENTS.md`.
 
 After updating Rust dependencies, run `python tool/generate_rust_notices.py` to refresh bundled third-party notices.
 

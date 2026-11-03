@@ -1,6 +1,8 @@
 # Installed apps
 
-Installed apps lists desktop applications registered through GIO, plus visible package-owned launchers whose user overrides prevent normal discovery, and Flatpak apps. It is not a list of every library or command-line package. Application rows show real icons and names with a compact wrapping summary of source, labeled version, and labeled size. Details add location, package identity, and native installation dates. Unavailable metadata stays explicitly unavailable.
+Installed apps lists desktop applications registered through GIO, plus visible package-owned launchers whose user overrides prevent normal discovery, and Flatpak apps. It is not a list of every library or command-line package. Application rows show real icons and names with wrapping Material tags for source, version and size. Each fact uses a distinct theme container color and keeps its text label. Details add location, package identity, and native installation dates. Unavailable metadata stays explicitly unavailable.
+
+Launchers whose executable is a valid AppImage in `$HOME/AppImages` are classified as `appimage` and displayed as **AppImage** in the list, source filter and details. Their launcher version and image file size are shown when available. An image passed as an argument to another executable is not classified as an AppImage launcher. These entries are managed from the AppImages page and never treated as removable native packages.
 
 The feature reuses the installed GTK 3 runner for themed icon rendering; raster and SVG icons are decoded asynchronously into PNG bytes. Flutter caches those bytes for the GUI lifetime. The headless Rust service exposes serialized GIcon metadata and does not initialize a GTK display.
 
@@ -8,11 +10,11 @@ The feature reuses the installed GTK 3 runner for themed icon rendering; raster 
 
 - `installed.15735a25`: application/package search.
 - `installed.3bf3689a`: name, descending package size, or descending installation date; missing values sort last.
-- `installed.765cf6c3`: source filter (replaces the Windows drive filter without changing its ID).
+- `installed.765cf6c3`: source filter (replaces the reference Windows drive filter with package source filtering without changing its ID).
 - `installed.32098ab2`: per-application details.
 - `installed.c3c4a29c`: confirmed uninstall.
 
-The application list uses `SliverList.builder`; search, sorting, and filtering operate on the observed metadata without rebuilding the entire list. Inventory is refreshed on page entry, explicit Refresh, and uninstall outcomes. These are live observations and session-local view preferences, so there is no saved system configuration to reconcile.
+The application list uses the shared `SettingsList` container with a fixed header, a bounded scrollable body and `ListView.builder`. Search, sorting, source filtering and Refresh live in the header; filtering and sorting operate on the observed metadata. Inventory is refreshed on page entry, explicit Refresh, and uninstall outcomes. These are live observations and session-local view preferences, so there is no saved system configuration to reconcile.
 
 Native metadata comes from the current ALPM database format (pacman 6.1+), using the system's `pacman-conf DBPath`. Package size belongs to the entire package; launchers sharing a package repeat that size. Flatpak uses the current `list --json` interface and `info --show-size`. Version and deployment date may be unavailable; no filesystem timestamp is labeled as a Flatpak installation date. Displayed native dates are formatted using actual system LC_TIME via the Rust date/time backend.
 

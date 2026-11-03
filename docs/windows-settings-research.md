@@ -1,26 +1,29 @@
-# Windows Settings reference and UI coverage
+# Windows Settings inspiration, reference, and UI coverage
 
 Research date: 2026-10-26. Target product: a global settings application for **Hyprland on Linux**, with **Material Design 3 Expressive** styling.
 
-This document describes the Windows-reference catalog as researched (188 pages and 1,251 controls); `advanced-display` later moved into a collapsed section of `display`, which also took over its `ms-settings:display-advanced` entry. The later additive Hyprland catalog extension is documented separately in [Hyprland research](hyprland-settings-research.md); the progress checklist tracks the combined catalog.
+Remy'a Settings draws design inspiration and comparative benchmarks from modern desktop settings patterns such as Windows 11 Settings, rather than directly copying or attempting 1:1 emulation. Because the application targets Linux and Hyprland, its categories, actual controls, workflows, and backend implementations have diverged significantly to fit native Linux services (PipeWire, NetworkManager, pacman/Flatpak/AppImage, Fontconfig, systemd-timedated) and Wayland compositor rules.
+
+This document records the initial desktop reference catalog researched for baseline comparative analysis (188 pages and 1,251 controls); `advanced-display` later moved into a collapsed section of `display`, which also took over its `ms-settings:display-advanced` entry. The later additive Hyprland catalog extension is documented separately in [Hyprland research](hyprland-settings-research.md); the progress checklist tracks the combined catalog.
 
 ## Evidence and limits
 
 Microsoft publishes a [Settings navigation guide](https://support.microsoft.com/en-us/windows/experience/exploring-windows-settings), a [page URI reference](https://learn.microsoft.com/en-us/windows/apps/develop/launch/launch-settings), and a [Windows 11 backup settings catalog](https://learn.microsoft.com/en-us/windows/configuration/windows-backup/catalog?pivots=windows-11). These are complementary inventories, not a published internal schema for every Windows Settings control. Availability varies by OS release, edition, hardware, installed applications, organization policy, account, and staged feature rollout.
 
-The current catalog includes **155 unique URI names** from the reference tables. Query parameters selecting individual apps, cameras, or audio endpoints belong to the same page; aliases are recorded on their target page. Remaining Windows-only entries are clearly unavailable reference previews. A URI that redirects to another view is not evidence of an independent current Windows 11 page.
+The retained coverage includes **116 URI entries** from the reference tables. Query parameters selecting individual apps, cameras, or audio endpoints belong to the same page; aliases are recorded on their target page. Remaining Windows-only entries are clearly unavailable reference previews. A URI that redirects to another view is not evidence of an independent current Windows 11 page.
 
-The retained backup coverage contains **335 hierarchy entries**, including **247 leaf entries** represented by individually identified controls in collapsible "Windows reference settings" sections; the other entries identify groups. Original English names are retained there for traceability. This catalog includes some File Explorer settings, which are treated as reference content rather than additional Settings categories. Backup checkmarks describe Windows backup coverage, not implementation status in this application.
+The retained backup coverage contains **299 hierarchy entries**, including **222 leaf entries** represented by individually identified controls in collapsible "Windows reference settings" sections; the other entries identify groups. Original English names are retained there for traceability. This catalog includes some File Explorer settings, which are treated as reference content rather than additional Settings categories. Backup checkmarks describe Windows backup coverage, not implementation status in this application.
 
 There are **188 detail pages**, **1,251 reference controls**, **10 settings categories**, and a separate Home and About view. All controls are authored UI previews. Control types, ranges, sample values, grouping, and option lists are this project's initial model, not Microsoft's internal types, actual hardware capabilities, live defaults, or a guarantee of an exact match to every Windows build. In particular, source-only reference fields whose choices are not documented use an explicit "未配置" option. Future implementation must verify real platform contracts and replace illustrative ranges and choices before enabling them.
 
-Supplemental pages come from [Advanced settings](https://learn.microsoft.com/en-us/windows/advanced-settings/), [app privacy guidance](https://support.microsoft.com/en-us/windows/privacy/windows-privacy-settings-that-apps-use), [Recall](https://support.microsoft.com/en-us/windows/ai/ai-features/retrace-your-steps-with-recall), [passkey management](https://support.microsoft.com/en-gb/accounts-billing/security/manage-your-saved-passkeys), and [presence sensing](https://support.microsoft.com/en-gb/windows/privacy/managing-presence-sensing-settings-in-windows-11). These include settings without entries in the URI reference. Exact service-specific and undocumented vendor extension schemas are outside the public evidence; no exhaustive Windows-internal export is claimed.
+Supplemental reference material comes from [Advanced settings](https://learn.microsoft.com/en-us/windows/advanced-settings/), [app privacy guidance](https://support.microsoft.com/en-us/windows/privacy/windows-privacy-settings-that-apps-use), [passkey management](https://support.microsoft.com/en-gb/accounts-billing/security/manage-your-saved-passkeys), and [presence sensing](https://support.microsoft.com/en-gb/windows/privacy/managing-presence-sensing-settings-in-windows-11). The retained runtime catalog includes only the selected product scope; universal application permission switches without a concrete Linux enforcement boundary are excluded. Hyprland permission rules and desktop portals remain separate previews. Exact service-specific and undocumented vendor extension schemas are outside the public evidence; no exhaustive Windows-internal export is claimed.
 
 ## Information architecture
 
 | Category | Main subjects | Hyprland direction |
 | --- | --- | --- |
-| System | Display, audio, notifications, focus, power, storage, windows, sharing, recovery, remote access, clipboard, device information, developer tools | Future compositor and Linux service integrations |
+| System | Display, notifications, focus, power, storage, windows, sharing, recovery, remote access, clipboard, device information, developer tools | Future compositor and Linux service integrations |
+| Sound | Output & input, Volume mixer and Devices | Native per-user PipeWire audio through libpulse; see [Sound](sound.md) |
 | Bluetooth & devices | Pairing, printers, cameras, mouse, touchpad, touch, pen, USB, phone and accessory devices | Future Linux device service integrations |
 | Network & Internet | Status, Wi-Fi, Ethernet, VPN, hotspot, airplane mode, cellular, proxy, adapters, usage | Future network service integration |
 | Appearance | Background (image or video), colors and themes (merged), lock screen, launcher, panel, fonts, lighting | Future Hyprland and desktop component configuration |
@@ -28,14 +31,14 @@ Supplemental pages come from [Advanced settings](https://learn.microsoft.com/en-
 | Accounts | Identity, login, local users, backup, credentials and passkeys | Future Linux session and account integration |
 | Time & language | Clock, synchronization, region, languages, speech and external input-method configuration tools | Future locale and input method integration |
 | Accessibility | Text, visual effects, pointer, cursor, magnification, contrast, reader, audio, captions, voice, keyboard, mouse and eye control | Future compositor and assistive technology integration |
-| Privacy & security | Security, encryption, activity, diagnostics, search and per-capability application permissions | Future Linux security and portal integration |
+| Privacy & security | Security, encryption, search/indexing and compositor permissions | Future Linux security and portal integration |
 | System updates | Status, history and update preferences | Future distribution-aware update integration |
 
-Windows-branded services are preserved as references, not promises to implement those services on Linux. Some concepts (taskbar, Start, clipboard history, notification center) may eventually map to separately installed desktop components; no particular shell or daemon is selected in this UI milestone.
+Windows-branded services and legacy concepts are preserved purely as reference material and inspiration, not promises to implement those services on Linux. The settings architecture diverges intentionally: Linux-native capabilities replace proprietary subsystems, and desktop components are integrated natively.
 
 ## Layout translation
 
-The shell follows the reference's category navigation, persistent search, Home shortcuts/cards, category lists, breadcrumbs, grouped controls, and deeper related pages. The native window keeps normal compositor behavior. At wide sizes the left sidebar stays visible; below 1,000 logical pixels navigation moves into a drawer. Settings rows stack their label and control on narrow content widths. Content scrolls without requiring a fixed window size.
+The shell draws inspiration from modern desktop settings patterns for category navigation, persistent search, Home shortcuts/cards, category lists, breadcrumbs, grouped controls, and deeper related pages, while adapting them to Linux and Hyprland workflows. The native window keeps normal compositor behavior. At wide sizes the left sidebar stays visible; below 1,000 logical pixels navigation moves into a drawer. Settings rows stack their label and control on narrow content widths. Content scrolls without requiring a fixed window size.
 
 Material Design 3 Expressive supplies colors, rounded surfaces, emphasis, buttons, switches, sliders, menus, typography, focus, and interaction feedback. Fluent visual assets and Windows window chrome are not copied. Display, theme, sound, network, power, storage, devices, and update pages include purpose-specific preview regions rather than a single generic empty template.
 
