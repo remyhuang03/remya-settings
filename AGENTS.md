@@ -71,17 +71,6 @@
 - Let the native runner own initial window setup and respect Wayland compositor policy. Change desktop configuration only through explicitly selected, implemented system settings; never alter unrelated compositor policy or window rules.
 
 ## Validation
-- Run relevant checks before presenting changes for review:
-  ```bash
-  fvm dart format --output=none --set-exit-if-changed lib test
-  fvm flutter analyze
-  fvm flutter test
-  fvm flutter build linux --debug
-  cargo fmt --all -- --check
-  cargo clippy --workspace --all-targets -- -D warnings
-  cargo test --workspace
-  git diff --check
-  ```
 - Run `fvm flutter pub get` after dependency changes. Use `fvm flutter run -d linux` for interactive verification and release builds when release behavior changes.
 - Keep durable tests for non-trivial logic and regressions; remove temporary UI inspection tests after verification and avoid duplicate coverage.
 - A successful build does not verify desktop behavior. Check affected window behavior and interactions on the real desktop; report untested boundaries.
