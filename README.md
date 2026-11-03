@@ -26,9 +26,10 @@ Settings combines an information architecture inspired by modern desktop setting
 - **Sound**: Native PipeWire output/input defaults, device volume and mute, application volume mixer/routing and all sound devices, with persisted preference reconciliation through the per-user PulseAudio API. See [Sound](docs/sound.md).
 - **System & Hostname**: Real-time hardware/OS specifications (CPU, GPU, memory, swap, disk, uptime) and polkit-authorized hostname editing.
 - **Account information**: Read-only username, plus a Settings-owned avatar with square crop, pan and zoom.
-- **System updates**: Repository/AUR checks and service-owned yay upgrades with held packages, retry and live output. See [updates and verification limits](docs/updates.md).
 - **Date & Time**: NTP synchronization via `systemd-timedated`, timezone selection (`ListTimezones`), manual clock setting, and `LC_TIME` calendar formatting.
 - **Configuration Reconciliation**: Non-destructive system detection on launch and automatic conflict resolution prompts between saved preferences and live system state.
+
+System updates is paused work in progress. Checks, installation, configuration writes and automatic scheduling are disabled in production; existing state and logs remain inspectable. See [the incomplete implementation and observed failures](docs/updates.md).
 
 ## Settings Catalog & Coverage
 

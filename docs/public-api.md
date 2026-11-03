@@ -932,18 +932,10 @@ Stream operations are ephemeral and do not resolve or persist device conflicts.
 No D-Bus method signatures or existing payloads change. See [Sound](sound.md)
 for configuration ownership, dependencies and verification boundaries.
 
-## System updates
+## System updates — paused work in progress
 
-`Get("updates")` and `Get("updates.<id>")` read the service-owned async updater without running commands. CLI uses the same keys. `Changed("updates", state)` publishes changes at most once per second. The existing Settings1 method signatures are unchanged.
+`Get("updates")` and Get for the eight update IDs remain inspectable. State reports `available: false`, `work_in_progress: true`, and an incomplete/unverified `reason`; per-setting availability is `planned`. Existing status, candidates, output, errors and saved schedule fields are retained for inspection.
 
-| Setting | Set value | Behavior |
-| --- | --- | --- |
-| `updates.check` | `check` | Start isolated repository and AUR checks; no upgrade |
-| `updates.upgrade` | `upgrade` | Start ordinary-user yay with the reused GUI authorization for fixed pacman operations |
-| `updates.include-held` | `true` / `false` | Include kernel, firmware, mkinitcpio and live-driver NVIDIA packages for this session; rejected while busy |
-| `updates.retry` | `true` / `false` | Retry failed upgrade attempts, with a 5-second-per-attempt delay capped at 60 seconds; can be turned off while busy |
-| `updates.status`, `updates.output` | read-only | Reject Set with ReadOnly |
+All production Set operations for `updates.check`, `updates.upgrade`, `updates.include-held`, `updates.retry`, `updates.status`, `updates.output`, `updates.automatic` and `updates.daily-time` reject with `Unavailable`. The service cannot start manual or automatic update jobs, even when `schedule.enabled` was saved as true. The old configuration is not erased or rewritten. Read-only activation does not authorize or execute the draft flow.
 
-State contains `api_version: 1`, monotonic `revision`, `available`, `missing`, `authorized`, `authorizing`, `auth_error`, `all`, `retry`, `busy`, `phase`, `kind`, `attempt`, `retry_at`, `checked_at`, `held`, `packages`, `output`, and `error`. Times are Unix seconds or null. A candidate contains `name`, `installed`, `available`, `source` (`repository` or `AUR`) and `held`. Phases are idle, checking, upgrading, retrying, completed or failed; kind is none, check or upgrade. Logs are chronological bounded plain-text lines; terminal color/control sequences are removed. Missing tools and authorization or operation failures remain visible. Failed checks retain prior candidates; successful upgrades invalidate them.
-
-`Close` closes only the GUI; `Quit` rejects while an updater job runs. Turning retry off prevents future attempts without interrupting an active package transaction. No operation is started by Get, page navigation or service startup, and session exclusions never modify saved system configuration. The pure Dart `UpdatesClient` exports the six IDs and operation helpers. See [System updates](updates.md) for authorization and verification boundaries.
+The Settings1 method signatures and pure Dart IDs/helpers are unchanged; the retained operation helpers now receive the unavailable error. Active-hours previews also remain unavailable. See [paused implementation and observed failures](updates.md); successful upgrade execution is unverified.

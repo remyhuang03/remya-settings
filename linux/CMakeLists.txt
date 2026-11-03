@@ -101,7 +101,7 @@ add_custom_target(rust_date_time ALL
 add_dependencies(${BINARY_NAME} rust_date_time)
 
 add_custom_target(rust_service ALL
-  COMMAND "${CARGO_EXECUTABLE}" build --locked --package remya_settings_service ${RUST_PROFILE_ARGS}
+  COMMAND "${CARGO_EXECUTABLE}" build --locked --package remya_settings_service --package remya_settings_updates ${RUST_PROFILE_ARGS}
   WORKING_DIRECTORY "${RUST_WORKSPACE_DIR}"
   COMMENT "Building resident Settings service")
 add_dependencies(${BINARY_NAME} rust_service)
@@ -130,7 +130,7 @@ install(CODE "
 
 set(INSTALL_BUNDLE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/data")
 set(INSTALL_BUNDLE_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
-install(PROGRAMS "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/remya-settings-service" DESTINATION "${CMAKE_INSTALL_PREFIX}/libexec" COMPONENT Runtime)
+install(PROGRAMS "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/remya-settings-service" "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/remya-settings-update-auth" DESTINATION "${CMAKE_INSTALL_PREFIX}/libexec" COMPONENT Runtime)
 install(PROGRAMS "${SETTINGS_CLI}" DESTINATION "${CMAKE_INSTALL_PREFIX}/libexec" COMPONENT Runtime)
 install(FILES "${RUST_DATE_TIME_LIBRARY}" "${RUST_APPEARANCE_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
 

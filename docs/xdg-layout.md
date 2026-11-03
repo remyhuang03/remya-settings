@@ -159,3 +159,9 @@ system state without server writes. Malformed state is retained and reported.
 Application streams and measured device state are not persisted. Sound creates
 no cache, system service or privileged configuration; it connects to the user's
 existing pipewire-pulse socket. See [Sound](sound.md).
+
+System update progress, held/retry session choices, logs and candidate inventory are memory-only. The application-owned daily schedule is saved atomically in `updates.json` beside `config.toml` (or beside debug `config.local.toml`); it stores the enabled flag, local HH:mm, last claimed local date and outcome/missed notice. Defaults are disabled, so first read never schedules an upgrade. Private job files and ordinary-user AUR builds are temporary under `/var/tmp/remya-settings-updates-<uid>/remya-settings-update-<random>/`, with mode 0700 and owner validation; jobs remove their directory on completion. This uses disk space rather than the runtime tmpfs for large builds. The fixed `libexec/remya-settings-update-auth` executable is bundled beside `remya-settings-service`. Its inherited unnamed socketpair is private to the job and has no filesystem path or public listener.
+
+Privileged package installation stages archive copies in a root-owned, mode-0700 `/var/tmp/remya-settings-packages-<random>/` directory. Pacman validates and installs that same immutable input; the staging directory is removed after the transaction finishes.
+
+System updates is paused work in progress. Production operations and schedule ticks are disabled; any existing `updates.json` is preserved for inspection, including its saved enabled flag, and is not treated as an instruction to run.

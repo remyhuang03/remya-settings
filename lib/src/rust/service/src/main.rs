@@ -114,6 +114,7 @@ fn run() -> Result<(), String> {
                 .expect("service worker panicked");
                 // A rejected page must not open anything or request authorization.
                 let opened = ((method == "Open" && args[0] != "repository") || (method == "Set" && args[0] == "airplane.bluetooth")) && result.is_ok();
+                let succeeded = result.is_ok();
                 match result {
                     Ok(value) => invocation.return_value(Some(&(value.to_string(),).to_variant())),
                     Err(error) => {
@@ -169,6 +170,9 @@ fn run() -> Result<(), String> {
                     if method == "Reload" || args.first().is_some_and(|id| id == "sound" || remya_settings_sound::is_setting(id)) {
                         signal(&bus, "sound", &state.lock().unwrap().sound.state());
                     }
+                    if args.first().is_some_and(|id| remya_settings_updates::is_setting(id)) {
+                        signal(&bus, "updates", &state.lock().unwrap().updates_state());
+                    }
                     if args.first().is_some_and(|id| id.starts_with("fonts.")) {
                         signal(&bus, "fonts", &serde_json::json!({}));
                     }
@@ -194,8 +198,9 @@ fn run() -> Result<(), String> {
                 }
                 if opened {
                     signal(&bus, "hostname", &state.lock().unwrap().hostname_state());
+                    signal(&bus, "updates", &state.lock().unwrap().updates_state());
                 }
-                if method == "Quit" {
+                if method == "Quit" && succeeded {
                     let _ = bus.flush_future().await;
                     state.lock().unwrap().shutdown();
                     quit.quit();
@@ -231,6 +236,12 @@ fn run() -> Result<(), String> {
         if bluetooth.take_dirty() {
             signal(&poll_bus, "bluetooth", &bluetooth.state());
         }
+        if let Ok(state) = polling.try_lock() {
+            state.tick_updates();
+            if state.updates.take_dirty() {
+                signal(&poll_bus, "updates", &state.updates_state());
+            }
+        }
         if appimages.take_dirty() {
             signal(&poll_bus, "appimages", &appimages.state());
         }
@@ -240,6 +251,10 @@ fn run() -> Result<(), String> {
         let mut expired = false;
         if let Ok(mut state) = polling.try_lock() {
             state.reap_gui();
+            if state.reap_authorization() {
+                signal(&poll_bus, "updates", &state.updates_state());
+                signal(&poll_bus, "hostname", &state.hostname_state());
+            }
             expired = state.display.pending_expired();
         }
         if expired {

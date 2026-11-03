@@ -5,7 +5,7 @@ import 'package:dbus/dbus.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
 const usage = '''Usage: remya_settings <command> [arguments]
-  get <theme|system|system-information|hostname|display|display-brightness|background|accent|fonts|network|bluetooth|sound|font-search:query|font:family|catalog|about|page:id|setting-id>  Read state or metadata
+  get <theme|system|system-information|hostname|display|display-brightness|background|accent|fonts|network|bluetooth|sound|account-information|updates|font-search:query|font:family|catalog|about|page:id|setting-id>  Read state or metadata
   set <setting-id> <value|->           Apply an available setting; - reads the value from stdin
   install-appimage <path>            Install an AppImage and show its progress in Settings
   list                               List all controls and availability

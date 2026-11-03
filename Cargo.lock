@@ -1405,6 +1405,7 @@ dependencies = [
  "remya_settings_network",
  "remya_settings_sound",
  "remya_settings_system_information",
+ "remya_settings_updates",
  "serde",
  "serde_json",
  "tempfile",
@@ -1436,6 +1437,16 @@ dependencies = [
  "sysinfo",
  "tempfile",
  "toml 0.9.12+spec-1.1.0",
+]
+
+[[package]]
+name = "remya_settings_updates"
+version = "0.1.0"
+dependencies = [
+ "libc",
+ "serde",
+ "serde_json",
+ "tempfile",
 ]
 
 [[package]]

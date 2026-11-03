@@ -30,6 +30,9 @@
     <!-- Get account-information reads the service username and Settings-owned avatar.
          The username readout rejects Set; Set your-info.58484bbb accepts an image path
          and normalized crop rectangle. Changed account-information reports avatar updates. -->
+    <!-- System updates is paused work in progress. Get updates / updates.* remains inspectable.
+         All eight update Set IDs reject Unavailable; production automatic ticks never run,
+         including with an enabled saved schedule. Existing config/status/output are preserved. -->
     <method name="Get">
       <arg type="s" direction="in"/>
       <arg type="s" direction="out"/>

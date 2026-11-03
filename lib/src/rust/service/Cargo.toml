@@ -28,3 +28,4 @@ remya_settings_network = { path = "../network" }
 remya_settings_bluetooth = { path = "../bluetooth" }
 
 remya_settings_sound = { path = "../sound" }
+remya_settings_updates = { path = "../updates" }

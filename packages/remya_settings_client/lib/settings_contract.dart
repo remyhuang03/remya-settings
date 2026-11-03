@@ -15,3 +15,5 @@ export 'src/bluetooth.dart';
 export 'src/account.dart';
 
 export 'src/sound.dart';
+
+export 'src/updates.dart';

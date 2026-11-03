@@ -1,4 +1,4 @@
-use crate::privileged::{Request, Session};
+use crate::privileged::{Request, Session, UpdateSession};
 use gio::glib::{Variant, variant::ToVariant};
 use remya_settings_appearance::api as appearance;
 use remya_settings_applications as applications;
@@ -16,11 +16,13 @@ use remya_settings_network::{NetworkManager, is_network_setting};
 use remya_settings_sound::{self as sound, Sound, pulse::RealPulse};
 use remya_settings_system_information::account::{self, AccountInformation};
 use remya_settings_system_information::hostname::{self, HostnameManager};
+use remya_settings_updates::{self as updates, Updates};
 use serde_json::{Value, json};
 use std::{
     fs,
     path::PathBuf,
     process::{Child, Command},
+    sync::{Arc, Mutex},
 };
 
 pub const STYLE: &str = "themes.material-style-variant";
@@ -176,8 +178,9 @@ pub struct State {
     pub network: NetworkManager,
     pub bluetooth: remya_settings_bluetooth::Bluetooth,
     pub sound: Sound<RealPulse>,
+    pub updates: Updates,
     pub auth_error: Option<String>,
-    privileged: Option<Session>,
+    privileged: Option<Arc<Mutex<Session>>>,
     gui: Option<Child>,
     auth_attempted: bool,
     pub restart_suggested: bool,
@@ -216,6 +219,13 @@ impl State {
             ),
             bluetooth: remya_settings_bluetooth::Bluetooth::new(),
             sound: Sound::new(RealPulse, config.with_file_name("sound.toml")),
+            updates: Updates::new(
+                std::env::current_exe()
+                    .unwrap_or_default()
+                    .with_file_name("remya-settings-update-auth"),
+                config.with_file_name("updates.json"),
+                atomic_write,
+            ),
             network: NetworkManager::real(config.with_file_name("network.toml")),
             appimages: applications::appimages::AppImages::real(
                 config.with_file_name("appimages.toml"),
@@ -349,7 +359,7 @@ impl State {
     pub fn finish_authorization(&mut self, result: Result<Session, String>) {
         match result {
             Ok(session) => {
-                self.privileged = Some(session);
+                self.privileged = Some(Arc::new(Mutex::new(session)));
                 self.auth_error = None;
                 self.date_error = None;
             }
@@ -357,20 +367,45 @@ impl State {
         }
     }
     fn request(&mut self, request: Request) -> Result<Value, String> {
-        let session = self.privileged.as_mut().ok_or_else(|| {
-            self.auth_error
-                .clone()
-                .unwrap_or("Open Settings and authorize system changes first".into())
-        })?;
+        if self.updates.busy() {
+            return Err("Busy:Wait for the system update operation to finish".into());
+        }
+        let shared = self
+            .privileged
+            .as_ref()
+            .ok_or_else(|| {
+                self.auth_error
+                    .clone()
+                    .unwrap_or("Open Settings and authorize system changes first".into())
+            })?
+            .clone();
+        let mut session = shared
+            .try_lock()
+            .map_err(|_| "Busy:Another authorized operation is running")?;
         let result = session.call(&request);
         if !session.is_alive() {
             self.privileged = None;
-            self.auth_error=Some("Privileged service stopped; close and reopen the Settings window to authorize again".into());
+            self.auth_error = Some("Privileged service stopped; close and reopen the Settings window to authorize again".into());
         }
         result
     }
     fn privileged(&mut self, request: Request) -> Result<clock::DateTimeState, String> {
         serde_json::from_value(self.request(request)?).map_err(|e| e.to_string())
+    }
+    pub fn tick_updates(&self) {
+        let privilege = self
+            .privileged
+            .as_ref()
+            .map(|session| Arc::new(UpdateSession(session.clone())) as Arc<dyn updates::Privilege>);
+        self.updates.tick(privilege);
+    }
+    pub fn updates_state(&self) -> Value {
+        let mut value = self.updates.state();
+        value["authorized"] = json!(self.privileged.is_some());
+        value["authorizing"] =
+            json!(self.auth_attempted && self.privileged.is_none() && self.auth_error.is_none());
+        value["auth_error"] = json!(self.auth_error);
+        value
     }
     pub fn hostname_state(&self) -> Value {
         let mut value = self.hostname.state();
@@ -584,6 +619,13 @@ impl State {
                     }
                     "account-information" => self.account.read(),
                     _ if account::IDS.contains(&key) => self.account.read_setting(key),
+                    "updates" => Ok(self.updates_state()),
+                    _ if updates::is_setting(key) => {
+                        let mut value = self.updates_state();
+                        value["id"] = json!(key);
+                        value["availability"] = json!(if updates::WORK_IN_PROGRESS { "planned" } else if value["available"] == true { "available" } else { "unsupported" });
+                        Ok(value)
+                    }
                     "sound" => {
                         let _ = self.sound.refresh();
                         Ok(self.sound.state())
@@ -769,6 +811,7 @@ impl State {
                 }
                 Ok(json!({"closed":true}))
             }
+            "Quit" if self.updates.busy() => Err("Busy:An update operation is running; wait for it to finish before quitting the service".into()),
             "Quit" => Ok(json!({"quitting":true})),
             _ => Err(invalid("Unknown method")),
         }
@@ -799,6 +842,13 @@ impl State {
         }
         if default_apps::IDS.contains(&key) {
             return self.default_apps.set(key, value);
+        }
+        if updates::is_setting(key) {
+            let privilege = self.privileged.as_ref().map(|session| {
+                Arc::new(UpdateSession(session.clone())) as Arc<dyn updates::Privilege>
+            });
+            self.updates.set(key, value, privilege)?;
+            return Ok(self.updates_state());
         }
         if sound::is_setting(key) {
             return self.sound.set(key, value);
@@ -1057,12 +1107,25 @@ impl State {
             self.gui = None;
         }
     }
+    pub fn reap_authorization(&mut self) -> bool {
+        let dead = self.privileged.as_ref().is_some_and(|shared| {
+            shared
+                .try_lock()
+                .is_ok_and(|mut session| !session.is_alive())
+        });
+        if dead {
+            self.privileged = None;
+            self.auth_error = Some("Privileged service stopped; close and reopen the Settings window to authorize again".into());
+        }
+        dead
+    }
     pub fn shutdown(&mut self) {
         if let Some(mut gui) = self.gui.take() {
             let _ = gui.kill();
             let _ = gui.wait();
         }
         self.privileged = None;
+        self.updates.shutdown();
         self.appimages.shutdown();
         self.bluetooth.cleanup();
         // Never leave an unconfirmed display change behind when the service stops.

@@ -1,3 +1,5 @@
+import '../../updates/application/updates_controller.dart';
+import '../../updates/presentation/updates_page.dart';
 import '../../sound/application/sound_controller.dart';
 import '../../sound/presentation/sound_page.dart';
 import '../../account/application/account_controller.dart';
@@ -39,9 +41,11 @@ class SettingsShell extends StatefulWidget {
     this.systemInformation,
     this.account,
     this.sound,
+    this.updates,
   });
   final AccountController? account;
   final SoundController? sound;
+  final UpdatesController? updates;
   final SettingsCatalog catalog;
   final SystemInformationReader? systemInformation;
   final Widget? status;
@@ -402,6 +406,8 @@ class _SettingsShellState extends State<SettingsShell> {
         }.contains(_page?.id) &&
         widget.sound != null) {
       content = SoundPage(controller: widget.sound!, page: _page!);
+    } else if (_page?.id == 'updates' && widget.updates != null) {
+      content = UpdatesPage(controller: widget.updates!);
     } else if (_page?.id == 'installed' &&
         ApplicationsScope.maybeOf(context) != null) {
       final controller = ApplicationsScope.maybeOf(context)!;
