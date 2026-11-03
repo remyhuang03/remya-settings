@@ -1,4 +1,5 @@
 import '../sound/application/sound_controller.dart';
+import '../settings/presentation/settings_row_layout.dart';
 import '../default_apps/application/default_apps_controller.dart';
 import '../network/application/network_controller.dart';
 import '../system_information/application/hostname_controller.dart';
@@ -397,7 +398,12 @@ class _StatusCard extends StatelessWidget {
           ),
       ],
     );
-    final buttons = Wrap(spacing: 8, runSpacing: 4, children: actions);
+    final buttons = Wrap(
+      alignment: .end,
+      spacing: 8,
+      runSpacing: 4,
+      children: actions,
+    );
     return Padding(
       padding: const .fromLTRB(16, 4, 16, 8),
       child: Material(
@@ -409,31 +415,16 @@ class _StatusCard extends StatelessWidget {
         ),
         child: Padding(
           padding: const .symmetric(horizontal: 16, vertical: 8),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return Column(
-                mainAxisSize: .min,
-                crossAxisAlignment: .stretch,
-                children: [
-                  Row(
-                    children: [
-                      Icon(icon, color: foreground, size: 24),
-                      const SizedBox(width: 12),
-                      Expanded(child: label),
-                      if (constraints.maxWidth >= 560) ...[
-                        const SizedBox(width: 16),
-                        SizedBox(
-                          width: constraints.maxWidth * 0.5,
-                          child: Align(alignment: .centerRight, child: buttons),
-                        ),
-                      ],
-                    ],
-                  ),
-                  if (constraints.maxWidth < 560)
-                    Align(alignment: .centerRight, child: buttons),
-                ],
-              );
-            },
+          child: SettingsRowLayout(
+            left: Row(
+              mainAxisSize: .min,
+              children: [
+                Icon(icon, color: foreground, size: 24),
+                const SizedBox(width: 12),
+                Flexible(child: label),
+              ],
+            ),
+            right: buttons,
           ),
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings_client/remya_settings_client.dart';
 
 import '../../settings/presentation/settings_widgets.dart';
+import '../../settings/presentation/settings_row_layout.dart';
 import '../application/network_controller.dart';
 
 String securityLabel(String? security) => switch (security) {
@@ -328,6 +329,7 @@ class NetworkHero extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     final text = Theme.of(context).textTheme;
     final heading = Row(
+      mainAxisSize: .min,
       children: [
         Container(
           width: 64,
@@ -336,7 +338,7 @@ class NetworkHero extends StatelessWidget {
           child: Icon(icon, size: 32, color: colors.onPrimary),
         ),
         const SizedBox(width: 20),
-        Expanded(
+        Flexible(
           child: Column(
             crossAxisAlignment: .start,
             children: [
@@ -363,30 +365,18 @@ class NetworkHero extends StatelessWidget {
       borderRadius: .circular(32),
       child: Padding(
         padding: const .all(24),
-        child: LayoutBuilder(
-          builder: (context, constraints) => Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              if (action == null)
-                heading
-              else if (constraints.maxWidth < 520) ...[
-                heading,
-                const SizedBox(height: 16),
-                Align(alignment: .centerRight, child: action),
-              ] else
-                Row(
-                  children: [
-                    Expanded(child: heading),
-                    const SizedBox(width: 16),
-                    action!,
-                  ],
-                ),
-              if (children.isNotEmpty) ...[
-                const SizedBox(height: 20),
-                ...children,
-              ],
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            if (action == null)
+              heading
+            else
+              SettingsRowLayout(left: heading, right: action!),
+            if (children.isNotEmpty) ...[
+              const SizedBox(height: 20),
+              ...children,
             ],
-          ),
+          ],
         ),
       ),
     );

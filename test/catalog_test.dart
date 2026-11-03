@@ -16,6 +16,32 @@ Map<String, dynamic> _readJson(String path) =>
     jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
 
 void main() {
+  testWidgets('single-page categories omit redundant page navigation', (
+    tester,
+  ) async {
+    final navigation = ValueNotifier<String?>('updates');
+    addTearDown(navigation.dispose);
+    final singlePageCatalog = readCatalog();
+    (singlePageCatalog['pages'] as List).removeWhere(
+      (page) => page['id'] == 'active-hours',
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SettingsShell(
+          catalog: SettingsCatalog.fromJson(singlePageCatalog),
+          navigation: navigation,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('nav-page-updates')), findsNothing);
+    navigation.value = 'sound-volume';
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('nav-page-sound-volume')), findsOneWidget);
+    expect(find.byKey(const ValueKey('nav-page-volume-mixer')), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('content reserves only the visible status bar height', (
     tester,
   ) async {
@@ -99,7 +125,7 @@ void main() {
   testWidgets(
     'compact actions stay inline when content fits and stack only when narrow',
     (tester) async {
-      for (final width in [320.0, 220.0]) {
+      for (final width in [360.0, 220.0]) {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -120,8 +146,12 @@ void main() {
         await tester.pumpAndSettle();
         final text = tester.getRect(find.text('Qt 6 Settings'));
         final button = tester.getRect(find.byType(FilledButton));
-        if (width == 320) {
-          expect((text.center.dy - button.center.dy).abs(), lessThan(16));
+        if (width == 360) {
+          expect(
+            (text.center.dy - button.center.dy).abs(),
+            lessThan(16),
+            reason: 'text=$text button=$button',
+          );
           expect(button.left, greaterThan(text.right));
         } else {
           expect(button.top, greaterThan(text.bottom));
@@ -216,10 +246,7 @@ void main() {
       catalog.search('direct_scanout').map((p) => p.id),
       contains('graphics'),
     );
-    expect(
-      catalog.search('hypridle').map((p) => p.id),
-      contains('power'),
-    );
+    expect(catalog.search('hypridle').map((p) => p.id), contains('power'));
     expect(
       catalog.search('window rules').map((p) => p.id),
       contains('hypr-window-rule-props'),

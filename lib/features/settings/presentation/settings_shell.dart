@@ -325,7 +325,9 @@ class _SettingsShellState extends State<SettingsShell> {
             style: Theme.of(context).textTheme.headlineMedium
                 ?.copyWith(fontWeight: .w600),
           ),
-          if (_page != null && _query.isEmpty) ...[
+          if (_page != null &&
+              _query.isEmpty &&
+              widget.catalog.inCategory(_category).length > 1) ...[
             const SizedBox(height: 16),
             _PageButtonGroup(
               category: widget.catalog.category(_category),

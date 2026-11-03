@@ -364,6 +364,7 @@ class _SelectedApplications extends StatelessWidget {
       crossAxisAlignment: .start,
       children: [
         Row(
+          mainAxisSize: .min,
           children: [
             Icon(switch (title) {
               'Web browser' => Icons.language_rounded,
@@ -377,7 +378,7 @@ class _SelectedApplications extends StatelessWidget {
               _ => Icons.insert_drive_file_outlined,
             }, size: 20),
             const SizedBox(width: 8),
-            Expanded(
+            Flexible(
               child: Text(
                 title,
                 style: Theme.of(context).textTheme.titleMedium,
@@ -387,6 +388,7 @@ class _SelectedApplications extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Row(
+          mainAxisSize: .min,
           children: [
             if (icons.length == 1)
               ApplicationIcon(icon: controller.application(icons.single)?.icon)
@@ -422,7 +424,7 @@ class _SelectedApplications extends StatelessWidget {
                 ),
               ),
             const SizedBox(width: 12),
-            Expanded(
+            Flexible(
               child: Text(
                 ids.length == 1
                     ? controller.name(ids.single)
@@ -548,13 +550,14 @@ class _AssociationsDialogState extends State<_AssociationsDialog> {
                           ),
                           const SizedBox(height: 8),
                           Row(
+                            mainAxisSize: .min,
                             children: [
                               ApplicationIcon(
                                 icon: controller.application(id)?.icon,
                                 size: 28,
                               ),
                               const SizedBox(width: 8),
-                              Expanded(child: Text(controller.name(id))),
+                              Flexible(child: Text(controller.name(id))),
                             ],
                           ),
                         ],

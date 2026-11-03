@@ -103,6 +103,7 @@ class _WifiPageState extends State<WifiPage> {
     id: wifiAdapterSettingId,
     label: const Text('Adapter'),
     control: DropdownMenu<String>(
+      width: 232,
       initialSelection: _controller.adapter,
       enabled: !_controller.isBusy,
       onSelected: (value) {
@@ -157,10 +158,11 @@ class _WifiPageState extends State<WifiPage> {
       key: ValueKey('wifi-item-${network['ssid']}-$security'),
       id: 'network-${network['ssid']}-$security',
       label: Row(
+        mainAxisSize: .min,
         children: [
           Icon(signalIcon(network['signal'] as int)),
           const SizedBox(width: 16),
-          Expanded(
+          Flexible(
             child: Column(
               crossAxisAlignment: .start,
               children: [

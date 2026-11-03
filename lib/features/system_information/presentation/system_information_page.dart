@@ -5,6 +5,7 @@ import 'package:remya_settings_client/settings_contract.dart';
 
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_widgets.dart';
+import '../../settings/presentation/settings_row_layout.dart';
 
 typedef _ReadResult = ({Map? values, String? error});
 
@@ -125,6 +126,7 @@ class _DeviceCard extends StatelessWidget {
     child: SettingRow(
       id: 'about.4433eb13',
       label: Row(
+        mainAxisSize: .min,
         children: [
           Container(
             width: 56,
@@ -140,7 +142,7 @@ class _DeviceCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 20),
-          Expanded(
+          Flexible(
             child: Column(
               crossAxisAlignment: .start,
               children: [
@@ -256,21 +258,7 @@ class _InformationRow extends StatelessWidget {
     return Padding(
       key: ValueKey(setting.id),
       padding: const .symmetric(horizontal: 20, vertical: 18),
-      child: LayoutBuilder(
-        builder: (context, constraints) => constraints.maxWidth < 480
-            ? Column(
-                crossAxisAlignment: .start,
-                children: [label, const SizedBox(height: 6), value],
-              )
-            : Row(
-                crossAxisAlignment: .start,
-                children: [
-                  SizedBox(width: 160, child: label),
-                  const SizedBox(width: 20),
-                  Expanded(child: value),
-                ],
-              ),
-      ),
+      child: SettingsRowLayout(left: label, right: value),
     );
   }
 }

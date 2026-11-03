@@ -87,10 +87,11 @@ class _ExternalToolsPageState extends State<ExternalToolsPage> {
               child: SettingRow(
                 id: tool['id'] as String,
                 label: Row(
+                  mainAxisSize: .min,
                   children: [
                     ApplicationIcon(icon: tool['icon'] as String?),
                     const SizedBox(width: 16),
-                    Expanded(
+                    Flexible(
                       child: Column(
                         crossAxisAlignment: .start,
                         children: [

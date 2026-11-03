@@ -91,7 +91,7 @@ void main() {
   ) async {
     await tester.pumpWidget(host());
     await refresh(tester);
-    final button = find.text('Discoverable for 60 seconds');
+    final button = find.text('Make visible');
     await tester.ensureVisible(button);
     expect(button.hitTestable(), findsOneWidget);
     expect(find.text('Discoverable: No'), findsOneWidget);

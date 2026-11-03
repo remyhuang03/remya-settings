@@ -1,6 +1,8 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:material_ui/material_ui.dart';
 
+import 'settings_row_layout.dart';
+
 import '../../appearance/application/app_preferences_controller.dart';
 import '../../appearance/domain/app_preferences.dart';
 import '../domain/settings_catalog.dart';
@@ -70,6 +72,7 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
         'sound' => Icons.volume_up_outlined,
         'network' => Icons.wifi_outlined,
         'devices' => Icons.devices_other_outlined,
+        'volume' => Icons.volume_up_outlined,
         'power' => Icons.battery_charging_full_rounded,
         'storage' => Icons.storage_outlined,
         'personalization' => Icons.palette_outlined,
@@ -237,42 +240,9 @@ class SettingRow extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
     key: ValueKey(id),
     padding: const .symmetric(horizontal: 20, vertical: 18),
-    child: LayoutBuilder(
-      builder: (context, constraints) {
-        final control = this.control;
-        if (control == null) {
-          return Align(alignment: .centerLeft, child: label);
-        }
-        final compact =
-            control is ButtonStyleButton ||
-            control is IconButton ||
-            control is Switch ||
-            control is Checkbox;
-        if (constraints.maxWidth < (compact ? 240 : 560)) {
-          return Column(
-            crossAxisAlignment: .start,
-            children: [
-              label,
-              const SizedBox(height: 14),
-              Align(alignment: .centerRight, child: control),
-            ],
-          );
-        }
-        return Row(
-          children: [
-            Expanded(child: label),
-            const SizedBox(width: 24),
-            if (compact)
-              control
-            else
-              SizedBox(
-                width: 232,
-                child: Align(alignment: .centerRight, child: control),
-              ),
-          ],
-        );
-      },
-    ),
+    child: control == null
+        ? Align(alignment: .centerLeft, heightFactor: 1, child: label)
+        : SettingsRowLayout(left: label, right: control!),
   );
 }
 
@@ -641,39 +611,50 @@ class PageLink extends StatelessWidget {
   final String? subtitle;
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) {
-      final compact = constraints.maxWidth < 560;
-      return ListTile(
-        key: ValueKey('page-link-${page.id}'),
-        contentPadding: const .symmetric(horizontal: 20, vertical: 8),
-        leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
-        title: Text(page.title),
-        subtitle: Padding(
-          padding: const .only(top: 5),
-          child: Column(
-            crossAxisAlignment: .start,
+  Widget build(BuildContext context) => Semantics(
+    button: true,
+    child: InkWell(
+      key: ValueKey('page-link-${page.id}'),
+      onTap: onTap,
+      child: Padding(
+        padding: const .symmetric(horizontal: 20, vertical: 16),
+        child: SettingsRowLayout(
+          left: Row(
+            mainAxisSize: .min,
             children: [
-              Text(subtitle ?? page.description),
-              if (compact) ...[
-                const SizedBox(height: 8),
+              Icon(icon, color: Theme.of(context).colorScheme.primary),
+              const SizedBox(width: 16),
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    Text(
+                      page.title,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      subtitle ?? page.description,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          right: Wrap(
+            alignment: .end,
+            crossAxisAlignment: .center,
+            spacing: 12,
+            runSpacing: 8,
+            children: [
+              if (page.availability != .available)
                 AvailabilityBadge(page.availability, reason: page.reason),
-              ],
+              const Icon(Icons.chevron_right_rounded, size: 20),
             ],
           ),
         ),
-        trailing: Row(
-          mainAxisSize: .min,
-          children: [
-            if (!compact) ...[
-              AvailabilityBadge(page.availability, reason: page.reason),
-              const SizedBox(width: 12),
-            ],
-            const Icon(Icons.chevron_right_rounded, size: 20),
-          ],
-        ),
-        onTap: onTap,
-      );
-    },
+      ),
+    ),
   );
 }

@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'settings_widgets.dart';
+import 'settings_row_layout.dart';
 
 /// A fixed header and an independently scrolling, lazily built list.
 class SettingsList extends StatefulWidget {
@@ -138,86 +139,15 @@ class _ListHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final label = Text(title, style: Theme.of(context).textTheme.titleMedium);
     if (actions.isEmpty) return label;
-    return _HeaderLayout(
-      children: [
-        label,
-        Wrap(
-          alignment: .end,
-          spacing: 8,
-          runSpacing: 8,
-          crossAxisAlignment: .center,
-          children: actions,
-        ),
-      ],
+    return SettingsRowLayout(
+      left: label,
+      right: Wrap(
+        alignment: .end,
+        spacing: 8,
+        runSpacing: 8,
+        crossAxisAlignment: .center,
+        children: actions,
+      ),
     );
   }
-}
-
-/// Measure both groups at their natural width; wrap only when they cannot fit together.
-class _HeaderLayout extends MultiChildRenderObjectWidget {
-  const _HeaderLayout({required super.children});
-
-  @override
-  RenderObject createRenderObject(BuildContext context) =>
-      _RenderHeaderLayout();
-}
-
-class _HeaderParentData extends ContainerBoxParentData<RenderBox> {}
-
-class _RenderHeaderLayout extends RenderBox
-    with
-        ContainerRenderObjectMixin<RenderBox, _HeaderParentData>,
-        RenderBoxContainerDefaultsMixin<RenderBox, _HeaderParentData> {
-  @override
-  void setupParentData(RenderBox child) {
-    if (child.parentData is! _HeaderParentData) {
-      child.parentData = _HeaderParentData();
-    }
-  }
-
-  bool _wrap(Size left, Size right) =>
-      left.width + 16 + right.width > constraints.maxWidth;
-
-  Size _measure(Size left, Size right, BoxConstraints constraints) =>
-      constraints.constrain(
-        Size(
-          constraints.maxWidth,
-          left.width + 16 + right.width > constraints.maxWidth
-              ? left.height + 12 + right.height
-              : math.max(left.height, right.height),
-        ),
-      );
-
-  @override
-  Size computeDryLayout(BoxConstraints constraints) => _measure(
-    firstChild!.getDryLayout(constraints.loosen()),
-    lastChild!.getDryLayout(constraints.loosen()),
-    constraints,
-  );
-
-  @override
-  void performLayout() {
-    final left = firstChild!;
-    final right = lastChild!;
-    left.layout(constraints.loosen(), parentUsesSize: true);
-    right.layout(constraints.loosen(), parentUsesSize: true);
-    size = _measure(left.size, right.size, constraints);
-    final wrap = _wrap(left.size, right.size);
-    (left.parentData! as _HeaderParentData).offset = Offset(
-      0,
-      wrap ? 0 : (size.height - left.size.height) / 2,
-    );
-    (right.parentData! as _HeaderParentData).offset = Offset(
-      size.width - right.size.width,
-      wrap ? left.size.height + 12 : (size.height - right.size.height) / 2,
-    );
-  }
-
-  @override
-  void paint(PaintingContext context, Offset offset) =>
-      defaultPaint(context, offset);
-
-  @override
-  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) =>
-      defaultHitTestChildren(result, position: position);
 }

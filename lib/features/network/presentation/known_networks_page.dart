@@ -221,6 +221,7 @@ class _ProfileTile extends StatelessWidget {
         id: knownNetworkMeteredSettingId,
         label: const Text('Metered connection'),
         control: DropdownMenu<String>(
+          width: 232,
           key: ValueKey('metered-${profile['metered']}'),
           initialSelection: profile['metered'] as String,
           enabled: _editable,

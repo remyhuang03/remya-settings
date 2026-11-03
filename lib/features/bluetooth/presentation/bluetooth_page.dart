@@ -131,15 +131,12 @@ class _BluetoothPageState extends State<BluetoothPage> {
                       ),
                     ],
                   ),
-                  control: SizedBox(
-                    width: 232,
-                    child: OutlinedButton.icon(
-                      onPressed: controller.busy
-                          ? null
-                          : () => _add(visible: true),
-                      icon: const Icon(Icons.visibility_outlined),
-                      label: const Text('Discoverable for 60 seconds'),
-                    ),
+                  control: OutlinedButton.icon(
+                    onPressed: controller.busy
+                        ? null
+                        : () => _add(visible: true),
+                    icon: const Icon(Icons.visibility_outlined),
+                    label: const Text('Make visible'),
                   ),
                 ),
               ),
