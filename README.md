@@ -14,22 +14,32 @@
 
 A global system settings application for **Hyprland on Linux**, built with **Flutter**, **Material Design 3 Expressive**, and a modular **Rust workspace**. Layout and information architecture are inspired by modern desktop settings benchmarks like Windows 11 Settings, while tailored and diverged for native Linux and Hyprland workflows.
 
-## Implemented Features
+> [!CAUTION]
+> **Early Development & Preview Only — Not Ready for Daily Use**
+>
+> - **Under Active Development**: This software is in an early, experimental stage of development and has **not** reached a usable production state.
+> - **Majority of Features Unavailable**: Out of 1,669 controls across 138 catalog pages, **1,491 controls are unimplemented UI-only previews** (`planned`) and 10 are platform-inapplicable (`unsupported`). Only 168 controls currently have backend integrations.
+> - **Implemented Features Are Unstable**: Even the implemented integrations are unstable, subject to breaking changes, and may have incomplete hardware verification boundaries or paused functionality (such as System Updates).
+> - **For Preview & Evaluation Only**: This repository is currently intended strictly for design preview and development reference. Use at your own risk on real systems.
+
+## Implemented Features (Experimental)
 
 Settings combines an information architecture inspired by modern desktop settings with native Linux and Hyprland backend integrations, reconciled with host state via Rust:
 
-- **Appearance**: Wallpaper management (`hyprpaper` images & `mpvpaper` videos), dynamic Material accent color extraction, Fontconfig font manager, and synchronized Light/Dark switching for GNOME/GTK and Qt Quick.
-- **Apps**: XDG default MIME associations (`mimeapps.list`), installed desktop applications inventory with guarded pacman/flatpak uninstallation, an AppImage library with zsync delta updates and live progress, and detected external configuration tools under More.
-- **Display**: Hyprland monitor arrangement, resolution, scaling, rotation, HDR, backlight brightness (`logind` / `ddcutil`), and safe atomic persistence to `monitors.lua` with a keep-or-revert countdown timer.
-- **Night light**: Color temperature, on/off and fixed-hours schedule through `hyprsunset`.
-- **Network**: Real-time connection status, Wi-Fi radio power toggle, access point scanning, connection handling, and saved NetworkManager profiles.
-- **Sound**: Native PipeWire output/input defaults, device volume and mute, application volume mixer/routing and all sound devices, with persisted preference reconciliation through the per-user PulseAudio API. See [Sound](docs/sound.md).
-- **System & Hostname**: Real-time hardware/OS specifications (CPU, GPU, memory, swap, disk, uptime) and polkit-authorized hostname editing.
-- **Account information**: Read-only username, plus a Settings-owned avatar with square crop, pan and zoom.
-- **Date & Time**: NTP synchronization via `systemd-timedated`, timezone selection (`ListTimezones`), manual clock setting, and `LC_TIME` calendar formatting.
-- **Configuration Reconciliation**: Non-destructive system detection on launch and automatic conflict resolution prompts between saved preferences and live system state.
+- **Appearance**: Wallpaper management (`hyprpaper` images & `mpvpaper` videos), dynamic Material accent color extraction, Fontconfig font manager, and synchronized Light/Dark switching for GNOME/GTK and Qt Quick. See [Appearance](docs/app-preferences.md).
+- **Apps**: XDG default MIME associations (`mimeapps.list`), installed desktop applications inventory with guarded pacman/flatpak uninstallation, an AppImage library (`$HOME/AppImages`) with zsync delta updates and live progress, and detected external configuration tools under More. See [Default apps](docs/default-apps.md), [Installed apps](docs/installed-apps.md), and [AppImages](docs/appimages.md).
+- **Display**: Hyprland monitor arrangement, resolution, scaling, rotation/flip, HDR, colour presets, backlight brightness (`logind` / `ddcutil`), and safe atomic persistence to `monitors.lua` with a keep-or-revert countdown timer.
+- **Night light**: Color temperature, on/off, and fixed-hours schedule through `hyprsunset` (`hyprsunset.conf`).
+- **Network**: Real-time connection status, live adapter traffic speeds, Wi-Fi radio power toggle, access point scanning, connection handling, and saved NetworkManager profiles. See [Network](docs/network.md).
+- **Bluetooth**: Adapter power, rfkill diagnostics, temporary discoverability, device scanning, pairing with interactive BlueZ Agent prompts (PIN, passkey, numeric comparison), connection toggling, battery reporting, and bond removal via system BlueZ. See [Bluetooth](docs/bluetooth.md) for features, API, and hardware verification limits.
+- **Sound**: Native PipeWire output/input defaults, device volume and mute, application volume mixer/routing, and full sound device inventory, with persisted preference reconciliation through the per-user PulseAudio (`libpulse`) API. See [Sound](docs/sound.md).
+- **System & Hostname**: Real-time read-only hardware/OS/firmware specifications (CPU, memory, motherboard, BIOS/UEFI DMI, kernel) via `sysinfo` and sysfs, plus polkit-authorized static hostname editing via `systemd-hostnamed`.
+- **Account information**: Read-only process username, plus a Settings-owned avatar (`avatar.png`) with interactive square crop, pan, and zoom.
+- **Date & Time**: NTP synchronization and custom NTP server drop-ins via `systemd-timedated` / `systemd-timesyncd`, timezone selection (`ListTimezones`), manual clock setting, and `LC_TIME` calendar formatting via `systemd-localed`.
+- **Configuration Reconciliation**: Non-destructive system detection on first launch and automatic conflict resolution prompts between saved preferences and live system state.
 
-System updates is paused work in progress. Checks, installation, configuration writes and automatic scheduling are disabled in production; existing state and logs remain inspectable. See [the incomplete implementation and observed failures](docs/updates.md).
+> [!WARNING]
+> **System updates** is paused work in progress. Checks, installation, configuration writes, and automatic scheduling are disabled in production; existing state and logs remain inspectable. See [the incomplete implementation and observed failures](docs/updates.md).
 
 ## Settings Catalog & Coverage
 
@@ -55,54 +65,21 @@ Settings uses a client-service architecture to keep memory footprint minimal and
 ```text
 Cargo.toml                Root Rust workspace
 lib/
-  main.dart               Flutter startup
-  app.dart                Application composition and theme
-  features/
-    about/                Product information and licenses
-    account/              Read-only identity and Settings-owned avatar
-    appearance/           App preferences, atomic TOML storage, theme state
-    applications/         Installed application inventory and external tools
-    background/           Wallpaper management (hyprpaper / mpvpaper) and accent color
-    date_time/            Date, time, NTP, and time zone management
-    default_apps/         XDG MIME default application associations
-    display/              Hyprland display outputs, layout, and brightness
-    fonts/                Font browsing, preview, installation, and removal
-    integration/          Resident service controllers and status
-    network/              Network status, Wi-Fi, and known networks
-    sound/                Output/input, application mixer and sound-device controls
-    settings/             Catalog model, navigation, search, shared list and renderer
-    updates/              Update status, explicit actions and live output
-    system_information/   Hardware/OS specifications and hostname management
-  src/rust/
-    appearance/           GNOME/GTK settings and Qt toolkit environments
-    appearance_bridge/    Generated Flutter/Rust bridge for appearance
-    applications/         Desktop entry parsing, icon lookup, package uninstall
-    background/           Hyprpaper IPC, mpvpaper unit, media copying, accent extraction
-    core/                 Backend types and crate boundaries
-    date_time/            systemd-timedated client and calendar helpers
-    date_time_bridge/     Generated Flutter/Rust bridge for date/time
-    default_apps/         mimeapps.list reader/writer and MIME associations
-    display/              Hyprland monitor rules, monitors.lua, and brightness
-    fonts/                Fontconfig queries, font installation, and metadata
-    network/              NetworkManager client and saved-network reconciliation
-    sound/                Native libpulse audio client and preference reconciliation
-    service/              Resident session D-Bus service and privileged helper
-    system_information/   Hardware/OS, hostname, account identity and avatar
-    updates/              Yay jobs and bounded private pacman authorization
+  main.dart, app.dart     Flutter startup, composition, and theme
+  features/<feature>/     Feature-first Flutter UI, state, and controllers
+  src/rust/<crate>/       Modular Rust backends, bridges, and resident service
 packages/
   remya_settings_client/  Pure Dart D-Bus client library for Remya Bar and dependent apps
-assets/
-  icons/                  Application icon (SVG and rendered PNG)
-  settings/               UI catalog and JSON Schema
+assets/                   Application icons, settings catalog/schema, and license notices
 linux/                    Native runner, GPU preference, and packaging templates
-docs/                     Architecture, research snapshots, public API, and progress tracking
-test/                     Catalog, unit tests, and CLI/D-Bus interface smoke tests
-tool/                     Installer, CLI generator, and license notice tools
+docs/                     Architecture, feature specs, public API, and progress tracking
+test/                     Unit, widget, catalog, and isolated CLI/D-Bus smoke tests
+tool/                     Installer, CLI entrypoint, and license notice generator
 ```
 
 ## Development
 
-Prerequisites: FVM, Rust via rustup, and Linux Flutter build prerequisites (Clang, CMake, Ninja, pkg-config, GTK 3 development libraries, GLib/GIO 2.84+, GdkPixbuf and libpulse headers, and GSettings tools). Current Arch Linux packages are the target; GTK 4 appearance requires GTK 4.20+. fish and luac validate their respective configuration targets. Sound requires dynamically linked system `libpulse` (PulseAudio 15+ API) and the current PipeWire, pipewire-pulse and WirePlumber services.
+Prerequisites: FVM, Rust via rustup, and Linux Flutter build prerequisites (Clang, CMake, Ninja, pkg-config, GTK 3 development libraries, GLib/GIO 2.84+, GdkPixbuf and libpulse headers, and GSettings tools). Current Arch Linux packages are the target; GTK 4 appearance requires GTK 4.20+. fish and luac validate their respective configuration targets. Sound requires dynamically linked system `libpulse` (PulseAudio 15+ API) and the current PipeWire, pipewire-pulse and WirePlumber services. Network requires NetworkManager; Bluetooth requires BlueZ; Night light requires `hyprsunset`; elevated operations require `polkit-kde-agent`.
 
 ```bash
 fvm install
@@ -129,7 +106,7 @@ python tool/install.py
 ```
 
 - Launch **Remy'a Settings** from the application menu, run `remya_settings`, or use `gtk-launch top.remya.settings`.
-- CLI commands: `remya_settings --help` lists available commands. Implemented features provide full CLI parity (e.g. `remya_settings get theme`, `remya_settings get display`, `remya_settings get background`, `remya_settings get hostname`, `remya_settings get default-app`).
+- CLI commands: `remya_settings --help` lists available commands. Implemented features provide full CLI parity (e.g. `remya_settings get theme`, `remya_settings get display`, `remya_settings get background`, `remya_settings get sound`, `remya_settings get network`, `remya_settings get bluetooth`, `remya_settings get default-apps`, `remya_settings get hostname`).
 - To exit the resident background service before updates, run `remya_settings quit`.
 - See [XDG directory layout](docs/xdg-layout.md) and [public API documentation](docs/public-api.md).
 
@@ -142,5 +119,3 @@ python tool/install.py
 ## License
 
 Licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE).
-
-Bluetooth settings use system BlueZ through the Rust/GIO service. See [Bluetooth](docs/bluetooth.md) for features, API and hardware verification limits.
