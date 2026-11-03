@@ -18,7 +18,7 @@ Apps > AppImages manages AppImage applications kept in one folder, `$HOME/AppIma
   - an https `.zsync` URL.
 - **Check** compares the published SHA-256 (GitHub `digest`) or zsync SHA-1 with the installed file. Without a checksum, a size change counts as a new build.
 - **Update** uses a zsync delta when the release publishes one, and the whole file otherwise; a failed delta falls back to the whole file. The download is written to `.<id>.part` beside the image. It must be an AppImage and match the published checksum before it is renamed over the installed file, so the path, launchers and command links stay valid. The launcher is then refreshed with the new version.
-- **Progress** is published once a second as `Changed("appimages", state)` while work runs. Each job reports a `status` (`queued`, `checking`, `comparing`, `downloading`, `installing`), `bytes`, `total` and `speed` in bytes per second. Cancel stops the download and removes partial files.
+- **Progress** uses a Material circular indicator around the application icon in both the list and details. Downloading/comparing with a known total displays a determinate fraction; other stages remain indeterminate. Status text and cancellation stay available, with cancellation disabled during the final installation step. Byte counts and download speeds select B, KiB, MiB, GiB or larger units rather than always displaying MiB. Progress is published once a second as `Changed("appimages", state)` while work runs. Each job reports a `status` (`queued`, `checking`, `comparing`, `downloading`, `installing`), `bytes`, `total` and `speed` in bytes per second. Cancel stops the download and removes partial files.
 - **Automatic checks** run at most once a day while the resident service is running, with failed attempts spaced an hour apart. When **Install updates automatically** is on, available updates are installed as they are found. Checks are on by default; automatic installation is off.
 - **Move to Trash** uses the desktop Trash through GIO. It also removes the launcher, the application's own hidden handler entries that point at the image (URL or folder handlers it registered itself), the app's own icon when no other entry uses it, and command links in `~/.local/bin` that point at the image. Application data in the home folder is kept.
 
@@ -46,13 +46,14 @@ The feature scope follows [AppManager](https://github.com/kem-a/AppManager) at t
 
 - Rust unit tests cover:
   - source parsing and https enforcement;
+  - installed-application classification requiring a real library image as the launcher executable;
   - architecture and glob asset selection;
   - the checksum-then-size update decision;
   - ELF `.upd_info` and payload-offset reading, including out-of-range tables;
   - payload link confinement;
   - desktop entry rendering that drops image commands and quotes paths;
   - preference persistence, damaged-file retention, request validation, automatic-check spacing and icon-removal confinement.
-- `test/service_controllers_test.dart` covers live progress state and visible rejected writes.
+- `test/service_controllers_test.dart` covers live progress state and visible rejected writes. `test/application_lists_test.dart` covers readable byte units, colored metadata tags, icon progress rings, indeterminate stages and cancellation.
 - `test/interface_smoke.py` runs against the installed bundles with isolated XDG roots. It uses a real GridCraft release with 64 KiB zeroed. It installs through `install-appimage`, then checks:
   - the launcher with `desktop-file-validate`;
   - source changes over the CLI and over D-Bus;

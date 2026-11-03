@@ -7,7 +7,7 @@ use serde_json::{Value, json};
 use std::{
     collections::{BTreeMap, BTreeSet},
     fs,
-    path::Path,
+    path::{Path, PathBuf},
     process::Command,
 };
 
@@ -245,6 +245,10 @@ fn inventory() -> Result<(Vec<Installed>, Vec<String>), String> {
             vec![]
         }
     };
+    let appimage_directory = std::env::var_os("HOME")
+        .map(PathBuf::from)
+        .filter(|home| home.is_absolute())
+        .map(|home| home.join("AppImages"));
     let mut result = vec![];
     let mut seen = BTreeSet::new();
     for app in desktop_applications() {
@@ -256,6 +260,11 @@ fn inventory() -> Result<(Vec<Installed>, Vec<String>), String> {
             continue;
         }
         let package = packages.iter().find(|p| p.desktops.contains(&app.id));
+        let managed = appimage_directory.as_ref().and_then(|directory| {
+            let exec = info.as_ref()?.string("Exec")?;
+            appimages::managed_launcher(&exec, directory)
+        });
+        let package = package.filter(|_| managed.is_none());
         let (source, token, reason) = if let Some(p) = package {
             (
                 "pacman",
@@ -265,6 +274,12 @@ fn inventory() -> Result<(Vec<Installed>, Vec<String>), String> {
                     p.package
                 ),
             )
+        } else if managed.is_some() {
+            (
+                "appimage",
+                String::new(),
+                "Managed AppImage; use the AppImages page to update or remove it.".into(),
+            )
         } else {
             (
                 "manual",
@@ -273,6 +288,10 @@ fn inventory() -> Result<(Vec<Installed>, Vec<String>), String> {
                     .into(),
             )
         };
+        let appimage_version = managed
+            .as_ref()
+            .and_then(|_| info.as_ref()?.string("X-AppImage-Version"))
+            .map(|s| s.to_string());
         let location = info
             .and_then(|i| i.filename())
             .map(|p| p.to_string_lossy().into_owned());
@@ -282,8 +301,10 @@ fn inventory() -> Result<(Vec<Installed>, Vec<String>), String> {
             name: app.name,
             icon: app.icon,
             source: source.into(),
-            version: package.map(|p| p.version.clone()),
-            size: package.and_then(|p| p.size),
+            version: package.map(|p| p.version.clone()).or(appimage_version),
+            size: package
+                .and_then(|p| p.size)
+                .or_else(|| managed.as_ref()?.metadata().ok().map(|m| m.len())),
             installed: package.and_then(|p| p.installed),
             package: package.map(|p| p.package.clone()),
             location,

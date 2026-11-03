@@ -309,6 +309,25 @@ fn is_appimage(path: &Path) -> bool {
         && head[..4] == *b"\x7fELF"
         && head[8..11] == *b"AI\x02"
 }
+/// Recognize launchers for images in the same library the AppImages feature manages.
+pub(crate) fn managed_launcher(exec: &str, directory: &Path) -> Option<PathBuf> {
+    let args = gio::glib::shell_parse_argv(exec).ok()?;
+    let mut args = args.iter();
+    let first = args.next()?;
+    let executable = if Path::new(first).file_name()? == "env" {
+        args.find(|arg| !arg.to_string_lossy().contains('='))?
+    } else {
+        first
+    };
+    let path = PathBuf::from(executable);
+    (path.is_absolute()
+        && path.parent() == Some(directory)
+        && path.file_name()?.to_str().is_some_and(valid_id)
+        && path.is_file()
+        && is_appimage(&path))
+    .then_some(path)
+}
+
 /// Section headers of a 64-bit little-endian ELF runtime, and where the runtime ends.
 type Sections = Vec<(Vec<u8>, u64, u64)>;
 fn elf_sections(file: &mut fs::File) -> Option<(Sections, u64)> {
@@ -1388,6 +1407,26 @@ fn refresh_desktop_database(applications: &Path) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn managed_launchers_require_a_real_library_image_as_the_executable() {
+        let root = tempfile::tempdir().unwrap();
+        let image = root.path().join("Example App.AppImage");
+        fs::write(&image, b"\x7fELF\0\0\0\0AI\x02").unwrap();
+        let quoted = exec_quote(&image);
+        assert_eq!(
+            managed_launcher(
+                &format!("env DESKTOPINTEGRATION=1 {quoted} %U"),
+                root.path()
+            ),
+            Some(image.clone())
+        );
+        assert_eq!(managed_launcher(&quoted, root.path()), Some(image.clone()));
+        assert!(managed_launcher(&format!("editor {quoted}"), root.path()).is_none());
+        assert!(managed_launcher(&quoted, &root.path().join("other")).is_none());
+        fs::write(&image, b"not an AppImage").unwrap();
+        assert!(managed_launcher(&quoted, root.path()).is_none());
+    }
+
     fn asset(name: &str) -> Asset {
         Asset {
             name: name.into(),
