@@ -191,6 +191,14 @@ void main() {
     );
     expect(button('Corp').onPressed, isNull);
     expect(button('Old').onPressed, isNull);
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('network-Saved Corp-enterprise')),
+      160,
+      scrollable: find.descendant(
+        of: find.byType(ListView),
+        matching: find.byType(Scrollable),
+      ),
+    );
     expect(button('Saved Corp').onPressed, isNotNull);
     await tester.pumpWidget(const SizedBox());
   });

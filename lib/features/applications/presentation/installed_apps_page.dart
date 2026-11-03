@@ -1,15 +1,10 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../settings/presentation/settings_widgets.dart';
+import '../../settings/presentation/settings_list.dart';
 import '../application/applications_controller.dart';
 import 'application_icon.dart';
-
-String _size(int? bytes) {
-  if (bytes == null) return 'Size unavailable';
-  return bytes < 1024 * 1024
-      ? '${(bytes / 1024).toStringAsFixed(1)} KiB'
-      : '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MiB';
-}
+import 'application_metadata.dart';
 
 class InstalledAppsPage extends StatefulWidget {
   const InstalledAppsPage({
@@ -73,180 +68,133 @@ class _InstalledAppsPageState extends State<InstalledAppsPage> {
             ? result
             : a.name.toLowerCase().compareTo(b.name.toLowerCase());
       });
-      return SliverMainAxisGroup(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: .stretch,
-              children: [
-                const Text(
-                  'Applications registered with this desktop. Package sizes may be shared by several launchers; Flatpak runtimes and application data are not included.',
-                ),
-                const SizedBox(height: 16),
-                SettingsSurface(
-                  padding: .zero,
-                  child: Column(
-                    children: [
-                      SettingRow(
-                        id: 'installed.15735a25',
-                        label: const Text('Search installed apps'),
-                        control: SizedBox(
-                          width: 232,
-                          child: TextField(
-                            key: const ValueKey('installed-search'),
-                            decoration: const InputDecoration(
-                              labelText: 'Application or package',
-                              prefixIcon: Icon(Icons.search_rounded),
-                            ),
-                            onChanged: (v) => setState(() => _query = v),
-                          ),
-                        ),
-                      ),
-                      SettingRow(
-                        id: 'installed.3bf3689a',
-                        label: const Text('Sort by'),
-                        control: DropdownMenu<String>(
-                          initialSelection: _sort,
-                          leadingIcon: const Icon(Icons.sort_rounded),
-                          dropdownMenuEntries: [
-                            for (final name in [
-                              'Name',
-                              'Size',
-                              'Installation date',
-                            ])
-                              DropdownMenuEntry(value: name, label: name),
-                          ],
-                          onSelected: (v) {
-                            if (v != null) setState(() => _sort = v);
-                          },
-                        ),
-                      ),
-                      SettingRow(
-                        id: 'installed.765cf6c3',
-                        label: const Text('Filter source'),
-                        control: DropdownMenu<String>(
-                          initialSelection: _source,
-                          leadingIcon: const Icon(Icons.filter_list_rounded),
-                          dropdownMenuEntries: [
-                            for (final name in [
-                              'All sources',
-                              ...controller.applications
-                                  .map((a) => a.source)
-                                  .toSet()
-                                  .toList()
-                                ..sort(),
-                            ])
-                              DropdownMenuEntry(value: name, label: name),
-                          ],
-                          onSelected: (v) {
-                            if (v != null) setState(() => _source = v);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (controller.isBusy) const LinearProgressIndicator(),
-                if (controller.errorMessage case final error?)
-                  SettingsSurface(
-                    child: Column(
-                      crossAxisAlignment: .start,
-                      children: [
-                        const Icon(Icons.error_outline_rounded),
-                        Text(error),
-                        TextButton.icon(
-                          onPressed: controller.isBusy
-                              ? null
-                              : controller.reload,
-                          icon: const Icon(Icons.refresh_rounded),
-                          label: const Text('Retry'),
-                        ),
-                      ],
-                    ),
-                  ),
-                for (final warning in controller.warnings)
-                  Padding(padding: const .only(top: 12), child: Text(warning)),
-                Padding(
-                  padding: const .symmetric(vertical: 20),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          controller.loaded
-                              ? '${apps.length} ${apps.length == 1 ? 'application' : 'applications'}'
-                              : 'Reading installed applications…',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                      ),
-                      IconButton(
-                        tooltip: 'Refresh applications',
-                        onPressed: controller.isBusy ? null : controller.reload,
-                        icon: const Icon(Icons.refresh_rounded),
-                      ),
-                    ],
-                  ),
-                ),
-                if (apps.isEmpty && controller.loaded)
-                  const SettingsSurface(child: Text('No applications found')),
-              ],
-            ),
+      final indices = {
+        for (var i = 0; i < apps.length; i++)
+          ValueKey('installed-${apps[i].id}'): i,
+      };
+      return Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          const Text(
+            'Applications registered with this desktop. Package sizes may be shared by several launchers; Flatpak runtimes and application data are not included.',
           ),
-          SliverList.builder(
+          const SizedBox(height: 16),
+          if (controller.isBusy) const LinearProgressIndicator(),
+          if (controller.errorMessage case final error?)
+            SettingsSurface(
+              child: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  const Icon(Icons.error_outline_rounded),
+                  Text(error),
+                  TextButton.icon(
+                    onPressed: controller.isBusy ? null : controller.reload,
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+          for (final warning in controller.warnings)
+            Padding(padding: const .only(top: 12), child: Text(warning)),
+          SettingsList(
+            title: controller.loaded
+                ? '${apps.length} ${apps.length == 1 ? 'application' : 'applications'}'
+                : 'Reading installed applications…',
+            actions: [
+              SizedBox(
+                width: 232,
+                child: TextField(
+                  key: const ValueKey('installed-search'),
+                  decoration: const InputDecoration(
+                    labelText: 'Application or package',
+                    prefixIcon: Icon(Icons.search_rounded),
+                  ),
+                  onChanged: (v) => setState(() => _query = v),
+                ),
+              ),
+              DropdownMenu<String>(
+                key: const ValueKey('installed.3bf3689a'),
+                width: 200,
+                label: const Text('Sort by'),
+                initialSelection: _sort,
+                leadingIcon: const Icon(Icons.sort_rounded),
+                dropdownMenuEntries: [
+                  for (final name in ['Name', 'Size', 'Installation date'])
+                    DropdownMenuEntry(value: name, label: name),
+                ],
+                onSelected: (v) {
+                  if (v != null) setState(() => _sort = v);
+                },
+              ),
+              DropdownMenu<String>(
+                key: const ValueKey('installed.765cf6c3'),
+                width: 200,
+                label: const Text('Source'),
+                initialSelection: _source,
+                leadingIcon: const Icon(Icons.filter_list_rounded),
+                dropdownMenuEntries: [
+                  for (final name in [
+                    'All sources',
+                    ...controller.applications
+                        .map((a) => a.source)
+                        .toSet()
+                        .toList()
+                      ..sort(),
+                  ])
+                    DropdownMenuEntry(
+                      value: name,
+                      label: applicationSourceLabel(name),
+                    ),
+                ],
+                onSelected: (v) {
+                  if (v != null) setState(() => _source = v);
+                },
+              ),
+              IconButton(
+                tooltip: 'Refresh applications',
+                onPressed: controller.isBusy ? null : controller.reload,
+                icon: const Icon(Icons.refresh_rounded),
+              ),
+            ],
+            empty: Text(
+              controller.loaded
+                  ? 'No applications found'
+                  : 'Reading installed applications…',
+            ),
             itemCount: apps.length,
+            findChildIndexCallback: (key) => indices[key],
             itemBuilder: (context, index) {
               final app = apps[index];
-              return Padding(
-                padding: const .only(bottom: 8),
-                child: SettingsSurface(
-                  padding: .zero,
-                  child: InkWell(
-                    key: ValueKey('installed-${app.id}'),
-                    onTap: controller.isBusy ? null : () => _details(app),
-                    child: Padding(
-                      padding: const .all(20),
-                      child: Row(
-                        children: [
-                          ApplicationIcon(icon: app.icon, size: 48),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: .start,
-                              children: [
-                                Text(
-                                  app.name,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium,
-                                ),
-                                const SizedBox(height: 8),
-                                DefaultTextStyle(
-                                  style: Theme.of(context).textTheme.bodySmall!,
-                                  child: Wrap(
-                                    spacing: 16,
-                                    runSpacing: 4,
-                                    children: [
-                                      Text(
-                                        app.source == 'pacman'
-                                            ? 'System package'
-                                            : app.source == 'manual'
-                                            ? 'Manual installation'
-                                            : app.source,
-                                      ),
-                                      if (app.version case final version?)
-                                        Text('Version: $version'),
-                                      if (app.size != null)
-                                        Text('Size: ${_size(app.size)}'),
-                                    ],
-                                  ),
-                                ),
-                              ],
+              return InkWell(
+                key: ValueKey('installed-${app.id}'),
+                onTap: controller.isBusy ? null : () => _details(app),
+                child: Padding(
+                  padding: const .all(20),
+                  child: Row(
+                    children: [
+                      ApplicationIcon(icon: app.icon, size: 48),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: .start,
+                          children: [
+                            Text(
+                              app.name,
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
-                          ),
-                          const SizedBox(width: 12),
-                          const Icon(Icons.chevron_right_rounded),
-                        ],
+                            const SizedBox(height: 8),
+                            ApplicationMetadata(
+                              source: applicationSourceLabel(app.source),
+                              version: app.version,
+                              size: app.size,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 12),
+                      const Icon(Icons.chevron_right_rounded),
+                    ],
                   ),
                 ),
               );
@@ -326,10 +274,13 @@ class _AppDetailsState extends State<_AppDetails> {
             crossAxisAlignment: .start,
             mainAxisSize: .min,
             children: [
-              Text('Version: ${app.version ?? 'Unavailable'}'),
-              Text('Source: ${app.source}'),
+              ApplicationMetadata(
+                source: applicationSourceLabel(app.source),
+                version: app.version,
+                size: app.size,
+              ),
+              const SizedBox(height: 12),
               Text('Package: ${app.raw['package'] ?? 'Not managed'}'),
-              Text('Installed size: ${_size(app.size)}'),
               FutureBuilder<String>(
                 future: _date,
                 builder: (context, snapshot) => Text(
@@ -350,7 +301,7 @@ class _AppDetailsState extends State<_AppDetails> {
                 children: [
                   ListTile(
                     leading: Icon(Icons.construction_rounded),
-                    title: Text('Permissions, repair and reset'),
+                    title: Text('Repair and reset'),
                     subtitle: Text(
                       'Not implemented. Application data is retained.',
                     ),

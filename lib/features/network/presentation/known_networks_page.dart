@@ -5,6 +5,7 @@ import 'package:remya_settings_client/remya_settings_client.dart';
 
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_widgets.dart';
+import '../../settings/presentation/settings_list.dart';
 import '../application/network_controller.dart';
 import 'network_widgets.dart';
 
@@ -44,6 +45,10 @@ class _KnownNetworksPageState extends State<KnownNetworksPage> {
     final profiles = _controller.profiles
         .where((p) => (p['name'] as String).toLowerCase().contains(query))
         .toList();
+    final indices = {
+      for (var i = 0; i < profiles.length; i++)
+        PageStorageKey('known-${profiles[i]['uuid']}'): i,
+    };
     return Column(
       crossAxisAlignment: .stretch,
       children: [
@@ -53,24 +58,11 @@ class _KnownNetworksPageState extends State<KnownNetworksPage> {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(height: 16),
-        SettingsSurface(
-          padding: .zero,
-          child: networkRows([
-            SettingRow(
-              id: knownNetworkAddSettingId,
-              label: const Text('Add a network, including a hidden one'),
-              control: FilledButton.icon(
-                onPressed:
-                    _controller.isBusy ||
-                        !_controller.allowed('settings.modify.system')
-                    ? null
-                    : _add,
-                icon: const Icon(Icons.add_rounded),
-                label: const Text('Add network'),
-              ),
-            ),
-            Padding(
-              padding: const .all(16),
+        SettingsList(
+          title: '${profiles.length} saved networks',
+          actions: [
+            SizedBox(
+              width: 232,
               child: TextField(
                 key: const ValueKey('known-networks.search'),
                 decoration: const InputDecoration(
@@ -80,24 +72,27 @@ class _KnownNetworksPageState extends State<KnownNetworksPage> {
                 onChanged: (value) => setState(() => _query = value.trim()),
               ),
             ),
-          ]),
-        ),
-        NetworkSectionTitle('${profiles.length} saved networks'),
-        if (profiles.isNotEmpty)
-          SettingsSurface(
-            padding: .zero,
-            child: Column(
-              children: [
-                for (final profile in profiles)
-                  _ProfileTile(
-                    key: PageStorageKey('known-${profile['uuid']}'),
-                    profile: profile,
-                    controller: _controller,
-                    page: widget.page,
-                  ),
-              ],
+            FilledButton.icon(
+              key: const ValueKey(knownNetworkAddSettingId),
+              onPressed:
+                  _controller.isBusy ||
+                      !_controller.allowed('settings.modify.system')
+                  ? null
+                  : _add,
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('Add network'),
             ),
+          ],
+          empty: const Text('No saved networks found'),
+          itemCount: profiles.length,
+          findChildIndexCallback: (key) => indices[key],
+          itemBuilder: (context, index) => _ProfileTile(
+            key: PageStorageKey('known-${profiles[index]['uuid']}'),
+            profile: profiles[index],
+            controller: _controller,
+            page: widget.page,
           ),
+        ),
       ],
     );
   }

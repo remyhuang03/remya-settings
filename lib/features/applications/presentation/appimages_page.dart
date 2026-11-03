@@ -3,15 +3,15 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings_client/remya_settings_client.dart';
 
 import '../../settings/presentation/settings_widgets.dart';
+import '../../settings/presentation/settings_list.dart';
 import '../application/appimages_controller.dart';
 import 'application_icon.dart';
+import 'application_metadata.dart';
 
 const _appImageTypes = XTypeGroup(
   label: 'AppImage',
   extensions: ['AppImage', 'appimage'],
 );
-
-String _mib(num bytes) => '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MiB';
 
 Future<String?> _pickAppImage() async =>
     (await openFile(acceptedTypeGroups: [_appImageTypes]))?.path;
@@ -47,7 +47,10 @@ class _AppImagesPageState extends State<AppImagesPage> {
     listenable: widget.controller,
     builder: (context, _) {
       final controller = widget.controller;
-      final text = Theme.of(context).textTheme;
+      final indices = {
+        for (var i = 0; i < controller.apps.length; i++)
+          ValueKey('appimage-${controller.apps[i].id}'): i,
+      };
       return Column(
         crossAxisAlignment: .stretch,
         children: [
@@ -55,50 +58,6 @@ class _AppImagesPageState extends State<AppImagesPage> {
             padding: .zero,
             child: Column(
               children: [
-                SettingRow(
-                  id: appImagesInstallSettingId,
-                  label: _Label(
-                    'Install AppImage',
-                    'A copy is kept in ${controller.directory} and added to the app launcher.',
-                  ),
-                  control: FilledButton.icon(
-                    key: const ValueKey('appimages-install'),
-                    onPressed: _install,
-                    icon: const Icon(Icons.add_rounded),
-                    label: const Text('Choose file'),
-                  ),
-                ),
-                for (final name in controller.installing)
-                  _InstallingRow(name: name),
-                SettingRow(
-                  id: appImagesCheckSettingId,
-                  label: _UpdatesLabel(controller: controller),
-                  control: Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      OutlinedButton.icon(
-                        key: const ValueKey('appimages-check'),
-                        onPressed: controller.checking
-                            ? null
-                            : () => controller.run(
-                                appImagesCheckSettingId,
-                                'all',
-                              ),
-                        icon: const Icon(Icons.refresh_rounded),
-                        label: const Text('Check now'),
-                      ),
-                      if (controller.updatable.isNotEmpty)
-                        FilledButton.icon(
-                          key: const ValueKey('appimages-update-all'),
-                          onPressed: () =>
-                              controller.run(appImagesUpdateSettingId, 'all'),
-                          icon: const Icon(Icons.system_update_alt_rounded),
-                          label: const Text('Update all'),
-                        ),
-                    ],
-                  ),
-                ),
                 SettingRow(
                   id: appImagesAutoCheckSettingId,
                   label: const _Label(
@@ -129,8 +88,16 @@ class _AppImagesPageState extends State<AppImagesPage> {
               ],
             ),
           ),
+          const SizedBox(height: 16),
+          Text(
+            'A copy is kept in ${controller.directory} and added to the app launcher.',
+          ),
+          for (final name in controller.installing) _InstallingRow(name: name),
+          Padding(
+            padding: const .symmetric(vertical: 12),
+            child: _UpdatesLabel(controller: controller),
+          ),
           if (controller.errorMessage case final error?) ...[
-            const SizedBox(height: 12),
             SettingsSurface(
               child: _StatusLine(
                 icon: Icons.error_outline_rounded,
@@ -138,23 +105,49 @@ class _AppImagesPageState extends State<AppImagesPage> {
                 error: true,
               ),
             ),
+            const SizedBox(height: 12),
           ],
-          Padding(
-            padding: const .fromLTRB(4, 24, 4, 12),
-            child: Text(
+          SettingsList(
+            title: controller.loaded
+                ? '${controller.apps.length} AppImages'
+                : 'Reading AppImages…',
+            actions: [
+              FilledButton.icon(
+                key: const ValueKey('appimages-install'),
+                onPressed: _install,
+                icon: const Icon(Icons.add_rounded),
+                label: const Text('Install AppImage'),
+              ),
+              OutlinedButton.icon(
+                key: const ValueKey('appimages-check'),
+                onPressed: controller.checking
+                    ? null
+                    : () => controller.run(appImagesCheckSettingId, 'all'),
+                icon: const Icon(Icons.refresh_rounded),
+                label: const Text('Check now'),
+              ),
+              if (controller.updatable.isNotEmpty)
+                FilledButton.icon(
+                  key: const ValueKey('appimages-update-all'),
+                  onPressed: () =>
+                      controller.run(appImagesUpdateSettingId, 'all'),
+                  icon: const Icon(Icons.system_update_alt_rounded),
+                  label: const Text('Update all'),
+                ),
+            ],
+            empty: Text(
               controller.loaded
-                  ? '${controller.apps.length} ${controller.apps.length == 1 ? 'application' : 'applications'}'
+                  ? 'No AppImages installed yet.'
                   : 'Reading AppImages…',
-              style: text.titleMedium,
+            ),
+            itemCount: controller.apps.length,
+            findChildIndexCallback: (key) => indices[key],
+            itemBuilder: (context, index) => _AppCard(
+              key: ValueKey('appimage-${controller.apps[index].id}'),
+              app: controller.apps[index],
+              controller: controller,
             ),
           ),
-          if (controller.loaded && controller.apps.isEmpty)
-            const SettingsSurface(child: Text('No AppImages installed yet.')),
-          for (final app in controller.apps)
-            Padding(
-              padding: const .only(bottom: 8),
-              child: _AppCard(app: app, controller: controller),
-            ),
         ],
       );
     },
@@ -282,7 +275,7 @@ class _StatusLine extends StatelessWidget {
 }
 
 class _AppCard extends StatelessWidget {
-  const _AppCard({required this.app, required this.controller});
+  const _AppCard({super.key, required this.app, required this.controller});
   final AppImageEntry app;
   final AppImagesController controller;
 
@@ -304,7 +297,7 @@ class _AppCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  ApplicationIcon(icon: app.icon, size: 48),
+                  _AppImageIcon(app: app),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
@@ -315,19 +308,11 @@ class _AppCard extends StatelessWidget {
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: 4),
-                        DefaultTextStyle(
-                          style: Theme.of(context).textTheme.bodySmall!,
-                          child: Wrap(
-                            spacing: 16,
-                            runSpacing: 4,
-                            children: [
-                              if (app.version case final version?)
-                                Text('Version: $version'),
-                              Text('Size: ${_mib(app.size)}'),
-                              if (!app.integrated)
-                                const Text('Not in app launcher'),
-                            ],
-                          ),
+                        ApplicationMetadata(
+                          source: 'AppImage',
+                          version: app.version,
+                          size: app.size,
+                          notice: app.integrated ? null : 'Not in app launcher',
                         ),
                         if (app.job == null && status != null) ...[
                           const SizedBox(height: 4),
@@ -369,6 +354,44 @@ class _AppCard extends StatelessWidget {
   }
 }
 
+class _AppImageIcon extends StatelessWidget {
+  const _AppImageIcon({required this.app});
+  final AppImageEntry app;
+
+  @override
+  Widget build(BuildContext context) {
+    final job = app.job;
+    final total = job?['total'] as int? ?? 0;
+    final measured =
+        total > 0 &&
+        const {'downloading', 'comparing'}.contains(job?['status']);
+    return SizedBox.square(
+      dimension: 64,
+      child: Stack(
+        alignment: .center,
+        children: [
+          ApplicationIcon(icon: app.icon),
+          if (job != null)
+            Positioned.fill(
+              child: CircularProgressIndicator(
+                key: ValueKey('appimage-progress-${app.id}'),
+                value: measured
+                    ? ((job['bytes'] as int) / total).clamp(0.0, 1.0)
+                    : null,
+                strokeWidth: 4,
+                strokeCap: .round,
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .surfaceContainerHighest,
+                semanticsLabel: 'Updating ${app.name}',
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _Progress extends StatelessWidget {
   const _Progress({
     required this.job,
@@ -385,33 +408,21 @@ class _Progress extends StatelessWidget {
     final bytes = job['bytes'] as int;
     final total = job['total'] as int;
     final speed = job['speed'] as int;
-    final measured =
-        (status == 'downloading' || status == 'comparing') && total > 0;
     final label = switch (status) {
       'queued' => 'Waiting…',
       'checking' => 'Checking for updates…',
       'comparing' =>
-        'Comparing with the installed version: ${_mib(bytes)} of ${_mib(total)}',
+        'Comparing with the installed version: ${formatBytes(bytes)} of ${formatBytes(total)}',
       'downloading' =>
-        'Downloading ${_mib(bytes)} of ${_mib(total)}'
-            '${speed > 0 ? ' at ${_mib(speed)}/s' : ''}',
+        'Downloading ${formatBytes(bytes)} of ${formatBytes(total)}'
+            '${speed > 0 ? ' at ${formatBytes(speed)}/s' : ''}',
       'installing' => 'Installing…',
       _ => status,
     };
     return Row(
       children: [
         Expanded(
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              LinearProgressIndicator(
-                key: ValueKey('appimage-progress-${app.id}'),
-                value: measured ? (bytes / total).clamp(0.0, 1.0) : null,
-              ),
-              const SizedBox(height: 6),
-              Text(label, style: Theme.of(context).textTheme.bodySmall),
-            ],
-          ),
+          child: Text(label, style: Theme.of(context).textTheme.bodySmall),
         ),
         const SizedBox(width: 8),
         IconButton(
@@ -520,7 +531,7 @@ class _AppDetailsState extends State<_AppDetails> {
       return AlertDialog(
         title: Row(
           children: [
-            ApplicationIcon(icon: app.icon, size: 48),
+            _AppImageIcon(app: app),
             const SizedBox(width: 16),
             Expanded(child: Text(app.name)),
           ],
@@ -532,9 +543,17 @@ class _AppDetailsState extends State<_AppDetails> {
               crossAxisAlignment: .start,
               mainAxisSize: .min,
               children: [
-                Text('Version: ${app.version ?? 'Unavailable'}'),
-                Text('Size: ${_mib(app.size)}'),
+                ApplicationMetadata(
+                  source: 'AppImage',
+                  version: app.version,
+                  size: app.size,
+                ),
+                const SizedBox(height: 12),
                 Text('Location: ${app.path}'),
+                if (app.job case final job?) ...[
+                  const SizedBox(height: 12),
+                  _Progress(job: job, app: app, controller: widget.controller),
+                ],
                 const SizedBox(height: 16),
                 Text(
                   'Update source',

@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
 import '../../settings/presentation/settings_widgets.dart';
+import '../../settings/presentation/settings_list.dart';
 import '../application/default_apps_controller.dart';
 
 class DefaultAppsPage extends StatefulWidget {
@@ -23,7 +24,6 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
   String? _searchError;
   bool _searching = false;
   int _request = 0;
-  int _visible = 30;
 
   @override
   void initState() {
@@ -43,7 +43,6 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
       _query = value.trim();
       _types = null;
       _application = null;
-      _visible = 30;
       _request++;
       _searching = false;
       _searchError = null;
@@ -65,7 +64,6 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
       if (mounted && request == _request) {
         setState(() {
           _types = (result['types'] as List).cast<Map>();
-          _visible = 30;
           _application = null;
         });
       }
@@ -103,20 +101,6 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
     await controller.set(setting, application.id, shortcut ? [] : types);
   }
 
-  Widget _row(String id, String title, String detail, Widget control) =>
-      SettingRow(
-        id: id,
-        label: Column(
-          crossAxisAlignment: .start,
-          children: [
-            Text(title, style: Theme.of(context).textTheme.bodyLarge),
-            const SizedBox(height: 6),
-            Text(detail, style: Theme.of(context).textTheme.bodySmall),
-          ],
-        ),
-        control: control,
-      );
-
   Future<void> _associations(
     String title,
     List<String> types,
@@ -133,6 +117,7 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
   );
 
   Widget _typeRow(String type) => SettingRow(
+    key: ValueKey('default-type-$type'),
     id: type,
     label: _SelectedApplications(
       title: type,
@@ -251,126 +236,93 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
             ),
           ),
           const SizedBox(height: 24),
-          SettingsSurface(
-            child: TextField(
-              key: const ValueKey('default-search'),
-              decoration: const InputDecoration(
-                labelText: 'Search applications or file types',
-                hintText: 'App name, .pdf, image/png or https',
-                prefixIcon: Icon(Icons.search_rounded),
-              ),
-              onChanged: _queryChanged,
-              onSubmitted: (_) {
-                _debounce?.cancel();
-                _search();
-              },
-            ),
-          ),
           if (_searchError case final error?) Text(error),
-          const SizedBox(height: 24),
-          if (app != null) ...[
-            Row(
-              children: [
+          SettingsList(
+            title: app == null
+                ? 'Applications (${matches.length})'
+                : '${app.name}: file and link types (${app.types.length})',
+            actions: [
+              SizedBox(
+                width: 260,
+                child: TextField(
+                  key: const ValueKey('default-search'),
+                  decoration: const InputDecoration(
+                    labelText: 'Search applications or file types',
+                    hintText: 'App name, .pdf, image/png or https',
+                    prefixIcon: Icon(Icons.search_rounded),
+                  ),
+                  onChanged: _queryChanged,
+                  onSubmitted: (_) {
+                    _debounce?.cancel();
+                    _search();
+                  },
+                ),
+              ),
+              if (app != null) ...[
                 IconButton(
                   tooltip: 'Back to applications',
                   onPressed: () => setState(() => _application = null),
                   icon: const Icon(Icons.arrow_back_rounded),
                 ),
-                Expanded(
-                  child: Text(
-                    app.name,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
+                FilledButton(
+                  onPressed:
+                      controller.canChange &&
+                          app.types.isNotEmpty &&
+                          app.types.length <= 256
+                      ? () => _choose(
+                          defaultAppsSearchSettingId,
+                          app.types,
+                          applicationId: app.id,
+                        )
+                      : null,
+                  child: const Text('Set defaults'),
                 ),
               ],
-            ),
-            _row(
-              'default-app-details',
-              'Set defaults for ${app.name}',
-              '${app.types.length} supported types. The picker lists the exact types before you confirm.',
-              FilledButton(
-                onPressed:
-                    controller.canChange &&
-                        app.types.isNotEmpty &&
-                        app.types.length <= 256
-                    ? () => _choose(
-                        defaultAppsSearchSettingId,
-                        app.types,
-                        applicationId: app.id,
-                      )
-                    : null,
-                child: const Text('Set defaults'),
-              ),
-            ),
-          ] else
-            Text(
-              typeList == null
-                  ? 'Applications (${matches.length})'
-                  : 'File and link types (${typeList.length})',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          const SizedBox(height: 12),
-          SettingsSurface(
-            padding: .zero,
-            child: Column(
-              children: [
-                if (shown == 0)
-                  const Padding(
-                    padding: .all(20),
-                    child: Text('No matches found'),
-                  ),
-                if (typeList != null)
-                  for (final type in typeList.take(_visible)) _typeRow(type)
-                else
-                  for (final match in matches.take(_visible))
-                    ListTile(
-                      leading: ApplicationIcon(icon: match.icon),
-                      title: Text(match.name),
-                      subtitle: Text(
-                        '${match.id}\n${match.types.length} supported types',
-                      ),
-                      trailing: const Icon(Icons.chevron_right_rounded),
-                      onTap: () => setState(() {
-                        _debounce?.cancel();
-                        _request++;
-                        _searching = false;
-                        _application = match;
-                        _visible = 30;
-                      }),
-                    ),
-                if (shown > _visible)
-                  TextButton(
-                    onPressed: () => setState(() => _visible += 30),
-                    child: const Text('Show more'),
-                  ),
-              ],
-            ),
+            ],
+            empty: const Text('No matches found'),
+            itemCount: shown,
+            findChildIndexCallback: (key) {
+              final index = typeList != null
+                  ? typeList.indexWhere(
+                      (type) => ValueKey('default-type-$type') == key,
+                    )
+                  : matches.indexWhere((app) => ValueKey(app.id) == key);
+              return index < 0 ? null : index;
+            },
+            itemBuilder: (context, index) {
+              if (typeList != null) return _typeRow(typeList[index]);
+              final match = matches[index];
+              return ListTile(
+                key: ValueKey(match.id),
+                leading: ApplicationIcon(icon: match.icon),
+                title: Text(match.name),
+                subtitle: Text(
+                  '${match.id}\n${match.types.length} supported types',
+                ),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => setState(() {
+                  _debounce?.cancel();
+                  _request++;
+                  _searching = false;
+                  _application = match;
+                }),
+              );
+            },
           ),
           if (app == null && _query.isNotEmpty && _types != null) ...[
             const SizedBox(height: 24),
-            Text(
-              'File and link types (${_types!.length})',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 12),
-            SettingsSurface(
-              padding: .zero,
-              child: Column(
-                children: [
-                  if (_types!.isEmpty)
-                    const Padding(
-                      padding: .all(20),
-                      child: Text('No matching file types'),
-                    ),
-                  for (final type in _types!.take(_visible))
-                    _typeRow(type['type'] as String),
-                  if (_types!.length > _visible)
-                    TextButton(
-                      onPressed: () => setState(() => _visible += 30),
-                      child: const Text('Show more'),
-                    ),
-                ],
-              ),
+            SettingsList(
+              title: 'File and link types (${_types!.length})',
+              empty: const Text('No matching file types'),
+              itemCount: _types!.length,
+              findChildIndexCallback: (key) {
+                final index = _types!.indexWhere(
+                  (type) => ValueKey('default-type-${type['type']}') == key,
+                );
+                return index < 0 ? null : index;
+              },
+              itemBuilder: (context, index) =>
+                  _typeRow(_types![index]['type'] as String),
             ),
           ],
           const SizedBox(height: 24),
@@ -529,6 +481,7 @@ class _AssociationsDialogState extends State<_AssociationsDialog> {
               .toList();
       return AlertDialog(
         title: Text(widget.title),
+        scrollable: true,
         content: SizedBox(
           width: 560,
           height: 440,
@@ -539,15 +492,6 @@ class _AssociationsDialogState extends State<_AssociationsDialog> {
                 'Choose an application for each file type. Extensions sharing the same MIME type change together.',
               ),
               const SizedBox(height: 12),
-              TextField(
-                key: const ValueKey('association-search'),
-                decoration: const InputDecoration(
-                  labelText: 'Search extensions',
-                  prefixIcon: Icon(Icons.search_rounded),
-                ),
-                onChanged: (value) => setState(() => _query = value),
-              ),
-              const SizedBox(height: 12),
               if (controller.errorMessage case final error?)
                 Text(
                   error,
@@ -555,46 +499,76 @@ class _AssociationsDialogState extends State<_AssociationsDialog> {
                 ),
               if (controller.isBusy) const LinearProgressIndicator(),
               Expanded(
-                child: entries.isEmpty
-                    ? const Center(child: Text('No matching file types'))
-                    : ListView.builder(
-                        itemCount: entries.length,
-                        itemBuilder: (context, index) {
-                          final entry = entries[index];
-                          final id = controller.system[entry.type] as String?;
-                          return SettingRow(
-                            id: 'association-${entry.extension}-${entry.type}',
-                            label: Column(
-                              crossAxisAlignment: .start,
-                              children: [
-                                Text(entry.extension),
-                                Text(
-                                  entry.type,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    ApplicationIcon(
-                                      icon: controller.application(id)?.icon,
-                                      size: 28,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(child: Text(controller.name(id))),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            control: FilledButton.icon(
-                              onPressed: controller.canChange
-                                  ? () => widget.choose(entry.type)
-                                  : null,
-                              icon: const Icon(Icons.edit_outlined),
-                              label: const Text('Change'),
-                            ),
-                          );
-                        },
+                child: SettingsList(
+                  title: 'File and link types (${entries.length})',
+                  actions: [
+                    SizedBox(
+                      width: 232,
+                      child: TextField(
+                        key: const ValueKey('association-search'),
+                        decoration: const InputDecoration(
+                          labelText: 'Search extensions',
+                          prefixIcon: Icon(Icons.search_rounded),
+                        ),
+                        onChanged: (value) => setState(() => _query = value),
                       ),
+                    ),
+                    FilledButton(
+                      onPressed: controller.canChange ? widget.setAll : null,
+                      child: const Text('Set all'),
+                    ),
+                  ],
+                  empty: const Text('No matching file types'),
+                  itemCount: entries.length,
+                  findChildIndexCallback: (key) {
+                    final index = entries.indexWhere(
+                      (e) =>
+                          ValueKey(
+                            'association-item-${e.extension}-${e.type}',
+                          ) ==
+                          key,
+                    );
+                    return index < 0 ? null : index;
+                  },
+                  itemBuilder: (context, index) {
+                    final entry = entries[index];
+                    final id = controller.system[entry.type] as String?;
+                    return SettingRow(
+                      key: ValueKey(
+                        'association-item-${entry.extension}-${entry.type}',
+                      ),
+                      id: 'association-${entry.extension}-${entry.type}',
+                      label: Column(
+                        crossAxisAlignment: .start,
+                        children: [
+                          Text(entry.extension),
+                          Text(
+                            entry.type,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              ApplicationIcon(
+                                icon: controller.application(id)?.icon,
+                                size: 28,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(child: Text(controller.name(id))),
+                            ],
+                          ),
+                        ],
+                      ),
+                      control: FilledButton.icon(
+                        onPressed: controller.canChange
+                            ? () => widget.choose(entry.type)
+                            : null,
+                        icon: const Icon(Icons.edit_outlined),
+                        label: const Text('Change'),
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -603,10 +577,6 @@ class _AssociationsDialogState extends State<_AssociationsDialog> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Close'),
-          ),
-          FilledButton(
-            onPressed: controller.canChange ? widget.setAll : null,
-            child: const Text('Set all'),
           ),
         ],
       );
@@ -636,43 +606,53 @@ class _ApplicationPickerState extends State<_ApplicationPicker> {
     final selected = _selected;
     return AlertDialog(
       title: const Text('Choose a default application'),
+      scrollable: true,
       content: SizedBox(
         width: 480,
         height: 400,
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
-            TextField(
-              autofocus: true,
-              decoration: const InputDecoration(
-                labelText: 'Search applications',
-              ),
-              onChanged: (v) => setState(() => _query = v),
-            ),
-            const SizedBox(height: 12),
             Expanded(
-              child: matches.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No installed application declares support for these types.',
+              child: SettingsList(
+                title: 'Applications (${matches.length})',
+                actions: [
+                  SizedBox(
+                    width: 232,
+                    child: TextField(
+                      autofocus: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Search applications',
                       ),
-                    )
-                  : ListView.builder(
-                      itemCount: matches.length,
-                      itemBuilder: (context, index) {
-                        final app = matches[index];
-                        return ListTile(
-                          leading: ApplicationIcon(icon: app.icon),
-                          trailing: selected?.id == app.id
-                              ? const Icon(Icons.check_circle_rounded)
-                              : null,
-                          title: Text(app.name),
-                          subtitle: Text(app.id),
-                          selected: selected?.id == app.id,
-                          onTap: () => setState(() => _selected = app),
-                        );
-                      },
+                      onChanged: (v) => setState(() => _query = v),
                     ),
+                  ),
+                ],
+                empty: const Text(
+                  'No installed application declares support for these types.',
+                ),
+                itemCount: matches.length,
+                findChildIndexCallback: (key) {
+                  final index = matches.indexWhere(
+                    (app) => ValueKey(app.id) == key,
+                  );
+                  return index < 0 ? null : index;
+                },
+                itemBuilder: (context, index) {
+                  final app = matches[index];
+                  return ListTile(
+                    key: ValueKey(app.id),
+                    leading: ApplicationIcon(icon: app.icon),
+                    trailing: selected?.id == app.id
+                        ? const Icon(Icons.check_circle_rounded)
+                        : null,
+                    title: Text(app.name),
+                    subtitle: Text(app.id),
+                    selected: selected?.id == app.id,
+                    onTap: () => setState(() => _selected = app),
+                  );
+                },
+              ),
             ),
             if (selected != null) ...[
               const Divider(),

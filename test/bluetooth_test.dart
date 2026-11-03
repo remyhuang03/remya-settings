@@ -86,6 +86,21 @@ void main() {
       expect(writes.last.$2, {'adapter': adapter, 'enabled': true});
     },
   );
+  testWidgets('temporary discoverability is visible without opening Advanced', (
+    tester,
+  ) async {
+    await tester.pumpWidget(host());
+    await refresh(tester);
+    final button = find.text('Discoverable for 60 seconds');
+    await tester.ensureVisible(button);
+    expect(button.hitTestable(), findsOneWidget);
+    expect(find.text('Discoverable: No'), findsOneWidget);
+    await tester.tap(button);
+    await refresh(tester);
+    expect(writes.first.$1, 'bluetooth.discoverable');
+    await tester.tap(find.text('Done'));
+    await refresh(tester);
+  });
   testWidgets('battery is optional and removal requires confirmation', (
     tester,
   ) async {

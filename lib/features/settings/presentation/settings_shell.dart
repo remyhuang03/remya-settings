@@ -11,8 +11,6 @@ import '../../applications/presentation/installed_apps_page.dart';
 import '../../default_apps/application/default_apps_controller.dart';
 import '../../default_apps/presentation/default_apps_page.dart';
 
-import 'dart:math' as math;
-
 import 'package:remya_settings_client/settings_contract.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
@@ -156,21 +154,12 @@ class _SettingsShellState extends State<SettingsShell> {
                   children: [
                     ?widget.topStatus,
                     Expanded(
-                      child: Stack(
+                      child: LayoutBuilder(
                         key: const ValueKey('settings-main-content'),
-                        fit: .expand,
-                        children: [
-                          _body(),
-                          if (widget.status case final status?)
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              child: status,
-                            ),
-                        ],
+                        builder: (context, constraints) => _body(),
                       ),
                     ),
+                    ?widget.status,
                   ],
                 ),
               ),
@@ -356,16 +345,6 @@ class _SettingsShellState extends State<SettingsShell> {
         ],
       );
     }
-    if (_query.trim().isEmpty &&
-        _page?.id == 'installed' &&
-        ApplicationsScope.maybeOf(context) != null) {
-      return _installedBody(ApplicationsScope.maybeOf(context)!);
-    }
-    if (_query.trim().isEmpty && _page?.id == 'fonts') {
-      if (FontsScope.maybeOf(context) case final controller?) {
-        return _fontsBody(_page!, controller);
-      }
-    }
     final Widget content;
     if (_query.trim().isNotEmpty) {
       final results = widget.catalog.search(_query);
@@ -405,6 +384,18 @@ class _SettingsShellState extends State<SettingsShell> {
               ),
             ),
         ],
+      );
+    } else if (_page?.id == 'installed' &&
+        ApplicationsScope.maybeOf(context) != null) {
+      final controller = ApplicationsScope.maybeOf(context)!;
+      content = InstalledAppsPage(
+        controller: controller,
+        formatDate: controller.formatDate,
+      );
+    } else if (_page?.id == 'fonts' && FontsScope.maybeOf(context) != null) {
+      content = FontsPage(
+        page: _page!,
+        controller: FontsScope.maybeOf(context)!,
       );
     } else if (const {
           'time-more',
@@ -465,7 +456,7 @@ class _SettingsShellState extends State<SettingsShell> {
                 MediaQuery.sizeOf(context).width < 600 ? 16 : 32,
                 8,
                 MediaQuery.sizeOf(context).width < 600 ? 16 : 32,
-                widget.status == null ? 40 : 144,
+                40,
               ),
               child: Align(
                 alignment: .topCenter,
@@ -500,66 +491,6 @@ class _SettingsShellState extends State<SettingsShell> {
       'known-networks' => KnownNetworksPage(controller: controller, page: page),
       _ => null,
     };
-  }
-
-  Widget _installedBody(ApplicationsController controller) {
-    final gutter = MediaQuery.sizeOf(context).width < 600 ? 16.0 : 32.0;
-    return CustomScrollView(
-      key: const ValueKey('content-installed'),
-      slivers: [
-        SliverToBoxAdapter(child: _header()),
-        SliverLayoutBuilder(
-          builder: (context, constraints) {
-            final side = math.max(
-              gutter,
-              (constraints.crossAxisExtent - 1080) / 2,
-            );
-            return SliverPadding(
-              padding: .fromLTRB(
-                side,
-                8,
-                side,
-                widget.status == null ? 40 : 144,
-              ),
-              sliver: InstalledAppsPage(
-                controller: controller,
-                formatDate: controller.formatDate,
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  /// Same frame as other pages, on slivers so the long font list stays lazy.
-  Widget _fontsBody(SettingsPageSpec page, FontsController controller) {
-    final gutter = MediaQuery.sizeOf(context).width < 600 ? 16.0 : 32.0;
-    return SelectionArea(
-      child: CustomScrollView(
-        key: const ValueKey('content-fonts'),
-        slivers: [
-          SliverToBoxAdapter(child: _header()),
-          SliverLayoutBuilder(
-            builder: (context, constraints) {
-              final side = math.max(
-                gutter,
-                (constraints.crossAxisExtent - 1080) / 2,
-              );
-              return SliverPadding(
-                padding: .fromLTRB(
-                  side,
-                  8,
-                  side,
-                  widget.status == null ? 40 : 144,
-                ),
-                sliver: FontsPage(page: page, controller: controller),
-              );
-            },
-          ),
-        ],
-      ),
-    );
   }
 }
 

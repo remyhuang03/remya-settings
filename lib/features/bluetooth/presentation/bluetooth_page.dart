@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
 import '../../settings/presentation/settings_widgets.dart';
+import '../../settings/presentation/settings_list.dart';
 import '../application/bluetooth_controller.dart';
 
 class BluetoothPage extends StatefulWidget {
@@ -45,9 +46,12 @@ class _BluetoothPageState extends State<BluetoothPage> {
     listenable: controller,
     builder: (context, _) {
       final adapter = controller.adapter;
-      final paired = controller.devices.where(
-        (d) => d['paired'] == true || d['bonded'] == true,
-      );
+      final paired = controller.devices
+          .where((d) => d['paired'] == true || d['bonded'] == true)
+          .toList();
+      final indices = {
+        for (var i = 0; i < paired.length; i++) ValueKey(paired[i]['id']): i,
+      };
       return Column(
         crossAxisAlignment: .stretch,
         children: [
@@ -108,27 +112,59 @@ class _BluetoothPageState extends State<BluetoothPage> {
                       }),
               ),
             ),
-            const SizedBox(height: 16),
-            if (controller.powered)
-              Align(
-                alignment: .centerLeft,
-                child: FilledButton.icon(
-                  key: const ValueKey('bluetooth.add'),
-                  onPressed: controller.busy ? null : _add,
-                  icon: const Icon(Icons.add_rounded),
-                  label: const Text('Add device'),
+            if (controller.powered) ...[
+              const SizedBox(height: 16),
+              SettingsSurface(
+                padding: .zero,
+                child: SettingRow(
+                  id: bluetoothDiscoverableSettingId,
+                  label: Column(
+                    crossAxisAlignment: .start,
+                    children: [
+                      const Text('Visible to nearby devices'),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Discoverable: ${adapter['discoverable'] == true ? 'Yes' : 'No'}',
+                      ),
+                      const Text(
+                        'Allow nearby devices to find this computer for 60 seconds.',
+                      ),
+                    ],
+                  ),
+                  control: SizedBox(
+                    width: 232,
+                    child: OutlinedButton.icon(
+                      onPressed: controller.busy
+                          ? null
+                          : () => _add(visible: true),
+                      icon: const Icon(Icons.visibility_outlined),
+                      label: const Text('Discoverable for 60 seconds'),
+                    ),
+                  ),
                 ),
               ),
+            ],
             const SizedBox(height: 16),
-            Text(
-              'Paired devices',
-              style: Theme.of(context).textTheme.titleMedium,
+            SettingsList(
+              title: 'Paired devices',
+              actions: [
+                if (controller.powered)
+                  FilledButton.icon(
+                    key: const ValueKey('bluetooth.add'),
+                    onPressed: controller.busy ? null : _add,
+                    icon: const Icon(Icons.add_rounded),
+                    label: const Text('Add device'),
+                  ),
+              ],
+              empty: const Text('No paired devices.'),
+              itemCount: paired.length,
+              findChildIndexCallback: (key) => indices[key],
+              itemBuilder: (context, index) => _DeviceCard(
+                key: ValueKey(paired[index]['id']),
+                controller: controller,
+                device: paired[index],
+              ),
             ),
-            const SizedBox(height: 8),
-            if (paired.isEmpty)
-              const SettingsSurface(child: Text('No paired devices.')),
-            for (final device in paired)
-              _DeviceCard(controller: controller, device: device),
             const SizedBox(height: 16),
             AdvancedSection(
               storageKey: const PageStorageKey('bluetooth.advanced'),
@@ -139,22 +175,6 @@ class _BluetoothPageState extends State<BluetoothPage> {
                   children: [
                     Text('Name: ${adapter['name']}'),
                     Text('Address: ${adapter['address']}'),
-                    Text(
-                      'Discoverable: ${adapter['discoverable'] == true ? 'Yes' : 'No'}',
-                    ),
-                    if (controller.powered) ...[
-                      const SizedBox(height: 12),
-                      OutlinedButton.icon(
-                        onPressed: controller.busy
-                            ? null
-                            : () => _add(visible: true),
-                        icon: const Icon(Icons.visibility_outlined),
-                        label: const Text('Discoverable for 60 seconds'),
-                      ),
-                      const Text(
-                        'Incoming pairing uses your system pairing agent.',
-                      ),
-                    ],
                   ],
                 ),
               ),
@@ -215,6 +235,7 @@ IconData _deviceIcon(Map device) => switch (device['icon']) {
 
 class _DeviceCard extends StatelessWidget {
   const _DeviceCard({
+    super.key,
     required this.controller,
     required this.device,
     this.nearby = false,
@@ -342,11 +363,18 @@ class _AddDeviceDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: controller,
-    builder: (context, _) => AlertDialog(
-      title: const Text('Add Bluetooth device'),
-      content: SizedBox(
-        width: 480,
-        child: SingleChildScrollView(
+    builder: (context, _) {
+      final nearby = controller.devices
+          .where((d) => d['paired'] != true && d['bonded'] != true)
+          .toList();
+      final indices = {
+        for (var i = 0; i < nearby.length; i++) ValueKey(nearby[i]['id']): i,
+      };
+      return AlertDialog(
+        title: const Text('Add Bluetooth device'),
+        scrollable: true,
+        content: SizedBox(
+          width: 480,
           child: Column(
             mainAxisSize: .min,
             crossAxisAlignment: .stretch,
@@ -369,38 +397,47 @@ class _AddDeviceDialog extends StatelessWidget {
                       : () => controller.set(bluetoothCancelSettingId),
                   child: const Text('Cancel pairing'),
                 ),
-              Text(controller.scanning ? 'Scanning…' : 'Scan stopped'),
               if (!controller.powered) const Text('Bluetooth is off.'),
-              if (controller.powered) ...[
-                for (final device in controller.devices.where(
-                  (d) => d['paired'] != true && d['bonded'] != true,
-                ))
-                  _DeviceCard(
-                    controller: controller,
-                    device: device,
-                    nearby: true,
+              if (controller.powered)
+                SizedBox(
+                  height: (MediaQuery.sizeOf(context).height * .5).clamp(
+                    240,
+                    400,
                   ),
-                if (controller.operation?['kind'] == 'pair' &&
-                    controller.operation?['status'] == 'completed')
-                  const Text('Device paired and connected.'),
-              ],
+                  child: SettingsList(
+                    title: controller.scanning ? 'Scanning…' : 'Scan stopped',
+                    actions: [
+                      IconButton(
+                        tooltip: 'Scan again',
+                        onPressed: controller.busy ? null : controller.scan,
+                        icon: const Icon(Icons.refresh_rounded),
+                      ),
+                    ],
+                    empty: const Text('No nearby devices found.'),
+                    itemCount: nearby.length,
+                    findChildIndexCallback: (key) => indices[key],
+                    itemBuilder: (context, index) => _DeviceCard(
+                      key: ValueKey(nearby[index]['id']),
+                      controller: controller,
+                      device: nearby[index],
+                      nearby: true,
+                    ),
+                  ),
+                ),
+              if (controller.operation?['kind'] == 'pair' &&
+                  controller.operation?['status'] == 'completed')
+                const Text('Device paired and connected.'),
             ],
           ),
         ),
-      ),
-      actions: [
-        if (controller.powered)
-          IconButton(
-            tooltip: 'Scan again',
-            onPressed: controller.busy ? null : controller.scan,
-            icon: const Icon(Icons.refresh_rounded),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Done'),
           ),
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Done'),
-        ),
-      ],
-    ),
+        ],
+      );
+    },
   );
 }
 

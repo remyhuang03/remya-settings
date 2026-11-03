@@ -21,7 +21,7 @@ seconds. Remove requires GUI confirmation and deletes BlueZ bonding information;
 CLI/D-Bus writes are already explicit requests and need no second confirmation.
 Trust, blocking, names, file transfer and audio profile management are not changed.
 
-Advanced offers a temporary discoverable scan, using the client's discovery filter.
+The main Bluetooth settings expose temporary discoverability and its current state. Add device remains in the paired-device list header. Discoverability uses the client's discovery filter; Advanced contains only adapter details.
 It does not edit global timeout or Pairable preferences. Incoming pairing remains
 with the system's default agent. Settings registers only its own KeyboardDisplay
 agent and never requests default-agent status. Agent callbacks must originate from

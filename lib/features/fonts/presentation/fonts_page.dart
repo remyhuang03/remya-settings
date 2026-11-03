@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:file_selector/file_selector.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter/rendering.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_widgets.dart';
+import '../../settings/presentation/settings_list.dart';
 import '../application/fonts_controller.dart';
 
 const _fontTypes = XTypeGroup(
@@ -20,7 +23,6 @@ Future<List<String>> _pickWithDialog() async => [
     file.path,
 ];
 
-/// A sliver: rows build lazily because each preview loads a whole font file.
 class FontsPage extends StatefulWidget {
   const FontsPage({
     super.key,
@@ -54,106 +56,79 @@ class _FontsPageState extends State<FontsPage> {
     if (paths.isNotEmpty) await widget.controller.install(paths);
   }
 
-  Widget _label(BuildContext context, SettingSpec setting) => Column(
-    crossAxisAlignment: .start,
-    children: [
-      Text(setting.title, style: Theme.of(context).textTheme.bodyLarge),
-      const SizedBox(height: 6),
-      Text(setting.reason, style: Theme.of(context).textTheme.bodySmall),
-    ],
-  );
-
-  Widget _controls(BuildContext context, List<FontFamily> matches) {
-    final controller = widget.controller;
-    return Column(
-      crossAxisAlignment: .stretch,
-      children: [
-        SettingsSurface(
-          padding: .zero,
-          child: Column(
-            children: [
-              SettingRow(
-                id: fontsSearchSettingId,
-                label: _label(context, _setting(fontsSearchSettingId)),
-                control: SizedBox(
-                  width: 232,
-                  child: TextField(
-                    key: const ValueKey('fonts-search'),
-                    decoration: const InputDecoration(
-                      isDense: true,
-                      hintText: 'Search fonts',
-                      prefixIcon: Icon(Icons.search_rounded, size: 20),
-                      border: OutlineInputBorder(
-                        borderRadius: .all(.circular(14)),
-                      ),
-                    ),
-                    onChanged: (value) => setState(() => _query = value),
-                  ),
-                ),
-              ),
-              const Divider(height: 1, indent: 20, endIndent: 20),
-              SettingRow(
-                id: fontsInstallSettingId,
-                label: _label(context, _setting(fontsInstallSettingId)),
-                control: FilledButton.icon(
-                  key: const ValueKey('fonts-install'),
-                  onPressed: controller.isBusy ? null : _install,
-                  icon: const Icon(Icons.add_rounded),
-                  label: const Text('Browse'),
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (controller.isBusy) const LinearProgressIndicator(),
-        if (controller.errorMessage case final error?)
-          Padding(
-            padding: const .only(top: 12),
-            child: Text(
-              error,
-              key: const ValueKey('fonts-error'),
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
-          ),
-        Padding(
-          padding: const .only(top: 28, bottom: 12),
-          child: Text(
-            controller.loaded
-                ? '${matches.length} font families'
-                : 'Reading fonts…',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: widget.controller,
     builder: (context, _) {
-      final matches = widget.controller.matching(_query).toList();
-      return SliverMainAxisGroup(
-        slivers: [
-          SliverToBoxAdapter(child: _controls(context, matches)),
-          if (matches.isEmpty && widget.controller.loaded)
-            const SliverToBoxAdapter(
-              child: SettingsSurface(child: Text('No fonts found')),
+      final controller = widget.controller;
+      final matches = controller.matching(_query).toList();
+      final indices = {
+        for (var i = 0; i < matches.length; i++)
+          ValueKey('font-${matches[i].name}'): i,
+      };
+      return Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          if (controller.isBusy) const LinearProgressIndicator(),
+          if (controller.errorMessage case final error?)
+            Padding(
+              padding: const .only(bottom: 12),
+              child: Text(
+                error,
+                key: const ValueKey('fonts-error'),
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
             ),
-          DecoratedSliver(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerLowest,
-              borderRadius: .circular(24),
+          SettingsList(
+            title: controller.loaded
+                ? '${matches.length} font families'
+                : 'Reading fonts…',
+            actions: [
+              SizedBox(
+                width: 232,
+                child: TextField(
+                  key: const ValueKey('fonts-search'),
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    labelText: 'Search fonts',
+                    prefixIcon: Icon(Icons.search_rounded, size: 20),
+                  ),
+                  onChanged: (value) => setState(() => _query = value),
+                ),
+              ),
+              Tooltip(
+                message: _setting(fontsInstallSettingId).reason,
+                child: FilledButton.icon(
+                  key: const ValueKey('fonts-install'),
+                  onPressed: controller.isBusy ? null : _install,
+                  icon: const Icon(Icons.add_rounded),
+                  label: const Text('Install fonts'),
+                ),
+              ),
+            ],
+            empty: Text(
+              controller.loaded ? 'No fonts found' : 'Reading fonts…',
             ),
-            sliver: SliverFixedExtentList.builder(
-              itemExtent: _rowHeight,
-              itemCount: matches.length,
-              itemBuilder: (context, index) => _FamilyRow(
-                key: ValueKey('font-${matches[index].name}'),
-                family: matches[index],
-                first: index == 0,
-                last: index == matches.length - 1,
-                onTap: () => _showDetails(context, matches[index]),
+            itemExtent: _rowHeight,
+            itemCount: matches.length,
+            findChildIndexCallback: (key) => indices[key],
+            itemBuilder: (context, index) => _FamilyRow(
+              key: ValueKey('font-${matches[index].name}'),
+              family: matches[index],
+              onTap: () => _showDetails(context, matches[index]),
+            ),
+          ),
+          AdvancedSection(
+            storageKey: const PageStorageKey('fonts-advanced'),
+            child: KeyedSubtree(
+              key: const PageStorageKey('fonts-advanced-body'),
+              child: Column(
+                children: [
+                  for (final setting in widget.page.controls.where(
+                    (s) => s.availability != .available,
+                  ))
+                    SettingControlTile(setting),
+                ],
               ),
             ),
           ),
@@ -174,28 +149,15 @@ class _FontsPageState extends State<FontsPage> {
 }
 
 class _FamilyRow extends StatelessWidget {
-  const _FamilyRow({
-    super.key,
-    required this.family,
-    required this.first,
-    required this.last,
-    required this.onTap,
-  });
+  const _FamilyRow({super.key, required this.family, required this.onTap});
   final FontFamily family;
-  final bool first;
-  final bool last;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.vertical(
-      top: .circular(first ? 24 : 0),
-      bottom: .circular(last ? 24 : 0),
-    );
     return Material(
       type: .transparency,
       child: InkWell(
-        borderRadius: radius,
         onTap: onTap,
         child: Padding(
           padding: const .symmetric(horizontal: 20),
@@ -220,8 +182,7 @@ class _FamilyRow extends StatelessWidget {
   }
 }
 
-/// Shows the sample in its font once the row is settled: a fast fling would otherwise
-/// load every font file it passes. The fixed strut keeps tall fonts inside the row.
+/// Font matching and text layout are expensive; only load visible previews after scrolling settles.
 class _FontPreview extends StatefulWidget {
   const _FontPreview(this.family);
   final String family;
@@ -231,38 +192,75 @@ class _FontPreview extends StatefulWidget {
 }
 
 class _FontPreviewState extends State<_FontPreview> {
+  ScrollPosition? _position;
+  Timer? _settle;
   bool _load = false;
 
-  void _check() {
-    if (!mounted) return;
-    if (Scrollable.recommendDeferredLoadingForContext(context)) {
-      SchedulerBinding.instance.scheduleFrameCallback((_) => _check());
-    } else {
-      setState(() => _load = true);
-    }
+  @override
+  void didUpdateWidget(covariant _FontPreview oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _schedule();
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (!_load) {
-      if (!Scrollable.recommendDeferredLoadingForContext(context)) {
-        _load = true;
-      } else {
-        SchedulerBinding.instance.scheduleFrameCallback((_) => _check());
-      }
-    }
-    return Text(
-      _sample,
-      maxLines: 1,
-      overflow: .ellipsis,
-      strutStyle: const StrutStyle(
-        fontSize: 18,
-        height: 1.4,
-        forceStrutHeight: true,
-      ),
-      style: TextStyle(fontFamily: _load ? widget.family : null, fontSize: 18),
-    );
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final position = Scrollable.of(context).position;
+    if (position == _position) return;
+    _detach();
+    _position = position;
+    position.addListener(_schedule);
+    position.isScrollingNotifier.addListener(_schedule);
+    _schedule();
   }
+
+  void _detach() {
+    _settle?.cancel();
+    _position?.removeListener(_schedule);
+    _position?.isScrollingNotifier.removeListener(_schedule);
+  }
+
+  void _schedule() {
+    _settle?.cancel();
+    if (_load || _position!.isScrollingNotifier.value) return;
+    _settle = Timer(const Duration(milliseconds: 250), () {
+      final position = _position!;
+      final render = context.findRenderObject();
+      final viewport = RenderAbstractViewport.maybeOf(render);
+      if (render == null ||
+          viewport == null ||
+          position.isScrollingNotifier.value) {
+        return;
+      }
+      final top = viewport.getOffsetToReveal(render, 0).offset;
+      if (top >= position.pixels + position.viewportDimension ||
+          top + render.paintBounds.height <= position.pixels) {
+        return;
+      }
+      setState(() => _load = true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _detach();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => !_load
+      ? const SizedBox(height: 25.2)
+      : Text(
+          _sample,
+          maxLines: 1,
+          overflow: .ellipsis,
+          strutStyle: const StrutStyle(
+            fontSize: 18,
+            height: 1.4,
+            forceStrutHeight: true,
+          ),
+          style: TextStyle(fontFamily: widget.family, fontSize: 18),
+        );
 }
 
 class _DetailsDialog extends StatelessWidget {

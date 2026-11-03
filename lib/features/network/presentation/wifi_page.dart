@@ -5,6 +5,7 @@ import 'package:remya_settings_client/remya_settings_client.dart';
 
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_widgets.dart';
+import '../../settings/presentation/settings_list.dart';
 import '../application/network_controller.dart';
 import 'network_widgets.dart';
 
@@ -153,6 +154,7 @@ class _WifiPageState extends State<WifiPage> {
     final creatable = known || !const {'enterprise', 'wep'}.contains(security);
     final connecting = _controller.connecting == network['ssid'];
     return SettingRow(
+      key: ValueKey('wifi-item-${network['ssid']}-$security'),
       id: 'network-${network['ssid']}-$security',
       label: Row(
         children: [
@@ -212,7 +214,13 @@ class _WifiPageState extends State<WifiPage> {
       );
     }
     final current = _controller.currentNetwork;
-    final others = _controller.networks.where((n) => n['in_use'] != true);
+    final others = _controller.networks
+        .where((n) => n['in_use'] != true)
+        .toList();
+    final indices = {
+      for (var i = 0; i < others.length; i++)
+        ValueKey('wifi-item-${others[i]['ssid']}-${others[i]['security']}'): i,
+    };
     return Column(
       crossAxisAlignment: .stretch,
       children: [
@@ -229,26 +237,23 @@ class _WifiPageState extends State<WifiPage> {
             const SizedBox(height: 24),
             _current(current),
           ],
-          NetworkSectionTitle(
-            'Available networks',
-            trailing: IconButton(
-              key: const ValueKey(wifiRefreshSettingId),
-              tooltip: 'Refresh',
-              onPressed: _controller.isBusy
-                  ? null
-                  : () => _controller.set(wifiRefreshSettingId, 'scan'),
-              icon: const Icon(Icons.refresh_rounded),
-            ),
-          ),
-          SettingsSurface(
-            padding: .zero,
-            child: others.isEmpty
-                ? const NetworkInfoRow(
-                    id: 'wifi.networks',
-                    label: 'Available networks',
-                    value: 'No other networks were found',
-                  )
-                : networkRows([for (final n in others) _network(n)]),
+          const SizedBox(height: 24),
+          SettingsList(
+            title: 'Available networks',
+            actions: [
+              IconButton(
+                key: const ValueKey(wifiRefreshSettingId),
+                tooltip: 'Refresh',
+                onPressed: _controller.isBusy
+                    ? null
+                    : () => _controller.set(wifiRefreshSettingId, 'scan'),
+                icon: const Icon(Icons.refresh_rounded),
+              ),
+            ],
+            empty: const Text('No other networks were found'),
+            itemCount: others.length,
+            findChildIndexCallback: (key) => indices[key],
+            itemBuilder: (context, index) => _network(others[index]),
           ),
         ],
         const NetworkSectionTitle('Saved networks'),

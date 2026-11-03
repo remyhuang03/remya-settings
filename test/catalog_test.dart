@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/settings/presentation/settings_widgets.dart';
+import 'package:remya_settings/features/settings/presentation/settings_shell.dart';
 
 import 'dart:convert';
 import 'dart:io';
@@ -15,6 +16,38 @@ Map<String, dynamic> _readJson(String path) =>
     jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
 
 void main() {
+  testWidgets('content reserves only the visible status bar height', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(900, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final statusHeight = ValueNotifier(0.0);
+    addTearDown(statusHeight.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SettingsShell(
+          catalog: SettingsCatalog.fromJson(readCatalog()),
+          status: ValueListenableBuilder(
+            valueListenable: statusHeight,
+            builder: (_, height, _) => SizedBox(height: height),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final content = find.byKey(const ValueKey('settings-main-content'));
+    expect(tester.getSize(content).height, 800);
+    statusHeight.value = 64;
+    await tester.pumpAndSettle();
+    expect(tester.getSize(content).height, 736);
+    statusHeight.value = 0;
+    await tester.pumpAndSettle();
+    expect(tester.getSize(content).height, 800);
+    expect(tester.takeException(), isNull);
+  });
+
   test(
     'every source route and backup leaf has a renderable catalog target',
     () {
