@@ -326,14 +326,25 @@
       "id": "gnome-tweaks",
       "title": "GNOME Tweaks",
       "url": "https://gitlab.gnome.org/GNOME/gnome-tweaks"
+    },
+    {
+      "id": "libpulse",
+      "title": "PulseAudio client API used by PipeWire",
+      "url": "https://www.freedesktop.org/wiki/Software/PulseAudio/Documentation/Developer/ClientAPI/"
     }
   ],
   "categories": [
     {
       "id": "system",
       "title": "System",
-      "description": "Display, Sound, Notifications and Power",
+      "description": "Display, Notifications and Power",
       "icon": "computer"
+    },
+    {
+      "id": "sound",
+      "title": "Sound",
+      "description": "Output, input, application volumes and audio devices",
+      "icon": "volume"
     },
     {
       "id": "devices",
@@ -1304,61 +1315,63 @@
       "children": []
     },
     {
-      "id": "sound",
-      "category": "system",
-      "title": "Sound",
-      "description": "Output, input and application volume",
-      "preview": "sound",
+      "id": "sound-volume",
+      "category": "sound",
+      "title": "Output & input",
+      "description": "Default output and input devices, volume and mute",
+      "preview": "none",
       "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback. Additional compositor options remain unimplemented previews.",
       "sources": [
-        "uris"
+        "uris",
+        "libpulse",
+        "hypr-options",
+        "hyprviz-project",
+        "hypr-audio"
       ],
       "windowsUris": [
-        "ms-settings:sound"
+        "ms-settings:sound",
+        "ms-settings:sound-defaultoutputproperties",
+        "ms-settings:sound-properties",
+        "ms-settings:sound-defaultinputproperties"
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Output",
           "controls": [
             {
-              "id": "sound.df22d19a",
-              "title": "Select output device",
+              "id": "sound.output-device",
+              "title": "Output device",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
               "options": [
-                "Sample Speaker",
-                "Sample Headphones"
+                "System audio devices"
               ],
-              "value": "Sample Speaker"
+              "value": "System audio devices",
+              "referencePath": [
+                "hypr-audio",
+                "default"
+              ]
             },
             {
-              "id": "sound.b6723f8d",
+              "id": "sound.output-volume",
               "title": "Output volume",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
+              "availability": "available",
+              "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
               "min": 0,
-              "max": 100,
-              "unit": "%"
+              "max": 150,
+              "unit": "%",
+              "value": 0
             },
             {
-              "id": "sound.1a90a9eb",
-              "title": "Mono audio",
+              "id": "sound.output-muted",
+              "title": "Mute output",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
               "value": false
-            },
-            {
-              "id": "sound.83c3c324",
-              "title": "All sound equipment",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
             }
           ]
         },
@@ -1366,106 +1379,73 @@
           "title": "Input",
           "controls": [
             {
-              "id": "sound.b456670c",
-              "title": "Select input device",
+              "id": "sound.input-device",
+              "title": "Input device",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
               "options": [
-                "Sample microphone"
+                "System audio devices"
               ],
-              "value": "Sample microphone"
+              "value": "System audio devices"
             },
             {
-              "id": "sound.6d541e81",
+              "id": "sound.input-volume",
               "title": "Input volume",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
+              "availability": "available",
+              "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
               "min": 0,
-              "max": 100,
-              "unit": "%"
+              "max": 150,
+              "unit": "%",
+              "value": 0
             },
             {
-              "id": "sound.8714d013",
-              "title": "Test the microphone",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "id": "sound.input-muted",
+              "title": "Mute microphone",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
+              "value": false
             }
           ]
         },
         {
           "title": "Advanced",
-          "controls": [
-            {
-              "id": "sound.9146f08b",
-              "title": "Volume compositor",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "sound.494f3460",
-              "title": "More sound settings",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
           "collapsed": true,
           "controls": [
             {
-              "id": "sound.reference.523e7f5c",
-              "title": "Mono audio",
-              "type": "toggle",
+              "id": "sound.compositor-bell",
+              "title": "Compositor bell sound (bell_sound)",
+              "type": "text",
               "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "default",
               "referencePath": [
-                "Sound",
-                "Mono audio"
-              ],
-              "value": false
-            },
-            {
-              "id": "sound.reference.a9568fa7",
-              "title": "More sound settings > Sounds [Program Events] (Windows default sounds)",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Sound",
-                "More sound settings > Sounds [Program Events] (Windows default sounds)"
-              ],
-              "value": "Configuration"
+                "hypr-options",
+                "misc",
+                "bell_sound"
+              ]
             }
           ]
         }
       ],
-      "children": [
-        "sound-devices",
-        "volume-mixer",
-        "audio-output",
-        "audio-input"
-      ]
+      "children": []
     },
     {
       "id": "volume-mixer",
-      "category": "system",
+      "category": "sound",
       "title": "Volume mixer",
-      "description": "System volume and per-app routing",
+      "description": "Playback and recording application volumes and routing",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
       "sources": [
-        "uris"
+        "uris",
+        "libpulse",
+        "hypr-options",
+        "hyprviz-project",
+        "hypr-audio"
       ],
       "windowsUris": [
         "ms-settings:apps-volume"
@@ -1475,57 +1455,50 @@
           "title": "Settings",
           "controls": [
             {
-              "id": "volume-mixer.d17879a4",
-              "title": "System volume",
+              "id": "sound.streams",
+              "title": "Active audio applications",
+              "type": "info",
+              "availability": "available",
+              "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
+              "value": "Observed audio streams",
+              "referencePath": [
+                "hypr-audio",
+                "streams"
+              ]
+            },
+            {
+              "id": "sound.stream-volume",
+              "title": "Application volume",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
+              "availability": "available",
+              "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
               "min": 0,
-              "max": 100,
-              "unit": "%"
+              "max": 150,
+              "unit": "%",
+              "value": 0
             },
             {
-              "id": "volume-mixer.3aa83c30",
-              "title": "Output device",
+              "id": "sound.stream-muted",
+              "title": "Mute application",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
+              "value": false
+            },
+            {
+              "id": "sound.stream-device",
+              "title": "Application audio device",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
               "options": [
-                "Sample Speaker",
-                "Sample Headphones"
+                "System audio devices"
               ],
-              "value": "Sample Speaker"
-            },
-            {
-              "id": "volume-mixer.c15e3367",
-              "title": "Input devices",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Sample microphone"
-              ],
-              "value": "Sample microphone"
-            },
-            {
-              "id": "volume-mixer.ef9d857c",
-              "title": "Sample application volume",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "volume-mixer.42141672",
-              "title": "Reset sound devices and volumes to recommended values",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Reset"
+              "value": "System audio devices",
+              "referencePath": [
+                "hypr-audio",
+                "routing"
+              ]
             }
           ]
         }
@@ -1534,14 +1507,18 @@
     },
     {
       "id": "sound-devices",
-      "category": "system",
-      "title": "All sound devices",
-      "description": "Output and input device directories",
+      "category": "sound",
+      "title": "Devices",
+      "description": "Connected physical and virtual audio devices",
       "preview": "none",
       "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback. Additional compositor options remain unimplemented previews.",
       "sources": [
-        "uris"
+        "uris",
+        "libpulse",
+        "hypr-options",
+        "hyprviz-project",
+        "hypr-audio"
       ],
       "windowsUris": [
         "ms-settings:sound-devices"
@@ -1551,208 +1528,69 @@
           "title": "Settings",
           "controls": [
             {
-              "id": "sound-devices.507f1aa5",
-              "title": "Speaker properties",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "id": "sound.devices",
+              "title": "Audio device inventory",
+              "type": "info",
+              "availability": "available",
+              "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
+              "value": "Observed sound devices"
             },
             {
-              "id": "sound-devices.4119daae",
-              "title": "Headphone properties",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "id": "sound.device-volume",
+              "title": "Device volume",
+              "type": "slider",
+              "availability": "available",
+              "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
+              "min": 0,
+              "max": 150,
+              "unit": "%",
+              "value": 0
             },
             {
-              "id": "sound-devices.9b818984",
-              "title": "Microphone properties",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "id": "sound.device-muted",
+              "title": "Mute device",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
+              "value": false
             },
             {
-              "id": "sound-devices.91c56260",
-              "title": "Add sound device",
+              "id": "sound.refresh",
+              "title": "Refresh audio",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.",
+              "value": "Refresh"
             }
           ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "audio-output",
-      "category": "system",
-      "title": "Output device properties",
-      "description": "Format, enhancement and spatial sound effects",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:sound-defaultoutputproperties",
-        "ms-settings:sound-properties"
-      ],
-      "sections": [
+        },
         {
-          "title": "Settings",
+          "title": "Advanced",
+          "collapsed": true,
           "controls": [
             {
-              "id": "audio-output.2c45320f",
-              "title": "Allow this device to be used for audio",
-              "type": "action",
+              "id": "sound.pipewire-profile",
+              "title": "PipeWire routing: Audio device configuration file",
+              "type": "text",
               "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "reason": "Not yet implemented; the optional PipeWire control component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-audio",
+                "profile"
+              ]
             },
             {
-              "id": "audio-output.9d2601c8",
-              "title": "Format",
-              "type": "choice",
+              "id": "sound.pipewire-port",
+              "title": "PipeWire routing: Input and output ports",
+              "type": "text",
               "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "24 bit 48000 Hz",
-                "16 bit 44100 Hz"
-              ],
-              "value": "24 bit 48000 Hz"
-            },
-            {
-              "id": "audio-output.74e9cee2",
-              "title": "Left channel volume",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "audio-output.19521017",
-              "title": "Right channel volume",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "audio-output.48bde259",
-              "title": "Audio enhancement",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Off",
-                "Device default effect"
-              ],
-              "value": "Off"
-            },
-            {
-              "id": "audio-output.f6e78b36",
-              "title": "Spatial sound effects",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Off",
-                "Spatial Audio"
-              ],
-              "value": "Off"
-            },
-            {
-              "id": "audio-output.540eb103",
-              "title": "Test the sound",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "audio-input",
-      "category": "system",
-      "title": "Input device properties",
-      "description": "Microphone format, volume and testing",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:sound-defaultinputproperties"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "audio-input.0b48b921",
-              "title": "Allow apps to use the microphone",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "audio-input.9d2601c8",
-              "title": "Format",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "16 bit 48000 Hz",
-                "24 bit 48000 Hz"
-              ],
-              "value": "16 bit 48000 Hz"
-            },
-            {
-              "id": "audio-input.6d541e81",
-              "title": "Input volume",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "audio-input.1eeef8e1",
-              "title": "Start microphone test",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "audio-input.519e7157",
-              "title": "Microphone enhancement",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Off",
-                "Device default effect"
-              ],
-              "value": "Off"
+              "reason": "Not yet implemented; the optional PipeWire control component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-audio",
+                "port"
+              ]
             }
           ]
         }
@@ -18315,19 +18153,6 @@
               ]
             },
             {
-              "id": "hypr-misc.bell-sound",
-              "title": "bell sound · bell_sound",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "default",
-              "referencePath": [
-                "hypr-options",
-                "misc",
-                "bell_sound"
-              ]
-            },
-            {
               "id": "hypr-misc.close-special-on-empty",
               "title": "close special on empty · close_special_on_empty",
               "type": "toggle",
@@ -26122,87 +25947,6 @@
               "referencePath": [
                 "nwg-config-project",
                 "tray"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-audio-routing",
-      "category": "system",
-      "title": "PipeWire audio routing",
-      "description": "Device configuration, application flow and port connection · Optional PipeWire control component",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; the optional PipeWire control component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-audio"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "hypr-audio-routing.profile",
-              "title": "Audio device configuration file",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional PipeWire control component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-audio",
-                "profile"
-              ]
-            },
-            {
-              "id": "hypr-audio-routing.port",
-              "title": "Input and output ports",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional PipeWire control component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-audio",
-                "port"
-              ]
-            },
-            {
-              "id": "hypr-audio-routing.streams",
-              "title": "Apply audio streaming",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional PipeWire control component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Not read",
-              "referencePath": [
-                "hypr-audio",
-                "streams"
-              ]
-            },
-            {
-              "id": "hypr-audio-routing.routing",
-              "title": "Audio stream routing",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional PipeWire control component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-audio",
-                "routing"
-              ]
-            },
-            {
-              "id": "hypr-audio-routing.default",
-              "title": "Default input and output nodes",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional PipeWire control component settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-audio",
-                "default"
               ]
             }
           ]

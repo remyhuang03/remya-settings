@@ -605,7 +605,7 @@
     },
     {
       "uri": "ms-settings:sound",
-      "page": "sound",
+      "page": "sound-volume",
       "sourceCategory": "Sound",
       "title": "Sound"
     },
@@ -617,19 +617,19 @@
     },
     {
       "uri": "ms-settings:sound-defaultinputproperties",
-      "page": "audio-input",
+      "page": "sound-volume",
       "sourceCategory": "Sound",
       "title": "Default microphone"
     },
     {
       "uri": "ms-settings:sound-defaultoutputproperties",
-      "page": "audio-output",
+      "page": "sound-volume",
       "sourceCategory": "Sound",
       "title": "Default audio output"
     },
     {
       "uri": "ms-settings:sound-properties",
-      "page": "audio-output",
+      "page": "sound-volume",
       "sourceCategory": "Sound",
       "title": "Audio device properties (specific device)"
     },
@@ -910,28 +910,8 @@
       "path": [
         "Sound"
       ],
-      "page": "sound",
+      "page": "sound-volume",
       "coverage": "section"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Sound",
-        "Mono audio"
-      ],
-      "page": "sound",
-      "coverage": "control",
-      "control": "sound.reference.523e7f5c"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Sound",
-        "More sound settings > Sounds [Program Events] (Windows default sounds)"
-      ],
-      "page": "sound",
-      "coverage": "control",
-      "control": "sound.reference.a9568fa7"
     },
     {
       "area": "System",

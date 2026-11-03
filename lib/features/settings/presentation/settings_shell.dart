@@ -1,3 +1,5 @@
+import '../../sound/application/sound_controller.dart';
+import '../../sound/presentation/sound_page.dart';
 import '../../account/application/account_controller.dart';
 import '../../account/presentation/account_information_page.dart';
 import '../../bluetooth/application/bluetooth_controller.dart';
@@ -36,8 +38,10 @@ class SettingsShell extends StatefulWidget {
     this.topStatus,
     this.systemInformation,
     this.account,
+    this.sound,
   });
   final AccountController? account;
+  final SoundController? sound;
   final SettingsCatalog catalog;
   final SystemInformationReader? systemInformation;
   final Widget? status;
@@ -389,6 +393,13 @@ class _SettingsShellState extends State<SettingsShell> {
             ),
         ],
       );
+    } else if (const {
+          'sound-volume',
+          'volume-mixer',
+          'sound-devices',
+        }.contains(_page?.id) &&
+        widget.sound != null) {
+      content = SoundPage(controller: widget.sound!, page: _page!);
     } else if (_page?.id == 'installed' &&
         ApplicationsScope.maybeOf(context) != null) {
       final controller = ApplicationsScope.maybeOf(context)!;

@@ -166,6 +166,9 @@ fn run() -> Result<(), String> {
                         && let Ok(account) = state.lock().unwrap().account.read() {
                         signal(&bus, "account-information", &account);
                     }
+                    if method == "Reload" || args.first().is_some_and(|id| id == "sound" || remya_settings_sound::is_setting(id)) {
+                        signal(&bus, "sound", &state.lock().unwrap().sound.state());
+                    }
                     if args.first().is_some_and(|id| id.starts_with("fonts.")) {
                         signal(&bus, "fonts", &serde_json::json!({}));
                     }
@@ -264,7 +267,11 @@ fn run() -> Result<(), String> {
                 let accent = s.background.accent_state();
                 let network = s.network.state();
                 let night_light = s.night_light.state();
+                let sound = s.sound.state();
                 s.refresh();
+                if s.sound.state() != sound {
+                    signal(&bus, "sound", &s.sound.state());
+                }
                 if s.night_light.state() != night_light {
                     signal(&bus, "night-light", &s.night_light.state());
                 }

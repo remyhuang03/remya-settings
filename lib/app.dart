@@ -1,3 +1,4 @@
+import 'features/sound/application/sound_controller.dart';
 import 'features/account/application/account_controller.dart';
 import 'features/bluetooth/application/bluetooth_controller.dart';
 import 'features/applications/application/applications_controller.dart';
@@ -41,6 +42,7 @@ class RemyaSettingsApp extends StatefulWidget {
     this.applications,
     this.network,
     this.bluetooth,
+    this.sound,
   });
   final BackgroundController? background;
   final FontsController? fonts;
@@ -48,6 +50,7 @@ class RemyaSettingsApp extends StatefulWidget {
   final ApplicationsController? applications;
   final NetworkController? network;
   final BluetoothController? bluetooth;
+  final SoundController? sound;
   final AccountController? account;
   final AppPreferencesController? preferences;
   final DateTimeController? dateTime;
@@ -87,6 +90,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     widget.applications?.dispose();
     widget.network?.dispose();
     widget.bluetooth?.dispose();
+    widget.sound?.dispose();
     super.dispose();
   }
 
@@ -134,6 +138,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
               return SettingsShell(
                 catalog: snapshot.data!,
                 account: widget.account,
+                sound: widget.sound,
                 navigation: widget.navigation,
                 scheduler: widget.scheduler,
                 systemInformation: widget.systemInformation,
@@ -152,6 +157,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
                   background: widget.background,
                   defaultApps: widget.defaultApps,
                   network: widget.network,
+                  sound: widget.sound,
                 ),
               );
             },

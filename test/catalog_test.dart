@@ -169,7 +169,7 @@ void main() {
     );
   });
 
-  test('every added control has a pinned source and stays unavailable', () {
+  test('every added control has a pinned source and verified availability', () {
     final sources = {
       for (final source in coverage['sources'] as List)
         source['id'] as String: source as Map<String, dynamic>,
@@ -193,6 +193,9 @@ void main() {
       final source = sources[entry['source']];
       expect(source, isNotNull, reason: entry['control'] as String);
       expect(source!['revision'], matches(RegExp(r'^[0-9a-f]{40}$')));
+      if (entry['availability'] == 'available') {
+        expect(entry['verification'], isNotEmpty);
+      }
       expect(source['url'], contains('/blob/${source['revision']}/'));
       expect(
         catalog.page(entry['page'] as String).controls.map((c) => c.id),
@@ -200,7 +203,9 @@ void main() {
       );
       expect(
         addedControls[entry['control']]!.availability,
-        SettingAvailability.planned,
+        entry['availability'] == 'available'
+            ? SettingAvailability.available
+            : SettingAvailability.planned,
       );
     }
     final sourceIds = (raw['sources'] as List).map((s) => s['id']).toSet();

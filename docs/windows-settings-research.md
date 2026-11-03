@@ -24,6 +24,7 @@ Supplemental reference material comes from [Advanced settings](https://learn.mic
 | --- | --- | --- |
 | System | Display, notifications, focus, power, storage, windows, sharing, recovery, remote access, clipboard, device information, developer tools | Future compositor and Linux service integrations |
 | Sound | Output & input, Volume mixer and Devices | Native per-user PipeWire audio through libpulse; see [Sound](sound.md) |
+| Sound | Output & input, Volume mixer and Devices | Native per-user PipeWire audio through libpulse; see [Sound](sound.md) |
 | Bluetooth & devices | Pairing, printers, cameras, mouse, touchpad, touch, pen, USB, phone and accessory devices | Future Linux device service integrations |
 | Network & Internet | Status, Wi-Fi, Ethernet, VPN, hotspot, airplane mode, cellular, proxy, adapters, usage | Future network service integration |
 | Appearance | Background (image or video), colors and themes (merged), lock screen, launcher, panel, fonts, lighting | Future Hyprland and desktop component configuration |

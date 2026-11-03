@@ -1,3 +1,4 @@
+import '../sound/application/sound_controller.dart';
 import '../default_apps/application/default_apps_controller.dart';
 import '../network/application/network_controller.dart';
 import '../system_information/application/hostname_controller.dart';
@@ -21,12 +22,14 @@ class SettingsStatus extends StatelessWidget {
     this.background,
     this.defaultApps,
     this.network,
+    this.sound,
     this.navigatorKey,
   });
   final AppPreferencesController preferences;
   final BackgroundController? background;
   final DefaultAppsController? defaultApps;
   final NetworkController? network;
+  final SoundController? sound;
   final DateTimeController? dateTime;
   final DisplayController? display;
   final NightLightController? nightLight;
@@ -42,6 +45,7 @@ class SettingsStatus extends StatelessWidget {
       background,
       defaultApps,
       network,
+      sound,
     ]),
     builder: (context, _) => ConstrainedBox(
       constraints: BoxConstraints(
@@ -86,6 +90,23 @@ class SettingsStatus extends StatelessWidget {
                   title: 'Date and time: ${controller.errorMessage}',
                   busy: controller.isBusy,
                   useSystem: controller.retry,
+                ),
+            ],
+            if (sound case final controller?) ...[
+              if (controller.hasConflict)
+                _ConflictWarning(
+                  navigatorKey: navigatorKey,
+                  title: 'Sound differs from saved Settings. Open Sound to inspect the device, volume and mute preferences.',
+                  busy: controller.isBusy,
+                  useSystem: controller.useSystemConfiguration,
+                  useSettings: controller.applySavedConfiguration,
+                ),
+              if (controller.errorMessage case final message?)
+                _ConflictWarning(
+                  navigatorKey: navigatorKey,
+                  title: 'Sound: $message',
+                  busy: controller.isBusy,
+                  useSystem: controller.refresh,
                 ),
             ],
             if (defaultApps case final controller?) ...[

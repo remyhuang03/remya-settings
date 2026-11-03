@@ -13,6 +13,7 @@ use remya_settings_display::{
 };
 use remya_settings_fonts::{self as fonts, FontManager, RealFontconfig};
 use remya_settings_network::{NetworkManager, is_network_setting};
+use remya_settings_sound::{self as sound, Sound, pulse::RealPulse};
 use remya_settings_system_information::account::{self, AccountInformation};
 use remya_settings_system_information::hostname::{self, HostnameManager};
 use serde_json::{Value, json};
@@ -174,6 +175,7 @@ pub struct State {
     pub appimages: applications::appimages::AppImages,
     pub network: NetworkManager,
     pub bluetooth: remya_settings_bluetooth::Bluetooth,
+    pub sound: Sound<RealPulse>,
     pub auth_error: Option<String>,
     privileged: Option<Session>,
     gui: Option<Child>,
@@ -213,6 +215,7 @@ impl State {
                 config.with_file_name("default-apps.toml"),
             ),
             bluetooth: remya_settings_bluetooth::Bluetooth::new(),
+            sound: Sound::new(RealPulse, config.with_file_name("sound.toml")),
             network: NetworkManager::real(config.with_file_name("network.toml")),
             appimages: applications::appimages::AppImages::real(
                 config.with_file_name("appimages.toml"),
@@ -245,6 +248,7 @@ impl State {
         // Failures stay in the manager's state for every reader.
         let _ = self.night_light.refresh();
         let _ = self.background.refresh();
+        let _ = self.sound.refresh();
     }
     fn refresh_theme(&mut self) -> Result<(), String> {
         let system =
@@ -388,7 +392,7 @@ impl State {
     pub fn configuration(&self) -> Value {
         let mut date = self.date.clone();
         date["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
-        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"network":self.network.state()})
+        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"network":self.network.state(),"sound":self.sound.state()})
     }
     pub fn controls(&self) -> Vec<&Value> {
         self.catalog["pages"]
@@ -580,6 +584,17 @@ impl State {
                     }
                     "account-information" => self.account.read(),
                     _ if account::IDS.contains(&key) => self.account.read_setting(key),
+                    "sound" => {
+                        let _ = self.sound.refresh();
+                        Ok(self.sound.state())
+                    }
+                    _ if sound::is_setting(key) => {
+                        let _ = self.sound.refresh();
+                        let mut value = self.sound.state();
+                        value["id"] = json!(key);
+                        value["availability"] = json!("available");
+                        Ok(value)
+                    }
                     "appimages" => Ok(self.appimages.state()),
                     _ if applications::appimages::is_setting(key)
                         && self.controls().iter().any(|c| c["id"] == key) =>
@@ -785,6 +800,9 @@ impl State {
         if default_apps::IDS.contains(&key) {
             return self.default_apps.set(key, value);
         }
+        if sound::is_setting(key) {
+            return self.sound.set(key, value);
+        }
         if applications::appimages::is_setting(key) {
             return self.appimages.set(key, value);
         }
@@ -940,6 +958,9 @@ impl State {
         self.save_date(state, &keys)
     }
     fn resolve(&mut self, feature: &str, source: &str) -> Result<Value, String> {
+        if feature == "sound" {
+            return self.sound.resolve(source);
+        }
         if feature == "network" {
             return self.network.resolve(source);
         }

@@ -1,4 +1,5 @@
 <node>
+  <!-- Sound: Get("sound") / Get("sound.*"), Set("sound.*", JSON), Resolve("sound", "system"|"settings"); Changed("sound", state). -->
   <interface name="top.remya.settings.Settings1">
     <!-- system-information returns api_version and per-ID value/error observations;
          its 16 about.* info fields reject Set with ReadOnly. about is app metadata.

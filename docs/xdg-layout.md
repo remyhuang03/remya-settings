@@ -147,3 +147,15 @@ restores those operations at startup. See [Bluetooth](bluetooth.md).
 ## Settings account avatar
 
 The ordinary-user service owns `avatar.png` beside its selected Settings configuration: `$XDG_CONFIG_HOME/remya/settings/avatar.png` (HOME fallback) in profile/release, or repository `config/avatar.png` in debug. A confirmed crop atomically replaces only this file, with mode 0600 on first creation and existing permissions retained. It rejects an avatar-file symlink rather than following it. The picker source is not changed, copied to the library or saved as a path preference. Username is a live read-only process-user observation and creates no files. The avatar is not synchronized to AccountsService, a desktop shell or a login system.
+
+## Sound preferences
+
+`sound.toml` lives beside `config.toml` (debug: repository `config/sound.toml`;
+profile/release: `$XDG_CONFIG_HOME/remya/settings/sound.toml`, with the existing
+absolute HOME fallback). Version 1 stores stable default output/input names and
+raw channel-volume/mute preferences keyed by direction plus stable device name.
+It uses the existing atomic writer and permissions policy. First use saves actual
+system state without server writes. Malformed state is retained and reported.
+Application streams and measured device state are not persisted. Sound creates
+no cache, system service or privileged configuration; it connects to the user's
+existing pipewire-pulse socket. See [Sound](sound.md).

@@ -17,11 +17,9 @@
     "display",
     "night-light",
     "graphics",
-    "sound",
+    "sound-volume",
     "volume-mixer",
     "sound-devices",
-    "audio-output",
-    "audio-input",
     "notifications",
     "focus",
     "quiet-schedule",
@@ -174,38 +172,6 @@
     "graphics.f6aaf67c",
     "graphics.232eb7f3",
     "graphics.49ad9ee9",
-    "sound.df22d19a",
-    "sound.b6723f8d",
-    "sound.1a90a9eb",
-    "sound.83c3c324",
-    "sound.b456670c",
-    "sound.6d541e81",
-    "sound.8714d013",
-    "sound.9146f08b",
-    "sound.494f3460",
-    "sound.reference.523e7f5c",
-    "sound.reference.a9568fa7",
-    "volume-mixer.d17879a4",
-    "volume-mixer.3aa83c30",
-    "volume-mixer.c15e3367",
-    "volume-mixer.ef9d857c",
-    "volume-mixer.42141672",
-    "sound-devices.507f1aa5",
-    "sound-devices.4119daae",
-    "sound-devices.9b818984",
-    "sound-devices.91c56260",
-    "audio-output.2c45320f",
-    "audio-output.9d2601c8",
-    "audio-output.74e9cee2",
-    "audio-output.19521017",
-    "audio-output.48bde259",
-    "audio-output.f6e78b36",
-    "audio-output.540eb103",
-    "audio-input.0b48b921",
-    "audio-input.9d2601c8",
-    "audio-input.6d541e81",
-    "audio-input.1eeef8e1",
-    "audio-input.519e7157",
     "notifications.7a66c0d0",
     "notifications.e0ab8430",
     "notifications.4a3428cc",
@@ -1539,8 +1505,7 @@
     "hypr-plugins",
     "hypr-diagnostics",
     "hypr-shutdown",
-    "hypr-shell-components",
-    "hypr-audio-routing"
+    "hypr-shell-components"
   ],
   "controls": [
     {
@@ -4386,8 +4351,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.bell-sound",
-      "page": "hypr-misc",
+      "control": "sound.compositor-bell",
+      "page": "sound-volume",
       "source": "hypr-options",
       "key": "bell-sound",
       "reference": [
@@ -11482,8 +11447,8 @@
       ]
     },
     {
-      "control": "hypr-audio-routing.profile",
-      "page": "hypr-audio-routing",
+      "control": "sound.pipewire-profile",
+      "page": "sound-devices",
       "source": "hypr-audio",
       "key": "profile",
       "reference": [
@@ -11492,8 +11457,8 @@
       ]
     },
     {
-      "control": "hypr-audio-routing.port",
-      "page": "hypr-audio-routing",
+      "control": "sound.pipewire-port",
+      "page": "sound-devices",
       "source": "hypr-audio",
       "key": "port",
       "reference": [
@@ -11502,34 +11467,40 @@
       ]
     },
     {
-      "control": "hypr-audio-routing.streams",
-      "page": "hypr-audio-routing",
+      "control": "sound.streams",
+      "page": "volume-mixer",
       "source": "hypr-audio",
       "key": "streams",
       "reference": [
         "hypr-audio",
         "streams"
-      ]
+      ],
+      "availability": "available",
+      "verification": "Rust sound reconciliation tests; test/sound_test.dart; isolated PipeWire audio verification"
     },
     {
-      "control": "hypr-audio-routing.routing",
-      "page": "hypr-audio-routing",
+      "control": "sound.stream-device",
+      "page": "volume-mixer",
       "source": "hypr-audio",
       "key": "routing",
       "reference": [
         "hypr-audio",
         "routing"
-      ]
+      ],
+      "availability": "available",
+      "verification": "Rust sound reconciliation tests; test/sound_test.dart; isolated PipeWire audio verification"
     },
     {
-      "control": "hypr-audio-routing.default",
-      "page": "hypr-audio-routing",
+      "control": "sound.output-device",
+      "page": "sound-volume",
       "source": "hypr-audio",
       "key": "default",
       "reference": [
         "hypr-audio",
         "default"
-      ]
+      ],
+      "availability": "available",
+      "verification": "Rust sound reconciliation tests; test/sound_test.dart; isolated PipeWire audio verification"
     }
   ]
 }

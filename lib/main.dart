@@ -1,3 +1,4 @@
+import 'features/sound/application/sound_controller.dart';
 import 'features/account/application/account_controller.dart';
 import 'features/bluetooth/application/bluetooth_controller.dart';
 import 'features/applications/application/applications_controller.dart';
@@ -103,6 +104,11 @@ Future<void> main() async {
     read: client.readAccountInformation,
     save: client.saveAccountAvatar,
   );
+  final sound = SoundController(
+    read: client.readSound,
+    write: client.setSound,
+    resolve: client.resolveSound,
+  );
   final navigation = ValueNotifier<String?>(null);
   final scheduler = SettingsScheduler([
     preferences.reload,
@@ -113,6 +119,7 @@ Future<void> main() async {
     background.reload,
     network.reload,
     bluetooth.reload,
+    sound.reload,
   ]);
   runApp(
     RemyaSettingsApp(
@@ -128,6 +135,7 @@ Future<void> main() async {
       applications: applications,
       network: network,
       bluetooth: bluetooth,
+      sound: sound,
       navigation: navigation,
       scheduler: scheduler,
       systemInformation: client.readSystemInformation,
@@ -162,6 +170,8 @@ Future<void> main() async {
         fonts.reload();
       case 'bluetooth':
         bluetooth.apply(change.value);
+      case 'sound':
+        sound.apply(change.value);
       case 'network':
         network.apply(change.value);
       case 'date-time':
