@@ -4,12 +4,6 @@
   "backupSource": "https://learn.microsoft.com/en-us/windows/configuration/windows-backup/catalog?pivots=windows-11",
   "uris": [
     {
-      "uri": "ms-settings:emailandaccounts",
-      "page": "email",
-      "sourceCategory": "Accounts",
-      "title": "Email & app accounts"
-    },
-    {
       "uri": "ms-settings:assignedaccess",
       "page": "kiosk",
       "sourceCategory": "Accounts",
@@ -152,12 +146,6 @@
       "page": "usb",
       "sourceCategory": "Devices",
       "title": "USB"
-    },
-    {
-      "uri": "ms-settings:wheel",
-      "page": "wheel",
-      "sourceCategory": "Devices",
-      "title": "Wheel"
     },
     {
       "uri": "ms-settings:mobile-devices",
@@ -412,84 +400,6 @@
       "title": "Phone Link"
     },
     {
-      "uri": "ms-settings:privacy-accountinfo",
-      "page": "privacy-accountinfo",
-      "sourceCategory": "Privacy",
-      "title": "Account info"
-    },
-    {
-      "uri": "ms-settings:privacy-activityhistory",
-      "page": "activity",
-      "sourceCategory": "Privacy",
-      "title": "Activity history"
-    },
-    {
-      "uri": "ms-settings:privacy-advertisingid",
-      "page": "general-privacy",
-      "sourceCategory": "Privacy",
-      "title": "Advertising ID"
-    },
-    {
-      "uri": "ms-settings:privacy-appdiagnostics",
-      "page": "privacy-appdiagnostics",
-      "sourceCategory": "Privacy",
-      "title": "App diagnostics"
-    },
-    {
-      "uri": "ms-settings:privacy-automaticfiledownloads",
-      "page": "privacy-automaticfiledownloads",
-      "sourceCategory": "Privacy",
-      "title": "Automatic file downloads"
-    },
-    {
-      "uri": "ms-settings:privacy-backgroundapps",
-      "page": "privacy-backgroundapps",
-      "sourceCategory": "Privacy",
-      "title": "Background Apps"
-    },
-    {
-      "uri": "ms-settings:privacy-backgroundspatialperception",
-      "page": "privacy-backgroundspatialperception",
-      "sourceCategory": "Privacy",
-      "title": "Background Spatial Perception"
-    },
-    {
-      "uri": "ms-settings:privacy-callhistory",
-      "page": "privacy-callhistory",
-      "sourceCategory": "Privacy",
-      "title": "Call history"
-    },
-    {
-      "uri": "ms-settings:privacy-webcam",
-      "page": "privacy-webcam",
-      "sourceCategory": "Privacy",
-      "title": "Camera"
-    },
-    {
-      "uri": "ms-settings:privacy-email",
-      "page": "privacy-email",
-      "sourceCategory": "Privacy",
-      "title": "Email"
-    },
-    {
-      "uri": "ms-settings:privacy-eyetracker",
-      "page": "privacy-eyetracker",
-      "sourceCategory": "Privacy",
-      "title": "Eye tracker"
-    },
-    {
-      "uri": "ms-settings:privacy-feedback",
-      "page": "diagnostics",
-      "sourceCategory": "Privacy",
-      "title": "Feedback & diagnostics"
-    },
-    {
-      "uri": "ms-settings:privacy-broadfilesystemaccess",
-      "page": "privacy-broadfilesystemaccess",
-      "sourceCategory": "Privacy",
-      "title": "File system"
-    },
-    {
       "uri": "ms-settings:privacy",
       "page": "general-privacy",
       "sourceCategory": "Privacy",
@@ -502,82 +412,10 @@
       "title": "General"
     },
     {
-      "uri": "ms-settings:privacy-graphicscaptureprogrammatic",
-      "page": "privacy-graphicscaptureprogrammatic",
-      "sourceCategory": "Privacy",
-      "title": "Graphics"
-    },
-    {
-      "uri": "ms-settings:privacy-graphicscapturewithoutborder",
-      "page": "privacy-graphicscapturewithoutborder",
-      "sourceCategory": "Privacy",
-      "title": "Graphics"
-    },
-    {
-      "uri": "ms-settings:privacy-location",
-      "page": "privacy-location",
-      "sourceCategory": "Privacy",
-      "title": "Location"
-    },
-    {
-      "uri": "ms-settings:privacy-messaging",
-      "page": "privacy-messaging",
-      "sourceCategory": "Privacy",
-      "title": "Messaging"
-    },
-    {
-      "uri": "ms-settings:privacy-microphone",
-      "page": "privacy-microphone",
-      "sourceCategory": "Privacy",
-      "title": "Microphone"
-    },
-    {
-      "uri": "ms-settings:privacy-motion",
-      "page": "privacy-motion",
-      "sourceCategory": "Privacy",
-      "title": "Motion"
-    },
-    {
-      "uri": "ms-settings:privacy-notifications",
-      "page": "privacy-notifications",
-      "sourceCategory": "Privacy",
-      "title": "Notifications"
-    },
-    {
-      "uri": "ms-settings:privacy-customdevices",
-      "page": "privacy-customdevices",
-      "sourceCategory": "Privacy",
-      "title": "Other devices"
-    },
-    {
-      "uri": "ms-settings:privacy-phonecalls",
-      "page": "privacy-phonecalls",
-      "sourceCategory": "Privacy",
-      "title": "Phone calls"
-    },
-    {
-      "uri": "ms-settings:privacy-pictures",
-      "page": "privacy-pictures",
-      "sourceCategory": "Privacy",
-      "title": "Pictures"
-    },
-    {
-      "uri": "ms-settings:privacy-radios",
-      "page": "privacy-radios",
-      "sourceCategory": "Privacy",
-      "title": "Radios"
-    },
-    {
       "uri": "ms-settings:privacy-speech",
       "page": "online-speech",
       "sourceCategory": "Privacy",
       "title": "Speech"
-    },
-    {
-      "uri": "ms-settings:privacy-voiceactivation",
-      "page": "privacy-voiceactivation",
-      "sourceCategory": "Privacy",
-      "title": "Voice activation"
     },
     {
       "uri": "ms-settings:search",
@@ -590,12 +428,6 @@
       "page": "search-index",
       "sourceCategory": "Search",
       "title": "Search more details"
-    },
-    {
-      "uri": "ms-settings:search-permissions",
-      "page": "search-permissions",
-      "sourceCategory": "Search",
-      "title": "Search Permissions"
     },
     {
       "uri": "ms-settings:apps-volume",
@@ -850,12 +682,6 @@
       "title": "Windows Update"
     },
     {
-      "uri": "ms-settings:windowsupdate-activehours",
-      "page": "active-hours",
-      "sourceCategory": "Update and security",
-      "title": "Windows Update-Active hours"
-    },
-    {
       "uri": "ms-settings:windowsupdate-options",
       "page": "updates",
       "sourceCategory": "Update and security",
@@ -866,6 +692,12 @@
       "page": "updates",
       "sourceCategory": "Update and security",
       "title": "Windows Update-Seeker on demand"
+    },
+    {
+      "uri": "ms-settings:windowsupdate-activehours",
+      "page": "active-hours",
+      "sourceCategory": "Update and security",
+      "title": "Active hours"
     }
   ],
   "backupSettings": [
@@ -924,7 +756,6 @@
     {
       "area": "System",
       "path": [
-        "Notifications",
         "Notifications"
       ],
       "page": "notifications",
@@ -933,7 +764,6 @@
     {
       "area": "System",
       "path": [
-        "Notifications",
         "Notifications",
         "Allow notifications to play sounds"
       ],
@@ -945,7 +775,6 @@
       "area": "System",
       "path": [
         "Notifications",
-        "Notifications",
         "Show notifications on the lock screen"
       ],
       "page": "notifications",
@@ -956,7 +785,6 @@
       "area": "System",
       "path": [
         "Notifications",
-        "Notifications",
         "Show reminders and incoming VoIP calls on the lock screen"
       ],
       "page": "notifications",
@@ -966,7 +794,6 @@
     {
       "area": "System",
       "path": [
-        "Notifications",
         "Notifications",
         "Show notification bell icon"
       ],
@@ -2284,26 +2111,6 @@
       "control": "backup.reference.802b32da"
     },
     {
-      "area": "Accounts",
-      "path": [
-        "Windows Backup",
-        "Email and Accounts"
-      ],
-      "page": "backup",
-      "coverage": "section"
-    },
-    {
-      "area": "Accounts",
-      "path": [
-        "Windows Backup",
-        "Email and Accounts",
-        "Accounts used by other apps (MSA accounts only)"
-      ],
-      "page": "backup",
-      "coverage": "control",
-      "control": "backup.reference.c0c91ce4"
-    },
-    {
       "area": "Time & language",
       "path": [
         "Date & time"
@@ -2331,7 +2138,6 @@
     {
       "area": "Vision",
       "path": [
-        "Text Size",
         "Text Size"
       ],
       "page": "text-size",
@@ -2691,7 +2497,6 @@
     {
       "area": "Vision",
       "path": [
-        "Color filters",
         "Color filters"
       ],
       "page": "color-filters",
@@ -3776,24 +3581,6 @@
       "page": "eye-control",
       "coverage": "control",
       "control": "eye-control.reference.da32acee"
-    },
-    {
-      "area": "Privacy & security",
-      "path": [
-        "Activity history"
-      ],
-      "page": "activity",
-      "coverage": "section"
-    },
-    {
-      "area": "Privacy & security",
-      "path": [
-        "Activity history",
-        "Store my activity history on this device"
-      ],
-      "page": "activity",
-      "coverage": "control",
-      "control": "activity.reference.c2152566"
     },
     {
       "area": "File Explorer settings",

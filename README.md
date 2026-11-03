@@ -34,7 +34,7 @@ Settings combines an information architecture inspired by modern desktop setting
 
 Browse Home, category pages, and About; search settings locally, follow related pages, and inspect third-party licenses.
 
-- **Current Catalog**: 13 categories, 214 pages, 1,799 controls (168 available, 1,597 planned previews, 34 unsupported).
+- **Current Catalog**: 13 categories, 138 pages, 1,669 controls (168 available, 1,491 planned previews, 10 unsupported).
 - **Desktop Reference & Inspiration**: Draws reference from applicable desktop settings benchmarks (including Windows 11 reference taxonomies), retaining relevant pages, controls, URI names, and hierarchy structures as design inspiration while departing where native Linux and Hyprland workflows differ. Removed Windows-only features are excluded from coverage records. See [research, sources, and limitations](docs/windows-settings-research.md).
 - **Hyprland Extensions**: Retains 762 controls based on official configuration documentation and ecosystem tools, merging related previews into ordinary pages’ Advanced sections. See [Hyprland sources and version limits](docs/hyprland-settings-research.md).
 - **Availability & Tracking**: Every setting declares availability (`available`, `planned`, or `unsupported`). Unavailable controls remain disabled while allowing navigation to preview pages; contextually inapplicable options are hidden automatically. See the [implementation progress checklist](docs/settings-implementation-progress.md).

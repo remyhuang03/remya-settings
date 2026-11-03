@@ -2,9 +2,9 @@
 
 Research date: 2026-10-26. Baseline: commit `44679b271497c40a0d37dd40299f89ae59c7aa6f`.
 
-This extension adds **2 categories, 83 pages, and 762 controls**. The combined catalog has **12 categories, 220 pages, and 1,815 controls**. The current reference catalog contains **140 pages and 1,074 controls**. The former `hypr-monitor-fields` page moved into Display: its implemented fields left this extension, and duplicates are listed under `retired` in the coverage file. Coverage files describe the current included controls.
+The retained extension contains **2 categories, 35 independent pages, and 762 controls**, including previews folded into ordinary pages. The combined catalog has **13 categories, 138 pages, and 1669 controls**. Coverage files describe the currently included controls and their owning pages.
 
-Apart from the implemented Display and Sound fields, this extension remains **UI only**. Every remaining addition is `planned`, operation controls remain disabled, and no configuration, process, device, or service is read or modified by the application. Optional components are identified in each page's availability reason. Their presence and compatibility have not been detected.
+Apart from the implemented Display fields and audio device/stream routing, this extension remains **UI only**. Every remaining addition is `planned`, operation controls remain disabled, and no configuration, process, device, or service is read or modified by the application. Optional components are identified in each page's availability reason. Their presence and compatibility have not been detected.
 
 ## Reference versions
 
@@ -24,14 +24,15 @@ Only feature facts and interface organization were used. No third-party implemen
 
 ## Classification and gap coverage
 
-Hyprland pages are grouped by system responsibility; OpenGL and rendering belong under System. The two dedicated Hyprland categories remain at the end of navigation.
+Hyprland controls are grouped by system responsibility; OpenGL and rendering belong under System. The two dedicated Hyprland categories remain at the end of navigation.
 
 | Category | Added pages | Missing concepts now represented |
 | --- | ---: | --- |
-| System | 10 | OpenGL, rendering and color pipeline, native monitor rules and reserved areas, HDR/ICC/VRR fields, output/workspace assignments, multi-GPU selection, XWayland and application quirks, hypridle listeners, PipeWire routing |
-| Bluetooth & devices | 12 | Global and per-device XKB/input overrides, pointer engine, touchpad/touch/tablet/pen parameters, virtual keyboards, gesture definitions and hardware switch bindings |
-| Appearance | 16 | Border gradients, gaps-related appearance, opacity/dimming, blur, shadows/glow/motion effects, animation trees and curves, and shell presets |
-| Privacy & security | 14 | Compositor permission rules, capture boundaries, portals and file-picker providers, authorization agent, Hyprlock authentication and widget configuration |
+| System | 0 | OpenGL, rendering and color pipeline, native monitor rules and reserved areas, HDR/ICC/VRR fields, output/workspace assignments, multi-GPU selection, XWayland and application quirks, hypridle listeners |
+| Sound | 0 | Native PipeWire default devices, stream inventory and routing; device profile/port previews |
+| Bluetooth & devices | 0 | Global and per-device XKB/input overrides, pointer engine, touchpad/touch/tablet/pen parameters, virtual keyboards, gesture definitions and hardware switch bindings |
+| Appearance | 0 | Border gradients, gaps-related appearance, opacity/dimming, blur, shadows/glow/motion effects, animation trees and curves, and shell presets |
+| Privacy & security | 3 | Compositor permission rules, capture boundaries, portals and file-picker providers, authorization agent, Hyprlock authentication and widget configuration |
 | **Window & workspaces (new)** | **23** | Dwindle/Master/Scrolling/Monocle layouts, general layout and snapping, persistent/special workspaces, window groups and group bars, window/layer/workspace rules, key bindings, flags and submaps |
 | **Session & configuration (new)** | **12** | Config entrypoints and includes, comments/overrides, backup/restore and diff previews, autostart/shutdown hooks, UWSM/user services, environment variables, plugins, diagnostics, experimental options and logout/power menu |
 
@@ -49,9 +50,9 @@ Documented boolean fields use disabled switches. Bounded numeric fields use the 
 
 ## Evidence and preservation checks
 
-- `assets/settings/catalog.json`: original objects plus appended categories, sources, and pages.
-- `docs/hyprland-settings-coverage.json`: baseline IDs, inspected repository revisions, file permalinks, new page IDs, and one source mapping for every added control. Native types/defaults/limits are recorded for table-derived fields.
-- `docs/settings-implementation-progress.md`: combined human-readable tracker; all preexisting detailed page blocks and tracking notes are retained verbatim, with added pages and updated summary counts.
+- `assets/settings/catalog.json`: current categories, sources and pages, with related compositor previews grouped in the owning ordinary page's collapsed Advanced section.
+- `docs/hyprland-settings-coverage.json`: baseline IDs, inspected repository revisions, file permalinks, remaining standalone page IDs, and one source mapping for every added control, including folded controls. Native types/defaults/limits are recorded for table-derived fields.
+- `docs/settings-implementation-progress.md`: combined human-readable tracker; current detailed page blocks and tracking notes, with matching summary counts.
 - `test/catalog_test.dart`: retained baseline identities, source mapping integrity, coverage of current source fields, searchable additions, unavailable previews, and exact tracker parity.
 
 Catalog tests validate current category/page/control identities and source mappings. Rendering tests exercise the enlarged catalog at wide, compact, and narrow widths; asset/schema validation and a Linux build check that the generic renderer accepts every added page.
@@ -59,3 +60,5 @@ Catalog tests validate current category/page/control identities and source mappi
 ## Implementation boundaries for later work
 
 Future integrations must select compatible Hyprland/component versions, preserve configuration structure and comments, validate values and paths, distinguish dynamic reloads from restart-only settings, and support rollback where writes could disrupt a session. GUI permission rules are not equivalent to a universal application sandbox. Optional shell components and update/package managers are not selected by the presence of their preview pages. These constraints do not add system-side behavior to this milestone.
+
+Related input, touchpad, touch, pen, display, graphics, audio, power, appearance, lock-screen, startup, backup and authorization previews now live under the corresponding ordinary page's default-collapsed Advanced section. Unimplemented previews remain planned and disabled; available audio controls are documented in [Sound](sound.md). Native workspace, rule, portal and session/configuration workflows without a matching ordinary page retain their own entries.

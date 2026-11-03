@@ -52,7 +52,6 @@
     "autoplay",
     "usb",
     "mobile",
-    "wheel",
     "network-status",
     "wifi",
     "known-networks",
@@ -79,7 +78,6 @@
     "defaults",
     "startup",
     "your-info",
-    "email",
     "signin",
     "dynamic-lock",
     "hello-face",
@@ -109,39 +107,12 @@
     "find-device",
     "general-privacy",
     "online-speech",
-    "diagnostics",
-    "activity",
-    "search-permissions",
     "search-index",
-    "recall",
     "updates",
-    "active-hours",
     "passkeys",
     "passkeys-advanced",
-    "presence-permissions",
     "cloud-storage",
-    "privacy-accountinfo",
-    "privacy-appdiagnostics",
-    "privacy-automaticfiledownloads",
-    "privacy-backgroundapps",
-    "privacy-backgroundspatialperception",
-    "privacy-callhistory",
-    "privacy-webcam",
-    "privacy-email",
-    "privacy-eyetracker",
-    "privacy-broadfilesystemaccess",
-    "privacy-graphicscaptureprogrammatic",
-    "privacy-graphicscapturewithoutborder",
-    "privacy-location",
-    "privacy-messaging",
-    "privacy-microphone",
-    "privacy-motion",
-    "privacy-notifications",
-    "privacy-customdevices",
-    "privacy-phonecalls",
-    "privacy-pictures",
-    "privacy-radios",
-    "privacy-voiceactivation"
+    "active-hours"
   ],
   "baselineControls": [
     "display.5d419889",
@@ -172,6 +143,10 @@
     "graphics.f6aaf67c",
     "graphics.232eb7f3",
     "graphics.49ad9ee9",
+    "sound.output-device",
+    "sound.output-volume",
+    "sound.input-device",
+    "sound.input-volume",
     "notifications.7a66c0d0",
     "notifications.e0ab8430",
     "notifications.4a3428cc",
@@ -419,10 +394,6 @@
     "mobile.1ec69bd1",
     "mobile.8031425b",
     "mobile.1c9889d2",
-    "wheel.1432f6ac",
-    "wheel.a359b3f1",
-    "wheel.f7d769a7",
-    "wheel.cbe34089",
     "network-status.connection",
     "network-status.name",
     "network-status.data-usage",
@@ -605,9 +576,6 @@
     "appimages.auto-check",
     "appimages.auto-update",
     "app-properties.e8427b83",
-    "app-properties.928fd04d",
-    "app-properties.b9fea940",
-    "app-properties.dde21b2c",
     "app-properties.6a3d60ab",
     "app-properties.dba04b1b",
     "app-properties.2888e689",
@@ -627,9 +595,6 @@
     "your-info.58484bbb",
     "your-info.7e0e3d0b",
     "your-info.398b2d99",
-    "email.c771c7d8",
-    "email.83f45bb5",
-    "email.f03ce431",
     "signin.090cb65e",
     "signin.e3ce550b",
     "signin.3adadd31",
@@ -665,7 +630,6 @@
     "backup.reference.60ff3096",
     "backup.reference.b695b07e",
     "backup.reference.802b32da",
-    "backup.reference.c0c91ce4",
     "kiosk.279497bb",
     "kiosk.864aff36",
     "kiosk.9ec480c1",
@@ -942,50 +906,16 @@
     "encryption.45dd31ac",
     "find-device.9436d046",
     "find-device.a33ef3cc",
-    "general-privacy.17180bb6",
     "general-privacy.688b695e",
-    "general-privacy.f06cf7db",
-    "general-privacy.c252e344",
     "general-privacy.87512f3b",
     "online-speech.0a66701f",
     "online-speech.20caf0a6",
-    "diagnostics.1670f2f6",
-    "diagnostics.9ed076ac",
-    "diagnostics.44f00cc6",
-    "diagnostics.e46bf6ba",
-    "diagnostics.693a0492",
-    "diagnostics.193e06c4",
-    "activity.4e2323e9",
-    "activity.f6afab60",
-    "activity.reference.c2152566",
-    "search-permissions.17512e70",
-    "search-permissions.c7813935",
-    "search-permissions.501e5ac5",
-    "search-permissions.781a175d",
-    "search-permissions.4a111c5a",
-    "search-permissions.34652d10",
     "search-index.acf33b0f",
     "search-index.5fc76958",
     "search-index.cd42d36e",
     "search-index.0690cd83",
     "search-index.d4c992e9",
     "search-index.5a5afb60",
-    "recall.75bf7faf",
-    "recall.35e00b88",
-    "recall.8c714efb",
-    "recall.08113799",
-    "recall.f4366b8d",
-    "recall.6f074486",
-    "recall.5b62e0a8",
-    "recall.6e493e99",
-    "updates.69d14924",
-    "updates.a6df3858",
-    "updates.0a009ef6",
-    "updates.1439f298",
-    "updates.abe0ecdb",
-    "active-hours.f2a92e6f",
-    "active-hours.e8868af6",
-    "active-hours.a0bb9f49",
     "passkeys.8fbaa646",
     "passkeys.6e953913",
     "passkeys.53d248e4",
@@ -993,105 +923,9 @@
     "passkeys-advanced.71fe6bdc",
     "passkeys-advanced.973ee8b8",
     "passkeys-advanced.786de3b4",
-    "presence-permissions.0c794eb6",
-    "presence-permissions.60318dc7",
-    "presence-permissions.77c98092",
-    "presence-permissions.249b0d1c",
     "cloud-storage.718afb24",
     "cloud-storage.1cc744fa",
     "cloud-storage.9d773e3a",
-    "privacy-accountinfo.c14db834",
-    "privacy-accountinfo.b3922642",
-    "privacy-accountinfo.53ddbab7",
-    "privacy-accountinfo.bc0f5a5a",
-    "privacy-appdiagnostics.2bae941b",
-    "privacy-appdiagnostics.cf86a8de",
-    "privacy-appdiagnostics.ca992042",
-    "privacy-appdiagnostics.bc0f5a5a",
-    "privacy-automaticfiledownloads.62830e87",
-    "privacy-automaticfiledownloads.4fe8b8e8",
-    "privacy-automaticfiledownloads.9f89bad5",
-    "privacy-automaticfiledownloads.bc0f5a5a",
-    "privacy-backgroundapps.bef9974b",
-    "privacy-backgroundapps.d50bfa1c",
-    "privacy-backgroundapps.d22436de",
-    "privacy-backgroundapps.bc0f5a5a",
-    "privacy-backgroundspatialperception.ffd33ca3",
-    "privacy-backgroundspatialperception.5a4a9f2a",
-    "privacy-backgroundspatialperception.efd56719",
-    "privacy-backgroundspatialperception.bc0f5a5a",
-    "privacy-callhistory.96bc87a0",
-    "privacy-callhistory.39e7e03f",
-    "privacy-callhistory.7eec1e7e",
-    "privacy-callhistory.bc0f5a5a",
-    "privacy-webcam.bb196d05",
-    "privacy-webcam.c68d5137",
-    "privacy-webcam.1dfd1d96",
-    "privacy-webcam.bc0f5a5a",
-    "privacy-email.6743c4a8",
-    "privacy-email.b1eccdff",
-    "privacy-email.0f9728b4",
-    "privacy-email.bc0f5a5a",
-    "privacy-eyetracker.e409bf85",
-    "privacy-eyetracker.9536184e",
-    "privacy-eyetracker.90447213",
-    "privacy-eyetracker.bc0f5a5a",
-    "privacy-broadfilesystemaccess.201c9daf",
-    "privacy-broadfilesystemaccess.85ed3ea9",
-    "privacy-broadfilesystemaccess.e0e3dac0",
-    "privacy-broadfilesystemaccess.bc0f5a5a",
-    "privacy-graphicscaptureprogrammatic.f4796772",
-    "privacy-graphicscaptureprogrammatic.36f7273e",
-    "privacy-graphicscaptureprogrammatic.7b1ff9cb",
-    "privacy-graphicscaptureprogrammatic.bc0f5a5a",
-    "privacy-graphicscapturewithoutborder.864101f4",
-    "privacy-graphicscapturewithoutborder.c791799e",
-    "privacy-graphicscapturewithoutborder.e6ef1f02",
-    "privacy-graphicscapturewithoutborder.bc0f5a5a",
-    "privacy-location.b53f9ca7",
-    "privacy-location.6d137050",
-    "privacy-location.46291e42",
-    "privacy-location.bc0f5a5a",
-    "privacy-location.082addf9",
-    "privacy-location.fec9248d",
-    "privacy-location.a348ea51",
-    "privacy-messaging.1c868b63",
-    "privacy-messaging.75f65f66",
-    "privacy-messaging.ebdef2d0",
-    "privacy-messaging.bc0f5a5a",
-    "privacy-microphone.2298fc11",
-    "privacy-microphone.d65280b9",
-    "privacy-microphone.3740edb1",
-    "privacy-microphone.bc0f5a5a",
-    "privacy-motion.d4e74455",
-    "privacy-motion.3c8df88a",
-    "privacy-motion.7dadf4d9",
-    "privacy-motion.bc0f5a5a",
-    "privacy-notifications.fcd04817",
-    "privacy-notifications.27c3ae78",
-    "privacy-notifications.4b6a2eab",
-    "privacy-notifications.bc0f5a5a",
-    "privacy-customdevices.2ae3eaa4",
-    "privacy-customdevices.116586b1",
-    "privacy-customdevices.71162fd5",
-    "privacy-customdevices.bc0f5a5a",
-    "privacy-phonecalls.f6415e0a",
-    "privacy-phonecalls.61c3930e",
-    "privacy-phonecalls.4fde61dd",
-    "privacy-phonecalls.bc0f5a5a",
-    "privacy-pictures.1b549e5c",
-    "privacy-pictures.d31bf02a",
-    "privacy-pictures.c20698c1",
-    "privacy-pictures.bc0f5a5a",
-    "privacy-radios.fd561c64",
-    "privacy-radios.11a432f0",
-    "privacy-radios.6792cc19",
-    "privacy-radios.bc0f5a5a",
-    "privacy-voiceactivation.2ccffeb1",
-    "privacy-voiceactivation.ab979cad",
-    "privacy-voiceactivation.67d3b590",
-    "privacy-voiceactivation.bc0f5a5a",
-    "privacy-voiceactivation.0b683ed1",
     "bluetooth.enabled",
     "bluetooth.adapter",
     "bluetooth.scan",
@@ -1104,7 +938,18 @@
     "bluetooth.respond",
     "bluetooth.information",
     "bluetooth.discoverable",
-    "airplane.bluetooth"
+    "airplane.bluetooth",
+    "updates.check",
+    "updates.upgrade",
+    "updates.include-held",
+    "updates.retry",
+    "updates.status",
+    "updates.output",
+    "updates.automatic",
+    "updates.daily-time",
+    "active-hours.f2a92e6f",
+    "active-hours.e8868af6",
+    "active-hours.a0bb9f49"
   ],
   "repositories": {
     "wiki": "026b282bdde916bb7ce77689857f40cf1e829e82",
@@ -1187,7 +1032,7 @@
       "path": "content/configuring/core/rules/workspace-rules.md"
     },
     {
-      "id": "hypr-gestures",
+      "id": "hypr-gesture-reference",
       "title": "Hyprland 手势绑定",
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/gestures.md",
       "repository": "hyprwm/hyprland-wiki",
@@ -1235,7 +1080,7 @@
       "path": "content/configuring/core/binds/switches.md"
     },
     {
-      "id": "hypr-animations",
+      "id": "hypr-animation-reference",
       "title": "Hyprland 动画和曲线",
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/animations.md",
       "repository": "hyprwm/hyprland-wiki",
@@ -1251,7 +1096,7 @@
       "path": "content/configuring/core/environment-variables.md"
     },
     {
-      "id": "hypr-autostart",
+      "id": "hypr-startup-reference",
       "title": "Hyprland 会话启动",
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/autostart.md",
       "repository": "hyprwm/hyprland-wiki",
@@ -1275,7 +1120,7 @@
       "path": "content/ipc/_index.md"
     },
     {
-      "id": "hypr-multi-gpu",
+      "id": "hypr-gpu-reference",
       "title": "Hyprland 多 GPU",
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/extra/multi-gpu.md",
       "repository": "hyprwm/hyprland-wiki",
@@ -1363,7 +1208,7 @@
       "path": "content/hypr-ecosystem/user/hyprpolkitagent.md"
     },
     {
-      "id": "hypr-shutdown",
+      "id": "hypr-power-reference",
       "title": "Hyprland 会话退出",
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprshutdown.md",
       "repository": "hyprwm/hyprland-wiki",
@@ -1425,36 +1270,13 @@
   ],
   "addedPages": [
     "hypr-general",
-    "hypr-general-col",
     "hypr-general-snap",
-    "hypr-decoration",
-    "hypr-decoration-blur",
-    "hypr-decoration-shadow",
-    "hypr-decoration-glow",
-    "hypr-decoration-motion-blur",
-    "hypr-decoration-wobble",
-    "hypr-animations",
-    "hypr-input",
-    "hypr-input-touchpad",
-    "hypr-input-touchdevice",
-    "hypr-input-virtualkeyboard",
-    "hypr-input-tablet",
-    "hypr-input-tablettool",
-    "hypr-gestures",
-    "hypr-gestures-scrolling",
     "hypr-group",
-    "hypr-group-col",
     "hypr-group-groupbar",
-    "hypr-group-groupbar-col",
     "hypr-misc",
-    "hypr-misc-col",
     "hypr-layout",
     "hypr-binds",
-    "hypr-xwayland",
-    "hypr-opengl",
-    "hypr-render",
     "hypr-ecosystem",
-    "hypr-quirks",
     "hypr-input-capture",
     "hypr-debug",
     "hypr-experimental",
@@ -1469,43 +1291,19 @@
     "hypr-window-rule-dynamic-effects",
     "hypr-layer-rule-props",
     "hypr-layer-rule-effects",
-    "hypr-gesture-fields",
-    "hypr-idle-general",
-    "hypr-idle-listeners",
-    "hypr-lock-general",
-    "hypr-lock-authentication",
-    "hypr-lock-animations",
-    "hypr-lock-shadowable",
-    "hypr-lock-clickable",
-    "hypr-lock-background",
-    "hypr-lock-image",
-    "hypr-lock-shape",
-    "hypr-lock-input-field",
-    "hypr-lock-label",
     "hypr-layout-overview",
     "hypr-layout-monocle",
     "hypr-workspaces",
     "hypr-keybinds",
     "hypr-bind-flags",
     "hypr-keybind-submaps",
-    "hypr-device-profiles",
-    "hypr-device-bindings",
-    "hypr-animation-editor",
-    "hypr-gradient-editor",
-    "hypr-output-assignments",
-    "hypr-multi-gpu",
     "hypr-compositor-permissions",
     "hypr-desktop-portals",
-    "hypr-polkit-agent",
     "hypr-config-files",
-    "hypr-config-backup",
-    "hypr-autostart",
     "hypr-session-services",
     "hypr-environment",
     "hypr-plugins",
-    "hypr-diagnostics",
-    "hypr-shutdown",
-    "hypr-shell-components"
+    "hypr-diagnostics"
   ],
   "controls": [
     {
@@ -1705,8 +1503,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-general-col.active-border",
-      "page": "hypr-general-col",
+      "control": "themes.border-active-border",
+      "page": "themes",
       "source": "hypr-options",
       "key": "active-border",
       "reference": [
@@ -1719,8 +1517,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-general-col.inactive-border",
-      "page": "hypr-general-col",
+      "control": "themes.border-inactive-border",
+      "page": "themes",
       "source": "hypr-options",
       "key": "inactive-border",
       "reference": [
@@ -1733,8 +1531,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-general-col.nogroup-border",
-      "page": "hypr-general-col",
+      "control": "themes.border-nogroup-border",
+      "page": "themes",
       "source": "hypr-options",
       "key": "nogroup-border",
       "reference": [
@@ -1747,8 +1545,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-general-col.nogroup-border-active",
-      "page": "hypr-general-col",
+      "control": "themes.border-nogroup-border-active",
+      "page": "themes",
       "source": "hypr-options",
       "key": "nogroup-border-active",
       "reference": [
@@ -1831,8 +1629,8 @@
       "documentedLimits": "[0 - 100]"
     },
     {
-      "control": "hypr-decoration.active-opacity",
-      "page": "hypr-decoration",
+      "control": "themes.decoration-active-opacity",
+      "page": "themes",
       "source": "hypr-options",
       "key": "active-opacity",
       "reference": [
@@ -1845,8 +1643,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "hypr-decoration.border-part-of-window",
-      "page": "hypr-decoration",
+      "control": "themes.decoration-border-part-of-window",
+      "page": "themes",
       "source": "hypr-options",
       "key": "border-part-of-window",
       "reference": [
@@ -1859,8 +1657,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration.dim-around",
-      "page": "hypr-decoration",
+      "control": "themes.decoration-dim-around",
+      "page": "themes",
       "source": "hypr-options",
       "key": "dim-around",
       "reference": [
@@ -1873,8 +1671,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "hypr-decoration.dim-inactive",
-      "page": "hypr-decoration",
+      "control": "themes.decoration-dim-inactive",
+      "page": "themes",
       "source": "hypr-options",
       "key": "dim-inactive",
       "reference": [
@@ -1887,8 +1685,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration.dim-modal",
-      "page": "hypr-decoration",
+      "control": "themes.decoration-dim-modal",
+      "page": "themes",
       "source": "hypr-options",
       "key": "dim-modal",
       "reference": [
@@ -1901,8 +1699,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration.dim-special",
-      "page": "hypr-decoration",
+      "control": "themes.decoration-dim-special",
+      "page": "themes",
       "source": "hypr-options",
       "key": "dim-special",
       "reference": [
@@ -1915,8 +1713,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration.dim-strength",
-      "page": "hypr-decoration",
+      "control": "themes.decoration-dim-strength",
+      "page": "themes",
       "source": "hypr-options",
       "key": "dim-strength",
       "reference": [
@@ -1929,8 +1727,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "hypr-decoration.fullscreen-opacity",
-      "page": "hypr-decoration",
+      "control": "themes.decoration-fullscreen-opacity",
+      "page": "themes",
       "source": "hypr-options",
       "key": "fullscreen-opacity",
       "reference": [
@@ -1943,8 +1741,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "hypr-decoration.inactive-opacity",
-      "page": "hypr-decoration",
+      "control": "themes.decoration-inactive-opacity",
+      "page": "themes",
       "source": "hypr-options",
       "key": "inactive-opacity",
       "reference": [
@@ -1957,8 +1755,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "hypr-decoration.rounding",
-      "page": "hypr-decoration",
+      "control": "themes.decoration-rounding",
+      "page": "themes",
       "source": "hypr-options",
       "key": "rounding",
       "reference": [
@@ -1971,8 +1769,8 @@
       "documentedLimits": "[0 - 100]"
     },
     {
-      "control": "hypr-decoration.rounding-power",
-      "page": "hypr-decoration",
+      "control": "themes.decoration-rounding-power",
+      "page": "themes",
       "source": "hypr-options",
       "key": "rounding-power",
       "reference": [
@@ -1985,8 +1783,8 @@
       "documentedLimits": "[1.0 - 10.0]"
     },
     {
-      "control": "hypr-decoration.screen-shader",
-      "page": "hypr-decoration",
+      "control": "themes.decoration-screen-shader",
+      "page": "themes",
       "source": "hypr-options",
       "key": "screen-shader",
       "reference": [
@@ -1999,8 +1797,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-blur.enabled",
-      "page": "hypr-decoration-blur",
+      "control": "background.blur-enabled",
+      "page": "background",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -2013,8 +1811,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-blur.brightness",
-      "page": "hypr-decoration-blur",
+      "control": "background.blur-brightness",
+      "page": "background",
       "source": "hypr-options",
       "key": "brightness",
       "reference": [
@@ -2027,8 +1825,8 @@
       "documentedLimits": "[0.0 - 2.0]"
     },
     {
-      "control": "hypr-decoration-blur.contrast",
-      "page": "hypr-decoration-blur",
+      "control": "background.blur-contrast",
+      "page": "background",
       "source": "hypr-options",
       "key": "contrast",
       "reference": [
@@ -2041,8 +1839,8 @@
       "documentedLimits": "[0.0 - 2.0]"
     },
     {
-      "control": "hypr-decoration-blur.ignore-opacity",
-      "page": "hypr-decoration-blur",
+      "control": "background.blur-ignore-opacity",
+      "page": "background",
       "source": "hypr-options",
       "key": "ignore-opacity",
       "reference": [
@@ -2055,8 +1853,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-blur.new-optimizations",
-      "page": "hypr-decoration-blur",
+      "control": "background.blur-new-optimizations",
+      "page": "background",
       "source": "hypr-options",
       "key": "new-optimizations",
       "reference": [
@@ -2069,8 +1867,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-blur.noise",
-      "page": "hypr-decoration-blur",
+      "control": "background.blur-noise",
+      "page": "background",
       "source": "hypr-options",
       "key": "noise",
       "reference": [
@@ -2083,8 +1881,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "hypr-decoration-blur.passes",
-      "page": "hypr-decoration-blur",
+      "control": "background.blur-passes",
+      "page": "background",
       "source": "hypr-options",
       "key": "passes",
       "reference": [
@@ -2097,8 +1895,8 @@
       "documentedLimits": "[0 - 10]"
     },
     {
-      "control": "hypr-decoration-blur.popups",
-      "page": "hypr-decoration-blur",
+      "control": "background.blur-popups",
+      "page": "background",
       "source": "hypr-options",
       "key": "popups",
       "reference": [
@@ -2111,8 +1909,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-blur.popups-ignorealpha",
-      "page": "hypr-decoration-blur",
+      "control": "background.blur-popups-ignorealpha",
+      "page": "background",
       "source": "hypr-options",
       "key": "popups-ignorealpha",
       "reference": [
@@ -2125,8 +1923,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "hypr-decoration-blur.size",
-      "page": "hypr-decoration-blur",
+      "control": "background.blur-size",
+      "page": "background",
       "source": "hypr-options",
       "key": "size",
       "reference": [
@@ -2139,8 +1937,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-blur.special",
-      "page": "hypr-decoration-blur",
+      "control": "background.blur-special",
+      "page": "background",
       "source": "hypr-options",
       "key": "special",
       "reference": [
@@ -2153,8 +1951,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-blur.vibrancy",
-      "page": "hypr-decoration-blur",
+      "control": "background.blur-vibrancy",
+      "page": "background",
       "source": "hypr-options",
       "key": "vibrancy",
       "reference": [
@@ -2167,8 +1965,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "hypr-decoration-blur.vibrancy-darkness",
-      "page": "hypr-decoration-blur",
+      "control": "background.blur-vibrancy-darkness",
+      "page": "background",
       "source": "hypr-options",
       "key": "vibrancy-darkness",
       "reference": [
@@ -2181,8 +1979,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "hypr-decoration-blur.xray",
-      "page": "hypr-decoration-blur",
+      "control": "background.blur-xray",
+      "page": "background",
       "source": "hypr-options",
       "key": "xray",
       "reference": [
@@ -2195,8 +1993,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-shadow.enabled",
-      "page": "hypr-decoration-shadow",
+      "control": "themes.shadow-enabled",
+      "page": "themes",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -2209,8 +2007,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-shadow.color",
-      "page": "hypr-decoration-shadow",
+      "control": "themes.shadow-color",
+      "page": "themes",
       "source": "hypr-options",
       "key": "color",
       "reference": [
@@ -2223,8 +2021,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-shadow.color-inactive",
-      "page": "hypr-decoration-shadow",
+      "control": "themes.shadow-color-inactive",
+      "page": "themes",
       "source": "hypr-options",
       "key": "color-inactive",
       "reference": [
@@ -2237,8 +2035,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-shadow.offset",
-      "page": "hypr-decoration-shadow",
+      "control": "themes.shadow-offset",
+      "page": "themes",
       "source": "hypr-options",
       "key": "offset",
       "reference": [
@@ -2251,8 +2049,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-shadow.range",
-      "page": "hypr-decoration-shadow",
+      "control": "themes.shadow-range",
+      "page": "themes",
       "source": "hypr-options",
       "key": "range",
       "reference": [
@@ -2265,8 +2063,8 @@
       "documentedLimits": "[0 - 100]"
     },
     {
-      "control": "hypr-decoration-shadow.render-power",
-      "page": "hypr-decoration-shadow",
+      "control": "themes.shadow-render-power",
+      "page": "themes",
       "source": "hypr-options",
       "key": "render-power",
       "reference": [
@@ -2279,8 +2077,8 @@
       "documentedLimits": "[1 - 4]"
     },
     {
-      "control": "hypr-decoration-shadow.scale",
-      "page": "hypr-decoration-shadow",
+      "control": "themes.shadow-scale",
+      "page": "themes",
       "source": "hypr-options",
       "key": "scale",
       "reference": [
@@ -2293,8 +2091,8 @@
       "documentedLimits": "[0.05 - 2.0]"
     },
     {
-      "control": "hypr-decoration-shadow.sharp",
-      "page": "hypr-decoration-shadow",
+      "control": "themes.shadow-sharp",
+      "page": "themes",
       "source": "hypr-options",
       "key": "sharp",
       "reference": [
@@ -2307,8 +2105,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-glow.enabled",
-      "page": "hypr-decoration-glow",
+      "control": "themes.glow-enabled",
+      "page": "themes",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -2321,8 +2119,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-glow.color",
-      "page": "hypr-decoration-glow",
+      "control": "themes.glow-color",
+      "page": "themes",
       "source": "hypr-options",
       "key": "color",
       "reference": [
@@ -2335,8 +2133,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-glow.color-inactive",
-      "page": "hypr-decoration-glow",
+      "control": "themes.glow-color-inactive",
+      "page": "themes",
       "source": "hypr-options",
       "key": "color-inactive",
       "reference": [
@@ -2349,8 +2147,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-glow.range",
-      "page": "hypr-decoration-glow",
+      "control": "themes.glow-range",
+      "page": "themes",
       "source": "hypr-options",
       "key": "range",
       "reference": [
@@ -2363,8 +2161,8 @@
       "documentedLimits": "[0 - 100]"
     },
     {
-      "control": "hypr-decoration-glow.render-power",
-      "page": "hypr-decoration-glow",
+      "control": "themes.glow-render-power",
+      "page": "themes",
       "source": "hypr-options",
       "key": "render-power",
       "reference": [
@@ -2377,8 +2175,8 @@
       "documentedLimits": "[1 - 4]"
     },
     {
-      "control": "hypr-decoration-motion-blur.enabled",
-      "page": "hypr-decoration-motion-blur",
+      "control": "themes.motion-blur-enabled",
+      "page": "themes",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -2391,8 +2189,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-motion-blur.samples",
-      "page": "hypr-decoration-motion-blur",
+      "control": "themes.motion-blur-samples",
+      "page": "themes",
       "source": "hypr-options",
       "key": "samples",
       "reference": [
@@ -2405,8 +2203,8 @@
       "documentedLimits": "[1 - 64]"
     },
     {
-      "control": "hypr-decoration-wobble.enabled",
-      "page": "hypr-decoration-wobble",
+      "control": "themes.wobble-enabled",
+      "page": "themes",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -2419,8 +2217,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-decoration-wobble.mesh",
-      "page": "hypr-decoration-wobble",
+      "control": "themes.wobble-mesh",
+      "page": "themes",
       "source": "hypr-options",
       "key": "mesh",
       "reference": [
@@ -2433,8 +2231,8 @@
       "documentedLimits": "[2 - 32]"
     },
     {
-      "control": "hypr-decoration-wobble.stiffness",
-      "page": "hypr-decoration-wobble",
+      "control": "themes.wobble-stiffness",
+      "page": "themes",
       "source": "hypr-options",
       "key": "stiffness",
       "reference": [
@@ -2447,8 +2245,8 @@
       "documentedLimits": "[0.0001 - 1000]"
     },
     {
-      "control": "hypr-decoration-wobble.damping",
-      "page": "hypr-decoration-wobble",
+      "control": "themes.wobble-damping",
+      "page": "themes",
       "source": "hypr-options",
       "key": "damping",
       "reference": [
@@ -2461,8 +2259,8 @@
       "documentedLimits": "[0 - 1000]"
     },
     {
-      "control": "hypr-decoration-wobble.mass",
-      "page": "hypr-decoration-wobble",
+      "control": "themes.wobble-mass",
+      "page": "themes",
       "source": "hypr-options",
       "key": "mass",
       "reference": [
@@ -2475,8 +2273,8 @@
       "documentedLimits": "[0.0001 - 1000]"
     },
     {
-      "control": "hypr-decoration-wobble.intensity",
-      "page": "hypr-decoration-wobble",
+      "control": "themes.wobble-intensity",
+      "page": "themes",
       "source": "hypr-options",
       "key": "intensity",
       "reference": [
@@ -2489,8 +2287,8 @@
       "documentedLimits": "[0 - 3]"
     },
     {
-      "control": "hypr-decoration-wobble.value-epsilon",
-      "page": "hypr-decoration-wobble",
+      "control": "themes.wobble-value-epsilon",
+      "page": "themes",
       "source": "hypr-options",
       "key": "value-epsilon",
       "reference": [
@@ -2503,8 +2301,8 @@
       "documentedLimits": "[0 - 100]"
     },
     {
-      "control": "hypr-decoration-wobble.velocity-epsilon",
-      "page": "hypr-decoration-wobble",
+      "control": "themes.wobble-velocity-epsilon",
+      "page": "themes",
       "source": "hypr-options",
       "key": "velocity-epsilon",
       "reference": [
@@ -2517,8 +2315,8 @@
       "documentedLimits": "[0 - 1000]"
     },
     {
-      "control": "hypr-animations.enabled",
-      "page": "hypr-animations",
+      "control": "themes.animation-enabled",
+      "page": "themes",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -2531,8 +2329,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-animations.workspace-wraparound",
-      "page": "hypr-animations",
+      "control": "themes.animation-workspace-wraparound",
+      "page": "themes",
       "source": "hypr-options",
       "key": "workspace-wraparound",
       "reference": [
@@ -2545,8 +2343,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.accel-profile",
-      "page": "hypr-input",
+      "control": "mouse.compositor-accel-profile",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "accel-profile",
       "reference": [
@@ -2559,8 +2357,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.emulate-discrete-scroll",
-      "page": "hypr-input",
+      "control": "mouse.compositor-emulate-discrete-scroll",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "emulate-discrete-scroll",
       "reference": [
@@ -2573,8 +2371,8 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-input.float-switch-override-focus",
-      "page": "hypr-input",
+      "control": "mouse.compositor-float-switch-override-focus",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "float-switch-override-focus",
       "reference": [
@@ -2587,8 +2385,8 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-input.focus-on-close",
-      "page": "hypr-input",
+      "control": "mouse.compositor-focus-on-close",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "focus-on-close",
       "reference": [
@@ -2601,8 +2399,8 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-input.follow-mouse",
-      "page": "hypr-input",
+      "control": "mouse.compositor-follow-mouse",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "follow-mouse",
       "reference": [
@@ -2615,8 +2413,8 @@
       "documentedLimits": "[0 - 3]"
     },
     {
-      "control": "hypr-input.follow-mouse-shrink",
-      "page": "hypr-input",
+      "control": "mouse.compositor-follow-mouse-shrink",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "follow-mouse-shrink",
       "reference": [
@@ -2629,8 +2427,8 @@
       "documentedLimits": "[0 - 300]"
     },
     {
-      "control": "hypr-input.follow-mouse-threshold",
-      "page": "hypr-input",
+      "control": "mouse.compositor-follow-mouse-threshold",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "follow-mouse-threshold",
       "reference": [
@@ -2643,8 +2441,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.force-no-accel",
-      "page": "hypr-input",
+      "control": "mouse.compositor-force-no-accel",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "force-no-accel",
       "reference": [
@@ -2657,8 +2455,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.kb-file",
-      "page": "hypr-input",
+      "control": "language.keyboard-kb-file",
+      "page": "language",
       "source": "hypr-options",
       "key": "kb-file",
       "reference": [
@@ -2671,8 +2469,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.kb-layout",
-      "page": "hypr-input",
+      "control": "language.keyboard-kb-layout",
+      "page": "language",
       "source": "hypr-options",
       "key": "kb-layout",
       "reference": [
@@ -2685,8 +2483,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.kb-model",
-      "page": "hypr-input",
+      "control": "language.keyboard-kb-model",
+      "page": "language",
       "source": "hypr-options",
       "key": "kb-model",
       "reference": [
@@ -2699,8 +2497,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.kb-options",
-      "page": "hypr-input",
+      "control": "language.keyboard-kb-options",
+      "page": "language",
       "source": "hypr-options",
       "key": "kb-options",
       "reference": [
@@ -2713,8 +2511,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.kb-rules",
-      "page": "hypr-input",
+      "control": "language.keyboard-kb-rules",
+      "page": "language",
       "source": "hypr-options",
       "key": "kb-rules",
       "reference": [
@@ -2727,8 +2525,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.kb-variant",
-      "page": "hypr-input",
+      "control": "language.keyboard-kb-variant",
+      "page": "language",
       "source": "hypr-options",
       "key": "kb-variant",
       "reference": [
@@ -2741,8 +2539,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.left-handed",
-      "page": "hypr-input",
+      "control": "mouse.compositor-left-handed",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "left-handed",
       "reference": [
@@ -2755,8 +2553,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.mouse-refocus",
-      "page": "hypr-input",
+      "control": "mouse.compositor-mouse-refocus",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "mouse-refocus",
       "reference": [
@@ -2769,8 +2567,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.natural-scroll",
-      "page": "hypr-input",
+      "control": "mouse.compositor-natural-scroll",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "natural-scroll",
       "reference": [
@@ -2783,8 +2581,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.numlock-by-default",
-      "page": "hypr-input",
+      "control": "accessibility-keyboard.compositor-numlock-by-default",
+      "page": "accessibility-keyboard",
       "source": "hypr-options",
       "key": "numlock-by-default",
       "reference": [
@@ -2797,8 +2595,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.off-window-axis-events",
-      "page": "hypr-input",
+      "control": "mouse.compositor-off-window-axis-events",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "off-window-axis-events",
       "reference": [
@@ -2811,8 +2609,8 @@
       "documentedLimits": "[0 - 3]"
     },
     {
-      "control": "hypr-input.repeat-delay",
-      "page": "hypr-input",
+      "control": "accessibility-keyboard.compositor-repeat-delay",
+      "page": "accessibility-keyboard",
       "source": "hypr-options",
       "key": "repeat-delay",
       "reference": [
@@ -2825,8 +2623,8 @@
       "documentedLimits": "[0 - 2000]"
     },
     {
-      "control": "hypr-input.repeat-rate",
-      "page": "hypr-input",
+      "control": "accessibility-keyboard.compositor-repeat-rate",
+      "page": "accessibility-keyboard",
       "source": "hypr-options",
       "key": "repeat-rate",
       "reference": [
@@ -2839,8 +2637,8 @@
       "documentedLimits": "[0 - 200]"
     },
     {
-      "control": "hypr-input.resolve-binds-by-sym",
-      "page": "hypr-input",
+      "control": "accessibility-keyboard.compositor-resolve-binds-by-sym",
+      "page": "accessibility-keyboard",
       "source": "hypr-options",
       "key": "resolve-binds-by-sym",
       "reference": [
@@ -2853,8 +2651,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.rotation",
-      "page": "hypr-input",
+      "control": "mouse.compositor-rotation",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "rotation",
       "reference": [
@@ -2867,8 +2665,8 @@
       "documentedLimits": "[0 - 359]"
     },
     {
-      "control": "hypr-input.scroll-button",
-      "page": "hypr-input",
+      "control": "mouse.compositor-scroll-button",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "scroll-button",
       "reference": [
@@ -2881,8 +2679,8 @@
       "documentedLimits": "[0 - 300]"
     },
     {
-      "control": "hypr-input.scroll-button-lock",
-      "page": "hypr-input",
+      "control": "mouse.compositor-scroll-button-lock",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "scroll-button-lock",
       "reference": [
@@ -2895,8 +2693,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.scroll-points",
-      "page": "hypr-input",
+      "control": "mouse.compositor-scroll-points",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "scroll-points",
       "reference": [
@@ -2909,8 +2707,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.scroll-method",
-      "page": "hypr-input",
+      "control": "mouse.compositor-scroll-method",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "scroll-method",
       "reference": [
@@ -2923,8 +2721,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.scroll-factor",
-      "page": "hypr-input",
+      "control": "mouse.compositor-scroll-factor",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "scroll-factor",
       "reference": [
@@ -2937,8 +2735,8 @@
       "documentedLimits": "[0 - 100]"
     },
     {
-      "control": "hypr-input.sensitivity",
-      "page": "hypr-input",
+      "control": "mouse.compositor-sensitivity",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "sensitivity",
       "reference": [
@@ -2951,8 +2749,8 @@
       "documentedLimits": "[-1.0 - 1.0]"
     },
     {
-      "control": "hypr-input.special-fallthrough",
-      "page": "hypr-input",
+      "control": "mouse.compositor-special-fallthrough",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "special-fallthrough",
       "reference": [
@@ -2965,8 +2763,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input.swallow-focus-click",
-      "page": "hypr-input",
+      "control": "mouse.compositor-swallow-focus-click",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "swallow-focus-click",
       "reference": [
@@ -2979,8 +2777,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-touchpad.clickfinger-behavior",
-      "page": "hypr-input-touchpad",
+      "control": "touchpad.compositor-clickfinger-behavior",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "clickfinger-behavior",
       "reference": [
@@ -2993,8 +2791,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-touchpad.disable-while-typing",
-      "page": "hypr-input-touchpad",
+      "control": "touchpad.compositor-disable-while-typing",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "disable-while-typing",
       "reference": [
@@ -3007,8 +2805,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-touchpad.drag-3fg",
-      "page": "hypr-input-touchpad",
+      "control": "touchpad.compositor-drag-3fg",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "drag-3fg",
       "reference": [
@@ -3021,8 +2819,8 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-input-touchpad.drag-lock",
-      "page": "hypr-input-touchpad",
+      "control": "touchpad.compositor-drag-lock",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "drag-lock",
       "reference": [
@@ -3035,8 +2833,8 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-input-touchpad.flip-x",
-      "page": "hypr-input-touchpad",
+      "control": "touchpad.compositor-flip-x",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "flip-x",
       "reference": [
@@ -3049,8 +2847,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-touchpad.flip-y",
-      "page": "hypr-input-touchpad",
+      "control": "touchpad.compositor-flip-y",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "flip-y",
       "reference": [
@@ -3063,8 +2861,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-touchpad.middle-button-emulation",
-      "page": "hypr-input-touchpad",
+      "control": "touchpad.compositor-middle-button-emulation",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "middle-button-emulation",
       "reference": [
@@ -3077,8 +2875,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-touchpad.natural-scroll",
-      "page": "hypr-input-touchpad",
+      "control": "touchpad.compositor-natural-scroll",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "natural-scroll",
       "reference": [
@@ -3091,8 +2889,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-touchpad.scroll-factor",
-      "page": "hypr-input-touchpad",
+      "control": "touchpad.compositor-scroll-factor",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "scroll-factor",
       "reference": [
@@ -3105,8 +2903,8 @@
       "documentedLimits": "[0.0 - 100]"
     },
     {
-      "control": "hypr-input-touchpad.tap-and-drag",
-      "page": "hypr-input-touchpad",
+      "control": "touchpad.compositor-tap-and-drag",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "tap-and-drag",
       "reference": [
@@ -3119,8 +2917,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-touchpad.tap-button-map",
-      "page": "hypr-input-touchpad",
+      "control": "touchpad.compositor-tap-button-map",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "tap-button-map",
       "reference": [
@@ -3133,8 +2931,8 @@
       "documentedLimits": "\"lrm\"/\"lmr\""
     },
     {
-      "control": "hypr-input-touchpad.tap-to-click",
-      "page": "hypr-input-touchpad",
+      "control": "touchpad.compositor-tap-to-click",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "tap-to-click",
       "reference": [
@@ -3147,8 +2945,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-touchdevice.enabled",
-      "page": "hypr-input-touchdevice",
+      "control": "touch.mapping-enabled",
+      "page": "touch",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -3161,8 +2959,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-touchdevice.output",
-      "page": "hypr-input-touchdevice",
+      "control": "touch.mapping-output",
+      "page": "touch",
       "source": "hypr-options",
       "key": "output",
       "reference": [
@@ -3175,8 +2973,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-touchdevice.transform",
-      "page": "hypr-input-touchdevice",
+      "control": "touch.mapping-transform",
+      "page": "touch",
       "source": "hypr-options",
       "key": "transform",
       "reference": [
@@ -3189,8 +2987,8 @@
       "documentedLimits": "[0 - 6]"
     },
     {
-      "control": "hypr-input-virtualkeyboard.release-pressed-on-close",
-      "page": "hypr-input-virtualkeyboard",
+      "control": "accessibility-keyboard.virtual-release-pressed-on-close",
+      "page": "accessibility-keyboard",
       "source": "hypr-options",
       "key": "release-pressed-on-close",
       "reference": [
@@ -3203,8 +3001,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-virtualkeyboard.share-states",
-      "page": "hypr-input-virtualkeyboard",
+      "control": "accessibility-keyboard.virtual-share-states",
+      "page": "accessibility-keyboard",
       "source": "hypr-options",
       "key": "share-states",
       "reference": [
@@ -3217,8 +3015,8 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-input-tablet.enabled",
-      "page": "hypr-input-tablet",
+      "control": "pen.tablet-enabled",
+      "page": "pen",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -3231,8 +3029,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-tablet.output",
-      "page": "hypr-input-tablet",
+      "control": "pen.tablet-output",
+      "page": "pen",
       "source": "hypr-options",
       "key": "output",
       "reference": [
@@ -3245,8 +3043,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-tablet.transform",
-      "page": "hypr-input-tablet",
+      "control": "pen.tablet-transform",
+      "page": "pen",
       "source": "hypr-options",
       "key": "transform",
       "reference": [
@@ -3259,8 +3057,8 @@
       "documentedLimits": "[0 - 6]"
     },
     {
-      "control": "hypr-input-tablet.absolute-region-position",
-      "page": "hypr-input-tablet",
+      "control": "pen.tablet-absolute-region-position",
+      "page": "pen",
       "source": "hypr-options",
       "key": "absolute-region-position",
       "reference": [
@@ -3273,8 +3071,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-tablet.active-area-position",
-      "page": "hypr-input-tablet",
+      "control": "pen.tablet-active-area-position",
+      "page": "pen",
       "source": "hypr-options",
       "key": "active-area-position",
       "reference": [
@@ -3287,8 +3085,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-tablet.active-area-size",
-      "page": "hypr-input-tablet",
+      "control": "pen.tablet-active-area-size",
+      "page": "pen",
       "source": "hypr-options",
       "key": "active-area-size",
       "reference": [
@@ -3301,8 +3099,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-tablet.left-handed",
-      "page": "hypr-input-tablet",
+      "control": "pen.tablet-left-handed",
+      "page": "pen",
       "source": "hypr-options",
       "key": "left-handed",
       "reference": [
@@ -3315,8 +3113,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-tablet.region-position",
-      "page": "hypr-input-tablet",
+      "control": "pen.tablet-region-position",
+      "page": "pen",
       "source": "hypr-options",
       "key": "region-position",
       "reference": [
@@ -3329,8 +3127,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-tablet.region-size",
-      "page": "hypr-input-tablet",
+      "control": "pen.tablet-region-size",
+      "page": "pen",
       "source": "hypr-options",
       "key": "region-size",
       "reference": [
@@ -3343,8 +3141,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-tablet.relative-input",
-      "page": "hypr-input-tablet",
+      "control": "pen.tablet-relative-input",
+      "page": "pen",
       "source": "hypr-options",
       "key": "relative-input",
       "reference": [
@@ -3357,8 +3155,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-input-tablettool.eraser-button-mode",
-      "page": "hypr-input-tablettool",
+      "control": "pen.tool-eraser-button-mode",
+      "page": "pen",
       "source": "hypr-options",
       "key": "eraser-button-mode",
       "reference": [
@@ -3371,8 +3169,8 @@
       "documentedLimits": "[0 - 6]"
     },
     {
-      "control": "hypr-input-tablettool.eraser-button-override",
-      "page": "hypr-input-tablettool",
+      "control": "pen.tool-eraser-button-override",
+      "page": "pen",
       "source": "hypr-options",
       "key": "eraser-button-override",
       "reference": [
@@ -3385,8 +3183,8 @@
       "documentedLimits": "[0 - ...]"
     },
     {
-      "control": "hypr-input-tablettool.pressure-range-min",
-      "page": "hypr-input-tablettool",
+      "control": "pen.tool-pressure-range-min",
+      "page": "pen",
       "source": "hypr-options",
       "key": "pressure-range-min",
       "reference": [
@@ -3399,8 +3197,8 @@
       "documentedLimits": "[-1.0 - 1.0]"
     },
     {
-      "control": "hypr-input-tablettool.pressure-range-max",
-      "page": "hypr-input-tablettool",
+      "control": "pen.tool-pressure-range-max",
+      "page": "pen",
       "source": "hypr-options",
       "key": "pressure-range-max",
       "reference": [
@@ -3413,8 +3211,8 @@
       "documentedLimits": "[-1.0 - 1.0]"
     },
     {
-      "control": "hypr-gestures.close-max-timeout",
-      "page": "hypr-gestures",
+      "control": "touchpad.workspace-close-max-timeout",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "close-max-timeout",
       "reference": [
@@ -3427,8 +3225,8 @@
       "documentedLimits": "[10 - 2000]"
     },
     {
-      "control": "hypr-gestures.workspace-swipe-cancel-ratio",
-      "page": "hypr-gestures",
+      "control": "touchpad.workspace-workspace-swipe-cancel-ratio",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "workspace-swipe-cancel-ratio",
       "reference": [
@@ -3441,8 +3239,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "hypr-gestures.workspace-swipe-create-new",
-      "page": "hypr-gestures",
+      "control": "touchpad.workspace-workspace-swipe-create-new",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "workspace-swipe-create-new",
       "reference": [
@@ -3455,8 +3253,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-gestures.workspace-swipe-direction-lock",
-      "page": "hypr-gestures",
+      "control": "touchpad.workspace-workspace-swipe-direction-lock",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "workspace-swipe-direction-lock",
       "reference": [
@@ -3469,8 +3267,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-gestures.workspace-swipe-direction-lock-threshold",
-      "page": "hypr-gestures",
+      "control": "touchpad.workspace-workspace-swipe-direction-lock-threshold",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "workspace-swipe-direction-lock-threshold",
       "reference": [
@@ -3483,8 +3281,8 @@
       "documentedLimits": "[0 - 200]"
     },
     {
-      "control": "hypr-gestures.workspace-swipe-distance",
-      "page": "hypr-gestures",
+      "control": "touchpad.workspace-workspace-swipe-distance",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "workspace-swipe-distance",
       "reference": [
@@ -3497,8 +3295,8 @@
       "documentedLimits": "[0 - 2000]"
     },
     {
-      "control": "hypr-gestures.workspace-swipe-forever",
-      "page": "hypr-gestures",
+      "control": "touchpad.workspace-workspace-swipe-forever",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "workspace-swipe-forever",
       "reference": [
@@ -3511,8 +3309,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-gestures.workspace-swipe-invert",
-      "page": "hypr-gestures",
+      "control": "touchpad.workspace-workspace-swipe-invert",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "workspace-swipe-invert",
       "reference": [
@@ -3525,8 +3323,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-gestures.workspace-swipe-min-speed-to-force",
-      "page": "hypr-gestures",
+      "control": "touchpad.workspace-workspace-swipe-min-speed-to-force",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "workspace-swipe-min-speed-to-force",
       "reference": [
@@ -3539,8 +3337,8 @@
       "documentedLimits": "[0 - 200]"
     },
     {
-      "control": "hypr-gestures.workspace-swipe-touch",
-      "page": "hypr-gestures",
+      "control": "touchpad.workspace-workspace-swipe-touch",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "workspace-swipe-touch",
       "reference": [
@@ -3553,8 +3351,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-gestures.workspace-swipe-touch-invert",
-      "page": "hypr-gestures",
+      "control": "touchpad.workspace-workspace-swipe-touch-invert",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "workspace-swipe-touch-invert",
       "reference": [
@@ -3567,8 +3365,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-gestures.workspace-swipe-use-r",
-      "page": "hypr-gestures",
+      "control": "touchpad.workspace-workspace-swipe-use-r",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "workspace-swipe-use-r",
       "reference": [
@@ -3581,8 +3379,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-gestures-scrolling.move-snap-to-grid",
-      "page": "hypr-gestures-scrolling",
+      "control": "touchpad.scrolling-move-snap-to-grid",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "move-snap-to-grid",
       "reference": [
@@ -3595,8 +3393,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-gestures-scrolling.move-snap-cursor",
-      "page": "hypr-gestures-scrolling",
+      "control": "touchpad.scrolling-move-snap-cursor",
+      "page": "touchpad",
       "source": "hypr-options",
       "key": "move-snap-cursor",
       "reference": [
@@ -3721,8 +3519,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-group-col.border-active",
-      "page": "hypr-group-col",
+      "control": "themes.group-border-border-active",
+      "page": "themes",
       "source": "hypr-options",
       "key": "border-active",
       "reference": [
@@ -3735,8 +3533,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-group-col.border-inactive",
-      "page": "hypr-group-col",
+      "control": "themes.group-border-border-inactive",
+      "page": "themes",
       "source": "hypr-options",
       "key": "border-inactive",
       "reference": [
@@ -3749,8 +3547,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-group-col.border-locked-active",
-      "page": "hypr-group-col",
+      "control": "themes.group-border-border-locked-active",
+      "page": "themes",
       "source": "hypr-options",
       "key": "border-locked-active",
       "reference": [
@@ -3763,8 +3561,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-group-col.border-locked-inactive",
-      "page": "hypr-group-col",
+      "control": "themes.group-border-border-locked-inactive",
+      "page": "themes",
       "source": "hypr-options",
       "key": "border-locked-inactive",
       "reference": [
@@ -4211,8 +4009,8 @@
       "documentedLimits": "[0 - 22]"
     },
     {
-      "control": "hypr-group-groupbar-col.active",
-      "page": "hypr-group-groupbar-col",
+      "control": "themes.groupbar-active",
+      "page": "themes",
       "source": "hypr-options",
       "key": "active",
       "reference": [
@@ -4225,8 +4023,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-group-groupbar-col.inactive",
-      "page": "hypr-group-groupbar-col",
+      "control": "themes.groupbar-inactive",
+      "page": "themes",
       "source": "hypr-options",
       "key": "inactive",
       "reference": [
@@ -4239,8 +4037,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-group-groupbar-col.locked-active",
-      "page": "hypr-group-groupbar-col",
+      "control": "themes.groupbar-locked-active",
+      "page": "themes",
       "source": "hypr-options",
       "key": "locked-active",
       "reference": [
@@ -4253,8 +4051,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-group-groupbar-col.locked-inactive",
-      "page": "hypr-group-groupbar-col",
+      "control": "themes.groupbar-locked-inactive",
+      "page": "themes",
       "source": "hypr-options",
       "key": "locked-inactive",
       "reference": [
@@ -4267,8 +4065,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.allow-session-lock-restore",
-      "page": "hypr-misc",
+      "control": "lockscreen.compositor-restore",
+      "page": "lockscreen",
       "source": "hypr-options",
       "key": "allow-session-lock-restore",
       "reference": [
@@ -4281,8 +4079,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.always-follow-on-dnd",
-      "page": "hypr-misc",
+      "control": "mouse.compositor-drag-focus",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "always-follow-on-dnd",
       "reference": [
@@ -4295,8 +4093,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.animate-manual-resizes",
-      "page": "hypr-misc",
+      "control": "themes.compositor-resize-animation",
+      "page": "themes",
       "source": "hypr-options",
       "key": "animate-manual-resizes",
       "reference": [
@@ -4309,8 +4107,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.animate-mouse-windowdragging",
-      "page": "hypr-misc",
+      "control": "themes.compositor-drag-animation",
+      "page": "themes",
       "source": "hypr-options",
       "key": "animate-mouse-windowdragging",
       "reference": [
@@ -4337,8 +4135,8 @@
       "documentedLimits": "[1 - 20]"
     },
     {
-      "control": "hypr-misc.background-color",
-      "page": "hypr-misc",
+      "control": "background.compositor-background-color",
+      "page": "background",
       "source": "hypr-options",
       "key": "background-color",
       "reference": [
@@ -4407,8 +4205,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.disable-hyprland-logo",
-      "page": "hypr-misc",
+      "control": "background.compositor-disable-hyprland-logo",
+      "page": "background",
       "source": "hypr-options",
       "key": "disable-hyprland-logo",
       "reference": [
@@ -4435,8 +4233,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.disable-splash-rendering",
-      "page": "hypr-misc",
+      "control": "background.compositor-disable-splash-rendering",
+      "page": "background",
       "source": "hypr-options",
       "key": "disable-splash-rendering",
       "reference": [
@@ -4561,8 +4359,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.font-family",
-      "page": "hypr-misc",
+      "control": "fonts.compositor-family",
+      "page": "fonts",
       "source": "hypr-options",
       "key": "font-family",
       "reference": [
@@ -4575,8 +4373,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.force-default-wallpaper",
-      "page": "hypr-misc",
+      "control": "background.compositor-force-default-wallpaper",
+      "page": "background",
       "source": "hypr-options",
       "key": "force-default-wallpaper",
       "reference": [
@@ -4617,8 +4415,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.key-press-enables-dpms",
-      "page": "hypr-misc",
+      "control": "power.wake-key",
+      "page": "power",
       "source": "hypr-options",
       "key": "key-press-enables-dpms",
       "reference": [
@@ -4645,8 +4443,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.lockdead-screen-delay",
-      "page": "hypr-misc",
+      "control": "lockscreen.compositor-dead-delay",
+      "page": "lockscreen",
       "source": "hypr-options",
       "key": "lockdead-screen-delay",
       "reference": [
@@ -4659,8 +4457,8 @@
       "documentedLimits": "[0 - 5000]"
     },
     {
-      "control": "hypr-misc.middle-click-paste",
-      "page": "hypr-misc",
+      "control": "mouse.compositor-middle-paste",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "middle-click-paste",
       "reference": [
@@ -4673,8 +4471,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.mouse-move-enables-dpms",
-      "page": "hypr-misc",
+      "control": "power.wake-pointer",
+      "page": "power",
       "source": "hypr-options",
       "key": "mouse-move-enables-dpms",
       "reference": [
@@ -4687,8 +4485,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.mouse-move-focuses-monitor",
-      "page": "hypr-misc",
+      "control": "mouse.compositor-monitor-focus",
+      "page": "mouse",
       "source": "hypr-options",
       "key": "mouse-move-focuses-monitor",
       "reference": [
@@ -4729,8 +4527,8 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-misc.render-unfocused-fps",
-      "page": "hypr-misc",
+      "control": "graphics.compositor-unfocused-fps",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "render-unfocused-fps",
       "reference": [
@@ -4757,8 +4555,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.session-lock-blur",
-      "page": "hypr-misc",
+      "control": "lockscreen.compositor-blur",
+      "page": "lockscreen",
       "source": "hypr-options",
       "key": "session-lock-blur",
       "reference": [
@@ -4771,8 +4569,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.session-lock-xray",
-      "page": "hypr-misc",
+      "control": "lockscreen.compositor-xray",
+      "page": "lockscreen",
       "source": "hypr-options",
       "key": "session-lock-xray",
       "reference": [
@@ -4799,8 +4597,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.splash-font-family",
-      "page": "hypr-misc",
+      "control": "background.compositor-splash-font-family",
+      "page": "background",
       "source": "hypr-options",
       "key": "splash-font-family",
       "reference": [
@@ -4841,8 +4639,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-misc.vrr",
-      "page": "hypr-misc",
+      "control": "display.compositor-vrr",
+      "page": "display",
       "source": "hypr-options",
       "key": "vrr",
       "reference": [
@@ -4855,8 +4653,8 @@
       "documentedLimits": "[0 - 3]"
     },
     {
-      "control": "hypr-misc-col.splash",
-      "page": "hypr-misc-col",
+      "control": "background.compositor-splash-color",
+      "page": "background",
       "source": "hypr-options",
       "key": "splash",
       "reference": [
@@ -5093,8 +4891,8 @@
       "documentedLimits": "[0 - 1]"
     },
     {
-      "control": "hypr-xwayland.enabled",
-      "page": "hypr-xwayland",
+      "control": "graphics.xwayland-enabled",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -5107,8 +4905,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-xwayland.create-abstract-socket",
-      "page": "hypr-xwayland",
+      "control": "graphics.xwayland-create-abstract-socket",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "create-abstract-socket",
       "reference": [
@@ -5121,8 +4919,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-xwayland.force-zero-scaling",
-      "page": "hypr-xwayland",
+      "control": "graphics.xwayland-force-zero-scaling",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "force-zero-scaling",
       "reference": [
@@ -5135,8 +4933,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-xwayland.use-nearest-neighbor",
-      "page": "hypr-xwayland",
+      "control": "graphics.xwayland-use-nearest-neighbor",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "use-nearest-neighbor",
       "reference": [
@@ -5149,8 +4947,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-opengl.nvidia-anti-flicker",
-      "page": "hypr-opengl",
+      "control": "graphics.opengl-nvidia-anti-flicker",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "nvidia-anti-flicker",
       "reference": [
@@ -5163,8 +4961,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-render.async-commit",
-      "page": "hypr-render",
+      "control": "graphics.render-async-commit",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "async-commit",
       "reference": [
@@ -5177,8 +4975,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-render.cm-auto-hdr",
-      "page": "hypr-render",
+      "control": "graphics.render-cm-auto-hdr",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "cm-auto-hdr",
       "reference": [
@@ -5191,8 +4989,8 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-render.cm-enabled",
-      "page": "hypr-render",
+      "control": "graphics.render-cm-enabled",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "cm-enabled",
       "reference": [
@@ -5205,8 +5003,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-render.cm-sdr-eotf",
-      "page": "hypr-render",
+      "control": "graphics.render-cm-sdr-eotf",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "cm-sdr-eotf",
       "reference": [
@@ -5219,8 +5017,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-render.ctm-animation",
-      "page": "hypr-render",
+      "control": "graphics.render-ctm-animation",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "ctm-animation",
       "reference": [
@@ -5233,8 +5031,8 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-render.commit-timing-enabled",
-      "page": "hypr-render",
+      "control": "graphics.render-commit-timing-enabled",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "commit-timing-enabled",
       "reference": [
@@ -5247,8 +5045,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-render.direct-scanout",
-      "page": "hypr-render",
+      "control": "graphics.render-direct-scanout",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "direct-scanout",
       "reference": [
@@ -5261,8 +5059,8 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-render.expand-undersized-textures",
-      "page": "hypr-render",
+      "control": "graphics.render-expand-undersized-textures",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "expand-undersized-textures",
       "reference": [
@@ -5275,8 +5073,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-render.fp16-sdr-tf",
-      "page": "hypr-render",
+      "control": "graphics.render-fp16-sdr-tf",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "fp16-sdr-tf",
       "reference": [
@@ -5289,8 +5087,8 @@
       "documentedLimits": "[0 - 1]"
     },
     {
-      "control": "hypr-render.icc-vcgt-enabled",
-      "page": "hypr-render",
+      "control": "graphics.render-icc-vcgt-enabled",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "icc-vcgt-enabled",
       "reference": [
@@ -5303,8 +5101,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-render.keep-unmodified-copy",
-      "page": "hypr-render",
+      "control": "graphics.render-keep-unmodified-copy",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "keep-unmodified-copy",
       "reference": [
@@ -5317,8 +5115,8 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-render.new-render-scheduling",
-      "page": "hypr-render",
+      "control": "graphics.render-new-render-scheduling",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "new-render-scheduling",
       "reference": [
@@ -5331,8 +5129,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-render.not-shown-fifo-lock",
-      "page": "hypr-render",
+      "control": "graphics.render-not-shown-fifo-lock",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "not-shown-fifo-lock",
       "reference": [
@@ -5345,8 +5143,8 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-render.non-shader-cm",
-      "page": "hypr-render",
+      "control": "graphics.render-non-shader-cm",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "non-shader-cm",
       "reference": [
@@ -5359,8 +5157,8 @@
       "documentedLimits": "[0 - 3]"
     },
     {
-      "control": "hypr-render.non-shader-cm-interop",
-      "page": "hypr-render",
+      "control": "graphics.render-non-shader-cm-interop",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "non-shader-cm-interop",
       "reference": [
@@ -5373,8 +5171,8 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-render.send-content-type",
-      "page": "hypr-render",
+      "control": "graphics.render-send-content-type",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "send-content-type",
       "reference": [
@@ -5387,8 +5185,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-render.use-fp16",
-      "page": "hypr-render",
+      "control": "graphics.render-use-fp16",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "use-fp16",
       "reference": [
@@ -5401,8 +5199,8 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-render.use-shader-blur-blend",
-      "page": "hypr-render",
+      "control": "graphics.render-use-shader-blur-blend",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "use-shader-blur-blend",
       "reference": [
@@ -5415,8 +5213,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-render.xp-mode",
-      "page": "hypr-render",
+      "control": "graphics.render-xp-mode",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "xp-mode",
       "reference": [
@@ -5793,8 +5591,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-quirks.prefer-hdr",
-      "page": "hypr-quirks",
+      "control": "graphics.compatibility-prefer-hdr",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "prefer-hdr",
       "reference": [
@@ -5807,8 +5605,8 @@
       "documentedLimits": "[0 - 1]"
     },
     {
-      "control": "hypr-quirks.skip-non-kms-dmabuf-formats",
-      "page": "hypr-quirks",
+      "control": "graphics.compatibility-skip-non-kms-dmabuf-formats",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "skip-non-kms-dmabuf-formats",
       "reference": [
@@ -8103,12 +7901,12 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-gesture-fields.action",
-      "page": "hypr-gesture-fields",
-      "source": "hypr-gestures",
+      "control": "touchpad.binding-action",
+      "page": "touchpad",
+      "source": "hypr-gesture-reference",
       "key": "action",
       "reference": [
-        "hypr-gestures",
+        "hypr-gesture-reference",
         "Fields",
         "action"
       ],
@@ -8117,12 +7915,12 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-gesture-fields.direction",
-      "page": "hypr-gesture-fields",
-      "source": "hypr-gestures",
+      "control": "touchpad.binding-direction",
+      "page": "touchpad",
+      "source": "hypr-gesture-reference",
       "key": "direction",
       "reference": [
-        "hypr-gestures",
+        "hypr-gesture-reference",
         "Fields",
         "direction"
       ],
@@ -8131,12 +7929,12 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-gesture-fields.fingers",
-      "page": "hypr-gesture-fields",
-      "source": "hypr-gestures",
+      "control": "touchpad.binding-fingers",
+      "page": "touchpad",
+      "source": "hypr-gesture-reference",
       "key": "fingers",
       "reference": [
-        "hypr-gestures",
+        "hypr-gesture-reference",
         "Fields",
         "fingers"
       ],
@@ -8145,12 +7943,12 @@
       "documentedLimits": "[2 - 9]"
     },
     {
-      "control": "hypr-gesture-fields.disable-inhibit",
-      "page": "hypr-gesture-fields",
-      "source": "hypr-gestures",
+      "control": "touchpad.binding-disable-inhibit",
+      "page": "touchpad",
+      "source": "hypr-gesture-reference",
       "key": "disable-inhibit",
       "reference": [
-        "hypr-gestures",
+        "hypr-gesture-reference",
         "Fields",
         "disable_inhibit"
       ],
@@ -8159,12 +7957,12 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-gesture-fields.mods",
-      "page": "hypr-gesture-fields",
-      "source": "hypr-gestures",
+      "control": "touchpad.binding-mods",
+      "page": "touchpad",
+      "source": "hypr-gesture-reference",
       "key": "mods",
       "reference": [
-        "hypr-gestures",
+        "hypr-gesture-reference",
         "Fields",
         "mods"
       ],
@@ -8173,12 +7971,12 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-gesture-fields.scale",
-      "page": "hypr-gesture-fields",
-      "source": "hypr-gestures",
+      "control": "touchpad.binding-scale",
+      "page": "touchpad",
+      "source": "hypr-gesture-reference",
       "key": "scale",
       "reference": [
-        "hypr-gestures",
+        "hypr-gesture-reference",
         "Fields",
         "scale"
       ],
@@ -8187,8 +7985,8 @@
       "documentedLimits": "[0.1 - 10.0]"
     },
     {
-      "control": "hypr-idle-general.lock-cmd",
-      "page": "hypr-idle-general",
+      "control": "power.idle-lock-cmd",
+      "page": "power",
       "source": "hypr-idle",
       "key": "lock-cmd",
       "reference": [
@@ -8201,8 +7999,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-general.unlock-cmd",
-      "page": "hypr-idle-general",
+      "control": "power.idle-unlock-cmd",
+      "page": "power",
       "source": "hypr-idle",
       "key": "unlock-cmd",
       "reference": [
@@ -8215,8 +8013,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-general.on-lock-cmd",
-      "page": "hypr-idle-general",
+      "control": "power.idle-on-lock-cmd",
+      "page": "power",
       "source": "hypr-idle",
       "key": "on-lock-cmd",
       "reference": [
@@ -8229,8 +8027,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-general.on-unlock-cmd",
-      "page": "hypr-idle-general",
+      "control": "power.idle-on-unlock-cmd",
+      "page": "power",
       "source": "hypr-idle",
       "key": "on-unlock-cmd",
       "reference": [
@@ -8243,8 +8041,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-general.before-sleep-cmd",
-      "page": "hypr-idle-general",
+      "control": "power.idle-before-sleep-cmd",
+      "page": "power",
       "source": "hypr-idle",
       "key": "before-sleep-cmd",
       "reference": [
@@ -8257,8 +8055,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-general.after-sleep-cmd",
-      "page": "hypr-idle-general",
+      "control": "power.idle-after-sleep-cmd",
+      "page": "power",
       "source": "hypr-idle",
       "key": "after-sleep-cmd",
       "reference": [
@@ -8271,8 +8069,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-general.ignore-dbus-inhibit",
-      "page": "hypr-idle-general",
+      "control": "power.idle-ignore-dbus-inhibit",
+      "page": "power",
       "source": "hypr-idle",
       "key": "ignore-dbus-inhibit",
       "reference": [
@@ -8285,8 +8083,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-general.ignore-systemd-inhibit",
-      "page": "hypr-idle-general",
+      "control": "power.idle-ignore-systemd-inhibit",
+      "page": "power",
       "source": "hypr-idle",
       "key": "ignore-systemd-inhibit",
       "reference": [
@@ -8299,8 +8097,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-general.ignore-wayland-inhibit",
-      "page": "hypr-idle-general",
+      "control": "power.idle-ignore-wayland-inhibit",
+      "page": "power",
       "source": "hypr-idle",
       "key": "ignore-wayland-inhibit",
       "reference": [
@@ -8313,8 +8111,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-general.inhibit-sleep",
-      "page": "hypr-idle-general",
+      "control": "power.idle-inhibit-sleep",
+      "page": "power",
       "source": "hypr-idle",
       "key": "inhibit-sleep",
       "reference": [
@@ -8327,8 +8125,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-listeners.timeout",
-      "page": "hypr-idle-listeners",
+      "control": "power.idle-listener-timeout",
+      "page": "power",
       "source": "hypr-idle",
       "key": "timeout",
       "reference": [
@@ -8341,8 +8139,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-listeners.on-timeout",
-      "page": "hypr-idle-listeners",
+      "control": "power.idle-listener-on-timeout",
+      "page": "power",
       "source": "hypr-idle",
       "key": "on-timeout",
       "reference": [
@@ -8355,8 +8153,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-listeners.on-resume",
-      "page": "hypr-idle-listeners",
+      "control": "power.idle-listener-on-resume",
+      "page": "power",
       "source": "hypr-idle",
       "key": "on-resume",
       "reference": [
@@ -8369,8 +8167,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-listeners.ignore-inhibit",
-      "page": "hypr-idle-listeners",
+      "control": "power.idle-listener-ignore-inhibit",
+      "page": "power",
       "source": "hypr-idle",
       "key": "ignore-inhibit",
       "reference": [
@@ -8383,8 +8181,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-listeners.condition-cmd",
-      "page": "hypr-idle-listeners",
+      "control": "power.idle-listener-condition-cmd",
+      "page": "power",
       "source": "hypr-idle",
       "key": "condition-cmd",
       "reference": [
@@ -8397,8 +8195,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-idle-listeners.condition-retry",
-      "page": "hypr-idle-listeners",
+      "control": "power.idle-listener-condition-retry",
+      "page": "power",
       "source": "hypr-idle",
       "key": "condition-retry",
       "reference": [
@@ -8411,8 +8209,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-general.hide-cursor",
-      "page": "hypr-lock-general",
+      "control": "lockscreen.general-hide-cursor",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "hide-cursor",
       "reference": [
@@ -8425,8 +8223,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-general.ignore-empty-input",
-      "page": "hypr-lock-general",
+      "control": "lockscreen.general-ignore-empty-input",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "ignore-empty-input",
       "reference": [
@@ -8439,8 +8237,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-general.immediate-render",
-      "page": "hypr-lock-general",
+      "control": "lockscreen.general-immediate-render",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "immediate-render",
       "reference": [
@@ -8453,8 +8251,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-general.text-trim",
-      "page": "hypr-lock-general",
+      "control": "lockscreen.general-text-trim",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "text-trim",
       "reference": [
@@ -8467,8 +8265,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-general.fractional-scaling",
-      "page": "hypr-lock-general",
+      "control": "lockscreen.general-fractional-scaling",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "fractional-scaling",
       "reference": [
@@ -8481,8 +8279,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-general.screencopy-mode",
-      "page": "hypr-lock-general",
+      "control": "lockscreen.general-screencopy-mode",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "screencopy-mode",
       "reference": [
@@ -8495,8 +8293,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-general.fail-timeout",
-      "page": "hypr-lock-general",
+      "control": "lockscreen.general-fail-timeout",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "fail-timeout",
       "reference": [
@@ -8509,8 +8307,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-authentication.pam-enabled",
-      "page": "hypr-lock-authentication",
+      "control": "lockscreen.authentication-pam-enabled",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "pam-enabled",
       "reference": [
@@ -8523,8 +8321,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-authentication.pam-module",
-      "page": "hypr-lock-authentication",
+      "control": "lockscreen.authentication-pam-module",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "pam-module",
       "reference": [
@@ -8537,8 +8335,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-authentication.fingerprint-enabled",
-      "page": "hypr-lock-authentication",
+      "control": "lockscreen.authentication-fingerprint-enabled",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "fingerprint-enabled",
       "reference": [
@@ -8551,8 +8349,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-authentication.fingerprint-ready-message",
-      "page": "hypr-lock-authentication",
+      "control": "lockscreen.authentication-fingerprint-ready-message",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "fingerprint-ready-message",
       "reference": [
@@ -8565,8 +8363,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-authentication.fingerprint-present-message",
-      "page": "hypr-lock-authentication",
+      "control": "lockscreen.authentication-fingerprint-present-message",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "fingerprint-present-message",
       "reference": [
@@ -8579,8 +8377,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-authentication.fingerprint-retry-delay",
-      "page": "hypr-lock-authentication",
+      "control": "lockscreen.authentication-fingerprint-retry-delay",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "fingerprint-retry-delay",
       "reference": [
@@ -8593,8 +8391,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-animations.enabled",
-      "page": "hypr-lock-animations",
+      "control": "lockscreen.animation-enabled",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "enabled",
       "reference": [
@@ -8607,8 +8405,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shadowable.shadow-passes",
-      "page": "hypr-lock-shadowable",
+      "control": "lockscreen.shadow-shadow-passes",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "shadow-passes",
       "reference": [
@@ -8621,8 +8419,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shadowable.shadow-size",
-      "page": "hypr-lock-shadowable",
+      "control": "lockscreen.shadow-shadow-size",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "shadow-size",
       "reference": [
@@ -8635,8 +8433,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shadowable.shadow-color",
-      "page": "hypr-lock-shadowable",
+      "control": "lockscreen.shadow-shadow-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "shadow-color",
       "reference": [
@@ -8649,8 +8447,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shadowable.shadow-boost",
-      "page": "hypr-lock-shadowable",
+      "control": "lockscreen.shadow-shadow-boost",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "shadow-boost",
       "reference": [
@@ -8663,8 +8461,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-clickable.onclick",
-      "page": "hypr-lock-clickable",
+      "control": "lockscreen.click-onclick",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "onclick",
       "reference": [
@@ -8677,8 +8475,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-background.monitor",
-      "page": "hypr-lock-background",
+      "control": "lockscreen.background-monitor",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "monitor",
       "reference": [
@@ -8691,8 +8489,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-background.path",
-      "page": "hypr-lock-background",
+      "control": "lockscreen.background-path",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "path",
       "reference": [
@@ -8705,8 +8503,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-background.color",
-      "page": "hypr-lock-background",
+      "control": "lockscreen.background-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "color",
       "reference": [
@@ -8719,8 +8517,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-background.blur-passes",
-      "page": "hypr-lock-background",
+      "control": "lockscreen.background-blur-passes",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "blur-passes",
       "reference": [
@@ -8733,8 +8531,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-background.blur-size",
-      "page": "hypr-lock-background",
+      "control": "lockscreen.background-blur-size",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "blur-size",
       "reference": [
@@ -8747,8 +8545,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-background.noise",
-      "page": "hypr-lock-background",
+      "control": "lockscreen.background-noise",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "noise",
       "reference": [
@@ -8761,8 +8559,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-background.contrast",
-      "page": "hypr-lock-background",
+      "control": "lockscreen.background-contrast",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "contrast",
       "reference": [
@@ -8775,8 +8573,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-background.brightness",
-      "page": "hypr-lock-background",
+      "control": "lockscreen.background-brightness",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "brightness",
       "reference": [
@@ -8789,8 +8587,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-background.vibrancy",
-      "page": "hypr-lock-background",
+      "control": "lockscreen.background-vibrancy",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "vibrancy",
       "reference": [
@@ -8803,8 +8601,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-background.vibrancy-darkness",
-      "page": "hypr-lock-background",
+      "control": "lockscreen.background-vibrancy-darkness",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "vibrancy-darkness",
       "reference": [
@@ -8817,8 +8615,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-background.reload-time",
-      "page": "hypr-lock-background",
+      "control": "lockscreen.background-reload-time",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "reload-time",
       "reference": [
@@ -8831,8 +8629,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-background.reload-cmd",
-      "page": "hypr-lock-background",
+      "control": "lockscreen.background-reload-cmd",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "reload-cmd",
       "reference": [
@@ -8845,8 +8643,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-background.crossfade-time",
-      "page": "hypr-lock-background",
+      "control": "lockscreen.background-crossfade-time",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "crossfade-time",
       "reference": [
@@ -8859,8 +8657,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-background.zindex",
-      "page": "hypr-lock-background",
+      "control": "lockscreen.background-zindex",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "zindex",
       "reference": [
@@ -8873,8 +8671,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-image.monitor",
-      "page": "hypr-lock-image",
+      "control": "lockscreen.image-monitor",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "monitor",
       "reference": [
@@ -8887,8 +8685,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-image.path",
-      "page": "hypr-lock-image",
+      "control": "lockscreen.image-path",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "path",
       "reference": [
@@ -8901,8 +8699,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-image.size",
-      "page": "hypr-lock-image",
+      "control": "lockscreen.image-size",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "size",
       "reference": [
@@ -8915,8 +8713,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-image.rounding",
-      "page": "hypr-lock-image",
+      "control": "lockscreen.image-rounding",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "rounding",
       "reference": [
@@ -8929,8 +8727,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-image.border-size",
-      "page": "hypr-lock-image",
+      "control": "lockscreen.image-border-size",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "border-size",
       "reference": [
@@ -8943,8 +8741,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-image.border-color",
-      "page": "hypr-lock-image",
+      "control": "lockscreen.image-border-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "border-color",
       "reference": [
@@ -8957,8 +8755,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-image.rotate",
-      "page": "hypr-lock-image",
+      "control": "lockscreen.image-rotate",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "rotate",
       "reference": [
@@ -8971,8 +8769,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-image.reload-time",
-      "page": "hypr-lock-image",
+      "control": "lockscreen.image-reload-time",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "reload-time",
       "reference": [
@@ -8985,8 +8783,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-image.reload-cmd",
-      "page": "hypr-lock-image",
+      "control": "lockscreen.image-reload-cmd",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "reload-cmd",
       "reference": [
@@ -8999,8 +8797,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-image.position",
-      "page": "hypr-lock-image",
+      "control": "lockscreen.image-position",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "position",
       "reference": [
@@ -9013,8 +8811,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-image.halign",
-      "page": "hypr-lock-image",
+      "control": "lockscreen.image-halign",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "halign",
       "reference": [
@@ -9027,8 +8825,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-image.valign",
-      "page": "hypr-lock-image",
+      "control": "lockscreen.image-valign",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "valign",
       "reference": [
@@ -9041,8 +8839,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-image.zindex",
-      "page": "hypr-lock-image",
+      "control": "lockscreen.image-zindex",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "zindex",
       "reference": [
@@ -9055,8 +8853,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shape.monitor",
-      "page": "hypr-lock-shape",
+      "control": "lockscreen.shape-monitor",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "monitor",
       "reference": [
@@ -9069,8 +8867,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shape.size",
-      "page": "hypr-lock-shape",
+      "control": "lockscreen.shape-size",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "size",
       "reference": [
@@ -9083,8 +8881,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shape.color",
-      "page": "hypr-lock-shape",
+      "control": "lockscreen.shape-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "color",
       "reference": [
@@ -9097,8 +8895,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shape.rounding",
-      "page": "hypr-lock-shape",
+      "control": "lockscreen.shape-rounding",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "rounding",
       "reference": [
@@ -9111,8 +8909,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shape.rotate",
-      "page": "hypr-lock-shape",
+      "control": "lockscreen.shape-rotate",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "rotate",
       "reference": [
@@ -9125,8 +8923,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shape.border-size",
-      "page": "hypr-lock-shape",
+      "control": "lockscreen.shape-border-size",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "border-size",
       "reference": [
@@ -9139,8 +8937,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shape.border-color",
-      "page": "hypr-lock-shape",
+      "control": "lockscreen.shape-border-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "border-color",
       "reference": [
@@ -9153,8 +8951,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shape.xray",
-      "page": "hypr-lock-shape",
+      "control": "lockscreen.shape-xray",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "xray",
       "reference": [
@@ -9167,8 +8965,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shape.position",
-      "page": "hypr-lock-shape",
+      "control": "lockscreen.shape-position",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "position",
       "reference": [
@@ -9181,8 +8979,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shape.halign",
-      "page": "hypr-lock-shape",
+      "control": "lockscreen.shape-halign",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "halign",
       "reference": [
@@ -9195,8 +8993,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shape.valign",
-      "page": "hypr-lock-shape",
+      "control": "lockscreen.shape-valign",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "valign",
       "reference": [
@@ -9209,8 +9007,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-shape.zindex",
-      "page": "hypr-lock-shape",
+      "control": "lockscreen.shape-zindex",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "zindex",
       "reference": [
@@ -9223,8 +9021,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.monitor",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-monitor",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "monitor",
       "reference": [
@@ -9237,8 +9035,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.size",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-size",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "size",
       "reference": [
@@ -9251,8 +9049,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.outline-thickness",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-outline-thickness",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "outline-thickness",
       "reference": [
@@ -9265,8 +9063,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.dots-size",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-dots-size",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "dots-size",
       "reference": [
@@ -9279,8 +9077,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.dots-spacing",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-dots-spacing",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "dots-spacing",
       "reference": [
@@ -9293,8 +9091,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.dots-center",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-dots-center",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "dots-center",
       "reference": [
@@ -9307,8 +9105,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.dots-rounding",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-dots-rounding",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "dots-rounding",
       "reference": [
@@ -9321,8 +9119,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.dots-text-format",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-dots-text-format",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "dots-text-format",
       "reference": [
@@ -9335,8 +9133,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.outer-color",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-outer-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "outer-color",
       "reference": [
@@ -9349,8 +9147,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.inner-color",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-inner-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "inner-color",
       "reference": [
@@ -9363,8 +9161,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.font-color",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-font-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "font-color",
       "reference": [
@@ -9377,8 +9175,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.font-family",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-font-family",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "font-family",
       "reference": [
@@ -9391,8 +9189,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.fade-on-empty",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-fade-on-empty",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "fade-on-empty",
       "reference": [
@@ -9405,8 +9203,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.fade-timeout",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-fade-timeout",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "fade-timeout",
       "reference": [
@@ -9419,8 +9217,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.placeholder-text",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-placeholder-text",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "placeholder-text",
       "reference": [
@@ -9433,8 +9231,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.hide-input",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-hide-input",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "hide-input",
       "reference": [
@@ -9447,8 +9245,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.hide-input-base-color",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-hide-input-base-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "hide-input-base-color",
       "reference": [
@@ -9461,8 +9259,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.rounding",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-rounding",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "rounding",
       "reference": [
@@ -9475,8 +9273,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.check-color",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-check-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "check-color",
       "reference": [
@@ -9489,8 +9287,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.check-text",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-check-text",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "check-text",
       "reference": [
@@ -9503,8 +9301,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.fail-color",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-fail-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "fail-color",
       "reference": [
@@ -9517,8 +9315,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.fail-text",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-fail-text",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "fail-text",
       "reference": [
@@ -9531,8 +9329,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.capslock-color",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-capslock-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "capslock-color",
       "reference": [
@@ -9545,8 +9343,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.numlock-color",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-numlock-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "numlock-color",
       "reference": [
@@ -9559,8 +9357,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.bothlock-color",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-bothlock-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "bothlock-color",
       "reference": [
@@ -9573,8 +9371,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.invert-numlock",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-invert-numlock",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "invert-numlock",
       "reference": [
@@ -9587,8 +9385,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.swap-font-color",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-swap-font-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "swap-font-color",
       "reference": [
@@ -9601,8 +9399,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.position",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-position",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "position",
       "reference": [
@@ -9615,8 +9413,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.halign",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-halign",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "halign",
       "reference": [
@@ -9629,8 +9427,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.valign",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-valign",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "valign",
       "reference": [
@@ -9643,8 +9441,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-input-field.zindex",
-      "page": "hypr-lock-input-field",
+      "control": "lockscreen.input-zindex",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "zindex",
       "reference": [
@@ -9657,8 +9455,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-label.monitor",
-      "page": "hypr-lock-label",
+      "control": "lockscreen.label-monitor",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "monitor",
       "reference": [
@@ -9671,8 +9469,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-label.text",
-      "page": "hypr-lock-label",
+      "control": "lockscreen.label-text",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "text",
       "reference": [
@@ -9685,8 +9483,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-label.text-align",
-      "page": "hypr-lock-label",
+      "control": "lockscreen.label-text-align",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "text-align",
       "reference": [
@@ -9699,8 +9497,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-label.color",
-      "page": "hypr-lock-label",
+      "control": "lockscreen.label-color",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "color",
       "reference": [
@@ -9713,8 +9511,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-label.font-size",
-      "page": "hypr-lock-label",
+      "control": "lockscreen.label-font-size",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "font-size",
       "reference": [
@@ -9727,8 +9525,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-label.font-family",
-      "page": "hypr-lock-label",
+      "control": "lockscreen.label-font-family",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "font-family",
       "reference": [
@@ -9741,8 +9539,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-label.rotate",
-      "page": "hypr-lock-label",
+      "control": "lockscreen.label-rotate",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "rotate",
       "reference": [
@@ -9755,8 +9553,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-label.position",
-      "page": "hypr-lock-label",
+      "control": "lockscreen.label-position",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "position",
       "reference": [
@@ -9769,8 +9567,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-label.halign",
-      "page": "hypr-lock-label",
+      "control": "lockscreen.label-halign",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "halign",
       "reference": [
@@ -9783,8 +9581,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-lock-label.valign",
-      "page": "hypr-lock-label",
+      "control": "lockscreen.label-valign",
+      "page": "lockscreen",
       "source": "hypr-lock",
       "key": "valign",
       "reference": [
@@ -10257,8 +10055,8 @@
       ]
     },
     {
-      "control": "hypr-device-profiles.device",
-      "page": "hypr-device-profiles",
+      "control": "device-list.input-device",
+      "page": "device-list",
       "source": "hypr-devices",
       "key": "device",
       "reference": [
@@ -10267,8 +10065,8 @@
       ]
     },
     {
-      "control": "hypr-device-profiles.enabled",
-      "page": "hypr-device-profiles",
+      "control": "device-list.input-enabled",
+      "page": "device-list",
       "source": "hypr-devices",
       "key": "enabled",
       "reference": [
@@ -10277,8 +10075,8 @@
       ]
     },
     {
-      "control": "hypr-device-profiles.keybinds",
-      "page": "hypr-device-profiles",
+      "control": "device-list.input-keybinds",
+      "page": "device-list",
       "source": "hypr-devices",
       "key": "keybinds",
       "reference": [
@@ -10287,8 +10085,8 @@
       ]
     },
     {
-      "control": "hypr-device-profiles.tags",
-      "page": "hypr-device-profiles",
+      "control": "device-list.input-tags",
+      "page": "device-list",
       "source": "hypr-devices",
       "key": "tags",
       "reference": [
@@ -10297,8 +10095,8 @@
       ]
     },
     {
-      "control": "hypr-device-profiles.keyboard",
-      "page": "hypr-device-profiles",
+      "control": "device-list.input-keyboard",
+      "page": "device-list",
       "source": "hypr-devices",
       "key": "keyboard",
       "reference": [
@@ -10307,8 +10105,8 @@
       ]
     },
     {
-      "control": "hypr-device-profiles.sensitivity",
-      "page": "hypr-device-profiles",
+      "control": "device-list.input-sensitivity",
+      "page": "device-list",
       "source": "hypr-devices",
       "key": "sensitivity",
       "reference": [
@@ -10317,8 +10115,8 @@
       ]
     },
     {
-      "control": "hypr-device-profiles.output",
-      "page": "hypr-device-profiles",
+      "control": "device-list.input-output",
+      "page": "device-list",
       "source": "hypr-devices",
       "key": "output",
       "reference": [
@@ -10327,8 +10125,8 @@
       ]
     },
     {
-      "control": "hypr-device-profiles.inherit",
-      "page": "hypr-device-profiles",
+      "control": "device-list.input-inherit",
+      "page": "device-list",
       "source": "hypr-devices",
       "key": "inherit",
       "reference": [
@@ -10337,8 +10135,8 @@
       ]
     },
     {
-      "control": "hypr-device-bindings.device",
-      "page": "hypr-device-bindings",
+      "control": "device-list.switch-device",
+      "page": "device-list",
       "source": "hypr-switches",
       "key": "device",
       "reference": [
@@ -10347,8 +10145,8 @@
       ]
     },
     {
-      "control": "hypr-device-bindings.switch",
-      "page": "hypr-device-bindings",
+      "control": "device-list.switch-switch",
+      "page": "device-list",
       "source": "hypr-switches",
       "key": "switch",
       "reference": [
@@ -10357,8 +10155,8 @@
       ]
     },
     {
-      "control": "hypr-device-bindings.state",
-      "page": "hypr-device-bindings",
+      "control": "device-list.switch-state",
+      "page": "device-list",
       "source": "hypr-switches",
       "key": "state",
       "reference": [
@@ -10367,8 +10165,8 @@
       ]
     },
     {
-      "control": "hypr-device-bindings.callback",
-      "page": "hypr-device-bindings",
+      "control": "device-list.switch-callback",
+      "page": "device-list",
       "source": "hypr-switches",
       "key": "callback",
       "reference": [
@@ -10377,8 +10175,8 @@
       ]
     },
     {
-      "control": "hypr-device-bindings.lid",
-      "page": "hypr-device-bindings",
+      "control": "device-list.switch-lid",
+      "page": "device-list",
       "source": "hypr-switches",
       "key": "lid",
       "reference": [
@@ -10387,8 +10185,8 @@
       ]
     },
     {
-      "control": "hypr-device-bindings.tablet",
-      "page": "hypr-device-bindings",
+      "control": "device-list.switch-tablet",
+      "page": "device-list",
       "source": "hypr-switches",
       "key": "tablet",
       "reference": [
@@ -10397,108 +10195,108 @@
       ]
     },
     {
-      "control": "hypr-animation-editor.leaf",
-      "page": "hypr-animation-editor",
-      "source": "hypr-animations",
+      "control": "themes.animation-editor-leaf",
+      "page": "themes",
+      "source": "hypr-animation-reference",
       "key": "leaf",
       "reference": [
-        "hypr-animations",
+        "hypr-animation-reference",
         "leaf"
       ]
     },
     {
-      "control": "hypr-animation-editor.enabled",
-      "page": "hypr-animation-editor",
-      "source": "hypr-animations",
+      "control": "themes.animation-editor-enabled",
+      "page": "themes",
+      "source": "hypr-animation-reference",
       "key": "enabled",
       "reference": [
-        "hypr-animations",
+        "hypr-animation-reference",
         "enabled"
       ]
     },
     {
-      "control": "hypr-animation-editor.speed",
-      "page": "hypr-animation-editor",
-      "source": "hypr-animations",
+      "control": "themes.animation-editor-speed",
+      "page": "themes",
+      "source": "hypr-animation-reference",
       "key": "speed",
       "reference": [
-        "hypr-animations",
+        "hypr-animation-reference",
         "speed"
       ]
     },
     {
-      "control": "hypr-animation-editor.style",
-      "page": "hypr-animation-editor",
-      "source": "hypr-animations",
+      "control": "themes.animation-editor-style",
+      "page": "themes",
+      "source": "hypr-animation-reference",
       "key": "style",
       "reference": [
-        "hypr-animations",
+        "hypr-animation-reference",
         "style"
       ]
     },
     {
-      "control": "hypr-animation-editor.curve",
-      "page": "hypr-animation-editor",
-      "source": "hypr-animations",
+      "control": "themes.animation-editor-curve",
+      "page": "themes",
+      "source": "hypr-animation-reference",
       "key": "curve",
       "reference": [
-        "hypr-animations",
+        "hypr-animation-reference",
         "curve"
       ]
     },
     {
-      "control": "hypr-animation-editor.bezier",
-      "page": "hypr-animation-editor",
-      "source": "hypr-animations",
+      "control": "themes.animation-editor-bezier",
+      "page": "themes",
+      "source": "hypr-animation-reference",
       "key": "bezier",
       "reference": [
-        "hypr-animations",
+        "hypr-animation-reference",
         "bezier"
       ]
     },
     {
-      "control": "hypr-animation-editor.spring-mass",
-      "page": "hypr-animation-editor",
-      "source": "hypr-animations",
+      "control": "themes.animation-editor-spring-mass",
+      "page": "themes",
+      "source": "hypr-animation-reference",
       "key": "spring-mass",
       "reference": [
-        "hypr-animations",
+        "hypr-animation-reference",
         "spring-mass"
       ]
     },
     {
-      "control": "hypr-animation-editor.spring-stiffness",
-      "page": "hypr-animation-editor",
-      "source": "hypr-animations",
+      "control": "themes.animation-editor-spring-stiffness",
+      "page": "themes",
+      "source": "hypr-animation-reference",
       "key": "spring-stiffness",
       "reference": [
-        "hypr-animations",
+        "hypr-animation-reference",
         "spring-stiffness"
       ]
     },
     {
-      "control": "hypr-animation-editor.spring-damping",
-      "page": "hypr-animation-editor",
-      "source": "hypr-animations",
+      "control": "themes.animation-editor-spring-damping",
+      "page": "themes",
+      "source": "hypr-animation-reference",
       "key": "spring-damping",
       "reference": [
-        "hypr-animations",
+        "hypr-animation-reference",
         "spring-damping"
       ]
     },
     {
-      "control": "hypr-animation-editor.inheritance",
-      "page": "hypr-animation-editor",
-      "source": "hypr-animations",
+      "control": "themes.animation-editor-inheritance",
+      "page": "themes",
+      "source": "hypr-animation-reference",
       "key": "inheritance",
       "reference": [
-        "hypr-animations",
+        "hypr-animation-reference",
         "inheritance"
       ]
     },
     {
-      "control": "hypr-gradient-editor.stops",
-      "page": "hypr-gradient-editor",
+      "control": "themes.gradient-stops",
+      "page": "themes",
       "source": "hyprsettings-project",
       "key": "stops",
       "reference": [
@@ -10507,8 +10305,8 @@
       ]
     },
     {
-      "control": "hypr-gradient-editor.angle",
-      "page": "hypr-gradient-editor",
+      "control": "themes.gradient-angle",
+      "page": "themes",
       "source": "hyprsettings-project",
       "key": "angle",
       "reference": [
@@ -10517,8 +10315,8 @@
       ]
     },
     {
-      "control": "hypr-gradient-editor.active",
-      "page": "hypr-gradient-editor",
+      "control": "themes.gradient-active",
+      "page": "themes",
       "source": "hyprsettings-project",
       "key": "active",
       "reference": [
@@ -10527,8 +10325,8 @@
       ]
     },
     {
-      "control": "hypr-gradient-editor.preview",
-      "page": "hypr-gradient-editor",
+      "control": "themes.gradient-preview",
+      "page": "themes",
       "source": "hyprsettings-project",
       "key": "preview",
       "reference": [
@@ -10587,8 +10385,8 @@
       ]
     },
     {
-      "control": "hypr-output-assignments.output",
-      "page": "hypr-output-assignments",
+      "control": "display.assignment-output",
+      "page": "display",
       "source": "nwg-displays-project",
       "key": "output",
       "reference": [
@@ -10597,8 +10395,8 @@
       ]
     },
     {
-      "control": "hypr-output-assignments.enabled",
-      "page": "hypr-output-assignments",
+      "control": "display.assignment-enabled",
+      "page": "display",
       "source": "nwg-displays-project",
       "key": "enabled",
       "reference": [
@@ -10607,8 +10405,8 @@
       ]
     },
     {
-      "control": "hypr-output-assignments.position",
-      "page": "hypr-output-assignments",
+      "control": "display.assignment-position",
+      "page": "display",
       "source": "nwg-displays-project",
       "key": "position",
       "reference": [
@@ -10617,8 +10415,8 @@
       ]
     },
     {
-      "control": "hypr-output-assignments.mirror",
-      "page": "hypr-output-assignments",
+      "control": "display.assignment-mirror",
+      "page": "display",
       "source": "nwg-displays-project",
       "key": "mirror",
       "reference": [
@@ -10627,8 +10425,8 @@
       ]
     },
     {
-      "control": "hypr-output-assignments.workspace",
-      "page": "hypr-output-assignments",
+      "control": "display.assignment-workspace",
+      "page": "display",
       "source": "nwg-displays-project",
       "key": "workspace",
       "reference": [
@@ -10637,8 +10435,8 @@
       ]
     },
     {
-      "control": "hypr-output-assignments.fallback",
-      "page": "hypr-output-assignments",
+      "control": "display.assignment-fallback",
+      "page": "display",
       "source": "nwg-displays-project",
       "key": "fallback",
       "reference": [
@@ -10647,8 +10445,8 @@
       ]
     },
     {
-      "control": "hypr-output-assignments.save",
-      "page": "hypr-output-assignments",
+      "control": "display.assignment-save",
+      "page": "display",
       "source": "nwg-displays-project",
       "key": "save",
       "reference": [
@@ -10657,52 +10455,52 @@
       ]
     },
     {
-      "control": "hypr-multi-gpu.devices",
-      "page": "hypr-multi-gpu",
-      "source": "hypr-multi-gpu",
+      "control": "graphics.gpu-devices",
+      "page": "graphics",
+      "source": "hypr-gpu-reference",
       "key": "devices",
       "reference": [
-        "hypr-multi-gpu",
+        "hypr-gpu-reference",
         "devices"
       ]
     },
     {
-      "control": "hypr-multi-gpu.render-device",
-      "page": "hypr-multi-gpu",
-      "source": "hypr-multi-gpu",
+      "control": "graphics.gpu-render-device",
+      "page": "graphics",
+      "source": "hypr-gpu-reference",
       "key": "render-device",
       "reference": [
-        "hypr-multi-gpu",
+        "hypr-gpu-reference",
         "render-device"
       ]
     },
     {
-      "control": "hypr-multi-gpu.vendor",
-      "page": "hypr-multi-gpu",
-      "source": "hypr-multi-gpu",
+      "control": "graphics.gpu-vendor",
+      "page": "graphics",
+      "source": "hypr-gpu-reference",
       "key": "vendor",
       "reference": [
-        "hypr-multi-gpu",
+        "hypr-gpu-reference",
         "vendor"
       ]
     },
     {
-      "control": "hypr-multi-gpu.mapping",
-      "page": "hypr-multi-gpu",
-      "source": "hypr-multi-gpu",
+      "control": "graphics.gpu-mapping",
+      "page": "graphics",
+      "source": "hypr-gpu-reference",
       "key": "mapping",
       "reference": [
-        "hypr-multi-gpu",
+        "hypr-gpu-reference",
         "mapping"
       ]
     },
     {
-      "control": "hypr-multi-gpu.variables",
-      "page": "hypr-multi-gpu",
-      "source": "hypr-multi-gpu",
+      "control": "graphics.gpu-variables",
+      "page": "graphics",
+      "source": "hypr-gpu-reference",
       "key": "variables",
       "reference": [
-        "hypr-multi-gpu",
+        "hypr-gpu-reference",
         "variables"
       ]
     },
@@ -10822,13 +10620,12 @@
       "source": "hypr-portal",
       "key": "diagnostics",
       "reference": [
-        "hypr-portal",
-        "diagnostics"
+        "hypr-portal"
       ]
     },
     {
-      "control": "hypr-polkit-agent.agent",
-      "page": "hypr-polkit-agent",
+      "control": "security.authorization-agent",
+      "page": "security",
       "source": "hypr-polkit",
       "key": "agent",
       "reference": [
@@ -10837,8 +10634,8 @@
       ]
     },
     {
-      "control": "hypr-polkit-agent.autostart",
-      "page": "hypr-polkit-agent",
+      "control": "security.authorization-autostart",
+      "page": "security",
       "source": "hypr-polkit",
       "key": "autostart",
       "reference": [
@@ -10847,8 +10644,8 @@
       ]
     },
     {
-      "control": "hypr-polkit-agent.status",
-      "page": "hypr-polkit-agent",
+      "control": "security.authorization-status",
+      "page": "security",
       "source": "hypr-polkit",
       "key": "status",
       "reference": [
@@ -10937,8 +10734,8 @@
       ]
     },
     {
-      "control": "hypr-config-backup.scope",
-      "page": "hypr-config-backup",
+      "control": "backup.configuration-scope",
+      "page": "backup",
       "source": "nwg-config-project",
       "key": "scope",
       "reference": [
@@ -10947,8 +10744,8 @@
       ]
     },
     {
-      "control": "hypr-config-backup.create",
-      "page": "hypr-config-backup",
+      "control": "backup.configuration-create",
+      "page": "backup",
       "source": "nwg-config-project",
       "key": "create",
       "reference": [
@@ -10957,8 +10754,8 @@
       ]
     },
     {
-      "control": "hypr-config-backup.restore",
-      "page": "hypr-config-backup",
+      "control": "backup.configuration-restore",
+      "page": "backup",
       "source": "nwg-config-project",
       "key": "restore",
       "reference": [
@@ -10967,8 +10764,8 @@
       ]
     },
     {
-      "control": "hypr-config-backup.import",
-      "page": "hypr-config-backup",
+      "control": "backup.configuration-import",
+      "page": "backup",
       "source": "nwg-config-project",
       "key": "import",
       "reference": [
@@ -10977,8 +10774,8 @@
       ]
     },
     {
-      "control": "hypr-config-backup.export",
-      "page": "hypr-config-backup",
+      "control": "backup.configuration-export",
+      "page": "backup",
       "source": "nwg-config-project",
       "key": "export",
       "reference": [
@@ -10987,8 +10784,8 @@
       ]
     },
     {
-      "control": "hypr-config-backup.preview",
-      "page": "hypr-config-backup",
+      "control": "backup.configuration-preview",
+      "page": "backup",
       "source": "nwg-config-project",
       "key": "preview",
       "reference": [
@@ -10997,52 +10794,52 @@
       ]
     },
     {
-      "control": "hypr-autostart.command",
-      "page": "hypr-autostart",
-      "source": "hypr-autostart",
+      "control": "startup.session-command",
+      "page": "startup",
+      "source": "hypr-startup-reference",
       "key": "command",
       "reference": [
-        "hypr-autostart",
+        "hypr-startup-reference",
         "command"
       ]
     },
     {
-      "control": "hypr-autostart.event",
-      "page": "hypr-autostart",
-      "source": "hypr-autostart",
+      "control": "startup.session-event",
+      "page": "startup",
+      "source": "hypr-startup-reference",
       "key": "event",
       "reference": [
-        "hypr-autostart",
+        "hypr-startup-reference",
         "event"
       ]
     },
     {
-      "control": "hypr-autostart.enabled",
-      "page": "hypr-autostart",
-      "source": "hypr-autostart",
+      "control": "startup.session-enabled",
+      "page": "startup",
+      "source": "hypr-startup-reference",
       "key": "enabled",
       "reference": [
-        "hypr-autostart",
+        "hypr-startup-reference",
         "enabled"
       ]
     },
     {
-      "control": "hypr-autostart.order",
-      "page": "hypr-autostart",
-      "source": "hypr-autostart",
+      "control": "startup.session-order",
+      "page": "startup",
+      "source": "hypr-startup-reference",
       "key": "order",
       "reference": [
-        "hypr-autostart",
+        "hypr-startup-reference",
         "order"
       ]
     },
     {
-      "control": "hypr-autostart.add",
-      "page": "hypr-autostart",
-      "source": "hypr-autostart",
+      "control": "startup.session-add",
+      "page": "startup",
+      "source": "hypr-startup-reference",
       "key": "add",
       "reference": [
-        "hypr-autostart",
+        "hypr-startup-reference",
         "add"
       ]
     },
@@ -11307,78 +11104,78 @@
       ]
     },
     {
-      "control": "hypr-shutdown.logout",
-      "page": "hypr-shutdown",
-      "source": "hypr-shutdown",
+      "control": "power.session-logout",
+      "page": "power",
+      "source": "hypr-power-reference",
       "key": "logout",
       "reference": [
-        "hypr-shutdown",
+        "hypr-power-reference",
         "logout"
       ]
     },
     {
-      "control": "hypr-shutdown.lock",
-      "page": "hypr-shutdown",
-      "source": "hypr-shutdown",
+      "control": "power.session-lock",
+      "page": "power",
+      "source": "hypr-power-reference",
       "key": "lock",
       "reference": [
-        "hypr-shutdown",
+        "hypr-power-reference",
         "lock"
       ]
     },
     {
-      "control": "hypr-shutdown.suspend",
-      "page": "hypr-shutdown",
-      "source": "hypr-shutdown",
+      "control": "power.session-suspend",
+      "page": "power",
+      "source": "hypr-power-reference",
       "key": "suspend",
       "reference": [
-        "hypr-shutdown",
+        "hypr-power-reference",
         "suspend"
       ]
     },
     {
-      "control": "hypr-shutdown.hibernate",
-      "page": "hypr-shutdown",
-      "source": "hypr-shutdown",
+      "control": "power.session-hibernate",
+      "page": "power",
+      "source": "hypr-power-reference",
       "key": "hibernate",
       "reference": [
-        "hypr-shutdown",
+        "hypr-power-reference",
         "hibernate"
       ]
     },
     {
-      "control": "hypr-shutdown.reboot",
-      "page": "hypr-shutdown",
-      "source": "hypr-shutdown",
+      "control": "power.session-reboot",
+      "page": "power",
+      "source": "hypr-power-reference",
       "key": "reboot",
       "reference": [
-        "hypr-shutdown",
+        "hypr-power-reference",
         "reboot"
       ]
     },
     {
-      "control": "hypr-shutdown.poweroff",
-      "page": "hypr-shutdown",
-      "source": "hypr-shutdown",
+      "control": "power.session-poweroff",
+      "page": "power",
+      "source": "hypr-power-reference",
       "key": "poweroff",
       "reference": [
-        "hypr-shutdown",
+        "hypr-power-reference",
         "poweroff"
       ]
     },
     {
-      "control": "hypr-shutdown.timeout",
-      "page": "hypr-shutdown",
-      "source": "hypr-shutdown",
+      "control": "power.session-timeout",
+      "page": "power",
+      "source": "hypr-power-reference",
       "key": "timeout",
       "reference": [
-        "hypr-shutdown",
+        "hypr-power-reference",
         "timeout"
       ]
     },
     {
-      "control": "hypr-shell-components.preset",
-      "page": "hypr-shell-components",
+      "control": "themes.desktop-component-preset",
+      "page": "themes",
       "source": "nwg-config-project",
       "key": "preset",
       "reference": [
@@ -11387,8 +11184,8 @@
       ]
     },
     {
-      "control": "hypr-shell-components.panel",
-      "page": "hypr-shell-components",
+      "control": "themes.desktop-component-panel",
+      "page": "themes",
       "source": "nwg-config-project",
       "key": "panel",
       "reference": [
@@ -11397,8 +11194,8 @@
       ]
     },
     {
-      "control": "hypr-shell-components.dock",
-      "page": "hypr-shell-components",
+      "control": "themes.desktop-component-dock",
+      "page": "themes",
       "source": "nwg-config-project",
       "key": "dock",
       "reference": [
@@ -11407,8 +11204,8 @@
       ]
     },
     {
-      "control": "hypr-shell-components.drawer",
-      "page": "hypr-shell-components",
+      "control": "themes.desktop-component-drawer",
+      "page": "themes",
       "source": "nwg-config-project",
       "key": "drawer",
       "reference": [
@@ -11417,8 +11214,8 @@
       ]
     },
     {
-      "control": "hypr-shell-components.notifications",
-      "page": "hypr-shell-components",
+      "control": "themes.desktop-component-notifications",
+      "page": "themes",
       "source": "nwg-config-project",
       "key": "notifications",
       "reference": [
@@ -11427,8 +11224,8 @@
       ]
     },
     {
-      "control": "hypr-shell-components.exit-menu",
-      "page": "hypr-shell-components",
+      "control": "themes.desktop-component-exit-menu",
+      "page": "themes",
       "source": "nwg-config-project",
       "key": "exit-menu",
       "reference": [
@@ -11437,8 +11234,8 @@
       ]
     },
     {
-      "control": "hypr-shell-components.tray",
-      "page": "hypr-shell-components",
+      "control": "themes.desktop-component-tray",
+      "page": "themes",
       "source": "nwg-config-project",
       "key": "tray",
       "reference": [

@@ -6,12 +6,12 @@
 
 清单覆盖现有目录中的全部设置项，包括主要中文控件和保留原名的设计参考细项（受 Windows 等桌面系统启发，作为设计参考与基准对照，而非直接照搬）；实际架构和功能已针对 Linux / Hyprland 进行了适配与差异化演进。相同概念可能存在多个展示位置。下述数量统计的是控件条目，不是去重后的独立后端功能数量。参考来源与实际实现的边界见 [调研说明](windows-settings-research.md)。
 
-Hyprland 内容包含 82 个独立页面及并入常规页面 Advanced 的预览项，共 762 项设置与 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
+Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览项，共 762 项设置与 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
 
 ## 当前概况
 
-- 设置分类：13 个；详情页面：214 个；设置条目：1799 项。
-- 已实现：168 项；未实现：1597 项；不适用：34 项。
+- 设置分类：13 个；详情页面：138 个；设置条目：1669 项。
+- 已实现：168 项；未实现：1491 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。
@@ -52,19 +52,19 @@ Hyprland 内容包含 82 个独立页面及并入常规页面 Advanced 的预览
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 33 | 301 | 54 | 247 | 0 |
+| [系统](#category-system) | 25 | 312 | 54 | 258 | 0 |
 | [声音](#category-sound) | 3 | 17 | 14 | 3 | 0 |
-| [蓝牙和设备](#category-devices) | 24 | 209 | 12 | 193 | 4 |
+| [蓝牙和设备](#category-devices) | 13 | 200 | 12 | 184 | 4 |
 | [网络和 Internet](#category-network) | 12 | 97 | 33 | 64 | 0 |
-| [外观](#category-appearance) | 23 | 184 | 20 | 164 | 0 |
-| [应用](#category-apps) | 5 | 38 | 25 | 13 | 0 |
-| [账户](#category-accounts) | 12 | 56 | 2 | 48 | 6 |
-| [时间和语言](#category-time) | 4 | 22 | 8 | 14 | 0 |
-| [辅助功能](#category-accessibility) | 14 | 230 | 0 | 230 | 0 |
-| [隐私和安全性](#category-privacy) | 47 | 260 | 0 | 236 | 24 |
-| [系统更新](#category-update) | 2 | 8 | 0 | 8 | 0 |
+| [外观](#category-appearance) | 9 | 295 | 20 | 275 | 0 |
+| [应用](#category-apps) | 5 | 40 | 25 | 15 | 0 |
+| [账户](#category-accounts) | 11 | 60 | 3 | 51 | 6 |
+| [时间和语言](#category-time) | 4 | 28 | 8 | 20 | 0 |
+| [辅助功能](#category-accessibility) | 14 | 236 | 0 | 236 | 0 |
+| [隐私和安全性](#category-privacy) | 9 | 39 | 0 | 35 | 4 |
+| [系统更新](#category-update) | 2 | 11 | 0 | 11 | 0 |
 | [窗口与工作区](#category-hyprland) | 23 | 258 | 0 | 258 | 0 |
-| [会话与配置](#category-session) | 12 | 119 | 0 | 119 | 0 |
+| [会话与配置](#category-session) | 9 | 82 | 0 | 82 | 0 |
 
 <a id="category-system"></a>
 
@@ -76,13 +76,11 @@ Hyprland 内容包含 82 个独立页面及并入常规页面 Advanced 的预览
 
 排列、亮度、颜色、缩放、分辨率与刷新率
 
-页面状态：**未实现**；条目：31；已实现 30 / 未实现 1 / 不适用 0。
+页面状态：**未实现**；条目：39；已实现 30 / 未实现 9 / 不适用 0。
 
 原因：显示设置通过 Hyprland 实现；夜间模式与 Graphics 页面尚未实现。
 
 Windows 参考入口：`ms-settings:display`、`ms-settings:screenrotation`、`ms-settings:display-advanced`。
-
-相关页面 ID：`hypr-output-assignments`、`hypr-multi-gpu`。
 
 参考资料：[hypr-monitors](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/monitors/_index.md)。
 
@@ -94,7 +92,7 @@ Display 交互：Position 使用 X/Y 输入；刷新操作移动到排列框右�
 | --- | --- | --- | --- | --- |
 | Selected display | `display.output` | 选择 | 已实现 | 实机 GUI；`test/display_test.dart` |
 | Position | `display.position` | 文本输入 | 已实现 | `test/display_smoke.py`（嵌套 Hyprland 0.57）；`test/display_test.dart`（布局计算） |
-| Refresh displays | `display.15697afc` | 操作 | 已实现 | 实机读取；`cargo test -p remya_settings_display` |
+| Refresh displays（排列框右上角按钮） | `display.15697afc` | 操作 | 已实现 | 实机读取；`cargo test -p remya_settings_display` |
 
 #### 亮度与颜色
 
@@ -144,6 +142,20 @@ Display 交互：Position 使用 X/Y 输入；刷新操作移动到排列框右�
 | --- | --- | --- | --- | --- |
 | Graphics | `display.2f32a8c2` | 操作 | 未实现 | — |
 
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Compositor variable refresh rate (vrr) | `display.compositor-vrr` | 滑块 | 未实现 | — |
+| Output assignment: Output name or description match | `display.assignment-output` | 文本输入 | 未实现 | — |
+| Output assignment: Enable this output | `display.assignment-enabled` | 开关 | 未实现 | — |
+| Output assignment: Display logical coordinates | `display.assignment-position` | 文本输入 | 未实现 | — |
+| Output assignment: Mirror output target | `display.assignment-mirror` | 文本输入 | 未实现 | — |
+| Output assignment: Workspace and output allocation | `display.assignment-workspace` | 文本输入 | 未实现 | — |
+| Output assignment: Unknown monitor fallback rules | `display.assignment-fallback` | 文本输入 | 未实现 | — |
+| Output assignment: Save layout draft | `display.assignment-save` | 操作 | 未实现 | — |
+
 ### Night light — `night-light`
 
 暖色显示与时间安排
@@ -169,7 +181,7 @@ Windows 参考入口：`ms-settings:nightlight`。
 
 默认图形选项与每应用 GPU 偏好
 
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+页面状态：**未实现**；条目：38；已实现 0 / 未实现 38 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -185,6 +197,44 @@ Windows 参考入口：`ms-settings:display-advancedgraphics`、`ms-settings:dis
 | Add desktop apps | `graphics.f6aaf67c` | 操作 | 未实现 | — |
 | Add app store apps | `graphics.232eb7f3` | 操作 | 未实现 | — |
 | Apply GPU preferences | `graphics.49ad9ee9` | 选择 | 未实现 | — |
+
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| OpenGL: nvidia anti flicker (nvidia_anti_flicker) | `graphics.opengl-nvidia-anti-flicker` | 开关 | 未实现 | — |
+| Rendering: async commit (async_commit) | `graphics.render-async-commit` | 开关 | 未实现 | — |
+| Rendering: cm auto hdr (cm_auto_hdr) | `graphics.render-cm-auto-hdr` | 滑块 | 未实现 | — |
+| Rendering: Color management switch (cm_enabled) | `graphics.render-cm-enabled` | 开关 | 未实现 | — |
+| Rendering: cm sdr eotf (cm_sdr_eotf) | `graphics.render-cm-sdr-eotf` | 文本输入 | 未实现 | — |
+| Rendering: ctm animation (ctm_animation) | `graphics.render-ctm-animation` | 滑块 | 未实现 | — |
+| Rendering: commit timing enabled (commit_timing_enabled) | `graphics.render-commit-timing-enabled` | 开关 | 未实现 | — |
+| Rendering: Direct scan output strategy (direct_scanout) | `graphics.render-direct-scanout` | 滑块 | 未实现 | — |
+| Rendering: expand undersized textures (expand_undersized_textures) | `graphics.render-expand-undersized-textures` | 开关 | 未实现 | — |
+| Rendering: fp16 sdr tf (fp16_sdr_tf) | `graphics.render-fp16-sdr-tf` | 滑块 | 未实现 | — |
+| Rendering: icc vcgt enabled (icc_vcgt_enabled) | `graphics.render-icc-vcgt-enabled` | 开关 | 未实现 | — |
+| Rendering: keep unmodified copy (keep_unmodified_copy) | `graphics.render-keep-unmodified-copy` | 滑块 | 未实现 | — |
+| Rendering: Rendering scheduling strategy (new_render_scheduling) | `graphics.render-new-render-scheduling` | 开关 | 未实现 | — |
+| Rendering: not shown fifo lock (not_shown_fifo_lock) | `graphics.render-not-shown-fifo-lock` | 滑块 | 未实现 | — |
+| Rendering: non shader cm (non_shader_cm) | `graphics.render-non-shader-cm` | 滑块 | 未实现 | — |
+| Rendering: non shader cm interop (non_shader_cm_interop) | `graphics.render-non-shader-cm-interop` | 滑块 | 未实现 | — |
+| Rendering: send content type (send_content_type) | `graphics.render-send-content-type` | 开关 | 未实现 | — |
+| Rendering: use fp16 (use_fp16) | `graphics.render-use-fp16` | 滑块 | 未实现 | — |
+| Rendering: use shader blur blend (use_shader_blur_blend) | `graphics.render-use-shader-blur-blend` | 开关 | 未实现 | — |
+| Rendering: xp mode (xp_mode) | `graphics.render-xp-mode` | 开关 | 未实现 | — |
+| Unfocused rendering frame rate (render_unfocused_fps) | `graphics.compositor-unfocused-fps` | 滑块 | 未实现 | — |
+| XWayland: enabled (enabled) | `graphics.xwayland-enabled` | 开关 | 未实现 | — |
+| XWayland: create abstract socket (create_abstract_socket) | `graphics.xwayland-create-abstract-socket` | 开关 | 未实现 | — |
+| XWayland: XWayland force integer scaling (force_zero_scaling) | `graphics.xwayland-force-zero-scaling` | 开关 | 未实现 | — |
+| XWayland: Nearest neighbor scaling (use_nearest_neighbor) | `graphics.xwayland-use-nearest-neighbor` | 开关 | 未实现 | — |
+| Application compatibility: prefer hdr (prefer_hdr) | `graphics.compatibility-prefer-hdr` | 滑块 | 未实现 | — |
+| Application compatibility: skip non kms dmabuf formats (skip_non_kms_dmabuf_formats) | `graphics.compatibility-skip-non-kms-dmabuf-formats` | 开关 | 未实现 | — |
+| GPU selection: DRM device selection sequence | `graphics.gpu-devices` | 文本输入 | 未实现 | — |
+| GPU selection: Rendering GPU selection | `graphics.gpu-render-device` | 文本输入 | 未实现 | — |
+| GPU selection: GPU and driver information | `graphics.gpu-vendor` | 信息展示 | 未实现 | — |
+| GPU selection: Connection relationship between monitor and GPU | `graphics.gpu-mapping` | 信息展示 | 未实现 | — |
+| GPU selection: Graphics card environment variable override | `graphics.gpu-variables` | 文本输入 | 未实现 | — |
 
 ### Notifications — `notifications`
 
@@ -306,7 +356,7 @@ Windows 参考入口：`ms-settings:quietmomentsscheduled`、`ms-settings:quietm
 
 能耗、屏幕超时与电池
 
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+页面状态：**未实现**；条目：32；已实现 0 / 未实现 32 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -325,6 +375,37 @@ Windows 参考入口：`ms-settings:powersleep`。
 | Battery usage | `power.03bd05ee` | 操作 | 未实现 | — |
 | Energy advice | `power.de734a46` | 操作 | 未实现 | — |
 | Video playback battery optimization | `power.f5cbd1dc` | 开关 | 未实现 | — |
+
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Wake displays on key press (key_press_enables_dpms) | `power.wake-key` | 开关 | 未实现 | — |
+| Wake displays on pointer movement (mouse_move_enables_dpms) | `power.wake-pointer` | 开关 | 未实现 | — |
+| Idle: Lock screen command (lock_cmd) | `power.idle-lock-cmd` | 文本输入 | 未实现 | — |
+| Idle: Unlock command (unlock_cmd) | `power.idle-unlock-cmd` | 文本输入 | 未实现 | — |
+| Idle: on lock cmd (on_lock_cmd) | `power.idle-on-lock-cmd` | 文本输入 | 未实现 | — |
+| Idle: on unlock cmd (on_unlock_cmd) | `power.idle-on-unlock-cmd` | 文本输入 | 未实现 | — |
+| Idle: Before sleep command (before_sleep_cmd) | `power.idle-before-sleep-cmd` | 文本输入 | 未实现 | — |
+| Idle: Post-wakeup command (after_sleep_cmd) | `power.idle-after-sleep-cmd` | 文本输入 | 未实现 | — |
+| Idle: Ignore D-Bus idle inhibition (ignore_dbus_inhibit) | `power.idle-ignore-dbus-inhibit` | 开关 | 未实现 | — |
+| Idle: Ignore systemd idle suppression (ignore_systemd_inhibit) | `power.idle-ignore-systemd-inhibit` | 开关 | 未实现 | — |
+| Idle: Ignore Wayland idle inhibition (ignore_wayland_inhibit) | `power.idle-ignore-wayland-inhibit` | 开关 | 未实现 | — |
+| Idle: Sleep waiting lock screen strategy (inhibit_sleep) | `power.idle-inhibit-sleep` | 文本输入 | 未实现 | — |
+| Idle listener: Timeout seconds (timeout) | `power.idle-listener-timeout` | 文本输入 | 未实现 | — |
+| Idle listener: Idle timeout action (on-timeout) | `power.idle-listener-on-timeout` | 文本输入 | 未实现 | — |
+| Idle listener: Resume activity action (on-resume) | `power.idle-listener-on-resume` | 文本输入 | 未实现 | — |
+| Idle listener: Ignore idle inhibition (ignore_inhibit) | `power.idle-listener-ignore-inhibit` | 开关 | 未实现 | — |
+| Idle listener: Idle trigger condition command (condition_cmd) | `power.idle-listener-condition-cmd` | 文本输入 | 未实现 | — |
+| Idle listener: Conditional retry interval (condition_retry) | `power.idle-listener-condition-retry` | 文本输入 | 未实现 | — |
+| Session power action: End graphics session | `power.session-logout` | 操作 | 未实现 | — |
+| Session power action: Lock session | `power.session-lock` | 操作 | 未实现 | — |
+| Session power action: hang | `power.session-suspend` | 操作 | 未实现 | — |
+| Session power action: Hibernate | `power.session-hibernate` | 操作 | 未实现 | — |
+| Session power action: Restart | `power.session-reboot` | 操作 | 未实现 | — |
+| Session power action: Turn off the power | `power.session-poweroff` | 操作 | 未实现 | — |
+| Session power action: Wait for the application to exit | `power.session-timeout` | 文本输入 | 未实现 | — |
 
 ### Energy saver — `battery-saver`
 
@@ -684,181 +765,6 @@ Windows 参考入口：`ms-settings:developers`。
 | View (Icon size, Auto arrange icons, Show desktop icons) | `file-explorer.reference.f24ca65a` | 选择 | 未实现 | — |
 | Sort by (Name, Size, Item type, Date modified) | `file-explorer.reference.ed11d482` | 选择 | 未实现 | — |
 
-### Hyprland · XWayland Compatible — `hypr-xwayland`
-
-合成器高级设置：xwayland · Hyprland
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### XWayland 兼容
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| enabled · enabled | `hypr-xwayland.enabled` | 开关 | 未实现 | — |
-| create abstract socket · create_abstract_socket | `hypr-xwayland.create-abstract-socket` | 开关 | 未实现 | — |
-| XWayland force integer scaling · force_zero_scaling | `hypr-xwayland.force-zero-scaling` | 开关 | 未实现 | — |
-| Nearest neighbor scaling · use_nearest_neighbor | `hypr-xwayland.use-nearest-neighbor` | 开关 | 未实现 | — |
-
-### Hyprland · Application Compatibility Exceptions — `hypr-quirks`
-
-合成器高级设置：quirks · Hyprland
-
-页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 应用兼容例外
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| prefer hdr · prefer_hdr | `hypr-quirks.prefer-hdr` | 滑块 | 未实现 | — |
-| skip non kms dmabuf formats · skip_non_kms_dmabuf_formats | `hypr-quirks.skip-non-kms-dmabuf-formats` | 开关 | 未实现 | — |
-
-### Idle and sleep · General — `hypr-idle-general`
-
-按官方文档分类的组件参数 · 可选组件 hypridle
-
-页面状态：**未实现**；条目：10；已实现 0 / 未实现 10 / 不适用 0。
-
-原因：尚未实现；可选组件 hypridle 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-idle](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hypridle.md)。
-
-#### 通用
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Lock screen command · lock_cmd | `hypr-idle-general.lock-cmd` | 文本输入 | 未实现 | — |
-| Unlock command · unlock_cmd | `hypr-idle-general.unlock-cmd` | 文本输入 | 未实现 | — |
-| on lock cmd · on_lock_cmd | `hypr-idle-general.on-lock-cmd` | 文本输入 | 未实现 | — |
-| on unlock cmd · on_unlock_cmd | `hypr-idle-general.on-unlock-cmd` | 文本输入 | 未实现 | — |
-| Before sleep command · before_sleep_cmd | `hypr-idle-general.before-sleep-cmd` | 文本输入 | 未实现 | — |
-| Post-wakeup command · after_sleep_cmd | `hypr-idle-general.after-sleep-cmd` | 文本输入 | 未实现 | — |
-| Ignore D-Bus idle inhibition · ignore_dbus_inhibit | `hypr-idle-general.ignore-dbus-inhibit` | 开关 | 未实现 | — |
-| Ignore systemd idle suppression · ignore_systemd_inhibit | `hypr-idle-general.ignore-systemd-inhibit` | 开关 | 未实现 | — |
-| Ignore Wayland idle inhibition · ignore_wayland_inhibit | `hypr-idle-general.ignore-wayland-inhibit` | 开关 | 未实现 | — |
-| Sleep waiting lock screen strategy · inhibit_sleep | `hypr-idle-general.inhibit-sleep` | 文本输入 | 未实现 | — |
-
-### Idle and sleep · Idle listener — `hypr-idle-listeners`
-
-按官方文档分类的组件参数 · 可选组件 hypridle
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；可选组件 hypridle 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-idle](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hypridle.md)。
-
-#### 空闲监听器
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Timeout seconds · timeout | `hypr-idle-listeners.timeout` | 文本输入 | 未实现 | — |
-| Idle timeout action · on-timeout | `hypr-idle-listeners.on-timeout` | 文本输入 | 未实现 | — |
-| Resume activity action · on-resume | `hypr-idle-listeners.on-resume` | 文本输入 | 未实现 | — |
-| Ignore idle inhibition · ignore_inhibit | `hypr-idle-listeners.ignore-inhibit` | 开关 | 未实现 | — |
-| Idle trigger condition command · condition_cmd | `hypr-idle-listeners.condition-cmd` | 文本输入 | 未实现 | — |
-| Conditional retry interval · condition_retry | `hypr-idle-listeners.condition-retry` | 文本输入 | 未实现 | — |
-
-### Monitor layout and workspace allocation — `hypr-output-assignments`
-
-输出启停、位置与工作区到显示器映射 · Hyprland
-
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[nwg-displays-project](https://github.com/nwg-piotr/nwg-displays/blob/412eff2779cf123f308753faab1a182dd474ba7a/README.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Output name or description match | `hypr-output-assignments.output` | 文本输入 | 未实现 | — |
-| Enable this output | `hypr-output-assignments.enabled` | 开关 | 未实现 | — |
-| Display logical coordinates | `hypr-output-assignments.position` | 文本输入 | 未实现 | — |
-| Mirror output target | `hypr-output-assignments.mirror` | 文本输入 | 未实现 | — |
-| Workspace and output allocation | `hypr-output-assignments.workspace` | 文本输入 | 未实现 | — |
-| Unknown monitor fallback rules | `hypr-output-assignments.fallback` | 文本输入 | 未实现 | — |
-| Save layout draft | `hypr-output-assignments.save` | 操作 | 未实现 | — |
-
-### Multiple GPU and Graphics Card Selection — `hypr-multi-gpu`
-
-显卡顺序、渲染设备及驱动兼容 · Hyprland
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-multi-gpu](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/extra/multi-gpu.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| DRM device selection sequence | `hypr-multi-gpu.devices` | 文本输入 | 未实现 | — |
-| Rendering GPU selection | `hypr-multi-gpu.render-device` | 文本输入 | 未实现 | — |
-| GPU and driver information | `hypr-multi-gpu.vendor` | 信息展示 | 未实现 | — |
-| Connection relationship between monitor and GPU | `hypr-multi-gpu.mapping` | 信息展示 | 未实现 | — |
-| Graphics card environment variable override | `hypr-multi-gpu.variables` | 文本输入 | 未实现 | — |
-
-### Hyprland · OpenGL compositing options — `hypr-opengl`
-
-合成器高级设置：opengl · Hyprland
-
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### OpenGL 合成选项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| nvidia anti flicker · nvidia_anti_flicker | `hypr-opengl.nvidia-anti-flicker` | 开关 | 未实现 | — |
-
-### Hyprland · Rendering and Color Pipeline — `hypr-render`
-
-合成器高级设置：render · Hyprland
-
-页面状态：**未实现**；条目：19；已实现 0 / 未实现 19 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 渲染与色彩管线
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| async commit · async_commit | `hypr-render.async-commit` | 开关 | 未实现 | — |
-| cm auto hdr · cm_auto_hdr | `hypr-render.cm-auto-hdr` | 滑块 | 未实现 | — |
-| Color management switch · cm_enabled | `hypr-render.cm-enabled` | 开关 | 未实现 | — |
-| cm sdr eotf · cm_sdr_eotf | `hypr-render.cm-sdr-eotf` | 文本输入 | 未实现 | — |
-| ctm animation · ctm_animation | `hypr-render.ctm-animation` | 滑块 | 未实现 | — |
-| commit timing enabled · commit_timing_enabled | `hypr-render.commit-timing-enabled` | 开关 | 未实现 | — |
-| Direct scan output strategy · direct_scanout | `hypr-render.direct-scanout` | 滑块 | 未实现 | — |
-| expand undersized textures · expand_undersized_textures | `hypr-render.expand-undersized-textures` | 开关 | 未实现 | — |
-| fp16 sdr tf · fp16_sdr_tf | `hypr-render.fp16-sdr-tf` | 滑块 | 未实现 | — |
-| icc vcgt enabled · icc_vcgt_enabled | `hypr-render.icc-vcgt-enabled` | 开关 | 未实现 | — |
-| keep unmodified copy · keep_unmodified_copy | `hypr-render.keep-unmodified-copy` | 滑块 | 未实现 | — |
-| Rendering scheduling strategy · new_render_scheduling | `hypr-render.new-render-scheduling` | 开关 | 未实现 | — |
-| not shown fifo lock · not_shown_fifo_lock | `hypr-render.not-shown-fifo-lock` | 滑块 | 未实现 | — |
-| non shader cm · non_shader_cm | `hypr-render.non-shader-cm` | 滑块 | 未实现 | — |
-| non shader cm interop · non_shader_cm_interop | `hypr-render.non-shader-cm-interop` | 滑块 | 未实现 | — |
-| send content type · send_content_type | `hypr-render.send-content-type` | 开关 | 未实现 | — |
-| use fp16 · use_fp16 | `hypr-render.use-fp16` | 滑块 | 未实现 | — |
-| use shader blur blend · use_shader_blur_blend | `hypr-render.use-shader-blur-blend` | 开关 | 未实现 | — |
-| xp mode · xp_mode | `hypr-render.xp-mode` | 开关 | 未实现 | — |
-
-
 ### Cursor — `cursor`
 
 光标主题、指针外观、文本光标与光标行为；暂未实现
@@ -945,6 +851,7 @@ Windows 参考入口：`ms-settings:easeofaccess-cursor`。
 | --- | --- | --- | --- | --- |
 | KDE System Settings | `system-more.kde` | 操作 | 已实现 | Rust 检测测试、CLI/D-Bus 对等与实机打开验证 |
 | GNOME Settings | `system-more.gnome` | 操作 | 已实现 | 检测与 GNOME/Unity 会话限制验证；Hyprland 下显示原因而不启动 |
+
 
 <a id="category-sound"></a>
 
@@ -1078,7 +985,7 @@ Windows 参考入口：`ms-settings:bluetooth`。
 
 连接设备与设备属性
 
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+页面状态：**未实现**；条目：18；已实现 0 / 未实现 18 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1092,6 +999,26 @@ Windows 参考入口：`ms-settings:connecteddevices`。
 | Connected devices | `device-list.c4c19ef3` | 信息展示 | 未实现 | — |
 | Monitors and docking stations | `device-list.eabd0e62` | 操作 | 未实现 | — |
 | Remove the device | `device-list.9064c223` | 操作 | 未实现 | — |
+
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Input device: Device name or match | `device-list.input-device` | 文本输入 | 未实现 | — |
+| Input device: Enable this device | `device-list.input-enabled` | 开关 | 未实现 | — |
+| Input device: Shortcut keys enabled for this device | `device-list.input-keybinds` | 开关 | 未实现 | — |
+| Input device: Device labeling and grouping | `device-list.input-tags` | 文本输入 | 未实现 | — |
+| Input device: This device keyboard layout overrides | `device-list.input-keyboard` | 文本输入 | 未实现 | — |
+| Input device: Pointer sensitivity override for this device | `device-list.input-sensitivity` | 文本输入 | 未实现 | — |
+| Input device: Bind the tablet to the monitor | `device-list.input-output` | 文本输入 | 未实现 | — |
+| Input device: View inherited global options | `device-list.input-inherit` | 操作 | 未实现 | — |
+| Hardware switch: Device name or label | `device-list.switch-device` | 文本输入 | 未实现 | — |
+| Hardware switch: Hardware switch name | `device-list.switch-switch` | 文本输入 | 未实现 | — |
+| Hardware switch: Switch trigger conditions | `device-list.switch-state` | 选择 | 未实现 | — |
+| Hardware switch: Trigger action | `device-list.switch-callback` | 文本输入 | 未实现 | — |
+| Hardware switch: Notebook closing action | `device-list.switch-lid` | 文本输入 | 未实现 | — |
+| Hardware switch: Tablet mode switching action | `device-list.switch-tablet` | 文本输入 | 未实现 | — |
 
 ### Printers and Scanners — `printers`
 
@@ -1146,7 +1073,7 @@ Windows 参考入口：`ms-settings:camera`。
 
 指针、滚轮与主按钮
 
-页面状态：**未实现**；条目：11；已实现 0 / 未实现 11 / 不适用 0。
+页面状态：**未实现**；条目：35；已实现 0 / 未实现 35 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1173,11 +1100,41 @@ Windows 参考入口：`ms-settings:mousetouchpad`。
 | Lines to scroll at a time | `mouse.reference.3bbac4aa` | 选择 | 未实现 | — |
 | Scroll inactive windows when hovering over them | `mouse.reference.8907aa76` | 开关 | 未实现 | — |
 
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Pointer: Pointer acceleration profile (accel_profile) | `mouse.compositor-accel-profile` | 文本输入 | 未实现 | — |
+| Pointer: Discrete scroll simulation (emulate_discrete_scroll) | `mouse.compositor-emulate-discrete-scroll` | 滑块 | 未实现 | — |
+| Pointer: Tile and float switching focus strategies (float_switch_override_focus) | `mouse.compositor-float-switch-override-focus` | 滑块 | 未实现 | — |
+| Pointer: Focus after closing the window (focus_on_close) | `mouse.compositor-focus-on-close` | 滑块 | 未实现 | — |
+| Pointer: Focus follows mouse mode (follow_mouse) | `mouse.compositor-follow-mouse` | 滑块 | 未实现 | — |
+| Pointer: Focus detection area shrink (follow_mouse_shrink) | `mouse.compositor-follow-mouse-shrink` | 滑块 | 未实现 | — |
+| Pointer: Focus switching movement threshold (follow_mouse_threshold) | `mouse.compositor-follow-mouse-threshold` | 文本输入 | 未实现 | — |
+| Pointer: Forced to turn off acceleration (force_no_accel) | `mouse.compositor-force-no-accel` | 开关 | 未实现 | — |
+| Pointer: Left-handed pointer mode (left_handed) | `mouse.compositor-left-handed` | 开关 | 未实现 | — |
+| Pointer: Refocus when crossing windows (mouse_refocus) | `mouse.compositor-mouse-refocus` | 开关 | 未实现 | — |
+| Pointer: Natural scroll (natural_scroll) | `mouse.compositor-natural-scroll` | 开关 | 未实现 | — |
+| Pointer: Off-window scroll event processing (off_window_axis_events) | `mouse.compositor-off-window-axis-events` | 滑块 | 未实现 | — |
+| Pointer: Device rotation angle (rotation) | `mouse.compositor-rotation` | 滑块 | 未实现 | — |
+| Pointer: Scroll trigger button (scroll_button) | `mouse.compositor-scroll-button` | 滑块 | 未实现 | — |
+| Pointer: Scroll button lock (scroll_button_lock) | `mouse.compositor-scroll-button-lock` | 开关 | 未实现 | — |
+| Pointer: Customize scroll acceleration sampling points (scroll_points) | `mouse.compositor-scroll-points` | 文本输入 | 未实现 | — |
+| Pointer: Scroll method (scroll_method) | `mouse.compositor-scroll-method` | 文本输入 | 未实现 | — |
+| Pointer: Scroll multiple (scroll_factor) | `mouse.compositor-scroll-factor` | 滑块 | 未实现 | — |
+| Pointer: Pointer sensitivity (sensitivity) | `mouse.compositor-sensitivity` | 滑块 | 未实现 | — |
+| Pointer: Special workspace focus penetration (special_fallthrough) | `mouse.compositor-special-fallthrough` | 开关 | 未实现 | — |
+| Pointer: Swallow the first click when focusing (swallow_focus_click) | `mouse.compositor-swallow-focus-click` | 开关 | 未实现 | — |
+| Follow focus during drag and drop (always_follow_on_dnd) | `mouse.compositor-drag-focus` | 开关 | 未实现 | — |
+| Middle-click paste (middle_click_paste) | `mouse.compositor-middle-paste` | 开关 | 未实现 | — |
+| Focus monitor on pointer movement (mouse_move_focuses_monitor) | `mouse.compositor-monitor-focus` | 开关 | 未实现 | — |
+
 ### Touchpad — `touchpad`
 
 轻触、滚动与多指手势
 
-页面状态：**未实现**；条目：24；已实现 0 / 未实现 24 / 不适用 0。
+页面状态：**未实现**；条目：56；已实现 0 / 未实现 56 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1217,11 +1174,49 @@ Windows 参考入口：`ms-settings:devices-touchpad`。
 | Pinch to Zoom | `touchpad.reference.9fd08601` | 开关 | 未实现 | — |
 | Intensity (supported on some devices only) | `touchpad.reference.bbbc35e5` | 滑块 | 未实现 | — |
 
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Touchpad: Distribute clicks according to finger number (clickfinger_behavior) | `touchpad.compositor-clickfinger-behavior` | 开关 | 未实现 | — |
+| Touchpad: Disable touchpad while typing (disable_while_typing) | `touchpad.compositor-disable-while-typing` | 开关 | 未实现 | — |
+| Touchpad: Three-finger drag (drag_3fg) | `touchpad.compositor-drag-3fg` | 滑块 | 未实现 | — |
+| Touchpad: Drag lock (drag_lock) | `touchpad.compositor-drag-lock` | 滑块 | 未实现 | — |
+| Touchpad: flip x (flip_x) | `touchpad.compositor-flip-x` | 开关 | 未实现 | — |
+| Touchpad: flip y (flip_y) | `touchpad.compositor-flip-y` | 开关 | 未实现 | — |
+| Touchpad: Middle button emulation (middle_button_emulation) | `touchpad.compositor-middle-button-emulation` | 开关 | 未实现 | — |
+| Touchpad: Natural scroll (natural_scroll) | `touchpad.compositor-natural-scroll` | 开关 | 未实现 | — |
+| Touchpad: Scroll multiple (scroll_factor) | `touchpad.compositor-scroll-factor` | 滑块 | 未实现 | — |
+| Touchpad: tap and drag (tap_and_drag) | `touchpad.compositor-tap-and-drag` | 开关 | 未实现 | — |
+| Touchpad: Tap button mapping (tap_button_map) | `touchpad.compositor-tap-button-map` | 文本输入 | 未实现 | — |
+| Touchpad: tap to click (tap_to_click) | `touchpad.compositor-tap-to-click` | 开关 | 未实现 | — |
+| Workspace gesture: close max timeout (close_max_timeout) | `touchpad.workspace-close-max-timeout` | 滑块 | 未实现 | — |
+| Workspace gesture: workspace swipe cancel ratio (workspace_swipe_cancel_ratio) | `touchpad.workspace-workspace-swipe-cancel-ratio` | 滑块 | 未实现 | — |
+| Workspace gesture: workspace swipe create new (workspace_swipe_create_new) | `touchpad.workspace-workspace-swipe-create-new` | 开关 | 未实现 | — |
+| Workspace gesture: workspace swipe direction lock (workspace_swipe_direction_lock) | `touchpad.workspace-workspace-swipe-direction-lock` | 开关 | 未实现 | — |
+| Workspace gesture: workspace swipe direction lock threshold (workspace_swipe_direction_lock_threshold) | `touchpad.workspace-workspace-swipe-direction-lock-threshold` | 滑块 | 未实现 | — |
+| Workspace gesture: workspace swipe distance (workspace_swipe_distance) | `touchpad.workspace-workspace-swipe-distance` | 滑块 | 未实现 | — |
+| Workspace gesture: workspace swipe forever (workspace_swipe_forever) | `touchpad.workspace-workspace-swipe-forever` | 开关 | 未实现 | — |
+| Workspace gesture: workspace swipe invert (workspace_swipe_invert) | `touchpad.workspace-workspace-swipe-invert` | 开关 | 未实现 | — |
+| Workspace gesture: workspace swipe min speed to force (workspace_swipe_min_speed_to_force) | `touchpad.workspace-workspace-swipe-min-speed-to-force` | 滑块 | 未实现 | — |
+| Workspace gesture: workspace swipe touch (workspace_swipe_touch) | `touchpad.workspace-workspace-swipe-touch` | 开关 | 未实现 | — |
+| Workspace gesture: workspace swipe touch invert (workspace_swipe_touch_invert) | `touchpad.workspace-workspace-swipe-touch-invert` | 开关 | 未实现 | — |
+| Workspace gesture: workspace swipe use r (workspace_swipe_use_r) | `touchpad.workspace-workspace-swipe-use-r` | 开关 | 未实现 | — |
+| Scrolling gesture: move snap to grid (move_snap_to_grid) | `touchpad.scrolling-move-snap-to-grid` | 开关 | 未实现 | — |
+| Scrolling gesture: move snap cursor (move_snap_cursor) | `touchpad.scrolling-move-snap-cursor` | 开关 | 未实现 | — |
+| Gesture binding: Gesture action (action) | `touchpad.binding-action` | 文本输入 | 未实现 | — |
+| Gesture binding: Gesture direction (direction) | `touchpad.binding-direction` | 文本输入 | 未实现 | — |
+| Gesture binding: Number of fingers (fingers) | `touchpad.binding-fingers` | 滑块 | 未实现 | — |
+| Gesture binding: Bypass shortcut key suppression (disable_inhibit) | `touchpad.binding-disable-inhibit` | 开关 | 未实现 | — |
+| Gesture binding: Modifier keys (mods) | `touchpad.binding-mods` | 文本输入 | 未实现 | — |
+| Gesture binding: scale (scale) | `touchpad.binding-scale` | 滑块 | 未实现 | — |
+
 ### Touch — `touch`
 
 触摸手势与唤醒
 
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1242,11 +1237,20 @@ Windows 参考入口：`ms-settings:devices-touch`。
 | Three- and four-finger touch gestures | `touch.reference.b3eb626b` | 开关 | 未实现 | — |
 | Touch the screen to wake (supported on some devices only) | `touch.reference.4283e4ac` | 开关 | 未实现 | — |
 
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Touch mapping: enabled (enabled) | `touch.mapping-enabled` | 开关 | 未实现 | — |
+| Touch mapping: Target display (output) | `touch.mapping-output` | 文本输入 | 未实现 | — |
+| Touch mapping: Rotation and flipping (transform) | `touch.mapping-transform` | 滑块 | 未实现 | — |
+
 ### Pen and Windows Ink — `pen`
 
 笔输入、笔菜单与反馈
 
-页面状态：**未实现**；条目：15；已实现 0 / 未实现 15 / 不适用 0。
+页面状态：**未实现**；条目：29；已实现 0 / 未实现 29 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1276,6 +1280,26 @@ Windows 参考入口：`ms-settings:pen`。
 | While inking (supported on some devices only) | `pen.reference.3ad69d1e` | 开关 | 未实现 | — |
 | While interacting with your device (supported on some devices only) | `pen.reference.7b1c28dd` | 开关 | 未实现 | — |
 | Intensity (supported on some devices only) | `pen.reference.8a3c1cf1` | 滑块 | 未实现 | — |
+
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Tablet: enabled (enabled) | `pen.tablet-enabled` | 开关 | 未实现 | — |
+| Tablet: Target display (output) | `pen.tablet-output` | 文本输入 | 未实现 | — |
+| Tablet: Rotation and flipping (transform) | `pen.tablet-transform` | 滑块 | 未实现 | — |
+| Tablet: absolute region position (absolute_region_position) | `pen.tablet-absolute-region-position` | 开关 | 未实现 | — |
+| Tablet: active area position (active_area_position) | `pen.tablet-active-area-position` | 文本输入 | 未实现 | — |
+| Tablet: active area size (active_area_size) | `pen.tablet-active-area-size` | 文本输入 | 未实现 | — |
+| Tablet: Left-handed pointer mode (left_handed) | `pen.tablet-left-handed` | 开关 | 未实现 | — |
+| Tablet: region position (region_position) | `pen.tablet-region-position` | 文本输入 | 未实现 | — |
+| Tablet: region size (region_size) | `pen.tablet-region-size` | 文本输入 | 未实现 | — |
+| Tablet: relative input (relative_input) | `pen.tablet-relative-input` | 开关 | 未实现 | — |
+| Pen tool: eraser button mode (eraser_button_mode) | `pen.tool-eraser-button-mode` | 滑块 | 未实现 | — |
+| Pen tool: eraser button override (eraser_button_override) | `pen.tool-eraser-button-override` | 文本输入 | 未实现 | — |
+| Pen tool: pressure range min (pressure_range_min) | `pen.tool-pressure-range-min` | 滑块 | 未实现 | — |
+| Pen tool: pressure range max (pressure_range_max) | `pen.tool-pressure-range-max` | 滑块 | 未实现 | — |
 
 ### Pen shortcut button — `pen-shortcuts`
 
@@ -1375,286 +1399,6 @@ Windows 参考入口：`ms-settings:mobile-devices`、`ms-settings:mobile-device
 | Manage mobile devices | `mobile.1ec69bd1` | 操作 | 未实现 | — |
 | Add mobile phone | `mobile.8031425b` | 操作 | 未实现 | — |
 | Show mobile suggestions | `mobile.1c9889d2` | 开关 | 未实现 | — |
-
-### Wheel devices — `wheel`
-
-Surface Dial 等配件参考
-
-页面状态：**不适用**；条目：4；已实现 0 / 未实现 0 / 不适用 4。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:wheel`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Add wheel device | `wheel.1432f6ac` | 操作 | 不适用 | — |
-| Sensitivity | `wheel.a359b3f1` | 滑块 | 不适用 | — |
-| Tactile feedback | `wheel.f7d769a7` | 开关 | 不适用 | — |
-| Default tools | `wheel.cbe34089` | 选择 | 不适用 | — |
-
-### Hyprland · Keyboard and pointer global options — `hypr-input`
-
-合成器高级设置：input · Hyprland
-
-页面状态：**未实现**；条目：31；已实现 0 / 未实现 31 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 键盘与指针全局选项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Pointer acceleration profile · accel_profile | `hypr-input.accel-profile` | 文本输入 | 未实现 | — |
-| Discrete scroll simulation · emulate_discrete_scroll | `hypr-input.emulate-discrete-scroll` | 滑块 | 未实现 | — |
-| Tile and float switching focus strategies · float_switch_override_focus | `hypr-input.float-switch-override-focus` | 滑块 | 未实现 | — |
-| Focus after closing the window · focus_on_close | `hypr-input.focus-on-close` | 滑块 | 未实现 | — |
-| Focus follows mouse mode · follow_mouse | `hypr-input.follow-mouse` | 滑块 | 未实现 | — |
-| Focus detection area shrink · follow_mouse_shrink | `hypr-input.follow-mouse-shrink` | 滑块 | 未实现 | — |
-| Focus switching movement threshold · follow_mouse_threshold | `hypr-input.follow-mouse-threshold` | 文本输入 | 未实现 | — |
-| Forced to turn off acceleration · force_no_accel | `hypr-input.force-no-accel` | 开关 | 未实现 | — |
-| Custom XKB file · kb_file | `hypr-input.kb-file` | 文本输入 | 未实现 | — |
-| Keyboard layout · kb_layout | `hypr-input.kb-layout` | 文本输入 | 未实现 | — |
-| Keyboard model · kb_model | `hypr-input.kb-model` | 文本输入 | 未实现 | — |
-| XKB extended options · kb_options | `hypr-input.kb-options` | 文本输入 | 未实现 | — |
-| XKB rules set · kb_rules | `hypr-input.kb-rules` | 文本输入 | 未实现 | — |
-| Keyboard layout variants · kb_variant | `hypr-input.kb-variant` | 文本输入 | 未实现 | — |
-| Left-handed pointer mode · left_handed | `hypr-input.left-handed` | 开关 | 未实现 | — |
-| Refocus when crossing windows · mouse_refocus | `hypr-input.mouse-refocus` | 开关 | 未实现 | — |
-| Natural scroll · natural_scroll | `hypr-input.natural-scroll` | 开关 | 未实现 | — |
-| Enable Num Lock by default · numlock_by_default | `hypr-input.numlock-by-default` | 开关 | 未实现 | — |
-| Off-window scroll event processing · off_window_axis_events | `hypr-input.off-window-axis-events` | 滑块 | 未实现 | — |
-| Key repeat delay · repeat_delay | `hypr-input.repeat-delay` | 滑块 | 未实现 | — |
-| Key repetition frequency · repeat_rate | `hypr-input.repeat-rate` | 滑块 | 未实现 | — |
-| Resolve shortcut keys according to the current layout · resolve_binds_by_sym | `hypr-input.resolve-binds-by-sym` | 开关 | 未实现 | — |
-| Device rotation angle · rotation | `hypr-input.rotation` | 滑块 | 未实现 | — |
-| Scroll trigger button · scroll_button | `hypr-input.scroll-button` | 滑块 | 未实现 | — |
-| Scroll button lock · scroll_button_lock | `hypr-input.scroll-button-lock` | 开关 | 未实现 | — |
-| Customize scroll acceleration sampling points · scroll_points | `hypr-input.scroll-points` | 文本输入 | 未实现 | — |
-| Scroll method · scroll_method | `hypr-input.scroll-method` | 文本输入 | 未实现 | — |
-| Scroll multiple · scroll_factor | `hypr-input.scroll-factor` | 滑块 | 未实现 | — |
-| Pointer sensitivity · sensitivity | `hypr-input.sensitivity` | 滑块 | 未实现 | — |
-| Special workspace focus penetration · special_fallthrough | `hypr-input.special-fallthrough` | 开关 | 未实现 | — |
-| Swallow the first click when focusing · swallow_focus_click | `hypr-input.swallow-focus-click` | 开关 | 未实现 | — |
-
-### Hyprland · Touchpad Advanced Options — `hypr-input-touchpad`
-
-合成器高级设置：input.touchpad · Hyprland
-
-页面状态：**未实现**；条目：12；已实现 0 / 未实现 12 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 触摸板高级选项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Distribute clicks according to finger number · clickfinger_behavior | `hypr-input-touchpad.clickfinger-behavior` | 开关 | 未实现 | — |
-| Disable touchpad while typing · disable_while_typing | `hypr-input-touchpad.disable-while-typing` | 开关 | 未实现 | — |
-| Three-finger drag · drag_3fg | `hypr-input-touchpad.drag-3fg` | 滑块 | 未实现 | — |
-| Drag lock · drag_lock | `hypr-input-touchpad.drag-lock` | 滑块 | 未实现 | — |
-| flip x · flip_x | `hypr-input-touchpad.flip-x` | 开关 | 未实现 | — |
-| flip y · flip_y | `hypr-input-touchpad.flip-y` | 开关 | 未实现 | — |
-| Middle button emulation · middle_button_emulation | `hypr-input-touchpad.middle-button-emulation` | 开关 | 未实现 | — |
-| Natural scroll · natural_scroll | `hypr-input-touchpad.natural-scroll` | 开关 | 未实现 | — |
-| Scroll multiple · scroll_factor | `hypr-input-touchpad.scroll-factor` | 滑块 | 未实现 | — |
-| tap and drag · tap_and_drag | `hypr-input-touchpad.tap-and-drag` | 开关 | 未实现 | — |
-| Tap button mapping · tap_button_map | `hypr-input-touchpad.tap-button-map` | 文本输入 | 未实现 | — |
-| tap to click · tap_to_click | `hypr-input-touchpad.tap-to-click` | 开关 | 未实现 | — |
-
-### Hyprland · Touch screen mapping — `hypr-input-touchdevice`
-
-合成器高级设置：input.touchdevice · Hyprland
-
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 触摸屏映射
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| enabled · enabled | `hypr-input-touchdevice.enabled` | 开关 | 未实现 | — |
-| Target display · output | `hypr-input-touchdevice.output` | 文本输入 | 未实现 | — |
-| Rotation and flipping · transform | `hypr-input-touchdevice.transform` | 滑块 | 未实现 | — |
-
-### Hyprland · Virtual keyboard — `hypr-input-virtualkeyboard`
-
-合成器高级设置：input.virtualkeyboard · Hyprland
-
-页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 虚拟键盘
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| release pressed on close · release_pressed_on_close | `hypr-input-virtualkeyboard.release-pressed-on-close` | 开关 | 未实现 | — |
-| share states · share_states | `hypr-input-virtualkeyboard.share-states` | 滑块 | 未实现 | — |
-
-### Hyprland · Tablet mapping — `hypr-input-tablet`
-
-合成器高级设置：input.tablet · Hyprland
-
-页面状态：**未实现**；条目：10；已实现 0 / 未实现 10 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 数位板映射
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| enabled · enabled | `hypr-input-tablet.enabled` | 开关 | 未实现 | — |
-| Target display · output | `hypr-input-tablet.output` | 文本输入 | 未实现 | — |
-| Rotation and flipping · transform | `hypr-input-tablet.transform` | 滑块 | 未实现 | — |
-| absolute region position · absolute_region_position | `hypr-input-tablet.absolute-region-position` | 开关 | 未实现 | — |
-| active area position · active_area_position | `hypr-input-tablet.active-area-position` | 文本输入 | 未实现 | — |
-| active area size · active_area_size | `hypr-input-tablet.active-area-size` | 文本输入 | 未实现 | — |
-| Left-handed pointer mode · left_handed | `hypr-input-tablet.left-handed` | 开关 | 未实现 | — |
-| region position · region_position | `hypr-input-tablet.region-position` | 文本输入 | 未实现 | — |
-| region size · region_size | `hypr-input-tablet.region-size` | 文本输入 | 未实现 | — |
-| relative input · relative_input | `hypr-input-tablet.relative-input` | 开关 | 未实现 | — |
-
-### Hyprland · Digital pen tool — `hypr-input-tablettool`
-
-合成器高级设置：input.tablettool · Hyprland
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 数位笔工具
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| eraser button mode · eraser_button_mode | `hypr-input-tablettool.eraser-button-mode` | 滑块 | 未实现 | — |
-| eraser button override · eraser_button_override | `hypr-input-tablettool.eraser-button-override` | 文本输入 | 未实现 | — |
-| pressure range min · pressure_range_min | `hypr-input-tablettool.pressure-range-min` | 滑块 | 未实现 | — |
-| pressure range max · pressure_range_max | `hypr-input-tablettool.pressure-range-max` | 滑块 | 未实现 | — |
-
-### Hyprland · Workspace Gesture Options — `hypr-gestures`
-
-合成器高级设置：gestures · Hyprland
-
-页面状态：**未实现**；条目：12；已实现 0 / 未实现 12 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 工作区手势选项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| close max timeout · close_max_timeout | `hypr-gestures.close-max-timeout` | 滑块 | 未实现 | — |
-| workspace swipe cancel ratio · workspace_swipe_cancel_ratio | `hypr-gestures.workspace-swipe-cancel-ratio` | 滑块 | 未实现 | — |
-| workspace swipe create new · workspace_swipe_create_new | `hypr-gestures.workspace-swipe-create-new` | 开关 | 未实现 | — |
-| workspace swipe direction lock · workspace_swipe_direction_lock | `hypr-gestures.workspace-swipe-direction-lock` | 开关 | 未实现 | — |
-| workspace swipe direction lock threshold · workspace_swipe_direction_lock_threshold | `hypr-gestures.workspace-swipe-direction-lock-threshold` | 滑块 | 未实现 | — |
-| workspace swipe distance · workspace_swipe_distance | `hypr-gestures.workspace-swipe-distance` | 滑块 | 未实现 | — |
-| workspace swipe forever · workspace_swipe_forever | `hypr-gestures.workspace-swipe-forever` | 开关 | 未实现 | — |
-| workspace swipe invert · workspace_swipe_invert | `hypr-gestures.workspace-swipe-invert` | 开关 | 未实现 | — |
-| workspace swipe min speed to force · workspace_swipe_min_speed_to_force | `hypr-gestures.workspace-swipe-min-speed-to-force` | 滑块 | 未实现 | — |
-| workspace swipe touch · workspace_swipe_touch | `hypr-gestures.workspace-swipe-touch` | 开关 | 未实现 | — |
-| workspace swipe touch invert · workspace_swipe_touch_invert | `hypr-gestures.workspace-swipe-touch-invert` | 开关 | 未实现 | — |
-| workspace swipe use r · workspace_swipe_use_r | `hypr-gestures.workspace-swipe-use-r` | 开关 | 未实现 | — |
-
-### Hyprland · Scroll layout gesture options — `hypr-gestures-scrolling`
-
-合成器高级设置：gestures.scrolling · Hyprland
-
-页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 滚动布局手势选项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| move snap to grid · move_snap_to_grid | `hypr-gestures-scrolling.move-snap-to-grid` | 开关 | 未实现 | — |
-| move snap cursor · move_snap_cursor | `hypr-gestures-scrolling.move-snap-cursor` | 开关 | 未实现 | — |
-
-### Touchpad gesture binding · Rule field — `hypr-gesture-fields`
-
-按官方文档分类的组件参数 · Hyprland
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-gestures](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/gestures.md)。
-
-#### 规则字段
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Gesture action · action | `hypr-gesture-fields.action` | 文本输入 | 未实现 | — |
-| Gesture direction · direction | `hypr-gesture-fields.direction` | 文本输入 | 未实现 | — |
-| Number of fingers · fingers | `hypr-gesture-fields.fingers` | 滑块 | 未实现 | — |
-| Bypass shortcut key suppression · disable_inhibit | `hypr-gesture-fields.disable-inhibit` | 开关 | 未实现 | — |
-| Modifier keys · mods | `hypr-gesture-fields.mods` | 文本输入 | 未实现 | — |
-| scale · scale | `hypr-gesture-fields.scale` | 滑块 | 未实现 | — |
-
-### Per-device input configuration — `hypr-device-profiles`
-
-按设备名称匹配与覆盖全局输入 · Hyprland
-
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-devices](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/devices.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Device name or match | `hypr-device-profiles.device` | 文本输入 | 未实现 | — |
-| Enable this device | `hypr-device-profiles.enabled` | 开关 | 未实现 | — |
-| Shortcut keys enabled for this device | `hypr-device-profiles.keybinds` | 开关 | 未实现 | — |
-| Device labeling and grouping | `hypr-device-profiles.tags` | 文本输入 | 未实现 | — |
-| This device keyboard layout overrides | `hypr-device-profiles.keyboard` | 文本输入 | 未实现 | — |
-| Pointer sensitivity override for this device | `hypr-device-profiles.sensitivity` | 文本输入 | 未实现 | — |
-| Bind the tablet to the monitor | `hypr-device-profiles.output` | 文本输入 | 未实现 | — |
-| View inherited global options | `hypr-device-profiles.inherit` | 操作 | 未实现 | — |
-
-### Device-specific binding and hardware switch — `hypr-device-bindings`
-
-盖板、平板模式及设备范围的绑定 · Hyprland
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-switches](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/switches.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Device name or label | `hypr-device-bindings.device` | 文本输入 | 未实现 | — |
-| Hardware switch name | `hypr-device-bindings.switch` | 文本输入 | 未实现 | — |
-| Switch trigger conditions | `hypr-device-bindings.state` | 选择 | 未实现 | — |
-| Trigger action | `hypr-device-bindings.callback` | 文本输入 | 未实现 | — |
-| Notebook closing action | `hypr-device-bindings.lid` | 文本输入 | 未实现 | — |
-| Tablet mode switching action | `hypr-device-bindings.tablet` | 文本输入 | 未实现 | — |
 
 <a id="category-network"></a>
 
@@ -1992,9 +1736,9 @@ Windows 参考入口：`ms-settings:network-advancedsettings`。
 
 桌面背景：图片（hyprpaper）或视频（mpvpaper）
 
-页面状态：**已实现**；条目：8；已实现 8 / 未实现 0 / 不适用 0。
+页面状态：**未实现**；条目：28；已实现 8 / 未实现 20 / 不适用 0。
 
-原因：Images use hyprpaper; videos use mpvpaper, because hyprpaper cannot play video.
+原因：图片和视频背景已实现；合成器背景与模糊选项仍为不可用预览。
 
 Windows 参考入口：`ms-settings:personalization-background`。
 
@@ -2016,11 +1760,36 @@ Windows 参考入口：`ms-settings:personalization-background`。
 | Splash offset | `background.splash-offset` | 滑块 | 已实现 | 见下文“Background, accent and fonts” |
 | Splash opacity | `background.splash-opacity` | 滑块 | 已实现 | 见下文“Background, accent and fonts” |
 
+Compositor background and blur options below are disabled previews; they do not change Hyprland configuration.
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| enabled | `background.blur-enabled` | 开关 | 未实现 | — |
+| Brightness adjustment | `background.blur-brightness` | 滑块 | 未实现 | — |
+| Contrast | `background.blur-contrast` | 滑块 | 未实现 | — |
+| Ignore window transparency | `background.blur-ignore-opacity` | 开关 | 未实现 | — |
+| Fuzzy performance optimization | `background.blur-new-optimizations` | 开关 | 未实现 | — |
+| Noise intensity | `background.blur-noise` | 滑块 | 未实现 | — |
+| Number of fuzzy iterations | `background.blur-passes` | 滑块 | 未实现 | — |
+| Blurred pop-ups | `background.blur-popups` | 开关 | 未实现 | — |
+| Pop-up window transparency threshold | `background.blur-popups-ignorealpha` | 滑块 | 未实现 | — |
+| Window or control size | `background.blur-size` | 文本输入 | 未实现 | — |
+| Special workspace is blurred | `background.blur-special` | 开关 | 未实现 | — |
+| Blur color saturation improvement | `background.blur-vibrancy` | 滑块 | 未实现 | — |
+| Effect of dark area saturation | `background.blur-vibrancy-darkness` | 滑块 | 未实现 | — |
+| Penetration effect | `background.blur-xray` | 开关 | 未实现 | — |
+| Display welcome banner | `background.compositor-splash-color` | 颜色 | 未实现 | — |
+| background color | `background.compositor-background-color` | 文本输入 | 未实现 | — |
+| disable hyprland logo | `background.compositor-disable-hyprland-logo` | 开关 | 未实现 | — |
+| disable splash rendering | `background.compositor-disable-splash-rendering` | 开关 | 未实现 | — |
+| force default wallpaper | `background.compositor-force-default-wallpaper` | 滑块 | 未实现 | — |
+| splash font family | `background.compositor-splash-font-family` | 文本输入 | 未实现 | — |
+
 ### Colors and themes — `themes`
 
 深浅色、强调色、Material 调色板与主题
 
-页面状态：**未实现**；条目：12；已实现 4 / 未实现 8 / 不适用 0。
+页面状态：**未实现**；条目：84；已实现 4 / 未实现 80 / 不适用 0。
 
 原因：Light/Dark, accent color and Material palette work. Other theme controls remain previews.
 
@@ -2053,11 +1822,89 @@ Windows 参考入口：`ms-settings:personalization-colors`、`ms-settings:color
 | Transparency Effects | `themes.reference.ed936eee` | 开关 | 未实现 | — |
 | Themes | `themes.reference.94d5186b` | 选择 | 未实现 | — |
 
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Window border: Active window border gradient (active_border) | `themes.border-active-border` | 文本输入 | 未实现 | — |
+| Window border: Inactive window border gradient (inactive_border) | `themes.border-inactive-border` | 文本输入 | 未实现 | — |
+| Window border: Disable group window borders (nogroup_border) | `themes.border-nogroup-border` | 文本输入 | 未实现 | — |
+| Window border: Disable group active window borders (nogroup_border_active) | `themes.border-nogroup-border-active` | 文本输入 | 未实现 | — |
+| Window decoration: Active window transparency (active_opacity) | `themes.decoration-active-opacity` | 滑块 | 未实现 | — |
+| Window decoration: Border participates in window drawing (border_part_of_window) | `themes.decoration-border-part-of-window` | 开关 | 未实现 | — |
+| Window decoration: Darkening degree of surrounding area (dim_around) | `themes.decoration-dim-around` | 滑块 | 未实现 | — |
+| Window decoration: Dim inactive windows (dim_inactive) | `themes.decoration-dim-inactive` | 开关 | 未实现 | — |
+| Window decoration: Modal window parent window dims (dim_modal) | `themes.decoration-dim-modal` | 开关 | 未实现 | — |
+| Window decoration: Darkening the background of special workspace (dim_special) | `themes.decoration-dim-special` | 文本输入 | 未实现 | — |
+| Window decoration: Inactive window dimming strength (dim_strength) | `themes.decoration-dim-strength` | 滑块 | 未实现 | — |
+| Window decoration: Full screen window transparency (fullscreen_opacity) | `themes.decoration-fullscreen-opacity` | 滑块 | 未实现 | — |
+| Window decoration: Inactive window transparency (inactive_opacity) | `themes.decoration-inactive-opacity` | 滑块 | 未实现 | — |
+| Window decoration: Corner radius (rounding) | `themes.decoration-rounding` | 滑块 | 未实现 | — |
+| Window decoration: Rounding curvature (rounding_power) | `themes.decoration-rounding-power` | 滑块 | 未实现 | — |
+| Window decoration: Screen shader path (screen_shader) | `themes.decoration-screen-shader` | 文本输入 | 未实现 | — |
+| Window shadow: enabled (enabled) | `themes.shadow-enabled` | 开关 | 未实现 | — |
+| Window shadow: color (color) | `themes.shadow-color` | 文本输入 | 未实现 | — |
+| Window shadow: Inactive color (color_inactive) | `themes.shadow-color-inactive` | 文本输入 | 未实现 | — |
+| Window shadow: offset·offset | `themes.shadow-offset` | 文本输入 | 未实现 | — |
+| Window shadow: Range of influence (range) | `themes.shadow-range` | 滑块 | 未实现 | — |
+| Window shadow: Rendering strength (render_power) | `themes.shadow-render-power` | 滑块 | 未实现 | — |
+| Window shadow: scale (scale) | `themes.shadow-scale` | 滑块 | 未实现 | — |
+| Window shadow: sharp (sharp) | `themes.shadow-sharp` | 开关 | 未实现 | — |
+| Window glow: enabled (enabled) | `themes.glow-enabled` | 开关 | 未实现 | — |
+| Window glow: color (color) | `themes.glow-color` | 颜色 | 未实现 | — |
+| Window glow: Inactive color (color_inactive) | `themes.glow-color-inactive` | 文本输入 | 未实现 | — |
+| Window glow: Range of influence (range) | `themes.glow-range` | 滑块 | 未实现 | — |
+| Window glow: Rendering strength (render_power) | `themes.glow-render-power` | 滑块 | 未实现 | — |
+| Motion blur: enabled (enabled) | `themes.motion-blur-enabled` | 开关 | 未实现 | — |
+| Motion blur: samples (samples) | `themes.motion-blur-samples` | 滑块 | 未实现 | — |
+| Window motion: enabled (enabled) | `themes.wobble-enabled` | 开关 | 未实现 | — |
+| Window motion: mesh (mesh) | `themes.wobble-mesh` | 滑块 | 未实现 | — |
+| Window motion: stiffness (stiffness) | `themes.wobble-stiffness` | 滑块 | 未实现 | — |
+| Window motion: damping (damping) | `themes.wobble-damping` | 滑块 | 未实现 | — |
+| Window motion: mass (mass) | `themes.wobble-mass` | 滑块 | 未实现 | — |
+| Window motion: intensity (intensity) | `themes.wobble-intensity` | 滑块 | 未实现 | — |
+| Window motion: value epsilon (value_epsilon) | `themes.wobble-value-epsilon` | 滑块 | 未实现 | — |
+| Window motion: velocity epsilon (velocity_epsilon) | `themes.wobble-velocity-epsilon` | 滑块 | 未实现 | — |
+| Animation: enabled (enabled) | `themes.animation-enabled` | 开关 | 未实现 | — |
+| Animation: Workspace animations are connected end to end (workspace_wraparound) | `themes.animation-workspace-wraparound` | 开关 | 未实现 | — |
+| Window group border: border active (border_active) | `themes.group-border-border-active` | 文本输入 | 未实现 | — |
+| Window group border: border inactive (border_inactive) | `themes.group-border-border-inactive` | 文本输入 | 未实现 | — |
+| Window group border: border locked active (border_locked_active) | `themes.group-border-border-locked-active` | 文本输入 | 未实现 | — |
+| Window group border: border locked inactive (border_locked_inactive) | `themes.group-border-border-locked-inactive` | 文本输入 | 未实现 | — |
+| Window group tab: active (active) | `themes.groupbar-active` | 文本输入 | 未实现 | — |
+| Window group tab: inactive (inactive) | `themes.groupbar-inactive` | 文本输入 | 未实现 | — |
+| Window group tab: locked active (locked_active) | `themes.groupbar-locked-active` | 文本输入 | 未实现 | — |
+| Window group tab: locked inactive (locked_inactive) | `themes.groupbar-locked-inactive` | 文本输入 | 未实现 | — |
+| Animate manual window resizing (animate_manual_resizes) | `themes.compositor-resize-animation` | 开关 | 未实现 | — |
+| Animate window dragging (animate_mouse_windowdragging) | `themes.compositor-drag-animation` | 开关 | 未实现 | — |
+| Animation editor: Animation node name | `themes.animation-editor-leaf` | 文本输入 | 未实现 | — |
+| Animation editor: Enable this node animation | `themes.animation-editor-enabled` | 开关 | 未实现 | — |
+| Animation editor: Animation duration (100 ms unit) | `themes.animation-editor-speed` | 文本输入 | 未实现 | — |
+| Animation editor: Animation style | `themes.animation-editor-style` | 文本输入 | 未实现 | — |
+| Animation editor: Curve name | `themes.animation-editor-curve` | 文本输入 | 未实现 | — |
+| Animation editor: Bézier Control Point | `themes.animation-editor-bezier` | 文本输入 | 未实现 | — |
+| Animation editor: Spring Quality | `themes.animation-editor-spring-mass` | 文本输入 | 未实现 | — |
+| Animation editor: Spring stiffness | `themes.animation-editor-spring-stiffness` | 文本输入 | 未实现 | — |
+| Animation editor: Spring damping | `themes.animation-editor-spring-damping` | 文本输入 | 未实现 | — |
+| Animation editor: View animation node inheritance | `themes.animation-editor-inheritance` | 操作 | 未实现 | — |
+| Gradient: Gradient color scale and transparency | `themes.gradient-stops` | 文本输入 | 未实现 | — |
+| Gradient: Gradient angle | `themes.gradient-angle` | 文本输入 | 未实现 | — |
+| Gradient: Active and inactive color matching | `themes.gradient-active` | 文本输入 | 未实现 | — |
+| Gradient: Preview gradient | `themes.gradient-preview` | 操作 | 未实现 | — |
+| Desktop component: Desktop Style Presets | `themes.desktop-component-preset` | 文本输入 | 未实现 | — |
+| Desktop component: Panel components and configuration | `themes.desktop-component-panel` | 文本输入 | 未实现 | — |
+| Desktop component: Dock components and configuration | `themes.desktop-component-dock` | 文本输入 | 未实现 | — |
+| Desktop component: App Drawer Components and Configuration | `themes.desktop-component-drawer` | 文本输入 | 未实现 | — |
+| Desktop component: Notification center style | `themes.desktop-component-notifications` | 文本输入 | 未实现 | — |
+| Desktop component: Exit menu style | `themes.desktop-component-exit-menu` | 文本输入 | 未实现 | — |
+| Desktop component: System Tray Module | `themes.desktop-component-tray` | 操作 | 未实现 | — |
+
 ### Lock screen interface — `lockscreen`
 
 锁屏背景、状态与登录画面
 
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**未实现**；条目：111；已实现 0 / 未实现 111 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2080,6 +1927,115 @@ Windows 参考入口：`ms-settings:lockscreen`。
 | Personalize your lock screen | `lockscreen.reference.3ada0526` | 开关 | 未实现 | — |
 | Get fun facts, tips, tricks, and more on your lock screen | `lockscreen.reference.252498b5` | 开关 | 未实现 | — |
 | Show the lock screen background picture on the sign-in screen | `lockscreen.reference.6437619e` | 开关 | 未实现 | — |
+
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Restore session lock (allow_session_lock_restore) | `lockscreen.compositor-restore` | 开关 | 未实现 | — |
+| Unresponsive lock screen delay (lockdead_screen_delay) | `lockscreen.compositor-dead-delay` | 滑块 | 未实现 | — |
+| Compositor lock blur (session_lock_blur) | `lockscreen.compositor-blur` | 开关 | 未实现 | — |
+| Compositor lock xray (session_lock_xray) | `lockscreen.compositor-xray` | 开关 | 未实现 | — |
+| Lock screen: Hide cursor (hide_cursor) | `lockscreen.general-hide-cursor` | 开关 | 未实现 | — |
+| Lock screen: ignore empty input (ignore_empty_input) | `lockscreen.general-ignore-empty-input` | 开关 | 未实现 | — |
+| Lock screen: immediate render (immediate_render) | `lockscreen.general-immediate-render` | 开关 | 未实现 | — |
+| Lock screen: text trim (text_trim) | `lockscreen.general-text-trim` | 开关 | 未实现 | — |
+| Lock screen: fractional scaling (fractional_scaling) | `lockscreen.general-fractional-scaling` | 文本输入 | 未实现 | — |
+| Lock screen: screencopy mode (screencopy_mode) | `lockscreen.general-screencopy-mode` | 文本输入 | 未实现 | — |
+| Lock screen: fail timeout (fail_timeout) | `lockscreen.general-fail-timeout` | 文本输入 | 未实现 | — |
+| Lock authentication: pam:enabled (pam:enabled) | `lockscreen.authentication-pam-enabled` | 开关 | 未实现 | — |
+| Lock authentication: pam:module (pam:module) | `lockscreen.authentication-pam-module` | 文本输入 | 未实现 | — |
+| Lock authentication: fingerprint:enabled (fingerprint:enabled) | `lockscreen.authentication-fingerprint-enabled` | 开关 | 未实现 | — |
+| Lock authentication: fingerprint:ready message (fingerprint:ready_message) | `lockscreen.authentication-fingerprint-ready-message` | 文本输入 | 未实现 | — |
+| Lock authentication: fingerprint:present message (fingerprint:present_message) | `lockscreen.authentication-fingerprint-present-message` | 文本输入 | 未实现 | — |
+| Lock authentication: fingerprint:retry delay (fingerprint:retry_delay) | `lockscreen.authentication-fingerprint-retry-delay` | 文本输入 | 未实现 | — |
+| Lock animation: enabled (enabled) | `lockscreen.animation-enabled` | 开关 | 未实现 | — |
+| Lock shadow: shadow passes (shadow_passes) | `lockscreen.shadow-shadow-passes` | 文本输入 | 未实现 | — |
+| Lock shadow: shadow size (shadow_size) | `lockscreen.shadow-shadow-size` | 文本输入 | 未实现 | — |
+| Lock shadow: shadow color (shadow_color) | `lockscreen.shadow-shadow-color` | 文本输入 | 未实现 | — |
+| Lock shadow: shadow boost (shadow_boost) | `lockscreen.shadow-shadow-boost` | 文本输入 | 未实现 | — |
+| Lock interaction: onclick (onclick) | `lockscreen.click-onclick` | 文本输入 | 未实现 | — |
+| Lock background: Monitor matching (monitor) | `lockscreen.background-monitor` | 文本输入 | 未实现 | — |
+| Lock background: Resource path (path) | `lockscreen.background-path` | 文本输入 | 未实现 | — |
+| Lock background: color (color) | `lockscreen.background-color` | 文本输入 | 未实现 | — |
+| Lock background: Lock screen background blur times (blur_passes) | `lockscreen.background-blur-passes` | 文本输入 | 未实现 | — |
+| Lock background: Lock screen background blur size (blur_size) | `lockscreen.background-blur-size` | 文本输入 | 未实现 | — |
+| Lock background: Noise intensity (noise) | `lockscreen.background-noise` | 文本输入 | 未实现 | — |
+| Lock background: Contrast (contrast) | `lockscreen.background-contrast` | 文本输入 | 未实现 | — |
+| Lock background: Brightness adjustment (brightness) | `lockscreen.background-brightness` | 文本输入 | 未实现 | — |
+| Lock background: Blur color saturation improvement (vibrancy) | `lockscreen.background-vibrancy` | 文本输入 | 未实现 | — |
+| Lock background: Effect of dark area saturation (vibrancy_darkness) | `lockscreen.background-vibrancy-darkness` | 文本输入 | 未实现 | — |
+| Lock background: reload time (reload_time) | `lockscreen.background-reload-time` | 文本输入 | 未实现 | — |
+| Lock background: reload cmd (reload_cmd) | `lockscreen.background-reload-cmd` | 文本输入 | 未实现 | — |
+| Lock background: Background switching time (crossfade_time) | `lockscreen.background-crossfade-time` | 文本输入 | 未实现 | — |
+| Lock background: zindex (zindex) | `lockscreen.background-zindex` | 文本输入 | 未实现 | — |
+| Lock image: Monitor matching (monitor) | `lockscreen.image-monitor` | 文本输入 | 未实现 | — |
+| Lock image: Resource path (path) | `lockscreen.image-path` | 文本输入 | 未实现 | — |
+| Lock image: Window or control size (size) | `lockscreen.image-size` | 文本输入 | 未实现 | — |
+| Lock image: Corner radius (rounding) | `lockscreen.image-rounding` | 文本输入 | 未实现 | — |
+| Lock image: Window border width (border_size) | `lockscreen.image-border-size` | 文本输入 | 未实现 | — |
+| Lock image: Window border gradient overlay (border_color) | `lockscreen.image-border-color` | 文本输入 | 未实现 | — |
+| Lock image: rotate (rotate) | `lockscreen.image-rotate` | 文本输入 | 未实现 | — |
+| Lock image: reload time (reload_time) | `lockscreen.image-reload-time` | 文本输入 | 未实现 | — |
+| Lock image: reload cmd (reload_cmd) | `lockscreen.image-reload-cmd` | 文本输入 | 未实现 | — |
+| Lock image: Virtual desktop position (position) | `lockscreen.image-position` | 文本输入 | 未实现 | — |
+| Lock image: Horizontal alignment (halign) | `lockscreen.image-halign` | 文本输入 | 未实现 | — |
+| Lock image: Vertical alignment (valign) | `lockscreen.image-valign` | 文本输入 | 未实现 | — |
+| Lock image: zindex (zindex) | `lockscreen.image-zindex` | 文本输入 | 未实现 | — |
+| Lock shape: Monitor matching (monitor) | `lockscreen.shape-monitor` | 文本输入 | 未实现 | — |
+| Lock shape: Window or control size (size) | `lockscreen.shape-size` | 文本输入 | 未实现 | — |
+| Lock shape: color (color) | `lockscreen.shape-color` | 文本输入 | 未实现 | — |
+| Lock shape: Corner radius (rounding) | `lockscreen.shape-rounding` | 文本输入 | 未实现 | — |
+| Lock shape: rotate (rotate) | `lockscreen.shape-rotate` | 文本输入 | 未实现 | — |
+| Lock shape: Window border width (border_size) | `lockscreen.shape-border-size` | 文本输入 | 未实现 | — |
+| Lock shape: Window border gradient overlay (border_color) | `lockscreen.shape-border-color` | 文本输入 | 未实现 | — |
+| Lock shape: Penetration effect (xray) | `lockscreen.shape-xray` | 开关 | 未实现 | — |
+| Lock shape: Virtual desktop position (position) | `lockscreen.shape-position` | 文本输入 | 未实现 | — |
+| Lock shape: Horizontal alignment (halign) | `lockscreen.shape-halign` | 文本输入 | 未实现 | — |
+| Lock shape: Vertical alignment (valign) | `lockscreen.shape-valign` | 文本输入 | 未实现 | — |
+| Lock shape: zindex (zindex) | `lockscreen.shape-zindex` | 文本输入 | 未实现 | — |
+| Lock password field: Monitor matching (monitor) | `lockscreen.input-monitor` | 文本输入 | 未实现 | — |
+| Lock password field: Window or control size (size) | `lockscreen.input-size` | 文本输入 | 未实现 | — |
+| Lock password field: outline thickness (outline_thickness) | `lockscreen.input-outline-thickness` | 文本输入 | 未实现 | — |
+| Lock password field: Password dot size (dots_size) | `lockscreen.input-dots-size` | 文本输入 | 未实现 | — |
+| Lock password field: Password dot spacing (dots_spacing) | `lockscreen.input-dots-spacing` | 文本输入 | 未实现 | — |
+| Lock password field: dots center (dots_center) | `lockscreen.input-dots-center` | 开关 | 未实现 | — |
+| Lock password field: dots rounding (dots_rounding) | `lockscreen.input-dots-rounding` | 文本输入 | 未实现 | — |
+| Lock password field: dots text format (dots_text_format) | `lockscreen.input-dots-text-format` | 文本输入 | 未实现 | — |
+| Lock password field: outer color (outer_color) | `lockscreen.input-outer-color` | 文本输入 | 未实现 | — |
+| Lock password field: inner color (inner_color) | `lockscreen.input-inner-color` | 文本输入 | 未实现 | — |
+| Lock password field: font color (font_color) | `lockscreen.input-font-color` | 文本输入 | 未实现 | — |
+| Lock password field: Font family (font_family) | `lockscreen.input-font-family` | 文本输入 | 未实现 | — |
+| Lock password field: Empty input fades out (fade_on_empty) | `lockscreen.input-fade-on-empty` | 开关 | 未实现 | — |
+| Lock password field: fade timeout (fade_timeout) | `lockscreen.input-fade-timeout` | 文本输入 | 未实现 | — |
+| Lock password field: Password input placeholder text (placeholder_text) | `lockscreen.input-placeholder-text` | 文本输入 | 未实现 | — |
+| Lock password field: Hide input content (hide_input) | `lockscreen.input-hide-input` | 开关 | 未实现 | — |
+| Lock password field: hide input base color (hide_input_base_color) | `lockscreen.input-hide-input-base-color` | 文本输入 | 未实现 | — |
+| Lock password field: Corner radius (rounding) | `lockscreen.input-rounding` | 文本输入 | 未实现 | — |
+| Lock password field: check color (check_color) | `lockscreen.input-check-color` | 文本输入 | 未实现 | — |
+| Lock password field: check text (check_text) | `lockscreen.input-check-text` | 文本输入 | 未实现 | — |
+| Lock password field: fail color (fail_color) | `lockscreen.input-fail-color` | 文本输入 | 未实现 | — |
+| Lock password field: Verification failure text (fail_text) | `lockscreen.input-fail-text` | 文本输入 | 未实现 | — |
+| Lock password field: capslock color (capslock_color) | `lockscreen.input-capslock-color` | 文本输入 | 未实现 | — |
+| Lock password field: numlock color (numlock_color) | `lockscreen.input-numlock-color` | 文本输入 | 未实现 | — |
+| Lock password field: bothlock color (bothlock_color) | `lockscreen.input-bothlock-color` | 文本输入 | 未实现 | — |
+| Lock password field: invert numlock (invert_numlock) | `lockscreen.input-invert-numlock` | 开关 | 未实现 | — |
+| Lock password field: swap font color (swap_font_color) | `lockscreen.input-swap-font-color` | 开关 | 未实现 | — |
+| Lock password field: Virtual desktop position (position) | `lockscreen.input-position` | 文本输入 | 未实现 | — |
+| Lock password field: Horizontal alignment (halign) | `lockscreen.input-halign` | 文本输入 | 未实现 | — |
+| Lock password field: Vertical alignment (valign) | `lockscreen.input-valign` | 文本输入 | 未实现 | — |
+| Lock password field: zindex (zindex) | `lockscreen.input-zindex` | 文本输入 | 未实现 | — |
+| Lock label: Monitor matching (monitor) | `lockscreen.label-monitor` | 文本输入 | 未实现 | — |
+| Lock label: Text content (text) | `lockscreen.label-text` | 文本输入 | 未实现 | — |
+| Lock label: text align (text_align) | `lockscreen.label-text-align` | 文本输入 | 未实现 | — |
+| Lock label: color (color) | `lockscreen.label-color` | 文本输入 | 未实现 | — |
+| Lock label: Font size (font_size) | `lockscreen.label-font-size` | 文本输入 | 未实现 | — |
+| Lock label: Font family (font_family) | `lockscreen.label-font-family` | 文本输入 | 未实现 | — |
+| Lock label: rotate (rotate) | `lockscreen.label-rotate` | 文本输入 | 未实现 | — |
+| Lock label: Virtual desktop position (position) | `lockscreen.label-position` | 文本输入 | 未实现 | — |
+| Lock label: Horizontal alignment (halign) | `lockscreen.label-halign` | 文本输入 | 未实现 | — |
+| Lock label: Vertical alignment (valign) | `lockscreen.label-valign` | 文本输入 | 未实现 | — |
 
 ### Start menu — `start`
 
@@ -2204,7 +2160,7 @@ Windows 参考入口：`ms-settings:taskbar`。
 
 浏览、预览、安装与卸载字体
 
-页面状态：**已实现**；条目：4；已实现 4 / 未实现 0 / 不适用 0。
+页面状态：**未实现**；条目：5；已实现 4 / 未实现 1 / 不适用 0。
 
 原因：Reads the fontconfig font list. Installs and removes font files only in your user font directory.
 
@@ -2218,6 +2174,13 @@ Windows 参考入口：`ms-settings:fonts`。
 | Install fonts | `fonts.158ba0bb` | 操作 | 已实现 | 见下文“Background, accent and fonts” |
 | Font details | `fonts.fc3969c7` | 操作 | 已实现 | 见下文“Background, accent and fonts” |
 | Uninstall fonts | `fonts.f869cae5` | 操作 | 已实现 | 见下文“Background, accent and fonts” |
+
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Compositor font family (font_family) | `fonts.compositor-family` | 文本输入 | 未实现 | — |
 
 ### Dynamic light effects — `lighting`
 
@@ -2239,301 +2202,6 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 | Effect | `lighting.151ddd4f` | 选择 | 未实现 | — |
 | Light color | `lighting.bf0bca1e` | 颜色 | 未实现 | — |
 | Match with accent colors | `lighting.869e06ec` | 开关 | 未实现 | — |
-
-### Hyprland · Window border gradient — `hypr-general-col`
-
-合成器高级设置：general.col · Hyprland
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 窗口边框渐变
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Active window border gradient · active_border | `hypr-general-col.active-border` | 文本输入 | 未实现 | — |
-| Inactive window border gradient · inactive_border | `hypr-general-col.inactive-border` | 文本输入 | 未实现 | — |
-| Disable group window borders · nogroup_border | `hypr-general-col.nogroup-border` | 文本输入 | 未实现 | — |
-| Disable group active window borders · nogroup_border_active | `hypr-general-col.nogroup-border-active` | 文本输入 | 未实现 | — |
-
-### Hyprland · Window decoration and transparency — `hypr-decoration`
-
-合成器高级设置：decoration · Hyprland
-
-页面状态：**未实现**；条目：12；已实现 0 / 未实现 12 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 窗口装饰与透明度
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Active window transparency · active_opacity | `hypr-decoration.active-opacity` | 滑块 | 未实现 | — |
-| Border participates in window drawing · border_part_of_window | `hypr-decoration.border-part-of-window` | 开关 | 未实现 | — |
-| Darkening degree of surrounding area · dim_around | `hypr-decoration.dim-around` | 滑块 | 未实现 | — |
-| Dim inactive windows · dim_inactive | `hypr-decoration.dim-inactive` | 开关 | 未实现 | — |
-| Modal window parent window dims · dim_modal | `hypr-decoration.dim-modal` | 开关 | 未实现 | — |
-| Darkening the background of special workspace · dim_special | `hypr-decoration.dim-special` | 文本输入 | 未实现 | — |
-| Inactive window dimming strength · dim_strength | `hypr-decoration.dim-strength` | 滑块 | 未实现 | — |
-| Full screen window transparency · fullscreen_opacity | `hypr-decoration.fullscreen-opacity` | 滑块 | 未实现 | — |
-| Inactive window transparency · inactive_opacity | `hypr-decoration.inactive-opacity` | 滑块 | 未实现 | — |
-| Corner radius · rounding | `hypr-decoration.rounding` | 滑块 | 未实现 | — |
-| Rounding curvature · rounding_power | `hypr-decoration.rounding-power` | 滑块 | 未实现 | — |
-| Screen shader path · screen_shader | `hypr-decoration.screen-shader` | 文本输入 | 未实现 | — |
-
-### Hyprland · Background blur — `hypr-decoration-blur`
-
-合成器高级设置：decoration.blur · Hyprland
-
-页面状态：**未实现**；条目：14；已实现 0 / 未实现 14 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 背景模糊
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| enabled · enabled | `hypr-decoration-blur.enabled` | 开关 | 未实现 | — |
-| Brightness adjustment · brightness | `hypr-decoration-blur.brightness` | 滑块 | 未实现 | — |
-| Contrast · contrast | `hypr-decoration-blur.contrast` | 滑块 | 未实现 | — |
-| Ignore window transparency · ignore_opacity | `hypr-decoration-blur.ignore-opacity` | 开关 | 未实现 | — |
-| Fuzzy performance optimization · new_optimizations | `hypr-decoration-blur.new-optimizations` | 开关 | 未实现 | — |
-| Noise intensity · noise | `hypr-decoration-blur.noise` | 滑块 | 未实现 | — |
-| Number of fuzzy iterations · passes | `hypr-decoration-blur.passes` | 滑块 | 未实现 | — |
-| Blurred pop-ups · popups | `hypr-decoration-blur.popups` | 开关 | 未实现 | — |
-| Pop-up window transparency threshold · popups_ignorealpha | `hypr-decoration-blur.popups-ignorealpha` | 滑块 | 未实现 | — |
-| Window or control size · size | `hypr-decoration-blur.size` | 文本输入 | 未实现 | — |
-| Special workspace is blurred · special | `hypr-decoration-blur.special` | 开关 | 未实现 | — |
-| Blur color saturation improvement · vibrancy | `hypr-decoration-blur.vibrancy` | 滑块 | 未实现 | — |
-| Effect of dark area saturation · vibrancy_darkness | `hypr-decoration-blur.vibrancy-darkness` | 滑块 | 未实现 | — |
-| Penetration effect · xray | `hypr-decoration-blur.xray` | 开关 | 未实现 | — |
-
-### Hyprland · Window Shadows — `hypr-decoration-shadow`
-
-合成器高级设置：decoration.shadow · Hyprland
-
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 窗口阴影
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| enabled · enabled | `hypr-decoration-shadow.enabled` | 开关 | 未实现 | — |
-| color · color | `hypr-decoration-shadow.color` | 文本输入 | 未实现 | — |
-| Inactive color · color_inactive | `hypr-decoration-shadow.color-inactive` | 文本输入 | 未实现 | — |
-| offset·offset | `hypr-decoration-shadow.offset` | 文本输入 | 未实现 | — |
-| Range of influence · range | `hypr-decoration-shadow.range` | 滑块 | 未实现 | — |
-| Rendering strength · render_power | `hypr-decoration-shadow.render-power` | 滑块 | 未实现 | — |
-| scale · scale | `hypr-decoration-shadow.scale` | 滑块 | 未实现 | — |
-| sharp · sharp | `hypr-decoration-shadow.sharp` | 开关 | 未实现 | — |
-
-### Hyprland · Window Glow — `hypr-decoration-glow`
-
-合成器高级设置：decoration.glow · Hyprland
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 窗口发光
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| enabled · enabled | `hypr-decoration-glow.enabled` | 开关 | 未实现 | — |
-| color · color | `hypr-decoration-glow.color` | 颜色 | 未实现 | — |
-| Inactive color · color_inactive | `hypr-decoration-glow.color-inactive` | 文本输入 | 未实现 | — |
-| Range of influence · range | `hypr-decoration-glow.range` | 滑块 | 未实现 | — |
-| Rendering strength · render_power | `hypr-decoration-glow.render-power` | 滑块 | 未实现 | — |
-
-### Hyprland · Motion Blur — `hypr-decoration-motion-blur`
-
-合成器高级设置：decoration.motion_blur · Hyprland
-
-页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 运动模糊
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| enabled · enabled | `hypr-decoration-motion-blur.enabled` | 开关 | 未实现 | — |
-| samples · samples | `hypr-decoration-motion-blur.samples` | 滑块 | 未实现 | — |
-
-### Hyprland · Window elastic deformation — `hypr-decoration-wobble`
-
-合成器高级设置：decoration.wobble · Hyprland
-
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 窗口弹性形变
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| enabled · enabled | `hypr-decoration-wobble.enabled` | 开关 | 未实现 | — |
-| mesh · mesh | `hypr-decoration-wobble.mesh` | 滑块 | 未实现 | — |
-| stiffness · stiffness | `hypr-decoration-wobble.stiffness` | 滑块 | 未实现 | — |
-| damping · damping | `hypr-decoration-wobble.damping` | 滑块 | 未实现 | — |
-| mass · mass | `hypr-decoration-wobble.mass` | 滑块 | 未实现 | — |
-| intensity · intensity | `hypr-decoration-wobble.intensity` | 滑块 | 未实现 | — |
-| value epsilon · value_epsilon | `hypr-decoration-wobble.value-epsilon` | 滑块 | 未实现 | — |
-| velocity epsilon · velocity_epsilon | `hypr-decoration-wobble.velocity-epsilon` | 滑块 | 未实现 | — |
-
-### Hyprland · Animation global options — `hypr-animations`
-
-合成器高级设置：animations · Hyprland
-
-页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 动画全局选项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| enabled · enabled | `hypr-animations.enabled` | 开关 | 未实现 | — |
-| Workspace animations are connected end to end · workspace_wraparound | `hypr-animations.workspace-wraparound` | 开关 | 未实现 | — |
-
-### Hyprland · Window group border color — `hypr-group-col`
-
-合成器高级设置：group.col · Hyprland
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 窗口组边框颜色
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| border active · border_active | `hypr-group-col.border-active` | 文本输入 | 未实现 | — |
-| border inactive · border_inactive | `hypr-group-col.border-inactive` | 文本输入 | 未实现 | — |
-| border locked active · border_locked_active | `hypr-group-col.border-locked-active` | 文本输入 | 未实现 | — |
-| border locked inactive · border_locked_inactive | `hypr-group-col.border-locked-inactive` | 文本输入 | 未实现 | — |
-
-### Hyprland · Window group tab bar color — `hypr-group-groupbar-col`
-
-合成器高级设置：group.groupbar.col · Hyprland
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 窗口组标签栏颜色
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| active · active | `hypr-group-groupbar-col.active` | 文本输入 | 未实现 | — |
-| inactive · inactive | `hypr-group-groupbar-col.inactive` | 文本输入 | 未实现 | — |
-| locked active · locked_active | `hypr-group-groupbar-col.locked-active` | 文本输入 | 未实现 | — |
-| locked inactive · locked_inactive | `hypr-group-groupbar-col.locked-inactive` | 文本输入 | 未实现 | — |
-
-### Hyprland · Compositor miscellaneous colors — `hypr-misc-col`
-
-合成器高级设置：misc.col · Hyprland
-
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 合成器杂项颜色
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Display welcome banner · splash | `hypr-misc-col.splash` | 颜色 | 未实现 | — |
-
-### Animation trees and curves — `hypr-animation-editor`
-
-窗口、图层、工作区动画与 Bézier / Spring · Hyprland
-
-页面状态：**未实现**；条目：10；已实现 0 / 未实现 10 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-animations](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/animations.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Animation node name | `hypr-animation-editor.leaf` | 文本输入 | 未实现 | — |
-| Enable this node animation | `hypr-animation-editor.enabled` | 开关 | 未实现 | — |
-| Animation duration (100 ms unit) | `hypr-animation-editor.speed` | 文本输入 | 未实现 | — |
-| Animation style | `hypr-animation-editor.style` | 文本输入 | 未实现 | — |
-| Curve name | `hypr-animation-editor.curve` | 文本输入 | 未实现 | — |
-| Bézier Control Point | `hypr-animation-editor.bezier` | 文本输入 | 未实现 | — |
-| Spring Quality | `hypr-animation-editor.spring-mass` | 文本输入 | 未实现 | — |
-| Spring stiffness | `hypr-animation-editor.spring-stiffness` | 文本输入 | 未实现 | — |
-| Spring damping | `hypr-animation-editor.spring-damping` | 文本输入 | 未实现 | — |
-| View animation node inheritance | `hypr-animation-editor.inheritance` | 操作 | 未实现 | — |
-
-### Color and Gradient Editing — `hypr-gradient-editor`
-
-边框、窗口组与多色渐变 · Hyprland
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hyprsettings-project](https://github.com/acropolis914/hyprsettings/blob/2343820372012eb436d7d24fe645f7948651d37b/README.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Gradient color scale and transparency | `hypr-gradient-editor.stops` | 文本输入 | 未实现 | — |
-| Gradient angle | `hypr-gradient-editor.angle` | 文本输入 | 未实现 | — |
-| Active and inactive color matching | `hypr-gradient-editor.active` | 文本输入 | 未实现 | — |
-| Preview gradient | `hypr-gradient-editor.preview` | 操作 | 未实现 | — |
-
-### Desktop components and style presets — `hypr-shell-components`
-
-面板、Dock、应用抽屉、通知与退出菜单 · 可选桌面 Shell 组件；不预设必须使用 nwg-shell
-
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
-
-原因：尚未实现；可选桌面 Shell 组件；不预设必须使用 nwg-shell 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[nwg-config-project](https://github.com/nwg-piotr/nwg-shell-config/blob/99dc0e00aa8b0931cd2b1be562ef950fbcc337f8/README.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Desktop Style Presets | `hypr-shell-components.preset` | 文本输入 | 未实现 | — |
-| Panel components and configuration | `hypr-shell-components.panel` | 文本输入 | 未实现 | — |
-| Dock components and configuration | `hypr-shell-components.dock` | 文本输入 | 未实现 | — |
-| App Drawer Components and Configuration | `hypr-shell-components.drawer` | 文本输入 | 未实现 | — |
-| Notification center style | `hypr-shell-components.notifications` | 文本输入 | 未实现 | — |
-| Exit menu style | `hypr-shell-components.exit-menu` | 文本输入 | 未实现 | — |
-| System Tray Module | `hypr-shell-components.tray` | 操作 | 未实现 | — |
 
 ### More — `appearance-more`
 
@@ -2601,9 +2269,9 @@ AppImage 集中目录、安装、更新源与实时更新进度
 
 ### Advanced app options — `app-properties`
 
-应用权限、后台运行与修复
+应用详情与维护
 
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2614,9 +2282,6 @@ Windows 参考入口：`ms-settings:appsfeatures-app`。
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Application version | `app-properties.e8427b83` | 信息展示 | 未实现 | — |
-| Camera permissions | `app-properties.928fd04d` | 开关 | 未实现 | — |
-| Microphone permissions | `app-properties.b9fea940` | 开关 | 未实现 | — |
-| Background running permissions | `app-properties.dde21b2c` | 选择 | 未实现 | — |
 | Terminate the application | `app-properties.6a3d60ab` | 操作 | 未实现 | — |
 | Repair application | `app-properties.dba04b1b` | 操作 | 未实现 | — |
 | Reset application | `app-properties.2888e689` | 操作 | 未实现 | — |
@@ -2652,7 +2317,7 @@ Windows 参考入口：`ms-settings:defaultapps`、`ms-settings:defaultbrowserse
 
 登录时启动的应用与影响
 
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+页面状态：**未实现**；条目：9；已实现 0 / 未实现 9 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2666,6 +2331,17 @@ Windows 参考入口：`ms-settings:startupapps`。
 | Sort by | `startup.3bf3689a` | 选择 | 未实现 | — |
 | Sample application starts at boot | `startup.bf13c9a3` | 开关 | 未实现 | — |
 | Launch Impact | `startup.e46804cd` | 信息展示 | 未实现 | — |
+
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Session action: Launch an application or command | `startup.session-command` | 文本输入 | 未实现 | — |
+| Session action: Triggering phase | `startup.session-event` | 选择 | 未实现 | — |
+| Session action: Enable this startup item | `startup.session-enabled` | 开关 | 未实现 | — |
+| Session action: Startup sequence and dependencies | `startup.session-order` | 文本输入 | 未实现 | — |
+| Session action: Added conversation action | `startup.session-add` | 操作 | 未实现 | — |
 
 <a id="category-accounts"></a>
 
@@ -2691,24 +2367,6 @@ Windows 参考入口：`ms-settings:yourinfo`。
 | Change avatar | `your-info.58484bbb` | 操作 | 已实现 | `test/account_test.dart`：双向滚轮、双指缩放、滑杆同步、拖动、1–8× 边界与取消、缩放后实际栅格绘制不越界；Rust 裁剪/原图不变/原子保存失败保留；CLI/D-Bus 契约 |
 | Manage Account | `your-info.7e0e3d0b` | 操作 | 未实现 | — |
 | Login options | `your-info.398b2d99` | 操作 | 未实现 | — |
-
-### Email and Accounts — `email`
-
-邮件、日历与其他应用账户
-
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:emailandaccounts`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Add account | `email.c771c7d8` | 操作 | 未实现 | — |
-| Add a work or school account | `email.83f45bb5` | 操作 | 未实现 | — |
-| Accounts used by other applications | `email.f03ce431` | 信息展示 | 未实现 | — |
 
 ### Sign-in options — `signin`
 
@@ -2756,11 +2414,11 @@ Windows 参考入口：`ms-settings:signinoptions-dynamiclock`。
 
 ### Facial recognition — `hello-face`
 
-Windows Hello 注册流程参考
+生物识别注册流程参考（参考 Windows Hello 设计）
 
 页面状态：**不适用**；条目：3；已实现 0 / 未实现 0 / 不适用 3。
 
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
+原因：仅为参考来源系统专属或旧版特性，尚无 Hyprland 对应实现。
 
 Windows 参考入口：`ms-settings:signinoptions-launchfaceenrollment`。
 
@@ -2814,7 +2472,7 @@ Windows 参考入口：`ms-settings:signinoptions-launchsecuritykeyenrollment`�
 
 应用、偏好与同步参考
 
-页面状态：**未实现**；条目：15；已实现 0 / 未实现 15 / 不适用 0。
+页面状态：**未实现**；条目：21；已实现 0 / 未实现 21 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2843,7 +2501,18 @@ Windows 参考入口：`ms-settings:sync`、`ms-settings:backup`。
 | Personalization | `backup.reference.60ff3096` | 开关 | 未实现 | — |
 | Language preferences and dictionary | `backup.reference.b695b07e` | 开关 | 未实现 | — |
 | Other Windows settings | `backup.reference.802b32da` | 开关 | 未实现 | — |
-| Accounts used by other apps (MSA accounts only) | `backup.reference.c0c91ce4` | 开关 | 未实现 | — |
+
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Configuration backup: Backup file range | `backup.configuration-scope` | 文本输入 | 未实现 | — |
+| Configuration backup: Create a configuration backup | `backup.configuration-create` | 操作 | 未实现 | — |
+| Configuration backup: Restore backup | `backup.configuration-restore` | 操作 | 未实现 | — |
+| Configuration backup: Import configuration archive | `backup.configuration-import` | 操作 | 未实现 | — |
+| Configuration backup: Export configuration archive | `backup.configuration-export` | 操作 | 未实现 | — |
+| Configuration backup: View differences before restoring | `backup.configuration-preview` | 操作 | 未实现 | — |
 
 ### Kiosk — `kiosk`
 
@@ -2901,11 +2570,11 @@ Windows 参考入口：`ms-settings:assignedaccess`。
 
 ### Cloud storage — `cloud-storage`
 
-Windows 首页云存储卡片参考
+首页云存储卡片参考（受现代桌面系统常见云存储卡片启发）
 
 页面状态：**不适用**；条目：3；已实现 0 / 未实现 0 / 不适用 3。
 
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
+原因：仅为参考来源系统专属或旧版特性，尚无 Hyprland 对应实现。
 
 #### 设置
 
@@ -2957,7 +2626,7 @@ Windows 参考入口：`ms-settings:dateandtime`。
 
 显示语言、首选语言与区域格式
 
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+页面状态：**未实现**；条目：12；已实现 0 / 未实现 12 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2973,6 +2642,18 @@ Windows 参考入口：`ms-settings:regionlanguage`、`ms-settings:regionformatt
 | Regional format | `language.b77c691e` | 选择 | 未实现 | — |
 | Language options | `language.feb9d380` | 操作 | 未实现 | — |
 | Manage language settings | `language.5f7e5146` | 操作 | 未实现 | — |
+
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Keyboard: Custom XKB file (kb_file) | `language.keyboard-kb-file` | 文本输入 | 未实现 | — |
+| Keyboard: Keyboard layout (kb_layout) | `language.keyboard-kb-layout` | 文本输入 | 未实现 | — |
+| Keyboard: Keyboard model (kb_model) | `language.keyboard-kb-model` | 文本输入 | 未实现 | — |
+| Keyboard: XKB extended options (kb_options) | `language.keyboard-kb-options` | 文本输入 | 未实现 | — |
+| Keyboard: XKB rules set (kb_rules) | `language.keyboard-kb-rules` | 文本输入 | 未实现 | — |
+| Keyboard: Keyboard layout variants (kb_variant) | `language.keyboard-kb-variant` | 文本输入 | 未实现 | — |
 
 ### More — `time-more`
 
@@ -3368,7 +3049,7 @@ Windows 参考入口：`ms-settings:easeofaccess-speechrecognition`。
 
 粘滞键、筛选键与屏幕键盘
 
-页面状态：**未实现**；条目：40；已实现 0 / 未实现 40 / 不适用 0。
+页面状态：**未实现**；条目：46；已实现 0 / 未实现 46 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -3433,6 +3114,18 @@ Windows 参考入口：`ms-settings:easeofaccess-keyboard`。
 | Play a sound when I turn Sticky, Filter, or Toggle keys on or off from the keyboard | `accessibility-keyboard.reference.8754adfd` | 开关 | 未实现 | — |
 | Underline acess keys | `accessibility-keyboard.reference.4a5a5e4c` | 开关 | 未实现 | — |
 | Use the print screen to open screen capture | `accessibility-keyboard.reference.6f3d637b` | 开关 | 未实现 | — |
+
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Keyboard: Enable Num Lock by default (numlock_by_default) | `accessibility-keyboard.compositor-numlock-by-default` | 开关 | 未实现 | — |
+| Keyboard: Key repeat delay (repeat_delay) | `accessibility-keyboard.compositor-repeat-delay` | 滑块 | 未实现 | — |
+| Keyboard: Key repetition frequency (repeat_rate) | `accessibility-keyboard.compositor-repeat-rate` | 滑块 | 未实现 | — |
+| Keyboard: Resolve shortcut keys according to the current layout (resolve_binds_by_sym) | `accessibility-keyboard.compositor-resolve-binds-by-sym` | 开关 | 未实现 | — |
+| Virtual keyboard: release pressed on close (release_pressed_on_close) | `accessibility-keyboard.virtual-release-pressed-on-close` | 开关 | 未实现 | — |
+| Virtual keyboard: share states (share_states) | `accessibility-keyboard.virtual-share-states` | 滑块 | 未实现 | — |
 
 ### Mouse keys — `mouse-keys`
 
@@ -3538,7 +3231,7 @@ Windows 参考入口：`ms-settings:easeofaccess-hearingaids`。
 
 安全概览与保护区域
 
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+页面状态：**未实现**；条目：10；已实现 0 / 未实现 10 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -3555,6 +3248,15 @@ Windows 参考入口：`ms-settings:windowsdefender`。
 | Application and browser controls | `security.3e8cd48e` | 操作 | 未实现 | — |
 | Equipment security | `security.b23021fa` | 操作 | 未实现 | — |
 | Equipment performance and operating condition | `security.dcf23926` | 操作 | 未实现 | — |
+
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Authorization agent: Authorized agent selection | `security.authorization-agent` | 选择 | 未实现 | — |
+| Authorization agent: Start authorization agent on login | `security.authorization-autostart` | 开关 | 未实现 | — |
+| Authorization agent: Authorized agent status | `security.authorization-status` | 信息展示 | 未实现 | — |
 
 ### Device encryption — `encryption`
 
@@ -3580,7 +3282,7 @@ Windows 参考入口：`ms-settings:deviceencryption`。
 
 页面状态：**不适用**；条目：2；已实现 0 / 未实现 0 / 不适用 2。
 
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
+原因：仅为参考来源系统专属或旧版特性，尚无 Hyprland 对应实现。
 
 Windows 参考入口：`ms-settings:findmydevice`。
 
@@ -3595,20 +3297,17 @@ Windows 参考入口：`ms-settings:findmydevice`。
 
 推荐内容、广告与应用跟踪
 
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
-Windows 参考入口：`ms-settings:privacy`、`ms-settings:privacy-general`、`ms-settings:privacy-advertisingid`。
+Windows 参考入口：`ms-settings:privacy`、`ms-settings:privacy-general`。
 
 #### 设置
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Allow apps to use the advertising identifier | `general-privacy.17180bb6` | 开关 | 未实现 | — |
 | Website access language list | `general-privacy.688b695e` | 开关 | 未实现 | — |
-| Track application launch | `general-privacy.f06cf7db` | 开关 | 未实现 | — |
-| Show suggested content | `general-privacy.c252e344` | 开关 | 未实现 | — |
 | Personalized offers | `general-privacy.87512f3b` | 开关 | 未实现 | — |
 
 ### Online speech recognition — `online-speech`
@@ -3617,7 +3316,7 @@ Windows 参考入口：`ms-settings:privacy`、`ms-settings:privacy-general`、`
 
 页面状态：**不适用**；条目：2；已实现 0 / 未实现 0 / 不适用 2。
 
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
+原因：仅为参考来源系统专属或旧版特性，尚无 Hyprland 对应实现。
 
 Windows 参考入口：`ms-settings:privacy-speech`。
 
@@ -3627,71 +3326,6 @@ Windows 参考入口：`ms-settings:privacy-speech`。
 | --- | --- | --- | --- | --- |
 | Online speech recognition | `online-speech.0a66701f` | 开关 | 不适用 | — |
 | Manage voice data in the cloud | `online-speech.20caf0a6` | 操作 | 不适用 | — |
-
-### Diagnostics & feedback — `diagnostics`
-
-诊断数据、改进体验与反馈
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-feedback`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Send optional diagnostic data | `diagnostics.1670f2f6` | 开关 | 未实现 | — |
-| Improved inking and typing | `diagnostics.9ed076ac` | 开关 | 未实现 | — |
-| Customized experience | `diagnostics.44f00cc6` | 开关 | 未实现 | — |
-| View diagnostic data | `diagnostics.e46bf6ba` | 开关 | 未实现 | — |
-| Delete diagnostic data | `diagnostics.693a0492` | 操作 | 未实现 | — |
-| Feedback frequency | `diagnostics.193e06c4` | 选择 | 未实现 | — |
-
-### Activity History — `activity`
-
-本地活动记录参考
-
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-activityhistory`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Store activity history on this device | `activity.4e2323e9` | 开关 | 未实现 | — |
-| Clear activity history | `activity.f6afab60` | 操作 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Store my activity history on this device | `activity.reference.c2152566` | 开关 | 未实现 | — |
-
-### Search permissions — `search-permissions`
-
-内容筛选、云内容与搜索记录
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:search-permissions`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| SafeSearch | `search-permissions.17512e70` | 选择 | 未实现 | — |
-| Personal account cloud content | `search-permissions.c7813935` | 开关 | 未实现 | — |
-| Work or school cloud content | `search-permissions.501e5ac5` | 开关 | 未实现 | — |
-| Search history on this device | `search-permissions.781a175d` | 开关 | 未实现 | — |
-| Clear device search history | `search-permissions.4a111c5a` | 操作 | 未实现 | — |
-| Show search highlights | `search-permissions.34652d10` | 开关 | 未实现 | — |
 
 ### Search and indexing — `search-index`
 
@@ -3714,466 +3348,6 @@ Windows 参考入口：`ms-settings:search`、`ms-settings:search-moredetails`�
 | Index troubleshooting | `search-index.d4c992e9` | 操作 | 未实现 | — |
 | Index status | `search-index.5a5afb60` | 信息展示 | 未实现 | — |
 
-### Recall and snapshots — `recall`
-
-Windows AI+ 专属快照参考
-
-页面状态：**不适用**；条目：8；已实现 0 / 未实现 0 / 不适用 8。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Save snapshot | `recall.75bf7faf` | 开关 | 不适用 | — |
-| Maximum disk usage | `recall.35e00b88` | 选择 | 不适用 | — |
-| Retention period | `recall.8c714efb` | 选择 | 不适用 | — |
-| Filtering applications | `recall.08113799` | 操作 | 不适用 | — |
-| Filter websites | `recall.f4366b8d` | 操作 | 不适用 | — |
-| Filter sensitive information | `recall.6f074486` | 开关 | 不适用 | — |
-| Delete snapshot | `recall.5b62e0a8` | 操作 | 不适用 | — |
-| Reset Recall | `recall.6e493e99` | 操作 | 不适用 | — |
-
-### Presence sensing permissions — `presence-permissions`
-
-应用对存在感应器的访问
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Presence of inductive access | `presence-permissions.0c794eb6` | 开关 | 未实现 | — |
-| Allow apps to access presence sensors | `presence-permissions.60318dc7` | 开关 | 未实现 | — |
-| Allow desktop apps to access presence sensors | `presence-permissions.77c98092` | 开关 | 未实现 | — |
-| Recent visits | `presence-permissions.249b0d1c` | 信息展示 | 未实现 | — |
-
-### Access to account information — `privacy-accountinfo`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-accountinfo`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Access to account information | `privacy-accountinfo.c14db834` | 开关 | 未实现 | — |
-| Allow applications to access account information | `privacy-accountinfo.b3922642` | 开关 | 未实现 | — |
-| Allow desktop applications to access account information | `privacy-accountinfo.53ddbab7` | 开关 | 未实现 | — |
-| Application access records | `privacy-accountinfo.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Application Diagnostics — `privacy-appdiagnostics`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-appdiagnostics`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Apply diagnostic permissions | `privacy-appdiagnostics.2bae941b` | 开关 | 未实现 | — |
-| Allow apps to access app diagnostics | `privacy-appdiagnostics.cf86a8de` | 开关 | 未实现 | — |
-| Allow desktop apps to access app diagnostics | `privacy-appdiagnostics.ca992042` | 开关 | 未实现 | — |
-| Application access records | `privacy-appdiagnostics.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Automatic file download — `privacy-automaticfiledownloads`
-
-应用访问权限与最近活动
-
-页面状态：**不适用**；条目：4；已实现 0 / 未实现 0 / 不适用 4。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:privacy-automaticfiledownloads`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Automatic file download permissions | `privacy-automaticfiledownloads.62830e87` | 开关 | 不适用 | — |
-| Allow apps to access automatic file downloads | `privacy-automaticfiledownloads.4fe8b8e8` | 开关 | 不适用 | — |
-| Allow desktop apps to access automatic file downloads | `privacy-automaticfiledownloads.9f89bad5` | 开关 | 不适用 | — |
-| Application access records | `privacy-automaticfiledownloads.bc0f5a5a` | 信息展示 | 不适用 | — |
-
-### Background apps — `privacy-backgroundapps`
-
-应用访问权限与最近活动
-
-页面状态：**不适用**；条目：4；已实现 0 / 未实现 0 / 不适用 4。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:privacy-backgroundapps`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Background application permissions | `privacy-backgroundapps.bef9974b` | 开关 | 不适用 | — |
-| Allow apps to access background apps | `privacy-backgroundapps.d50bfa1c` | 开关 | 不适用 | — |
-| Allow desktop apps to access background apps | `privacy-backgroundapps.d22436de` | 开关 | 不适用 | — |
-| Application access records | `privacy-backgroundapps.bc0f5a5a` | 信息展示 | 不适用 | — |
-
-### Background spatial perception — `privacy-backgroundspatialperception`
-
-应用访问权限与最近活动
-
-页面状态：**不适用**；条目：4；已实现 0 / 未实现 0 / 不适用 4。
-
-原因：Windows 专属或旧版参考，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:privacy-backgroundspatialperception`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Background space awareness permissions | `privacy-backgroundspatialperception.ffd33ca3` | 开关 | 不适用 | — |
-| Allow apps to access background space awareness | `privacy-backgroundspatialperception.5a4a9f2a` | 开关 | 不适用 | — |
-| Allow desktop apps to access background spatial awareness | `privacy-backgroundspatialperception.efd56719` | 开关 | 不适用 | — |
-| Application access records | `privacy-backgroundspatialperception.bc0f5a5a` | 信息展示 | 不适用 | — |
-
-### Call records — `privacy-callhistory`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-callhistory`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Call record permissions | `privacy-callhistory.96bc87a0` | 开关 | 未实现 | — |
-| Allow the app to access call history | `privacy-callhistory.39e7e03f` | 开关 | 未实现 | — |
-| Allow desktop apps to access call history | `privacy-callhistory.7eec1e7e` | 开关 | 未实现 | — |
-| Application access records | `privacy-callhistory.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Camera access — `privacy-webcam`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-webcam`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Camera access rights | `privacy-webcam.bb196d05` | 开关 | 未实现 | — |
-| Allow apps to access camera access | `privacy-webcam.c68d5137` | 开关 | 未实现 | — |
-| Allow desktop apps to access camera access | `privacy-webcam.1dfd1d96` | 开关 | 未实现 | — |
-| Application access records | `privacy-webcam.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Email access — `privacy-email`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-email`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Email Access | `privacy-email.6743c4a8` | 开关 | 未实现 | — |
-| Allow apps to access email access | `privacy-email.b1eccdff` | 开关 | 未实现 | — |
-| Allow desktop apps to access email access | `privacy-email.0f9728b4` | 开关 | 未实现 | — |
-| Application access records | `privacy-email.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Eye Trackers — `privacy-eyetracker`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-eyetracker`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Eye Tracker Permissions | `privacy-eyetracker.e409bf85` | 开关 | 未实现 | — |
-| Allow apps to access eye trackers | `privacy-eyetracker.9536184e` | 开关 | 未实现 | — |
-| Allow desktop apps to access the eye tracker | `privacy-eyetracker.90447213` | 开关 | 未实现 | — |
-| Application access records | `privacy-eyetracker.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### File system — `privacy-broadfilesystemaccess`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-broadfilesystemaccess`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| File system permissions | `privacy-broadfilesystemaccess.201c9daf` | 开关 | 未实现 | — |
-| Allow applications to access the file system | `privacy-broadfilesystemaccess.85ed3ea9` | 开关 | 未实现 | — |
-| Allow desktop applications to access the file system | `privacy-broadfilesystemaccess.e0e3dac0` | 开关 | 未实现 | — |
-| Application access records | `privacy-broadfilesystemaccess.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Screen capture and recording — `privacy-graphicscaptureprogrammatic`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-graphicscaptureprogrammatic`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Screenshot and recording permissions | `privacy-graphicscaptureprogrammatic.f4796772` | 开关 | 未实现 | — |
-| Allow apps to access screenshots and recordings | `privacy-graphicscaptureprogrammatic.36f7273e` | 开关 | 未实现 | — |
-| Allow desktop apps to access screenshots and recordings | `privacy-graphicscaptureprogrammatic.7b1ff9cb` | 开关 | 未实现 | — |
-| Application access records | `privacy-graphicscaptureprogrammatic.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Borderless screenshots — `privacy-graphicscapturewithoutborder`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-graphicscapturewithoutborder`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Borderless screenshot permission | `privacy-graphicscapturewithoutborder.864101f4` | 开关 | 未实现 | — |
-| Allow apps to access borderless screenshots | `privacy-graphicscapturewithoutborder.c791799e` | 开关 | 未实现 | — |
-| Allow desktop apps to access borderless screenshots | `privacy-graphicscapturewithoutborder.e6ef1f02` | 开关 | 未实现 | — |
-| Application access records | `privacy-graphicscapturewithoutborder.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Location — `privacy-location`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-location`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Location permissions | `privacy-location.b53f9ca7` | 开关 | 未实现 | — |
-| Allow apps to access location | `privacy-location.6d137050` | 开关 | 未实现 | — |
-| Allow desktop apps to access location | `privacy-location.46291e42` | 开关 | 未实现 | — |
-| Application access records | `privacy-location.bc0f5a5a` | 信息展示 | 未实现 | — |
-| Location services | `privacy-location.082addf9` | 开关 | 未实现 | — |
-| Default location | `privacy-location.fec9248d` | 操作 | 未实现 | — |
-| Clear location history | `privacy-location.a348ea51` | 操作 | 未实现 | — |
-
-### Messaging — `privacy-messaging`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-messaging`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Message permissions | `privacy-messaging.1c868b63` | 开关 | 未实现 | — |
-| Allow apps to access messages | `privacy-messaging.75f65f66` | 开关 | 未实现 | — |
-| Allow desktop apps to access messages | `privacy-messaging.ebdef2d0` | 开关 | 未实现 | — |
-| Application access records | `privacy-messaging.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Microphone access — `privacy-microphone`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-microphone`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Microphone access | `privacy-microphone.2298fc11` | 开关 | 未实现 | — |
-| Allow apps to access microphone access | `privacy-microphone.d65280b9` | 开关 | 未实现 | — |
-| Allow desktop apps to access microphone access | `privacy-microphone.3740edb1` | 开关 | 未实现 | — |
-| Application access records | `privacy-microphone.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Motion — `privacy-motion`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-motion`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Movement permissions | `privacy-motion.d4e74455` | 开关 | 未实现 | — |
-| Allow apps to access sports | `privacy-motion.3c8df88a` | 开关 | 未实现 | — |
-| Allow desktop apps to access sports | `privacy-motion.7dadf4d9` | 开关 | 未实现 | — |
-| Application access records | `privacy-motion.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Notification access — `privacy-notifications`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-notifications`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Notification access rights | `privacy-notifications.fcd04817` | 开关 | 未实现 | — |
-| Allow apps to access notification access | `privacy-notifications.27c3ae78` | 开关 | 未实现 | — |
-| Allow desktop apps to access notification access | `privacy-notifications.4b6a2eab` | 开关 | 未实现 | — |
-| Application access records | `privacy-notifications.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Other devices — `privacy-customdevices`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-customdevices`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Other device permissions | `privacy-customdevices.2ae3eaa4` | 开关 | 未实现 | — |
-| Allow apps to access other devices | `privacy-customdevices.116586b1` | 开关 | 未实现 | — |
-| Allow desktop apps to access other devices | `privacy-customdevices.71162fd5` | 开关 | 未实现 | — |
-| Application access records | `privacy-customdevices.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Telephone calls — `privacy-phonecalls`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-phonecalls`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Phone call permissions | `privacy-phonecalls.f6415e0a` | 开关 | 未实现 | — |
-| Allow apps to access phone calls | `privacy-phonecalls.61c3930e` | 开关 | 未实现 | — |
-| Allow desktop apps to access phone calls | `privacy-phonecalls.4fde61dd` | 开关 | 未实现 | — |
-| Application access records | `privacy-phonecalls.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Pictures — `privacy-pictures`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-pictures`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Image permissions | `privacy-pictures.1b549e5c` | 开关 | 未实现 | — |
-| Allow apps to access images | `privacy-pictures.d31bf02a` | 开关 | 未实现 | — |
-| Allow desktop apps to access images | `privacy-pictures.c20698c1` | 开关 | 未实现 | — |
-| Application access records | `privacy-pictures.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Wireless communications — `privacy-radios`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-radios`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Wireless communication permissions | `privacy-radios.fd561c64` | 开关 | 未实现 | — |
-| Allow applications to access wireless communications | `privacy-radios.11a432f0` | 开关 | 未实现 | — |
-| Allow desktop applications to access wireless communications | `privacy-radios.6792cc19` | 开关 | 未实现 | — |
-| Application access records | `privacy-radios.bc0f5a5a` | 信息展示 | 未实现 | — |
-
-### Voice activation — `privacy-voiceactivation`
-
-应用访问权限与最近活动
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy-voiceactivation`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Voice activation permissions | `privacy-voiceactivation.2ccffeb1` | 开关 | 未实现 | — |
-| Allow apps to access voice activation | `privacy-voiceactivation.ab979cad` | 开关 | 未实现 | — |
-| Allow desktop apps to access voice activation | `privacy-voiceactivation.67d3b590` | 开关 | 未实现 | — |
-| Application access records | `privacy-voiceactivation.bc0f5a5a` | 信息展示 | 未实现 | — |
-| Allow voice activation when lock screen | `privacy-voiceactivation.0b683ed1` | 开关 | 未实现 | — |
-
 ### Hyprland · Input capture boundaries — `hypr-input-capture`
 
 合成器高级设置：input-capture · Hyprland
@@ -4190,255 +3364,6 @@ Windows 参考入口：`ms-settings:privacy-voiceactivation`。
 | --- | --- | --- | --- | --- |
 | capture modifiers · capture_modifiers | `hypr-input-capture.capture-modifiers` | 开关 | 未实现 | — |
 | enforce barriers · enforce_barriers | `hypr-input-capture.enforce-barriers` | 开关 | 未实现 | — |
-
-### Hyprlock lock screen · General — `hypr-lock-general`
-
-按官方文档分类的组件参数 · 可选组件 hyprlock
-
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
-
-#### 通用
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Hide cursor · hide_cursor | `hypr-lock-general.hide-cursor` | 开关 | 未实现 | — |
-| ignore empty input · ignore_empty_input | `hypr-lock-general.ignore-empty-input` | 开关 | 未实现 | — |
-| immediate render · immediate_render | `hypr-lock-general.immediate-render` | 开关 | 未实现 | — |
-| text trim · text_trim | `hypr-lock-general.text-trim` | 开关 | 未实现 | — |
-| fractional scaling · fractional_scaling | `hypr-lock-general.fractional-scaling` | 文本输入 | 未实现 | — |
-| screencopy mode · screencopy_mode | `hypr-lock-general.screencopy-mode` | 文本输入 | 未实现 | — |
-| fail timeout · fail_timeout | `hypr-lock-general.fail-timeout` | 文本输入 | 未实现 | — |
-
-### Hyprlock lock screen · Authentication — `hypr-lock-authentication`
-
-按官方文档分类的组件参数 · 可选组件 hyprlock
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
-
-#### 身份验证
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| pam:enabled · pam:enabled | `hypr-lock-authentication.pam-enabled` | 开关 | 未实现 | — |
-| pam:module · pam:module | `hypr-lock-authentication.pam-module` | 文本输入 | 未实现 | — |
-| fingerprint:enabled · fingerprint:enabled | `hypr-lock-authentication.fingerprint-enabled` | 开关 | 未实现 | — |
-| fingerprint:ready message · fingerprint:ready_message | `hypr-lock-authentication.fingerprint-ready-message` | 文本输入 | 未实现 | — |
-| fingerprint:present message · fingerprint:present_message | `hypr-lock-authentication.fingerprint-present-message` | 文本输入 | 未实现 | — |
-| fingerprint:retry delay · fingerprint:retry_delay | `hypr-lock-authentication.fingerprint-retry-delay` | 文本输入 | 未实现 | — |
-
-### Hyprlock lock screen · animation — `hypr-lock-animations`
-
-按官方文档分类的组件参数 · 可选组件 hyprlock
-
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
-
-#### 动画
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| enabled · enabled | `hypr-lock-animations.enabled` | 开关 | 未实现 | — |
-
-### Hyprlock lock screen · Shadow general parameters — `hypr-lock-shadowable`
-
-按官方文档分类的组件参数 · 可选组件 hyprlock
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
-
-#### 阴影通用参数
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| shadow passes · shadow_passes | `hypr-lock-shadowable.shadow-passes` | 文本输入 | 未实现 | — |
-| shadow size · shadow_size | `hypr-lock-shadowable.shadow-size` | 文本输入 | 未实现 | — |
-| shadow color · shadow_color | `hypr-lock-shadowable.shadow-color` | 文本输入 | 未实现 | — |
-| shadow boost · shadow_boost | `hypr-lock-shadowable.shadow-boost` | 文本输入 | 未实现 | — |
-
-### Hyprlock lock screen · Click operation — `hypr-lock-clickable`
-
-按官方文档分类的组件参数 · 可选组件 hyprlock
-
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
-
-#### 点击操作
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| onclick · onclick | `hypr-lock-clickable.onclick` | 文本输入 | 未实现 | — |
-
-### Hyprlock lock screen · background — `hypr-lock-background`
-
-按官方文档分类的组件参数 · 可选组件 hyprlock
-
-页面状态：**未实现**；条目：14；已实现 0 / 未实现 14 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
-
-#### 背景
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Monitor matching · monitor | `hypr-lock-background.monitor` | 文本输入 | 未实现 | — |
-| Resource path · path | `hypr-lock-background.path` | 文本输入 | 未实现 | — |
-| color · color | `hypr-lock-background.color` | 文本输入 | 未实现 | — |
-| Lock screen background blur times · blur_passes | `hypr-lock-background.blur-passes` | 文本输入 | 未实现 | — |
-| Lock screen background blur size · blur_size | `hypr-lock-background.blur-size` | 文本输入 | 未实现 | — |
-| Noise intensity · noise | `hypr-lock-background.noise` | 文本输入 | 未实现 | — |
-| Contrast · contrast | `hypr-lock-background.contrast` | 文本输入 | 未实现 | — |
-| Brightness adjustment · brightness | `hypr-lock-background.brightness` | 文本输入 | 未实现 | — |
-| Blur color saturation improvement · vibrancy | `hypr-lock-background.vibrancy` | 文本输入 | 未实现 | — |
-| Effect of dark area saturation · vibrancy_darkness | `hypr-lock-background.vibrancy-darkness` | 文本输入 | 未实现 | — |
-| reload time · reload_time | `hypr-lock-background.reload-time` | 文本输入 | 未实现 | — |
-| reload cmd · reload_cmd | `hypr-lock-background.reload-cmd` | 文本输入 | 未实现 | — |
-| Background switching time · crossfade_time | `hypr-lock-background.crossfade-time` | 文本输入 | 未实现 | — |
-| zindex · zindex | `hypr-lock-background.zindex` | 文本输入 | 未实现 | — |
-
-### Hyprlock Lock Screen · Pictures — `hypr-lock-image`
-
-按官方文档分类的组件参数 · 可选组件 hyprlock
-
-页面状态：**未实现**；条目：13；已实现 0 / 未实现 13 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
-
-#### 图片
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Monitor matching · monitor | `hypr-lock-image.monitor` | 文本输入 | 未实现 | — |
-| Resource path · path | `hypr-lock-image.path` | 文本输入 | 未实现 | — |
-| Window or control size · size | `hypr-lock-image.size` | 文本输入 | 未实现 | — |
-| Corner radius · rounding | `hypr-lock-image.rounding` | 文本输入 | 未实现 | — |
-| Window border width · border_size | `hypr-lock-image.border-size` | 文本输入 | 未实现 | — |
-| Window border gradient overlay · border_color | `hypr-lock-image.border-color` | 文本输入 | 未实现 | — |
-| rotate · rotate | `hypr-lock-image.rotate` | 文本输入 | 未实现 | — |
-| reload time · reload_time | `hypr-lock-image.reload-time` | 文本输入 | 未实现 | — |
-| reload cmd · reload_cmd | `hypr-lock-image.reload-cmd` | 文本输入 | 未实现 | — |
-| Virtual desktop position · position | `hypr-lock-image.position` | 文本输入 | 未实现 | — |
-| Horizontal alignment · halign | `hypr-lock-image.halign` | 文本输入 | 未实现 | — |
-| Vertical alignment · valign | `hypr-lock-image.valign` | 文本输入 | 未实现 | — |
-| zindex · zindex | `hypr-lock-image.zindex` | 文本输入 | 未实现 | — |
-
-### Hyprlock Lock Screen · Shape — `hypr-lock-shape`
-
-按官方文档分类的组件参数 · 可选组件 hyprlock
-
-页面状态：**未实现**；条目：12；已实现 0 / 未实现 12 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
-
-#### 形状
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Monitor matching · monitor | `hypr-lock-shape.monitor` | 文本输入 | 未实现 | — |
-| Window or control size · size | `hypr-lock-shape.size` | 文本输入 | 未实现 | — |
-| color · color | `hypr-lock-shape.color` | 文本输入 | 未实现 | — |
-| Corner radius · rounding | `hypr-lock-shape.rounding` | 文本输入 | 未实现 | — |
-| rotate · rotate | `hypr-lock-shape.rotate` | 文本输入 | 未实现 | — |
-| Window border width · border_size | `hypr-lock-shape.border-size` | 文本输入 | 未实现 | — |
-| Window border gradient overlay · border_color | `hypr-lock-shape.border-color` | 文本输入 | 未实现 | — |
-| Penetration effect · xray | `hypr-lock-shape.xray` | 开关 | 未实现 | — |
-| Virtual desktop position · position | `hypr-lock-shape.position` | 文本输入 | 未实现 | — |
-| Horizontal alignment · halign | `hypr-lock-shape.halign` | 文本输入 | 未实现 | — |
-| Vertical alignment · valign | `hypr-lock-shape.valign` | 文本输入 | 未实现 | — |
-| zindex · zindex | `hypr-lock-shape.zindex` | 文本输入 | 未实现 | — |
-
-### Hyprlock lock screen · Password input box — `hypr-lock-input-field`
-
-按官方文档分类的组件参数 · 可选组件 hyprlock
-
-页面状态：**未实现**；条目：31；已实现 0 / 未实现 31 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
-
-#### 密码输入框
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Monitor matching · monitor | `hypr-lock-input-field.monitor` | 文本输入 | 未实现 | — |
-| Window or control size · size | `hypr-lock-input-field.size` | 文本输入 | 未实现 | — |
-| outline thickness · outline_thickness | `hypr-lock-input-field.outline-thickness` | 文本输入 | 未实现 | — |
-| Password dot size · dots_size | `hypr-lock-input-field.dots-size` | 文本输入 | 未实现 | — |
-| Password dot spacing · dots_spacing | `hypr-lock-input-field.dots-spacing` | 文本输入 | 未实现 | — |
-| dots center · dots_center | `hypr-lock-input-field.dots-center` | 开关 | 未实现 | — |
-| dots rounding · dots_rounding | `hypr-lock-input-field.dots-rounding` | 文本输入 | 未实现 | — |
-| dots text format · dots_text_format | `hypr-lock-input-field.dots-text-format` | 文本输入 | 未实现 | — |
-| outer color · outer_color | `hypr-lock-input-field.outer-color` | 文本输入 | 未实现 | — |
-| inner color · inner_color | `hypr-lock-input-field.inner-color` | 文本输入 | 未实现 | — |
-| font color · font_color | `hypr-lock-input-field.font-color` | 文本输入 | 未实现 | — |
-| Font family · font_family | `hypr-lock-input-field.font-family` | 文本输入 | 未实现 | — |
-| Empty input fades out · fade_on_empty | `hypr-lock-input-field.fade-on-empty` | 开关 | 未实现 | — |
-| fade timeout · fade_timeout | `hypr-lock-input-field.fade-timeout` | 文本输入 | 未实现 | — |
-| Password input placeholder text · placeholder_text | `hypr-lock-input-field.placeholder-text` | 文本输入 | 未实现 | — |
-| Hide input content · hide_input | `hypr-lock-input-field.hide-input` | 开关 | 未实现 | — |
-| hide input base color · hide_input_base_color | `hypr-lock-input-field.hide-input-base-color` | 文本输入 | 未实现 | — |
-| Corner radius · rounding | `hypr-lock-input-field.rounding` | 文本输入 | 未实现 | — |
-| check color · check_color | `hypr-lock-input-field.check-color` | 文本输入 | 未实现 | — |
-| check text · check_text | `hypr-lock-input-field.check-text` | 文本输入 | 未实现 | — |
-| fail color · fail_color | `hypr-lock-input-field.fail-color` | 文本输入 | 未实现 | — |
-| Verification failure text · fail_text | `hypr-lock-input-field.fail-text` | 文本输入 | 未实现 | — |
-| capslock color · capslock_color | `hypr-lock-input-field.capslock-color` | 文本输入 | 未实现 | — |
-| numlock color · numlock_color | `hypr-lock-input-field.numlock-color` | 文本输入 | 未实现 | — |
-| bothlock color · bothlock_color | `hypr-lock-input-field.bothlock-color` | 文本输入 | 未实现 | — |
-| invert numlock · invert_numlock | `hypr-lock-input-field.invert-numlock` | 开关 | 未实现 | — |
-| swap font color · swap_font_color | `hypr-lock-input-field.swap-font-color` | 开关 | 未实现 | — |
-| Virtual desktop position · position | `hypr-lock-input-field.position` | 文本输入 | 未实现 | — |
-| Horizontal alignment · halign | `hypr-lock-input-field.halign` | 文本输入 | 未实现 | — |
-| Vertical alignment · valign | `hypr-lock-input-field.valign` | 文本输入 | 未实现 | — |
-| zindex · zindex | `hypr-lock-input-field.zindex` | 文本输入 | 未实现 | — |
-
-### Hyprlock lock screen · Text label — `hypr-lock-label`
-
-按官方文档分类的组件参数 · 可选组件 hyprlock
-
-页面状态：**未实现**；条目：10；已实现 0 / 未实现 10 / 不适用 0。
-
-原因：尚未实现；可选组件 hyprlock 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-lock](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprlock.md)。
-
-#### 文字标签
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Monitor matching · monitor | `hypr-lock-label.monitor` | 文本输入 | 未实现 | — |
-| Text content · text | `hypr-lock-label.text` | 文本输入 | 未实现 | — |
-| text align · text_align | `hypr-lock-label.text-align` | 文本输入 | 未实现 | — |
-| color · color | `hypr-lock-label.color` | 文本输入 | 未实现 | — |
-| Font size · font_size | `hypr-lock-label.font-size` | 文本输入 | 未实现 | — |
-| Font family · font_family | `hypr-lock-label.font-family` | 文本输入 | 未实现 | — |
-| rotate · rotate | `hypr-lock-label.rotate` | 文本输入 | 未实现 | — |
-| Virtual desktop position · position | `hypr-lock-label.position` | 文本输入 | 未实现 | — |
-| Horizontal alignment · halign | `hypr-lock-label.halign` | 文本输入 | 未实现 | — |
-| Vertical alignment · valign | `hypr-lock-label.valign` | 文本输入 | 未实现 | — |
 
 ### Compositor permission rules — `hypr-compositor-permissions`
 
@@ -4484,24 +3409,6 @@ Windows 参考入口：`ms-settings:privacy-voiceactivation`。
 | Sharing session recovery token | `hypr-desktop-portals.restore` | 开关 | 未实现 | — |
 | Portal service diagnostics | `hypr-desktop-portals.diagnostics` | 操作 | 未实现 | — |
 
-### Authentication agent — `hypr-polkit-agent`
-
-授权对话框与会话代理状态 · 可选授权代理
-
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
-
-原因：尚未实现；可选授权代理 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-polkit](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprpolkitagent.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Authorized agent selection | `hypr-polkit-agent.agent` | 选择 | 未实现 | — |
-| Start authorization agent on login | `hypr-polkit-agent.autostart` | 开关 | 未实现 | — |
-| Authorized agent status | `hypr-polkit-agent.status` | 信息展示 | 未实现 | — |
-
 <a id="category-update"></a>
 
 ## 系统更新
@@ -4510,52 +3417,43 @@ Windows 参考入口：`ms-settings:privacy-voiceactivation`。
 
 ### System updates — `updates`
 
-更新状态与维护计划；高级选项已合入本页默认折叠的 Advanced 区域，旧页面 ID `update-options` 打开此区域。
+仓库与 AUR 更新的半成品源码保留。生产页面显示 Work in progress，所有更新操作停用；Get 仍可检查现有状态与日志。
 
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+页面状态：**未实现（半成品，已暂停）**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：用户明确暂停更新设计。实际升级先因临时目录权限校验失败，0700 创建已修复并通过目录边界测试；之后实际执行报 ` -> invalid option 'nosudoloop'`，未继续修复。授权取消/失败重试入口也未完成；真实升级流程未验证。生产 Check、Update now、配置写入与自动调度全部停用，保留源码、旧配置和只读状态/日志。
 
 Windows 参考入口：`ms-settings:windowsupdate`、`ms-settings:windowsupdate-action`、`ms-settings:windowsupdate-seekerondemand`、`ms-settings:windowsupdate-options`。
 
-#### Settings
+#### Package updates
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Update status | `updates.69d14924` | 信息展示 | 未实现 | — |
-| Check for updates | `updates.a6df3858` | 操作 | 未实现 | — |
+| Check for updates | `updates.check` | 操作 | 未实现 | updates crate 异步只读检查测试、独立数据库检查；未执行本机升级 |
+| Update now | `updates.upgrade` | 操作 | 未实现 | updates crate 假事务、提权参数白名单、私有通道测试；未执行本机升级 |
+| Include held packages | `updates.include-held` | 开关 | 未实现 | up.fish 排除策略一致性、NVIDIA 与全量模式测试 |
+| Retry after failure | `updates.retry` | 开关 | 未实现 | 退避上限与关闭后不再重试测试 |
+| Update status | `updates.status` | 信息展示 | 未实现 | 异步忙碌状态、错误保留及 `test/updates_test.dart` |
+| Update output | `updates.output` | 信息展示 | 未实现 | 有界日志、ANSI/回车处理、私有输出通道及 `test/updates_test.dart` |
 
-#### Advanced
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Restart as soon as possible | `updates.0a009ef6` | 开关 | 未实现 | — |
-| Notify me when a reboot is needed | `updates.1439f298` | 开关 | 未实现 | — |
-| Activity time | `updates.abe0ecdb` | 操作 | 未实现 | — |
+| Automatic updates | `updates.automatic` | 开关 | 未实现 | 默认关闭、fake-clock 每日调度、权限缺失与错过时间测试；未执行本机自动升级 |
+| Daily update time | `updates.daily-time` | 操作 | 未实现 | HH:mm 校验、持久化、时区刷新与日期倒退防重复测试 |
 
 ### Active hours — `active-hours`
 
-避免在工作时重启
+期望的活动时段预览；暂不影响检查、手动更新或定时自动更新，不执行 Windows 重启行为。
 
 页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：尚未实现；控件禁用，导航可用。
 
 Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
-#### 设置
-
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Adjust activity time | `active-hours.f2a92e6f` | 选择 | 未实现 | — |
+| Adjust active hours | `active-hours.f2a92e6f` | 选择 | 未实现 | — |
 | Start time | `active-hours.e8868af6` | 文本输入 | 未实现 | — |
 | End time | `active-hours.a0bb9f49` | 文本输入 | 未实现 | — |
-
-
-
-
-
-
 
 <a id="category-hyprland"></a>
 
@@ -5104,8 +4002,6 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
-相关页面 ID：`hypr-bind-flags`、`hypr-keybind-submaps`、`hypr-device-bindings`。
-
 参考资料：[hypr-binds](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/_index.md)。
 
 #### 设置
@@ -5178,11 +4074,11 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 Hyprland 会话、配置文件、启动与诊断
 
-### Hyprland · Compositor behavior and startup appearance — `hypr-misc`
+### Hyprland · Compositor behavior — `hypr-misc`
 
 合成器高级设置：misc · Hyprland
 
-页面状态：**未实现**；条目：41；已实现 0 / 未实现 41 / 不适用 0。
+页面状态：**未实现**；条目：22；已实现 0 / 未实现 22 / 不适用 0。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -5192,19 +4088,11 @@ Hyprland 会话、配置文件、启动与诊断
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| allow session lock restore · allow_session_lock_restore | `hypr-misc.allow-session-lock-restore` | 开关 | 未实现 | — |
-| always follow on dnd · always_follow_on_dnd | `hypr-misc.always-follow-on-dnd` | 开关 | 未实现 | — |
-| animate manual resizes · animate_manual_resizes | `hypr-misc.animate-manual-resizes` | 开关 | 未实现 | — |
-| animate mouse windowdragging · animate_mouse_windowdragging | `hypr-misc.animate-mouse-windowdragging` | 开关 | 未实现 | — |
 | anr missed pings · anr_missed_pings | `hypr-misc.anr-missed-pings` | 滑块 | 未实现 | — |
-| background color · background_color | `hypr-misc.background-color` | 文本输入 | 未实现 | — |
-
 | close special on empty · close_special_on_empty | `hypr-misc.close-special-on-empty` | 开关 | 未实现 | — |
 | disable autoreload · disable_autoreload | `hypr-misc.disable-autoreload` | 开关 | 未实现 | — |
 | disable hyprland guiutils check · disable_hyprland_guiutils_check | `hypr-misc.disable-hyprland-guiutils-check` | 开关 | 未实现 | — |
-| disable hyprland logo · disable_hyprland_logo | `hypr-misc.disable-hyprland-logo` | 开关 | 未实现 | — |
 | disable scale notification · disable_scale_notification | `hypr-misc.disable-scale-notification` | 开关 | 未实现 | — |
-| disable splash rendering · disable_splash_rendering | `hypr-misc.disable-splash-rendering` | 开关 | 未实现 | — |
 | disable watchdog warning · disable_watchdog_warning | `hypr-misc.disable-watchdog-warning` | 开关 | 未实现 | — |
 | disable xdg env checks · disable_xdg_env_checks | `hypr-misc.disable-xdg-env-checks` | 开关 | 未实现 | — |
 | enable anr dialog · enable_anr_dialog | `hypr-misc.enable-anr-dialog` | 开关 | 未实现 | — |
@@ -5213,27 +4101,15 @@ Hyprland 会话、配置文件、启动与诊断
 | float force onscreen · float_force_onscreen | `hypr-misc.float-force-onscreen` | 滑块 | 未实现 | — |
 | new float force onscreen · new_float_force_onscreen | `hypr-misc.new-float-force-onscreen` | 滑块 | 未实现 | — |
 | Focus on application activation · focus_on_activate | `hypr-misc.focus-on-activate` | 开关 | 未实现 | — |
-| Font family · font_family | `hypr-misc.font-family` | 文本输入 | 未实现 | — |
-| force default wallpaper · force_default_wallpaper | `hypr-misc.force-default-wallpaper` | 滑块 | 未实现 | — |
 | initial workspace token timeout · initial_workspace_token_timeout | `hypr-misc.initial-workspace-token-timeout` | 滑块 | 未实现 | — |
 | initial workspace tracking · initial_workspace_tracking | `hypr-misc.initial-workspace-tracking` | 文本输入 | 未实现 | — |
-| key press enables dpms · key_press_enables_dpms | `hypr-misc.key-press-enables-dpms` | 开关 | 未实现 | — |
 | layers hog keyboard focus · layers_hog_keyboard_focus | `hypr-misc.layers-hog-keyboard-focus` | 开关 | 未实现 | — |
-| lockdead screen delay · lockdead_screen_delay | `hypr-misc.lockdead-screen-delay` | 滑块 | 未实现 | — |
-| middle click paste · middle_click_paste | `hypr-misc.middle-click-paste` | 开关 | 未实现 | — |
-| mouse move enables dpms · mouse_move_enables_dpms | `hypr-misc.mouse-move-enables-dpms` | 开关 | 未实现 | — |
-| mouse move focuses monitor · mouse_move_focuses_monitor | `hypr-misc.mouse-move-focuses-monitor` | 开关 | 未实现 | — |
 | name vk after proc · name_vk_after_proc | `hypr-misc.name-vk-after-proc` | 开关 | 未实现 | — |
 | on focus under fullscreen · on_focus_under_fullscreen | `hypr-misc.on-focus-under-fullscreen` | 滑块 | 未实现 | — |
-| render unfocused fps · render_unfocused_fps | `hypr-misc.render-unfocused-fps` | 滑块 | 未实现 | — |
 | screencopy force 8b · screencopy_force_8b | `hypr-misc.screencopy-force-8b` | 开关 | 未实现 | — |
-| session lock blur · session_lock_blur | `hypr-misc.session-lock-blur` | 开关 | 未实现 | — |
-| session lock xray · session_lock_xray | `hypr-misc.session-lock-xray` | 开关 | 未实现 | — |
 | size limits tiled · size_limits_tiled | `hypr-misc.size-limits-tiled` | 开关 | 未实现 | — |
-| splash font family · splash_font_family | `hypr-misc.splash-font-family` | 文本输入 | 未实现 | — |
 | swallow exception regex · swallow_exception_regex | `hypr-misc.swallow-exception-regex` | 文本输入 | 未实现 | — |
 | swallow regex · swallow_regex | `hypr-misc.swallow-regex` | 文本输入 | 未实现 | — |
-| Variable refresh rate mode · vrr | `hypr-misc.vrr` | 滑块 | 未实现 | — |
 
 ### Hyprland · Ecosystem options — `hypr-ecosystem`
 
@@ -5314,8 +4190,6 @@ Lua / legacy 配置、包含关系与注释保留 · Hyprland
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
-相关页面 ID：`hypr-config-backup`、`hypr-environment`、`hypr-autostart`、`hypr-diagnostics`。
-
 参考资料：[hyprsettings-project](https://github.com/acropolis914/hyprsettings/blob/2343820372012eb436d7d24fe645f7948651d37b/README.md)。
 
 #### 设置
@@ -5330,47 +4204,6 @@ Lua / legacy 配置、包含关系与注释保留 · Hyprland
 | View modification differences | `hypr-config-files.diff` | 操作 | 未实现 | — |
 | Configure syntax checking | `hypr-config-files.validation` | 操作 | 未实现 | — |
 | Reload configuration | `hypr-config-files.reload` | 操作 | 未实现 | — |
-
-### Configuration backup and recovery — `hypr-config-backup`
-
-备份、恢复点与导入导出 · Hyprland
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[nwg-config-project](https://github.com/nwg-piotr/nwg-shell-config/blob/99dc0e00aa8b0931cd2b1be562ef950fbcc337f8/README.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Backup file range | `hypr-config-backup.scope` | 文本输入 | 未实现 | — |
-| Create a configuration backup | `hypr-config-backup.create` | 操作 | 未实现 | — |
-| Restore backup | `hypr-config-backup.restore` | 操作 | 未实现 | — |
-| Import configuration archive | `hypr-config-backup.import` | 操作 | 未实现 | — |
-| Export configuration archive | `hypr-config-backup.export` | 操作 | 未实现 | — |
-| View differences before restoring | `hypr-config-backup.preview` | 操作 | 未实现 | — |
-
-### Session startup and exit actions — `hypr-autostart`
-
-启动钩子、退出钩子与用户服务 · Hyprland
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-autostart](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/autostart.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Launch an application or command | `hypr-autostart.command` | 文本输入 | 未实现 | — |
-| Triggering phase | `hypr-autostart.event` | 选择 | 未实现 | — |
-| Enable this startup item | `hypr-autostart.enabled` | 开关 | 未实现 | — |
-| Startup sequence and dependencies | `hypr-autostart.order` | 文本输入 | 未实现 | — |
-| Added conversation action | `hypr-autostart.add` | 操作 | 未实现 | — |
 
 ### UWSM and user services — `hypr-session-services`
 
@@ -5457,28 +4290,6 @@ Wayland、XDG、主题与应用环境 · Hyprland
 | Enter device identification | `hypr-diagnostics.devices` | 信息展示 | 未实现 | — |
 | IPC event viewing | `hypr-diagnostics.events` | 操作 | 未实现 | — |
 | Export diagnostic summary | `hypr-diagnostics.report` | 操作 | 未实现 | — |
-
-### Exit session and power menu — `hypr-shutdown`
-
-应用退出、锁定与关机动作 · 可选会话退出组件及系统电源服务
-
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
-
-原因：尚未实现；可选会话退出组件及系统电源服务 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-shutdown](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/hyprshutdown.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| End graphics session | `hypr-shutdown.logout` | 操作 | 未实现 | — |
-| Lock session | `hypr-shutdown.lock` | 操作 | 未实现 | — |
-| hang | `hypr-shutdown.suspend` | 操作 | 未实现 | — |
-| Hibernate | `hypr-shutdown.hibernate` | 操作 | 未实现 | — |
-| Restart | `hypr-shutdown.reboot` | 操作 | 未实现 | — |
-| Turn off the power | `hypr-shutdown.poweroff` | 操作 | 未实现 | — |
-| Wait for the application to exit | `hypr-shutdown.timeout` | 文本输入 | 未实现 | — |
 
 ## English UI and sidebar navigation update
 

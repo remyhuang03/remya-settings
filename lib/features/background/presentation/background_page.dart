@@ -261,7 +261,31 @@ class _BackgroundPageState extends State<BackgroundPage> {
 
   Widget _advanced() => AdvancedSection(
     storageKey: const PageStorageKey('background-advanced'),
-    child: Column(children: _advancedRows()),
+    child: KeyedSubtree(
+      key: const PageStorageKey('background-advanced-body'),
+      child: Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          ..._advancedRows(),
+          for (final (title, prefix) in const [
+            ('Compositor background', 'background.compositor-'),
+            ('Compositor blur', 'background.blur-'),
+          ]) ...[
+            Padding(
+              padding: const .fromLTRB(20, 24, 20, 12),
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            for (final setting in widget.page.controls.where(
+              (s) => s.id.startsWith(prefix),
+            ))
+              SettingControlTile(setting),
+          ],
+        ],
+      ),
+    ),
   );
 }
 

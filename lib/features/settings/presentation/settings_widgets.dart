@@ -64,9 +64,7 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'app-properties' => Icons.tune_rounded,
       'defaults' => Icons.task_alt_rounded,
       'startup' => Icons.rocket_launch_outlined,
-      'lockscreen' ||
-      'signin' ||
-      'hypr-lock-authentication' => Icons.lock_outline_rounded,
+      'lockscreen' || 'signin' => Icons.lock_outline_rounded,
       _ => switch (page.preview) {
         'display' => Icons.desktop_windows_outlined,
         'sound' => Icons.volume_up_outlined,

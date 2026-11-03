@@ -214,16 +214,36 @@ void main() {
     }
     expect(
       catalog.search('direct_scanout').map((p) => p.id),
-      contains('hypr-render'),
+      contains('graphics'),
     );
     expect(
       catalog.search('hypridle').map((p) => p.id),
-      contains('hypr-idle-listeners'),
+      contains('power'),
     );
     expect(
       catalog.search('window rules').map((p) => p.id),
       contains('hypr-window-rule-props'),
     );
+  });
+
+  test('folded compositor controls stay in their owner’s collapsed Advanced section', () {
+    final standalone = (coverage['addedPages'] as List).cast<String>().toSet();
+    for (final entry
+        in (coverage['controls'] as List).cast<Map<String, dynamic>>()) {
+      final pageId = entry['page'] as String;
+      // Cursor already groups both reference catalogs in its existing layout.
+      if (standalone.contains(pageId) ||
+          pageId == 'cursor' ||
+          entry['availability'] == 'available') {
+        continue;
+      }
+      final page = catalog.page(pageId);
+      final section = page.sections.singleWhere(
+        (s) => s.controls.any((c) => c.id == entry['control']),
+      );
+      expect(section.title, 'Advanced', reason: entry['control'] as String);
+      expect(section.collapsed, isTrue, reason: entry['control'] as String);
+    }
   });
 
   test(

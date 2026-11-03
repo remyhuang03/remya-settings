@@ -82,6 +82,7 @@ class SettingsCatalog {
         p.description,
         category(p.category).title,
         ...p.windowsUris,
+        ...p.sections.map((s) => s.description ?? ''),
         ...p.controls.map((c) => c.title),
       ].join(' ').toLowerCase();
       return terms.every(text.contains);

@@ -175,4 +175,24 @@ void main() {
     expect(find.byKey(const ValueKey('background-display-A')), findsNothing);
     expect(await browse(), '*');
   });
+  testWidgets('compositor previews stay disabled inside Advanced', (
+    tester,
+  ) async {
+    final h = _Harness(_state());
+    addTearDown(h.controller.dispose);
+    await h.controller.reload();
+    await _pump(tester, h.controller);
+    final control = find.byKey(const ValueKey('background.blur-enabled'));
+    expect(control.hitTestable(), findsNothing);
+    await tester.ensureVisible(find.text('Advanced'));
+    await tester.tap(find.text('Advanced'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(control);
+    final toggle = tester.widget<Switch>(
+      find.descendant(of: control, matching: find.byType(Switch)),
+    );
+    expect(toggle.onChanged, isNull);
+    expect(find.text('Planned'), findsWidgets);
+    expect(h.writes, isEmpty);
+  });
 }
