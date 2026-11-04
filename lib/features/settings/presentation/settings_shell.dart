@@ -1,3 +1,5 @@
+import '../../power/presentation/battery_usage_page.dart';
+import '../../power/presentation/power_page.dart';
 import '../../camera/application/camera_controller.dart';
 import '../../camera/presentation/camera_page.dart';
 import '../../updates/application/updates_controller.dart';
@@ -45,11 +47,13 @@ class SettingsShell extends StatefulWidget {
     this.systemInformation,
     this.account,
     this.sound,
+    this.power,
     this.cameras,
     this.updates,
   });
   final AccountController? account;
   final SoundController? sound;
+  final SettingsClient? power;
   final CameraController? cameras;
   final UpdatesController? updates;
   final SettingsCatalog catalog;
@@ -440,6 +444,15 @@ class _SettingsShellState extends State<SettingsShell> {
         }.contains(_page?.id) &&
         widget.sound != null) {
       content = SoundPage(controller: widget.sound!, page: _page!);
+    } else if (_page?.id == 'battery-usage' && widget.power != null) {
+      content = BatteryUsagePage(client: widget.power!, page: _page!);
+    } else if ((_page?.id == 'power' || _page?.id == 'battery-saver') &&
+        widget.power != null) {
+      content = PowerPage(
+        key: ValueKey(_page!.id),
+        page: _page!,
+        client: widget.power!,
+      );
     } else if (_page?.id == 'cameras' && widget.cameras != null) {
       content = CameraPage(controller: widget.cameras!);
     } else if (_page?.id == 'updates' && widget.updates != null) {

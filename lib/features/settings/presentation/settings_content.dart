@@ -191,7 +191,7 @@ class SettingsDetail extends StatelessWidget {
           SettingsPreview(page.preview),
       ],
       for (final section in page.sections)
-        _SectionCard(
+        SettingsSectionCard(
           section,
           onPageRow: (id) => onPage(catalog.page(_pageRows[id]!)),
           pageRows: _pageRows.keys.toSet(),
@@ -227,19 +227,25 @@ class SettingsDetail extends StatelessWidget {
   );
 }
 
-class _SectionCard extends StatelessWidget {
-  const _SectionCard(
+class SettingsSectionCard extends StatelessWidget {
+  const SettingsSectionCard(
     this.section, {
+    super.key,
     required this.onPageRow,
     required this.pageRows,
+    this.controlBuilder,
+    this.isVisible,
   });
   final SettingsSection section;
   final ValueChanged<String> onPageRow;
   final Set<String> pageRows;
+  final Widget Function(SettingSpec)? controlBuilder;
+  final bool Function(SettingSpec)? isVisible;
 
   @override
   Widget build(BuildContext context) {
     final visible = section.controls
+        .where((setting) => isVisible?.call(setting) ?? true)
         .where(
           (setting) => switch (setting.id) {
             displayDetectId => false,
@@ -256,12 +262,13 @@ class _SectionCard extends StatelessWidget {
       children: [
         for (var i = 0; i < visible.length; i++) ...[
           if (i != 0) const Divider(height: 1, indent: 20, endIndent: 20),
-          SettingControlTile(
-            visible[i],
-            onOpenPage: pageRows.contains(visible[i].id)
-                ? () => onPageRow(visible[i].id)
-                : null,
-          ),
+          controlBuilder?.call(visible[i]) ??
+              SettingControlTile(
+                visible[i],
+                onOpenPage: pageRows.contains(visible[i].id)
+                    ? () => onPageRow(visible[i].id)
+                    : null,
+              ),
         ],
       ],
     );

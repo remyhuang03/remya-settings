@@ -1,0 +1,244 @@
+import 'dart:async';
+
+import 'package:material_ui/material_ui.dart';
+import 'package:remya_settings_client/settings_contract.dart';
+
+import '../../settings/domain/settings_catalog.dart';
+import '../../settings/presentation/settings_widgets.dart';
+import '../../settings/presentation/settings_content.dart';
+
+class PowerPage extends StatefulWidget {
+  const PowerPage({super.key, required this.page, required this.client});
+  final SettingsPageSpec page;
+  final SettingsClient client;
+  @override
+  State<PowerPage> createState() => _PowerPageState();
+}
+
+class _PowerPageState extends State<PowerPage> {
+  SettingsClient get _client => widget.client;
+  Map<String, dynamic> _state = {};
+  String? _error;
+  bool _busy = false;
+  Timer? _timer;
+  Map get _system => _state['system'] as Map? ?? {};
+  Map get _saved => _state['saved'] as Map? ?? {};
+  bool get _enabled =>
+      !_busy &&
+      _state['available'] == true &&
+      _state['conflict'] != true &&
+      _state['error'] == null;
+  @override
+  void initState() {
+    super.initState();
+    _load();
+    _timer = Timer.periodic(const Duration(seconds: 5), (_) => _load());
+  }
+
+  Future<void> _load() async {
+    if (_busy) return;
+    await _attempt(_client.readPower);
+  }
+
+  Future<void> _attempt(Future<Map<String, dynamic>> Function() action) async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      final result = await action();
+      if (mounted) {
+        setState(() {
+          _state = result;
+          _error = result['error'] as String?;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _error = '$e');
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  void _set(String id, Object value) =>
+      _attempt(() => _client.setPower(id, value));
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  Widget _choice(
+    SettingSpec setting,
+    Object? selected,
+    Map<Object, String> choices,
+  ) {
+    if (selected != null && !choices.containsKey(selected)) {
+      choices = {...choices, selected: '$selected'};
+    }
+    return SettingRow(
+      id: setting.id,
+      label: Text(setting.title, style: Theme.of(context).textTheme.bodyLarge),
+      control: DropdownMenu<Object>(
+        key: ValueKey('${setting.id}-$selected'),
+        width: 232,
+        menuHeight: 300,
+        initialSelection: selected,
+        enabled: _enabled,
+        dropdownMenuEntries: [
+          for (final entry in choices.entries)
+            DropdownMenuEntry(value: entry.key, label: entry.value),
+        ],
+        onSelected: (value) {
+          if (value != null) _set(setting.id, value);
+        },
+      ),
+    );
+  }
+
+  Widget _toggle(SettingSpec setting, bool value, {String? description}) =>
+      SettingRow(
+        id: setting.id,
+        label: Column(
+          crossAxisAlignment: .start,
+          children: [
+            Text(setting.title, style: Theme.of(context).textTheme.bodyLarge),
+            if (description != null) ...[
+              const SizedBox(height: 6),
+              Text(description, style: Theme.of(context).textTheme.bodySmall),
+            ],
+          ],
+        ),
+        control: Switch(
+          value: value,
+          onChanged: _enabled ? (v) => _set(setting.id, v) : null,
+        ),
+      );
+
+  Widget _control(SettingSpec setting) {
+    final timeouts = _system['timeouts'] as Map? ?? {};
+    return switch (setting.id) {
+      'power.5a4f0131' => _choice(setting, _system['profile'], {
+        for (final p in _system['profiles'] as List? ?? [])
+          p: switch (p) {
+            'balanced' => 'Balanced',
+            'power-saver' => 'Power saver',
+            'performance' => 'Performance',
+            _ => '$p',
+          },
+      }),
+      'power.5e3af39c' || 'power.8b4c8522' => _choice(
+        setting,
+        timeouts[setting.id == 'power.5e3af39c' ? 'screen' : 'sleep'],
+        {
+          0: 'Never',
+          60: '1 minute',
+          300: '5 minutes',
+          600: '10 minutes',
+          1200: '20 minutes',
+          1800: '30 minutes',
+          3600: '1 hour',
+        },
+      ),
+      'battery-saver.743773bd' => _toggle(
+        setting,
+        _system['profile'] == 'power-saver',
+      ),
+      'battery-saver.9b0caf70' => _choice(setting, _saved['threshold'], {
+        0: 'Never',
+        10: '10%',
+        20: '20%',
+        30: '30%',
+        50: '50%',
+        100: 'Always',
+      }),
+      'battery-saver.power-source' => _toggle(
+        setting,
+        _saved['include_ac'] == true,
+      ),
+      'battery-saver.07945503' => _toggle(
+        setting,
+        _saved['dim'] == true,
+        description:
+            'Reduce built-in screen brightness to 70% of its current level.',
+      ),
+      _ => SettingControlTile(setting),
+    };
+  }
+
+  bool _visible(SettingSpec setting) => switch (setting.id) {
+    'battery-saver.power-source' => (_saved['threshold'] as num? ?? 0) > 0,
+    'battery-saver.07945503' => _system['has_backlight'] == true,
+    _ => true,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final timeouts = _system['timeouts'] as Map? ?? {};
+    return Column(
+      crossAxisAlignment: .stretch,
+      children: [
+        Text(
+          widget.page.description,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        if (_error != null)
+          ListTile(
+            leading: const Icon(Icons.error_outline),
+            title: Text(_error!),
+          ),
+        if (_state['conflict'] == true)
+          Card(
+            child: Padding(
+              padding: const .all(16),
+              child: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  const Text('System power settings differ from Settings.'),
+                  Text(
+                    'Saved: ${_saved['profile']}   System: ${_system['profile']}',
+                  ),
+                  Text(
+                    'Saved timeouts: ${_saved['timeouts']}\nSystem timeouts: $timeouts',
+                  ),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      TextButton(
+                        onPressed: _busy
+                            ? null
+                            : () => _attempt(
+                                () => _client.resolvePower('system'),
+                              ),
+                        child: const Text('Adopt system'),
+                      ),
+                      TextButton(
+                        onPressed: _busy
+                            ? null
+                            : () => _attempt(
+                                () => _client.resolvePower('settings'),
+                              ),
+                        child: const Text('Apply Settings'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        if ((_system['degraded'] as String? ?? '').isNotEmpty)
+          Text('Performance limited: ${_system['degraded']}'),
+        if (_state['history_error'] != null)
+          Text('Battery history: ${_state['history_error']}'),
+        for (final section in widget.page.sections)
+          SettingsSectionCard(
+            section,
+            onPageRow: (_) {},
+            pageRows: const {},
+            controlBuilder: _control,
+            isVisible: _visible,
+          ),
+      ],
+    );
+  }
+}

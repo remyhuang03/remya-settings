@@ -1,5 +1,5 @@
 [workspace]
-members = ["lib/src/rust/camera", "lib/src/rust/core", "lib/src/rust/appearance", "lib/src/rust/date_time", "lib/src/rust/display", "lib/src/rust/service", "lib/src/rust/system_information", "lib/src/rust/background", "lib/src/rust/fonts", "lib/src/rust/default_apps", "lib/src/rust/applications", "lib/src/rust/network", "lib/src/rust/bluetooth", "lib/src/rust/sound", "lib/src/rust/updates"]
+members = ["lib/src/rust/power", "lib/src/rust/camera", "lib/src/rust/core", "lib/src/rust/appearance", "lib/src/rust/date_time", "lib/src/rust/display", "lib/src/rust/service", "lib/src/rust/system_information", "lib/src/rust/background", "lib/src/rust/fonts", "lib/src/rust/default_apps", "lib/src/rust/applications", "lib/src/rust/network", "lib/src/rust/bluetooth", "lib/src/rust/sound", "lib/src/rust/updates"]
 resolver = "3"
 
 [workspace.package]

@@ -169,3 +169,7 @@ Its version-1 cameras table maps PipeWire node names to the supported brightness
 contrast, saturation and sharpness values. Node serials and preview frames are
 never persisted. The ordinary-user Rust service owns atomic writes and conflict
 resolution; no PipeWire/WirePlumber configuration files are edited.
+
+## Power history
+
+Power preferences and restoration metadata are `power.json` and `power.runtime.json` beside the Settings configuration. Permanent battery history is `$XDG_STATE_HOME/remya/settings/power.sqlite3` (HOME fallback `.local/state`); debug uses repository `config/power.sqlite3`. Relative state roots are ignored. SQLite WAL/SHM files remain beside the database.

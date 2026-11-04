@@ -179,6 +179,7 @@ pub struct State {
     pub bluetooth: remya_settings_bluetooth::Bluetooth,
     pub cameras: remya_settings_camera::Cameras<remya_settings_camera::native::Native>,
     pub sound: Sound<RealPulse>,
+    pub power: remya_settings_power::Power,
     pub updates: Updates,
     pub auth_error: Option<String>,
     privileged: Option<Arc<Mutex<Session>>>,
@@ -224,6 +225,11 @@ impl State {
                 config.with_file_name("cameras.toml"),
             ),
             sound: Sound::new(RealPulse),
+            power: remya_settings_power::Power::new(
+                config.with_file_name("power.json"),
+                hypr_config_dir().join("hypridle.conf"),
+                power_history_path(&config),
+            ),
             updates: Updates::new(config.with_file_name("updates.json"), atomic_write),
             network: NetworkManager::real(config.with_file_name("network.toml")),
             appimages: applications::appimages::AppImages::real(
@@ -258,6 +264,7 @@ impl State {
         let _ = self.night_light.refresh();
         let _ = self.background.refresh();
         let _ = self.sound.refresh();
+        let _ = self.power.refresh();
         let _ = self.cameras.refresh();
     }
     fn refresh_theme(&mut self) -> Result<(), String> {
@@ -412,7 +419,7 @@ impl State {
     pub fn configuration(&self) -> Value {
         let mut date = self.date.clone();
         date["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
-        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"network":self.network.state(),"sound":self.sound.state(),"cameras":self.cameras.state()})
+        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"network":self.network.state(),"sound":self.sound.state(),"power":self.power.state(),"cameras":self.cameras.state()})
     }
     pub fn controls(&self) -> Vec<&Value> {
         self.catalog["pages"]
@@ -625,12 +632,17 @@ impl State {
                         value["id"] = json!(key);
                         Ok(value)
                     }
+                    "power" | "battery-saver" => Ok(self.power.read()),
+                    _ if remya_settings_power::is_setting(key) => Ok(self.power.read_setting(key)),
+                    _ if key.starts_with("battery-history:") => self.power.query(&key[16..]),
                     "sound" => {
                         let _ = self.sound.refresh();
+        let _ = self.power.refresh();
                         Ok(self.sound.state())
                     }
                     _ if sound::is_setting(key) => {
                         let _ = self.sound.refresh();
+        let _ = self.power.refresh();
                         let mut value = self.sound.state();
                         value["id"] = json!(key);
                         value["availability"] = json!("available");
@@ -816,6 +828,9 @@ impl State {
         }
     }
     fn set(&mut self, key: &str, value: &str) -> Result<Value, String> {
+        if remya_settings_power::is_setting(key) {
+            return self.power.set(key, value);
+        }
         let control = self
             .controls()
             .into_iter()
@@ -1006,6 +1021,9 @@ impl State {
         self.save_date(state, &keys)
     }
     fn resolve(&mut self, feature: &str, source: &str) -> Result<Value, String> {
+        if feature == "power" {
+            return self.power.resolve(source);
+        }
         if let Some(name) = feature.strip_prefix("cameras:") {
             return self.cameras.resolve(name, source);
         }
@@ -1118,6 +1136,7 @@ impl State {
         dead
     }
     pub fn shutdown(&mut self) {
+        self.power.shutdown();
         if let Some(mut gui) = self.gui.take() {
             let _ = gui.kill();
             let _ = gui.wait();
@@ -1244,4 +1263,20 @@ mod tests {
                 .starts_with("Unavailable:")
         );
     }
+}
+
+fn power_history_path(config: &std::path::Path) -> PathBuf {
+    if config
+        .file_name()
+        .is_some_and(|name| name == "config.local.toml")
+    {
+        return config.with_file_name("power.sqlite3");
+    }
+    let root = std::env::var_os("XDG_STATE_HOME")
+        .map(PathBuf::from)
+        .filter(|p| p.is_absolute())
+        .unwrap_or_else(|| {
+            PathBuf::from(std::env::var_os("HOME").unwrap_or_default()).join(".local/state")
+        });
+    root.join("remya/settings/power.sqlite3")
 }

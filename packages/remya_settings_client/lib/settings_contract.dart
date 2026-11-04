@@ -19,3 +19,5 @@ export 'src/sound.dart';
 export 'src/updates.dart';
 
 export 'src/camera.dart';
+
+export 'src/power.dart';

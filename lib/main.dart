@@ -134,6 +134,7 @@ Future<void> main() async {
     RemyaSettingsApp(
       account: account,
       preferences: preferences,
+      power: client,
       dateTime: dateTime,
       display: display,
       nightLight: nightLight,

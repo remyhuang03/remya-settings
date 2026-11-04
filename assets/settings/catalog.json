@@ -3591,8 +3591,8 @@
       "title": "Power & sleep",
       "description": "Energy consumption, screen timeout and sleep",
       "preview": "power",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Rust power profiles, safe hypridle timeouts and energy saver policies.",
       "sources": [
         "uris",
         "hypr-options",
@@ -3611,8 +3611,8 @@
               "id": "power.5a4f0131",
               "title": "Power mode",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Rust power backend with system readback and regression tests.",
               "options": [
                 "Balance",
                 "Optimal energy efficiency",
@@ -3624,8 +3624,8 @@
               "id": "power.5e3af39c",
               "title": "Turn off screen time",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Rust power backend with system readback and regression tests.",
               "options": [
                 "5 minutes",
                 "10 minutes",
@@ -3638,8 +3638,8 @@
               "id": "power.8b4c8522",
               "title": "Sleep time",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Rust power backend with system readback and regression tests.",
               "options": [
                 "15 minutes",
                 "30 minutes",
@@ -3653,7 +3653,7 @@
               "title": "Energy saving mode",
               "type": "action",
               "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "reason": "Use the Energy saver page in category navigation.",
               "value": "Configuration"
             },
             {
@@ -3671,14 +3671,6 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": "Configuration"
-            },
-            {
-              "id": "power.f5cbd1dc",
-              "title": "Video playback battery optimization",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
             }
           ]
         },
@@ -4019,8 +4011,8 @@
       "title": "Energy saver",
       "description": "Energy saving strategy and automatic activation threshold",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Rust power profiles, safe hypridle timeouts and energy saver policies.",
       "sources": [
         "uris"
       ],
@@ -4036,30 +4028,40 @@
               "id": "battery-saver.743773bd",
               "title": "Energy saving mode",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Rust power backend with system readback and regression tests.",
               "value": false
             },
             {
               "id": "battery-saver.9b0caf70",
               "title": "Automatic opening conditions",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Rust power backend with system readback and regression tests.",
               "options": [
-                "Battery power 20%",
-                "Battery power 30%",
-                "always",
-                "Never"
+                "Never",
+                "10%",
+                "20%",
+                "30%",
+                "50%",
+                "Always"
               ],
-              "value": "Battery power 20%"
+              "value": "Never"
             },
             {
               "id": "battery-saver.07945503",
               "title": "Reduce screen brightness when saving energy",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Rust power backend with system readback and regression tests.",
+              "value": false
+            },
+            {
+              "id": "battery-saver.power-source",
+              "title": "Also enable when plugged in",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Rust power policy verified with PowerProfiles readback.",
               "value": false
             }
           ]
@@ -4073,8 +4075,8 @@
       "title": "Battery usage",
       "description": "Power history and power consumption of each application",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "SQLite battery history and observed screen/sleep durations; application usage remains planned.",
       "sources": [
         "uris"
       ],
@@ -4089,36 +4091,36 @@
               "id": "battery-usage.2be90408",
               "title": "Time frame",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "SQLite observations with tested range clipping and unknown-interval handling.",
               "options": [
-                "Past 24 hours",
-                "Past 7 days"
+                "Last 24 hours",
+                "Last 7 days"
               ],
-              "value": "Past 24 hours"
+              "value": "Last 24 hours"
             },
             {
               "id": "battery-usage.37bfb377",
               "title": "Screen on time",
               "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "SQLite observations with tested range clipping and unknown-interval handling.",
               "value": "Not read"
             },
             {
               "id": "battery-usage.1aa63c64",
               "title": "Screen off time",
               "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "SQLite observations with tested range clipping and unknown-interval handling.",
               "value": "Not read"
             },
             {
               "id": "battery-usage.adee81f9",
               "title": "Sleep time",
               "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "SQLite observations with tested range clipping and unknown-interval handling.",
               "value": "Not read"
             },
             {

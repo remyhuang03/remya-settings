@@ -968,3 +968,7 @@ CLI get/set/resolve use the identical service operations. CameraClient exposes
 readCameras, changeCamera and resolveCamera without Flutter. `open cameras`
 opens the page; local frame rendering is a GUI concern and not a D-Bus payload.
 See [Camera](camera.md) for dependencies, persistence and verification.
+
+## Power
+
+See [power operations and history contract](power.md#public-operations). All writes use the owning Rust controller; history uses bounded SQLite queries.

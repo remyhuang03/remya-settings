@@ -1,0 +1,19 @@
+import 'dart:convert';
+
+import 'dbus_client.dart';
+
+extension PowerClient on SettingsClient {
+  Future<Map<String, dynamic>> readPower() => call('Get', ['power']);
+  Future<Map<String, dynamic>> setPower(String id, Object value) =>
+      call('Set', [id, jsonEncode(value)]);
+  Future<Map<String, dynamic>> resolvePower(String source) =>
+      call('Resolve', ['power', source]);
+  Future<Map<String, dynamic>> batteryHistory({
+    required int from,
+    required int to,
+    int after = 0,
+    int limit = 1000,
+  }) => call('Get', [
+    'battery-history:${jsonEncode({'from': from, 'to': to, 'after': after, 'limit': limit})}',
+  ]);
+}

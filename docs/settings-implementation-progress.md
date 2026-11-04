@@ -11,7 +11,7 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 ## 当前概况
 
 - 设置分类：15 个；详情页面：134 个；设置条目：1619 项。
-- 已实现：184 项；未实现：1425 项；不适用：10 项。
+- 已实现：195 项；未实现：1414 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
@@ -709,9 +709,9 @@ Windows 参考入口：`ms-settings:sound-devices`。
 
 能耗、屏幕超时与电池
 
-页面状态：**未实现**；条目：32；已实现 0 / 未实现 32 / 不适用 0。
+页面状态：**已接入基础功能**；条目：31；已实现 3 / 未实现 28 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：基础功能通过 Rust 接入真实系统，其余高级项保持预览。
 
 Windows 参考入口：`ms-settings:powersleep`。
 
@@ -721,13 +721,12 @@ Windows 参考入口：`ms-settings:powersleep`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Power mode | `power.5a4f0131` | 选择 | 未实现 | — |
-| Turn off screen time | `power.5e3af39c` | 选择 | 未实现 | — |
-| Sleep time | `power.8b4c8522` | 选择 | 未实现 | — |
+| Power mode | `power.5a4f0131` | 选择 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
+| Turn off screen time | `power.5e3af39c` | 选择 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
+| Sleep time | `power.8b4c8522` | 选择 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
 | Energy saving mode | `power.743773bd` | 操作 | 未实现 | — |
 | Battery usage | `power.03bd05ee` | 操作 | 未实现 | — |
 | Energy advice | `power.de734a46` | 操作 | 未实现 | — |
-| Video playback battery optimization | `power.f5cbd1dc` | 开关 | 未实现 | — |
 
 
 #### Advanced: compositor previews
@@ -764,9 +763,9 @@ Windows 参考入口：`ms-settings:powersleep`。
 
 节能策略与自动启用阈值
 
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+页面状态：**已接入基础功能**；条目：4；已实现 4 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：基础功能通过 Rust 接入真实系统，其余高级项保持预览。
 
 Windows 参考入口：`ms-settings:batterysaver`、`ms-settings:batterysaver-settings`。
 
@@ -774,17 +773,18 @@ Windows 参考入口：`ms-settings:batterysaver`、`ms-settings:batterysaver-se
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Energy saving mode | `battery-saver.743773bd` | 开关 | 未实现 | — |
-| Automatic opening conditions | `battery-saver.9b0caf70` | 选择 | 未实现 | — |
-| Reduce screen brightness when saving energy | `battery-saver.07945503` | 开关 | 未实现 | — |
+| Energy saving mode | `battery-saver.743773bd` | 开关 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
+| Automatic opening conditions | `battery-saver.9b0caf70` | 选择 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
+| Reduce screen brightness when saving energy | `battery-saver.07945503` | 开关 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
+| Also enable when plugged in | `battery-saver.power-source` | 开关 | 已实现 | Rust policy tests; live automatic policy roundtrip |
 
 ### Battery usage — `battery-usage`
 
 电量历史与每应用耗电
 
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+页面状态：**已接入统计**；条目：5；已实现 4 / 未实现 1 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：SQLite 电量曲线、屏幕与睡眠时长已接入；每应用耗电保持预览。
 
 Windows 参考入口：`ms-settings:batterysaver-usagedetails`。
 
@@ -792,10 +792,10 @@ Windows 参考入口：`ms-settings:batterysaver-usagedetails`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Time frame | `battery-usage.2be90408` | 选择 | 未实现 | — |
-| Screen on time | `battery-usage.37bfb377` | 信息展示 | 未实现 | — |
-| Screen off time | `battery-usage.1aa63c64` | 信息展示 | 未实现 | — |
-| Sleep time | `battery-usage.adee81f9` | 信息展示 | 未实现 | — |
+| Time frame | `battery-usage.2be90408` | 选择 | 已实现 | test/battery_history_test.dart; SQLite readback |
+| Screen on time | `battery-usage.37bfb377` | 信息展示 | 已实现 | test/battery_history_test.dart; SQLite readback |
+| Screen off time | `battery-usage.1aa63c64` | 信息展示 | 已实现 | test/battery_history_test.dart; SQLite readback |
+| Sleep time | `battery-usage.adee81f9` | 信息展示 | 已实现 | test/battery_history_test.dart; SQLite readback |
 | Battery usage per app | `battery-usage.68bac7d6` | 信息展示 | 未实现 | — |
 
 <a id="category-notifications"></a>
@@ -4284,3 +4284,5 @@ Wayland、XDG、主题与应用环境 · Hyprland
 - Nested Hyprland with two virtual outputs and the release build: Fill and splash changes restarted hyprpaper in about 1.6 s and reduced two instances to one; pixels confirmed Fill, Cover through IPC without a restart, and a per-display image; the workstation's hyprpaper kept its PID.
 - Fonts page performance: the list is lazy with no Show more. With 478 real families, opening loaded 21 font files instead of 50, and keyboard navigation scrolled through the list while loading only nearby fonts.
 - Untested: a real session lock on the workstation, per-display images on physical outputs, automatic hyprpaper restart on the workstation, video across a real sign-in, the native file and color picker dialogs, and `switchwall.sh` through the wallpaper selector. Real-desktop image changes wait for the duplicate hyprpaper instance to be resolved.
+
+电池历史后端使用 SQLite 永久保存每分钟电量样本、屏幕开关和 logind 睡眠事件；历史页面展示最近 24 小时 / 7 天电量曲线与时长统计，每应用耗电保持未实现。详见 [power.md](power.md)。

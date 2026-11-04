@@ -167,6 +167,9 @@ fn run() -> Result<(), String> {
                         && let Ok(account) = state.lock().unwrap().account.read() {
                         signal(&bus, "account-information", &account);
                     }
+                    if method == "Reload" || args.first().is_some_and(|id| id == "power" || id == "battery-saver" || remya_settings_power::is_setting(id)) {
+                        signal(&bus, "power", &state.lock().unwrap().power.state());
+                    }
                     if method == "Reload" || args.first().is_some_and(|id| id == "sound" || remya_settings_sound::is_setting(id)) {
                         signal(&bus, "sound", &state.lock().unwrap().sound.state());
                     }
@@ -233,6 +236,22 @@ fn run() -> Result<(), String> {
     let mut ticks = 0u32;
     events::watch(state.clone(), bus.clone());
     let _network_subscriptions = events::watch_network(state.clone(), bus.clone());
+    let _power_sleep = events::watch_power_sleep(state.clone());
+    let power_state = state.clone();
+    let power_bus = bus.clone();
+    std::thread::spawn(move || {
+        loop {
+            {
+                let mut s = power_state.lock().unwrap();
+                let before = s.power.state();
+                s.power.tick();
+                if s.power.state() != before {
+                    signal(&power_bus, "power", &s.power.state());
+                }
+            }
+            std::thread::sleep(std::time::Duration::from_secs(1));
+        }
+    });
     glib::timeout_add_seconds_local(1, move || {
         ticks += 1;
         if bluetooth.take_dirty() {

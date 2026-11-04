@@ -92,3 +92,23 @@ mod tests {
         assert!(!is_output_event("workspace>>1"));
     }
 }
+
+pub fn watch_power_sleep(
+    state: Arc<Mutex<State>>,
+) -> Option<(gio::DBusConnection, gio::SignalSubscription)> {
+    let bus = gio::bus_get_sync(gio::BusType::System, gio::Cancellable::NONE).ok()?;
+    let id = bus.subscribe_to_signal(
+        Some("org.freedesktop.login1"),
+        Some("org.freedesktop.login1.Manager"),
+        Some("PrepareForSleep"),
+        Some("/org/freedesktop/login1"),
+        None,
+        gio::DBusSignalFlags::NONE,
+        move |signal| {
+            if let Some((sleeping,)) = signal.parameters.get::<(bool,)>() {
+                state.lock().unwrap().power.sleep(sleeping);
+            }
+        },
+    );
+    Some((bus, id))
+}

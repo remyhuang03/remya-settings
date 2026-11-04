@@ -31,3 +31,5 @@ remya_settings_sound = { path = "../sound" }
 remya_settings_updates = { path = "../updates" }
 
 remya_settings_camera = { path = "../camera", default-features = false }
+
+remya_settings_power = { path = "../power" }
