@@ -130,6 +130,8 @@ Future<void> main() async {
     cameras.reload,
     updates.reload,
   ]);
+  // The native window appears on the first frame, so load its complete theme first.
+  await preferences.reload();
   runApp(
     RemyaSettingsApp(
       account: account,
