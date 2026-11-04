@@ -24,6 +24,8 @@ IconData categoryIcon(String icon) => switch (icon) {
   'accessibility' => Icons.accessibility_new_rounded,
   'shield' => Icons.shield_outlined,
   'update' => Icons.system_update_alt_rounded,
+  'power' || 'battery' => Icons.battery_charging_full_rounded,
+  'notifications' || 'notification' => Icons.notifications_none_rounded,
   _ => Icons.settings_outlined,
 };
 
@@ -49,6 +51,7 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'sound-devices' => Icons.speaker_outlined,
       'notifications' => Icons.notifications_none_rounded,
       'focus' || 'quiet-schedule' => Icons.do_not_disturb_on_outlined,
+      'priority-notifications' => Icons.notification_important_outlined,
       'themes' => Icons.palette_outlined,
       'background' => Icons.wallpaper_outlined,
       'fonts' || 'text-size' => Icons.text_fields_rounded,
@@ -67,6 +70,9 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'defaults' => Icons.task_alt_rounded,
       'startup' => Icons.rocket_launch_outlined,
       'lockscreen' || 'signin' => Icons.lock_outline_rounded,
+      'power' => Icons.battery_charging_full_rounded,
+      'battery-saver' => Icons.battery_saver_rounded,
+      'battery-usage' => Icons.bar_chart_rounded,
       _ => switch (page.preview) {
         'display' => Icons.desktop_windows_outlined,
         'sound' => Icons.volume_up_outlined,

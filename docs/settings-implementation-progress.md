@@ -54,8 +54,10 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 25 | 312 | 54 | 258 | 0 |
+| [系统](#category-system) | 18 | 231 | 54 | 177 | 0 |
 | [声音](#category-sound) | 3 | 17 | 14 | 3 | 0 |
+| [电源与电池](#category-power) | 3 | 40 | 0 | 40 | 0 |
+| [通知与免打扰](#category-notifications) | 4 | 41 | 0 | 41 | 0 |
 | [蓝牙和设备](#category-devices) | 13 | 200 | 12 | 184 | 4 |
 | [网络和 Internet](#category-network) | 12 | 97 | 33 | 64 | 0 |
 | [外观](#category-appearance) | 9 | 295 | 20 | 275 | 0 |
@@ -72,7 +74,7 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 
 ## 系统
 
-显示、声音、通知与电源
+显示、存储与系统信息
 
 ### Display — `display`
 
@@ -237,215 +239,6 @@ Windows 参考入口：`ms-settings:display-advancedgraphics`、`ms-settings:dis
 | GPU selection: GPU and driver information | `graphics.gpu-vendor` | 信息展示 | 未实现 | — |
 | GPU selection: Connection relationship between monitor and GPU | `graphics.gpu-mapping` | 信息展示 | 未实现 | — |
 | GPU selection: Graphics card environment variable override | `graphics.gpu-variables` | 文本输入 | 未实现 | — |
-
-### Notifications — `notifications`
-
-应用通知、免打扰与优先级
-
-页面状态：**未实现**；条目：24；已实现 0 / 未实现 24 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:notifications`。
-
-相关页面 ID：`quiet-schedule`、`priority-notifications`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Notice | `notifications.7a66c0d0` | 开关 | 未实现 | — |
-| Allow notifications to play sounds | `notifications.e0ab8430` | 开关 | 未实现 | — |
-| Lock screen notification | `notifications.4a3428cc` | 开关 | 未实现 | — |
-| Lock screen reminders and incoming calls | `notifications.d6aba528` | 开关 | 未实现 | — |
-| Show notification bell icon | `notifications.d503fb54` | 开关 | 未实现 | — |
-
-#### 免打扰
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Do not disturb | `notifications.a04cba4d` | 开关 | 未实现 | — |
-| Automatically turn on Do Not Disturb | `notifications.7abaf526` | 操作 | 未实现 | — |
-| Set up priority notifications | `notifications.5ca577ba` | 操作 | 未实现 | — |
-
-#### 其他设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Display welcome experience after update | `notifications.d04ff1cd` | 开关 | 未实现 | — |
-| Get tips and advice when using the system | `notifications.bf018b80` | 开关 | 未实现 | — |
-| Screen indicator position | `notifications.af16c789` | 选择 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Allow notifications to play sounds | `notifications.reference.da472fb3` | 开关 | 未实现 | — |
-| Show notifications on the lock screen | `notifications.reference.c7fafa9e` | 开关 | 未实现 | — |
-| Show reminders and incoming VoIP calls on the lock screen | `notifications.reference.1517c6c9` | 开关 | 未实现 | — |
-| Show notification bell icon | `notifications.reference.d08d71db` | 开关 | 未实现 | — |
-| Do not disturb | `notifications.reference.30527137` | 开关 | 未实现 | — |
-| During these times | `notifications.reference.40e74cde` | 选择 | 未实现 | — |
-| When duplicating your display (priority notification banners are also hidden) | `notifications.reference.1c052cd8` | 开关 | 未实现 | — |
-| When playing a game | `notifications.reference.210adac4` | 开关 | 未实现 | — |
-| When using an app in full-screen mode (priority notification banners are also hidden) | `notifications.reference.3554d597` | 选择 | 未实现 | — |
-| For the first hour after a Windows feature update | `notifications.reference.3d050709` | 开关 | 未实现 | — |
-| Show incoming calls, including VoIP | `notifications.reference.beb97dd8` | 开关 | 未实现 | — |
-| Show reminders, regardless of app used | `notifications.reference.8ad51f25` | 开关 | 未实现 | — |
-| Apps | `notifications.reference.7e9418df` | 开关 | 未实现 | — |
-
-### Focus — `focus`
-
-专注时段与减少干扰
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:quiethours`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Session duration | `focus.9eac723a` | 选择 | 未实现 | — |
-| Start focus period | `focus.e9d3186d` | 操作 | 未实现 | — |
-| Display timer | `focus.72877c30` | 开关 | 未实现 | — |
-| Hide taskbar app badges | `focus.4c84c9c8` | 开关 | 未实现 | — |
-| Hide taskbar flickering | `focus.18b69b82` | 开关 | 未实现 | — |
-| Turn on Do Not Disturb | `focus.fadd18ca` | 开关 | 未实现 | — |
-
-### Automatic Do Not Disturb — `quiet-schedule`
-
-时间、全屏与演示条件
-
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:quietmomentsscheduled`、`ms-settings:quietmomentspresentation`、`ms-settings:quietmomentsgame`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| During these times | `quiet-schedule.a4bf60fc` | 开关 | 未实现 | — |
-| When copying a monitor | `quiet-schedule.00e784e0` | 开关 | 未实现 | — |
-| While playing games | `quiet-schedule.00e302dd` | 开关 | 未实现 | — |
-| When the app is in full screen mode | `quiet-schedule.98b0a144` | 开关 | 未实现 | — |
-| First hour after system update | `quiet-schedule.52bb4227` | 开关 | 未实现 | — |
-| Start time | `quiet-schedule.e8868af6` | 文本输入 | 未实现 | — |
-| End time | `quiet-schedule.a0bb9f49` | 文本输入 | 未实现 | — |
-| Repeat | `quiet-schedule.6e708ba7` | 选择 | 未实现 | — |
-
-### Priority notification — `priority-notifications`
-
-来电、提醒与例外应用
-
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Show incoming call notification | `priority-notifications.79d29523` | 开关 | 未实现 | — |
-| Always show reminders | `priority-notifications.64f96963` | 开关 | 未实现 | — |
-| Add priority applications | `priority-notifications.c4e0313c` | 操作 | 未实现 | — |
-
-### Power & battery — `power`
-
-能耗、屏幕超时与电池
-
-页面状态：**未实现**；条目：32；已实现 0 / 未实现 32 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:powersleep`。
-
-相关页面 ID：`battery-saver`、`battery-usage`、`energy`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Power mode | `power.5a4f0131` | 选择 | 未实现 | — |
-| Turn off screen time | `power.5e3af39c` | 选择 | 未实现 | — |
-| Sleep time | `power.8b4c8522` | 选择 | 未实现 | — |
-| Energy saving mode | `power.743773bd` | 操作 | 未实现 | — |
-| Battery usage | `power.03bd05ee` | 操作 | 未实现 | — |
-| Energy advice | `power.de734a46` | 操作 | 未实现 | — |
-| Video playback battery optimization | `power.f5cbd1dc` | 开关 | 未实现 | — |
-
-
-#### Advanced: compositor previews
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Wake displays on key press (key_press_enables_dpms) | `power.wake-key` | 开关 | 未实现 | — |
-| Wake displays on pointer movement (mouse_move_enables_dpms) | `power.wake-pointer` | 开关 | 未实现 | — |
-| Idle: Lock screen command (lock_cmd) | `power.idle-lock-cmd` | 文本输入 | 未实现 | — |
-| Idle: Unlock command (unlock_cmd) | `power.idle-unlock-cmd` | 文本输入 | 未实现 | — |
-| Idle: on lock cmd (on_lock_cmd) | `power.idle-on-lock-cmd` | 文本输入 | 未实现 | — |
-| Idle: on unlock cmd (on_unlock_cmd) | `power.idle-on-unlock-cmd` | 文本输入 | 未实现 | — |
-| Idle: Before sleep command (before_sleep_cmd) | `power.idle-before-sleep-cmd` | 文本输入 | 未实现 | — |
-| Idle: Post-wakeup command (after_sleep_cmd) | `power.idle-after-sleep-cmd` | 文本输入 | 未实现 | — |
-| Idle: Ignore D-Bus idle inhibition (ignore_dbus_inhibit) | `power.idle-ignore-dbus-inhibit` | 开关 | 未实现 | — |
-| Idle: Ignore systemd idle suppression (ignore_systemd_inhibit) | `power.idle-ignore-systemd-inhibit` | 开关 | 未实现 | — |
-| Idle: Ignore Wayland idle inhibition (ignore_wayland_inhibit) | `power.idle-ignore-wayland-inhibit` | 开关 | 未实现 | — |
-| Idle: Sleep waiting lock screen strategy (inhibit_sleep) | `power.idle-inhibit-sleep` | 文本输入 | 未实现 | — |
-| Idle listener: Timeout seconds (timeout) | `power.idle-listener-timeout` | 文本输入 | 未实现 | — |
-| Idle listener: Idle timeout action (on-timeout) | `power.idle-listener-on-timeout` | 文本输入 | 未实现 | — |
-| Idle listener: Resume activity action (on-resume) | `power.idle-listener-on-resume` | 文本输入 | 未实现 | — |
-| Idle listener: Ignore idle inhibition (ignore_inhibit) | `power.idle-listener-ignore-inhibit` | 开关 | 未实现 | — |
-| Idle listener: Idle trigger condition command (condition_cmd) | `power.idle-listener-condition-cmd` | 文本输入 | 未实现 | — |
-| Idle listener: Conditional retry interval (condition_retry) | `power.idle-listener-condition-retry` | 文本输入 | 未实现 | — |
-| Session power action: End graphics session | `power.session-logout` | 操作 | 未实现 | — |
-| Session power action: Lock session | `power.session-lock` | 操作 | 未实现 | — |
-| Session power action: hang | `power.session-suspend` | 操作 | 未实现 | — |
-| Session power action: Hibernate | `power.session-hibernate` | 操作 | 未实现 | — |
-| Session power action: Restart | `power.session-reboot` | 操作 | 未实现 | — |
-| Session power action: Turn off the power | `power.session-poweroff` | 操作 | 未实现 | — |
-| Session power action: Wait for the application to exit | `power.session-timeout` | 文本输入 | 未实现 | — |
-
-### Energy saver — `battery-saver`
-
-节能策略与自动启用阈值
-
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:batterysaver`、`ms-settings:batterysaver-settings`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Energy saving mode | `battery-saver.743773bd` | 开关 | 未实现 | — |
-| Automatic opening conditions | `battery-saver.9b0caf70` | 选择 | 未实现 | — |
-| Reduce screen brightness when saving energy | `battery-saver.07945503` | 开关 | 未实现 | — |
-
-### Battery usage — `battery-usage`
-
-电量历史与每应用耗电
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:batterysaver-usagedetails`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Time frame | `battery-usage.2be90408` | 选择 | 未实现 | — |
-| Screen on time | `battery-usage.37bfb377` | 信息展示 | 未实现 | — |
-| Screen off time | `battery-usage.1aa63c64` | 信息展示 | 未实现 | — |
-| Sleep time | `battery-usage.adee81f9` | 信息展示 | 未实现 | — |
-| Battery usage per app | `battery-usage.68bac7d6` | 信息展示 | 未实现 | — |
 
 ### Storage — `storage`
 
@@ -939,6 +732,227 @@ Windows 参考入口：`ms-settings:sound-devices`。
 | --- | --- | --- | --- | --- |
 | PipeWire routing: Audio device configuration file | `sound.pipewire-profile` | 文本输入 | 未实现 | — |
 | PipeWire routing: Input and output ports | `sound.pipewire-port` | 文本输入 | 未实现 | — |
+
+<a id="category-power"></a>
+
+## 电源与电池
+
+能耗、电池、睡眠与电源管理
+
+### Power & battery — `power`
+
+能耗、屏幕超时与电池
+
+页面状态：**未实现**；条目：32；已实现 0 / 未实现 32 / 不适用 0。
+
+原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+
+Windows 参考入口：`ms-settings:powersleep`。
+
+相关页面 ID：`battery-saver`、`battery-usage`、`energy`。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Power mode | `power.5a4f0131` | 选择 | 未实现 | — |
+| Turn off screen time | `power.5e3af39c` | 选择 | 未实现 | — |
+| Sleep time | `power.8b4c8522` | 选择 | 未实现 | — |
+| Energy saving mode | `power.743773bd` | 操作 | 未实现 | — |
+| Battery usage | `power.03bd05ee` | 操作 | 未实现 | — |
+| Energy advice | `power.de734a46` | 操作 | 未实现 | — |
+| Video playback battery optimization | `power.f5cbd1dc` | 开关 | 未实现 | — |
+
+
+#### Advanced: compositor previews
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Wake displays on key press (key_press_enables_dpms) | `power.wake-key` | 开关 | 未实现 | — |
+| Wake displays on pointer movement (mouse_move_enables_dpms) | `power.wake-pointer` | 开关 | 未实现 | — |
+| Idle: Lock screen command (lock_cmd) | `power.idle-lock-cmd` | 文本输入 | 未实现 | — |
+| Idle: Unlock command (unlock_cmd) | `power.idle-unlock-cmd` | 文本输入 | 未实现 | — |
+| Idle: on lock cmd (on_lock_cmd) | `power.idle-on-lock-cmd` | 文本输入 | 未实现 | — |
+| Idle: on unlock cmd (on_unlock_cmd) | `power.idle-on-unlock-cmd` | 文本输入 | 未实现 | — |
+| Idle: Before sleep command (before_sleep_cmd) | `power.idle-before-sleep-cmd` | 文本输入 | 未实现 | — |
+| Idle: Post-wakeup command (after_sleep_cmd) | `power.idle-after-sleep-cmd` | 文本输入 | 未实现 | — |
+| Idle: Ignore D-Bus idle inhibition (ignore_dbus_inhibit) | `power.idle-ignore-dbus-inhibit` | 开关 | 未实现 | — |
+| Idle: Ignore systemd idle suppression (ignore_systemd_inhibit) | `power.idle-ignore-systemd-inhibit` | 开关 | 未实现 | — |
+| Idle: Ignore Wayland idle inhibition (ignore_wayland_inhibit) | `power.idle-ignore-wayland-inhibit` | 开关 | 未实现 | — |
+| Idle: Sleep waiting lock screen strategy (inhibit_sleep) | `power.idle-inhibit-sleep` | 文本输入 | 未实现 | — |
+| Idle listener: Timeout seconds (timeout) | `power.idle-listener-timeout` | 文本输入 | 未实现 | — |
+| Idle listener: Idle timeout action (on-timeout) | `power.idle-listener-on-timeout` | 文本输入 | 未实现 | — |
+| Idle listener: Resume activity action (on-resume) | `power.idle-listener-on-resume` | 文本输入 | 未实现 | — |
+| Idle listener: Ignore idle inhibition (ignore_inhibit) | `power.idle-listener-ignore-inhibit` | 开关 | 未实现 | — |
+| Idle listener: Idle trigger condition command (condition_cmd) | `power.idle-listener-condition-cmd` | 文本输入 | 未实现 | — |
+| Idle listener: Conditional retry interval (condition_retry) | `power.idle-listener-condition-retry` | 文本输入 | 未实现 | — |
+| Session power action: End graphics session | `power.session-logout` | 操作 | 未实现 | — |
+| Session power action: Lock session | `power.session-lock` | 操作 | 未实现 | — |
+| Session power action: hang | `power.session-suspend` | 操作 | 未实现 | — |
+| Session power action: Hibernate | `power.session-hibernate` | 操作 | 未实现 | — |
+| Session power action: Restart | `power.session-reboot` | 操作 | 未实现 | — |
+| Session power action: Turn off the power | `power.session-poweroff` | 操作 | 未实现 | — |
+| Session power action: Wait for the application to exit | `power.session-timeout` | 文本输入 | 未实现 | — |
+
+### Energy saver — `battery-saver`
+
+节能策略与自动启用阈值
+
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+
+原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+
+Windows 参考入口：`ms-settings:batterysaver`、`ms-settings:batterysaver-settings`。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Energy saving mode | `battery-saver.743773bd` | 开关 | 未实现 | — |
+| Automatic opening conditions | `battery-saver.9b0caf70` | 选择 | 未实现 | — |
+| Reduce screen brightness when saving energy | `battery-saver.07945503` | 开关 | 未实现 | — |
+
+### Battery usage — `battery-usage`
+
+电量历史与每应用耗电
+
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+
+原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+
+Windows 参考入口：`ms-settings:batterysaver-usagedetails`。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Time frame | `battery-usage.2be90408` | 选择 | 未实现 | — |
+| Screen on time | `battery-usage.37bfb377` | 信息展示 | 未实现 | — |
+| Screen off time | `battery-usage.1aa63c64` | 信息展示 | 未实现 | — |
+| Sleep time | `battery-usage.adee81f9` | 信息展示 | 未实现 | — |
+| Battery usage per app | `battery-usage.68bac7d6` | 信息展示 | 未实现 | — |
+
+<a id="category-notifications"></a>
+
+## 通知与免打扰
+
+系统通知、免打扰与专注时段
+
+### Notifications — `notifications`
+
+应用通知、免打扰与优先级
+
+页面状态：**未实现**；条目：24；已实现 0 / 未实现 24 / 不适用 0。
+
+原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+
+Windows 参考入口：`ms-settings:notifications`。
+
+相关页面 ID：`quiet-schedule`、`priority-notifications`。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Notice | `notifications.7a66c0d0` | 开关 | 未实现 | — |
+| Allow notifications to play sounds | `notifications.e0ab8430` | 开关 | 未实现 | — |
+| Lock screen notification | `notifications.4a3428cc` | 开关 | 未实现 | — |
+| Lock screen reminders and incoming calls | `notifications.d6aba528` | 开关 | 未实现 | — |
+| Show notification bell icon | `notifications.d503fb54` | 开关 | 未实现 | — |
+
+#### 免打扰
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Do not disturb | `notifications.a04cba4d` | 开关 | 未实现 | — |
+| Automatically turn on Do Not Disturb | `notifications.7abaf526` | 操作 | 未实现 | — |
+| Set up priority notifications | `notifications.5ca577ba` | 操作 | 未实现 | — |
+
+#### 其他设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Display welcome experience after update | `notifications.d04ff1cd` | 开关 | 未实现 | — |
+| Get tips and advice when using the system | `notifications.bf018b80` | 开关 | 未实现 | — |
+| Screen indicator position | `notifications.af16c789` | 选择 | 未实现 | — |
+
+#### Windows 参考细项
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Allow notifications to play sounds | `notifications.reference.da472fb3` | 开关 | 未实现 | — |
+| Show notifications on the lock screen | `notifications.reference.c7fafa9e` | 开关 | 未实现 | — |
+| Show reminders and incoming VoIP calls on the lock screen | `notifications.reference.1517c6c9` | 开关 | 未实现 | — |
+| Show notification bell icon | `notifications.reference.d08d71db` | 开关 | 未实现 | — |
+| Do not disturb | `notifications.reference.30527137` | 开关 | 未实现 | — |
+| During these times | `notifications.reference.40e74cde` | 选择 | 未实现 | — |
+| When duplicating your display (priority notification banners are also hidden) | `notifications.reference.1c052cd8` | 开关 | 未实现 | — |
+| When playing a game | `notifications.reference.210adac4` | 开关 | 未实现 | — |
+| When using an app in full-screen mode (priority notification banners are also hidden) | `notifications.reference.3554d597` | 选择 | 未实现 | — |
+| For the first hour after a Windows feature update | `notifications.reference.3d050709` | 开关 | 未实现 | — |
+| Show incoming calls, including VoIP | `notifications.reference.beb97dd8` | 开关 | 未实现 | — |
+| Show reminders, regardless of app used | `notifications.reference.8ad51f25` | 开关 | 未实现 | — |
+| Apps | `notifications.reference.7e9418df` | 开关 | 未实现 | — |
+
+### Focus — `focus`
+
+专注时段与减少干扰
+
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+
+原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+
+Windows 参考入口：`ms-settings:quiethours`。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Session duration | `focus.9eac723a` | 选择 | 未实现 | — |
+| Start focus period | `focus.e9d3186d` | 操作 | 未实现 | — |
+| Display timer | `focus.72877c30` | 开关 | 未实现 | — |
+| Hide taskbar app badges | `focus.4c84c9c8` | 开关 | 未实现 | — |
+| Hide taskbar flickering | `focus.18b69b82` | 开关 | 未实现 | — |
+| Turn on Do Not Disturb | `focus.fadd18ca` | 开关 | 未实现 | — |
+
+### Automatic Do Not Disturb — `quiet-schedule`
+
+时间、全屏与演示条件
+
+页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+
+原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+
+Windows 参考入口：`ms-settings:quietmomentsscheduled`、`ms-settings:quietmomentspresentation`、`ms-settings:quietmomentsgame`。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| During these times | `quiet-schedule.a4bf60fc` | 开关 | 未实现 | — |
+| When copying a monitor | `quiet-schedule.00e784e0` | 开关 | 未实现 | — |
+| While playing games | `quiet-schedule.00e302dd` | 开关 | 未实现 | — |
+| When the app is in full screen mode | `quiet-schedule.98b0a144` | 开关 | 未实现 | — |
+| First hour after system update | `quiet-schedule.52bb4227` | 开关 | 未实现 | — |
+| Start time | `quiet-schedule.e8868af6` | 文本输入 | 未实现 | — |
+| End time | `quiet-schedule.a0bb9f49` | 文本输入 | 未实现 | — |
+| Repeat | `quiet-schedule.6e708ba7` | 选择 | 未实现 | — |
+
+### Priority notification — `priority-notifications`
+
+来电、提醒与例外应用
+
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+
+原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+
+#### 设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Show incoming call notification | `priority-notifications.79d29523` | 开关 | 未实现 | — |
+| Always show reminders | `priority-notifications.64f96963` | 开关 | 未实现 | — |
+| Add priority applications | `priority-notifications.c4e0313c` | 操作 | 未实现 | — |
 
 <a id="category-devices"></a>
 
