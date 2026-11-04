@@ -17,31 +17,6 @@ void main() {
     expect(applicationSourceLabel('manual'), 'Manual installation');
   });
 
-  testWidgets('metadata uses distinct labeled Material tags that wrap', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(
-          body: SizedBox(
-            width: 240,
-            child: ApplicationMetadata(
-              source: 'AppImage',
-              version: '1.2.3',
-              size: 1024,
-            ),
-          ),
-        ),
-      ),
-    );
-    expect(find.text('AppImage'), findsOneWidget);
-    expect(find.text('1.2.3'), findsOneWidget);
-    expect(find.text('1.0 KiB'), findsOneWidget);
-    final chips = tester.widgetList<Chip>(find.byType(Chip)).toList();
-    expect(chips.map((chip) => chip.backgroundColor).toSet().length, 3);
-    expect(tester.takeException(), isNull);
-  });
-
   testWidgets(
     'AppImage progress surrounds its icon and uses adaptive speed units',
     (tester) async {

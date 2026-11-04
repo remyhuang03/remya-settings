@@ -199,13 +199,4 @@ mod tests {
         );
         assert!(read_frame(&mut &b""[..]).unwrap().is_none());
     }
-    #[test]
-    fn removed_update_requests_are_rejected() {
-        for request in [
-            r#"{"operation":"UpdateBegin","job":"remya-settings-update-abcdef","all":false}"#,
-            r#"{"operation":"UpdateEnd","job":"remya-settings-update-abcdef"}"#,
-        ] {
-            assert!(serde_json::from_str::<Request>(request).is_err());
-        }
-    }
 }

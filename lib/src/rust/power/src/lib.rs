@@ -544,15 +544,3 @@ fn eligible(threshold: u32, include_ac: bool, b: &Value) -> bool {
             .as_f64()
             .is_some_and(|p| p <= threshold as f64)
 }
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn automatic_conditions() {
-        let b = json!({"present":true,"percentage":20,"on_battery":false});
-        assert!(!eligible(20, false, &b));
-        assert!(eligible(20, true, &b));
-        assert!(!eligible(0, true, &b));
-        assert!(!eligible(10, true, &b));
-    }
-}

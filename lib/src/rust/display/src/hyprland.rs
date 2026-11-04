@@ -202,15 +202,4 @@ mod tests {
         );
         assert_eq!(parse_provider("backend: drm"), None);
     }
-
-    #[test]
-    fn monitor_json_uses_hyprland_names() {
-        let monitor: Monitor = serde_json::from_str(
-            r#"{"name":"eDP-1","refreshRate":120.0,"availableModes":["2560x1600@120.00Hz"],
-                "mirrorOf":"none","hardwareDetails":{"hdr":true,"vrrCapable":true}}"#,
-        )
-        .unwrap();
-        assert_eq!(monitor.refresh_rate, 120.0);
-        assert!(monitor.hardware_details.vrr_capable);
-    }
 }

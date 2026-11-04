@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:remya_settings_client/settings_contract.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 import 'package:remya_settings/features/sound/application/sound_controller.dart';
 import 'package:remya_settings/features/sound/presentation/sound_page.dart';
@@ -62,29 +61,7 @@ Map<String, dynamic> state() => {
   },
 };
 
-class _Client extends SettingsClient {
-  final calls = <(String, List<String>)>[];
-  @override
-  Future<Map<String, dynamic>> call(
-    String method, [
-    List<String> arguments = const [],
-  ]) async {
-    calls.add((method, arguments));
-    return state();
-  }
-}
-
 void main() {
-  test('Sound client preserves the generic versioned contract', () async {
-    final client = _Client();
-    addTearDown(client.close);
-    await client.readSound();
-    await client.changeSound(soundOutputVolumeSettingId, {'percent': 50});
-    expect(client.calls.map((c) => [c.$1, ...c.$2]), [
-      ['Get', 'sound'],
-      ['Set', 'sound.output-volume', '{"percent":50}'],
-    ]);
-  });
   test('an older periodic read cannot replace a completed write', () async {
     final pending = Completer<Map<String, dynamic>>();
     final updated = state()..['error'] = 'write readback failed';

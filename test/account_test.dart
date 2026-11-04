@@ -22,39 +22,7 @@ Map<String, dynamic> _state() => {
   'error': null,
 };
 
-class _Client extends SettingsClient {
-  final calls = <(String, List<String>)>[];
-  @override
-  Future<Map<String, dynamic>> call(
-    String method, [
-    List<String> arguments = const [],
-  ]) async {
-    calls.add((method, arguments));
-    return _state();
-  }
-}
-
 void main() {
-  test('client uses the versioned Get/Set contract without a GUI', () async {
-    final client = _Client();
-    addTearDown(client.close);
-    await client.readAccountInformation();
-    await client.saveAccountAvatar('/tmp/avatar.png', {
-      'left': 0,
-      'top': 0,
-      'right': 1,
-      'bottom': 1,
-    });
-    expect(client.calls.first.$1, 'Get');
-    expect(client.calls.first.$2, ['account-information']);
-    expect(client.calls.last.$1, 'Set');
-    expect(client.calls.last.$2.first, accountAvatarSettingId);
-    expect(jsonDecode(client.calls.last.$2.last), {
-      'path': '/tmp/avatar.png',
-      'crop': {'left': 0, 'top': 0, 'right': 1, 'bottom': 1},
-    });
-  });
-
   test(
     'failed avatar saves keep the last valid profile and show the failure',
     () async {

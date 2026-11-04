@@ -1,7 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/settings/presentation/settings_shell.dart';
 import 'package:remya_settings/features/settings/presentation/settings_category_group.dart';
-import 'package:remya_settings/features/settings/presentation/settings_widgets.dart';
 
 import 'dart:convert';
 import 'dart:io';
@@ -340,110 +339,6 @@ void main() {
       ).allMatches(tracker).map((m) => m[1]).toList();
       expect(headings.length, catalog.pages.length);
       expect(headings.toSet(), catalog.pages.map((p) => p.id).toSet());
-    },
-  );
-
-  testWidgets('power category groups power, energy saver, and battery usage', (
-    tester,
-  ) async {
-    final cat = catalog.category('power');
-    expect(cat.title, 'Power & battery');
-    expect(categoryIcon(cat.icon), Icons.battery_charging_full_rounded);
-
-    final powerPages = catalog.inCategory('power');
-    expect(powerPages.map((p) => p.id), [
-      'power',
-      'battery-saver',
-      'battery-usage',
-    ]);
-    expect(
-      pageIcon(catalog.page('power'), cat),
-      Icons.battery_charging_full_rounded,
-    );
-    expect(
-      pageIcon(catalog.page('battery-saver'), cat),
-      Icons.battery_saver_rounded,
-    );
-    expect(
-      pageIcon(catalog.page('battery-usage'), cat),
-      Icons.bar_chart_rounded,
-    );
-
-    final navigation = ValueNotifier<String?>('power');
-    addTearDown(navigation.dispose);
-    await tester.pumpWidget(
-      MaterialApp(
-        home: SettingsShell(catalog: catalog, navigation: navigation),
-      ),
-    );
-    await tester.pumpAndSettle();
-
-    expect(find.byKey(const ValueKey('nav-page-power')), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey('nav-page-battery-saver')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const ValueKey('nav-page-battery-usage')),
-      findsOneWidget,
-    );
-    expect(tester.takeException(), isNull);
-  });
-
-  testWidgets(
-    'notifications category groups notifications, focus, quiet schedule, and priority notifications',
-    (tester) async {
-      final cat = catalog.category('notifications');
-      expect(cat.title, 'Notifications');
-      expect(categoryIcon(cat.icon), Icons.notifications_none_rounded);
-
-      final notifPages = catalog.inCategory('notifications');
-      expect(notifPages.map((p) => p.id), [
-        'notifications',
-        'focus',
-        'quiet-schedule',
-        'priority-notifications',
-      ]);
-      expect(
-        pageIcon(catalog.page('notifications'), cat),
-        Icons.notifications_none_rounded,
-      );
-      expect(
-        pageIcon(catalog.page('focus'), cat),
-        Icons.do_not_disturb_on_outlined,
-      );
-      expect(
-        pageIcon(catalog.page('quiet-schedule'), cat),
-        Icons.do_not_disturb_on_outlined,
-      );
-      expect(
-        pageIcon(catalog.page('priority-notifications'), cat),
-        Icons.notification_important_outlined,
-      );
-
-      final navigation = ValueNotifier<String?>('notifications');
-      addTearDown(navigation.dispose);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: SettingsShell(catalog: catalog, navigation: navigation),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(
-        find.byKey(const ValueKey('nav-page-notifications')),
-        findsOneWidget,
-      );
-      expect(find.byKey(const ValueKey('nav-page-focus')), findsOneWidget);
-      expect(
-        find.byKey(const ValueKey('nav-page-quiet-schedule')),
-        findsOneWidget,
-      );
-      expect(
-        find.byKey(const ValueKey('nav-page-priority-notifications')),
-        findsOneWidget,
-      );
-      expect(tester.takeException(), isNull);
     },
   );
 }

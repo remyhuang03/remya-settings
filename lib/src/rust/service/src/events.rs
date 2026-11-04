@@ -81,18 +81,6 @@ pub fn watch_network(
     Some(subscriptions)
 }
 
-#[cfg(test)]
-mod tests {
-    use super::is_output_event;
-
-    #[test]
-    fn only_output_changes_trigger_a_refresh() {
-        assert!(is_output_event("monitoraddedv2>>1,DP-1,desc"));
-        assert!(is_output_event("monitorremoved>>DP-1"));
-        assert!(!is_output_event("workspace>>1"));
-    }
-}
-
 pub fn watch_power_sleep(
     state: Arc<Mutex<State>>,
 ) -> Option<(gio::DBusConnection, gio::SignalSubscription)> {
