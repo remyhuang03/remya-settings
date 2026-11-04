@@ -190,7 +190,7 @@ class _Row extends StatelessWidget {
     label: Column(
       crossAxisAlignment: .start,
       children: [
-        Text(setting.title, style: Theme.of(context).textTheme.titleSmall),
+        Text(setting.title, style: Theme.of(context).textTheme.bodyLarge),
         if (subtitle case final subtitle?)
           Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
       ],

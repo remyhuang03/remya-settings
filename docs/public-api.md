@@ -747,6 +747,7 @@ are hidden and reject launch. More pages do not own or reconcile external prefer
 | --- | --- | --- |
 | System | `system-more.kde` | `systemsettings` |
 | System | `system-more.gnome` | `gnome-control-center` |
+| System | `system-more.localsend` | `localsend` |
 | Appearance | `appearance-more.qt6ct` | `qt6ct` |
 | Appearance | `appearance-more.kvantum` | `kvantummanager` |
 | Appearance | `appearance-more.gtk` | `nwg-look` |

@@ -15,6 +15,7 @@ import '../../display/application/display_controller.dart';
 import '../../display/presentation/display_settings.dart';
 import '../domain/settings_catalog.dart';
 import 'settings_preview.dart';
+import 'settings_category_group.dart';
 import 'settings_widgets.dart';
 
 class SettingsHome extends StatelessWidget {
@@ -33,28 +34,32 @@ class SettingsHome extends StatelessWidget {
       children: [
         Text('All settings', style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 12),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final width = constraints.maxWidth >= 640
-                ? (constraints.maxWidth - 16) / 2
-                : constraints.maxWidth;
-            return Wrap(
-              spacing: 16,
-              runSpacing: 16,
+        for (final group in SettingsCategoryGroup.values) ...[
+          Padding(
+            padding: const .only(top: 12, bottom: 10),
+            child: Text(
+              group.title,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ),
+          ClipRRect(
+            key: ValueKey('home-group-${group.name}'),
+            borderRadius: .circular(28),
+            child: Column(
               children: [
-                for (final category in catalog.categories)
-                  SizedBox(
-                    width: width,
-                    child: _CategoryCard(
-                      category: category,
-                      pages: catalog.inCategory(category.id).length,
-                      onTap: () => onCategory(category.id),
-                    ),
+                for (final category in group.categories(catalog)) ...[
+                  if (category.id != group.ids.first) const SizedBox(height: 2),
+                  _CategoryCard(
+                    category: category,
+                    pages: catalog.inCategory(category.id).length,
+                    onTap: () => onCategory(category.id),
                   ),
+                ],
               ],
-            );
-          },
-        ),
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
         const SizedBox(height: 24),
         Text(
           '${catalog.categories.length} categories · ${catalog.pages.length} pages · ${catalog.controlCount} settings\nSample data is for layout previews and does not represent your device.',
@@ -79,8 +84,8 @@ class _CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Material(
-      color: colors.surfaceContainerLowest,
-      borderRadius: .circular(24),
+      color: colors.surfaceContainerLow,
+      borderRadius: .circular(4),
       clipBehavior: .antiAlias,
       child: InkWell(
         onTap: onTap,
@@ -88,17 +93,7 @@ class _CategoryCard extends StatelessWidget {
           padding: const .all(22),
           child: Row(
             children: [
-              Container(
-                padding: const .all(13),
-                decoration: BoxDecoration(
-                  color: colors.secondaryContainer,
-                  borderRadius: .circular(18),
-                ),
-                child: Icon(
-                  categoryIcon(category.icon),
-                  color: colors.onSecondaryContainer,
-                ),
-              ),
+              SettingsCategoryIcon(category: category, size: 52),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -115,7 +110,7 @@ class _CategoryCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '$pages pages · Not implemented',
+                      '$pages pages',
                       style: Theme.of(context).textTheme.labelSmall
                           ?.copyWith(color: colors.onSurfaceVariant),
                     ),

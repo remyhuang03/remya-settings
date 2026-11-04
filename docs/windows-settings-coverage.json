@@ -562,12 +562,6 @@
       "title": "Projecting to this PC"
     },
     {
-      "uri": "ms-settings:crossdevice",
-      "page": "nearby",
-      "sourceCategory": "System",
-      "title": "Shared experiences"
-    },
-    {
       "uri": "ms-settings:notifications",
       "page": "notifications",
       "sourceCategory": "System",

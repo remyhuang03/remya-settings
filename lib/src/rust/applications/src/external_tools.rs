@@ -5,7 +5,7 @@ use std::{
     path::Path,
     process::{Command, Stdio},
 };
-pub const IDS: [&str; 8] = [
+pub const IDS: [&str; 9] = [
     "time-more.fcitx5",
     "time-more.ibus",
     "system-more.kde",
@@ -14,8 +14,9 @@ pub const IDS: [&str; 8] = [
     "appearance-more.kvantum",
     "appearance-more.gtk",
     "appearance-more.gnome-tweaks",
+    "system-more.localsend",
 ];
-const TOOLS: [(&str, &str, &str, &str); 8] = [
+const TOOLS: [(&str, &str, &str, &str); 9] = [
     (
         IDS[0],
         "Fcitx 5 Configuration",
@@ -44,6 +45,7 @@ const TOOLS: [(&str, &str, &str, &str); 8] = [
     (IDS[5], "Kvantum Manager", "kvantummanager", "kvantum"),
     (IDS[6], "GTK Settings", "nwg-look", "nwg-look"),
     (IDS[7], "GNOME Tweaks", "gnome-tweaks", "org.gnome.tweaks"),
+    (IDS[8], "LocalSend", "localsend", "localsend"),
 ];
 fn launch_error(id: &str) -> Option<&'static str> {
     if id == "system-more.gnome"
@@ -123,6 +125,19 @@ mod tests {
         );
         std::fs::set_permissions(file, std::fs::Permissions::from_mode(0o700)).unwrap();
         assert_eq!(detected(root.path(), "time")["tools"][0]["id"], IDS[0]);
+        let localsend = root.path().join("localsend");
+        std::fs::write(&localsend, "").unwrap();
+        assert!(
+            detected(root.path(), "system")["tools"]
+                .as_array()
+                .unwrap()
+                .is_empty()
+        );
+        std::fs::set_permissions(localsend, std::fs::Permissions::from_mode(0o700)).unwrap();
+        let tools = detected(root.path(), "system");
+        assert_eq!(tools["tools"][0]["id"], "system-more.localsend");
+        assert_eq!(tools["tools"][0]["name"], "LocalSend");
+        assert_eq!(tools["tools"].as_array().unwrap().len(), 1);
         assert!(open("../../bin/sh").is_err());
         assert!(read("../../bin").is_err());
         assert!(

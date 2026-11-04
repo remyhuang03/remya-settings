@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/settings/presentation/settings_shell.dart';
+import 'package:remya_settings/features/settings/presentation/settings_category_group.dart';
 import 'package:remya_settings/features/settings/presentation/settings_widgets.dart';
 
 import 'dart:convert';
@@ -16,6 +17,63 @@ Map<String, dynamic> _readJson(String path) =>
     jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
 
 void main() {
+  test(
+    'category groups cover the catalog once and use readable distinct colors',
+    () {
+      final catalog = SettingsCatalog.fromJson(readCatalog());
+      final groups = SettingsCategoryGroup.values;
+      final ids = groups.expand((group) => group.ids).toList();
+      expect(
+        ids.toSet(),
+        catalog.categories.map((category) => category.id).toSet(),
+      );
+      expect(ids.length, ids.toSet().length);
+      expect(
+        groups.map((group) => group.background).toSet().length,
+        groups.length,
+      );
+      for (final group in groups) {
+        final contrast =
+            (group.background.computeLuminance() + .05) /
+            (group.foreground.computeLuminance() + .05);
+        expect(contrast, greaterThanOrEqualTo(4.5));
+      }
+    },
+  );
+
+  testWidgets('grouped categories navigate in wide and compact sidebars', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+    for (final width in [1200.0, 800.0]) {
+      tester.view.physicalSize = Size(width, 900);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: SettingsShell(
+            key: ValueKey(width),
+            catalog: SettingsCatalog.fromJson(readCatalog()),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      for (final group in SettingsCategoryGroup.values) {
+        expect(
+          find.byKey(ValueKey('home-group-${group.name}')),
+          findsOneWidget,
+        );
+      }
+      await tester.tap(find.byKey(const ValueKey('nav-network')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('nav-page-network-status')),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    }
+  });
+
   testWidgets('single-page categories omit redundant page navigation', (
     tester,
   ) async {
@@ -314,7 +372,7 @@ void main() {
     'notifications category groups notifications, focus, quiet schedule, and priority notifications',
     (tester) async {
       final cat = catalog.category('notifications');
-      expect(cat.title, 'Notifications & do not disturb');
+      expect(cat.title, 'Notifications');
       expect(categoryIcon(cat.icon), Icons.notifications_none_rounded);
 
       final notifPages = catalog.inCategory('notifications');

@@ -68,6 +68,7 @@ const externalToolSettingIds = {
   ...inputMethodToolSettingIds,
   'system-more.kde',
   'system-more.gnome',
+  'system-more.localsend',
   'appearance-more.qt6ct',
   'appearance-more.kvantum',
   'appearance-more.gtk',

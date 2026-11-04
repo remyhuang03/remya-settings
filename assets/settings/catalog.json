@@ -339,7 +339,7 @@
     },
     {
       "id": "notifications",
-      "title": "Notifications & do not disturb",
+      "title": "Notifications",
       "description": "App and system alerts, do not disturb and focus sessions",
       "icon": "notifications"
     },
@@ -1859,66 +1859,6 @@
             {
               "id": "disks.c1481df0",
               "title": "Format the volume",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "nearby",
-      "category": "system",
-      "title": "Nearby sharing",
-      "description": "Device discovery, sharing range and receiving directory",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:crossdevice"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "nearby.27459ca2",
-              "title": "Nearby sharing",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Off",
-                "Only my devices",
-                "Everyone nearby"
-              ],
-              "value": "Off"
-            },
-            {
-              "id": "nearby.4433eb13",
-              "title": "Device name",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "nearby.7436bca6",
-              "title": "Receive file location",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "nearby.e04563a3",
-              "title": "Change the save directory",
               "type": "action",
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
@@ -23330,6 +23270,14 @@
               "type": "action",
               "availability": "available",
               "reason": "Open an installed external configuration application. Each tool owns its settings; unavailable tools are hidden.",
+              "value": "Open"
+            },
+            {
+              "id": "system-more.localsend",
+              "title": "LocalSend",
+              "type": "action",
+              "availability": "available",
+              "reason": "Open installed LocalSend to share files with nearby devices. LocalSend manages its own configuration; the entry is hidden when it is not installed.",
               "value": "Open"
             }
           ]

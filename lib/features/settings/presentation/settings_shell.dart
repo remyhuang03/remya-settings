@@ -28,6 +28,7 @@ import '../../fonts/application/fonts_controller.dart';
 import '../../fonts/presentation/fonts_page.dart';
 import '../domain/settings_catalog.dart';
 import 'settings_content.dart';
+import 'settings_category_group.dart';
 import '../../integration/settings_scheduler.dart';
 import 'settings_widgets.dart';
 
@@ -235,13 +236,38 @@ class _SettingsShellState extends State<SettingsShell> {
                 children: [
                   _navigationTile('home', 'Home', Icons.home_outlined, compact),
                   const SizedBox(height: 6),
-                  for (final category in widget.catalog.categories)
-                    _navigationTile(
-                      category.id,
-                      category.title,
-                      categoryIcon(category.icon),
-                      compact,
+                  for (final group in SettingsCategoryGroup.values) ...[
+                    if (!compact)
+                      Padding(
+                        padding: const .fromLTRB(12, 14, 8, 8),
+                        child: Text(
+                          group.title,
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                      )
+                    else
+                      const SizedBox(height: 14),
+                    Material(
+                      key: ValueKey('nav-group-${group.name}'),
+                      color: colors.surfaceContainer,
+                      borderRadius: .circular(24),
+                      clipBehavior: .antiAlias,
+                      child: Column(
+                        crossAxisAlignment: .stretch,
+                        children: [
+                          for (final category in group.categories(
+                            widget.catalog,
+                          ))
+                            _navigationTile(
+                              category.id,
+                              category.title,
+                              categoryIcon(category.icon),
+                              compact,
+                            ),
+                        ],
+                      ),
                     ),
+                  ],
                 ],
               ),
             ),
@@ -269,8 +295,11 @@ class _SettingsShellState extends State<SettingsShell> {
     final colors = Theme.of(context).colorScheme;
     final selected =
         _category == id || id == 'about' && _category == 'licenses';
+    final categoryIconWidget = const {'home', 'about'}.contains(id)
+        ? Icon(icon, size: 22)
+        : SettingsCategoryIcon(category: widget.catalog.category(id), size: 34);
     return Padding(
-      padding: const .symmetric(vertical: 3),
+      padding: const .symmetric(vertical: 2),
       child: compact
           ? IconButton.filledTonal(
               key: ValueKey('nav-$id'),
@@ -286,7 +315,7 @@ class _SettingsShellState extends State<SettingsShell> {
                 minimumSize: const Size(48, 48),
               ),
               onPressed: () => _navigate(id),
-              icon: Icon(icon, size: 22),
+              icon: categoryIconWidget,
             )
           : ListTile(
               key: ValueKey('nav-$id'),
@@ -294,9 +323,9 @@ class _SettingsShellState extends State<SettingsShell> {
               selectedTileColor: colors.secondaryContainer,
               selectedColor: colors.onSecondaryContainer,
               shape: RoundedRectangleBorder(borderRadius: .circular(18)),
-              leading: Icon(icon, size: 22),
+              leading: categoryIconWidget,
               title: Text(title, style: const TextStyle(fontSize: 14)),
-              contentPadding: const .symmetric(horizontal: 16),
+              contentPadding: const .symmetric(horizontal: 12),
               minTileHeight: 48,
               onTap: () => _navigate(id),
             ),

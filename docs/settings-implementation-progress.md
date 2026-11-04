@@ -10,8 +10,8 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 
 ## 当前概况
 
-- 设置分类：13 个；详情页面：138 个；设置条目：1667 项。
-- 已实现：177 项；未实现：1480 项；不适用：10 项。
+- 设置分类：15 个；详情页面：137 个；设置条目：1664 项。
+- 已实现：178 项；未实现：1476 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
@@ -19,6 +19,8 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 - 声音通过 Rust libpulse 连接 PipeWire，支持输出、输入、应用音量/路由与设备清单；所有声音控制跟随系统实时状态，不持久化、不比对或恢复配置。见[声音文档](sound.md)。
 
 - 网络通过 Rust / system D-Bus 连接 NetworkManager，提供网络状态、Wi-Fi 与已知网络；设置项见[网络文档](network.md)。
+
+- Night light 行标题与通用设置行统一使用 `bodyLarge`。
 
 - Night light 通过 Rust 写 `hyprsunset.conf` 并经 `hyprctl hyprsunset` 控制运行状态，定时由 hyprsunset 原生 profile 执行；见[公开接口](public-api.md)。
 
@@ -29,6 +31,7 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 ### 已完成的界面能力（不计入系统功能进度）
 
 - [x] 首页、常驻分类侧栏与自适应内容布局（窄窗口常驻图标侧栏）。
+- [x] 一级目录在首页与侧栏按用途分为六组，使用一致的彩色圆形图标、分组间距与连接卡片；验证：`test/catalog_test.dart`。
 - [x] 各分类的 More 统一放在二级选项末尾，其余选项保持目录顺序。
 - [x] 按页面、设置名称和参考 URI 进行本地搜索。
 - [x] 相关页面跳转、Alt+Left 键盘历史导航及参考细项展开。
@@ -54,10 +57,10 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 18 | 231 | 54 | 177 | 0 |
+| [系统](#category-system) | 17 | 228 | 55 | 173 | 0 |
 | [声音](#category-sound) | 3 | 17 | 14 | 3 | 0 |
 | [电源与电池](#category-power) | 3 | 40 | 0 | 40 | 0 |
-| [通知与免打扰](#category-notifications) | 4 | 41 | 0 | 41 | 0 |
+| [通知](#category-notifications) | 4 | 41 | 0 | 41 | 0 |
 | [蓝牙和设备](#category-devices) | 13 | 200 | 12 | 184 | 4 |
 | [网络和 Internet](#category-network) | 12 | 97 | 33 | 64 | 0 |
 | [外观](#category-appearance) | 9 | 295 | 20 | 275 | 0 |
@@ -333,25 +336,6 @@ Windows 参考入口：`ms-settings:disksandvolumes`。
 | Change drive letter | `disks.d324d258` | 操作 | 未实现 | — |
 | Resize the volume | `disks.6e9cf764` | 操作 | 未实现 | — |
 | Format the volume | `disks.c1481df0` | 操作 | 未实现 | — |
-
-### Nearby sharing — `nearby`
-
-设备发现、共享范围与接收目录
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:crossdevice`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Nearby sharing | `nearby.27459ca2` | 选择 | 未实现 | — |
-| Device name | `nearby.4433eb13` | 文本输入 | 未实现 | — |
-| Receive file location | `nearby.7436bca6` | 文本输入 | 未实现 | — |
-| Change the save directory | `nearby.e04563a3` | 操作 | 未实现 | — |
 
 ### Recovery — `recovery`
 
@@ -640,13 +624,13 @@ Windows 参考入口：`ms-settings:easeofaccess-cursor`。
 
 打开实际已安装的外部设置应用。未安装的入口自动隐藏。
 
-页面状态：**已实现**；条目：2；已实现 2 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：3；已实现 3 / 未实现 0 / 不适用 0。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | KDE System Settings | `system-more.kde` | 操作 | 已实现 | Rust 检测测试、CLI/D-Bus 对等与实机打开验证 |
 | GNOME Settings | `system-more.gnome` | 操作 | 已实现 | 检测与 GNOME/Unity 会话限制验证；Hyprland 下显示原因而不启动 |
-
+| LocalSend | `system-more.localsend` | 操作 | 已实现 | Rust 可执行检测测试、已安装 CLI/D-Bus 对等与实机打开验证 |
 
 <a id="category-sound"></a>
 
@@ -834,7 +818,7 @@ Windows 参考入口：`ms-settings:batterysaver-usagedetails`。
 
 <a id="category-notifications"></a>
 
-## 通知与免打扰
+## 通知
 
 系统通知、免打扰与专注时段
 

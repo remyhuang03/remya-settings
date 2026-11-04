@@ -256,7 +256,7 @@ def session_checks():
         for tool in cli('get','external-tools:system')['tools']:
             if tool.get('launch_error'):
                 assert 'Unavailable' in cli('set',tool['id'],'open',ok=False)
-        for group, entries in {'system':[('system-more.kde','systemsettings'),('system-more.gnome','gnome-control-center')],'appearance':[('appearance-more.qt6ct','qt6ct'),('appearance-more.kvantum','kvantummanager'),('appearance-more.gtk','nwg-look'),('appearance-more.gnome-tweaks','gnome-tweaks')]}.items():
+        for group, entries in {'system':[('system-more.kde','systemsettings'),('system-more.gnome','gnome-control-center'),('system-more.localsend','localsend')],'appearance':[('appearance-more.qt6ct','qt6ct'),('appearance-more.kvantum','kvantummanager'),('appearance-more.gtk','nwg-look'),('appearance-more.gnome-tweaks','gnome-tweaks')]}.items():
             assert {t['id'] for t in cli('get','external-tools:'+group)['tools']} == {id for id,binary in entries if os.access('/usr/bin/'+binary,os.X_OK)}
         assert {t['id'] for t in tools['tools']} == {id for id, binary in [('time-more.fcitx5','fcitx5-configtool'),('time-more.ibus','ibus-setup')] if os.access('/usr/bin/'+binary, os.X_OK)}
         assert 'InvalidArgument' in cli('set','time-more.fcitx5','invalid',ok=False)

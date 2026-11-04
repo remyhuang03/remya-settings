@@ -19,7 +19,8 @@
          Native/system uninstall uses the authorized private helper; manual entries reject uninstall.
          Get appimages reads the AppImage library; appimages.* Set values are documented in docs/public-api.md.
          Changed topics background, accent, fonts, default-apps, installed-apps and appimages report updates. -->
-    <!-- external-tools:time/system/appearance lists installed external configurators.
+    <!-- external-tools:time/system/appearance lists installed external applications.
+         Set system-more.localsend with open launches /usr/bin/localsend.
          Set the catalog tool ID with open launches only its fixed ordinary-user executable.
          input-method-tools lists installed input-method configurators. Set time-more.fcitx5 or
          time-more.ibus with open launches the fixed tool as the ordinary user. -->
