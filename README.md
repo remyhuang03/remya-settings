@@ -18,8 +18,8 @@ A global system settings application for **Hyprland on Linux**, built with **Flu
 > **Early Development & Preview Only — Not Ready for Daily Use**
 >
 > - **Under Active Development**: This software is in an early, experimental stage of development and has **not** reached a usable production state.
-> - **Majority of Features Unavailable**: Out of 1,669 controls across 138 catalog pages, **1,491 controls are unimplemented UI-only previews** (`planned`) and 10 are platform-inapplicable (`unsupported`). Only 168 controls currently have backend integrations.
-> - **Implemented Features Are Unstable**: Even the implemented integrations are unstable, subject to breaking changes, and may have incomplete hardware verification boundaries or paused functionality (such as System Updates).
+> - **Majority of Features Unavailable**: Out of 1,667 controls across 138 catalog pages, **1,480 controls are unimplemented UI-only previews** (`planned`) and 10 are platform-inapplicable (`unsupported`). Only 177 controls currently have backend integrations.
+> - **Implemented Features Are Unstable**: Even the implemented integrations are unstable, subject to breaking changes, and may have incomplete hardware verification boundaries.
 > - **For Preview & Evaluation Only**: This repository is currently intended strictly for design preview and development reference. Use at your own risk on real systems.
 
 ## Implemented Features (Experimental)
@@ -36,16 +36,14 @@ Settings combines an information architecture inspired by modern desktop setting
 - **System & Hostname**: Real-time read-only hardware/OS/firmware specifications (CPU, memory, motherboard, BIOS/UEFI DMI, kernel) via `sysinfo` and sysfs, plus polkit-authorized static hostname editing via `systemd-hostnamed`.
 - **Account information**: Read-only process username, plus a Settings-owned avatar (`avatar.png`) with interactive square crop, pan, and zoom.
 - **Date & Time**: NTP synchronization and custom NTP server drop-ins via `systemd-timedated` / `systemd-timesyncd`, timezone selection (`ListTimezones`), manual clock setting, and `LC_TIME` calendar formatting via `systemd-localed`.
+- **System updates**: Repository and AUR update checks, repository upgrades with pacman through a fixed root-owned updater, session-only held-package and retry choices, and optional automatic updates that the login-started service runs when your active hours end. AUR packages are listed, not installed. See [System updates](docs/updates.md).
 - **Configuration Reconciliation**: Non-destructive system detection on first launch and automatic conflict resolution prompts between saved preferences and live system state.
-
-> [!WARNING]
-> **System updates** is paused work in progress. Checks, installation, configuration writes, and automatic scheduling are disabled in production; existing state and logs remain inspectable. See [the incomplete implementation and observed failures](docs/updates.md).
 
 ## Settings Catalog & Coverage
 
 Browse Home, category pages, and About; search settings locally, follow related pages, and inspect third-party licenses.
 
-- **Current Catalog**: 13 categories, 138 pages, 1,669 controls (168 available, 1,491 planned previews, 10 unsupported).
+- **Current Catalog**: 13 categories, 138 pages, 1,667 controls (177 available, 1,480 planned previews, 10 unsupported).
 - **Desktop Reference & Inspiration**: Draws reference from applicable desktop settings benchmarks (including Windows 11 reference taxonomies), retaining relevant pages, controls, URI names, and hierarchy structures as design inspiration while departing where native Linux and Hyprland workflows differ. Removed Windows-only features are excluded from coverage records. See [research, sources, and limitations](docs/windows-settings-research.md).
 - **Hyprland Extensions**: Retains 762 controls based on official configuration documentation and ecosystem tools, merging related previews into ordinary pages’ Advanced sections. See [Hyprland sources and version limits](docs/hyprland-settings-research.md).
 - **Availability & Tracking**: Every setting declares availability (`available`, `planned`, or `unsupported`). Unavailable controls remain disabled while allowing navigation to preview pages; contextually inapplicable options are hidden automatically. See the [implementation progress checklist](docs/settings-implementation-progress.md).
@@ -105,9 +103,15 @@ fvm flutter build linux --release
 python tool/install.py
 ```
 
+For system updates, install the root updater and its polkit rule once (and again when the page reports it outdated):
+
+```bash
+sudo python tool/install_system_updater.py
+```
+
 - Launch **Remy'a Settings** from the application menu, run `remya_settings`, or use `gtk-launch top.remya.settings`.
 - CLI commands: `remya_settings --help` lists available commands. Implemented features provide full CLI parity (e.g. `remya_settings get theme`, `remya_settings get display`, `remya_settings get background`, `remya_settings get sound`, `remya_settings get network`, `remya_settings get bluetooth`, `remya_settings get default-apps`, `remya_settings get hostname`).
-- To exit the resident background service before updates, run `remya_settings quit`.
+- The resident background service starts with the graphical session (`top.remya.settings.service`). `tool/install.py` stops and restarts it around an update; it refuses while a system update is running. Run `remya_settings quit` to stop it manually.
 - See [XDG directory layout](docs/xdg-layout.md) and [public API documentation](docs/public-api.md).
 
 ## Usage & Keyboard Shortcuts

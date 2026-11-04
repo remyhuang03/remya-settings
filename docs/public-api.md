@@ -931,10 +931,18 @@ D-Bus and Dart client expose only live reads, writes and refresh. Readback check
 only the requested field. See [Sound](sound.md) for dependencies and verification
 boundaries.
 
-## System updates — paused work in progress
+## System updates
 
-`Get("updates")` and Get for the eight update IDs remain inspectable. State reports `available: false`, `work_in_progress: true`, and an incomplete/unverified `reason`; per-setting availability is `planned`. Existing status, candidates, output, errors and saved schedule fields are retained for inspection.
+`Get("updates")` returns `api_version`, `revision`, `available`, `reason`, `missing` (required tool paths that are absent), `updater` (`installed`, `missing` or `outdated`), `install_command`, `aur` (whether yay exists), `all`, `retry`, `busy`, `phase` (`idle`, `checking`, `upgrading`, `retrying`, `completed`, `failed`), `kind` (`check`, `upgrade`, `scheduled`), `attempt`, `retry_at`, `checked_at`, `held`, `packages` (`name`, `installed`, `available`, `source` = `repository` or `AUR`, `held`), `eligible` (an unheld repository update exists), `output` and `error`, plus `schedule` (`enabled`, `active_start`, `active_end`, `last_run_day`, `notice`, `error`, `editable`). `Get("updates")` re-reads the installed root updater. Per-setting Get adds `id` and `availability` (`available`, or `unsupported` when required tools are missing).
 
-All production Set operations for `updates.check`, `updates.upgrade`, `updates.include-held`, `updates.retry`, `updates.status`, `updates.output`, `updates.automatic` and `updates.daily-time` reject with `Unavailable`. The service cannot start manual or automatic update jobs, even when `schedule.enabled` was saved as true. The old configuration is not erased or rewritten. Read-only activation does not authorize or execute the draft flow.
+| CLI | D-Bus | Result |
+| --- | --- | --- |
+| `set updates.check check` | `Set(id, "check")` | Starts an asynchronous check; needs only the tools |
+| `set updates.upgrade upgrade` | `Set(id, "upgrade")` | Starts an asynchronous repository upgrade; `Unavailable` until the root updater is installed |
+| `set updates.include-held <bool>` | `Set(id, value)` | Session-only; `Busy` while an operation runs |
+| `set updates.retry <bool>` | `Set(id, value)` | Session-only; `false` stops further attempts |
+| `set updates.automatic <bool>` | `Set(id, value)` | Saved in `updates.json` |
+| `set active-hours.e8868af6 HH:mm` | `Set(id, value)` | Active hours start; saved local time, must differ from the end |
+| `set active-hours.a0bb9f49 HH:mm` | `Set(id, value)` | Active hours end; automatic updates start when it is reached |
 
-The Settings1 method signatures and pure Dart IDs/helpers are unchanged; the retained operation helpers now receive the unavailable error. Active-hours previews also remain unavailable. See [paused implementation and observed failures](updates.md); successful upgrade execution is unverified.
+`updates.status` and `updates.output` reject Set with `ReadOnly`. A second check or upgrade while busy returns `Busy`. `Changed("updates", state)` is published at most once a second while anything changes. Quit returns `Busy` while an update runs. Upgrades never use the GUI-authorized privileged helper: the service runs `pkexec /usr/local/libexec/remya-settings-update upgrade [--include-held]`, which is allowed without a password only by the polkit rule from `tool/install_system_updater.py`. The Dart `UpdatesClient` exposes every operation above. See [System updates](updates.md).

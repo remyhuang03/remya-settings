@@ -2,7 +2,7 @@
 
 Research date: 2026-10-26. Baseline: commit `44679b271497c40a0d37dd40299f89ae59c7aa6f`.
 
-The retained extension contains **2 categories, 35 independent pages, and 762 controls**, including previews folded into ordinary pages. The combined catalog has **13 categories, 138 pages, and 1669 controls**. Coverage files describe the currently included controls and their owning pages.
+The retained extension contains **2 categories, 35 independent pages, and 762 controls**, including previews folded into ordinary pages. The combined catalog has **13 categories, 138 pages, and 1667 controls**. Coverage files describe the currently included controls and their owning pages.
 
 Apart from the implemented Display fields and audio device/stream routing, this extension remains **UI only**. Every remaining addition is `planned`, operation controls remain disabled, and no configuration, process, device, or service is read or modified by the application. Optional components are identified in each page's availability reason. Their presence and compatibility have not been detected.
 

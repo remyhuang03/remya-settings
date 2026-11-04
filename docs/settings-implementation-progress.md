@@ -10,8 +10,8 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 
 ## 当前概况
 
-- 设置分类：13 个；详情页面：138 个；设置条目：1669 项。
-- 已实现：168 项；未实现：1491 项；不适用：10 项。
+- 设置分类：13 个；详情页面：138 个；设置条目：1667 项。
+- 已实现：177 项；未实现：1480 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
@@ -21,6 +21,8 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 - 网络通过 Rust / system D-Bus 连接 NetworkManager，提供网络状态、Wi-Fi 与已知网络；设置项见[网络文档](network.md)。
 
 - Night light 通过 Rust 写 `hyprsunset.conf` 并经 `hyprctl hyprsunset` 控制运行状态，定时由 hyprsunset 原生 profile 执行；见[公开接口](public-api.md)。
+
+- 系统更新由随图形会话启动的常驻服务执行：普通用户检查仓库（checkupdates）与 AUR（yay -Qua，仅列出），仓库升级经 pkexec 调用固定的 root 更新器在独立 systemd 单元中运行 `pacman -Syu`；自动更新在活动时间结束时运行，只有错过整个非活动时段时才在活动时间补跑。见[系统更新文档](updates.md)。
 
 - 显示通过 Rust 经 `hyprctl` 读取并实时应用 Hyprland 显示规则，确认后写入 `monitors.lua`，并按系统配置同步规则处理冲突；亮度为实时值（logind 背光 / `ddcutil`），不保存。
 
@@ -62,7 +64,7 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 | [时间和语言](#category-time) | 4 | 28 | 8 | 20 | 0 |
 | [辅助功能](#category-accessibility) | 14 | 236 | 0 | 236 | 0 |
 | [隐私和安全性](#category-privacy) | 9 | 39 | 0 | 35 | 4 |
-| [系统更新](#category-update) | 2 | 11 | 0 | 11 | 0 |
+| [系统更新](#category-update) | 2 | 9 | 9 | 0 | 0 |
 | [窗口与工作区](#category-hyprland) | 23 | 258 | 0 | 258 | 0 |
 | [会话与配置](#category-session) | 9 | 82 | 0 | 82 | 0 |
 
@@ -1453,7 +1455,7 @@ Windows 参考入口：`ms-settings:network-status`。
 
 无线网络与当前连接
 
-页面状态：**已实现**；条目：8；已实现 8 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：7；已实现 7 / 未实现 0 / 不适用 0。
 
 原因：已通过 NetworkManager 实现。
 
@@ -3419,11 +3421,11 @@ Windows 参考入口：`ms-settings:search`、`ms-settings:search-moredetails`�
 
 ### System updates — `updates`
 
-仓库与 AUR 更新的半成品源码保留。生产页面显示 Work in progress，所有更新操作停用；Get 仍可检查现有状态与日志。
+仓库更新检查与升级、AUR 更新列表、会话级保留包与重试选项、在非活动时间运行的自动更新。
 
-页面状态：**未实现（半成品，已暂停）**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**已实现**；条目：7；已实现 7 / 未实现 0 / 不适用 0。
 
-原因：用户明确暂停更新设计。实际升级先因临时目录权限校验失败，0700 创建已修复并通过目录边界测试；之后实际执行报 ` -> invalid option 'nosudoloop'`，未继续修复。授权取消/失败重试入口也未完成；真实升级流程未验证。生产 Check、Update now、配置写入与自动调度全部停用，保留源码、旧配置和只读状态/日志。
+原因：旧草稿通过 yay `--sudo` 桥接反向解析 pacman 参数，实机报 ` -> invalid option 'nosudoloop'` 后被暂停。重新设计后仓库升级只走固定 root 更新器（`upgrade [--include-held]`），由 `tool/install_system_updater.py` 安装的 polkit 规则免密授权；AUR 只列出不安装；常驻服务由 systemd 用户单元随会话启动并负责自动更新，自动更新在 Active hours 之外运行。
 
 Windows 参考入口：`ms-settings:windowsupdate`、`ms-settings:windowsupdate-action`、`ms-settings:windowsupdate-seekerondemand`、`ms-settings:windowsupdate-options`。
 
@@ -3431,31 +3433,29 @@ Windows 参考入口：`ms-settings:windowsupdate`、`ms-settings:windowsupdate-
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Check for updates | `updates.check` | 操作 | 未实现 | updates crate 异步只读检查测试、独立数据库检查；未执行本机升级 |
-| Update now | `updates.upgrade` | 操作 | 未实现 | updates crate 假事务、提权参数白名单、私有通道测试；未执行本机升级 |
-| Include held packages | `updates.include-held` | 开关 | 未实现 | up.fish 排除策略一致性、NVIDIA 与全量模式测试 |
-| Retry after failure | `updates.retry` | 开关 | 未实现 | 退避上限与关闭后不再重试测试 |
-| Update status | `updates.status` | 信息展示 | 未实现 | 异步忙碌状态、错误保留及 `test/updates_test.dart` |
-| Update output | `updates.output` | 信息展示 | 未实现 | 有界日志、ANSI/回车处理、私有输出通道及 `test/updates_test.dart` |
+| Check for updates | `updates.check` | 操作 | 已实现 | updates crate 假后端异步检查、仓库/AUR 分组与保留标记测试；`test/updates_test.dart`；2026-11-04 本机安装版实际检查（17 个仓库更新，均正确标为保留） |
+| Update now | `updates.upgrade` | 操作 | 已实现 | root 更新器参数白名单与 pacman 参数测试、pkexec 126/127 不重试测试；2026-11-04 本机安装版经 pkexec → systemd-run 实际执行 `pacman -Syu`，26 个保留包全部忽略，无可安装更新（nothing to do），状态 completed |
+| Include held packages | `updates.include-held` | 开关 | 已实现 | up.fish 保留策略、NVIDIA 与全量模式测试；仅仓库包受影响测试 |
+| Retry after failure | `updates.retry` | 开关 | 已实现 | 退避上限、关闭后停止、授权拒绝不重试测试 |
+| Update status | `updates.status` | 信息展示 | 已实现 | 异步忙碌状态、错误保留及 `test/updates_test.dart` |
+| Update output | `updates.output` | 信息展示 | 已实现 | 有界日志、ANSI/回车处理及 `test/updates_test.dart` |
 
-| Automatic updates | `updates.automatic` | 开关 | 未实现 | 默认关闭、fake-clock 每日调度、权限缺失与错过时间测试；未执行本机自动升级 |
-| Daily update time | `updates.daily-time` | 操作 | 未实现 | HH:mm 校验、持久化、时区刷新与日期倒退防重复测试 |
+| Automatic updates | `updates.automatic` | 开关 | 已实现 | 默认关闭、每个非活动时段一次、错过时段在活动时间补跑、活动时间内开启不视为错过、忙碌等待、更新器缺失提示测试；`test/updates_schedule_smoke.py` |
 
 ### Active hours — `active-hours`
 
-期望的活动时段预览；暂不影响检查、手动更新或定时自动更新，不执行 Windows 重启行为。
+自动更新等待的活动时段，保存在 `updates.json`；可跨午夜，开始与结束不能相同。不执行 Windows 重启行为。
 
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+页面状态：**已实现**；条目：2；已实现 2 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；控件禁用，导航可用。
+原因：Rust 常驻服务保存并按活动时段调度自动更新。Windows 的按活动自动调整（Adjust active hours）在 Linux 无对应数据来源，已移除。
 
 Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Adjust active hours | `active-hours.f2a92e6f` | 选择 | 未实现 | — |
-| Start time | `active-hours.e8868af6` | 文本输入 | 未实现 | — |
-| End time | `active-hours.a0bb9f49` | 文本输入 | 未实现 | — |
+| Start time | `active-hours.e8868af6` | 文本输入 | 已实现 | HH:mm 校验、跨午夜窗口、开始结束相同拒绝、持久化测试；`test/updates_schedule_smoke.py`、`test/updates_test.dart` |
+| End time | `active-hours.a0bb9f49` | 文本输入 | 已实现 | 同上；夏令时日期计算测试 |
 
 <a id="category-hyprland"></a>
 
