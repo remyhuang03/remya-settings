@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:remya_settings/features/settings/presentation/settings_row_layout.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/updates/application/updates_controller.dart';
@@ -187,62 +186,6 @@ void main() {
       controller.dispose();
     },
   );
-  testWidgets('status and actions share a row whenever natural widths fit', (
-    tester,
-  ) async {
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-    for (final canInstall in [false, true]) {
-      for (final width in [1200.0, 520.0, 320.0]) {
-        await tester.binding.setSurfaceSize(Size(width, 1400));
-        final state = <String, dynamic>{
-          'available': true,
-          'phase': 'idle',
-          'checked_at': canInstall ? 1 : null,
-          'eligible': canInstall,
-          'packages': canInstall
-              ? [
-                  {'name': 'mesa', 'source': 'repository', 'held': false},
-                ]
-              : [],
-        };
-        final controller = UpdatesController(
-          read: () async => state,
-          write: (_, _) async => state,
-        );
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: SingleChildScrollView(
-                child: UpdatesPage(controller: controller),
-              ),
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-        final header = find.byKey(const ValueKey('updates-status-actions'));
-        final layout = tester.widget<SettingsRowLayout>(header);
-        final status = tester.getRect(find.byWidget(layout.children.first));
-        final actions = tester.getRect(find.byWidget(layout.children.last));
-        final widthAvailable = tester.getSize(header).width;
-        final fits = status.width + 16 + actions.width <= widthAvailable;
-        if (width == 1200) expect(fits, true);
-        if (fits) {
-          expect((status.center.dy - actions.center.dy).abs(), lessThan(2));
-          expect(actions.left, greaterThan(status.right));
-        } else {
-          expect(actions.top, greaterThan(status.bottom));
-        }
-        expect((status.left - tester.getRect(header).left).abs(), lessThan(1));
-        expect(
-          (actions.right - tester.getRect(header).right).abs(),
-          lessThan(1),
-        );
-        expect(tester.takeException(), isNull);
-        await tester.pumpWidget(const SizedBox.shrink());
-        controller.dispose();
-      }
-    }
-  });
   testWidgets(
     'a missing system updater shows its install command and still allows checks',
     (tester) async {

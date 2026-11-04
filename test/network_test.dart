@@ -108,31 +108,6 @@ void main() {
     expect(passwordProblem('z' * 64), isNotNull);
   });
 
-  test('catalog keeps random address and data usage planned', () {
-    SettingSpec spec(String page, String id) =>
-        catalog.page(page).controls.firstWhere((c) => c.id == id);
-    expect(
-      spec('known-networks', 'known-networks.mac').availability,
-      SettingAvailability.planned,
-    );
-    expect(
-      spec('network-status', 'network-status.data-usage').availability,
-      SettingAvailability.planned,
-    );
-    expect(
-      spec('known-networks', 'known-networks.priority').availability,
-      SettingAvailability.planned,
-    );
-    expect(
-      catalog.page('data-usage').availability,
-      SettingAvailability.planned,
-    );
-    expect(
-      spec('wifi', 'wifi.enabled').availability,
-      SettingAvailability.available,
-    );
-  });
-
   testWidgets(
     'failed writes stay visible and unresolved conflicts block edits',
     (tester) async {

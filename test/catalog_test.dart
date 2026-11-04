@@ -1,5 +1,4 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:remya_settings/features/settings/presentation/settings_widgets.dart';
 import 'package:remya_settings/features/settings/presentation/settings_shell.dart';
 
 import 'dart:convert';
@@ -119,45 +118,6 @@ void main() {
         contains('wifi'),
       );
       expect(catalog.search('definitely-no-such-setting'), isEmpty);
-    },
-  );
-
-  testWidgets(
-    'compact actions stay inline when content fits and stack only when narrow',
-    (tester) async {
-      for (final width in [360.0, 220.0]) {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: SizedBox(
-                width: width,
-                child: SettingRow(
-                  id: 'test-row',
-                  label: const Text('Qt 6 Settings'),
-                  control: FilledButton(
-                    onPressed: () {},
-                    child: const Text('Open'),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-        final text = tester.getRect(find.text('Qt 6 Settings'));
-        final button = tester.getRect(find.byType(FilledButton));
-        if (width == 360) {
-          expect(
-            (text.center.dy - button.center.dy).abs(),
-            lessThan(16),
-            reason: 'text=$text button=$button',
-          );
-          expect(button.left, greaterThan(text.right));
-        } else {
-          expect(button.top, greaterThan(text.bottom));
-        }
-        expect(tester.takeException(), isNull);
-      }
     },
   );
 

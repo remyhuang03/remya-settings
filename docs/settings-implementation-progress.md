@@ -3440,7 +3440,7 @@ Windows 参考入口：`ms-settings:windowsupdate`、`ms-settings:windowsupdate-
 | Update status | `updates.status` | 信息展示 | 已实现 | 异步忙碌状态、错误保留及 `test/updates_test.dart` |
 | Update output | `updates.output` | 信息展示 | 已实现 | 有界日志、ANSI/回车处理及 `test/updates_test.dart` |
 
-| Automatic updates | `updates.automatic` | 开关 | 已实现 | 默认关闭、每个非活动时段一次、错过时段在活动时间补跑、活动时间内开启不视为错过、忙碌等待、更新器缺失提示测试；`test/updates_schedule_smoke.py` |
+| Automatic updates | `updates.automatic` | 开关 | 已实现 | 默认关闭、每个非活动时段一次、错过时段在活动时间补跑、活动时间内开启不视为错过、忙碌等待、更新器缺失提示测试；`test/updates_smoke.py` |
 
 ### Active hours — `active-hours`
 
@@ -3454,7 +3454,7 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Start time | `active-hours.e8868af6` | 文本输入 | 已实现 | HH:mm 校验、跨午夜窗口、开始结束相同拒绝、持久化测试；`test/updates_schedule_smoke.py`、`test/updates_test.dart` |
+| Start time | `active-hours.e8868af6` | 文本输入 | 已实现 | HH:mm 校验、跨午夜窗口、开始结束相同拒绝、持久化测试；`test/updates_smoke.py`、`test/updates_test.dart` |
 | End time | `active-hours.a0bb9f49` | 文本输入 | 已实现 | 同上；夏令时日期计算测试 |
 
 <a id="category-hyprland"></a>

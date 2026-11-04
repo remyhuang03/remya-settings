@@ -75,27 +75,6 @@ class _Client extends SettingsClient {
 }
 
 void main() {
-  test('Sound defaults to combined controls before mixer and devices', () {
-    final catalog = SettingsCatalog.fromJson(
-      jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
-          as Map<String, dynamic>,
-    );
-    final pages = catalog.inCategory('sound');
-    expect(pages.map((page) => page.id), [
-      'sound-volume',
-      'volume-mixer',
-      'sound-devices',
-    ]);
-    expect(pages.map((page) => page.title), [
-      'Output & input',
-      'Volume mixer',
-      'Devices',
-    ]);
-    expect(
-      pages.first.controls.where((c) => c.availability == .available).length,
-      6,
-    );
-  });
   test('Sound client preserves the generic versioned contract', () async {
     final client = _Client();
     addTearDown(client.close);

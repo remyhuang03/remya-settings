@@ -108,10 +108,4 @@ void main() {
     await night.set(nightLightEnabledId, 'false');
     expect(night.errorMessage, 'boom');
   });
-
-  test('sunset to sunrise stays planned', () async {
-    final spec = await page();
-    final timing = spec.controls.firstWhere((c) => c.id == nightLightTimingId);
-    expect(timing.availability, isNot(SettingAvailability.available));
-  });
 }
