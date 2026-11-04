@@ -1,5 +1,6 @@
 """Check both installers without touching personal data or requiring real builds."""
 import importlib.util
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -60,12 +61,38 @@ class InstallTest(unittest.TestCase):
                 command = home / '.local/bin' / installer.APP_ID
                 self.assertEqual(command.resolve(), installed)
                 self.assertEqual(config.read_text(), 'preserve me')
+                if installer.APP_ID == 'remya_settings':
+                    unit = (data / 'systemd/user/top.remya.settings.service').read_text()
+                    self.assertIn('BusName=top.remya.settings.Service1', unit)
+                    self.assertIn('WantedBy=graphical-session.target', unit)
+                    self.assertIn('ExecStart="' + str(installed).replace('$', '$$').replace('%', '%%') + '" --service', unit)
+                    service = (data / 'dbus-1/services/top.remya.settings.Service1.service').read_text()
+                    self.assertIn('SystemdService=top.remya.settings.service', service)
                 command.unlink()
                 command.write_text('unrelated program')
                 with self.assertRaisesRegex(RuntimeError, 'unrelated command'):
                     installer.install(root, environment)
                 self.assertEqual(command.read_text(), 'unrelated program')
                 self.assertEqual(installed.read_text(), 'version two')
+
+
+class SystemUpdaterTest(unittest.TestCase):
+    def test_rule_allows_only_fixed_upgrades_for_one_valid_user(self):
+        spec = importlib.util.spec_from_file_location('system_updater', ROOT / 'tool/install_system_updater.py')
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        rule = module.rule('remy')
+        self.assertIn(module.MARKER, rule)
+        self.assertIn('subject.user == "remy"', rule)
+        self.assertIn('command == "/usr/local/libexec/remya-settings-update upgrade"', rule)
+        self.assertIn('command == "/usr/local/libexec/remya-settings-update upgrade --include-held"', rule)
+        self.assertEqual(rule.count('polkit.Result.YES'), 1)
+        for bad in ['', 'Remy', 'a" || true || "', 'x' * 40]:
+            with self.assertRaises(ValueError):
+                module.rule(bad)
+        if os.geteuid() != 0:
+            with self.assertRaisesRegex(SystemExit, 'sudo'):
+                module.main(ROOT, {})
 
 
 if __name__ == '__main__':
