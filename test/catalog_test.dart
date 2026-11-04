@@ -301,4 +301,51 @@ void main() {
       expect(headings.toSet(), catalog.pages.map((p) => p.id).toSet());
     },
   );
+
+  testWidgets('power category groups power, energy saver, and battery usage', (
+    tester,
+  ) async {
+    final cat = catalog.category('power');
+    expect(cat.title, 'Power & battery');
+    expect(categoryIcon(cat.icon), Icons.battery_charging_full_rounded);
+
+    final powerPages = catalog.inCategory('power');
+    expect(powerPages.map((p) => p.id), [
+      'power',
+      'battery-saver',
+      'battery-usage',
+    ]);
+    expect(
+      pageIcon(catalog.page('power'), cat),
+      Icons.battery_charging_full_rounded,
+    );
+    expect(
+      pageIcon(catalog.page('battery-saver'), cat),
+      Icons.battery_saver_rounded,
+    );
+    expect(
+      pageIcon(catalog.page('battery-usage'), cat),
+      Icons.bar_chart_rounded,
+    );
+
+    final navigation = ValueNotifier<String?>('power');
+    addTearDown(navigation.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SettingsShell(catalog: catalog, navigation: navigation),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const ValueKey('nav-page-power')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('nav-page-battery-saver')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('nav-page-battery-usage')),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
 }

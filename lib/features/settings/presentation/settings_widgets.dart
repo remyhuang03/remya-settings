@@ -24,6 +24,7 @@ IconData categoryIcon(String icon) => switch (icon) {
   'accessibility' => Icons.accessibility_new_rounded,
   'shield' => Icons.shield_outlined,
   'update' => Icons.system_update_alt_rounded,
+  'power' || 'battery' => Icons.battery_charging_full_rounded,
   _ => Icons.settings_outlined,
 };
 
@@ -67,6 +68,9 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'defaults' => Icons.task_alt_rounded,
       'startup' => Icons.rocket_launch_outlined,
       'lockscreen' || 'signin' => Icons.lock_outline_rounded,
+      'power' => Icons.battery_charging_full_rounded,
+      'battery-saver' => Icons.battery_saver_rounded,
+      'battery-usage' => Icons.bar_chart_rounded,
       _ => switch (page.preview) {
         'display' => Icons.desktop_windows_outlined,
         'sound' => Icons.volume_up_outlined,

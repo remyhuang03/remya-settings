@@ -322,7 +322,7 @@
     {
       "id": "system",
       "title": "System",
-      "description": "Display, notifications, power and system information",
+      "description": "Display, notifications and system information",
       "icon": "computer"
     },
     {
@@ -330,6 +330,12 @@
       "title": "Sound",
       "description": "Output, input, application volumes and audio devices",
       "icon": "volume"
+    },
+    {
+      "id": "power",
+      "title": "Power & battery",
+      "description": "Battery, session sleep, energy saver and power management",
+      "icon": "power"
     },
     {
       "id": "devices",
@@ -2042,555 +2048,6 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "power",
-      "category": "system",
-      "title": "Power & battery",
-      "description": "Energy consumption, screen timeout and battery",
-      "preview": "power",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris",
-        "hypr-options",
-        "hyprviz-project",
-        "hypr-idle",
-        "hypr-power-reference"
-      ],
-      "windowsUris": [
-        "ms-settings:powersleep"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "power.5a4f0131",
-              "title": "Power mode",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Balance",
-                "Optimal energy efficiency",
-                "Best performance"
-              ],
-              "value": "Balance"
-            },
-            {
-              "id": "power.5e3af39c",
-              "title": "Turn off screen time",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "5 minutes",
-                "10 minutes",
-                "30 minutes",
-                "Never"
-              ],
-              "value": "5 minutes"
-            },
-            {
-              "id": "power.8b4c8522",
-              "title": "Sleep time",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "15 minutes",
-                "30 minutes",
-                "1 hour",
-                "Never"
-              ],
-              "value": "15 minutes"
-            },
-            {
-              "id": "power.743773bd",
-              "title": "Energy saving mode",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "power.03bd05ee",
-              "title": "Battery usage",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "power.de734a46",
-              "title": "Energy advice",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "power.f5cbd1dc",
-              "title": "Video playback battery optimization",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        },
-        {
-          "title": "Advanced",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "power.wake-key",
-              "title": "Wake displays on key press (key_press_enables_dpms)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "misc",
-                "key_press_enables_dpms"
-              ]
-            },
-            {
-              "id": "power.wake-pointer",
-              "title": "Wake displays on pointer movement (mouse_move_enables_dpms)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "misc",
-                "mouse_move_enables_dpms"
-              ]
-            },
-            {
-              "id": "power.idle-lock-cmd",
-              "title": "Idle: Lock screen command (lock_cmd)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "lock_cmd"
-              ]
-            },
-            {
-              "id": "power.idle-unlock-cmd",
-              "title": "Idle: Unlock command (unlock_cmd)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "unlock_cmd"
-              ]
-            },
-            {
-              "id": "power.idle-on-lock-cmd",
-              "title": "Idle: on lock cmd (on_lock_cmd)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "on_lock_cmd"
-              ]
-            },
-            {
-              "id": "power.idle-on-unlock-cmd",
-              "title": "Idle: on unlock cmd (on_unlock_cmd)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "on_unlock_cmd"
-              ]
-            },
-            {
-              "id": "power.idle-before-sleep-cmd",
-              "title": "Idle: Before sleep command (before_sleep_cmd)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "before_sleep_cmd"
-              ]
-            },
-            {
-              "id": "power.idle-after-sleep-cmd",
-              "title": "Idle: Post-wakeup command (after_sleep_cmd)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "after_sleep_cmd"
-              ]
-            },
-            {
-              "id": "power.idle-ignore-dbus-inhibit",
-              "title": "Idle: Ignore D-Bus idle inhibition (ignore_dbus_inhibit)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "ignore_dbus_inhibit"
-              ]
-            },
-            {
-              "id": "power.idle-ignore-systemd-inhibit",
-              "title": "Idle: Ignore systemd idle suppression (ignore_systemd_inhibit)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "ignore_systemd_inhibit"
-              ]
-            },
-            {
-              "id": "power.idle-ignore-wayland-inhibit",
-              "title": "Idle: Ignore Wayland idle inhibition (ignore_wayland_inhibit)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "ignore_wayland_inhibit"
-              ]
-            },
-            {
-              "id": "power.idle-inhibit-sleep",
-              "title": "Idle: Sleep waiting lock screen strategy (inhibit_sleep)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "2",
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "inhibit_sleep"
-              ]
-            },
-            {
-              "id": "power.idle-listener-timeout",
-              "title": "Idle listener: Timeout seconds (timeout)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "none, value must be specified",
-              "referencePath": [
-                "hypr-idle",
-                "Listeners",
-                "timeout"
-              ]
-            },
-            {
-              "id": "power.idle-listener-on-timeout",
-              "title": "Idle listener: Idle timeout action (on-timeout)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "Listeners",
-                "on-timeout"
-              ]
-            },
-            {
-              "id": "power.idle-listener-on-resume",
-              "title": "Idle listener: Resume activity action (on-resume)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "Listeners",
-                "on-resume"
-              ]
-            },
-            {
-              "id": "power.idle-listener-ignore-inhibit",
-              "title": "Idle listener: Ignore idle inhibition (ignore_inhibit)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-idle",
-                "Listeners",
-                "ignore_inhibit"
-              ]
-            },
-            {
-              "id": "power.idle-listener-condition-cmd",
-              "title": "Idle listener: Idle trigger condition command (condition_cmd)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "Listeners",
-                "condition_cmd"
-              ]
-            },
-            {
-              "id": "power.idle-listener-condition-retry",
-              "title": "Idle listener: Conditional retry interval (condition_retry)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "0",
-              "referencePath": [
-                "hypr-idle",
-                "Listeners",
-                "condition_retry"
-              ]
-            },
-            {
-              "id": "power.session-logout",
-              "title": "Session power action: End graphics session",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-power-reference",
-                "logout"
-              ]
-            },
-            {
-              "id": "power.session-lock",
-              "title": "Session power action: Lock session",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-power-reference",
-                "lock"
-              ]
-            },
-            {
-              "id": "power.session-suspend",
-              "title": "Session power action: hang",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-power-reference",
-                "suspend"
-              ]
-            },
-            {
-              "id": "power.session-hibernate",
-              "title": "Session power action: Hibernate",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-power-reference",
-                "hibernate"
-              ]
-            },
-            {
-              "id": "power.session-reboot",
-              "title": "Session power action: Restart",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-power-reference",
-                "reboot"
-              ]
-            },
-            {
-              "id": "power.session-poweroff",
-              "title": "Session power action: Turn off the power",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-power-reference",
-                "poweroff"
-              ]
-            },
-            {
-              "id": "power.session-timeout",
-              "title": "Session power action: Wait for the application to exit",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-power-reference",
-                "timeout"
-              ]
-            }
-          ],
-          "description": "Planned compositor options from Hyprland configuration options, HyprViz page organization, hypridle idle management, Hyprland session exit."
-        }
-      ],
-      "children": [
-        "battery-saver",
-        "battery-usage"
-      ]
-    },
-    {
-      "id": "battery-saver",
-      "category": "system",
-      "title": "Energy saver",
-      "description": "Energy saving strategy and automatic activation threshold",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:batterysaver",
-        "ms-settings:batterysaver-settings"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "battery-saver.743773bd",
-              "title": "Energy saving mode",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "battery-saver.9b0caf70",
-              "title": "Automatic opening conditions",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Battery power 20%",
-                "Battery power 30%",
-                "always",
-                "Never"
-              ],
-              "value": "Battery power 20%"
-            },
-            {
-              "id": "battery-saver.07945503",
-              "title": "Reduce screen brightness when saving energy",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "battery-usage",
-      "category": "system",
-      "title": "Battery usage",
-      "description": "Power history and power consumption of each application",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:batterysaver-usagedetails"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "battery-usage.2be90408",
-              "title": "Time frame",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Past 24 hours",
-                "Past 7 days"
-              ],
-              "value": "Past 24 hours"
-            },
-            {
-              "id": "battery-usage.37bfb377",
-              "title": "Screen on time",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
-            },
-            {
-              "id": "battery-usage.1aa63c64",
-              "title": "Screen off time",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
-            },
-            {
-              "id": "battery-usage.adee81f9",
-              "title": "Sleep time",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
-            },
-            {
-              "id": "battery-usage.68bac7d6",
-              "title": "Battery usage per app",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
             }
           ]
         }
@@ -4765,6 +4222,555 @@
                 "hypr-audio",
                 "port"
               ]
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "power",
+      "category": "power",
+      "title": "Power & sleep",
+      "description": "Energy consumption, screen timeout and sleep",
+      "preview": "power",
+      "availability": "planned",
+      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "sources": [
+        "uris",
+        "hypr-options",
+        "hyprviz-project",
+        "hypr-idle",
+        "hypr-power-reference"
+      ],
+      "windowsUris": [
+        "ms-settings:powersleep"
+      ],
+      "sections": [
+        {
+          "title": "Settings",
+          "controls": [
+            {
+              "id": "power.5a4f0131",
+              "title": "Power mode",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "options": [
+                "Balance",
+                "Optimal energy efficiency",
+                "Best performance"
+              ],
+              "value": "Balance"
+            },
+            {
+              "id": "power.5e3af39c",
+              "title": "Turn off screen time",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "options": [
+                "5 minutes",
+                "10 minutes",
+                "30 minutes",
+                "Never"
+              ],
+              "value": "5 minutes"
+            },
+            {
+              "id": "power.8b4c8522",
+              "title": "Sleep time",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "options": [
+                "15 minutes",
+                "30 minutes",
+                "1 hour",
+                "Never"
+              ],
+              "value": "15 minutes"
+            },
+            {
+              "id": "power.743773bd",
+              "title": "Energy saving mode",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Configuration"
+            },
+            {
+              "id": "power.03bd05ee",
+              "title": "Battery usage",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Configuration"
+            },
+            {
+              "id": "power.de734a46",
+              "title": "Energy advice",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Configuration"
+            },
+            {
+              "id": "power.f5cbd1dc",
+              "title": "Video playback battery optimization",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            }
+          ]
+        },
+        {
+          "title": "Advanced",
+          "collapsed": true,
+          "controls": [
+            {
+              "id": "power.wake-key",
+              "title": "Wake displays on key press (key_press_enables_dpms)",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "misc",
+                "key_press_enables_dpms"
+              ]
+            },
+            {
+              "id": "power.wake-pointer",
+              "title": "Wake displays on pointer movement (mouse_move_enables_dpms)",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "misc",
+                "mouse_move_enables_dpms"
+              ]
+            },
+            {
+              "id": "power.idle-lock-cmd",
+              "title": "Idle: Lock screen command (lock_cmd)",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-idle",
+                "General",
+                "lock_cmd"
+              ]
+            },
+            {
+              "id": "power.idle-unlock-cmd",
+              "title": "Idle: Unlock command (unlock_cmd)",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-idle",
+                "General",
+                "unlock_cmd"
+              ]
+            },
+            {
+              "id": "power.idle-on-lock-cmd",
+              "title": "Idle: on lock cmd (on_lock_cmd)",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-idle",
+                "General",
+                "on_lock_cmd"
+              ]
+            },
+            {
+              "id": "power.idle-on-unlock-cmd",
+              "title": "Idle: on unlock cmd (on_unlock_cmd)",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-idle",
+                "General",
+                "on_unlock_cmd"
+              ]
+            },
+            {
+              "id": "power.idle-before-sleep-cmd",
+              "title": "Idle: Before sleep command (before_sleep_cmd)",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-idle",
+                "General",
+                "before_sleep_cmd"
+              ]
+            },
+            {
+              "id": "power.idle-after-sleep-cmd",
+              "title": "Idle: Post-wakeup command (after_sleep_cmd)",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-idle",
+                "General",
+                "after_sleep_cmd"
+              ]
+            },
+            {
+              "id": "power.idle-ignore-dbus-inhibit",
+              "title": "Idle: Ignore D-Bus idle inhibition (ignore_dbus_inhibit)",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-idle",
+                "General",
+                "ignore_dbus_inhibit"
+              ]
+            },
+            {
+              "id": "power.idle-ignore-systemd-inhibit",
+              "title": "Idle: Ignore systemd idle suppression (ignore_systemd_inhibit)",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-idle",
+                "General",
+                "ignore_systemd_inhibit"
+              ]
+            },
+            {
+              "id": "power.idle-ignore-wayland-inhibit",
+              "title": "Idle: Ignore Wayland idle inhibition (ignore_wayland_inhibit)",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-idle",
+                "General",
+                "ignore_wayland_inhibit"
+              ]
+            },
+            {
+              "id": "power.idle-inhibit-sleep",
+              "title": "Idle: Sleep waiting lock screen strategy (inhibit_sleep)",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "2",
+              "referencePath": [
+                "hypr-idle",
+                "General",
+                "inhibit_sleep"
+              ]
+            },
+            {
+              "id": "power.idle-listener-timeout",
+              "title": "Idle listener: Timeout seconds (timeout)",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "none, value must be specified",
+              "referencePath": [
+                "hypr-idle",
+                "Listeners",
+                "timeout"
+              ]
+            },
+            {
+              "id": "power.idle-listener-on-timeout",
+              "title": "Idle listener: Idle timeout action (on-timeout)",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-idle",
+                "Listeners",
+                "on-timeout"
+              ]
+            },
+            {
+              "id": "power.idle-listener-on-resume",
+              "title": "Idle listener: Resume activity action (on-resume)",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-idle",
+                "Listeners",
+                "on-resume"
+              ]
+            },
+            {
+              "id": "power.idle-listener-ignore-inhibit",
+              "title": "Idle listener: Ignore idle inhibition (ignore_inhibit)",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": false,
+              "referencePath": [
+                "hypr-idle",
+                "Listeners",
+                "ignore_inhibit"
+              ]
+            },
+            {
+              "id": "power.idle-listener-condition-cmd",
+              "title": "Idle listener: Idle trigger condition command (condition_cmd)",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-idle",
+                "Listeners",
+                "condition_cmd"
+              ]
+            },
+            {
+              "id": "power.idle-listener-condition-retry",
+              "title": "Idle listener: Conditional retry interval (condition_retry)",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "0",
+              "referencePath": [
+                "hypr-idle",
+                "Listeners",
+                "condition_retry"
+              ]
+            },
+            {
+              "id": "power.session-logout",
+              "title": "Session power action: End graphics session",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "Configuration",
+              "referencePath": [
+                "hypr-power-reference",
+                "logout"
+              ]
+            },
+            {
+              "id": "power.session-lock",
+              "title": "Session power action: Lock session",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "Configuration",
+              "referencePath": [
+                "hypr-power-reference",
+                "lock"
+              ]
+            },
+            {
+              "id": "power.session-suspend",
+              "title": "Session power action: hang",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "Configuration",
+              "referencePath": [
+                "hypr-power-reference",
+                "suspend"
+              ]
+            },
+            {
+              "id": "power.session-hibernate",
+              "title": "Session power action: Hibernate",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "Configuration",
+              "referencePath": [
+                "hypr-power-reference",
+                "hibernate"
+              ]
+            },
+            {
+              "id": "power.session-reboot",
+              "title": "Session power action: Restart",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "Configuration",
+              "referencePath": [
+                "hypr-power-reference",
+                "reboot"
+              ]
+            },
+            {
+              "id": "power.session-poweroff",
+              "title": "Session power action: Turn off the power",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "Configuration",
+              "referencePath": [
+                "hypr-power-reference",
+                "poweroff"
+              ]
+            },
+            {
+              "id": "power.session-timeout",
+              "title": "Session power action: Wait for the application to exit",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "value": "",
+              "referencePath": [
+                "hypr-power-reference",
+                "timeout"
+              ]
+            }
+          ],
+          "description": "Planned compositor options from Hyprland configuration options, HyprViz page organization, hypridle idle management, Hyprland session exit."
+        }
+      ],
+      "children": [
+        "battery-saver",
+        "battery-usage"
+      ]
+    },
+    {
+      "id": "battery-saver",
+      "category": "power",
+      "title": "Energy saver",
+      "description": "Energy saving strategy and automatic activation threshold",
+      "preview": "none",
+      "availability": "planned",
+      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "sources": [
+        "uris"
+      ],
+      "windowsUris": [
+        "ms-settings:batterysaver",
+        "ms-settings:batterysaver-settings"
+      ],
+      "sections": [
+        {
+          "title": "Settings",
+          "controls": [
+            {
+              "id": "battery-saver.743773bd",
+              "title": "Energy saving mode",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "battery-saver.9b0caf70",
+              "title": "Automatic opening conditions",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "options": [
+                "Battery power 20%",
+                "Battery power 30%",
+                "always",
+                "Never"
+              ],
+              "value": "Battery power 20%"
+            },
+            {
+              "id": "battery-saver.07945503",
+              "title": "Reduce screen brightness when saving energy",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "battery-usage",
+      "category": "power",
+      "title": "Battery usage",
+      "description": "Power history and power consumption of each application",
+      "preview": "none",
+      "availability": "planned",
+      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "sources": [
+        "uris"
+      ],
+      "windowsUris": [
+        "ms-settings:batterysaver-usagedetails"
+      ],
+      "sections": [
+        {
+          "title": "Settings",
+          "controls": [
+            {
+              "id": "battery-usage.2be90408",
+              "title": "Time frame",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "options": [
+                "Past 24 hours",
+                "Past 7 days"
+              ],
+              "value": "Past 24 hours"
+            },
+            {
+              "id": "battery-usage.37bfb377",
+              "title": "Screen on time",
+              "type": "info",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Not read"
+            },
+            {
+              "id": "battery-usage.1aa63c64",
+              "title": "Screen off time",
+              "type": "info",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Not read"
+            },
+            {
+              "id": "battery-usage.adee81f9",
+              "title": "Sleep time",
+              "type": "info",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Not read"
+            },
+            {
+              "id": "battery-usage.68bac7d6",
+              "title": "Battery usage per app",
+              "type": "info",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Not read"
             }
           ]
         }
