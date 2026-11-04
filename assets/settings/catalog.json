@@ -322,7 +322,7 @@
     {
       "id": "system",
       "title": "System",
-      "description": "Display, notifications and system information",
+      "description": "Display, storage and system information",
       "icon": "computer"
     },
     {
@@ -336,6 +336,12 @@
       "title": "Power & battery",
       "description": "Battery, session sleep, energy saver and power management",
       "icon": "power"
+    },
+    {
+      "id": "notifications",
+      "title": "Notifications & do not disturb",
+      "description": "App and system alerts, do not disturb and focus sessions",
+      "icon": "notifications"
     },
     {
       "id": "devices",
@@ -1524,532 +1530,6 @@
             }
           ],
           "description": "Planned compositor options from Hyprland configuration options, HyprViz page organization, Hyprland Multi-GPU."
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "notifications",
-      "category": "system",
-      "title": "Notifications",
-      "description": "App Notifications, Do Not Disturb and Priority",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:notifications"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "notifications.7a66c0d0",
-              "title": "Notice",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "notifications.e0ab8430",
-              "title": "Allow notifications to play sounds",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "notifications.4a3428cc",
-              "title": "Lock screen notification",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "notifications.d6aba528",
-              "title": "Lock screen reminders and incoming calls",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "notifications.d503fb54",
-              "title": "Show notification bell icon",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        },
-        {
-          "title": "Do not disturb",
-          "controls": [
-            {
-              "id": "notifications.a04cba4d",
-              "title": "Do not disturb",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "notifications.7abaf526",
-              "title": "Automatically turn on Do Not Disturb",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "notifications.5ca577ba",
-              "title": "Set up priority notifications",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        },
-        {
-          "title": "Other settings",
-          "controls": [
-            {
-              "id": "notifications.d04ff1cd",
-              "title": "Display welcome experience after update",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "notifications.bf018b80",
-              "title": "Get tips and advice when using the system",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "notifications.af16c789",
-              "title": "Screen indicator position",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Bottom center",
-                "Upper left corner",
-                "Top center"
-              ],
-              "value": "Bottom center"
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "notifications.reference.da472fb3",
-              "title": "Allow notifications to play sounds",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Notifications",
-                "Allow notifications to play sounds"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.c7fafa9e",
-              "title": "Show notifications on the lock screen",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Notifications",
-                "Show notifications on the lock screen"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.1517c6c9",
-              "title": "Show reminders and incoming VoIP calls on the lock screen",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Notifications",
-                "Show reminders and incoming VoIP calls on the lock screen"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.d08d71db",
-              "title": "Show notification bell icon",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Notifications",
-                "Show notification bell icon"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.30527137",
-              "title": "Do not disturb",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Do not disturb"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.40e74cde",
-              "title": "During these times",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Turn on do not disturb automatically",
-                "During these times"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "notifications.reference.1c052cd8",
-              "title": "When duplicating your display (priority notification banners are also hidden)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Turn on do not disturb automatically",
-                "When duplicating your display (priority notification banners are also hidden)"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.210adac4",
-              "title": "When playing a game",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Turn on do not disturb automatically",
-                "When playing a game"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.3554d597",
-              "title": "When using an app in full-screen mode (priority notification banners are also hidden)",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Turn on do not disturb automatically",
-                "When using an app in full-screen mode (priority notification banners are also hidden)"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "notifications.reference.3d050709",
-              "title": "For the first hour after a Windows feature update",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Turn on do not disturb automatically",
-                "For the first hour after a Windows feature update"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.beb97dd8",
-              "title": "Show incoming calls, including VoIP",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Set Priority Notifications",
-                "Calls and reminders",
-                "Show incoming calls, including VoIP"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.8ad51f25",
-              "title": "Show reminders, regardless of app used",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Set Priority Notifications",
-                "Calls and reminders",
-                "Show reminders, regardless of app used"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.7e9418df",
-              "title": "Apps",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Set Priority Notifications",
-                "Apps"
-              ],
-              "value": false
-            }
-          ]
-        }
-      ],
-      "children": [
-        "quiet-schedule",
-        "priority-notifications"
-      ]
-    },
-    {
-      "id": "focus",
-      "category": "system",
-      "title": "Focus",
-      "description": "Focus periods and reducing distractions",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:quiethours"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "focus.9eac723a",
-              "title": "Session duration",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "30 minutes",
-                "45 minutes",
-                "60 minutes"
-              ],
-              "value": "30 minutes"
-            },
-            {
-              "id": "focus.e9d3186d",
-              "title": "Start focus period",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Start"
-            },
-            {
-              "id": "focus.72877c30",
-              "title": "Display timer",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "focus.4c84c9c8",
-              "title": "Hide taskbar app badges",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "focus.18b69b82",
-              "title": "Hide taskbar flickering",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "focus.fadd18ca",
-              "title": "Turn on Do Not Disturb",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "quiet-schedule",
-      "category": "system",
-      "title": "Automatic Do Not Disturb",
-      "description": "Time, full screen and presentation conditions",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:quietmomentsscheduled",
-        "ms-settings:quietmomentspresentation",
-        "ms-settings:quietmomentsgame"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "quiet-schedule.a4bf60fc",
-              "title": "During these times",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "quiet-schedule.00e784e0",
-              "title": "When copying a monitor",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "quiet-schedule.00e302dd",
-              "title": "While playing games",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "quiet-schedule.98b0a144",
-              "title": "When the app is in full screen mode",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "quiet-schedule.52bb4227",
-              "title": "First hour after system update",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "quiet-schedule.e8868af6",
-              "title": "Start time",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "quiet-schedule.a0bb9f49",
-              "title": "End time",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "quiet-schedule.6e708ba7",
-              "title": "Repeat",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Every day",
-                "Working days",
-                "Weekend"
-              ],
-              "value": "Every day"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "priority-notifications",
-      "category": "system",
-      "title": "Priority notification",
-      "description": "Incoming calls, reminders and exceptions apps",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "priority-notifications.79d29523",
-              "title": "Show incoming call notification",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "priority-notifications.64f96963",
-              "title": "Always show reminders",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "priority-notifications.c4e0313c",
-              "title": "Add priority applications",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
         }
       ],
       "children": []
@@ -4771,6 +4251,532 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": "Not read"
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "notifications",
+      "category": "notifications",
+      "title": "Notifications",
+      "description": "App Notifications, Do Not Disturb and Priority",
+      "preview": "none",
+      "availability": "planned",
+      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "sources": [
+        "uris"
+      ],
+      "windowsUris": [
+        "ms-settings:notifications"
+      ],
+      "sections": [
+        {
+          "title": "Settings",
+          "controls": [
+            {
+              "id": "notifications.7a66c0d0",
+              "title": "Notice",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "notifications.e0ab8430",
+              "title": "Allow notifications to play sounds",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "notifications.4a3428cc",
+              "title": "Lock screen notification",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "notifications.d6aba528",
+              "title": "Lock screen reminders and incoming calls",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "notifications.d503fb54",
+              "title": "Show notification bell icon",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            }
+          ]
+        },
+        {
+          "title": "Do not disturb",
+          "controls": [
+            {
+              "id": "notifications.a04cba4d",
+              "title": "Do not disturb",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "notifications.7abaf526",
+              "title": "Automatically turn on Do Not Disturb",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Configuration"
+            },
+            {
+              "id": "notifications.5ca577ba",
+              "title": "Set up priority notifications",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Configuration"
+            }
+          ]
+        },
+        {
+          "title": "Other settings",
+          "controls": [
+            {
+              "id": "notifications.d04ff1cd",
+              "title": "Display welcome experience after update",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "notifications.bf018b80",
+              "title": "Get tips and advice when using the system",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "notifications.af16c789",
+              "title": "Screen indicator position",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "options": [
+                "Bottom center",
+                "Upper left corner",
+                "Top center"
+              ],
+              "value": "Bottom center"
+            }
+          ]
+        },
+        {
+          "title": "Windows reference settings",
+          "collapsed": true,
+          "controls": [
+            {
+              "id": "notifications.reference.da472fb3",
+              "title": "Allow notifications to play sounds",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Notifications",
+                "Notifications",
+                "Allow notifications to play sounds"
+              ],
+              "value": false
+            },
+            {
+              "id": "notifications.reference.c7fafa9e",
+              "title": "Show notifications on the lock screen",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Notifications",
+                "Notifications",
+                "Show notifications on the lock screen"
+              ],
+              "value": false
+            },
+            {
+              "id": "notifications.reference.1517c6c9",
+              "title": "Show reminders and incoming VoIP calls on the lock screen",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Notifications",
+                "Notifications",
+                "Show reminders and incoming VoIP calls on the lock screen"
+              ],
+              "value": false
+            },
+            {
+              "id": "notifications.reference.d08d71db",
+              "title": "Show notification bell icon",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Notifications",
+                "Notifications",
+                "Show notification bell icon"
+              ],
+              "value": false
+            },
+            {
+              "id": "notifications.reference.30527137",
+              "title": "Do not disturb",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Notifications",
+                "Do not disturb"
+              ],
+              "value": false
+            },
+            {
+              "id": "notifications.reference.40e74cde",
+              "title": "During these times",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Notifications",
+                "Turn on do not disturb automatically",
+                "During these times"
+              ],
+              "value": "Not configured",
+              "options": [
+                "Not configured"
+              ]
+            },
+            {
+              "id": "notifications.reference.1c052cd8",
+              "title": "When duplicating your display (priority notification banners are also hidden)",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Notifications",
+                "Turn on do not disturb automatically",
+                "When duplicating your display (priority notification banners are also hidden)"
+              ],
+              "value": false
+            },
+            {
+              "id": "notifications.reference.210adac4",
+              "title": "When playing a game",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Notifications",
+                "Turn on do not disturb automatically",
+                "When playing a game"
+              ],
+              "value": false
+            },
+            {
+              "id": "notifications.reference.3554d597",
+              "title": "When using an app in full-screen mode (priority notification banners are also hidden)",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Notifications",
+                "Turn on do not disturb automatically",
+                "When using an app in full-screen mode (priority notification banners are also hidden)"
+              ],
+              "value": "Not configured",
+              "options": [
+                "Not configured"
+              ]
+            },
+            {
+              "id": "notifications.reference.3d050709",
+              "title": "For the first hour after a Windows feature update",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Notifications",
+                "Turn on do not disturb automatically",
+                "For the first hour after a Windows feature update"
+              ],
+              "value": false
+            },
+            {
+              "id": "notifications.reference.beb97dd8",
+              "title": "Show incoming calls, including VoIP",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Notifications",
+                "Set Priority Notifications",
+                "Calls and reminders",
+                "Show incoming calls, including VoIP"
+              ],
+              "value": false
+            },
+            {
+              "id": "notifications.reference.8ad51f25",
+              "title": "Show reminders, regardless of app used",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Notifications",
+                "Set Priority Notifications",
+                "Calls and reminders",
+                "Show reminders, regardless of app used"
+              ],
+              "value": false
+            },
+            {
+              "id": "notifications.reference.7e9418df",
+              "title": "Apps",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Notifications",
+                "Set Priority Notifications",
+                "Apps"
+              ],
+              "value": false
+            }
+          ]
+        }
+      ],
+      "children": [
+        "quiet-schedule",
+        "priority-notifications"
+      ]
+    },
+    {
+      "id": "focus",
+      "category": "notifications",
+      "title": "Focus",
+      "description": "Focus periods and reducing distractions",
+      "preview": "none",
+      "availability": "planned",
+      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "sources": [
+        "uris"
+      ],
+      "windowsUris": [
+        "ms-settings:quiethours"
+      ],
+      "sections": [
+        {
+          "title": "Settings",
+          "controls": [
+            {
+              "id": "focus.9eac723a",
+              "title": "Session duration",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "options": [
+                "30 minutes",
+                "45 minutes",
+                "60 minutes"
+              ],
+              "value": "30 minutes"
+            },
+            {
+              "id": "focus.e9d3186d",
+              "title": "Start focus period",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Start"
+            },
+            {
+              "id": "focus.72877c30",
+              "title": "Display timer",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "focus.4c84c9c8",
+              "title": "Hide taskbar app badges",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "focus.18b69b82",
+              "title": "Hide taskbar flickering",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "focus.fadd18ca",
+              "title": "Turn on Do Not Disturb",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "quiet-schedule",
+      "category": "notifications",
+      "title": "Automatic Do Not Disturb",
+      "description": "Time, full screen and presentation conditions",
+      "preview": "none",
+      "availability": "planned",
+      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "sources": [
+        "uris"
+      ],
+      "windowsUris": [
+        "ms-settings:quietmomentsscheduled",
+        "ms-settings:quietmomentspresentation",
+        "ms-settings:quietmomentsgame"
+      ],
+      "sections": [
+        {
+          "title": "Settings",
+          "controls": [
+            {
+              "id": "quiet-schedule.a4bf60fc",
+              "title": "During these times",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "quiet-schedule.00e784e0",
+              "title": "When copying a monitor",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "quiet-schedule.00e302dd",
+              "title": "While playing games",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "quiet-schedule.98b0a144",
+              "title": "When the app is in full screen mode",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "quiet-schedule.52bb4227",
+              "title": "First hour after system update",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "quiet-schedule.e8868af6",
+              "title": "Start time",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": ""
+            },
+            {
+              "id": "quiet-schedule.a0bb9f49",
+              "title": "End time",
+              "type": "text",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": ""
+            },
+            {
+              "id": "quiet-schedule.6e708ba7",
+              "title": "Repeat",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "options": [
+                "Every day",
+                "Working days",
+                "Weekend"
+              ],
+              "value": "Every day"
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "priority-notifications",
+      "category": "notifications",
+      "title": "Priority notification",
+      "description": "Incoming calls, reminders and exceptions apps",
+      "preview": "none",
+      "availability": "planned",
+      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "sources": [
+        "uris"
+      ],
+      "windowsUris": [],
+      "sections": [
+        {
+          "title": "Settings",
+          "controls": [
+            {
+              "id": "priority-notifications.79d29523",
+              "title": "Show incoming call notification",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "priority-notifications.64f96963",
+              "title": "Always show reminders",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "priority-notifications.c4e0313c",
+              "title": "Add priority applications",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Configuration"
             }
           ]
         }
