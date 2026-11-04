@@ -11,8 +11,6 @@ import 'package:remya_settings/features/sound/presentation/sound_page.dart';
 
 Map<String, dynamic> state() => {
   'available': true,
-  'initialized': true,
-  'conflict': false,
   'error': null,
   'system': {
     'default_output': 'speakers',
@@ -103,44 +101,35 @@ void main() {
     addTearDown(client.close);
     await client.readSound();
     await client.changeSound(soundOutputVolumeSettingId, {'percent': 50});
-    await client.resolveSound('system');
     expect(client.calls.map((c) => [c.$1, ...c.$2]), [
       ['Get', 'sound'],
       ['Set', 'sound.output-volume', '{"percent":50}'],
-      ['Resolve', 'sound', 'system'],
     ]);
   });
   test('an older periodic read cannot replace a completed write', () async {
     final pending = Completer<Map<String, dynamic>>();
-    final updated = state()..['conflict'] = true;
+    final updated = state()..['error'] = 'write readback failed';
     final controller = SoundController(
       read: () => pending.future,
       write: (_, _) async => updated,
-      resolve: (_) async => updated,
     );
     addTearDown(controller.dispose);
     final loading = controller.reload();
     await controller.set('sound.output-muted', {'muted': true});
     pending.complete(state());
     await loading;
-    expect(controller.hasConflict, isTrue);
+    expect(controller.errorMessage, 'write readback failed');
   });
   late Map<String, dynamic> snapshot;
   late List<(String, Map)> writes;
-  late List<String> resolutions;
   late SoundController controller;
   setUp(() {
     snapshot = state();
     writes = [];
-    resolutions = [];
     controller = SoundController(
       read: () async => snapshot,
       write: (id, value) async {
         writes.add((id, jsonDecode(value) as Map));
-        return snapshot;
-      },
-      resolve: (source) async {
-        resolutions.add(source);
         return snapshot;
       },
     );
@@ -191,32 +180,43 @@ void main() {
     });
     await tester.pumpWidget(const SizedBox());
   });
-  testWidgets(
-    'conflicts offer both resolutions and mixer streams remain ephemeral',
-    (tester) async {
-      snapshot['conflict'] = true;
-      await host(tester, 'volume-mixer');
-      expect(
-        find.text('Sound settings differ from saved Settings'),
-        findsOneWidget,
-      );
-      expect(find.text('Player'), findsOneWidget);
-      await tester.tap(find.text('Use system configuration'));
-      await tester.pumpAndSettle();
-      expect(resolutions, ['system']);
-      await tester.ensureVisible(find.text('Mute'));
-      await tester.tap(find.byType(Switch));
-      await tester.pumpAndSettle();
-      expect(writes.single.$1, 'sound.stream-muted');
-      expect(writes.single.$2, {
-        'direction': 'output',
-        'index': 3,
-        'client': 4,
-        'muted': true,
-      });
-      await tester.pumpWidget(const SizedBox());
-    },
-  );
+  testWidgets('external changes refresh live controls without conflicts', (
+    tester,
+  ) async {
+    await host(tester, 'sound-volume');
+    snapshot = state();
+    final output = (snapshot['system'] as Map)['devices'][0] as Map;
+    output['preferences'] = {
+      'channels': [16384, 16384],
+      'muted': true,
+    };
+    await controller.reload();
+    await tester.pumpAndSettle();
+    expect(find.text('Volume: 25%'), findsOneWidget);
+    expect(find.text('Use system configuration'), findsNothing);
+    expect(find.text('Apply saved Settings'), findsNothing);
+    expect(controller.canChange, isTrue);
+    await tester.tap(find.byType(Switch).first);
+    await tester.pumpAndSettle();
+    expect(writes.single.$1, 'sound.output-muted');
+    expect(writes.single.$2['muted'], isFalse);
+    await tester.pumpWidget(const SizedBox());
+  });
+  testWidgets('mixer streams use current stream identity', (tester) async {
+    await host(tester, 'volume-mixer');
+    expect(find.text('Player'), findsOneWidget);
+    await tester.ensureVisible(find.text('Mute'));
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+    expect(writes.single.$1, 'sound.stream-muted');
+    expect(writes.single.$2, {
+      'direction': 'output',
+      'index': 3,
+      'client': 4,
+      'muted': true,
+    });
+    await tester.pumpWidget(const SizedBox());
+  });
   testWidgets('Sound pages fit a narrow viewport with actual device readouts', (
     tester,
   ) async {
@@ -234,7 +234,6 @@ void main() {
     final failing = SoundController(
       read: () async => snapshot,
       write: (_, _) async => throw StateError('device removed'),
-      resolve: (_) async => snapshot,
     );
     addTearDown(failing.dispose);
     await failing.reload();

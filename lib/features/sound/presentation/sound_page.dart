@@ -189,36 +189,6 @@ class _SoundPageState extends State<SoundPage> {
     builder: (context, _) => Column(
       crossAxisAlignment: .stretch,
       children: [
-        if (controller.hasConflict)
-          SettingsSurface(
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                const Icon(Icons.warning_amber_rounded),
-                const Text('Sound settings differ from saved Settings'),
-                const Text(
-                  'Device selection, volume or mute was changed outside Settings.',
-                ),
-                Wrap(
-                  spacing: 8,
-                  children: [
-                    TextButton(
-                      onPressed: controller.isBusy
-                          ? null
-                          : controller.useSystemConfiguration,
-                      child: const Text('Use system configuration'),
-                    ),
-                    TextButton(
-                      onPressed: controller.isBusy
-                          ? null
-                          : controller.applySavedConfiguration,
-                      child: const Text('Apply saved Settings'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
         if (controller.errorMessage case final error?)
           SettingsSurface(
             child: Column(

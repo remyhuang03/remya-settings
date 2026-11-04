@@ -265,24 +265,27 @@ impl Backend for RealPulse {
         direction: Direction,
         name: &str,
         p: &DevicePrefs,
+        operation: &str,
     ) -> Result<(), String> {
         safe_name(name)?;
-        let volume = volumes(p)?;
         let mut c = Connection::new()?;
-        let result = Rc::new(Cell::new(false));
-        let op = match direction {
-            Direction::Output => c.context.introspect().set_sink_volume_by_name(
-                name,
-                &volume,
-                Some(callback(&result)),
-            ),
-            Direction::Input => c.context.introspect().set_source_volume_by_name(
-                name,
-                &volume,
-                Some(callback(&result)),
-            ),
-        };
-        c.success(op, result)?;
+        if operation.ends_with("-volume") {
+            let volume = volumes(p)?;
+            let result = Rc::new(Cell::new(false));
+            let op = match direction {
+                Direction::Output => c.context.introspect().set_sink_volume_by_name(
+                    name,
+                    &volume,
+                    Some(callback(&result)),
+                ),
+                Direction::Input => c.context.introspect().set_source_volume_by_name(
+                    name,
+                    &volume,
+                    Some(callback(&result)),
+                ),
+            };
+            return c.success(op, result);
+        }
         let result = Rc::new(Cell::new(false));
         let op = match direction {
             Direction::Output => {

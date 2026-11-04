@@ -894,7 +894,7 @@ Username rejects Set with ReadOnly. `Changed("account-information", state)` repo
 ## Sound
 
 `Get("sound")` and the pure Dart `SoundClient.readSound()` return version-1 state:
-`available`, `initialized`, `conflict`, nullable `error`, `saved` and live `system`.
+`api_version`, `available`, nullable `error` and live `system`.
 `system` contains nullable `default_output`/`default_input`, `devices` and `streams`.
 Devices have stable `name`, current `index`, `description`, `direction` (`output` or
 `input`), `rate`, `channels`, `state` and `preferences`. Stream records have current
@@ -923,14 +923,13 @@ fail explicitly. `client:null` is required for a stream without a client index.
 `sound.devices` and `sound.streams` are read-only inventory catalog entries.
 Getting any available Sound setting returns the same state with its ID and
 availability. Writes return verified readback; `Changed("sound", state)` reports
-changes. The configuration summary includes the same Sound conflict/error state.
+changes. The configuration summary includes the same live Sound/error state.
 
-`Resolve("sound", "system")` adopts actual defaults and device preferences;
-`Resolve("sound", "settings")` applies saved preferences with readback validation.
-CLI uses `remya_settings resolve sound system|settings`; Dart uses `resolveSound`.
-Stream operations are ephemeral and do not resolve or persist device conflicts.
-No D-Bus method signatures or existing payloads change. See [Sound](sound.md)
-for configuration ownership, dependencies and verification boundaries.
+All Sound settings follow current audio-server state and are never persisted or
+compared with a saved configuration. Sound has no `Resolve` operation; the CLI,
+D-Bus and Dart client expose only live reads, writes and refresh. Readback checks
+only the requested field. See [Sound](sound.md) for dependencies and verification
+boundaries.
 
 ## System updates — paused work in progress
 

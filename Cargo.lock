@@ -1418,11 +1418,9 @@ name = "remya_settings_sound"
 version = "0.1.0"
 dependencies = [
  "libpulse-binding",
- "remya_settings_display",
  "serde",
  "serde_json",
  "tempfile",
- "toml 0.9.12+spec-1.1.0",
 ]
 
 [[package]]

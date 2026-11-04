@@ -25,6 +25,4 @@ extension SoundClient on SettingsClient {
     String setting,
     Map<String, Object?> request,
   ) => setSound(setting, jsonEncode(request));
-  Future<Map<String, dynamic>> resolveSound(String source) =>
-      call('Resolve', ['sound', source]);
 }

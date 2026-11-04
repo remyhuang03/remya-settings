@@ -105,11 +105,7 @@ Future<void> main() async {
     read: client.readAccountInformation,
     save: client.saveAccountAvatar,
   );
-  final sound = SoundController(
-    read: client.readSound,
-    write: client.setSound,
-    resolve: client.resolveSound,
-  );
+  final sound = SoundController(read: client.readSound, write: client.setSound);
   final updates = UpdatesController(
     read: client.readUpdates,
     write: (id, value) => client.call('Set', [id, value]),

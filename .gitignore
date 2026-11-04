@@ -69,6 +69,4 @@ __pycache__/
 
 /config/default-apps.toml
 
-/config/sound.toml
-
 /config/avatar.png

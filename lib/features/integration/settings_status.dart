@@ -78,7 +78,7 @@ class SettingsStatus extends StatelessWidget {
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
                   title:
-                      'Date/time configuration differs from saved Settings. Time zone: system ${controller.state!.timezone}, Settings ${controller.savedTimezone}.',
+                      'Date/time configuration differs from saved Settings.\n${controller.conflictSummary}',
                   busy: controller.isBusy,
                   useSystem: controller.useSystemConfiguration,
                   useSettings: controller.applySavedConfiguration,
@@ -94,14 +94,6 @@ class SettingsStatus extends StatelessWidget {
                 ),
             ],
             if (sound case final controller?) ...[
-              if (controller.hasConflict)
-                _ConflictWarning(
-                  navigatorKey: navigatorKey,
-                  title: 'Sound differs from saved Settings. Open Sound to inspect the device, volume and mute preferences.',
-                  busy: controller.isBusy,
-                  useSystem: controller.useSystemConfiguration,
-                  useSettings: controller.applySavedConfiguration,
-                ),
               if (controller.errorMessage case final message?)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
@@ -391,8 +383,6 @@ class _StatusCard extends StatelessWidget {
         if (message.isNotEmpty)
           Text(
             message,
-            maxLines: 2,
-            overflow: .ellipsis,
             style: Theme.of(context).textTheme.bodySmall
                 ?.copyWith(color: foreground),
           ),

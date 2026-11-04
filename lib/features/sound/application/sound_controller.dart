@@ -3,14 +3,9 @@ import 'dart:convert';
 import 'package:material_ui/material_ui.dart';
 
 class SoundController extends ChangeNotifier {
-  SoundController({
-    required this.read,
-    required this.write,
-    required this.resolve,
-  });
+  SoundController({required this.read, required this.write});
   final Future<Map<String, dynamic>> Function() read;
   final Future<Map<String, dynamic>> Function(String, String) write;
-  final Future<Map<String, dynamic>> Function(String) resolve;
   Map<String, dynamic> value = {};
   String? errorMessage;
   bool isBusy = false;
@@ -22,13 +17,7 @@ class SoundController extends ChangeNotifier {
   List<Map> get devices => (system['devices'] as List? ?? []).cast<Map>();
   List<Map> get streams => (system['streams'] as List? ?? []).cast<Map>();
   bool get available => value['available'] == true;
-  bool get hasConflict => value['conflict'] == true;
-  bool get canChange =>
-      available &&
-      value['initialized'] == true &&
-      !hasConflict &&
-      !isBusy &&
-      errorMessage == null;
+  bool get canChange => available && !isBusy && errorMessage == null;
   List<Map> devicesFor(String direction) =>
       devices.where((d) => d['direction'] == direction).toList();
   Map? selected(String direction) =>
@@ -91,8 +80,6 @@ class SoundController extends ChangeNotifier {
   Future<void> set(String id, Map<String, Object?> request) =>
       _attempt(() => write(id, jsonEncode(request)));
   Future<void> refresh() => _attempt(() => write('sound.refresh', '{}'));
-  Future<void> useSystemConfiguration() => _attempt(() => resolve('system'));
-  Future<void> applySavedConfiguration() => _attempt(() => resolve('settings'));
   @override
   void dispose() {
     _disposed = true;

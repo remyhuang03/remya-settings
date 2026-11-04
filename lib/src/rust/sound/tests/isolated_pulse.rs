@@ -3,7 +3,6 @@
 use remya_settings_sound::{Backend, Direction, Sound, pulse::RealPulse};
 use serde_json::json;
 use std::{
-    fs,
     path::Path,
     process::{Child, Command, Stdio},
     thread,
@@ -111,7 +110,7 @@ fn native_controls_and_stream_routes_use_private_audio_server() {
         2
     );
     let config = runtime.join("sound.toml");
-    let mut sound = Sound::new(RealPulse, config.clone());
+    let mut sound = Sound::new(RealPulse);
     sound.refresh().unwrap();
     let output = "remya_test_b";
     let input = "remya_test_b.monitor";
@@ -148,13 +147,40 @@ fn native_controls_and_stream_routes_use_private_audio_server() {
         .clone();
     external.muted = false;
     backend
-        .set_device(Direction::Output, output, &external)
+        .set_device(Direction::Output, output, &external, "sound.output-muted")
         .unwrap();
     sound.refresh().unwrap();
-    assert_eq!(sound.state()["conflict"], true);
-    sound.resolve("settings").unwrap();
-    assert_eq!(sound.state()["conflict"], false);
-    let before = fs::read(&config).unwrap();
+    assert!(
+        !sound.state()["system"]["devices"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|d| d["name"] == output)
+            .unwrap()["preferences"]["muted"]
+            .as_bool()
+            .unwrap()
+    );
+    assert!(!config.exists());
+    // Stale fields in a request must not overwrite another tool's live changes.
+    external.channels.fill(16384);
+    external.muted = true;
+    backend
+        .set_device(Direction::Output, output, &external, "sound.output-volume")
+        .unwrap();
+    let current = backend.read().unwrap();
+    let current = current.devices.iter().find(|d| d.name == output).unwrap();
+    assert!(!current.preferences.muted);
+    external.channels.fill(65536);
+    backend
+        .set_device(Direction::Output, output, &external, "sound.output-muted")
+        .unwrap();
+    let current = backend.read().unwrap();
+    let current = current.devices.iter().find(|d| d.name == output).unwrap();
+    assert_eq!(
+        current.preferences.channels,
+        vec![16384; external.channels.len()]
+    );
+    assert!(current.preferences.muted);
     server.0.push(
         command(runtime, "pacat")
             .args([
@@ -200,11 +226,7 @@ fn native_controls_and_stream_routes_use_private_audio_server() {
     sound
         .set("sound.stream-device", &change(json!({"device":output})))
         .unwrap();
-    assert_eq!(
-        fs::read(config).unwrap(),
-        before,
-        "Stream preferences are ephemeral"
-    );
+    assert!(!config.exists());
     let state = backend.read().unwrap();
     let observed = state
         .streams

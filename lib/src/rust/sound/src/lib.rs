@@ -1,10 +1,8 @@
 //! Per-user audio through PipeWire's PulseAudio protocol; no privileged process or shell commands.
 pub mod pulse;
 
-use remya_settings_display::atomic_write;
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
-use std::{collections::BTreeMap, fs, path::PathBuf};
 
 pub const IDS: [&str; 12] = [
     "sound.output-device",
@@ -30,14 +28,6 @@ pub enum Direction {
     Output,
     Input,
 }
-impl Direction {
-    fn key(self) -> &'static str {
-        match self {
-            Self::Output => "output",
-            Self::Input => "input",
-        }
-    }
-}
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct DevicePrefs {
@@ -56,9 +46,6 @@ pub struct Device {
     pub state: String,
 }
 impl Device {
-    fn key(&self) -> String {
-        format!("{}:{}", self.direction.key(), self.name)
-    }
     pub fn percent(&self) -> f64 {
         volume_percent(&self.preferences.channels)
     }
@@ -110,51 +97,9 @@ pub trait Backend: Send {
         direction: Direction,
         name: &str,
         prefs: &DevicePrefs,
+        operation: &str,
     ) -> Result<(), String>;
     fn set_stream(&mut self, stream: &Stream, operation: &str) -> Result<(), String>;
-}
-#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-struct Saved {
-    version: u8,
-    default_output: Option<String>,
-    default_input: Option<String>,
-    devices: BTreeMap<String, DevicePrefs>,
-}
-impl Saved {
-    fn from_snapshot(snapshot: &Snapshot) -> Self {
-        Self {
-            version: 1,
-            default_output: snapshot.default_output.clone(),
-            default_input: snapshot.default_input.clone(),
-            devices: snapshot
-                .devices
-                .iter()
-                .map(|d| (d.key(), d.preferences.clone()))
-                .collect(),
-        }
-    }
-    fn differs(&self, actual: &Snapshot) -> bool {
-        self.default_output != actual.default_output
-            || self.default_input != actual.default_input
-            || actual.devices.iter().any(|d| {
-                self.devices
-                    .get(&d.key())
-                    .is_some_and(|p| p != &d.preferences)
-            })
-    }
-    fn validate(&self) -> Result<(), String> {
-        if self.version != 1
-            || self.devices.values().any(|p| {
-                p.channels.is_empty()
-                    || p.channels.len() > 32
-                    || p.channels.iter().any(|v| *v > 0x7fff_ffff)
-            })
-        {
-            return Err("Invalid sound preferences".into());
-        }
-        Ok(())
-    }
 }
 fn invalid(s: &str) -> String {
     format!("InvalidArgument:{s}")
@@ -172,76 +117,29 @@ struct Change {
 }
 pub struct Sound<B: Backend> {
     backend: B,
-    file: PathBuf,
-    saved: Option<Saved>,
     actual: Option<Snapshot>,
     error: Option<String>,
     operation_error: Option<String>,
-    load_error: Option<String>,
 }
 impl<B: Backend> Sound<B> {
-    pub fn new(backend: B, file: PathBuf) -> Self {
-        let loaded = match fs::read_to_string(&file) {
-            Ok(s) => toml::from_str::<Saved>(&s)
-                .map(Some)
-                .map_err(|e| e.to_string()),
-            Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
-            Err(e) => Err(e.to_string()),
-        }
-        .and_then(|s| {
-            if let Some(v) = &s {
-                v.validate()?;
-            }
-            Ok(s)
-        });
-        let (saved, load_error) = match loaded {
-            Ok(v) => (v, None),
-            Err(e) => (None, Some(e)),
-        };
+    pub fn new(backend: B) -> Self {
         Self {
             backend,
-            file,
-            saved,
             actual: None,
             error: None,
             operation_error: None,
-            load_error,
         }
     }
-    fn save(&mut self, next: Saved) -> Result<(), String> {
-        next.validate()?;
-        atomic_write(
-            &self.file,
-            toml::to_string(&next)
-                .map_err(|e| e.to_string())?
-                .as_bytes(),
-        )?;
-        self.saved = Some(next);
-        self.load_error = None;
-        Ok(())
-    }
     pub fn refresh(&mut self) -> Result<(), String> {
-        let result = (|| {
-            let snapshot = self.backend.read()?;
-            self.actual = Some(snapshot.clone());
-            if let Some(error) = &self.load_error {
-                return Err(error.clone());
-            }
-            if self.saved.is_none() {
-                self.save(Saved::from_snapshot(&snapshot))?;
-            }
-            Ok(())
-        })();
+        let result = self
+            .backend
+            .read()
+            .map(|snapshot| self.actual = Some(snapshot));
         self.error = result.as_ref().err().cloned();
         result
     }
     pub fn state(&self) -> Value {
-        let conflict = self
-            .saved
-            .as_ref()
-            .zip(self.actual.as_ref())
-            .is_some_and(|(s, a)| s.differs(a));
-        json!({"api_version":1,"available":self.actual.is_some(),"initialized":self.saved.is_some(),"system":self.actual,"saved":self.saved,"conflict":conflict,"error":self.error.as_ref().or(self.operation_error.as_ref())})
+        json!({"api_version":1,"available":self.actual.is_some() && self.error.is_none(),"system":self.actual,"error":self.error.as_ref().or(self.operation_error.as_ref())})
     }
     fn write(&mut self, id: &str, text: &str) -> Result<(), String> {
         if id == "sound.refresh" {
@@ -254,17 +152,7 @@ impl<B: Backend> Sound<B> {
             .as_ref()
             .ok_or("Sound service unavailable")?
             .clone();
-        if !stream_change && self.saved.as_ref().is_some_and(|s| s.differs(&actual)) {
-            return Err(
-                "Conflict: Sound differs from saved Settings; choose which configuration to use"
-                    .into(),
-            );
-        }
         let change: Change = serde_json::from_str(text).map_err(|e| invalid(&e.to_string()))?;
-        let mut next = self
-            .saved
-            .clone()
-            .ok_or("Sound configuration is not initialized")?;
         let direction = if id.starts_with("sound.output-") {
             Direction::Output
         } else if id.starts_with("sound.input-") {
@@ -325,7 +213,15 @@ impl<B: Backend> Sound<B> {
                         && s.direction == stream.direction
                 })
                 .ok_or("The audio stream ended during the change")?;
-            if observed.preferences != stream.preferences || observed.device != stream.device {
+            let matches = match id {
+                "sound.stream-volume" => {
+                    observed.preferences.channels == stream.preferences.channels
+                }
+                "sound.stream-muted" => observed.preferences.muted == stream.preferences.muted,
+                "sound.stream-device" => observed.device == stream.device,
+                _ => unreachable!(),
+            };
+            if !matches {
                 return Err("Audio stream readback did not match the requested change".into());
             }
             return Ok(());
@@ -340,9 +236,14 @@ impl<B: Backend> Sound<B> {
                 return Err("Audio device is no longer available".into());
             }
             self.backend.set_default(direction, &name)?;
-            match direction {
-                Direction::Output => next.default_output = Some(name),
-                Direction::Input => next.default_input = Some(name),
+            self.actual = Some(self.backend.read()?);
+            let observed = self.actual.as_ref().unwrap();
+            let selected = match direction {
+                Direction::Output => &observed.default_output,
+                Direction::Input => &observed.default_input,
+            };
+            if selected.as_deref() != Some(&name) {
+                return Err("Sound readback did not match the requested device".into());
             }
         } else {
             let name = change
@@ -370,14 +271,26 @@ impl<B: Backend> Sound<B> {
             } else {
                 return Err(invalid("Unknown sound operation"));
             }
-            self.backend.set_device(direction, &name, &prefs)?;
-            next.devices.insert(device.key(), prefs);
+            self.backend.set_device(direction, &name, &prefs, id)?;
+            self.actual = Some(self.backend.read()?);
+            let observed = self
+                .actual
+                .as_ref()
+                .unwrap()
+                .devices
+                .iter()
+                .find(|d| d.name == name && d.direction == direction)
+                .ok_or("Audio device disappeared during the change")?;
+            let matches = if id.ends_with("-volume") {
+                observed.preferences.channels == prefs.channels
+            } else {
+                observed.preferences.muted == prefs.muted
+            };
+            if !matches {
+                return Err("Sound readback did not match the requested change".into());
+            }
         }
-        self.actual = Some(self.backend.read()?);
-        if next.differs(self.actual.as_ref().unwrap()) {
-            return Err("Sound readback did not match the requested change".into());
-        }
-        self.save(next)
+        Ok(())
     }
     pub fn set(&mut self, id: &str, text: &str) -> Result<Value, String> {
         if text.len() > 4096 {
@@ -393,58 +306,6 @@ impl<B: Backend> Sound<B> {
         self.operation_error = result.as_ref().err().cloned();
         result.map(|_| self.state())
     }
-    pub fn resolve(&mut self, source: &str) -> Result<Value, String> {
-        let result = (|| {
-            let actual = self.backend.read()?;
-            self.actual = Some(actual.clone());
-            match source {
-                "system" => self.save(Saved::from_snapshot(&actual))?,
-                "settings" => {
-                    let saved = self.saved.clone().ok_or("No saved sound preferences")?;
-                    for (direction, name) in [
-                        (Direction::Output, &saved.default_output),
-                        (Direction::Input, &saved.default_input),
-                    ] {
-                        if let Some(name) = name {
-                            if !actual
-                                .devices
-                                .iter()
-                                .any(|d| d.name == *name && d.direction == direction)
-                            {
-                                return Err(format!(
-                                    "Saved {} device is no longer connected",
-                                    direction.key()
-                                ));
-                            }
-                            self.backend.set_default(direction, name)?;
-                        }
-                    }
-                    for device in &actual.devices {
-                        if let Some(prefs) = saved.devices.get(&device.key()) {
-                            if prefs.channels.len() != device.preferences.channels.len() {
-                                return Err(
-                                    "Saved channel layout no longer matches this device".into()
-                                );
-                            }
-                            self.backend
-                                .set_device(device.direction, &device.name, prefs)?;
-                        }
-                    }
-                    self.actual = Some(self.backend.read()?);
-                    if saved.differs(self.actual.as_ref().unwrap()) {
-                        return Err("Sound readback did not match saved Settings".into());
-                    }
-                }
-                _ => return Err(invalid("Choose system or settings")),
-            }
-            Ok(())
-        })();
-        self.operation_error = result.as_ref().err().cloned();
-        if result.is_ok() {
-            self.error = None;
-        }
-        result.map(|_| self.state())
-    }
 }
 
 #[cfg(test)]
@@ -458,6 +319,7 @@ mod tests {
         fail: Arc<Mutex<bool>>,
         read_fail: Arc<Mutex<bool>>,
         ignore: Arc<Mutex<bool>>,
+        churn: Arc<Mutex<bool>>,
     }
     impl Backend for Fake {
         fn read(&mut self) -> Result<Snapshot, String> {
@@ -477,6 +339,9 @@ mod tests {
                     Direction::Output => s.default_output = Some(name.into()),
                     Direction::Input => s.default_input = Some(name.into()),
                 }
+                if *self.churn.lock().unwrap() {
+                    s.devices[0].preferences.muted = !s.devices[0].preferences.muted;
+                }
             }
             Ok(())
         }
@@ -485,39 +350,64 @@ mod tests {
             direction: Direction,
             name: &str,
             prefs: &DevicePrefs,
+            operation: &str,
         ) -> Result<(), String> {
             *self.writes.lock().unwrap() += 1;
             if *self.fail.lock().unwrap() {
                 return Err("write denied".into());
             }
             if !*self.ignore.lock().unwrap() {
-                self.state
-                    .lock()
-                    .unwrap()
+                let mut state = self.state.lock().unwrap();
+                let device = state
                     .devices
                     .iter_mut()
                     .find(|d| d.name == name && d.direction == direction)
-                    .unwrap()
-                    .preferences = prefs.clone();
+                    .unwrap();
+                if operation.ends_with("-volume") {
+                    device.preferences.channels = prefs.channels.clone();
+                    if *self.churn.lock().unwrap() {
+                        device.preferences.muted = !prefs.muted;
+                    }
+                } else {
+                    device.preferences.muted = prefs.muted;
+                    if *self.churn.lock().unwrap() {
+                        device.preferences.channels = vec![12345];
+                    }
+                }
+                if *self.churn.lock().unwrap() {
+                    state.default_input = None;
+                }
             }
             Ok(())
         }
-        fn set_stream(&mut self, stream: &Stream, _operation: &str) -> Result<(), String> {
+        fn set_stream(&mut self, stream: &Stream, operation: &str) -> Result<(), String> {
             *self.writes.lock().unwrap() += 1;
             if *self.fail.lock().unwrap() {
                 return Err("write denied".into());
             }
-            *self
-                .state
-                .lock()
-                .unwrap()
-                .streams
-                .iter_mut()
-                .find(|s| s.index == stream.index)
-                .unwrap() = stream.clone();
+            if !*self.ignore.lock().unwrap() {
+                let mut state = self.state.lock().unwrap();
+                let observed = state
+                    .streams
+                    .iter_mut()
+                    .find(|s| s.index == stream.index)
+                    .unwrap();
+                *observed = stream.clone();
+                if *self.churn.lock().unwrap() {
+                    match operation {
+                        "sound.stream-volume" => {
+                            observed.preferences.muted = !stream.preferences.muted
+                        }
+                        "sound.stream-muted" => observed.device = "another-device".into(),
+                        "sound.stream-device" => observed.preferences.channels = vec![12345],
+                        _ => unreachable!(),
+                    }
+                }
+            }
             Ok(())
         }
     }
+
     fn snapshot() -> Snapshot {
         Snapshot {
             default_output: Some("speakers".into()),
@@ -573,65 +463,67 @@ mod tests {
             fail: Arc::default(),
             read_fail: Arc::default(),
             ignore: Arc::default(),
+            churn: Arc::default(),
         }
     }
     #[test]
-    fn failed_detection_and_malformed_config_never_initialize_or_overwrite() {
-        let root = tempfile::tempdir().unwrap();
-        let path = root.path().join("sound.toml");
+    fn failed_detection_keeps_last_readback_and_disables_controls() {
         let backend = fake();
         *backend.read_fail.lock().unwrap() = true;
-        let mut sound = Sound::new(backend.clone(), path.clone());
+        let mut sound = Sound::new(backend.clone());
         assert!(sound.refresh().is_err());
-        assert!(!path.exists());
-        assert_eq!(sound.state()["initialized"], false);
+        assert_eq!(sound.state()["available"], false);
+        assert!(sound.state()["system"].is_null());
         *backend.read_fail.lock().unwrap() = false;
-        fs::write(&path, "bad [").unwrap();
-        let mut sound = Sound::new(backend.clone(), path.clone());
-        assert!(sound.refresh().is_err());
-        assert_eq!(fs::read_to_string(&path).unwrap(), "bad [");
-        assert_eq!(sound.state()["initialized"], false);
-        assert_eq!(*backend.writes.lock().unwrap(), 0);
-        sound.resolve("system").unwrap();
-        let saved = fs::read_to_string(&path).unwrap();
+        sound.refresh().unwrap();
+        let last = sound.state()["system"].clone();
         *backend.read_fail.lock().unwrap() = true;
         assert!(sound.refresh().is_err());
-        assert_eq!(fs::read_to_string(&path).unwrap(), saved);
-        assert!(sound.state()["system"]["devices"].is_array());
+        assert_eq!(sound.state()["available"], false);
+        assert_eq!(sound.state()["system"], last);
+        assert_eq!(*backend.writes.lock().unwrap(), 0);
     }
     #[test]
-    fn initializes_without_writes_and_resolves_both_conflict_directions() {
-        let root = tempfile::tempdir().unwrap();
+    fn external_changes_and_device_inventory_are_live_across_restarts() {
         let backend = fake();
-        let mut sound = Sound::new(backend.clone(), root.path().join("sound.toml"));
+        let mut sound = Sound::new(backend.clone());
         sound.refresh().unwrap();
+        for key in ["saved", "conflict", "initialized"] {
+            assert!(sound.state().get(key).is_none());
+        }
+        {
+            let mut state = backend.state.lock().unwrap();
+            for device in &mut state.devices {
+                device.preferences.channels.fill(16384);
+                device.preferences.muted = true;
+            }
+            state.default_output = None;
+            state.default_input = None;
+            state.devices.remove(0);
+            let mut added = state.devices[0].clone();
+            added.name = "headset".into();
+            state.devices.push(added);
+        }
+        sound.refresh().unwrap();
+        let actual = serde_json::to_value(backend.state.lock().unwrap().clone()).unwrap();
+        assert_eq!(sound.state()["system"], actual);
         assert_eq!(*backend.writes.lock().unwrap(), 0);
-        assert!(sound.state()["initialized"].as_bool().unwrap());
-        backend.state.lock().unwrap().devices[0].preferences.muted = true;
-        sound.refresh().unwrap();
-        assert_eq!(sound.state()["conflict"], true);
-        assert!(
-            sound
-                .set("sound.output-volume", r#"{"percent":20}"#)
-                .unwrap_err()
-                .starts_with("Conflict:")
-        );
-        sound.resolve("system").unwrap();
-        assert_eq!(sound.state()["conflict"], false);
+        let mut restarted = Sound::new(backend.clone());
+        restarted.refresh().unwrap();
+        assert_eq!(restarted.state()["system"], actual);
         assert_eq!(*backend.writes.lock().unwrap(), 0);
-        backend.state.lock().unwrap().devices[0].preferences.muted = false;
-        sound.refresh().unwrap();
-        sound.resolve("settings").unwrap();
-        assert!(backend.state.lock().unwrap().devices[0].preferences.muted);
-        assert_eq!(sound.state()["conflict"], false);
+        restarted
+            .set(
+                "sound.device-volume",
+                r#"{"direction":"input","name":"headset","percent":20}"#,
+            )
+            .unwrap();
+        assert!(restarted.state()["error"].is_null());
     }
     #[test]
-    fn volume_preserves_balance_and_failed_writes_keep_the_last_saved_preferences() {
-        let root = tempfile::tempdir().unwrap();
-        let path = root.path().join("sound.toml");
+    fn volume_preserves_balance_and_failures_remain_visible() {
         let backend = fake();
-        let mut sound = Sound::new(backend.clone(), path.clone());
-        sound.refresh().unwrap();
+        let mut sound = Sound::new(backend.clone());
         sound
             .set("sound.output-volume", r#"{"percent":50}"#)
             .unwrap();
@@ -641,58 +533,87 @@ mod tests {
                 .channels,
             vec![32768, 16384]
         );
-        let saved = fs::read_to_string(&path).unwrap();
         *backend.fail.lock().unwrap() = true;
         assert!(
             sound
                 .set("sound.output-muted", r#"{"muted":true}"#)
                 .is_err()
         );
-        assert_eq!(fs::read_to_string(&path).unwrap(), saved);
         assert!(sound.state()["error"].as_str().unwrap().contains("denied"));
         *backend.fail.lock().unwrap() = false;
         *backend.ignore.lock().unwrap() = true;
-        assert!(
-            sound
-                .set("sound.output-volume", r#"{"percent":25}"#)
-                .unwrap_err()
-                .contains("readback")
-        );
-        assert_eq!(fs::read_to_string(path).unwrap(), saved);
+        for (id, text) in [
+            ("sound.output-volume", r#"{"percent":25}"#),
+            ("sound.output-muted", r#"{"muted":true}"#),
+            ("sound.output-device", r#"{"name":"microphone"}"#),
+            (
+                "sound.stream-volume",
+                r#"{"direction":"output","index":3,"client":4,"percent":25}"#,
+            ),
+            (
+                "sound.stream-muted",
+                r#"{"direction":"output","index":3,"client":4,"muted":true}"#,
+            ),
+        ] {
+            // The default-device case needs another connected output.
+            if id == "sound.output-device" {
+                let mut extra = snapshot().devices[0].clone();
+                extra.name = "microphone".into();
+                backend.state.lock().unwrap().devices.push(extra);
+            }
+            assert!(
+                sound.set(id, text).unwrap_err().contains("readback"),
+                "{id}"
+            );
+        }
     }
     #[test]
-    fn transient_stream_changes_do_not_persist_and_stale_streams_and_invalid_values_fail() {
-        let root = tempfile::tempdir().unwrap();
-        let path = root.path().join("sound.toml");
+    fn readback_checks_only_the_requested_field() {
         let backend = fake();
-        let mut sound = Sound::new(backend.clone(), path.clone());
-        sound.refresh().unwrap();
-        let saved = fs::read_to_string(&path).unwrap();
+        *backend.churn.lock().unwrap() = true;
+        let mut sound = Sound::new(backend);
+        for (id, text) in [
+            ("sound.output-device", r#"{"name":"speakers"}"#),
+            ("sound.output-volume", r#"{"percent":25}"#),
+            ("sound.output-muted", r#"{"muted":true}"#),
+            (
+                "sound.stream-volume",
+                r#"{"direction":"output","index":3,"client":4,"percent":25}"#,
+            ),
+            (
+                "sound.stream-muted",
+                r#"{"direction":"output","index":3,"client":4,"muted":true}"#,
+            ),
+            (
+                "sound.stream-device",
+                r#"{"direction":"output","index":3,"client":4,"device":"speakers"}"#,
+            ),
+        ] {
+            sound.set(id, text).unwrap();
+        }
+    }
+    #[test]
+    fn stale_streams_and_invalid_values_fail() {
+        let backend = fake();
+        let mut sound = Sound::new(backend.clone());
         sound
             .set(
                 "sound.stream-volume",
                 r#"{"direction":"output","index":3,"client":4,"percent":25}"#,
             )
             .unwrap();
-        assert_eq!(fs::read_to_string(&path).unwrap(), saved);
-        assert!(
-            sound
-                .set(
-                    "sound.stream-volume",
-                    r#"{"direction":"output","index":3,"client":9,"percent":25}"#
-                )
-                .is_err()
-        );
-        assert!(
-            sound
-                .set("sound.output-volume", r#"{"percent":151}"#)
-                .is_err()
-        );
-        assert!(
-            sound
-                .set("sound.output-device", r#"{"name":"missing"}"#)
-                .is_err()
-        );
+        for (id, text) in [
+            (
+                "sound.stream-volume",
+                r#"{"direction":"output","index":3,"client":9,"percent":25}"#,
+            ),
+            ("sound.output-volume", r#"{"percent":151}"#),
+            ("sound.output-volume", r#"{"percent":-1}"#),
+            ("sound.output-device", r#"{"name":"missing"}"#),
+            ("sound.output-muted", r#"{"muted":true,"unknown":true}"#),
+        ] {
+            assert!(sound.set(id, text).is_err(), "{id}: {text}");
+        }
         backend.state.lock().unwrap().streams.clear();
         assert!(
             sound
@@ -704,28 +625,9 @@ mod tests {
         );
     }
     #[test]
-    fn persistence_failure_after_write_remains_a_conflict() {
-        let root = tempfile::tempdir().unwrap();
-        let path = root.path().join("sound.toml");
-        let backend = fake();
-        let mut sound = Sound::new(backend.clone(), path.clone());
-        sound.refresh().unwrap();
-        fs::remove_file(&path).unwrap();
-        fs::create_dir(&path).unwrap();
-        assert!(
-            sound
-                .set("sound.output-muted", r#"{"muted":true}"#)
-                .is_err()
-        );
-        assert_eq!(sound.state()["conflict"], true);
-        assert!(sound.state()["error"].is_string());
-    }
-    #[test]
     fn automatic_readback_retains_failed_operation_until_explicit_retry() {
-        let root = tempfile::tempdir().unwrap();
         let backend = fake();
-        let mut sound = Sound::new(backend.clone(), root.path().join("sound.toml"));
-        sound.refresh().unwrap();
+        let mut sound = Sound::new(backend.clone());
         *backend.fail.lock().unwrap() = true;
         assert!(
             sound

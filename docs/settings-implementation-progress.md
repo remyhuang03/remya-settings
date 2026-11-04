@@ -14,9 +14,9 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 - 已实现：168 项；未实现：1491 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
-- 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。
+- 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
 
-- 声音通过 Rust libpulse 连接 PipeWire，支持输出、输入、应用音量/路由与设备清单；稳定设备偏好按系统配置同步，临时应用流不持久化。见[声音文档](sound.md)。
+- 声音通过 Rust libpulse 连接 PipeWire，支持输出、输入、应用音量/路由与设备清单；所有声音控制跟随系统实时状态，不持久化、不比对或恢复配置。见[声音文档](sound.md)。
 
 - 网络通过 Rust / system D-Bus 连接 NetworkManager，提供网络状态、Wi-Fi 与已知网络；设置项见[网络文档](network.md)。
 
@@ -858,6 +858,8 @@ Windows 参考入口：`ms-settings:easeofaccess-cursor`。
 ## 声音
 
 输出、输入、应用音量与音频设备
+
+实时状态回归验证：Rust sound/service 测试、`test/sound_test.dart` 和隔离 PipeWire 测试通过；`test/sound_smoke.py` 的 debug/release 验证覆盖外部音量、静音、默认设备变更、服务重启、无配置写入以及已删除恢复接口的拒绝。
 
 ### Output & input — `sound-volume`
 

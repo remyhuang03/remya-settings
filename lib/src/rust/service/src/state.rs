@@ -218,7 +218,7 @@ impl State {
                 config.with_file_name("default-apps.toml"),
             ),
             bluetooth: remya_settings_bluetooth::Bluetooth::new(),
-            sound: Sound::new(RealPulse, config.with_file_name("sound.toml")),
+            sound: Sound::new(RealPulse),
             updates: Updates::new(
                 std::env::current_exe()
                     .unwrap_or_default()
@@ -1008,9 +1008,6 @@ impl State {
         self.save_date(state, &keys)
     }
     fn resolve(&mut self, feature: &str, source: &str) -> Result<Value, String> {
-        if feature == "sound" {
-            return self.sound.resolve(source);
-        }
         if feature == "network" {
             return self.network.resolve(source);
         }

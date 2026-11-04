@@ -19,7 +19,7 @@ The binding uses PulseAudio 15+ APIs. There is no shell command backend, privile
 helper or system configuration file editor for audio. Each request uses a bounded
 native connection, without autospawning a server. Missing or unresponsive audio
 services report an error; device state is never invented. Runtime changes and
-30-second service reconciliation emit the existing `Changed("sound", state)`
+30-second service refresh emit the existing `Changed("sound", state)`
 signal; an open Sound page also refreshes its live inventory every two seconds.
 
 [PulseAudio client API](https://www.freedesktop.org/software/pulseaudio/doxygen/)
@@ -32,41 +32,36 @@ Those controls remain planned in Advanced, alongside the compositor bell preview
 Windows-specific enhancements, spatial audio, device tests and permission controls
 have been removed from these pages.
 
-## Persistence and reconciliation
+## Live state and operations
 
-`sound.toml` beside the selected Settings configuration stores schema version 1,
-stable default device names and per-device raw channel volumes/mute values. First
-use reads actual state and atomically saves it without writing to the audio server.
-Failed write warnings survive automatic inventory polling until an explicit refresh
-or successful operation. Invalid configuration, failed detection and failed persistence are reported without
-replacing the last valid saved state. Device indices are used only for current
-inventory; persisted identities use the audio server's stable names.
+All audio controls follow the audio server's live state, including device volume,
+mute, default input/output devices and application routing. Settings does not
+persist audio preferences, compare them with a saved configuration, or restore
+old values. External changes and device additions/removals are reflected on the
+next read without a configuration conflict. No sound configuration file is read
+or created, and there is no Sound configuration-resolution operation.
 
-Startup, page opening and refresh compare saved values with fresh device readback.
-An external volume, mute or default-device change produces a warning with both
-choices: use system configuration, or apply saved Settings. Ordinary persistent
-writes are blocked during a conflict. Applying saved values verifies that saved
-defaults are connected and channel layouts still match, then verifies actual
-readback. A disconnected non-default device's preferences are retained for when
-it reappears; new devices are read live and their preferences are saved when edited
-or when system configuration is adopted. Reconciliation never reconnects devices.
+Every operation reads current inventory before writing and verifies only the
+requested field afterwards. Device volume writes do not change mute, and mute
+writes do not change volume. Failed write warnings survive automatic inventory
+polling until an explicit refresh or successful operation. Failed detection keeps
+the last readout visible, reports an error and disables device controls.
 
-Per-application streams are ephemeral. Volume, mute and routing identify a current
-stream by direction, stream index and client index, revalidate before writing and
-verify readback afterwards. They never modify `sound.toml` and remain usable during
-a device-preference conflict. Ended/replaced streams and removed destinations
-produce an error. Volume changes preserve existing channel balance and allow
-0–150%; actual values outside that range remain visible in the readout. No audio
-is played as a device test, and no microphone audio is captured by Settings.
+Per-application volume, mute and routing identify a current stream by direction,
+stream index and client index, revalidate before writing and verify readback
+afterwards. Ended/replaced streams and removed destinations produce an error.
+Volume changes preserve existing channel balance and allow 0–150%; actual values
+outside that range remain visible in the readout. No audio is played as a device
+test, and no microphone audio is captured by Settings.
 
 ## Verification
 
-`cargo test -p remya_settings_sound` covers initialization without writes, both
-conflict resolutions, channel balance, failed/mismatched readback, failed
-persistence, ephemeral stream writes and stale stream identity. Flutter
-`test/sound_test.dart` covers the pure Dart client contract, scoped output/input writes, reconciliation actions,
-mixer behavior and error retention. Catalog tests cover the navigation, source
-mapping and progress tracker.
+`cargo test -p remya_settings_sound` covers reads without writes, external
+changes and inventory changes across restarts, channel balance, failed/mismatched
+readback, field-scoped verification, stale stream identity and error retention.
+Flutter `test/sound_test.dart` covers the pure Dart client contract, scoped
+output/input writes, live control refresh, mixer behavior and error retention.
+Catalog tests cover navigation, source mapping and the progress tracker.
 
 `cargo test -p remya_settings_sound --test isolated_pulse -- --ignored` starts
 private PipeWire and pipewire-pulse servers, a WirePlumber policy-only instance
@@ -79,6 +74,6 @@ configuration/state. Physical hardware, Bluetooth handover and audible playback
 are separate manual boundaries.
 
 `python test/sound_smoke.py debug` verifies actual CLI/D-Bus parity, input
-validation, both conflict resolutions and Sound change notifications on private
-session/system-bus and PipeWire state. It uses the compiled service and a Linux
+validation, live external changes, restarts, removed resolution requests and Sound
+change notifications on private session/system-bus and PipeWire state. It uses the compiled service and a Linux
 bundle's generic CLI, then terminates all validation processes.

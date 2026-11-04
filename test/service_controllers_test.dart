@@ -19,6 +19,8 @@ class FakeService extends SettingsClient {
   String locale = '';
   bool fail = false;
   bool ntp = false;
+  Map<String, Object?> saved = {'timezone': 'UTC'};
+  bool conflict = false;
   @override
   Future<Map<String, dynamic>> call(
     String method, [
@@ -52,8 +54,8 @@ class FakeService extends SettingsClient {
       'sync_error': null,
       'time_locale': locale,
       'saved_timezone': 'UTC',
-      'saved': {'timezone': 'UTC'},
-      'conflict': false,
+      'saved': saved,
+      'conflict': conflict,
       'restart_suggested': method == 'Set',
     };
   }
@@ -222,6 +224,47 @@ void main() {
       'date-time',
       'system',
     ]);
+  });
+  test('date/time conflicts describe changed preferences rather than the unchanged timezone', () async {
+    final service = FakeService()
+      ..saved = {
+        'timezone': 'UTC',
+        'ntp': false,
+        'time_servers': <String>[],
+        'time_locale': 'en_US.utf8',
+      }
+      ..conflict = true;
+    final controller = ServiceDateTimeController(service);
+    addTearDown(controller.dispose);
+    addTearDown(service.close);
+    await controller.reload();
+    expect(
+      controller.conflictSummary,
+      'Date/time format\nSystem: System language default\nSettings: en_US.utf8',
+    );
+    service.saved = {
+      'timezone': 'Asia/Taipei',
+      'ntp': true,
+      'time_servers': ['time.example.org'],
+      'time_locale': '',
+    };
+    await controller.reload();
+    expect(
+      controller.conflictSummary,
+      contains('Time zone\nSystem: UTC\nSettings: Asia/Taipei'),
+    );
+    expect(
+      controller.conflictSummary,
+      contains('Automatic time\nSystem: Off\nSettings: On'),
+    );
+    expect(
+      controller.conflictSummary,
+      contains('Time servers\nSystem: Automatic\nSettings: time.example.org'),
+    );
+    expect(controller.conflictSummary, isNot(contains('Date/time format')));
+    service.conflict = false;
+    await controller.reload();
+    expect(controller.conflictSummary, isEmpty);
   });
   test(
     'manual time hides immediately while automatic-time write is pending',

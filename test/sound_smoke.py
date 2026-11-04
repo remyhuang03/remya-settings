@@ -60,10 +60,10 @@ def check(profile, cli):
         time.sleep(0.2)
         for name in ('remya_api_a', 'remya_api_b'):
             run('pactl', 'load-module', 'module-null-sink', f'sink_name={name}')
-        start(str(ROOT / f'target/{profile}/remya-settings-service'))
+        service = start(str(ROOT / f'target/{profile}/remya-settings-service'))
         def ready():
             try:
-                return dbus('Get', 'sound')['initialized']
+                return dbus('Get', 'sound')['available']
             except AssertionError:
                 return False
         wait(ready)
@@ -72,7 +72,8 @@ def check(profile, cli):
             return json.loads(output) if ok else output
         initial = command('get', 'sound')
         assert initial == dbus('Get', 'sound')
-        assert initial['available'] and not initial['conflict'], initial
+        assert initial['available'], initial
+        assert not {'saved', 'conflict', 'initialized'} & initial.keys(), initial
         assert all(d['name'].startswith('remya_api_') for d in initial['system']['devices'])
         assert command('get', 'sound.devices')['id'] == 'sound.devices'
         assert 'ReadOnly' in command('set', 'sound.devices', '{}', ok=False)
@@ -91,17 +92,38 @@ def check(profile, cli):
             expected = dbus(method, setting, json.dumps(body))
             assert command('get', 'sound') == expected
         run('pactl', 'set-sink-mute', 'remya_api_b', '0')
-        assert command('get', 'sound')['conflict']
-        command('resolve', 'sound', 'settings')
-        assert not dbus('Get', 'sound')['conflict']
-        run('pactl', 'set-sink-mute', 'remya_api_b', '0')
-        assert dbus('Get', 'sound')['conflict']
-        command('resolve', 'sound', 'system')
-        assert not command('get', 'sound')['conflict']
+        run('pactl', 'set-sink-volume', 'remya_api_b', '27%')
+        run('pactl', 'set-source-mute', 'remya_api_b.monitor', '0')
+        run('pactl', 'set-source-volume', 'remya_api_b.monitor', '31%')
+        run('pactl', 'set-default-sink', 'remya_api_a')
+        run('pactl', 'set-default-source', 'remya_api_a.monitor')
+        live = command('get', 'sound')
+        assert live == dbus('Get', 'sound') and live['error'] is None, live
+        assert live['system']['default_output'] == 'remya_api_a'
+        assert live['system']['default_input'] == 'remya_api_a.monitor'
+        for name, expected in [('remya_api_b', 27), ('remya_api_b.monitor', 31)]:
+            device = next(d for d in live['system']['devices'] if d['name'] == name)
+            assert not device['preferences']['muted'], device
+            assert abs(max(device['preferences']['channels']) * 100 / 65536 - expected) < 0.01
+        assert 'Unknown feature' in command('resolve', 'sound', 'settings', ok=False)
+        assert 'Unknown feature' in command('resolve', 'sound', 'system', ok=False)
+        error = run('gdbus', 'call', '--session', '--dest', BUS,
+                    '--object-path', '/top/remya/settings', '--method', f'{API}.Resolve',
+                    'sound', 'settings', ok=False)
+        assert 'Unknown feature' in error, error
+        config = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/sound.toml'
+        assert not config.exists(), config
+        # Restart only the private Settings service, retaining the live audio server.
+        service.terminate()
+        service.wait(timeout=5)
+        start(str(ROOT / f'target/{profile}/remya-settings-service'))
+        wait(ready)
+        assert command('get', 'sound')['system'] == live['system']
+        assert not config.exists(), config
         signals.seek(0)
         assert 'Changed (\'sound\'' in signals.read(), 'Missing Sound change notification'
         command('quit')
-        print('Sound CLI/D-Bus parity, validation, both resolutions and signals passed')
+        print('Sound CLI/D-Bus parity, live state, removed resolutions, restart and signals passed')
 
 
 def main():

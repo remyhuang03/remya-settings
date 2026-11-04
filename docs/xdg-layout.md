@@ -148,17 +148,12 @@ restores those operations at startup. See [Bluetooth](bluetooth.md).
 
 The ordinary-user service owns `avatar.png` beside its selected Settings configuration: `$XDG_CONFIG_HOME/remya/settings/avatar.png` (HOME fallback) in profile/release, or repository `config/avatar.png` in debug. A confirmed crop atomically replaces only this file, with mode 0600 on first creation and existing permissions retained. It rejects an avatar-file symlink rather than following it. The picker source is not changed, copied to the library or saved as a path preference. Username is a live read-only process-user observation and creates no files. The avatar is not synchronized to AccountsService, a desktop shell or a login system.
 
-## Sound preferences
+## Sound
 
-`sound.toml` lives beside `config.toml` (debug: repository `config/sound.toml`;
-profile/release: `$XDG_CONFIG_HOME/remya/settings/sound.toml`, with the existing
-absolute HOME fallback). Version 1 stores stable default output/input names and
-raw channel-volume/mute preferences keyed by direction plus stable device name.
-It uses the existing atomic writer and permissions policy. First use saves actual
-system state without server writes. Malformed state is retained and reported.
-Application streams and measured device state are not persisted. Sound creates
-no cache, system service or privileged configuration; it connects to the user's
-existing pipewire-pulse socket. See [Sound](sound.md).
+Sound has no Settings-owned configuration or cache. Device volume, mute, default
+input/output devices and application routing follow live audio-server state.
+The ordinary-user service connects to the existing pipewire-pulse socket and
+never saves or restores audio preferences. See [Sound](sound.md).
 
 System update progress, held/retry session choices, logs and candidate inventory are memory-only. The application-owned daily schedule is saved atomically in `updates.json` beside `config.toml` (or beside debug `config.local.toml`); it stores the enabled flag, local HH:mm, last claimed local date and outcome/missed notice. Defaults are disabled, so first read never schedules an upgrade. Private job files and ordinary-user AUR builds are temporary under `/var/tmp/remya-settings-updates-<uid>/remya-settings-update-<random>/`, with mode 0700 and owner validation; jobs remove their directory on completion. This uses disk space rather than the runtime tmpfs for large builds. The fixed `libexec/remya-settings-update-auth` executable is bundled beside `remya-settings-service`. Its inherited unnamed socketpair is private to the job and has no filesystem path or public listener.
 

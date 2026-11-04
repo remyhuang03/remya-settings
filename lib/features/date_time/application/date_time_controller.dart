@@ -59,6 +59,36 @@ class DateTimeController extends ChangeNotifier {
   bool _equal(Object? a, Object? b) =>
       a is List && b is List ? listEquals(a, b) : a == b;
 
+  String get conflictSummary {
+    final saved = toMap()['saved'] as Map?;
+    if (!hasConflict || state == null || saved == null) return '';
+    const labels = {
+      'timezone': 'Time zone',
+      'ntp': 'Automatic time',
+      'time_servers': 'Time servers',
+      'time_locale': 'Date/time format',
+    };
+    String format(String key, Object? value) => switch (key) {
+      'ntp' => value == true ? 'On' : 'Off',
+      'time_servers' =>
+        (value as List).isEmpty ? 'Automatic' : value.join(', '),
+      'time_locale' => value == '' ? 'System language default' : '$value',
+      _ => '$value',
+    };
+    return _preferences(state!).entries
+        .where(
+          (entry) =>
+              saved.containsKey(entry.key) &&
+              !(entry.key == 'time_servers' && state!.syncError != null) &&
+              !_equal(entry.value, saved[entry.key]),
+        )
+        .map(
+          (entry) =>
+              '${labels[entry.key]}\nSystem: ${format(entry.key, entry.value)}\nSettings: ${format(entry.key, saved[entry.key])}',
+        )
+        .join('\n\n');
+  }
+
   void _notify() {
     if (!_disposed) notifyListeners();
   }
