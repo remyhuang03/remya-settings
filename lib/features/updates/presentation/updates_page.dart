@@ -26,14 +26,10 @@ class _UpdatesPageState extends State<UpdatesPage> {
     builder: (context, _) {
       final controller = widget.controller;
       final value = controller.value;
-      final disabled =
-          !controller.available ||
-          controller.pending ||
-          controller.workInProgress;
-      final packages = controller.packages;
+      final idle = !controller.pending && !controller.busy;
       final output = controller.output.reversed.toList();
       final phase = switch (value['phase']) {
-        'checking' => 'Checking repository and AUR updates',
+        'checking' => 'Checking for updates',
         'upgrading' => 'Upgrading packages (attempt ${value['attempt']})',
         'retrying' => 'Waiting to retry (attempt ${value['attempt']})',
         'completed' =>
@@ -43,11 +39,9 @@ class _UpdatesPageState extends State<UpdatesPage> {
               ? 'Automatic update completed'
               : 'Update completed',
         'failed' => 'Update operation failed',
-        _ =>
-          controller.workInProgress
-              ? 'Updates paused (work in progress)'
-              : 'Ready to check for updates',
+        _ => 'Ready to check for updates',
       };
+      void check() => controller.set(updatesCheckSettingId, 'check');
       return Column(
         crossAxisAlignment: .stretch,
         children: [
@@ -55,43 +49,20 @@ class _UpdatesPageState extends State<UpdatesPage> {
             child: Column(
               crossAxisAlignment: .stretch,
               children: [
-                if (controller.workInProgress) ...[
-                  const Align(
-                    alignment: .centerLeft,
-                    child: Chip(
-                      avatar: Icon(Icons.construction_rounded),
-                      label: Text('Work in progress'),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    value['reason'] as String? ??
-                        'Package updates are incomplete and unverified.',
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Execution is disabled. Saved schedules are preserved and paused; existing status and output remain available for inspection.',
-                  ),
-                  const SizedBox(height: 16),
-                ],
                 SettingsRowLayout(
                   key: const ValueKey('updates-status-actions'),
                   left: Row(
                     mainAxisSize: .min,
                     children: [
-                      if (controller.busy)
-                        const Padding(
-                          padding: .only(right: 16),
-                          child: SizedBox.square(
-                            dimension: 24,
-                            child: CircularProgressIndicator(),
-                          ),
-                        )
-                      else
-                        const Padding(
-                          padding: .only(right: 16),
-                          child: Icon(Icons.system_update_alt_rounded),
-                        ),
+                      Padding(
+                        padding: const .only(right: 16),
+                        child: controller.busy
+                            ? const SizedBox.square(
+                                dimension: 24,
+                                child: CircularProgressIndicator(),
+                              )
+                            : const Icon(Icons.system_update_alt_rounded),
+                      ),
                       Flexible(child: Text(phase)),
                     ],
                   ),
@@ -100,78 +71,37 @@ class _UpdatesPageState extends State<UpdatesPage> {
                     spacing: 12,
                     runSpacing: 12,
                     children: [
-                      if (controller.canInstall)
+                      if (controller.canInstall) ...[
                         OutlinedButton.icon(
-                          onPressed: disabled || controller.busy
-                              ? null
-                              : () => controller.set(
-                                  updatesCheckSettingId,
-                                  'check',
-                                ),
-                          icon: const Icon(Icons.refresh_rounded),
-                          label: const Text('Check for updates'),
-                        )
-                      else
-                        FilledButton.icon(
-                          onPressed: disabled || controller.busy
-                              ? null
-                              : () => controller.set(
-                                  updatesCheckSettingId,
-                                  'check',
-                                ),
+                          onPressed: idle && controller.canCheck ? check : null,
                           icon: const Icon(Icons.refresh_rounded),
                           label: const Text('Check for updates'),
                         ),
-                      if (controller.canInstall)
                         FilledButton.icon(
-                          onPressed:
-                              disabled ||
-                                  controller.busy ||
-                                  !controller.authorized
-                              ? null
-                              : () => controller.set(
+                          onPressed: idle
+                              ? () => controller.set(
                                   updatesUpgradeSettingId,
                                   'upgrade',
-                                ),
+                                )
+                              : null,
                           icon: const Icon(Icons.downloading_rounded),
                           label: const Text('Update now'),
+                        ),
+                      ] else
+                        FilledButton.icon(
+                          onPressed: idle && controller.canCheck ? check : null,
+                          icon: const Icon(Icons.refresh_rounded),
+                          label: const Text('Check for updates'),
                         ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 12),
-                Text(
-                  controller.workInProgress
-                      ? 'Checks, installations and scheduled runs are unavailable.'
-                      : 'Repository and AUR packages are updated with yay. The operation continues in the Settings service when this window is closed.',
+                const Text(
+                  'Repository packages are upgraded with pacman by the system updater and continue in the Settings service when this window is closed. AUR packages are only listed; update them with yay in a terminal.',
                 ),
-                if (!controller.authorized && !controller.workInProgress)
-                  Padding(
-                    padding: const .only(top: 12),
-                    child: Text(
-                      value['auth_error'] as String? ??
-                          (value['authorizing'] == true
-                              ? 'Waiting for authorization…'
-                              : 'Open Settings and authorize system changes to upgrade packages.'),
-                    ),
-                  ),
-                if (!controller.available &&
-                    !controller.workInProgress &&
-                    value.isNotEmpty)
-                  Padding(
-                    padding: const .only(top: 12),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.info_outline_rounded),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            'Unavailable: missing ${(value['missing'] as List? ?? []).join(', ')}',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                if (value.isNotEmpty && !controller.available)
+                  _Unavailable(value: value),
                 if (controller.errorMessage case final error?)
                   Padding(
                     padding: const .only(top: 12),
@@ -195,13 +125,13 @@ class _UpdatesPageState extends State<UpdatesPage> {
                 SwitchListTile(
                   title: const Text('Include held packages'),
                   subtitle: const Text(
-                    'Also upgrade the kernel, firmware, mkinitcpio and installed NVIDIA packages while its driver is loaded. This choice applies only to this session.',
+                    'Also upgrade the kernel, firmware, mkinitcpio and installed NVIDIA packages while its driver is loaded. This choice applies only to this session; automatic updates always keep them held.',
                   ),
                   value: value['all'] == true,
-                  onChanged: disabled || controller.busy
-                      ? null
-                      : (all) =>
-                            controller.set(updatesIncludeHeldSettingId, '$all'),
+                  onChanged: controller.available && idle
+                      ? (all) =>
+                            controller.set(updatesIncludeHeldSettingId, '$all')
+                      : null,
                 ),
                 SwitchListTile(
                   title: const Text('Retry after failure'),
@@ -209,39 +139,29 @@ class _UpdatesPageState extends State<UpdatesPage> {
                     'Retry with a delay of 5 seconds per attempt, up to 60 seconds. Turn this off to stop future attempts; the current package transaction will finish.',
                   ),
                   value: value['retry'] == true,
-                  onChanged: disabled
-                      ? null
-                      : (retry) =>
-                            controller.set(updatesRetrySettingId, '$retry'),
+                  onChanged: controller.available && !controller.pending
+                      ? (retry) =>
+                            controller.set(updatesRetrySettingId, '$retry')
+                      : null,
                 ),
               ],
             ),
           ),
           if (value['checked_at'] != null) ...[
             const SizedBox(height: 16),
-            SizedBox(
-              height: 300,
-              child: SettingsList(
-                title: '${packages.length} available updates',
-                itemCount: packages.length,
-                empty: const Text(
-                  'No updates found in the last completed check.',
-                ),
-                itemBuilder: (context, index) {
-                  final package = packages[index];
-                  return ListTile(
-                    key: ValueKey('${package['source']}:${package['name']}'),
-                    title: Text('${package['name']}'),
-                    subtitle: Text(
-                      '${package['installed']} → ${package['available']}\n${package['source']}',
-                    ),
-                    trailing: package['held'] == true
-                        ? const Chip(label: Text('Held'))
-                        : null,
-                  );
-                },
-              ),
+            _Packages(
+              title: '${controller.repository.length} repository updates',
+              packages: controller.repository,
+              empty: 'No repository updates found in the last check.',
             ),
+            if (value['aur'] == true) ...[
+              const SizedBox(height: 16),
+              _Packages(
+                title: '${controller.aur.length} AUR updates',
+                packages: controller.aur,
+                empty: 'No AUR updates found in the last check.',
+              ),
+            ],
           ],
           const SizedBox(height: 16),
           SizedBox(
@@ -250,8 +170,8 @@ class _UpdatesPageState extends State<UpdatesPage> {
               child: SettingsList(
                 title: 'Update output (newest first)',
                 itemCount: output.length,
-                empty: Text(
-                  controller.workInProgress ? 'No recorded output.' : 'Output will appear when you check or upgrade packages.',
+                empty: const Text(
+                  'Output will appear when you check or upgrade packages.',
                 ),
                 itemBuilder: (context, index) => Padding(
                   padding: const .symmetric(horizontal: 20, vertical: 3),
@@ -270,28 +190,82 @@ class _UpdatesPageState extends State<UpdatesPage> {
   );
 }
 
+class _Unavailable extends StatelessWidget {
+  const _Unavailable({required this.value});
+  final Map<String, dynamic> value;
+
+  @override
+  Widget build(BuildContext context) {
+    final setup = (value['missing'] as List? ?? const []).isEmpty;
+    return Padding(
+      padding: const .only(top: 12),
+      child: Row(
+        crossAxisAlignment: .start,
+        children: [
+          const Icon(Icons.info_outline_rounded),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                Text(
+                  value['reason'] as String? ??
+                      'System updates are unavailable.',
+                ),
+                if (setup) ...[
+                  const SizedBox(height: 8),
+                  SelectableText(
+                    value['install_command'] as String? ?? '',
+                    style: const TextStyle(fontFamily: 'monospace'),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Packages extends StatelessWidget {
+  const _Packages({
+    required this.title,
+    required this.packages,
+    required this.empty,
+  });
+  final String title;
+  final List<Map> packages;
+  final String empty;
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    height: 300,
+    child: SettingsList(
+      title: title,
+      itemCount: packages.length,
+      empty: Text(empty),
+      itemBuilder: (context, index) {
+        final package = packages[index];
+        return ListTile(
+          key: ValueKey('${package['source']}:${package['name']}'),
+          title: Text('${package['name']}'),
+          subtitle: Text('${package['installed']} → ${package['available']}'),
+          trailing: package['held'] == true
+              ? const Chip(
+                  avatar: Icon(Icons.pause_circle_outline_rounded),
+                  label: Text('Held'),
+                )
+              : null,
+        );
+      },
+    ),
+  );
+}
+
 class _AutomaticUpdates extends StatelessWidget {
   const _AutomaticUpdates({required this.controller});
   final UpdatesController controller;
-
-  Future<void> _chooseTime(BuildContext context) async {
-    final current = (controller.schedule['time'] as String? ?? '03:00').split(
-      ':',
-    );
-    final time = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay(
-        hour: int.parse(current[0]),
-        minute: int.parse(current[1]),
-      ),
-    );
-    if (time != null) {
-      await controller.set(
-        updatesDailyTimeSettingId,
-        '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}',
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -305,39 +279,19 @@ class _AutomaticUpdates extends StatelessWidget {
           SwitchListTile(
             contentPadding: .zero,
             title: const Text('Automatic updates'),
-            subtitle: const Text(
-              'Check and install eligible updates daily at the chosen local time. Off by default.',
+            subtitle: Text(
+              'Install eligible repository updates when your active hours end (${schedule['active_start'] ?? '08:00'} to ${schedule['active_end'] ?? '23:00'}). Change them in Active hours. Off by default.',
             ),
             value: enabled,
-            onChanged:
-                controller.pending ||
-                    !controller.available ||
-                    controller.workInProgress ||
-                    schedule['editable'] == false
+            onChanged: controller.pending || schedule['editable'] == false
                 ? null
                 : (enabled) =>
                       controller.set(updatesAutomaticSettingId, '$enabled'),
           ),
           if (enabled) ...[
-            const SizedBox(height: 8),
-            SettingRow(
-              id: 'updates-daily-time',
-              label: const Text('Daily update time'),
-              control: OutlinedButton.icon(
-                onPressed:
-                    controller.pending ||
-                        !controller.available ||
-                        controller.workInProgress ||
-                        schedule['editable'] == false
-                    ? null
-                    : () => _chooseTime(context),
-                icon: const Icon(Icons.schedule_rounded),
-                label: Text('${schedule['time']} (local time)'),
-              ),
-            ),
             const SizedBox(height: 12),
             const Text(
-              'The Settings service must remain running with system changes authorized. Closing the window keeps it running. Missed times are skipped; reopening and authorizing Settings will not start a missed update. Scheduled runs always retain the default kernel, firmware and NVIDIA holds. The current Retry choice applies.',
+              'The Settings service starts with your session and updates in the background once per inactive period. If the computer was off for a whole inactive period, the missed update runs at the next sign-in, even during active hours. Automatic updates always keep the kernel, firmware and NVIDIA packages held. The current Retry choice applies.',
             ),
           ],
           if (schedule['notice'] case final String notice)

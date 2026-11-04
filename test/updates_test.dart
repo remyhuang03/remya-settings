@@ -6,6 +6,7 @@ import 'package:remya_settings/features/settings/presentation/settings_row_layou
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/updates/application/updates_controller.dart';
+import 'package:remya_settings/features/updates/presentation/active_hours_page.dart';
 import 'package:remya_settings/features/updates/presentation/updates_page.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
@@ -41,12 +42,16 @@ void main() {
       final writes = <(String, String)>[];
       final state = <String, dynamic>{
         'available': true,
-        'authorized': true,
+        'missing': [],
+        'aur': true,
+        'eligible': true,
         'phase': 'idle',
         'revision': 0,
         'checked_at': 1,
         'packages': [
-          {'name': 'mesa', 'held': false},
+          {'name': 'linux', 'source': 'repository', 'held': true},
+          {'name': 'mesa', 'source': 'repository', 'held': false},
+          {'name': 'yay-bin', 'source': 'AUR', 'held': false},
         ],
         'schedule': {'enabled': false, 'time': '03:00'},
         'output': [
@@ -79,6 +84,9 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(writes, isEmpty);
+      expect(find.text('2 repository updates'), findsOneWidget);
+      expect(find.text('1 AUR updates'), findsOneWidget);
+      expect(find.text('Held'), findsOneWidget);
       expect(find.text('latest line'), findsOneWidget);
       expect(
         tester.getTopLeft(find.text('latest line')).dy,
@@ -133,7 +141,6 @@ void main() {
       final writes = <(String, String)>[];
       final state = <String, dynamic>{
         'available': true,
-        'authorized': true,
         'schedule': {'enabled': false, 'time': '03:00'},
       };
       final controller = UpdatesController(
@@ -157,7 +164,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.text('Update now'), findsNothing);
-      expect(find.text('Daily update time'), findsNothing);
+      expect(find.textContaining('once per inactive period'), findsNothing);
       final automatic = find.widgetWithText(
         SwitchListTile,
         'Automatic updates',
@@ -166,20 +173,16 @@ void main() {
       await tester.tap(automatic);
       await tester.pumpAndSettle();
       expect(writes, [(updatesAutomaticSettingId, 'true')]);
-      expect(find.text('Daily update time'), findsOneWidget);
-      expect(find.text('Active hours'), findsNothing);
+      expect(find.textContaining('once per inactive period'), findsOneWidget);
       final activeHours = SettingsCatalog.fromJson(
         jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
             as Map<String, dynamic>,
       ).page('active-hours');
-      expect(activeHours.availability, SettingAvailability.planned);
-      expect(activeHours.controls.length, 3);
-      expect(
-        activeHours.controls.every(
-          (control) => control.availability == SettingAvailability.planned,
-        ),
-        true,
-      );
+      expect(activeHours.availability, SettingAvailability.available);
+      expect(activeHours.controls.map((control) => control.id), [
+        activeHoursStartSettingId,
+        activeHoursEndSettingId,
+      ]);
       await tester.pumpWidget(const SizedBox.shrink());
       controller.dispose();
     },
@@ -193,12 +196,12 @@ void main() {
         await tester.binding.setSurfaceSize(Size(width, 1400));
         final state = <String, dynamic>{
           'available': true,
-          'authorized': true,
           'phase': 'idle',
           'checked_at': canInstall ? 1 : null,
+          'eligible': canInstall,
           'packages': canInstall
               ? [
-                  {'name': 'mesa', 'held': false},
+                  {'name': 'mesa', 'source': 'repository', 'held': false},
                 ]
               : [],
         };
@@ -241,16 +244,21 @@ void main() {
     }
   });
   testWidgets(
-    'production WIP preserves readable output and disables every update control',
+    'a missing system updater shows its install command and still allows checks',
     (tester) async {
+      await tester.binding.setSurfaceSize(const Size(720, 1400));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
       final writes = <(String, String)>[];
       final state = <String, dynamic>{
         'available': false,
-        'work_in_progress': true,
-        'reason': 'Incomplete and unverified; execution paused.',
+        'missing': [],
+        'updater': 'missing',
+        'reason': 'The system updater is missing.',
+        'install_command': 'sudo python tool/install_system_updater.py',
         'checked_at': 1,
+        'eligible': true,
         'packages': [
-          {'name': 'mesa', 'held': false},
+          {'name': 'mesa', 'source': 'repository', 'held': false},
         ],
         'schedule': {'enabled': true, 'time': '03:00', 'editable': true},
         'output': ['existing diagnostic output'],
@@ -272,34 +280,65 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Work in progress'), findsOneWidget);
-      expect(find.text('existing diagnostic output'), findsOneWidget);
-      for (final button in tester.widgetList<ButtonStyleButton>(
-        find.byType(FilledButton),
-      )) {
-        expect(button.onPressed, isNull);
-      }
-      for (final button in tester.widgetList<ButtonStyleButton>(
-        find.byType(OutlinedButton),
-      )) {
-        expect(button.onPressed, isNull);
-      }
-      for (final toggle in tester.widgetList<SwitchListTile>(
-        find.byType(SwitchListTile),
-      )) {
-        expect(toggle.onChanged, isNull);
-      }
+      expect(find.text('The system updater is missing.'), findsOneWidget);
       expect(
-        tester
-            .widget<SwitchListTile>(
-              find.widgetWithText(SwitchListTile, 'Automatic updates'),
-            )
-            .value,
-        true,
+        find.text('sudo python tool/install_system_updater.py'),
+        findsOneWidget,
       );
-      expect(writes, isEmpty);
+      expect(find.text('Update now'), findsNothing);
+      expect(find.text('existing diagnostic output'), findsOneWidget);
+      for (final title in ['Include held packages', 'Retry after failure']) {
+        expect(
+          tester
+              .widget<SwitchListTile>(
+                find.widgetWithText(SwitchListTile, title),
+              )
+              .onChanged,
+          isNull,
+        );
+      }
+      await tester.tap(find.widgetWithText(FilledButton, 'Check for updates'));
+      await tester.pump();
+      expect(writes, [(updatesCheckSettingId, 'check')]);
       await tester.pumpWidget(const SizedBox.shrink());
       controller.dispose();
+    },
+  );
+  testWidgets(
+    'active hours show saved times and lock while the file is invalid',
+    (tester) async {
+      for (final editable in [true, false]) {
+        final state = <String, dynamic>{
+          'schedule': {
+            'active_start': '09:30',
+            'active_end': '01:00',
+            'editable': editable,
+          },
+        };
+        final controller = UpdatesController(
+          read: () async => state,
+          write: (_, _) async => state,
+        );
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: SingleChildScrollView(
+                child: ActiveHoursPage(controller: controller),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('09:30 (local time)'), findsOneWidget);
+        expect(find.text('01:00 (local time)'), findsOneWidget);
+        for (final button in tester.widgetList<OutlinedButton>(
+          find.byType(OutlinedButton),
+        )) {
+          expect(button.onPressed == null, !editable);
+        }
+        await tester.pumpWidget(const SizedBox.shrink());
+        controller.dispose();
+      }
     },
   );
 }

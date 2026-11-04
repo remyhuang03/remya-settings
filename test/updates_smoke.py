@@ -37,23 +37,16 @@ def session():
             except AssertionError:
                 assert time.monotonic() < deadline
                 time.sleep(.1)
-        if state.get('work_in_progress'):
-            assert not state['available'] and state['reason'].startswith('Work in progress:')
-            assert cli('get', 'updates')['work_in_progress']
-            for identifier in ['check', 'upgrade', 'include-held', 'retry', 'status', 'output', 'automatic', 'daily-time']:
-                setting='updates.' + identifier
-                assert dbus('Get', setting)['availability'] == 'planned'
-                assert 'Unavailable' in dbus('Set', setting, 'true', ok=False)
-            assert not dbus('Get','updates')['busy']
-            dbus('Quit'); service.wait(timeout=10)
-            print('PASS: production WIP inspection remains available; all eight update writes rejected; no job started')
-            return
         assert state['phase'] == 'idle' and not state['busy']
-        assert state['available'], state['missing']
+        assert not state['missing'], state['missing']
+        assert state['updater'] in ('installed', 'missing', 'outdated')
         assert cli('get', 'updates')['phase'] == 'idle'
         assert dbus('Get', 'updates.status')['id'] == 'updates.status'
         assert 'ReadOnly' in dbus('Set', 'updates.output', 'clear', ok=False)
-        assert 'Unauthorized' in dbus('Set', 'updates.upgrade', 'upgrade', ok=False)
+        if state['updater'] != 'installed':
+            # Never call upgrade when the real updater is installed: it would upgrade this machine.
+            assert 'Unavailable' in dbus('Set', 'updates.upgrade', 'upgrade', ok=False)
+        assert dbus('Get', 'updates.upgrade')['availability'] == 'available'
         assert cli('set', 'updates.include-held', 'true')['all']
         assert dbus('Set', 'updates.include-held', 'false')['all'] is False
         assert dbus('Set', 'updates.retry', 'true')['retry']

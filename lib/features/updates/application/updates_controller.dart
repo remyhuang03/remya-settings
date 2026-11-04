@@ -11,13 +11,19 @@ class UpdatesController extends ChangeNotifier {
   int _revision = 0;
 
   bool get busy => value['busy'] == true;
-  bool get workInProgress => value['work_in_progress'] == true;
+
+  /// The root updater is installed and every required tool exists.
   bool get available => value['available'] == true;
-  bool get authorized => value['authorized'] == true;
+
+  /// Checks need only the tools; installing also needs the root updater.
+  bool get canCheck => (value['missing'] as List? ?? const []).isEmpty;
   List<Map> get packages => (value['packages'] as List? ?? []).cast<Map>();
+  List<Map> get repository =>
+      packages.where((package) => package['source'] == 'repository').toList();
+  List<Map> get aur =>
+      packages.where((package) => package['source'] == 'AUR').toList();
   bool get canInstall =>
-      value['checked_at'] != null &&
-      packages.any((package) => package['held'] != true);
+      available && value['checked_at'] != null && value['eligible'] == true;
   Map get schedule => value['schedule'] as Map? ?? const {};
   List<String> get output => (value['output'] as List? ?? []).cast<String>();
 

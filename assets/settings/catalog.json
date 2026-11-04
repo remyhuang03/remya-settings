@@ -17552,10 +17552,10 @@
       "id": "updates",
       "category": "update",
       "title": "System updates",
-      "description": "Repository and AUR package updates with live output",
+      "description": "Repository package updates with live output, automatic updates outside active hours and an AUR update list",
       "preview": "update",
-      "availability": "planned",
-      "reason": "Work in progress: package updates are incomplete and upgrade execution is unverified. Checks, updates and automatic scheduling are paused.",
+      "availability": "available",
+      "reason": "The resident Rust service checks updates with checkupdates and yay -Qua and upgrades repository packages through a fixed root-owned pacman updater authorized by polkit.",
       "sources": [
         "uris"
       ],
@@ -17573,65 +17573,57 @@
               "id": "updates.check",
               "title": "Check for updates",
               "type": "action",
-              "availability": "planned",
-              "reason": "Work in progress: package updates are incomplete and upgrade execution is unverified. Checks, updates and automatic scheduling are paused.",
+              "availability": "available",
+              "reason": "The resident Rust service checks updates with checkupdates and yay -Qua and upgrades repository packages through a fixed root-owned pacman updater authorized by polkit.",
               "value": "check"
             },
             {
               "id": "updates.upgrade",
               "title": "Update now",
               "type": "action",
-              "availability": "planned",
-              "reason": "Work in progress: package updates are incomplete and upgrade execution is unverified. Checks, updates and automatic scheduling are paused.",
+              "availability": "available",
+              "reason": "The resident Rust service checks updates with checkupdates and yay -Qua and upgrades repository packages through a fixed root-owned pacman updater authorized by polkit.",
               "value": "upgrade"
             },
             {
               "id": "updates.include-held",
               "title": "Include held packages",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Work in progress: package updates are incomplete and upgrade execution is unverified. Checks, updates and automatic scheduling are paused.",
+              "availability": "available",
+              "reason": "The resident Rust service checks updates with checkupdates and yay -Qua and upgrades repository packages through a fixed root-owned pacman updater authorized by polkit.",
               "value": false
             },
             {
               "id": "updates.retry",
               "title": "Retry after failure",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Work in progress: package updates are incomplete and upgrade execution is unverified. Checks, updates and automatic scheduling are paused.",
+              "availability": "available",
+              "reason": "The resident Rust service checks updates with checkupdates and yay -Qua and upgrades repository packages through a fixed root-owned pacman updater authorized by polkit.",
               "value": false
             },
             {
               "id": "updates.status",
               "title": "Update status",
               "type": "info",
-              "availability": "planned",
-              "reason": "Work in progress: package updates are incomplete and upgrade execution is unverified. Checks, updates and automatic scheduling are paused.",
+              "availability": "available",
+              "reason": "The resident Rust service checks updates with checkupdates and yay -Qua and upgrades repository packages through a fixed root-owned pacman updater authorized by polkit.",
               "value": "Read from the update service"
             },
             {
               "id": "updates.output",
               "title": "Update output",
               "type": "info",
-              "availability": "planned",
-              "reason": "Work in progress: package updates are incomplete and upgrade execution is unverified. Checks, updates and automatic scheduling are paused.",
+              "availability": "available",
+              "reason": "The resident Rust service checks updates with checkupdates and yay -Qua and upgrades repository packages through a fixed root-owned pacman updater authorized by polkit.",
               "value": "Read from the update service"
             },
             {
               "id": "updates.automatic",
               "title": "Automatic updates",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Work in progress: package updates are incomplete and upgrade execution is unverified. Checks, updates and automatic scheduling are paused.",
+              "availability": "available",
+              "reason": "The resident Rust service checks updates with checkupdates and yay -Qua and upgrades repository packages through a fixed root-owned pacman updater authorized by polkit.",
               "value": false
-            },
-            {
-              "id": "updates.daily-time",
-              "title": "Daily update time",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Work in progress: package updates are incomplete and upgrade execution is unverified. Checks, updates and automatic scheduling are paused.",
-              "value": "03:00"
             }
           ]
         }
@@ -17642,10 +17634,10 @@
       "id": "active-hours",
       "category": "update",
       "title": "Active hours",
-      "description": "Preferred activity window (preview)",
+      "description": "Hours when automatic updates wait",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not implemented. Active hours do not affect checks, manual updates or scheduled automatic updates.",
+      "availability": "available",
+      "reason": "The resident Rust service saves active hours in updates.json; automatic updates run when inactive hours begin and catch up during active hours only after a missed inactive period.",
       "sources": [
         "uris"
       ],
@@ -17657,32 +17649,20 @@
           "title": "Activity window",
           "controls": [
             {
-              "id": "active-hours.f2a92e6f",
-              "title": "Adjust active hours",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not implemented. Active hours do not affect checks, manual updates or scheduled automatic updates.",
-              "options": [
-                "Automatic",
-                "Manual"
-              ],
-              "value": "Manual"
-            },
-            {
               "id": "active-hours.e8868af6",
               "title": "Start time",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not implemented. Active hours do not affect checks, manual updates or scheduled automatic updates.",
-              "value": ""
+              "availability": "available",
+              "reason": "The resident Rust service saves active hours in updates.json; automatic updates run when inactive hours begin and catch up during active hours only after a missed inactive period.",
+              "value": "08:00"
             },
             {
               "id": "active-hours.a0bb9f49",
               "title": "End time",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not implemented. Active hours do not affect checks, manual updates or scheduled automatic updates.",
-              "value": ""
+              "availability": "available",
+              "reason": "The resident Rust service saves active hours in updates.json; automatic updates run when inactive hours begin and catch up during active hours only after a missed inactive period.",
+              "value": "23:00"
             }
           ]
         }

@@ -41,28 +41,27 @@ def launch():
 
 
 def session():
+    # Active hours always cover the test, so enabling never starts a real upgrade.
+    now = time.localtime()
+    minute = now.tm_hour * 60 + now.tm_min
+    start, end = (f'{m // 60 % 24:02}:{m % 60:02}' for m in ((minute - 60) % 1440, (minute + 120) % 1440))
     service = None
     try:
         service, state = launch()
-        if state.get('work_in_progress'):
-            assert not state['available'] and not state['busy']
-            assert 'Unavailable' in call('Set','updates.automatic','true',ok=False)
-            assert 'Unavailable' in call('Set','updates.daily-time','23:59',ok=False)
-            call('Quit'); service.wait(timeout=10); service=None
-            print('PASS: WIP blocks production schedule writes and leaves scheduler idle')
-            return
         assert state['schedule']['enabled'] is False
-        assert not state['authorized'] and not state['busy'] and state['phase'] == 'idle'
-        assert cli('set', 'updates.daily-time', '23:59')['schedule']['time'] == '23:59'
-        assert 'InvalidArgument' in call('Set', 'updates.daily-time', '25:00', ok=False)
-        assert call('Get', 'updates')['schedule']['time'] == '23:59'
-        assert call('Set', 'updates.automatic', 'true')['schedule']['enabled']
-        assert 'Unavailable' in call('Set', 'active-hours.e8868af6', '08:00', ok=False)
+        assert not state['busy'] and state['phase'] == 'idle'
+        assert cli('set', 'active-hours.e8868af6', start)['schedule']['active_start'] == start
+        assert call('Set', 'active-hours.a0bb9f49', end)['schedule']['active_end'] == end
+        assert 'InvalidArgument' in call('Set', 'active-hours.a0bb9f49', '25:00', ok=False)
+        assert 'InvalidArgument' in call('Set', 'active-hours.a0bb9f49', start, ok=False)
+        assert call('Get', 'updates')['schedule']['active_end'] == end
+        enabled = call('Set', 'updates.automatic', 'true')['schedule']
+        assert enabled['enabled'] and enabled['last_run_day'], enabled
         assert call('Get', 'updates')['phase'] == 'idle'
         call('Quit'); service.wait(timeout=10); service = None
         service, state = launch()
-        assert state['schedule']['enabled'] and state['schedule']['time'] == '23:59'
-        assert not state['busy'] and not state['authorized']
+        assert state['schedule']['enabled'] and state['schedule']['active_start'] == start
+        assert not state['busy']
         assert not cli('set', 'updates.automatic', 'false')['schedule']['enabled']
         call('Quit'); service.wait(timeout=10); service = None
         configuration = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/updates.json'
@@ -74,7 +73,7 @@ def session():
         assert configuration.read_text() == '{broken configuration'
         assert not call('Get', 'updates')['busy']
         call('Quit'); service.wait(timeout=10); service = None
-        print('PASS: default off, CLI/D-Bus schedule writes, restart persistence, invalid input retention, malformed file protection; no check or upgrade started')
+        print('PASS: default off, CLI/D-Bus active hours and schedule writes, restart persistence, invalid input retention, malformed file protection; no check or upgrade started')
     finally:
         if service is not None and service.poll() is None:
             service.terminate(); service.wait(timeout=10)

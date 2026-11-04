@@ -7,13 +7,16 @@ const updatesRetrySettingId = 'updates.retry';
 const updatesStatusSettingId = 'updates.status';
 const updatesOutputSettingId = 'updates.output';
 const updatesAutomaticSettingId = 'updates.automatic';
-const updatesDailyTimeSettingId = 'updates.daily-time';
+const activeHoursStartSettingId = 'active-hours.e8868af6';
+const activeHoursEndSettingId = 'active-hours.a0bb9f49';
 
 extension UpdatesClient on SettingsClient {
   Future<Map<String, dynamic>> automaticUpdates(bool enabled) =>
       call('Set', [updatesAutomaticSettingId, '$enabled']);
-  Future<Map<String, dynamic>> dailyUpdateTime(String localTime) =>
-      call('Set', [updatesDailyTimeSettingId, localTime]);
+  Future<Map<String, dynamic>> activeHoursStart(String localTime) =>
+      call('Set', [activeHoursStartSettingId, localTime]);
+  Future<Map<String, dynamic>> activeHoursEnd(String localTime) =>
+      call('Set', [activeHoursEndSettingId, localTime]);
   Future<Map<String, dynamic>> readUpdates() => call('Get', ['updates']);
   Future<Map<String, dynamic>> checkUpdates() =>
       call('Set', [updatesCheckSettingId, 'check']);

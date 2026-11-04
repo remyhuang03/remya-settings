@@ -1,4 +1,5 @@
 import '../../updates/application/updates_controller.dart';
+import '../../updates/presentation/active_hours_page.dart';
 import '../../updates/presentation/updates_page.dart';
 import '../../sound/application/sound_controller.dart';
 import '../../sound/presentation/sound_page.dart';
@@ -408,6 +409,8 @@ class _SettingsShellState extends State<SettingsShell> {
       content = SoundPage(controller: widget.sound!, page: _page!);
     } else if (_page?.id == 'updates' && widget.updates != null) {
       content = UpdatesPage(controller: widget.updates!);
+    } else if (_page?.id == 'active-hours' && widget.updates != null) {
+      content = ActiveHoursPage(controller: widget.updates!);
     } else if (_page?.id == 'installed' &&
         ApplicationsScope.maybeOf(context) != null) {
       final controller = ApplicationsScope.maybeOf(context)!;
