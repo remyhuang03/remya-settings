@@ -170,6 +170,9 @@ fn run() -> Result<(), String> {
                     if method == "Reload" || args.first().is_some_and(|id| id == "sound" || remya_settings_sound::is_setting(id)) {
                         signal(&bus, "sound", &state.lock().unwrap().sound.state());
                     }
+                    if method == "Reload" || args.first().is_some_and(|id| id == "cameras" || id.starts_with("cameras:") || remya_settings_camera::is_setting(id)) {
+                        signal(&bus, "cameras", &state.lock().unwrap().cameras.state());
+                    }
                     if args.first().is_some_and(|id| remya_settings_updates::is_setting(id)) {
                         signal(&bus, "updates", &state.lock().unwrap().updates.state());
                     }
@@ -281,7 +284,11 @@ fn run() -> Result<(), String> {
                 let network = s.network.state();
                 let night_light = s.night_light.state();
                 let sound = s.sound.state();
+                let cameras = s.cameras.state();
                 s.refresh();
+                if s.cameras.state() != cameras {
+                    signal(&bus, "cameras", &s.cameras.state());
+                }
                 if s.sound.state() != sound {
                     signal(&bus, "sound", &s.sound.state());
                 }

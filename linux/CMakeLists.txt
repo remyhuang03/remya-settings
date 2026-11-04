@@ -115,6 +115,13 @@ add_custom_target(settings_cli ALL
 add_dependencies(${BINARY_NAME} settings_cli)
 
 
+set(RUST_CAMERA_LIBRARY "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/libremya_settings_camera.so")
+add_custom_target(rust_camera ALL
+  COMMAND "${CARGO_EXECUTABLE}" build --locked --package remya_settings_camera ${RUST_PROFILE_ARGS}
+  WORKING_DIRECTORY "${RUST_WORKSPACE_DIR}"
+  BYPRODUCTS "${RUST_CAMERA_LIBRARY}")
+add_dependencies(${BINARY_NAME} rust_camera)
+
 # === Installation ===
 # By default, "installing" just makes a relocatable bundle in the build
 # directory.
@@ -132,7 +139,7 @@ set(INSTALL_BUNDLE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/data")
 set(INSTALL_BUNDLE_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 install(PROGRAMS "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/remya-settings-service" "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/remya-settings-update" DESTINATION "${CMAKE_INSTALL_PREFIX}/libexec" COMPONENT Runtime)
 install(PROGRAMS "${SETTINGS_CLI}" DESTINATION "${CMAKE_INSTALL_PREFIX}/libexec" COMPONENT Runtime)
-install(FILES "${RUST_DATE_TIME_LIBRARY}" "${RUST_APPEARANCE_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
+install(FILES "${RUST_CAMERA_LIBRARY}" "${RUST_DATE_TIME_LIBRARY}" "${RUST_APPEARANCE_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
 
 install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
   COMPONENT Runtime)

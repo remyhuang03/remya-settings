@@ -10,13 +10,15 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 
 ## 当前概况
 
-- 设置分类：15 个；详情页面：137 个；设置条目：1664 项。
-- 已实现：178 项；未实现：1476 项；不适用：10 项。
+- 设置分类：15 个；详情页面：134 个；设置条目：1619 项。
+- 已实现：184 项；未实现：1425 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
 
 - 声音通过 Rust libpulse 连接 PipeWire，支持输出、输入、应用音量/路由与设备清单；所有声音控制跟随系统实时状态，不持久化、不比对或恢复配置。见[声音文档](sound.md)。
+
+- Camera 通过原生 PipeWire 读取设备能力、调节图像参数和处理配置冲突；支持显式开启的本地实时预览。见[Camera 文档](camera.md)。
 
 - 网络通过 Rust / system D-Bus 连接 NetworkManager，提供网络状态、Wi-Fi 与已知网络；设置项见[网络文档](network.md)。
 
@@ -336,26 +338,6 @@ Windows 参考入口：`ms-settings:disksandvolumes`。
 | Change drive letter | `disks.d324d258` | 操作 | 未实现 | — |
 | Resize the volume | `disks.6e9cf764` | 操作 | 未实现 | — |
 | Format the volume | `disks.c1481df0` | 操作 | 未实现 | — |
-
-### Recovery — `recovery`
-
-恢复选项与高级启动
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:recovery`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Fix system problems | `recovery.03ea91ae` | 操作 | 未实现 | — |
-| Reset this PC | `recovery.631b3905` | 操作 | 未实现 | — |
-| Return to the previous version | `recovery.f1b586da` | 操作 | 未实现 | — |
-| Advanced startup | `recovery.b85853c3` | 操作 | 未实现 | — |
-| Fast Computer Recovery | `recovery.8d2d42f1` | 操作 | 未实现 | — |
 
 ### Project to this computer — `projection`
 
@@ -1050,26 +1032,22 @@ Windows 参考入口：`ms-settings:printers`。
 
 ### Camera — `cameras`
 
-摄像头目录、图像与访问
+PipeWire 摄像头清单与图像调节，实时预览由 GUI 本地 Rust 后端提供。
 
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**已实现**；条目：6；已实现 6 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：通过 PipeWire 原生接口读取能力、验证写入与回读，并保存真实配置和处理冲突。
 
 Windows 参考入口：`ms-settings:camera`。
 
-#### 设置
-
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Camera connected | `cameras.89d99d4d` | 信息展示 | 未实现 | — |
-| Add a webcam | `cameras.2f6bf052` | 操作 | 未实现 | — |
-| Brightness | `cameras.5d419889` | 滑块 | 未实现 | — |
-| Contrast | `cameras.9212a1ec` | 滑块 | 未实现 | — |
-| Saturation | `cameras.1e9ac879` | 滑块 | 未实现 | — |
-| Sharpness | `cameras.6b14430e` | 滑块 | 未实现 | — |
-| Allow multiple apps to use the camera | `cameras.6b86ffc4` | 开关 | 未实现 | — |
-| Reset camera settings | `cameras.39cd691a` | 操作 | 未实现 | — |
+| Connected cameras | `cameras.devices` | 信息展示 | 已实现 | Rust Camera 测试、真实设备参数写入与恢复验证；详见 [Camera](camera.md) |
+| Brightness | `cameras.brightness` | 滑块 | 已实现 | Rust Camera 测试、真实设备参数写入与恢复验证；详见 [Camera](camera.md) |
+| Contrast | `cameras.contrast` | 滑块 | 已实现 | Rust Camera 测试、真实设备参数写入与恢复验证；详见 [Camera](camera.md) |
+| Saturation | `cameras.saturation` | 滑块 | 已实现 | Rust Camera 测试、真实设备参数写入与恢复验证；详见 [Camera](camera.md) |
+| Sharpness | `cameras.sharpness` | 滑块 | 已实现 | Rust Camera 测试、真实设备参数写入与恢复验证；详见 [Camera](camera.md) |
+| Reset camera settings | `cameras.reset` | 操作 | 已实现 | Rust Camera 测试、真实设备参数写入与恢复验证；详见 [Camera](camera.md) |
 
 ### Mouse — `mouse`
 
@@ -1247,90 +1225,6 @@ Windows 参考入口：`ms-settings:devices-touch`。
 | Touch mapping: enabled (enabled) | `touch.mapping-enabled` | 开关 | 未实现 | — |
 | Touch mapping: Target display (output) | `touch.mapping-output` | 文本输入 | 未实现 | — |
 | Touch mapping: Rotation and flipping (transform) | `touch.mapping-transform` | 滑块 | 未实现 | — |
-
-### Pen and Windows Ink — `pen`
-
-笔输入、笔菜单与反馈
-
-页面状态：**未实现**；条目：29；已实现 0 / 未实现 29 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:pen`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Dominated hand | `pen.eab621aa` | 选择 | 未实现 | — |
-| Ignore touches when using pen | `pen.11c38039` | 开关 | 未实现 | — |
-| Use your pen as a mouse | `pen.73aecd75` | 开关 | 未实现 | — |
-| Pen button simulates right click | `pen.7528aa4c` | 开关 | 未实现 | — |
-| Tactile feedback for writing | `pen.7a0091bd` | 开关 | 未实现 | — |
-| Interactive tactile feedback | `pen.046201e2` | 开关 | 未实现 | — |
-| Feedback intensity | `pen.2b27039e` | 滑块 | 未实现 | — |
-| Display pen menu when removing pen | `pen.04119d43` | 开关 | 未实现 | — |
-| Pen Shortcuts | `pen.050f809b` | 操作 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Ignore touch input when I'm using my pen | `pen.reference.f573a64c` | 开关 | 未实现 | — |
-| Let me use my pen as a mouse when it's available | `pen.reference.e839eb2c` | 开关 | 未实现 | — |
-| Use the pen button as a right-click equivalent when it's available | `pen.reference.0f60ea0a` | 开关 | 未实现 | — |
-| While inking (supported on some devices only) | `pen.reference.3ad69d1e` | 开关 | 未实现 | — |
-| While interacting with your device (supported on some devices only) | `pen.reference.7b1c28dd` | 开关 | 未实现 | — |
-| Intensity (supported on some devices only) | `pen.reference.8a3c1cf1` | 滑块 | 未实现 | — |
-
-
-#### Advanced: compositor previews
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Tablet: enabled (enabled) | `pen.tablet-enabled` | 开关 | 未实现 | — |
-| Tablet: Target display (output) | `pen.tablet-output` | 文本输入 | 未实现 | — |
-| Tablet: Rotation and flipping (transform) | `pen.tablet-transform` | 滑块 | 未实现 | — |
-| Tablet: absolute region position (absolute_region_position) | `pen.tablet-absolute-region-position` | 开关 | 未实现 | — |
-| Tablet: active area position (active_area_position) | `pen.tablet-active-area-position` | 文本输入 | 未实现 | — |
-| Tablet: active area size (active_area_size) | `pen.tablet-active-area-size` | 文本输入 | 未实现 | — |
-| Tablet: Left-handed pointer mode (left_handed) | `pen.tablet-left-handed` | 开关 | 未实现 | — |
-| Tablet: region position (region_position) | `pen.tablet-region-position` | 文本输入 | 未实现 | — |
-| Tablet: region size (region_size) | `pen.tablet-region-size` | 文本输入 | 未实现 | — |
-| Tablet: relative input (relative_input) | `pen.tablet-relative-input` | 开关 | 未实现 | — |
-| Pen tool: eraser button mode (eraser_button_mode) | `pen.tool-eraser-button-mode` | 滑块 | 未实现 | — |
-| Pen tool: eraser button override (eraser_button_override) | `pen.tool-eraser-button-override` | 文本输入 | 未实现 | — |
-| Pen tool: pressure range min (pressure_range_min) | `pen.tool-pressure-range-min` | 滑块 | 未实现 | — |
-| Pen tool: pressure range max (pressure_range_max) | `pen.tool-pressure-range-max` | 滑块 | 未实现 | — |
-
-### Pen shortcut button — `pen-shortcuts`
-
-单击、双击与按住动作
-
-页面状态：**未实现**；条目：9；已实现 0 / 未实现 9 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:pen-button`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Click | `pen-shortcuts.63754892` | 选择 | 未实现 | — |
-| Double click | `pen-shortcuts.f4121511` | 选择 | 未实现 | — |
-| Press and hold | `pen-shortcuts.c38aef1b` | 选择 | 未实现 | — |
-| Allow apps to replace button behavior | `pen-shortcuts.941cf204` | 开关 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Single-click | `pen-shortcuts.reference.ceea88ce` | 开关 | 未实现 | — |
-| Double-click | `pen-shortcuts.reference.1f59f186` | 开关 | 未实现 | — |
-| Press and hold (only supported by some pens) | `pen-shortcuts.reference.853b480c` | 开关 | 未实现 | — |
-| Allow apps to override the shortcut button behavior | `pen-shortcuts.reference.339eec05` | 选择 | 未实现 | — |
-| When available, show pen menu after I remove my pen from storage | `pen-shortcuts.reference.afd4d4ac` | 开关 | 未实现 | — |
 
 ### Autoplay — `autoplay`
 

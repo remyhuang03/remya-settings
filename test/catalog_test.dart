@@ -18,6 +18,28 @@ Map<String, dynamic> _readJson(String path) =>
 
 void main() {
   test(
+    'Camera catalog implements supported controls and removes discarded pages',
+    () {
+      final catalog = SettingsCatalog.fromJson(readCatalog());
+      final ids = catalog.pages.map((p) => p.id).toSet();
+      expect(ids.intersection({'pen', 'pen-shortcuts', 'recovery'}), isEmpty);
+      final camera = catalog.page('cameras');
+      expect(camera.controls.map((c) => c.id).toSet(), {
+        'cameras.devices',
+        'cameras.brightness',
+        'cameras.contrast',
+        'cameras.saturation',
+        'cameras.sharpness',
+        'cameras.reset',
+      });
+      expect(
+        camera.controls.every((c) => c.availability.name == 'available'),
+        isTrue,
+      );
+    },
+  );
+
+  test(
     'category groups cover the catalog once and use readable distinct colors',
     () {
       final catalog = SettingsCatalog.fromJson(readCatalog());

@@ -177,6 +177,7 @@ pub struct State {
     pub appimages: applications::appimages::AppImages,
     pub network: NetworkManager,
     pub bluetooth: remya_settings_bluetooth::Bluetooth,
+    pub cameras: remya_settings_camera::Cameras<remya_settings_camera::native::Native>,
     pub sound: Sound<RealPulse>,
     pub updates: Updates,
     pub auth_error: Option<String>,
@@ -218,6 +219,10 @@ impl State {
                 config.with_file_name("default-apps.toml"),
             ),
             bluetooth: remya_settings_bluetooth::Bluetooth::new(),
+            cameras: remya_settings_camera::Cameras::new(
+                remya_settings_camera::native::Native,
+                config.with_file_name("cameras.toml"),
+            ),
             sound: Sound::new(RealPulse),
             updates: Updates::new(config.with_file_name("updates.json"), atomic_write),
             network: NetworkManager::real(config.with_file_name("network.toml")),
@@ -253,6 +258,7 @@ impl State {
         let _ = self.night_light.refresh();
         let _ = self.background.refresh();
         let _ = self.sound.refresh();
+        let _ = self.cameras.refresh();
     }
     fn refresh_theme(&mut self) -> Result<(), String> {
         let system =
@@ -406,7 +412,7 @@ impl State {
     pub fn configuration(&self) -> Value {
         let mut date = self.date.clone();
         date["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
-        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"network":self.network.state(),"sound":self.sound.state()})
+        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"network":self.network.state(),"sound":self.sound.state(),"cameras":self.cameras.state()})
     }
     pub fn controls(&self) -> Vec<&Value> {
         self.catalog["pages"]
@@ -607,6 +613,16 @@ impl State {
                         value["id"] = json!(key);
                         // Missing tools are a host limit; a missing root updater is reported by `available`/`reason`.
                         value["availability"] = json!(if value["missing"].as_array().is_some_and(Vec::is_empty) { "available" } else { "unsupported" });
+                        Ok(value)
+                    }
+                    "cameras" => {
+                        let _ = self.cameras.refresh();
+                        Ok(self.cameras.state())
+                    }
+                    _ if remya_settings_camera::is_setting(key) => {
+                        let _ = self.cameras.refresh();
+                        let mut value = self.cameras.state();
+                        value["id"] = json!(key);
                         Ok(value)
                     }
                     "sound" => {
@@ -829,6 +845,9 @@ impl State {
         if updates::is_setting(key) {
             return self.updates.set(key, value);
         }
+        if remya_settings_camera::is_setting(key) {
+            return self.cameras.set(key, value);
+        }
         if sound::is_setting(key) {
             return self.sound.set(key, value);
         }
@@ -987,6 +1006,9 @@ impl State {
         self.save_date(state, &keys)
     }
     fn resolve(&mut self, feature: &str, source: &str) -> Result<Value, String> {
+        if let Some(name) = feature.strip_prefix("cameras:") {
+            return self.cameras.resolve(name, source);
+        }
         if feature == "network" {
             return self.network.resolve(source);
         }

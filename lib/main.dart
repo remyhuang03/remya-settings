@@ -1,3 +1,4 @@
+import 'features/camera/application/camera_controller.dart';
 import 'features/updates/application/updates_controller.dart';
 import 'features/sound/application/sound_controller.dart';
 import 'features/account/application/account_controller.dart';
@@ -105,6 +106,11 @@ Future<void> main() async {
     read: client.readAccountInformation,
     save: client.saveAccountAvatar,
   );
+  final cameras = CameraController(
+    read: client.readCameras,
+    write: client.changeCamera,
+    resolve: client.resolveCamera,
+  );
   final sound = SoundController(read: client.readSound, write: client.setSound);
   final updates = UpdatesController(
     read: client.readUpdates,
@@ -121,6 +127,7 @@ Future<void> main() async {
     network.reload,
     bluetooth.reload,
     sound.reload,
+    cameras.reload,
     updates.reload,
   ]);
   runApp(
@@ -138,6 +145,7 @@ Future<void> main() async {
       network: network,
       bluetooth: bluetooth,
       sound: sound,
+      cameras: cameras,
       updates: updates,
       navigation: navigation,
       scheduler: scheduler,
@@ -175,6 +183,8 @@ Future<void> main() async {
         bluetooth.apply(change.value);
       case 'updates':
         updates.apply(change.value);
+      case 'cameras':
+        cameras.apply(change.value);
       case 'sound':
         sound.apply(change.value);
       case 'network':

@@ -1870,69 +1870,6 @@
       "children": []
     },
     {
-      "id": "recovery",
-      "category": "system",
-      "title": "Recovery",
-      "description": "Recovery options and advanced startup",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:recovery"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "recovery.03ea91ae",
-              "title": "Fix system problems",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "recovery.631b3905",
-              "title": "Reset this PC",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "recovery.f1b586da",
-              "title": "Return to the previous version",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "recovery.b85853c3",
-              "title": "Advanced startup",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Restart"
-            },
-            {
-              "id": "recovery.8d2d42f1",
-              "title": "Fast Computer Recovery",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "projection",
       "category": "system",
       "title": "Project to this computer",
@@ -5178,10 +5115,10 @@
       "id": "cameras",
       "category": "devices",
       "title": "Camera",
-      "description": "Camera catalog, images and access",
+      "description": "Connected cameras, live preview and image adjustments",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Rust reads and validates PipeWire camera parameters and reconciles saved configuration.",
       "sources": [
         "uris"
       ],
@@ -5190,83 +5127,63 @@
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Camera",
           "controls": [
             {
-              "id": "cameras.89d99d4d",
-              "title": "Camera connected",
+              "id": "cameras.devices",
+              "title": "Connected cameras",
               "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not scanned yet"
+              "availability": "available",
+              "reason": "Rust reads and validates PipeWire camera parameters and reconciles saved configuration.",
+              "value": "Detected through PipeWire"
             },
             {
-              "id": "cameras.2f6bf052",
-              "title": "Add a webcam",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "cameras.5d419889",
+              "id": "cameras.brightness",
               "title": "Brightness",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
+              "availability": "available",
+              "reason": "Rust reads and validates PipeWire camera parameters and reconciles saved configuration.",
+              "value": 0,
               "min": 0,
-              "max": 100,
-              "unit": "%"
+              "max": 1
             },
             {
-              "id": "cameras.9212a1ec",
+              "id": "cameras.contrast",
               "title": "Contrast",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
+              "availability": "available",
+              "reason": "Rust reads and validates PipeWire camera parameters and reconciles saved configuration.",
+              "value": 0,
               "min": 0,
-              "max": 100,
-              "unit": "%"
+              "max": 1
             },
             {
-              "id": "cameras.1e9ac879",
+              "id": "cameras.saturation",
               "title": "Saturation",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
+              "availability": "available",
+              "reason": "Rust reads and validates PipeWire camera parameters and reconciles saved configuration.",
+              "value": 0,
               "min": 0,
-              "max": 100,
-              "unit": "%"
+              "max": 1
             },
             {
-              "id": "cameras.6b14430e",
+              "id": "cameras.sharpness",
               "title": "Sharpness",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
+              "availability": "available",
+              "reason": "Rust reads and validates PipeWire camera parameters and reconciles saved configuration.",
+              "value": 0,
               "min": 0,
-              "max": 100,
-              "unit": "%"
+              "max": 1
             },
             {
-              "id": "cameras.6b86ffc4",
-              "title": "Allow multiple apps to use the camera",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "cameras.39cd691a",
+              "id": "cameras.reset",
               "title": "Reset camera settings",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Rust reads and validates PipeWire camera parameters and reconciles saved configuration.",
+              "value": "Reset"
             }
           ]
         }
@@ -6649,533 +6566,6 @@
             }
           ],
           "description": "Planned compositor options from Hyprland configuration options, HyprViz page organization."
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "pen",
-      "category": "devices",
-      "title": "Pen and Windows Ink",
-      "description": "Pen input, pen menus and feedback",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris",
-        "hypr-options",
-        "hyprviz-project"
-      ],
-      "windowsUris": [
-        "ms-settings:pen"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "pen.eab621aa",
-              "title": "Dominated hand",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Right hand",
-                "Left hand"
-              ],
-              "value": "Right hand"
-            },
-            {
-              "id": "pen.11c38039",
-              "title": "Ignore touches when using pen",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "pen.73aecd75",
-              "title": "Use your pen as a mouse",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "pen.7528aa4c",
-              "title": "Pen button simulates right click",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "pen.7a0091bd",
-              "title": "Tactile feedback for writing",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "pen.046201e2",
-              "title": "Interactive tactile feedback",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "pen.2b27039e",
-              "title": "Feedback intensity",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "pen.04119d43",
-              "title": "Display pen menu when removing pen",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "pen.050f809b",
-              "title": "Pen Shortcuts",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "pen.reference.f573a64c",
-              "title": "Ignore touch input when I'm using my pen",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Pen and Windows Ink",
-                "Ignore touch input when I'm using my pen"
-              ],
-              "value": false
-            },
-            {
-              "id": "pen.reference.e839eb2c",
-              "title": "Let me use my pen as a mouse when it's available",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Pen and Windows Ink",
-                "Let me use my pen as a mouse when it's available"
-              ],
-              "value": false
-            },
-            {
-              "id": "pen.reference.0f60ea0a",
-              "title": "Use the pen button as a right-click equivalent when it's available",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Pen and Windows Ink",
-                "Use the pen button as a right-click equivalent when it's available"
-              ],
-              "value": false
-            },
-            {
-              "id": "pen.reference.3ad69d1e",
-              "title": "While inking (supported on some devices only)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Pen and Windows Ink",
-                "Tactile signals (supported on some devices only)",
-                "While inking (supported on some devices only)"
-              ],
-              "value": false
-            },
-            {
-              "id": "pen.reference.7b1c28dd",
-              "title": "While interacting with your device (supported on some devices only)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Pen and Windows Ink",
-                "Tactile signals (supported on some devices only)",
-                "While interacting with your device (supported on some devices only)"
-              ],
-              "value": false
-            },
-            {
-              "id": "pen.reference.8a3c1cf1",
-              "title": "Intensity (supported on some devices only)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Pen and Windows Ink",
-                "Tactile signals (supported on some devices only)",
-                "Intensity (supported on some devices only)"
-              ],
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            }
-          ]
-        },
-        {
-          "title": "Advanced",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "pen.tablet-enabled",
-              "title": "Tablet: enabled (enabled)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "input.tablet",
-                "enabled"
-              ]
-            },
-            {
-              "id": "pen.tablet-output",
-              "title": "Tablet: Target display (output)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-options",
-                "input.tablet",
-                "output"
-              ]
-            },
-            {
-              "id": "pen.tablet-transform",
-              "title": "Tablet: Rotation and flipping (transform)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 6.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input.tablet",
-                "transform"
-              ]
-            },
-            {
-              "id": "pen.tablet-absolute-region-position",
-              "title": "Tablet: absolute region position (absolute_region_position)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "input.tablet",
-                "absolute_region_position"
-              ]
-            },
-            {
-              "id": "pen.tablet-active-area-position",
-              "title": "Tablet: active area position (active_area_position)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "{0, 0}",
-              "referencePath": [
-                "hypr-options",
-                "input.tablet",
-                "active_area_position"
-              ]
-            },
-            {
-              "id": "pen.tablet-active-area-size",
-              "title": "Tablet: active area size (active_area_size)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "{0, 0}",
-              "referencePath": [
-                "hypr-options",
-                "input.tablet",
-                "active_area_size"
-              ]
-            },
-            {
-              "id": "pen.tablet-left-handed",
-              "title": "Tablet: Left-handed pointer mode (left_handed)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "input.tablet",
-                "left_handed"
-              ]
-            },
-            {
-              "id": "pen.tablet-region-position",
-              "title": "Tablet: region position (region_position)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "{0, 0}",
-              "referencePath": [
-                "hypr-options",
-                "input.tablet",
-                "region_position"
-              ]
-            },
-            {
-              "id": "pen.tablet-region-size",
-              "title": "Tablet: region size (region_size)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "{0, 0}",
-              "referencePath": [
-                "hypr-options",
-                "input.tablet",
-                "region_size"
-              ]
-            },
-            {
-              "id": "pen.tablet-relative-input",
-              "title": "Tablet: relative input (relative_input)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "input.tablet",
-                "relative_input"
-              ]
-            },
-            {
-              "id": "pen.tool-eraser-button-mode",
-              "title": "Pen tool: eraser button mode (eraser_button_mode)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 6.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input.tablettool",
-                "eraser_button_mode"
-              ]
-            },
-            {
-              "id": "pen.tool-eraser-button-override",
-              "title": "Pen tool: eraser button override (eraser_button_override)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "0",
-              "referencePath": [
-                "hypr-options",
-                "input.tablettool",
-                "eraser_button_override"
-              ]
-            },
-            {
-              "id": "pen.tool-pressure-range-min",
-              "title": "Pen tool: pressure range min (pressure_range_min)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": -1.0,
-              "min": -1.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input.tablettool",
-                "pressure_range_min"
-              ]
-            },
-            {
-              "id": "pen.tool-pressure-range-max",
-              "title": "Pen tool: pressure range max (pressure_range_max)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": -1.0,
-              "min": -1.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input.tablettool",
-                "pressure_range_max"
-              ]
-            }
-          ],
-          "description": "Planned compositor options from Hyprland configuration options, HyprViz page organization."
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "pen-shortcuts",
-      "category": "devices",
-      "title": "Pen shortcut button",
-      "description": "Single click, double click and hold actions",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:pen-button"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "pen-shortcuts.63754892",
-              "title": "Click",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Open the pen menu",
-                "Open the app",
-                "None"
-              ],
-              "value": "Open the pen menu"
-            },
-            {
-              "id": "pen-shortcuts.f4121511",
-              "title": "Double click",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Screenshot",
-                "Open the app",
-                "None"
-              ],
-              "value": "Screenshot"
-            },
-            {
-              "id": "pen-shortcuts.c38aef1b",
-              "title": "Press and hold",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Open the app",
-                "None"
-              ],
-              "value": "Open the app"
-            },
-            {
-              "id": "pen-shortcuts.941cf204",
-              "title": "Allow apps to replace button behavior",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "pen-shortcuts.reference.ceea88ce",
-              "title": "Single-click",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Choose what your shortcut button does",
-                "Single-click"
-              ],
-              "value": false
-            },
-            {
-              "id": "pen-shortcuts.reference.1f59f186",
-              "title": "Double-click",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Choose what your shortcut button does",
-                "Double-click"
-              ],
-              "value": false
-            },
-            {
-              "id": "pen-shortcuts.reference.853b480c",
-              "title": "Press and hold (only supported by some pens)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Choose what your shortcut button does",
-                "Press and hold (only supported by some pens)"
-              ],
-              "value": false
-            },
-            {
-              "id": "pen-shortcuts.reference.339eec05",
-              "title": "Allow apps to override the shortcut button behavior",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Choose what your shortcut button does",
-                "Allow apps to override the shortcut button behavior"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "pen-shortcuts.reference.afd4d4ac",
-              "title": "When available, show pen menu after I remove my pen from storage",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Choose what your shortcut button does",
-                "When available, show pen menu after I remove my pen from storage"
-              ],
-              "value": false
-            }
-          ]
         }
       ],
       "children": []

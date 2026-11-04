@@ -31,7 +31,6 @@
     "storage-sense",
     "cleanup",
     "disks",
-    "recovery",
     "projection",
     "remote-desktop",
     "clipboard",
@@ -46,8 +45,6 @@
     "mouse",
     "touchpad",
     "touch",
-    "pen",
-    "pen-shortcuts",
     "autoplay",
     "usb",
     "mobile",
@@ -229,11 +226,6 @@
     "disks.d324d258",
     "disks.6e9cf764",
     "disks.c1481df0",
-    "recovery.03ea91ae",
-    "recovery.631b3905",
-    "recovery.f1b586da",
-    "recovery.b85853c3",
-    "recovery.8d2d42f1",
     "projection.ec71f569",
     "projection.d8103e93",
     "projection.7d2dd2be",
@@ -302,14 +294,6 @@
     "printers.98323162",
     "printers.1b618ab5",
     "printers.reference.c1c02196",
-    "cameras.89d99d4d",
-    "cameras.2f6bf052",
-    "cameras.5d419889",
-    "cameras.9212a1ec",
-    "cameras.1e9ac879",
-    "cameras.6b14430e",
-    "cameras.6b86ffc4",
-    "cameras.39cd691a",
     "mouse.ad43aa5f",
     "mouse.2f06ebc7",
     "mouse.62b5a139",
@@ -350,30 +334,6 @@
     "touch.e963918e",
     "touch.reference.b3eb626b",
     "touch.reference.4283e4ac",
-    "pen.eab621aa",
-    "pen.11c38039",
-    "pen.73aecd75",
-    "pen.7528aa4c",
-    "pen.7a0091bd",
-    "pen.046201e2",
-    "pen.2b27039e",
-    "pen.04119d43",
-    "pen.050f809b",
-    "pen.reference.f573a64c",
-    "pen.reference.e839eb2c",
-    "pen.reference.0f60ea0a",
-    "pen.reference.3ad69d1e",
-    "pen.reference.7b1c28dd",
-    "pen.reference.8a3c1cf1",
-    "pen-shortcuts.63754892",
-    "pen-shortcuts.f4121511",
-    "pen-shortcuts.c38aef1b",
-    "pen-shortcuts.941cf204",
-    "pen-shortcuts.reference.ceea88ce",
-    "pen-shortcuts.reference.1f59f186",
-    "pen-shortcuts.reference.853b480c",
-    "pen-shortcuts.reference.339eec05",
-    "pen-shortcuts.reference.afd4d4ac",
     "autoplay.aef48ac6",
     "autoplay.cf7a8268",
     "autoplay.16fc14e6",
@@ -3006,202 +2966,6 @@
       "nativeType": "int",
       "documentedDefault": "`2`",
       "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "pen.tablet-enabled",
-      "page": "pen",
-      "source": "hypr-options",
-      "key": "enabled",
-      "reference": [
-        "hypr-options",
-        "input.tablet",
-        "enabled"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "pen.tablet-output",
-      "page": "pen",
-      "source": "hypr-options",
-      "key": "output",
-      "reference": [
-        "hypr-options",
-        "input.tablet",
-        "output"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "pen.tablet-transform",
-      "page": "pen",
-      "source": "hypr-options",
-      "key": "transform",
-      "reference": [
-        "hypr-options",
-        "input.tablet",
-        "transform"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 6]"
-    },
-    {
-      "control": "pen.tablet-absolute-region-position",
-      "page": "pen",
-      "source": "hypr-options",
-      "key": "absolute-region-position",
-      "reference": [
-        "hypr-options",
-        "input.tablet",
-        "absolute_region_position"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "pen.tablet-active-area-position",
-      "page": "pen",
-      "source": "hypr-options",
-      "key": "active-area-position",
-      "reference": [
-        "hypr-options",
-        "input.tablet",
-        "active_area_position"
-      ],
-      "nativeType": "vec2",
-      "documentedDefault": "`{0, 0}`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "pen.tablet-active-area-size",
-      "page": "pen",
-      "source": "hypr-options",
-      "key": "active-area-size",
-      "reference": [
-        "hypr-options",
-        "input.tablet",
-        "active_area_size"
-      ],
-      "nativeType": "vec2",
-      "documentedDefault": "`{0, 0}`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "pen.tablet-left-handed",
-      "page": "pen",
-      "source": "hypr-options",
-      "key": "left-handed",
-      "reference": [
-        "hypr-options",
-        "input.tablet",
-        "left_handed"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "pen.tablet-region-position",
-      "page": "pen",
-      "source": "hypr-options",
-      "key": "region-position",
-      "reference": [
-        "hypr-options",
-        "input.tablet",
-        "region_position"
-      ],
-      "nativeType": "vec2",
-      "documentedDefault": "`{0, 0}`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "pen.tablet-region-size",
-      "page": "pen",
-      "source": "hypr-options",
-      "key": "region-size",
-      "reference": [
-        "hypr-options",
-        "input.tablet",
-        "region_size"
-      ],
-      "nativeType": "vec2",
-      "documentedDefault": "`{0, 0}`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "pen.tablet-relative-input",
-      "page": "pen",
-      "source": "hypr-options",
-      "key": "relative-input",
-      "reference": [
-        "hypr-options",
-        "input.tablet",
-        "relative_input"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "pen.tool-eraser-button-mode",
-      "page": "pen",
-      "source": "hypr-options",
-      "key": "eraser-button-mode",
-      "reference": [
-        "hypr-options",
-        "input.tablettool",
-        "eraser_button_mode"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "0",
-      "documentedLimits": "[0 - 6]"
-    },
-    {
-      "control": "pen.tool-eraser-button-override",
-      "page": "pen",
-      "source": "hypr-options",
-      "key": "eraser-button-override",
-      "reference": [
-        "hypr-options",
-        "input.tablettool",
-        "eraser_button_override"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "0",
-      "documentedLimits": "[0 - ...]"
-    },
-    {
-      "control": "pen.tool-pressure-range-min",
-      "page": "pen",
-      "source": "hypr-options",
-      "key": "pressure-range-min",
-      "reference": [
-        "hypr-options",
-        "input.tablettool",
-        "pressure_range_min"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "-1.0",
-      "documentedLimits": "[-1.0 - 1.0]"
-    },
-    {
-      "control": "pen.tool-pressure-range-max",
-      "page": "pen",
-      "source": "hypr-options",
-      "key": "pressure-range-max",
-      "reference": [
-        "hypr-options",
-        "input.tablettool",
-        "pressure_range_max"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "-1.0",
-      "documentedLimits": "[-1.0 - 1.0]"
     },
     {
       "control": "touchpad.workspace-close-max-timeout",

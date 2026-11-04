@@ -1,3 +1,5 @@
+import '../../camera/application/camera_controller.dart';
+import '../../camera/presentation/camera_page.dart';
 import '../../updates/application/updates_controller.dart';
 import '../../updates/presentation/active_hours_page.dart';
 import '../../updates/presentation/updates_page.dart';
@@ -43,10 +45,12 @@ class SettingsShell extends StatefulWidget {
     this.systemInformation,
     this.account,
     this.sound,
+    this.cameras,
     this.updates,
   });
   final AccountController? account;
   final SoundController? sound;
+  final CameraController? cameras;
   final UpdatesController? updates;
   final SettingsCatalog catalog;
   final SystemInformationReader? systemInformation;
@@ -436,6 +440,8 @@ class _SettingsShellState extends State<SettingsShell> {
         }.contains(_page?.id) &&
         widget.sound != null) {
       content = SoundPage(controller: widget.sound!, page: _page!);
+    } else if (_page?.id == 'cameras' && widget.cameras != null) {
+      content = CameraPage(controller: widget.cameras!);
     } else if (_page?.id == 'updates' && widget.updates != null) {
       content = UpdatesPage(controller: widget.updates!);
     } else if (_page?.id == 'active-hours' && widget.updates != null) {

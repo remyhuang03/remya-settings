@@ -17,3 +17,5 @@ export 'src/account.dart';
 export 'src/sound.dart';
 
 export 'src/updates.dart';
+
+export 'src/camera.dart';

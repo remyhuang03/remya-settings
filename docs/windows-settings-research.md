@@ -10,7 +10,7 @@ This document records the initial desktop reference catalog researched for basel
 
 Microsoft publishes a [Settings navigation guide](https://support.microsoft.com/en-us/windows/experience/exploring-windows-settings), a [page URI reference](https://learn.microsoft.com/en-us/windows/apps/develop/launch/launch-settings), and a [Windows 11 backup settings catalog](https://learn.microsoft.com/en-us/windows/configuration/windows-backup/catalog?pivots=windows-11). These are complementary inventories, not a published internal schema for every Windows Settings control. Availability varies by OS release, edition, hardware, installed applications, organization policy, account, and staged feature rollout.
 
-The retained coverage includes **116 URI entries** from the reference tables. Query parameters selecting individual apps, cameras, or audio endpoints belong to the same page; aliases are recorded on their target page. Remaining Windows-only entries are clearly unavailable reference previews. A URI that redirects to another view is not evidence of an independent current Windows 11 page.
+The retained coverage includes **112 URI entries** from the reference tables. Query parameters selecting individual apps, cameras, or audio endpoints belong to the same page; aliases are recorded on their target page. Remaining Windows-only entries are clearly unavailable reference previews. A URI that redirects to another view is not evidence of an independent current Windows 11 page.
 
 The retained backup coverage contains **299 hierarchy entries**, including **222 leaf entries** represented by individually identified controls in collapsible "Windows reference settings" sections; the other entries identify groups. Original English names are retained there for traceability. This catalog includes some File Explorer settings, which are treated as reference content rather than additional Settings categories. Backup checkmarks describe Windows backup coverage, not implementation status in this application.
 
@@ -22,9 +22,9 @@ Supplemental reference material comes from [Advanced settings](https://learn.mic
 
 | Category | Main subjects | Hyprland direction |
 | --- | --- | --- |
-| System | Display, notifications, focus, power, storage, windows, sharing, recovery, remote access, clipboard, device information, developer tools | Future compositor and Linux service integrations |
+| System | Display, notifications, focus, power, storage, windows, sharing, remote access, clipboard, device information, developer tools | Future compositor and Linux service integrations |
 | Sound | Output & input, Volume mixer and Devices | Native per-user PipeWire audio through libpulse; see [Sound](sound.md) |
-| Bluetooth & devices | Pairing, printers, cameras, mouse, touchpad, touch, pen, USB, phone and accessory devices | Future Linux device service integrations |
+| Bluetooth & devices | Pairing, printers, cameras, mouse, touchpad, touch, USB, phone and accessory devices | Future Linux device service integrations |
 | Network & Internet | Status, Wi-Fi, Ethernet, VPN, hotspot, airplane mode, cellular, proxy, adapters, usage | Future network service integration |
 | Appearance | Background (image or video), colors and themes (merged), lock screen, launcher, panel, fonts, lighting | Future Hyprland and desktop component configuration |
 | Apps | Installed apps, defaults and startup | Future package and XDG application integration |

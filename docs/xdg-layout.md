@@ -160,3 +160,12 @@ System update progress, held/retry session choices, logs and candidate inventory
 `tool/install.py` also writes `$XDG_DATA_HOME/systemd/user/top.remya.settings.service` and enables it for `graphical-session.target`, so the resident service starts with the session; the D-Bus service file names it with `SystemdService=`. When the service is running, the installer asks it to Quit (refused while an update runs), installs, and starts the unit again.
 
 The one exception outside the user's home is the optional system updater, installed only by `sudo python tool/install_system_updater.py`: `/usr/local/libexec/remya-settings-update` (root:root, 0755) and `/etc/polkit-1/rules.d/50-top.remya.settings.update.rules` (0644). The release bundle's `libexec/remya-settings-update` is only its install source.
+
+## Camera configuration
+
+`cameras.toml` is adjacent to the service's main config (repository config in
+debug; `$XDG_CONFIG_HOME/remya/settings/` in profile/release with HOME fallback).
+Its version-1 cameras table maps PipeWire node names to the supported brightness,
+contrast, saturation and sharpness values. Node serials and preview frames are
+never persisted. The ordinary-user Rust service owns atomic writes and conflict
+resolution; no PipeWire/WirePlumber configuration files are edited.

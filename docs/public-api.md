@@ -947,3 +947,24 @@ boundaries.
 | `set active-hours.a0bb9f49 HH:mm` | `Set(id, value)` | Active hours end; automatic updates start when it is reached |
 
 `updates.status` and `updates.output` reject Set with `ReadOnly`. A second check or upgrade while busy returns `Busy`. `Changed("updates", state)` is published at most once a second while anything changes. Quit returns `Busy` while an update runs. Upgrades never use the GUI-authorized privileged helper: the service runs `pkexec /usr/local/libexec/remya-settings-update upgrade [--include-held]`, which is allowed without a password only by the polkit rule from `tool/install_system_updater.py`. The Dart `UpdatesClient` exposes every operation above. See [System updates](updates.md).
+
+## Cameras
+
+`Get("cameras")` returns api_version, available, initialized, devices, saved,
+conflicts (node names) and error. Each device has name, serial, description,
+framerate and controls. Each control reports value, min, max, step, default and
+writable. `Get("cameras.devices")` and individual control IDs return the same
+state with id. Inventory is read-only.
+
+`Set("cameras.brightness|contrast|saturation|sharpness", JSON)` accepts
+`{"camera":"node.name","serial":52,"value":3}` with an actual current device
+identity. `Set("cameras.reset", JSON)` accepts camera and serial, without value.
+These operations validate capabilities and verify readback. Errors are retained.
+
+`Resolve("cameras:<node.name>", "system|settings")` adopts the detected values
+or applies saved values for that camera. `Get("configuration")` includes cameras.
+`Changed("cameras", state)` reports operations, resolutions and periodic changes.
+CLI get/set/resolve use the identical service operations. CameraClient exposes
+readCameras, changeCamera and resolveCamera without Flutter. `open cameras`
+opens the page; local frame rendering is a GUI concern and not a D-Bus payload.
+See [Camera](camera.md) for dependencies, persistence and verification.

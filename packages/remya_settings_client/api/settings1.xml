@@ -1,5 +1,7 @@
 <node>
   <!-- Sound: Get("sound") / Get("sound.*"), Set("sound.*", JSON); Changed("sound", state). -->
+  <!-- Cameras: Get cameras/cameras.*, Set cameras.* with JSON camera/serial/value;
+       Resolve cameras:<node.name> system|settings; Changed cameras. Preview frames stay GUI-local. -->
   <interface name="top.remya.settings.Settings1">
     <!-- system-information returns api_version and per-ID value/error observations;
          its 16 about.* info fields reject Set with ReadOnly. about is app metadata.

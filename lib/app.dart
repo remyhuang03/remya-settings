@@ -1,3 +1,4 @@
+import 'features/camera/application/camera_controller.dart';
 import 'features/updates/application/updates_controller.dart';
 import 'features/sound/application/sound_controller.dart';
 import 'features/account/application/account_controller.dart';
@@ -44,6 +45,7 @@ class RemyaSettingsApp extends StatefulWidget {
     this.network,
     this.bluetooth,
     this.sound,
+    this.cameras,
     this.updates,
   });
   final AccountController? account;
@@ -54,6 +56,7 @@ class RemyaSettingsApp extends StatefulWidget {
   final NetworkController? network;
   final BluetoothController? bluetooth;
   final SoundController? sound;
+  final CameraController? cameras;
   final UpdatesController? updates;
   final AppPreferencesController? preferences;
   final DateTimeController? dateTime;
@@ -94,6 +97,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     widget.network?.dispose();
     widget.bluetooth?.dispose();
     widget.sound?.dispose();
+    widget.cameras?.dispose();
     widget.updates?.dispose();
     super.dispose();
   }
@@ -141,6 +145,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
               }
               return SettingsShell(
                 catalog: snapshot.data!,
+                cameras: widget.cameras,
                 account: widget.account,
                 sound: widget.sound,
                 updates: widget.updates,

@@ -112,18 +112,6 @@
       "title": "Mouse & touchpad"
     },
     {
-      "uri": "ms-settings:pen",
-      "page": "pen",
-      "sourceCategory": "Devices",
-      "title": "Pen & Windows Ink"
-    },
-    {
-      "uri": "ms-settings:pen-button",
-      "page": "pen-shortcuts",
-      "sourceCategory": "Devices",
-      "title": "Pen shortcut button"
-    },
-    {
       "uri": "ms-settings:printers",
       "page": "printers",
       "sourceCategory": "Devices",
@@ -646,12 +634,6 @@
       "title": "For developers"
     },
     {
-      "uri": "ms-settings:recovery",
-      "page": "recovery",
-      "sourceCategory": "Update and security",
-      "title": "Recovery"
-    },
-    {
       "uri": "ms-settings:signinoptions-launchsecuritykeyenrollment",
       "page": "security-key",
       "sourceCategory": "Update and security",
@@ -1105,144 +1087,6 @@
       "page": "mouse",
       "coverage": "control",
       "control": "mouse.reference.8907aa76"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Pen and Windows Ink"
-      ],
-      "page": "pen",
-      "coverage": "section"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Pen and Windows Ink",
-        "Ignore touch input when I'm using my pen"
-      ],
-      "page": "pen",
-      "coverage": "control",
-      "control": "pen.reference.f573a64c"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Pen and Windows Ink",
-        "Let me use my pen as a mouse when it's available"
-      ],
-      "page": "pen",
-      "coverage": "control",
-      "control": "pen.reference.e839eb2c"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Pen and Windows Ink",
-        "Use the pen button as a right-click equivalent when it's available"
-      ],
-      "page": "pen",
-      "coverage": "control",
-      "control": "pen.reference.0f60ea0a"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Pen and Windows Ink",
-        "Tactile signals (supported on some devices only)"
-      ],
-      "page": "pen",
-      "coverage": "section"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Pen and Windows Ink",
-        "Tactile signals (supported on some devices only)",
-        "While inking (supported on some devices only)"
-      ],
-      "page": "pen",
-      "coverage": "control",
-      "control": "pen.reference.3ad69d1e"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Pen and Windows Ink",
-        "Tactile signals (supported on some devices only)",
-        "While interacting with your device (supported on some devices only)"
-      ],
-      "page": "pen",
-      "coverage": "control",
-      "control": "pen.reference.7b1c28dd"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Pen and Windows Ink",
-        "Tactile signals (supported on some devices only)",
-        "Intensity (supported on some devices only)"
-      ],
-      "page": "pen",
-      "coverage": "control",
-      "control": "pen.reference.8a3c1cf1"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Choose what your shortcut button does"
-      ],
-      "page": "pen-shortcuts",
-      "coverage": "section"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Choose what your shortcut button does",
-        "Single-click"
-      ],
-      "page": "pen-shortcuts",
-      "coverage": "control",
-      "control": "pen-shortcuts.reference.ceea88ce"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Choose what your shortcut button does",
-        "Double-click"
-      ],
-      "page": "pen-shortcuts",
-      "coverage": "control",
-      "control": "pen-shortcuts.reference.1f59f186"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Choose what your shortcut button does",
-        "Press and hold (only supported by some pens)"
-      ],
-      "page": "pen-shortcuts",
-      "coverage": "control",
-      "control": "pen-shortcuts.reference.853b480c"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Choose what your shortcut button does",
-        "Allow apps to override the shortcut button behavior"
-      ],
-      "page": "pen-shortcuts",
-      "coverage": "control",
-      "control": "pen-shortcuts.reference.339eec05"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Choose what your shortcut button does",
-        "When available, show pen menu after I remove my pen from storage"
-      ],
-      "page": "pen-shortcuts",
-      "coverage": "control",
-      "control": "pen-shortcuts.reference.afd4d4ac"
     },
     {
       "area": "Bluetooth & devices",
