@@ -1,28 +1,11 @@
 use remya_settings_date_time::api as clock;
-use remya_settings_updates::{
-    Privilege,
-    authorization::Authorization,
-    protocol::{Operation, Output, write_frame},
-};
 use serde::{Deserialize, Serialize};
 use std::io::{BufRead, BufReader, Read, Write};
 use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
-use std::sync::{Arc, Mutex};
 
 #[derive(Serialize, Deserialize)]
 #[serde(tag = "operation", deny_unknown_fields)]
 pub enum Request {
-    UpdateBegin {
-        job: String,
-        all: bool,
-    },
-    UpdatePacman {
-        job: String,
-        transaction: Operation,
-    },
-    UpdateEnd {
-        job: String,
-    },
     Uninstall {
         removal: remya_settings_applications::Removal,
     },
@@ -81,54 +64,10 @@ pub fn serve() -> Result<(), String> {
     let mut output = std::io::stdout().lock();
     writeln!(output, "ready-v1").map_err(|e| e.to_string())?;
     output.flush().map_err(|e| e.to_string())?;
-    let mut update: Option<Authorization> = None;
     while let Some(line) = read_frame(&mut input)? {
         let request = serde_json::from_str::<Request>(&line);
-        if let Ok(Request::UpdatePacman { job, transaction }) = &request {
-            let mut connected = true;
-            let result = update
-                .as_ref()
-                .filter(|auth| auth.job() == job)
-                .ok_or_else(|| "No authorized update job owns this request".to_owned())
-                .and_then(|auth| {
-                    auth.run(transaction, |text| {
-                        if connected {
-                            connected =
-                                write_frame(&mut output, &Output::Text { text: text.into() })
-                                    .is_ok();
-                        }
-                    })
-                });
-            // A closed observer must never kill pacman halfway through a transaction.
-            if !connected {
-                return Ok(());
-            }
-            let result = match result {
-                Ok(code) => Output::Exit { code },
-                Err(message) => Output::Error { message },
-            };
-            write_frame(&mut output, &result)?;
-            continue;
-        }
         let result = request.map_err(|e| e.to_string()).and_then(|request| {
             let state = match request {
-                Request::UpdateBegin { job, all } => {
-                    if update.is_some() {
-                        return Err("An update job is already authorized".into());
-                    }
-                    let auth = Authorization::begin(&job, all)?;
-                    let held = serde_json::json!({"held":auth.held()});
-                    update = Some(auth);
-                    return Ok(held);
-                }
-                Request::UpdateEnd { job } => {
-                    if update.as_ref().is_none_or(|auth| auth.job() != job) {
-                        return Err("Update job identity mismatch".into());
-                    }
-                    update = None;
-                    return Ok(serde_json::Value::Null);
-                }
-                Request::UpdatePacman { .. } => return Err("Invalid update frame".into()),
                 Request::Uninstall { removal } => {
                     return remya_settings_applications::uninstall(&removal, true);
                 }
@@ -227,68 +166,6 @@ impl Session {
         serde_json::from_str::<Result<serde_json::Value, String>>(&line)
             .map_err(|e| e.to_string())?
     }
-    fn update(
-        &mut self,
-        job: &str,
-        operation: &Operation,
-        output: &mut dyn FnMut(&str),
-    ) -> Result<i32, String> {
-        self.send(&Request::UpdatePacman {
-            job: job.into(),
-            transaction: operation.clone(),
-        })?;
-        while let Some(line) = read_frame(&mut self.output)? {
-            match serde_json::from_str::<Output>(&line).map_err(|e| e.to_string())? {
-                Output::Text { text } => output(&text),
-                Output::Exit { code } => return Ok(code),
-                Output::Error { message } => return Err(message),
-            }
-        }
-        Err("Updater authorization stopped; reopen Settings to authorize again".into())
-    }
-}
-
-pub struct UpdateSession(pub Arc<Mutex<Session>>);
-impl Privilege for UpdateSession {
-    fn begin(&self, job: &str, all: bool) -> Result<Vec<String>, String> {
-        let result = self
-            .0
-            .lock()
-            .map_err(|_| "Privilege session failed")?
-            .call(&Request::UpdateBegin {
-                job: job.into(),
-                all,
-            })?;
-        result["held"]
-            .as_array()
-            .ok_or("Invalid updater authorization response")?
-            .iter()
-            .map(|value| {
-                value
-                    .as_str()
-                    .map(str::to_owned)
-                    .ok_or_else(|| "Invalid held package".to_owned())
-            })
-            .collect()
-    }
-    fn run(
-        &self,
-        job: &str,
-        operation: &Operation,
-        output: &mut dyn FnMut(&str),
-    ) -> Result<i32, String> {
-        self.0
-            .lock()
-            .map_err(|_| "Privilege session failed")?
-            .update(job, operation, output)
-    }
-    fn end(&self, job: &str) -> Result<(), String> {
-        self.0
-            .lock()
-            .map_err(|_| "Privilege session failed")?
-            .call(&Request::UpdateEnd { job: job.into() })
-            .map(|_| ())
-    }
 }
 
 #[cfg(test)]
@@ -323,24 +200,12 @@ mod tests {
         assert!(read_frame(&mut &b""[..]).unwrap().is_none());
     }
     #[test]
-    fn updater_streams_output_until_exit_over_the_existing_private_session() {
-        let mut child = Command::new("/bin/sh").args(["-c", "read -r request; printf '%s\\n' '{\"kind\":\"Text\",\"text\":\"working\\n\"}' '{\"kind\":\"Exit\",\"code\":0}'"])
-            .stdin(Stdio::piped()).stdout(Stdio::piped()).spawn().unwrap();
-        let mut session = Session {
-            input: child.stdin.take(),
-            output: BufReader::new(child.stdout.take().unwrap()),
-            child,
-        };
-        let mut text = String::new();
-        assert_eq!(
-            session
-                .update("remya-settings-update-abcdef", &Operation::Ping, &mut |s| {
-                    text.push_str(s)
-                })
-                .unwrap(),
-            0
-        );
-        assert_eq!(text, "working\n");
-        assert!(serde_json::from_str::<Request>(r#"{"operation":"UpdatePacman","job":"remya-settings-update-abcdef","transaction":{"kind":"Sync","refresh":true,"upgrade":true,"packages":[],"dependencies":false,"needed":false,"config":"/tmp/evil"}}"#).is_err());
+    fn removed_update_requests_are_rejected() {
+        for request in [
+            r#"{"operation":"UpdateBegin","job":"remya-settings-update-abcdef","all":false}"#,
+            r#"{"operation":"UpdateEnd","job":"remya-settings-update-abcdef"}"#,
+        ] {
+            assert!(serde_json::from_str::<Request>(request).is_err());
+        }
     }
 }

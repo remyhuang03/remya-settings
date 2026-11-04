@@ -6,11 +6,13 @@ publish.workspace = true
 license.workspace = true
 
 [[bin]]
-name = "remya-settings-update-auth"
-path = "src/bin/update_auth.rs"
+name = "remya-settings-update"
+path = "src/bin/update.rs"
 
 [dependencies]
 libc = "0.2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+
+[dev-dependencies]
 tempfile = "3.23"

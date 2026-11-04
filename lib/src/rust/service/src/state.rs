@@ -1,4 +1,4 @@
-use crate::privileged::{Request, Session, UpdateSession};
+use crate::privileged::{Request, Session};
 use gio::glib::{Variant, variant::ToVariant};
 use remya_settings_appearance::api as appearance;
 use remya_settings_applications as applications;
@@ -219,13 +219,7 @@ impl State {
             ),
             bluetooth: remya_settings_bluetooth::Bluetooth::new(),
             sound: Sound::new(RealPulse),
-            updates: Updates::new(
-                std::env::current_exe()
-                    .unwrap_or_default()
-                    .with_file_name("remya-settings-update-auth"),
-                config.with_file_name("updates.json"),
-                atomic_write,
-            ),
+            updates: Updates::new(config.with_file_name("updates.json"), atomic_write),
             network: NetworkManager::real(config.with_file_name("network.toml")),
             appimages: applications::appimages::AppImages::real(
                 config.with_file_name("appimages.toml"),
@@ -391,21 +385,6 @@ impl State {
     }
     fn privileged(&mut self, request: Request) -> Result<clock::DateTimeState, String> {
         serde_json::from_value(self.request(request)?).map_err(|e| e.to_string())
-    }
-    pub fn tick_updates(&self) {
-        let privilege = self
-            .privileged
-            .as_ref()
-            .map(|session| Arc::new(UpdateSession(session.clone())) as Arc<dyn updates::Privilege>);
-        self.updates.tick(privilege);
-    }
-    pub fn updates_state(&self) -> Value {
-        let mut value = self.updates.state();
-        value["authorized"] = json!(self.privileged.is_some());
-        value["authorizing"] =
-            json!(self.auth_attempted && self.privileged.is_none() && self.auth_error.is_none());
-        value["auth_error"] = json!(self.auth_error);
-        value
     }
     pub fn hostname_state(&self) -> Value {
         let mut value = self.hostname.state();
@@ -619,11 +598,15 @@ impl State {
                     }
                     "account-information" => self.account.read(),
                     _ if account::IDS.contains(&key) => self.account.read_setting(key),
-                    "updates" => Ok(self.updates_state()),
+                    "updates" => {
+                        self.updates.refresh();
+                        Ok(self.updates.state())
+                    }
                     _ if updates::is_setting(key) => {
-                        let mut value = self.updates_state();
+                        let mut value = self.updates.state();
                         value["id"] = json!(key);
-                        value["availability"] = json!(if updates::WORK_IN_PROGRESS { "planned" } else if value["available"] == true { "available" } else { "unsupported" });
+                        // Missing tools are a host limit; a missing root updater is reported by `available`/`reason`.
+                        value["availability"] = json!(if value["missing"].as_array().is_some_and(Vec::is_empty) { "available" } else { "unsupported" });
                         Ok(value)
                     }
                     "sound" => {
@@ -844,11 +827,7 @@ impl State {
             return self.default_apps.set(key, value);
         }
         if updates::is_setting(key) {
-            let privilege = self.privileged.as_ref().map(|session| {
-                Arc::new(UpdateSession(session.clone())) as Arc<dyn updates::Privilege>
-            });
-            self.updates.set(key, value, privilege)?;
-            return Ok(self.updates_state());
+            return self.updates.set(key, value);
         }
         if sound::is_setting(key) {
             return self.sound.set(key, value);

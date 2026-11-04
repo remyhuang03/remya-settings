@@ -1,17 +1,14 @@
-pub mod authorization;
-pub mod bridge;
 mod engine;
 mod process;
-pub mod protocol;
 mod schedule;
 mod terminal;
+pub mod updater;
 
 use engine::{Backend, RealBackend};
 use serde::Serialize;
 use serde_json::{Value, json};
 use std::{
     fs,
-    os::unix::fs::{DirBuilderExt, MetadataExt, PermissionsExt},
     path::{Path, PathBuf},
     process::Command,
     sync::{
@@ -22,8 +19,9 @@ use std::{
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
-pub const WORK_IN_PROGRESS: bool = true;
-pub const WIP_REASON: &str = "Work in progress: package updates are incomplete and upgrade execution is unverified. Checks, updates and automatic scheduling are paused.";
+/// Bump whenever the root updater's behavior or arguments change.
+pub const UPDATER_VERSION: u32 = 1;
+pub const INSTALL_COMMAND: &str = "sudo python tool/install_system_updater.py";
 pub const CHECK: &str = "updates.check";
 pub const UPGRADE: &str = "updates.upgrade";
 pub const ALL: &str = "updates.include-held";
@@ -31,10 +29,29 @@ pub const RETRY: &str = "updates.retry";
 pub const STATUS: &str = "updates.status";
 pub const OUTPUT: &str = "updates.output";
 pub const AUTOMATIC: &str = "updates.automatic";
-pub const TIME: &str = "updates.daily-time";
-pub const IDS: [&str; 8] = [CHECK, UPGRADE, ALL, RETRY, STATUS, OUTPUT, AUTOMATIC, TIME];
+pub const ACTIVE_START: &str = "active-hours.e8868af6";
+pub const ACTIVE_END: &str = "active-hours.a0bb9f49";
+pub const IDS: [&str; 9] = [
+    CHECK,
+    UPGRADE,
+    ALL,
+    RETRY,
+    STATUS,
+    OUTPUT,
+    AUTOMATIC,
+    ACTIVE_START,
+    ACTIVE_END,
+];
 pub fn is_setting(id: &str) -> bool {
     IDS.contains(&id)
+}
+pub fn valid_package(value: &str) -> bool {
+    !value.is_empty()
+        && value.len() <= 255
+        && !value.starts_with(['-', '.'])
+        && value
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b"@_+.-".contains(&b))
 }
 const DEFAULT_HELD: &[&str] = &[
     "linux",
@@ -90,20 +107,10 @@ pub fn installed_packages() -> Result<Vec<String>, String> {
     }
     let text = String::from_utf8(out.stdout).map_err(|e| e.to_string())?;
     let packages = text.lines().map(str::to_owned).collect::<Vec<_>>();
-    if !packages.iter().all(|p| protocol::valid_package(p)) {
+    if !packages.iter().all(|p| valid_package(p)) {
         return Err("Invalid installed package name".into());
     }
     Ok(packages)
-}
-pub trait Privilege: Send + Sync {
-    fn begin(&self, job: &str, all: bool) -> Result<Vec<String>, String>;
-    fn run(
-        &self,
-        job: &str,
-        operation: &protocol::Operation,
-        output: &mut dyn FnMut(&str),
-    ) -> Result<i32, String>;
-    fn end(&self, job: &str) -> Result<(), String>;
 }
 #[derive(Clone, Serialize)]
 pub struct Candidate {
@@ -116,6 +123,7 @@ pub struct Candidate {
 struct State {
     revision: u64,
     schedule: schedule::Schedule,
+    updater: &'static str,
     all: bool,
     retry: bool,
     busy: bool,
@@ -130,23 +138,10 @@ struct State {
     error: Option<String>,
 }
 impl State {
-    fn new(schedule: schedule::Schedule) -> Self {
-        Self {
-            revision: 0,
-            schedule,
-            all: false,
-            retry: false,
-            busy: false,
-            phase: "idle",
-            kind: "none",
-            attempt: 0,
-            retry_at: None,
-            checked_at: None,
-            held: vec![],
-            candidates: vec![],
-            log: terminal::Log::default(),
-            error: None,
-        }
+    fn eligible(&self) -> bool {
+        self.candidates
+            .iter()
+            .any(|c| c.source == "repository" && !c.held)
     }
 }
 struct Inner {
@@ -155,7 +150,6 @@ struct Inner {
     dirty: AtomicBool,
     stop: AtomicBool,
     required: Vec<PathBuf>,
-    work_in_progress: bool,
 }
 #[derive(Clone)]
 pub struct Updates(Arc<Inner>);
@@ -168,46 +162,57 @@ fn now() -> u64 {
 fn retry_delay(attempt: u32) -> u64 {
     u64::from(attempt).saturating_mul(5).min(60)
 }
+fn not_ready(updater: &str) -> String {
+    format!(
+        "Unavailable:The system updater is {updater}. Run {INSTALL_COMMAND} from the Settings source tree once."
+    )
+}
 impl Updates {
-    pub fn new(
-        bridge: PathBuf,
-        configuration: PathBuf,
-        write: fn(&Path, &[u8]) -> Result<(), String>,
-    ) -> Self {
+    pub fn new(configuration: PathBuf, write: fn(&Path, &[u8]) -> Result<(), String>) -> Self {
         let required = [
-            "/usr/bin/yay",
             "/usr/bin/pacman",
             "/usr/bin/checkupdates",
-            "/usr/bin/script",
-            "/usr/bin/makepkg",
-            "/usr/bin/fakeroot",
-            "/usr/bin/git",
-            "/usr/bin/gpg",
+            "/usr/bin/pkexec",
+            "/usr/bin/systemd-run",
         ]
         .into_iter()
         .map(PathBuf::from)
-        .chain([bridge.clone()])
         .collect();
         Self::with_backend(
-            Arc::new(RealBackend { bridge }),
+            Arc::new(RealBackend {
+                updater: updater::PATH.into(),
+            }),
             required,
             schedule::Schedule::load(configuration, write),
-            WORK_IN_PROGRESS,
         )
     }
     fn with_backend(
         backend: Arc<dyn Backend>,
         required: Vec<PathBuf>,
         schedule: schedule::Schedule,
-        work_in_progress: bool,
     ) -> Self {
         Self(Arc::new(Inner {
-            state: Mutex::new(State::new(schedule)),
+            state: Mutex::new(State {
+                revision: 0,
+                schedule,
+                updater: backend.updater(),
+                all: false,
+                retry: false,
+                busy: false,
+                phase: "idle",
+                kind: "none",
+                attempt: 0,
+                retry_at: None,
+                checked_at: None,
+                held: vec![],
+                candidates: vec![],
+                log: terminal::Log::default(),
+                error: None,
+            }),
             backend,
             dirty: AtomicBool::new(false),
             stop: AtomicBool::new(false),
             required,
-            work_in_progress,
         }))
     }
     fn missing(&self) -> Vec<String> {
@@ -218,10 +223,31 @@ impl Updates {
             .map(|p| p.display().to_string())
             .collect()
     }
+    /// Re-reads the installed root updater, e.g. after the user ran the install command.
+    pub fn refresh(&self) {
+        let updater = self.0.backend.updater();
+        if self.0.state.lock().unwrap().updater != updater {
+            self.change(|state| state.updater = updater);
+        }
+    }
     pub fn state(&self) -> Value {
         let state = self.0.state.lock().unwrap();
         let missing = self.missing();
-        json!({"api_version":1,"revision":state.revision,"schedule":state.schedule.state(),"available":!self.0.work_in_progress && missing.is_empty(),"work_in_progress":self.0.work_in_progress,"reason":if self.0.work_in_progress {Some(WIP_REASON)} else {None},"missing":missing,"all":state.all,"retry":state.retry,"busy":state.busy,"phase":state.phase,"kind":state.kind,"attempt":state.attempt,"retry_at":state.retry_at,"checked_at":state.checked_at,"held":state.held,"packages":state.candidates,"output":state.log.lines(),"error":state.error})
+        let available = missing.is_empty() && state.updater == "installed";
+        let reason = if !missing.is_empty() {
+            Some(format!(
+                "Required tools are missing: {}",
+                missing.join(", ")
+            ))
+        } else if !available {
+            Some(format!(
+                "The system updater is {}. Run {INSTALL_COMMAND} from the Settings source tree once.",
+                state.updater
+            ))
+        } else {
+            None
+        };
+        json!({"api_version":1,"revision":state.revision,"schedule":state.schedule.state(),"available":available,"reason":reason,"missing":missing,"updater":state.updater,"install_command":INSTALL_COMMAND,"aur":self.0.backend.aur(),"all":state.all,"retry":state.retry,"busy":state.busy,"phase":state.phase,"kind":state.kind,"attempt":state.attempt,"retry_at":state.retry_at,"checked_at":state.checked_at,"held":state.held,"packages":state.candidates,"eligible":state.eligible(),"output":state.log.lines(),"error":state.error})
     }
     pub fn busy(&self) -> bool {
         self.0.state.lock().unwrap().busy
@@ -259,9 +285,6 @@ impl Updates {
         });
     }
     fn start(&self, kind: &'static str) -> Result<(), String> {
-        if self.0.work_in_progress {
-            return Err(format!("Unavailable:{WIP_REASON}"));
-        }
         let missing = self.missing();
         if !missing.is_empty() {
             return Err(format!(
@@ -269,17 +292,22 @@ impl Updates {
                 missing.join(", ")
             ));
         }
+        let updater = self.0.backend.updater();
         let mut state = self.0.state.lock().unwrap();
+        state.updater = updater;
+        if kind != "check" && updater != "installed" {
+            return Err(not_ready(updater));
+        }
         if state.busy {
             return Err("Busy:An update operation is already running".into());
         }
         state.revision = state.revision.saturating_add(1);
         state.busy = true;
         state.kind = kind;
-        state.phase = if kind == "check" || kind == "scheduled" {
-            "checking"
-        } else {
+        state.phase = if kind == "upgrade" {
             "upgrading"
+        } else {
+            "checking"
         };
         state.attempt = 0;
         state.retry_at = None;
@@ -289,19 +317,12 @@ impl Updates {
         self.0.dirty.store(true, Ordering::Relaxed);
         Ok(())
     }
-    pub fn set(
-        &self,
-        id: &str,
-        value: &str,
-        privilege: Option<Arc<dyn Privilege>>,
-    ) -> Result<Value, String> {
-        if self.0.work_in_progress {
-            return Err(format!("Unavailable:{WIP_REASON}"));
-        }
+    pub fn set(&self, id: &str, value: &str) -> Result<Value, String> {
         match id {
-            AUTOMATIC | TIME => {
+            AUTOMATIC | ACTIVE_START | ACTIVE_END => {
+                let local = schedule::LocalTime::now().ok_or("Cannot read the local time")?;
                 let mut state = self.0.state.lock().unwrap();
-                state.schedule.set(id, value)?;
+                state.schedule.set(id, value, &local)?;
                 state.revision = state.revision.saturating_add(1);
                 self.0.dirty.store(true, Ordering::Relaxed);
             }
@@ -318,7 +339,9 @@ impl Updates {
                     if id == ALL {
                         state.all = value;
                         for candidate in &mut state.candidates {
-                            candidate.held = !value && state.held.contains(&candidate.name);
+                            candidate.held = !value
+                                && candidate.source == "repository"
+                                && state.held.contains(&candidate.name);
                         }
                     } else {
                         state.retry = value;
@@ -332,7 +355,8 @@ impl Updates {
                 self.start("check")?;
                 let updates = self.clone();
                 thread::spawn(move || {
-                    let result = updates.check();
+                    let all = updates.0.state.lock().unwrap().all;
+                    let result = updates.check(all);
                     updates.finish(result);
                 });
             }
@@ -340,13 +364,11 @@ impl Updates {
                 if value != "upgrade" {
                     return Err("InvalidArgument:Use upgrade".into());
                 }
-                let privilege = privilege
-                    .ok_or("Unauthorized:Open Settings and authorize system changes first")?;
                 self.start("upgrade")?;
                 let updates = self.clone();
                 thread::spawn(move || {
                     let all = updates.0.state.lock().unwrap().all;
-                    let result = updates.upgrade(privilege, all);
+                    let result = updates.upgrade(all);
                     updates.finish(result);
                 });
             }
@@ -357,22 +379,17 @@ impl Updates {
         }
         Ok(self.state())
     }
-    pub fn tick(&self, privilege: Option<Arc<dyn Privilege>>) {
-        if self.0.work_in_progress {
-            return;
-        }
+    pub fn tick(&self) {
         if let Some(local) = schedule::LocalTime::now() {
-            self.tick_at(&local, privilege);
+            self.tick_at(&local);
         }
     }
-    fn tick_at(&self, local: &schedule::LocalTime, privilege: Option<Arc<dyn Privilege>>) {
-        if self.0.work_in_progress {
-            return;
-        }
+    fn tick_at(&self, local: &schedule::LocalTime) {
         let due = {
             let mut state = self.0.state.lock().unwrap();
             let busy = state.busy;
-            let due = state.schedule.due(local, busy, privilege.is_some());
+            let ready = self.missing().is_empty() && state.updater == "installed";
+            let due = state.schedule.due(local, busy, ready);
             if !matches!(due, schedule::Due::None) {
                 state.revision = state.revision.saturating_add(1);
                 self.0.dirty.store(true, Ordering::Relaxed);
@@ -390,58 +407,24 @@ impl Updates {
         thread::spawn(move || {
             let result = (|| {
                 updates.output("Daily automatic update: checking for eligible packages.\n");
-                updates.check()?;
-                let eligible = {
-                    let state = updates.0.state.lock().unwrap();
-                    state
-                        .candidates
-                        .iter()
-                        .any(|candidate| !state.held.contains(&candidate.name))
-                };
-                if !eligible {
-                    updates.output("No eligible updates; no package transaction was started.\n");
+                // Scheduled runs always keep the default holds.
+                updates.check(false)?;
+                if !updates.0.state.lock().unwrap().eligible() {
+                    updates.output("No eligible repository updates; pacman was not started.\n");
                     return Ok(());
                 }
-                updates.upgrade(
-                    privilege.ok_or("Scheduled update authorization is no longer available")?,
-                    false,
-                )
+                updates.upgrade(false)
             })();
             updates.finish(result);
         });
     }
-    fn scratch(&self) -> Result<tempfile::TempDir, String> {
-        let uid = unsafe { libc::geteuid() };
-        if uid == 0 {
-            return Err("Updates and AUR builds must run as an ordinary user".into());
-        }
-        let base = process::job_base(uid);
-        match fs::DirBuilder::new().mode(0o700).create(&base) {
-            Ok(()) => {}
-            Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {}
-            Err(e) => return Err(e.to_string()),
-        }
-        let metadata = fs::symlink_metadata(&base).map_err(|e| e.to_string())?;
-        if !metadata.is_dir() || metadata.uid() != uid || metadata.mode() & 0o077 != 0 {
-            return Err("Update working directory is not private and owned by this user".into());
-        }
-        tempfile::Builder::new()
-            .prefix("remya-settings-update-")
-            .permissions(fs::Permissions::from_mode(0o700))
-            .tempdir_in(base)
-            .map_err(|e| e.to_string())
-    }
-    fn check(&self) -> Result<(), String> {
-        let root = self.scratch()?;
-        let all = self.0.state.lock().unwrap().all;
+    fn check(&self, all: bool) -> Result<(), String> {
         let held = self.0.backend.held(false)?;
         self.change(|state| state.held = held.clone());
-        let mut candidates = self
-            .0
-            .backend
-            .check(root.path(), &mut |text| self.output(text))?;
+        let mut candidates = self.0.backend.check(&mut |text| self.output(text))?;
         for candidate in &mut candidates {
-            candidate.held = !all && held.contains(&candidate.name);
+            candidate.held =
+                !all && candidate.source == "repository" && held.contains(&candidate.name);
         }
         self.change(|state| {
             state.candidates = candidates;
@@ -450,41 +433,18 @@ impl Updates {
         self.output("Update check completed.\n");
         Ok(())
     }
-    fn upgrade(&self, privilege: Arc<dyn Privilege>, all: bool) -> Result<(), String> {
-        let root = self.scratch()?;
-        let job = root
-            .path()
-            .file_name()
-            .and_then(|p| p.to_str())
-            .ok_or("Invalid update working directory")?;
-        let held = privilege.begin(job, all)?;
-        self.change(|state| state.held = held.clone());
-        self.output(&if held.is_empty() {
-            "Upgrading everything; no packages are held.\n".into()
-        } else {
-            format!(
-                "Holding {} packages for this session: {}\n",
-                held.len(),
-                held.join(", ")
-            )
-        });
-        let result = (|| {
-            loop {
-                self.change(|state| {
-                    state.attempt += 1;
-                    state.phase = "upgrading";
-                    state.retry_at = None;
-                    state.error = None;
-                });
-                let attempt = self.0.state.lock().unwrap().attempt;
-                self.output(&format!("Upgrade attempt {attempt}.\n"));
-                let result =
-                    self.0
-                        .backend
-                        .upgrade(root.path(), &held, privilege.clone(), &mut |text| {
-                            self.output(text)
-                        });
-                if matches!(result, Ok(0)) {
+    fn upgrade(&self, all: bool) -> Result<(), String> {
+        loop {
+            self.change(|state| {
+                state.attempt += 1;
+                state.phase = "upgrading";
+                state.retry_at = None;
+                state.error = None;
+            });
+            let attempt = self.0.state.lock().unwrap().attempt;
+            self.output(&format!("Upgrade attempt {attempt}.\n"));
+            let message = match self.0.backend.upgrade(all, &mut |text| self.output(text)) {
+                Ok(0) => {
                     self.change(|state| {
                         state.checked_at = None;
                         state.candidates.clear();
@@ -494,31 +454,35 @@ impl Updates {
                     );
                     return Ok(());
                 }
-                let message = match result {
-                    Ok(code) => format!("Upgrade failed (exit {code})"),
-                    Err(error) => error,
-                };
-                self.output(&format!("{message}\n"));
+                // pkexec: 126 = authorization refused or dismissed, 127 = not authorized.
+                Ok(126 | 127) => {
+                    return Err(format!(
+                        "System update was not authorized. Run {INSTALL_COMMAND} to install the updater and its polkit rule."
+                    ));
+                }
+                Ok(code) => format!("Upgrade failed (exit {code})"),
+                Err(error) => error,
+            };
+            self.output(&format!("{message}\n"));
+            if !self.0.state.lock().unwrap().retry || self.0.stop.load(Ordering::Relaxed) {
+                return Err(message);
+            }
+            let delay = retry_delay(attempt);
+            self.change(|state| {
+                state.phase = "retrying";
+                state.retry_at = Some(now() + delay);
+                state.error = Some(message.clone());
+            });
+            self.output(&format!(
+                "Retrying in {delay} seconds. Turn off Retry after failure to stop further attempts.\n"
+            ));
+            for _ in 0..delay * 10 {
+                thread::sleep(Duration::from_millis(100));
                 if !self.0.state.lock().unwrap().retry || self.0.stop.load(Ordering::Relaxed) {
                     return Err(message);
                 }
-                let delay = retry_delay(attempt);
-                self.change(|state| {
-                    state.phase = "retrying";
-                    state.retry_at = Some(now() + delay);
-                    state.error = Some(message.clone());
-                });
-                self.output(&format!("Retrying in {delay} seconds. Turn off Retry after failure to stop further attempts.\n"));
-                for _ in 0..delay * 10 {
-                    thread::sleep(Duration::from_millis(100));
-                    if !self.0.state.lock().unwrap().retry || self.0.stop.load(Ordering::Relaxed) {
-                        return Err(message);
-                    }
-                }
             }
-        })();
-        let ended = privilege.end(job);
-        result.and(ended)
+        }
     }
     pub fn shutdown(&self) {
         self.0.stop.store(true, Ordering::Relaxed);
@@ -528,6 +492,7 @@ impl Updates {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::atomic::AtomicU32;
     #[test]
     fn holds_match_up_and_all_removes_every_hold() {
         let installed = vec![
@@ -547,97 +512,73 @@ mod tests {
         assert_eq!(retry_delay(12), 60);
         assert_eq!(retry_delay(100), 60);
     }
-    struct ReadOnly;
-    impl Backend for ReadOnly {
+    fn candidate(name: &str, source: &str) -> Candidate {
+        Candidate {
+            name: name.into(),
+            installed: "1".into(),
+            available: "2".into(),
+            source: source.into(),
+            held: false,
+        }
+    }
+    struct Fake {
+        updater: &'static str,
+        candidates: Vec<Candidate>,
+        codes: Mutex<Vec<i32>>,
+        gate: Option<(
+            std::sync::mpsc::Sender<()>,
+            Mutex<std::sync::mpsc::Receiver<()>>,
+        )>,
+        checks: AtomicU32,
+        upgrades: Mutex<Vec<bool>>,
+    }
+    impl Fake {
+        fn new(candidates: Vec<Candidate>, codes: Vec<i32>) -> Self {
+            Self {
+                updater: "installed",
+                candidates,
+                codes: Mutex::new(codes),
+                gate: None,
+                checks: 0.into(),
+                upgrades: Mutex::new(vec![]),
+            }
+        }
+    }
+    impl Backend for Fake {
         fn held(&self, _: bool) -> Result<Vec<String>, String> {
             Ok(vec!["linux".into()])
         }
-        fn check(&self, _: &Path, output: &mut dyn FnMut(&str)) -> Result<Vec<Candidate>, String> {
+        fn aur(&self) -> bool {
+            true
+        }
+        fn check(&self, output: &mut dyn FnMut(&str)) -> Result<Vec<Candidate>, String> {
+            if let Some((entered, release)) = &self.gate {
+                entered.send(()).unwrap();
+                release.lock().unwrap().recv().unwrap();
+            }
+            self.checks.fetch_add(1, Ordering::Relaxed);
             output("checked\n");
-            Ok(vec![])
+            Ok(self.candidates.clone())
         }
-        fn upgrade(
-            &self,
-            _: &Path,
-            _: &[String],
-            _: Arc<dyn Privilege>,
-            _: &mut dyn FnMut(&str),
-        ) -> Result<i32, String> {
-            panic!("read-only calls must never upgrade")
+        fn upgrade(&self, all: bool, output: &mut dyn FnMut(&str)) -> Result<i32, String> {
+            self.upgrades.lock().unwrap().push(all);
+            output("fake transaction\n");
+            let mut codes = self.codes.lock().unwrap();
+            Ok(if codes.len() > 1 {
+                codes.remove(0)
+            } else {
+                codes[0]
+            })
         }
-    }
-    #[test]
-    fn inspection_and_view_options_never_start_an_upgrade() {
-        let updates = Updates::with_backend(
-            Arc::new(ReadOnly),
-            vec![],
-            schedule::Schedule::memory(),
-            false,
-        );
-        assert_eq!(updates.state()["phase"], "idle");
-        updates.set(ALL, "true", None).unwrap();
-        updates.set(RETRY, "true", None).unwrap();
-        assert!(
-            updates
-                .set(UPGRADE, "upgrade", None)
-                .unwrap_err()
-                .starts_with("Unauthorized:")
-        );
-        assert!(!updates.busy());
-        assert!(updates.set(OUTPUT, "clear", None).is_err());
-    }
-    struct Gate {
-        entered: std::sync::mpsc::Sender<()>,
-        release: Mutex<std::sync::mpsc::Receiver<()>>,
-        upgrades: std::sync::atomic::AtomicU32,
-    }
-    impl Backend for Gate {
-        fn held(&self, _: bool) -> Result<Vec<String>, String> {
-            Ok(vec!["linux".into()])
-        }
-        fn check(&self, _: &Path, output: &mut dyn FnMut(&str)) -> Result<Vec<Candidate>, String> {
-            self.entered.send(()).unwrap();
-            self.release.lock().unwrap().recv().unwrap();
-            output("repository checked\n");
-            Ok(vec![Candidate {
-                name: "linux".into(),
-                installed: "1".into(),
-                available: "2".into(),
-                source: "repository".into(),
-                held: false,
-            }])
-        }
-        fn upgrade(
-            &self,
-            _: &Path,
-            _: &[String],
-            _: Arc<dyn Privilege>,
-            output: &mut dyn FnMut(&str),
-        ) -> Result<i32, String> {
-            self.upgrades.fetch_add(1, Ordering::Relaxed);
-            output("fake package transaction failed\n");
-            Ok(1)
+        fn updater(&self) -> &'static str {
+            self.updater
         }
     }
-    struct FakePrivilege;
-    impl Privilege for FakePrivilege {
-        fn begin(&self, _: &str, _: bool) -> Result<Vec<String>, String> {
-            Ok(vec!["linux".into()])
-        }
-        fn run(
-            &self,
-            _: &str,
-            _: &protocol::Operation,
-            _: &mut dyn FnMut(&str),
-        ) -> Result<i32, String> {
-            panic!("fake backend must not run pacman")
-        }
-        fn end(&self, _: &str) -> Result<(), String> {
-            Ok(())
-        }
+    fn service(backend: Arc<Fake>) -> Updates {
+        Updates::with_backend(backend, vec![], schedule::Schedule::memory())
     }
     fn await_phase(updates: &Updates, phase: &str) {
-        for _ in 0..100 {
+        for _ in 0..200 {
             if updates.state()["phase"] == phase {
                 return;
             }
@@ -646,197 +587,152 @@ mod tests {
         panic!("expected {phase}, got {}", updates.state());
     }
     #[test]
-    fn asynchronous_check_stays_responsive_and_retry_can_stop_without_restarting_transaction() {
+    fn check_is_asynchronous_holds_repository_packages_and_never_counts_aur() {
         let (entered, receive) = std::sync::mpsc::channel();
         let (release, wait) = std::sync::mpsc::channel();
-        let backend = Arc::new(Gate {
-            entered,
-            release: Mutex::new(wait),
-            upgrades: 0.into(),
-        });
-        let updates =
-            Updates::with_backend(backend.clone(), vec![], schedule::Schedule::memory(), false);
-        updates.set(CHECK, "check", None).unwrap();
+        let mut fake = Fake::new(
+            vec![candidate("linux", "repository"), candidate("linux", "AUR")],
+            vec![0],
+        );
+        fake.gate = Some((entered, Mutex::new(wait)));
+        let backend = Arc::new(fake);
+        let updates = service(backend.clone());
+        updates.set(CHECK, "check").unwrap();
         receive.recv_timeout(Duration::from_secs(2)).unwrap();
-        assert!(updates.busy());
         assert_eq!(updates.state()["phase"], "checking");
         assert!(
             updates
-                .set(CHECK, "check", None)
+                .set(CHECK, "check")
                 .unwrap_err()
                 .starts_with("Busy:")
         );
-        assert!(updates.set(ALL, "true", None).is_err());
-        assert_eq!(backend.upgrades.load(Ordering::Relaxed), 0);
+        assert!(updates.set(ALL, "true").is_err());
         release.send(()).unwrap();
         await_phase(&updates, "completed");
-        assert_eq!(updates.state()["packages"][0]["held"], true);
-        updates.set(RETRY, "true", None).unwrap();
-        updates
-            .set(UPGRADE, "upgrade", Some(Arc::new(FakePrivilege)))
-            .unwrap();
-        await_phase(&updates, "retrying");
-        updates.set(RETRY, "false", None).unwrap();
-        await_phase(&updates, "failed");
-        assert_eq!(backend.upgrades.load(Ordering::Relaxed), 1);
-        assert_eq!(updates.state()["packages"][0]["name"], "linux");
+        let state = updates.state();
+        assert_eq!(state["packages"][0]["held"], true);
+        assert_eq!(state["packages"][1]["held"], false);
+        assert_eq!(state["eligible"], false);
+        updates.set(ALL, "true").unwrap();
+        assert_eq!(updates.state()["eligible"], true);
         assert!(
-            updates.state()["output"]
-                .as_array()
+            updates
+                .set(OUTPUT, "clear")
+                .unwrap_err()
+                .starts_with("ReadOnly:")
+        );
+        assert!(backend.upgrades.lock().unwrap().is_empty());
+    }
+    #[test]
+    fn upgrade_passes_held_choice_retries_failures_and_stops_on_refused_authorization() {
+        let backend = Arc::new(Fake::new(vec![], vec![1, 0]));
+        let updates = service(backend.clone());
+        updates.set(ALL, "true").unwrap();
+        updates.set(RETRY, "true").unwrap();
+        updates.set(UPGRADE, "upgrade").unwrap();
+        await_phase(&updates, "retrying");
+        for _ in 0..200 {
+            if updates.state()["phase"] == "completed" {
+                break;
+            }
+            thread::sleep(Duration::from_millis(50));
+        }
+        assert_eq!(updates.state()["phase"], "completed");
+        assert_eq!(*backend.upgrades.lock().unwrap(), [true, true]);
+
+        let refused = Arc::new(Fake::new(vec![], vec![126]));
+        let updates = service(refused.clone());
+        updates.set(RETRY, "true").unwrap();
+        updates.set(UPGRADE, "upgrade").unwrap();
+        await_phase(&updates, "failed");
+        assert!(
+            updates.state()["error"]
+                .as_str()
                 .unwrap()
-                .iter()
-                .any(|s| s.as_str().unwrap().contains("fake package transaction"))
+                .contains("not authorized")
         );
-    }
-    struct AutomaticBackend {
-        checks: std::sync::atomic::AtomicU32,
-        upgrades: std::sync::atomic::AtomicU32,
-        eligible: bool,
-    }
-    impl Backend for AutomaticBackend {
-        fn held(&self, _: bool) -> Result<Vec<String>, String> {
-            Ok(vec!["linux".into()])
-        }
-        fn check(&self, _: &Path, _: &mut dyn FnMut(&str)) -> Result<Vec<Candidate>, String> {
-            self.checks.fetch_add(1, Ordering::Relaxed);
-            Ok(vec![Candidate {
-                name: if self.eligible { "mesa" } else { "linux" }.into(),
-                installed: "1".into(),
-                available: "2".into(),
-                source: "repository".into(),
-                held: false,
-            }])
-        }
-        fn upgrade(
-            &self,
-            _: &Path,
-            held: &[String],
-            _: Arc<dyn Privilege>,
-            _: &mut dyn FnMut(&str),
-        ) -> Result<i32, String> {
-            assert_eq!(held, ["linux"]);
-            self.upgrades.fetch_add(1, Ordering::Relaxed);
-            Ok(0)
-        }
-    }
-    struct AutomaticPrivilege(Mutex<Vec<bool>>);
-    impl Privilege for AutomaticPrivilege {
-        fn begin(&self, _: &str, all: bool) -> Result<Vec<String>, String> {
-            self.0.lock().unwrap().push(all);
-            Ok(vec!["linux".into()])
-        }
-        fn run(
-            &self,
-            _: &str,
-            _: &protocol::Operation,
-            _: &mut dyn FnMut(&str),
-        ) -> Result<i32, String> {
-            unreachable!("fake updater never invokes pacman")
-        }
-        fn end(&self, _: &str) -> Result<(), String> {
-            Ok(())
-        }
+        assert_eq!(refused.upgrades.lock().unwrap().len(), 1);
+
+        let failing = Arc::new(Fake::new(vec![], vec![1]));
+        let updates = service(failing.clone());
+        updates.set(RETRY, "true").unwrap();
+        updates.set(UPGRADE, "upgrade").unwrap();
+        await_phase(&updates, "retrying");
+        updates.set(RETRY, "false").unwrap();
+        await_phase(&updates, "failed");
+        assert_eq!(failing.upgrades.lock().unwrap().len(), 1);
     }
     #[test]
-    fn scheduled_jobs_check_first_keep_holds_and_never_prompt_or_replay_without_authorization() {
-        for eligible in [false, true] {
-            let backend = Arc::new(AutomaticBackend {
-                checks: 0.into(),
-                upgrades: 0.into(),
-                eligible,
-            });
-            let updates =
-                Updates::with_backend(backend.clone(), vec![], schedule::Schedule::memory(), false);
-            let privilege = Arc::new(AutomaticPrivilege(Mutex::new(vec![])));
-            let local = schedule::LocalTime {
-                day: "2026-11-03".into(),
-                minute: 180,
-            };
-            updates.tick_at(&local, Some(privilege.clone()));
-            assert_eq!(backend.checks.load(Ordering::Relaxed), 0);
-            updates.set(ALL, "true", None).unwrap();
-            updates.set(AUTOMATIC, "true", None).unwrap();
-            updates.tick_at(&local, None);
-            updates.tick_at(&local, Some(privilege.clone()));
-            assert_eq!(backend.checks.load(Ordering::Relaxed), 0);
-            assert!(
-                updates.state()["schedule"]["notice"]
-                    .as_str()
-                    .unwrap()
-                    .contains("not authorized")
-            );
-            let tomorrow = schedule::LocalTime {
-                day: "2026-11-04".into(),
-                minute: 180,
-            };
-            updates.tick_at(&tomorrow, Some(privilege.clone()));
-            await_phase(&updates, "completed");
-            updates.tick_at(&tomorrow, Some(privilege.clone()));
-            assert_eq!(backend.checks.load(Ordering::Relaxed), 1);
-            assert_eq!(
-                backend.upgrades.load(Ordering::Relaxed),
-                u32::from(eligible)
-            );
-            assert_eq!(
-                *privilege.0.lock().unwrap(),
-                if eligible { vec![false] } else { vec![] }
-            );
-        }
-    }
-    #[test]
-    fn production_job_is_private_and_passes_the_privileged_directory_boundary() {
-        let updates = Updates::with_backend(
-            Arc::new(ReadOnly),
-            vec![],
-            schedule::Schedule::memory(),
-            false,
-        );
-        let scratch = updates.scratch().unwrap();
-        let uid = unsafe { libc::geteuid() };
-        let metadata = scratch.path().metadata().unwrap();
-        assert_eq!(metadata.uid(), uid);
-        assert_eq!(metadata.mode() & 0o777, 0o700);
-        let job = scratch.path().file_name().unwrap().to_str().unwrap();
-        assert!(authorization::job_directory(job, uid).is_ok());
-        fs::set_permissions(scratch.path(), fs::Permissions::from_mode(0o755)).unwrap();
-        assert!(authorization::job_directory(job, uid).is_err());
-    }
-    #[test]
-    fn production_wip_rejects_every_write_and_never_runs_a_saved_schedule() {
-        let root = tempfile::tempdir().unwrap();
-        let path = root.path().join("updates.json");
-        let saved =
-            br#"{"version":1,"enabled":true,"time":"03:00","last_run_day":null,"notice":null}"#;
-        fs::write(&path, saved).unwrap();
-        let schedule = schedule::Schedule::load(path.clone(), |_, _| {
-            panic!("WIP must not write schedule data")
-        });
-        let updates = Updates::with_backend(Arc::new(ReadOnly), vec![], schedule, true);
-        assert_eq!(
-            Updates::new("/missing-bridge".into(), path.clone(), |_, _| Ok(())).state()["work_in_progress"],
-            true
-        );
-        assert_eq!(updates.state()["available"], false);
-        assert_eq!(updates.state()["reason"], WIP_REASON);
-        assert_eq!(updates.state()["schedule"]["enabled"], true);
-        for id in IDS {
+    fn missing_or_outdated_updater_blocks_upgrades_but_not_checks() {
+        for status in ["missing", "outdated"] {
+            let mut fake = Fake::new(vec![], vec![0]);
+            fake.updater = status;
+            let backend = Arc::new(fake);
+            let updates = service(backend.clone());
+            let state = updates.state();
+            assert_eq!(state["available"], false);
+            assert!(state["reason"].as_str().unwrap().contains(INSTALL_COMMAND));
             assert!(
                 updates
-                    .set(id, "true", Some(Arc::new(FakePrivilege)))
+                    .set(UPGRADE, "upgrade")
                     .unwrap_err()
                     .starts_with("Unavailable:")
             );
+            updates.set(CHECK, "check").unwrap();
+            await_phase(&updates, "completed");
+            assert!(backend.upgrades.lock().unwrap().is_empty());
         }
-        updates.tick_at(
-            &schedule::LocalTime {
-                day: "2026-11-03".into(),
-                minute: 180,
-            },
-            Some(Arc::new(FakePrivilege)),
+        let tools = Updates::with_backend(
+            Arc::new(Fake::new(vec![], vec![0])),
+            vec!["/nonexistent/pacman".into()],
+            schedule::Schedule::memory(),
         );
-        assert!(!updates.busy());
-        assert_eq!(updates.state()["phase"], "idle");
-        assert!(updates.state()["output"].as_array().unwrap().is_empty());
-        assert_eq!(fs::read(path).unwrap(), saved);
+        assert!(
+            tools
+                .set(CHECK, "check")
+                .unwrap_err()
+                .starts_with("Unavailable:")
+        );
+    }
+    #[test]
+    fn scheduled_runs_check_first_keep_holds_and_run_once_per_day() {
+        for eligible in [false, true] {
+            let backend = Arc::new(Fake::new(
+                vec![
+                    candidate(if eligible { "mesa" } else { "linux" }, "repository"),
+                    candidate("yay-bin", "AUR"),
+                ],
+                vec![0],
+            ));
+            let updates = service(backend.clone());
+            updates.set(ALL, "true").unwrap();
+            let tonight = schedule::LocalTime {
+                day: "2026-11-03".into(),
+                yesterday: "2026-11-02".into(),
+                minute: 23 * 60 + 30,
+            };
+            updates.tick_at(&tonight);
+            assert_eq!(backend.checks.load(Ordering::Relaxed), 0);
+            updates
+                .0
+                .state
+                .lock()
+                .unwrap()
+                .schedule
+                .set(AUTOMATIC, "true", &tonight)
+                .unwrap();
+            updates.tick_at(&tonight);
+            await_phase(&updates, "completed");
+            updates.tick_at(&tonight);
+            assert_eq!(backend.checks.load(Ordering::Relaxed), 1);
+            assert_eq!(
+                *backend.upgrades.lock().unwrap(),
+                if eligible { vec![false] } else { vec![] }
+            );
+            assert_eq!(
+                updates.state()["schedule"]["notice"],
+                "Automatic update completed."
+            );
+        }
     }
 }

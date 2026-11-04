@@ -171,7 +171,7 @@ fn run() -> Result<(), String> {
                         signal(&bus, "sound", &state.lock().unwrap().sound.state());
                     }
                     if args.first().is_some_and(|id| remya_settings_updates::is_setting(id)) {
-                        signal(&bus, "updates", &state.lock().unwrap().updates_state());
+                        signal(&bus, "updates", &state.lock().unwrap().updates.state());
                     }
                     if args.first().is_some_and(|id| id.starts_with("fonts.")) {
                         signal(&bus, "fonts", &serde_json::json!({}));
@@ -198,7 +198,6 @@ fn run() -> Result<(), String> {
                 }
                 if opened {
                     signal(&bus, "hostname", &state.lock().unwrap().hostname_state());
-                    signal(&bus, "updates", &state.lock().unwrap().updates_state());
                 }
                 if method == "Quit" && succeeded {
                     let _ = bus.flush_future().await;
@@ -237,9 +236,9 @@ fn run() -> Result<(), String> {
             signal(&poll_bus, "bluetooth", &bluetooth.state());
         }
         if let Ok(state) = polling.try_lock() {
-            state.tick_updates();
+            state.updates.tick();
             if state.updates.take_dirty() {
-                signal(&poll_bus, "updates", &state.updates_state());
+                signal(&poll_bus, "updates", &state.updates.state());
             }
         }
         if appimages.take_dirty() {
@@ -252,7 +251,6 @@ fn run() -> Result<(), String> {
         if let Ok(mut state) = polling.try_lock() {
             state.reap_gui();
             if state.reap_authorization() {
-                signal(&poll_bus, "updates", &state.updates_state());
                 signal(&poll_bus, "hostname", &state.hostname_state());
             }
             expired = state.display.pending_expired();
