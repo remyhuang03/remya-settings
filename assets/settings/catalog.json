@@ -22699,10 +22699,10 @@
       "id": "remya-bar",
       "category": "appearance",
       "title": "Remy'a Bar",
-      "description": "Clock appearance",
+      "description": "Clock and app tray",
       "preview": "none",
       "availability": "available",
-      "reason": "Configure the clock in Remy'a Bar.",
+      "reason": "Configure the clock and app tray in Remy'a Bar.",
       "sources": [
         "app-appearance"
       ],
@@ -22718,6 +22718,19 @@
               "availability": "available",
               "reason": "Show seconds in the bar clock.",
               "value": true
+            }
+          ]
+        },
+        {
+          "title": "App tray",
+          "controls": [
+            {
+              "id": "remya-bar.folded-apps",
+              "title": "Folded apps",
+              "type": "action",
+              "availability": "available",
+              "reason": "Manage which app icons are folded in the tray.",
+              "value": "Manage"
             }
           ]
         }

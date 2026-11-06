@@ -987,3 +987,13 @@ The ordinary-user service stores `clock_seconds` as a boolean in
 `remya-bar.toml`. A missing file defaults to `true`. Malformed files are
 reported and protected from overwrites. This preference controls the clock
 capsule across outputs and has no system counterpart.
+
+### Remya Bar folded applications
+
+`Get("remya-bar.folded-apps")` returns an available setting whose `value` is
+the list of folded StatusNotifierItem IDs. The list defaults to empty.
+`Set("remya-bar.folded-apps", "{\"id\":\"app-id\",\"folded\":true}")` adds one
+ID, and `folded: false` removes it. The operation returns the updated setting
+and emits `Changed` with the same topic. The CLI accepts the same JSON string
+as its set value. Settings serializes edits and atomically stores the list in
+`remya-bar-tray.toml` beside its selected configuration.

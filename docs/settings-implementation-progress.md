@@ -2105,6 +2105,7 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 | 设置项 | 控件 ID | 类型 | 状态 | 实现依据 |
 | --- | --- | --- | --- | --- |
 | Show seconds | `remya-bar.clock-seconds` | 开关 | 已实现 | Settings 服务持久化，CLI/D-Bus 对等测试，安装版开关联动三个 Hyprland 输出 |
+| Folded apps | `remya-bar.folded-apps` | 操作 | 已实现 | Settings 持久化托盘折叠状态，支持从设置页恢复固定。 |
 
 ### More — `appearance-more`
 

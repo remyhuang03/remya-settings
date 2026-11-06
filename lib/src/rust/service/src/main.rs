@@ -118,8 +118,8 @@ fn run() -> Result<(), String> {
                 match result {
                     Ok(value) => {
                         invocation.return_value(Some(&(value.to_string(),).to_variant()));
-                        if method == "Set" && args[0] == state::BAR_CLOCK_SECONDS {
-                            signal(&bus, state::BAR_CLOCK_SECONDS, &value);
+                        if method == "Set" && [state::BAR_CLOCK_SECONDS, state::BAR_FOLDED_APPS].contains(&args[0].as_str()) {
+                            signal(&bus, &args[0], &value);
                         }
                     }
                     Err(error) => {

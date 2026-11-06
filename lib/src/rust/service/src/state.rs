@@ -27,6 +27,7 @@ use std::{
 
 pub const STYLE: &str = "themes.material-style-variant";
 pub const MODE: &str = "themes.material-theme-mode";
+pub const BAR_FOLDED_APPS: &str = "remya-bar.folded-apps";
 pub const BAR_CLOCK_SECONDS: &str = "remya-bar.clock-seconds";
 pub const ZONE: &str = "date-time.fb2a23dc";
 pub const MANUAL: &str = "date-time.6422d209";
@@ -267,6 +268,41 @@ impl State {
         };
         Ok(json!({"id":BAR_CLOCK_SECONDS,"availability":"available","value":value}))
     }
+    fn bar_folded_apps_file(&self) -> PathBuf {
+        self.config.with_file_name("remya-bar-tray.toml")
+    }
+    fn read_bar_folded_apps(&self) -> Result<Value, String> {
+        let ids: Vec<String> = match load(&self.bar_folded_apps_file())? {
+            None => vec![],
+            Some(config) => serde_json::from_value(config["folded_apps"].clone())
+                .map_err(|_| "Invalid Remya Bar folded applications configuration")?,
+        };
+        Ok(json!({"id":BAR_FOLDED_APPS,"availability":"available","value":ids}))
+    }
+    fn set_bar_folded_app(&self, value: &str) -> Result<Value, String> {
+        #[derive(serde::Deserialize)]
+        #[serde(deny_unknown_fields)]
+        struct Change {
+            id: String,
+            folded: bool,
+        }
+        let change: Change = serde_json::from_str(value)
+            .map_err(|_| invalid("Expected a tray item id and folded boolean"))?;
+        if change.id.trim().is_empty()
+            || change.id.len() > 256
+            || change.id.chars().any(char::is_control)
+        {
+            return Err(invalid("Invalid tray item id"));
+        }
+        let mut state = self.read_bar_folded_apps()?;
+        let ids = state["value"].as_array_mut().unwrap();
+        ids.retain(|id| id != &change.id);
+        if change.folded {
+            ids.push(json!(change.id));
+        }
+        write(&self.bar_folded_apps_file(), &json!({"folded_apps":ids}))?;
+        Ok(state)
+    }
     pub fn refresh(&mut self) {
         self.theme_error = self.refresh_theme().err();
         self.date_error = self.refresh_date().err();
@@ -452,6 +488,7 @@ impl State {
                 let key = args[0].as_str();
                 match key {
                     BAR_CLOCK_SECONDS => self.read_bar_clock_seconds(),
+                    BAR_FOLDED_APPS => self.read_bar_folded_apps(),
                     "theme" => {
                         self.refresh_theme()?;
                         Ok(self.theme.clone())
@@ -962,6 +999,9 @@ impl State {
             self.theme_error = None;
             return Ok(self.theme.clone());
         }
+        if key == BAR_FOLDED_APPS {
+            return self.set_bar_folded_app(value);
+        }
         if key == BAR_CLOCK_SECONDS {
             let enabled = value
                 .parse::<bool>()
@@ -1259,6 +1299,35 @@ mod tests {
         assert!(load(&target).is_err());
         assert_eq!(fs::read_to_string(&target).unwrap(), "bad [");
     }
+    #[test]
+    fn tray_fold_state_survives_service_restart() {
+        let root = tempfile::tempdir().unwrap();
+        let config = root.path().join("config.toml");
+        let mut state = State::new(config.clone());
+        assert_eq!(
+            state.execute("Get", &[BAR_FOLDED_APPS.into()]).unwrap()["value"],
+            json!([])
+        );
+        assert_eq!(
+            state
+                .execute(
+                    "Set",
+                    &[
+                        BAR_FOLDED_APPS.into(),
+                        json!({"id":"my-app","folded":true}).to_string()
+                    ]
+                )
+                .unwrap()["value"],
+            json!(["my-app"])
+        );
+        assert_eq!(
+            State::new(config)
+                .execute("Get", &[BAR_FOLDED_APPS.into()])
+                .unwrap()["value"],
+            json!(["my-app"])
+        );
+    }
+
     #[test]
     fn catalog_parity_bounds_and_unknown_operations() {
         let root = tempfile::tempdir().unwrap();

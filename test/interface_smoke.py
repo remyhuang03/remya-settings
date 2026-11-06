@@ -275,6 +275,24 @@ def bar_clock_checks():
     print('PASS: Bar clock default, CLI and D-Bus read/write parity, Changed, persistence and invalid input')
 
 
+def bar_tray_checks():
+    setting = 'remya-bar.folded-apps'
+    config = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/remya-bar-tray.toml'
+    assert cli('get', setting) == dbus('Get', setting)
+    assert cli('get', setting)['value'] == []
+    assert cli('set', setting, '{"id":"app-a","folded":true}') == dbus('Get', setting)
+    assert dbus('Set', setting, '{"id":"app-b","folded":true}') == cli('get', setting)
+    assert cli('get', setting)['value'] == ['app-a', 'app-b']
+    assert cli('set', setting, '{"id":"app-a","folded":false}')['value'] == ['app-b']
+    assert 'InvalidArgument' in cli('set', setting, '{"id":"","folded":true}', ok=False)
+    assert cli('get', setting)['value'] == ['app-b']
+    config.write_text('folded_apps = false\n')
+    cli('set', setting, '{"id":"app-b","folded":false}', ok=False)
+    assert config.read_text() == 'folded_apps = false\n'
+    config.unlink()
+    print('PASS: Bar tray CLI and D-Bus parity, per-app edits, validation and persistence')
+
+
 def session_checks():
     pid = None
     watcher = None
@@ -297,6 +315,7 @@ def session_checks():
         pid = service_pid()
         assert initial == dbus('Get', 'theme')
         bar_clock_checks()
+        bar_tray_checks()
         default_apps_checks()
         night_light_checks()
         installed_apps_checks()
