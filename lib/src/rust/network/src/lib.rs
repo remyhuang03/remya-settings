@@ -282,6 +282,7 @@ struct ConnectRequest {
     ssid: Option<String>,
     uuid: Option<String>,
     password: Option<String>,
+    hidden_security: Option<Security>,
 }
 
 #[derive(Deserialize)]
@@ -702,11 +703,28 @@ impl<B: Backend> Manager<B> {
             .ssid
             .as_ref()
             .and_then(|ssid| adapter.networks.iter().find(|n| &n.ssid == ssid));
-        let uuid = request
-            .uuid
-            .or_else(|| network.and_then(|n| n.known_uuid.clone()));
+        let hidden = request.hidden_security.is_some();
+        let uuid = request.uuid.or_else(|| {
+            if hidden {
+                let ssid = request.ssid.as_deref()?.as_bytes();
+                self.snapshot()
+                    .ok()?
+                    .profiles
+                    .iter()
+                    .find(|profile| profile.raw == ssid)
+                    .map(|profile| profile.uuid.clone())
+            } else {
+                network.and_then(|network| network.known_uuid.clone())
+            }
+        });
         if let Some(uuid) = uuid {
             let profile = self.profile(&uuid)?;
+            if request
+                .hidden_security
+                .is_some_and(|security| security != profile.security)
+            {
+                return Err(invalid("The saved network uses a different security type"));
+            }
             if let Some(password) = &request.password {
                 if !profile.security.personal() {
                     return Err(invalid("This network cannot use a password here"));
@@ -729,16 +747,33 @@ impl<B: Backend> Manager<B> {
             });
             return Ok(());
         }
-        let network = network.ok_or_else(|| invalid("Network not found; refresh the list"))?;
-        if !network.security.creatable() {
+        let (ssid, raw, security) = if let Some(security) = request.hidden_security {
+            let ssid = request
+                .ssid
+                .as_deref()
+                .ok_or_else(|| invalid("Hidden networks require an SSID"))?;
+            if ssid.is_empty() || ssid.len() > 32 {
+                return Err(invalid("Use 1 to 32 bytes for the network name"));
+            }
+            (ssid, ssid.as_bytes(), security)
+        } else {
+            let network = network.ok_or_else(|| invalid("Network not found; refresh the list"))?;
+            (
+                network.ssid.as_str(),
+                network.raw.as_slice(),
+                network.security,
+            )
+        };
+        if !security.creatable() {
             return Err("Unavailable:Settings cannot create this type of network".into());
         }
-        validate_password(network.security, request.password.as_deref())?;
+        validate_password(security, request.password.as_deref())?;
+        let ssid = ssid.to_owned();
         let spec = NewNetwork {
-            ssid: network.raw.clone(),
-            security: network.security,
+            ssid: raw.to_owned(),
+            security,
             password: request.password,
-            hidden: false,
+            hidden,
             autoconnect: true,
         };
         let (profile, active) = self.backend.add_activate(&spec, &adapter.path)?;
@@ -746,7 +781,7 @@ impl<B: Backend> Manager<B> {
         self.pending = Some(Pending {
             active,
             profile,
-            ssid: network.ssid.clone(),
+            ssid,
             uuid: None,
             new_profile: true,
             device: adapter.path,
@@ -817,7 +852,9 @@ impl<B: Backend> Manager<B> {
                 // Messages from the parser could quote the password.
                 let request: ConnectRequest = serde_json::from_str(value)
                     .map_err(|_| invalid("Expected ssid or uuid, and an optional password"))?;
-                if request.ssid.is_some() == request.uuid.is_some() {
+                if request.ssid.is_some() == request.uuid.is_some()
+                    || (request.hidden_security.is_some() && request.ssid.is_none())
+                {
                     return Err(invalid("Provide either ssid or uuid"));
                 }
                 self.begin_connect(request)?;
@@ -1075,6 +1112,7 @@ mod tests {
             ));
             let mut new = profile("new", &spec.ssid_name(), spec.security);
             new.unsaved = true;
+            new.hidden = spec.hidden;
             world.snapshot.profiles.push(new);
             world.snapshot.active.push(Active {
                 path: "/a/1".into(),
@@ -1368,6 +1406,36 @@ mod tests {
             !serde_json::to_string(&manager.state())
                 .unwrap()
                 .contains("correct-horse")
+        );
+    }
+
+    #[test]
+    fn hidden_network_activates_without_scan_result_and_saves_only_after_connection() {
+        let (fake, mut manager, _root) = setup();
+        let state = manager
+            .set(
+                WIFI_CONNECT,
+                r#"{"ssid":"Hidden Lab","hidden_security":"wpa2","password":"correct-horse"}"#,
+            )
+            .unwrap();
+        assert_eq!(state["connecting"], "Hidden Lab");
+        {
+            let mut world = fake.0.lock().unwrap();
+            let trial = world
+                .snapshot
+                .profiles
+                .iter()
+                .find(|profile| profile.uuid == "new")
+                .unwrap();
+            assert!(trial.hidden && trial.unsaved);
+            world.snapshot.active[0].state = 2;
+        }
+        manager.refresh().unwrap();
+        assert!(calls(&fake).contains(&"save /c/new".to_owned()));
+        assert!(
+            manager
+                .set(WIFI_CONNECT, r#"{"uuid":"home","hidden_security":"open"}"#)
+                .is_err()
         );
     }
 

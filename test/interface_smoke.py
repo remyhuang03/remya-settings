@@ -293,6 +293,25 @@ def bar_tray_checks():
     print('PASS: Bar tray CLI and D-Bus parity, per-app edits, validation and persistence')
 
 
+def sidebar_layout_checks():
+    setting = 'remya-bar.sidebar-layout'
+    config = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/remya-bar-sidebar.toml'
+    initial = cli('get', setting)
+    assert initial == dbus('Get', setting)
+    assert not config.exists()
+    new = ['audio', 'internet', 'lock']
+    assert cli('set', setting, json.dumps({'expected': initial['value'], 'tiles': new})) == dbus('Get', setting)
+    assert cli('get', setting)['value'] == new
+    assert 'InvalidArgument' in cli('set', setting, json.dumps({'expected': new, 'tiles': ['audio', 'audio']}), ok=False)
+    assert 'changed in another view' in cli('set', setting, json.dumps({'expected': [], 'tiles': []}), ok=False)
+    assert dbus('Set', setting, json.dumps({'expected': new, 'tiles': []})) == cli('get', setting)
+    config.write_text('tiles = false\n')
+    cli('set', setting, '{"expected":[],"tiles":[]}', ok=False)
+    assert config.read_text() == 'tiles = false\n'
+    config.unlink()
+    print('PASS: sidebar layout CLI and D-Bus parity, concurrent edit detection and persistence')
+
+
 def session_checks():
     pid = None
     watcher = None
@@ -316,6 +335,7 @@ def session_checks():
         assert initial == dbus('Get', 'theme')
         bar_clock_checks()
         bar_tray_checks()
+        sidebar_layout_checks()
         default_apps_checks()
         night_light_checks()
         installed_apps_checks()

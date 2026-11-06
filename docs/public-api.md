@@ -770,7 +770,7 @@ See [Network settings](network.md) for behavior, secrets and limits. NetworkMana
 | `set wifi.enabled <true/false>` | `Set(id, value)` | Radio, verified by readback |
 | `set wifi.adapter <interface>` | `Set(id, value)` | Adapter for later Wi-Fi operations in this service session |
 | `set wifi.refresh scan` | `Set(id, value)` | Requests a scan; results arrive in `Changed` |
-| `set wifi.connect <json>` | `Set(id, json)` | `{"ssid"\|"uuid", "password"?}`. Starts activation and returns with `connecting` set |
+| `set wifi.connect <json>` | `Set(id, json)` | `{"ssid"\|"uuid", "password"?, "hidden_security"?}`. Starts activation and returns with `connecting` set |
 | `set wifi.disconnect disconnect` | `Set(id, value)` | Disconnects the selected adapter |
 | `set known-networks.add <json>` | `Set(id, json)` | `{"ssid","security":"open"\|"wpa2"\|"wpa3","password"?,"hidden"?,"autoconnect"?}`. Saves without activating |
 | `set known-networks.autoconnect <json>` | `Set(id, json)` | `{"uuid","value":true\|false}` |
@@ -779,6 +779,10 @@ See [Network settings](network.md) for behavior, secrets and limits. NetworkMana
 | `set known-networks.forget <uuid>` | `Set(id, uuid)` | Deletes the profile, verified by readback |
 | `set network-status.sign-in open` | `Set(id, value)` | Opens the connectivity address in a captive portal |
 | `resolve network <system/settings>` | `Resolve("network", source)` | Adopts system preferences, or applies saved ones with readback |
+
+For an unadvertised network, pass `ssid` and `hidden_security` (`open`, `wpa2` or
+`wpa3`). Settings activates a hidden trial profile and saves it only after connection.
+An existing saved SSID reuses its profile and must match the requested security.
 
 Use `-` as the CLI value to read it from stdin, so a password does not appear in the process list:
 `printf '%s' '{"ssid":"Cafe","password":"..."}' | remya_settings set wifi.connect -`
@@ -997,3 +1001,14 @@ ID, and `folded: false` removes it. The operation returns the updated setting
 and emits `Changed` with the same topic. The CLI accepts the same JSON string
 as its set value. Settings serializes edits and atomically stores the list in
 `remya-bar-tray.toml` beside its selected configuration.
+
+
+## Remya Bar sidebar layout
+
+`Get("remya-bar.sidebar-layout")` returns the ordered visible tile IDs in
+`value`. Missing configuration returns the defaults without writing a file.
+`Set("remya-bar.sidebar-layout", JSON)` takes `{"expected":[...],"tiles":[...]}`.
+Both arrays use tile IDs. The service rejects unknown and duplicate IDs and
+rejects concurrent edits when `expected` differs from the saved order. The
+response and `Changed("remya-bar.sidebar-layout", state)` contain the committed
+layout. The same commands are available through the Settings CLI.

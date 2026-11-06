@@ -28,6 +28,7 @@ use std::{
 pub const STYLE: &str = "themes.material-style-variant";
 pub const MODE: &str = "themes.material-theme-mode";
 pub const BAR_FOLDED_APPS: &str = "remya-bar.folded-apps";
+pub const BAR_SIDEBAR: &str = "remya-bar.sidebar-layout";
 pub const BAR_CLOCK_SECONDS: &str = "remya-bar.clock-seconds";
 pub const ZONE: &str = "date-time.fb2a23dc";
 pub const MANUAL: &str = "date-time.6422d209";
@@ -303,6 +304,63 @@ impl State {
         write(&self.bar_folded_apps_file(), &json!({"folded_apps":ids}))?;
         Ok(state)
     }
+    fn sidebar_layout(&self, request: Option<&str>) -> Result<Value, String> {
+        const DEFAULT: &[&str] = &[
+            "internet",
+            "bluetooth",
+            "audio",
+            "night-light",
+            "dnd",
+            "power",
+            "caffeine",
+            "game",
+            "record",
+            "screenshot",
+            "picker",
+            "dark",
+            "vpn",
+            "airplane",
+            "keyboard",
+            "clipboard",
+        ];
+        const EXTRA: &[&str] = &["mic-mute", "lock", "audio-switcher"];
+        let validate = |tiles: &Vec<String>| {
+            let mut seen = std::collections::HashSet::new();
+            tiles.iter().all(|id| {
+                (DEFAULT.contains(&id.as_str()) || EXTRA.contains(&id.as_str())) && seen.insert(id)
+            })
+        };
+        let path = self.config.with_file_name("remya-bar-sidebar.toml");
+        let current: Vec<String> = match load(&path)? {
+            Some(config) => serde_json::from_value(config["tiles"].clone())
+                .ok()
+                .filter(validate)
+                .ok_or("Invalid sidebar layout configuration")?,
+            None => DEFAULT.iter().map(|id| (*id).to_owned()).collect(),
+        };
+        let tiles = if let Some(request) = request {
+            #[derive(serde::Deserialize)]
+            #[serde(deny_unknown_fields)]
+            struct LayoutChange {
+                expected: Vec<String>,
+                tiles: Vec<String>,
+            }
+            let change: LayoutChange = serde_json::from_str(request)
+                .map_err(|_| invalid("Expected the previous and new sidebar tile lists"))?;
+            if !validate(&change.tiles) {
+                return Err(invalid("Sidebar tile IDs must be known and unique"));
+            }
+            if current != change.expected {
+                return Err("Sidebar layout changed in another view. Reopen the editor.".into());
+            }
+            write(&path, &json!({"tiles":change.tiles}))?;
+            change.tiles
+        } else {
+            current
+        };
+        Ok(json!({"id":BAR_SIDEBAR,"availability":"available","value":tiles}))
+    }
+
     pub fn refresh(&mut self) {
         self.theme_error = self.refresh_theme().err();
         self.date_error = self.refresh_date().err();
@@ -489,6 +547,7 @@ impl State {
                 match key {
                     BAR_CLOCK_SECONDS => self.read_bar_clock_seconds(),
                     BAR_FOLDED_APPS => self.read_bar_folded_apps(),
+                    BAR_SIDEBAR => self.sidebar_layout(None),
                     "theme" => {
                         self.refresh_theme()?;
                         Ok(self.theme.clone())
@@ -882,6 +941,9 @@ impl State {
         }
     }
     fn set(&mut self, key: &str, value: &str) -> Result<Value, String> {
+        if key == BAR_SIDEBAR {
+            return self.sidebar_layout(Some(value));
+        }
         if remya_settings_power::is_setting(key) {
             return self.power.set(key, value);
         }

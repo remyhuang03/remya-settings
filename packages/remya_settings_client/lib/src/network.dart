@@ -28,9 +28,15 @@ extension NetworkClient on SettingsClient {
     String? ssid,
     String? uuid,
     String? password,
+    String? hiddenSecurity,
   }) => call('Set', [
     wifiConnectSettingId,
-    jsonEncode({'ssid': ?ssid, 'uuid': ?uuid, 'password': ?password}),
+    jsonEncode({
+      'ssid': ?ssid,
+      'uuid': ?uuid,
+      'password': ?password,
+      'hidden_security': ?hiddenSecurity,
+    }),
   ]);
   Future<Map<String, dynamic>> addKnownNetwork({
     required String ssid,
