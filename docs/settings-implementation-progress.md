@@ -761,9 +761,9 @@ Windows 参考入口：`ms-settings:powersleep`。
 
 ### Energy saver — `battery-saver`
 
-节能策略与自动启用阈值
+节能策略与自动启用和关闭阈值
 
-页面状态：**已接入基础功能**；条目：4；已实现 4 / 未实现 0 / 不适用 0。
+页面状态：**已接入基础功能**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
 
 原因：基础功能通过 Rust 接入真实系统，其余高级项保持预览。
 
@@ -774,7 +774,8 @@ Windows 参考入口：`ms-settings:batterysaver`、`ms-settings:batterysaver-se
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Energy saving mode | `battery-saver.743773bd` | 开关 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
-| Automatic opening conditions | `battery-saver.9b0caf70` | 选择 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
+| Turn on automatically at | `battery-saver.9b0caf70` | 选择 | 已实现 | Rust power tests and live PowerProfiles readback |
+| Turn off automatically at | `battery-saver.off-threshold` | 选择 | 已实现 | Rust threshold tests and isolated CLI/D-Bus readback |
 | Reduce screen brightness when saving energy | `battery-saver.07945503` | 开关 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
 | Also enable when plugged in | `battery-saver.power-source` | 开关 | 已实现 | Rust policy tests; live automatic policy roundtrip |
 

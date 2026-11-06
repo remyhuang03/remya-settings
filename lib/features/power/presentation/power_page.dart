@@ -20,9 +20,13 @@ class _PowerPageState extends State<PowerPage> {
   Map<String, dynamic> _state = {};
   String? _error;
   bool _busy = false;
+  bool _reloadPending = false;
   Timer? _timer;
+  StreamSubscription<SettingsChange>? _changes;
   Map get _system => _state['system'] as Map? ?? {};
   Map get _saved => _state['saved'] as Map? ?? {};
+  int get _turnOnAt => _saved['threshold'] as int? ?? 0;
+  int get _turnOffAt => _saved['off_threshold'] as int? ?? -1;
   bool get _enabled =>
       !_busy &&
       _state['available'] == true &&
@@ -31,6 +35,14 @@ class _PowerPageState extends State<PowerPage> {
   @override
   void initState() {
     super.initState();
+    _changes = _client.changes.listen((change) {
+      if (change.topic != 'power') return;
+      if (_busy) {
+        _reloadPending = true;
+      } else {
+        unawaited(_load());
+      }
+    }, onError: (Object error) => debugPrint('Power changes: $error'));
     _load();
     _timer = Timer.periodic(const Duration(seconds: 5), (_) => _load());
   }
@@ -56,7 +68,13 @@ class _PowerPageState extends State<PowerPage> {
         setState(() => _error = '$e');
       }
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (mounted) {
+        setState(() => _busy = false);
+        if (_reloadPending) {
+          _reloadPending = false;
+          unawaited(_load());
+        }
+      }
     }
   }
 
@@ -65,6 +83,7 @@ class _PowerPageState extends State<PowerPage> {
   @override
   void dispose() {
     _timer?.cancel();
+    unawaited(_changes?.cancel());
     super.dispose();
   }
 
@@ -144,13 +163,17 @@ class _PowerPageState extends State<PowerPage> {
         setting,
         _system['profile'] == 'power-saver',
       ),
-      'battery-saver.9b0caf70' => _choice(setting, _saved['threshold'], {
+      energySaverOnThresholdId => _choice(setting, _turnOnAt, {
         0: 'Never',
-        10: '10%',
-        20: '20%',
-        30: '30%',
-        50: '50%',
+        for (final percent in [10, 20, 30, 50])
+          if (_turnOffAt <= 0 || percent < _turnOffAt) percent: '$percent%',
         100: 'Always',
+      }),
+      energySaverOffThresholdId => _choice(setting, _turnOffAt, {
+        -1: 'Follow turn-on threshold',
+        0: 'Never',
+        for (final percent in [30, 50, 70, 80, 90, 100])
+          if (percent > _turnOnAt) percent: '$percent%',
       }),
       'battery-saver.power-source' => _toggle(
         setting,
@@ -167,7 +190,8 @@ class _PowerPageState extends State<PowerPage> {
   }
 
   bool _visible(SettingSpec setting) => switch (setting.id) {
-    'battery-saver.power-source' => (_saved['threshold'] as num? ?? 0) > 0,
+    'battery-saver.power-source' => _turnOnAt > 0,
+    energySaverOffThresholdId => _turnOnAt > 0 && _turnOnAt < 100,
     'battery-saver.07945503' => _system['has_backlight'] == true,
     _ => true,
   };

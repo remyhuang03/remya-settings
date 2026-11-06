@@ -4009,7 +4009,7 @@
       "id": "battery-saver",
       "category": "power",
       "title": "Energy saver",
-      "description": "Energy saving strategy and automatic activation threshold",
+      "description": "Energy saving strategy and automatic on and off thresholds",
       "preview": "none",
       "availability": "available",
       "reason": "Rust power profiles, safe hypridle timeouts and energy saver policies.",
@@ -4034,7 +4034,7 @@
             },
             {
               "id": "battery-saver.9b0caf70",
-              "title": "Automatic opening conditions",
+              "title": "Turn on automatically at",
               "type": "choice",
               "availability": "available",
               "reason": "Rust power backend with system readback and regression tests.",
@@ -4047,6 +4047,24 @@
                 "Always"
               ],
               "value": "Never"
+            },
+            {
+              "id": "battery-saver.off-threshold",
+              "title": "Turn off automatically at",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Rust energy saver policy with threshold validation and profile restoration.",
+              "options": [
+                "Follow turn-on threshold",
+                "Never",
+                "30%",
+                "50%",
+                "70%",
+                "80%",
+                "90%",
+                "100%"
+              ],
+              "value": "Follow turn-on threshold"
             },
             {
               "id": "battery-saver.07945503",

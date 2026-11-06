@@ -207,6 +207,7 @@ write may still finish at the service; read the effective value before retrying.
 A debug Bar passes the sibling Settings debug executable to the public
 `openRemyaSettings` helper. This uses normal native application activation and
 starts the debug GUI/service without installing desktop or D-Bus activation files.
+Pass `page: 'power'` to open Power & battery directly in either build mode.
 Build Settings with `fvm flutter build linux --debug` once before using this path;
 a missing build reports that command. A release caller keeps using D-Bus `Open`.
 The debug Settings process obtains its config root from its own native runner,
@@ -971,7 +972,7 @@ See [Camera](camera.md) for dependencies, persistence and verification.
 
 ## Power
 
-See [power operations and history contract](power.md#public-operations). All writes use the owning Rust controller; history uses bounded SQLite queries.
+The automatic Energy saver activation threshold accepts integer selections or a boolean toggle. The independent turn-off threshold uses `battery-saver.off-threshold`. See [power operations and history contract](power.md#public-operations). All writes use the owning Rust controller. History uses bounded SQLite queries.
 
 ## Remy'a Bar appearance
 

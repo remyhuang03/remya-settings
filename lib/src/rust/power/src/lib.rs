@@ -10,12 +10,19 @@ use serde_json::{Value, json};
 use std::{collections::HashMap, path::PathBuf};
 const BUS: &str = "org.freedesktop.UPower.PowerProfiles";
 const PATH: &str = "/org/freedesktop/UPower/PowerProfiles";
+const AUTO_ON_ID: &str = "battery-saver.9b0caf70";
+const AUTO_OFF_ID: &str = "battery-saver.off-threshold";
+const ON_THRESHOLDS: &[u32] = &[0, 10, 20, 30, 50, 100];
+const DEFAULT_ON_THRESHOLD: u32 = 20;
+const FOLLOW_ON_THRESHOLD: i32 = -1;
+const OFF_THRESHOLDS: &[i32] = &[FOLLOW_ON_THRESHOLD, 0, 30, 50, 70, 80, 90, 100];
 pub const IDS: &[&str] = &[
     "power.5a4f0131",
     "power.5e3af39c",
     "power.8b4c8522",
     "battery-saver.743773bd",
-    "battery-saver.9b0caf70",
+    AUTO_ON_ID,
+    AUTO_OFF_ID,
     "battery-saver.07945503",
     "battery-saver.power-source",
 ];
@@ -107,9 +114,67 @@ struct Saved {
     #[serde(default)]
     threshold: u32,
     #[serde(default)]
+    preferred_threshold: Option<u32>,
+    #[serde(default = "default_off_threshold")]
+    off_threshold: i32,
+    #[serde(default)]
     include_ac: bool,
     #[serde(default)]
     dim: bool,
+}
+fn default_off_threshold() -> i32 {
+    FOLLOW_ON_THRESHOLD
+}
+
+impl Saved {
+    fn valid_thresholds(&self) -> bool {
+        let on = if self.threshold == 0 {
+            self.preferred_threshold.unwrap_or(DEFAULT_ON_THRESHOLD)
+        } else {
+            self.threshold
+        };
+        ON_THRESHOLDS.contains(&self.threshold)
+            && self
+                .preferred_threshold
+                .is_none_or(|value| value != 0 && ON_THRESHOLDS.contains(&value))
+            && OFF_THRESHOLDS.contains(&self.off_threshold)
+            && (on == 100 || self.off_threshold <= 0 || self.off_threshold as u32 > on)
+    }
+
+    fn set_on_threshold(&mut self, value: &Value) -> Result<(), String> {
+        let on = match value.as_bool() {
+            Some(true) if self.threshold != 0 => self.threshold,
+            Some(true) => self.preferred_threshold.unwrap_or(DEFAULT_ON_THRESHOLD),
+            Some(false) => 0,
+            None => value
+                .as_u64()
+                .and_then(|value| u32::try_from(value).ok())
+                .filter(|value| ON_THRESHOLDS.contains(value))
+                .ok_or("Invalid turn-on threshold")?,
+        };
+        let preferred = if on != 0 { on } else { self.threshold };
+        if preferred != 0 {
+            self.preferred_threshold = Some(preferred);
+        }
+        self.threshold = on;
+        Ok(())
+    }
+
+    fn automatic_condition(&self, managed: bool, battery: &Value) -> bool {
+        if self.threshold == 0
+            || battery["present"] != true
+            || !(self.include_ac || battery["on_battery"] == true)
+        {
+            return false;
+        }
+        let Some(percent) = battery["percentage"].as_f64() else {
+            return false;
+        };
+        if !managed || self.threshold == 100 || self.off_threshold == FOLLOW_ON_THRESHOLD {
+            return percent <= f64::from(self.threshold);
+        }
+        self.off_threshold == 0 || percent < f64::from(self.off_threshold)
+    }
 }
 #[derive(Default, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -224,7 +289,7 @@ impl Power {
         }
         if let Some(s) = &self.saved {
             if !["power-saver", "balanced", "performance"].contains(&s.profile.as_str())
-                || ![0, 10, 20, 30, 50, 100].contains(&s.threshold)
+                || !s.valid_thresholds()
                 || s.timeouts.screen > 86400
                 || s.timeouts.sleep > 86400
             {
@@ -239,6 +304,8 @@ impl Power {
                 profile: active.clone(),
                 timeouts,
                 threshold: 0,
+                preferred_threshold: None,
+                off_threshold: default_off_threshold(),
                 include_ac: false,
                 dim: false,
             };
@@ -274,7 +341,8 @@ impl Power {
             "power.5e3af39c" => state["system"]["timeouts"]["screen"].clone(),
             "power.8b4c8522" => state["system"]["timeouts"]["sleep"].clone(),
             "battery-saver.743773bd" => json!(state["system"]["profile"] == "power-saver"),
-            "battery-saver.9b0caf70" => state["saved"]["threshold"].clone(),
+            AUTO_ON_ID => state["saved"]["threshold"].clone(),
+            AUTO_OFF_ID => state["saved"]["off_threshold"].clone(),
             "battery-saver.power-source" => state["saved"]["include_ac"].clone(),
             _ => state["saved"]["dim"].clone(),
         };
@@ -376,31 +444,36 @@ impl Power {
                 self.restore = None;
                 self.manual = true;
             }
-            "battery-saver.9b0caf70" => {
-                s.threshold = v
-                    .as_u64()
-                    .filter(|v| [0, 10, 20, 30, 50, 100].contains(v))
-                    .ok_or("Invalid threshold")? as u32;
-                self.manual = false;
-                self.condition = None;
+            AUTO_ON_ID => {
+                s.set_on_threshold(&v)?;
+            }
+            AUTO_OFF_ID => {
+                s.off_threshold = v
+                    .as_i64()
+                    .and_then(|value| i32::try_from(value).ok())
+                    .filter(|value| OFF_THRESHOLDS.contains(value))
+                    .ok_or("Invalid turn-off threshold")?;
             }
             "battery-saver.power-source" => {
                 s.include_ac = v.as_bool().ok_or("Expected boolean")?;
-                self.manual = false;
-                self.condition = None;
             }
             "battery-saver.07945503" => {
                 s.dim = v.as_bool().ok_or("Expected boolean")?;
             }
             _ => return Err("Unknown power setting".into()),
         }
+        if !s.valid_thresholds() {
+            return Err("Turn-off threshold must be higher than turn-on threshold".into());
+        }
         if ["power.5a4f0131", "battery-saver.743773bd"].contains(&id) {
-            self.condition = Some(eligible(s.threshold, s.include_ac, &self.system["battery"]));
+            self.condition = Some(s.automatic_condition(false, &self.system["battery"]));
         }
         self.persist(&s)?;
         self.saved = Some(s);
         self.refresh()?;
-        if ["battery-saver.9b0caf70", "battery-saver.power-source"].contains(&id) {
+        if matches!(id, AUTO_ON_ID | AUTO_OFF_ID | "battery-saver.power-source") {
+            self.manual = false;
+            self.condition = None;
             self.automatic()?;
             self.refresh()?;
         }
@@ -496,7 +569,7 @@ impl Power {
         if !b["error"].is_null() {
             return Err(format!("Battery detection failed: {}", b["error"]));
         }
-        let condition = eligible(s.threshold, s.include_ac, b);
+        let condition = s.automatic_condition(self.restore.is_some(), b);
         if self.condition != Some(condition) {
             self.manual = false;
             self.condition = Some(condition)
@@ -536,11 +609,61 @@ impl Power {
             .query(request)
     }
 }
-fn eligible(threshold: u32, include_ac: bool, b: &Value) -> bool {
-    threshold > 0
-        && b["present"] == true
-        && (include_ac || b["on_battery"] == true)
-        && b["percentage"]
-            .as_f64()
-            .is_some_and(|p| p <= threshold as f64)
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn legacy_preferences() -> Saved {
+        serde_json::from_value(json!({
+            "profile": "balanced",
+            "timeouts": {"screen": 600, "sleep": 1200},
+            "threshold": 20
+        }))
+        .unwrap()
+    }
+
+    fn battery_at(percent: f64, on_battery: bool) -> Value {
+        json!({"present": true, "percentage": percent, "on_battery": on_battery})
+    }
+
+    #[test]
+    fn automatic_saver_uses_separate_entry_and_exit_thresholds() {
+        let mut saved = legacy_preferences();
+        assert_eq!(saved.off_threshold, FOLLOW_ON_THRESHOLD);
+        assert!(!saved.automatic_condition(true, &battery_at(20.1, true)));
+        saved.off_threshold = 80;
+        assert!(saved.automatic_condition(false, &battery_at(20.0, true)));
+        assert!(!saved.automatic_condition(false, &battery_at(79.9, true)));
+        assert!(saved.automatic_condition(true, &battery_at(79.9, true)));
+        assert!(!saved.automatic_condition(true, &battery_at(80.0, true)));
+        saved.off_threshold = 0;
+        assert!(saved.automatic_condition(true, &battery_at(100.0, true)));
+        assert!(!saved.automatic_condition(true, &battery_at(100.0, false)));
+        saved.include_ac = true;
+        assert!(saved.automatic_condition(true, &battery_at(100.0, false)));
+        saved.threshold = 0;
+        assert!(!saved.automatic_condition(true, &battery_at(100.0, false)));
+    }
+
+    #[test]
+    fn switch_defaults_to_twenty_and_restores_the_saved_percentage() {
+        let mut saved = legacy_preferences();
+        saved.threshold = 0;
+        saved.set_on_threshold(&json!(true)).unwrap();
+        assert_eq!(saved.threshold, 20);
+        saved.set_on_threshold(&json!(50)).unwrap();
+        saved.set_on_threshold(&json!(true)).unwrap();
+        assert_eq!(saved.threshold, 50);
+        saved.set_on_threshold(&json!(false)).unwrap();
+        assert_eq!(saved.threshold, 0);
+        let mut reopened: Saved = serde_json::from_value(json!(saved)).unwrap();
+        reopened.set_on_threshold(&json!(true)).unwrap();
+        assert_eq!(reopened.threshold, 50);
+        reopened.off_threshold = 50;
+        assert!(!reopened.valid_thresholds());
+        reopened.off_threshold = 70;
+        assert!(reopened.valid_thresholds());
+        assert!(reopened.set_on_threshold(&json!(101)).is_err());
+    }
 }

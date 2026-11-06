@@ -19,8 +19,17 @@ recovery. Other idle daemons are not supported.
 Automatic energy saver defaults to off. Thresholds are 10, 20, 30, 50 and 100
 percent (Always), with an independent include-external-power preference (default
 false). A manual profile change suppresses automatic changes until eligibility
-changes. The previous profile is restored when eligibility ends. These managed
-changes are distinguished from external configuration conflicts.
+changes. In Power & battery → Energy saver, **Turn off automatically at**
+controls when an automatically enabled saver restores the previous profile.
+**Follow turn-on threshold** is the default, including for existing preferences:
+the previous profile returns once the battery rises above the turn-on threshold.
+A separate percentage restores it as soon as the battery reaches that percentage.
+The turn-off percentage must be higher than the turn-on percentage. **Never**
+keeps an automatically enabled saver active across battery percentages. When
+automatic activation is disabled or external power becomes ineligible, the
+previous profile is still restored. The turn-off control is shown for
+percentage-based activation. These managed changes are distinguished from
+external configuration conflicts.
 
 Optional dimming affects built-in kernel backlights only, reducing the entry
 brightness to 70 percent, with a minimum of 1 percent. Exit restores only a
@@ -54,6 +63,13 @@ History queries return raw events plus preceding state/session/battery context f
 - `Set power.5e3af39c` / `power.8b4c8522`: JSON seconds, 0 (Never) to 86400.
 - `Set battery-saver.743773bd`: JSON manual saver boolean.
 - `Set battery-saver.9b0caf70`: JSON threshold 0, 10, 20, 30, 50 or 100.
+  A JSON boolean supports a switch for the same setting. False selects Never
+  (0). True keeps the current nonzero threshold or restores the last nonzero
+  threshold, defaulting to 20% on first use.
+- `Get battery-saver.off-threshold` / `Set battery-saver.off-threshold`: saved
+  `off_threshold` as a JSON integer. Use -1 to follow the turn-on threshold,
+  0 for Never, or 30, 50, 70, 80, 90 or 100 for a separate turn-off percentage.
+  Percentage-based activation requires a higher turn-off percentage.
 - `Set battery-saver.power-source`: JSON include-external-power boolean.
 - `Set battery-saver.07945503`: JSON dimming boolean.
 - `Resolve power system|settings`: reconcile real preferences explicitly.

@@ -174,3 +174,7 @@ resolution; no PipeWire/WirePlumber configuration files are edited.
 ## Power history
 
 Power preferences and restoration metadata are `power.json` and `power.runtime.json` beside the Settings configuration. Permanent battery history is `$XDG_STATE_HOME/remya/settings/power.sqlite3` (HOME fallback `.local/state`); debug uses repository `config/power.sqlite3`. Relative state roots are ignored. SQLite WAL/SHM files remain beside the database.
+
+`power.json` stores the last nonzero activation threshold as
+`preferred_threshold` and the turn-off policy as `off_threshold`.
+Existing files without the field follow the turn-on threshold. See [Power and energy saver](power.md).

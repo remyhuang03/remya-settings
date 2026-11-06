@@ -50,8 +50,19 @@ with tempfile.TemporaryDirectory(prefix='remya-power-api-') as directory:
         assert json.loads(cli)['system']['profile'] == state['system']['profile']
         assert call('Resolve', 'power', 'system')['conflict'] is False
         assert call('Set', 'battery-saver.power-source', 'false')['saved']['include_ac'] is False
+        auto_on = 'battery-saver.9b0caf70'
+        auto_off = 'battery-saver.off-threshold'
+        cli = [str(BUNDLE / 'libexec/remya_settings_cli')]
+        assert call('Get', auto_off)['value'] == -1
+        assert call('Set', auto_off, '80')['saved']['off_threshold'] == 80
+        assert json.loads(subprocess.check_output([*cli, 'get', auto_off], env=env))['value'] == 80
+        subprocess.run([*cli, 'set', auto_off, '0'], env=env, check=True, stdout=subprocess.DEVNULL)
+        assert call('Get', auto_off)['value'] == 0
+        assert call('Set', auto_on, 'false')['saved']['threshold'] == 0
+        saved = json.loads((config / 'remya/settings/power.json').read_text())
+        assert saved['threshold'] == 0 and saved['off_threshold'] == 0
         try:
-            call('Set', 'battery-saver.9b0caf70', '101')
+            call('Set', auto_on, '101')
             raise AssertionError('invalid threshold accepted')
         except subprocess.CalledProcessError:
             pass

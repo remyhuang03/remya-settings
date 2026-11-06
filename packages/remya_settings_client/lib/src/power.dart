@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'dbus_client.dart';
 
+const energySaverOffThresholdId = 'battery-saver.off-threshold';
+const energySaverOnThresholdId = 'battery-saver.9b0caf70';
+
 extension PowerClient on SettingsClient {
   Future<Map<String, dynamic>> readPower() => call('Get', ['power']);
   Future<Map<String, dynamic>> setPower(String id, Object value) =>

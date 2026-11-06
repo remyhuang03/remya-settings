@@ -361,25 +361,26 @@ void main() {
   });
 
   test(
-    'debug launcher opens a local executable without an installed service',
+    'debug launcher passes the requested page to the local executable',
     () async {
       final directory = Directory.systemTemp.createTempSync(
         'remya-debug-launch-',
       );
       addTearDown(() => directory.deleteSync(recursive: true));
-      final executable = File('${directory.path}/settings with spaces')
-        ..writeAsStringSync('#!/bin/sh\nprintf started > "\$0.started"\n');
+      final executable = File(
+        '${directory.path}/settings with spaces',
+      )..writeAsStringSync('#!/bin/sh\nprintf "%s\\n" "\$@" > "\$0.started"\n');
       expect(
         (await Process.run('chmod', ['+x', '--', executable.path])).exitCode,
         0,
       );
-      await openRemyaSettings(debugExecutable: executable);
+      await openRemyaSettings(debugExecutable: executable, page: 'power');
       final marker = File('${executable.path}.started');
       final deadline = DateTime.now().add(const Duration(seconds: 5));
       while (!marker.existsSync() && DateTime.now().isBefore(deadline)) {
         await Future<void>.delayed(const Duration(milliseconds: 20));
       }
-      expect(marker.readAsStringSync(), 'started');
+      expect(marker.readAsLinesSync(), ['open', 'power']);
     },
   );
 
