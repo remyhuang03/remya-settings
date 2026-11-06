@@ -2,6 +2,10 @@
 
 Colors and themes contains the system Light/Dark selector, the accent color, and the application palette selector. There is no Follow system option. Remy'a Settings immediately uses the selected mode, accent and Material palette. The accent is stored separately in `accent.toml`; see [public interfaces](public-api.md#accent-color).
 
+Appearance → Remy'a Bar contains Show seconds, enabled by default. The Settings
+service saves this app preference and publishes changes to running bars. See
+[the clock preference API](public-api.md#remya-bar-appearance).
+
 ## Configuration ownership
 
 | Data | Owner | Storage |

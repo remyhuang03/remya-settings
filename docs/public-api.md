@@ -972,3 +972,17 @@ See [Camera](camera.md) for dependencies, persistence and verification.
 ## Power
 
 See [power operations and history contract](power.md#public-operations). All writes use the owning Rust controller; history uses bounded SQLite queries.
+
+## Remy'a Bar appearance
+
+Use `get remya-bar.clock-seconds` and `set remya-bar.clock-seconds <true|false>`
+or the corresponding `Get(id)` and `Set(id, value)` D-Bus methods. Both
+return `{"id":"remya-bar.clock-seconds","availability":"available","value":true}`
+with the effective boolean. After a successful write, `Changed` uses the setting
+ID as its topic and carries the same payload. The pure Dart `BarClockClient`
+extension provides typed read and write methods.
+
+The ordinary-user service stores `clock_seconds` as a boolean in
+`remya-bar.toml`. A missing file defaults to `true`. Malformed files are
+reported and protected from overwrites. This preference controls the clock
+capsule across outputs and has no system counterpart.

@@ -28,6 +28,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../about/presentation/about_page.dart';
 import '../../about/presentation/licenses_view.dart';
+import '../../appearance/presentation/bar_appearance_page.dart';
 import '../../fonts/application/fonts_controller.dart';
 import '../../fonts/presentation/fonts_page.dart';
 import '../domain/settings_catalog.dart';
@@ -47,13 +48,13 @@ class SettingsShell extends StatefulWidget {
     this.systemInformation,
     this.account,
     this.sound,
-    this.power,
+    this.client,
     this.cameras,
     this.updates,
   });
   final AccountController? account;
   final SoundController? sound;
-  final SettingsClient? power;
+  final SettingsClient? client;
   final CameraController? cameras;
   final UpdatesController? updates;
   final SettingsCatalog catalog;
@@ -444,14 +445,16 @@ class _SettingsShellState extends State<SettingsShell> {
         }.contains(_page?.id) &&
         widget.sound != null) {
       content = SoundPage(controller: widget.sound!, page: _page!);
-    } else if (_page?.id == 'battery-usage' && widget.power != null) {
-      content = BatteryUsagePage(client: widget.power!, page: _page!);
+    } else if (_page?.id == 'remya-bar' && widget.client != null) {
+      content = BarAppearancePage(client: widget.client!, page: _page!);
+    } else if (_page?.id == 'battery-usage' && widget.client != null) {
+      content = BatteryUsagePage(client: widget.client!, page: _page!);
     } else if ((_page?.id == 'power' || _page?.id == 'battery-saver') &&
-        widget.power != null) {
+        widget.client != null) {
       content = PowerPage(
         key: ValueKey(_page!.id),
         page: _page!,
-        client: widget.power!,
+        client: widget.client!,
       );
     } else if (_page?.id == 'cameras' && widget.cameras != null) {
       content = CameraPage(controller: widget.cameras!);

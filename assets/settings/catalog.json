@@ -22678,6 +22678,35 @@
       "children": []
     },
     {
+      "id": "remya-bar",
+      "category": "appearance",
+      "title": "Remy'a Bar",
+      "description": "Clock appearance",
+      "preview": "none",
+      "availability": "available",
+      "reason": "Configure the clock in Remy'a Bar.",
+      "sources": [
+        "app-appearance"
+      ],
+      "windowsUris": [],
+      "sections": [
+        {
+          "title": "Clock",
+          "controls": [
+            {
+              "id": "remya-bar.clock-seconds",
+              "title": "Show seconds",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Show seconds in the bar clock.",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
       "id": "appearance-more",
       "category": "appearance",
       "title": "More",

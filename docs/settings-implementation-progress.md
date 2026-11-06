@@ -2099,6 +2099,12 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 | Light color | `lighting.bf0bca1e` | 颜色 | 未实现 | — |
 | Match with accent colors | `lighting.869e06ec` | 开关 | 未实现 | — |
 
+### Remy'a Bar — `remya-bar`
+
+| 设置项 | 控件 ID | 类型 | 状态 | 实现依据 |
+| --- | --- | --- | --- | --- |
+| Show seconds | `remya-bar.clock-seconds` | 开关 | 已实现 | Settings 服务持久化，CLI/D-Bus 对等测试，安装版开关联动三个 Hyprland 输出 |
+
 ### More — `appearance-more`
 
 打开实际已安装的外部设置应用。未安装的入口自动隐藏。

@@ -241,6 +241,40 @@ def installed_apps_checks():
     print('PASS: native package readback and authorization rejection, real isolated user Flatpak uninstall, stale-version rejection, retained data, CLI/D-Bus parity',flush=True)
 
 
+def bar_clock_checks():
+    setting = 'remya-bar.clock-seconds'
+    config = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/remya-bar.toml'
+    assert not config.exists()
+    assert cli('get', setting) == dbus('Get', setting) == {
+        'id': setting, 'availability': 'available', 'value': True,
+    }
+    monitor = subprocess.Popen(
+        ['stdbuf', '-oL', 'gdbus', 'monitor', '--session', '--dest', BUS],
+        stdout=subprocess.PIPE,
+    )
+    try:
+        assert select.select([monitor.stdout], [], [], 5)[0]
+        os.read(monitor.stdout.fileno(), 4096)
+        assert cli('set', setting, 'false') == dbus('Get', setting)
+        assert cli('get', setting)['value'] is False
+        assert select.select([monitor.stdout], [], [], 5)[0]
+    finally:
+        monitor.terminate()
+        signals = monitor.communicate(timeout=5)[0].decode()
+    assert f"'{setting}'" in signals, signals
+    assert config.read_text().strip() == 'clock_seconds = false'
+    assert 'InvalidArgument' in cli('set', setting, 'maybe', ok=False)
+    assert cli('get', setting)['value'] is False
+    assert dbus('Set', setting, 'true') == cli('get', setting)
+    assert cli('get', setting)['value'] is True
+    config.write_text('clock_seconds = "invalid"\n')
+    cli('get', setting, ok=False)
+    cli('set', setting, 'false', ok=False)
+    assert config.read_text() == 'clock_seconds = "invalid"\n'
+    config.unlink()
+    print('PASS: Bar clock default, CLI and D-Bus read/write parity, Changed, persistence and invalid input')
+
+
 def session_checks():
     pid = None
     watcher = None
@@ -262,6 +296,7 @@ def session_checks():
         assert 'InvalidArgument' in cli('set','time-more.fcitx5','invalid',ok=False)
         pid = service_pid()
         assert initial == dbus('Get', 'theme')
+        bar_clock_checks()
         default_apps_checks()
         night_light_checks()
         installed_apps_checks()

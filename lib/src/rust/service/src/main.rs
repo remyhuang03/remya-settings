@@ -116,7 +116,12 @@ fn run() -> Result<(), String> {
                 let opened = ((method == "Open" && args[0] != "repository") || (method == "Set" && args[0] == "airplane.bluetooth")) && result.is_ok();
                 let succeeded = result.is_ok();
                 match result {
-                    Ok(value) => invocation.return_value(Some(&(value.to_string(),).to_variant())),
+                    Ok(value) => {
+                        invocation.return_value(Some(&(value.to_string(),).to_variant()));
+                        if method == "Set" && args[0] == state::BAR_CLOCK_SECONDS {
+                            signal(&bus, state::BAR_CLOCK_SECONDS, &value);
+                        }
+                    }
                     Err(error) => {
                         let (kind, message) = error
                             .split_once(':')

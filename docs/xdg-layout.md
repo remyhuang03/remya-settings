@@ -9,6 +9,7 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Debug Bar theme override, highest priority | `<bar-repository>/config/config.local.toml` |
 | Debug Bar fallback | Sibling Settings repository's local config, then installed XDG config |
 | Installed/shared Settings preferences | `$XDG_CONFIG_HOME/remya/settings/config.toml` |
+| Bar clock preference | `remya-bar.toml` beside the selected Settings configuration |
 | Config fallback | `$HOME/.config/remya/settings/config.toml` |
 | Background, accent settings | `background.toml` and `accent.toml` beside `config.toml` |
 | Background copies | `$XDG_DATA_HOME/remya/settings/backgrounds/`; debug: `<settings-repository>/config/backgrounds/` |

@@ -27,6 +27,7 @@ use std::{
 
 pub const STYLE: &str = "themes.material-style-variant";
 pub const MODE: &str = "themes.material-theme-mode";
+pub const BAR_CLOCK_SECONDS: &str = "remya-bar.clock-seconds";
 pub const ZONE: &str = "date-time.fb2a23dc";
 pub const MANUAL: &str = "date-time.6422d209";
 pub const AUTO: &str = "date-time.db451de3";
@@ -251,6 +252,21 @@ impl State {
     fn date_file(&self) -> PathBuf {
         self.config.with_file_name("date-time.toml")
     }
+    fn bar_clock_file(&self) -> PathBuf {
+        self.config.with_file_name("remya-bar.toml")
+    }
+    fn read_bar_clock_seconds(&self) -> Result<Value, String> {
+        let value = match load(&self.bar_clock_file())? {
+            None => true,
+            Some(config) => config
+                .as_object()
+                .filter(|object| object.len() == 1)
+                .and_then(|object| object.get("clock_seconds"))
+                .and_then(Value::as_bool)
+                .ok_or("Invalid Remy'a Bar configuration: clock_seconds must be a boolean")?,
+        };
+        Ok(json!({"id":BAR_CLOCK_SECONDS,"availability":"available","value":value}))
+    }
     pub fn refresh(&mut self) {
         self.theme_error = self.refresh_theme().err();
         self.date_error = self.refresh_date().err();
@@ -435,6 +451,7 @@ impl State {
             "Get" => {
                 let key = args[0].as_str();
                 match key {
+                    BAR_CLOCK_SECONDS => self.read_bar_clock_seconds(),
                     "theme" => {
                         self.refresh_theme()?;
                         Ok(self.theme.clone())
@@ -944,6 +961,14 @@ impl State {
             self.refresh_theme()?;
             self.theme_error = None;
             return Ok(self.theme.clone());
+        }
+        if key == BAR_CLOCK_SECONDS {
+            let enabled = value
+                .parse::<bool>()
+                .map_err(|_| invalid("Use true or false"))?;
+            self.read_bar_clock_seconds()?;
+            write(&self.bar_clock_file(), &json!({"clock_seconds":enabled}))?;
+            return self.read_bar_clock_seconds();
         }
         self.refresh_date()?;
         let (request, keys) = match key {

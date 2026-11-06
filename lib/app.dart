@@ -30,7 +30,7 @@ class RemyaSettingsApp extends StatefulWidget {
   const RemyaSettingsApp({
     super.key,
     this.preferences,
-    this.power,
+    this.client,
     this.account,
     this.navigation,
     this.dateTime,
@@ -60,7 +60,7 @@ class RemyaSettingsApp extends StatefulWidget {
   final CameraController? cameras;
   final UpdatesController? updates;
   final AppPreferencesController? preferences;
-  final SettingsClient? power;
+  final SettingsClient? client;
   final DateTimeController? dateTime;
   final DisplayController? display;
   final NightLightController? nightLight;
@@ -147,7 +147,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
               }
               return SettingsShell(
                 catalog: snapshot.data!,
-                power: widget.power,
+                client: widget.client,
                 cameras: widget.cameras,
                 account: widget.account,
                 sound: widget.sound,

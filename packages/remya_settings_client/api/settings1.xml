@@ -1,4 +1,5 @@
 <node>
+  <!-- Get and Set remya-bar.clock-seconds read/write a boolean. Changed uses the same ID. -->
   <!-- Power: Get power|battery-saver; Set power.5a4f0131 (JSON profile),
        power.5e3af39c|power.8b4c8522 (seconds, 0=Never),
        battery-saver.743773bd|battery-saver.07945503|battery-saver.power-source (bool),
