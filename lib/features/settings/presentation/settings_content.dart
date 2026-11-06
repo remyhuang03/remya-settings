@@ -32,8 +32,6 @@ class SettingsHome extends StatelessWidget {
     return Column(
       crossAxisAlignment: .stretch,
       children: [
-        Text('All settings', style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 12),
         for (final group in SettingsCategoryGroup.values) ...[
           Padding(
             padding: const .only(top: 12, bottom: 10),
@@ -51,7 +49,6 @@ class SettingsHome extends StatelessWidget {
                   if (category.id != group.ids.first) const SizedBox(height: 2),
                   _CategoryCard(
                     category: category,
-                    pages: catalog.inCategory(category.id).length,
                     onTap: () => onCategory(category.id),
                   ),
                 ],
@@ -60,24 +57,14 @@ class SettingsHome extends StatelessWidget {
           ),
           const SizedBox(height: 12),
         ],
-        const SizedBox(height: 24),
-        Text(
-          '${catalog.categories.length} categories · ${catalog.pages.length} pages · ${catalog.controlCount} settings\nSample data is for layout previews and does not represent your device.',
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
       ],
     );
   }
 }
 
 class _CategoryCard extends StatelessWidget {
-  const _CategoryCard({
-    required this.category,
-    required this.pages,
-    required this.onTap,
-  });
+  const _CategoryCard({required this.category, required this.onTap});
   final SettingsCategory category;
-  final int pages;
   final VoidCallback onTap;
 
   @override
@@ -93,7 +80,7 @@ class _CategoryCard extends StatelessWidget {
           padding: const .all(22),
           child: Row(
             children: [
-              SettingsCategoryIcon(category: category, size: 52),
+              SettingsCategoryIcon(category: category, size: 48),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -107,12 +94,6 @@ class _CategoryCard extends StatelessWidget {
                     Text(
                       category.description,
                       style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '$pages pages',
-                      style: Theme.of(context).textTheme.labelSmall
-                          ?.copyWith(color: colors.onSurfaceVariant),
                     ),
                   ],
                 ),
@@ -218,11 +199,6 @@ class SettingsDetail extends StatelessWidget {
           ),
         ),
       ],
-      const SizedBox(height: 24),
-      Text(
-        'Unimplemented settings use sample values, not detected device state.',
-        style: Theme.of(context).textTheme.labelSmall,
-      ),
     ],
   );
 }
