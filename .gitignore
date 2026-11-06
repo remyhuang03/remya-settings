@@ -70,3 +70,8 @@ __pycache__/
 /config/default-apps.toml
 
 /config/avatar.png
+
+# Debug battery history
+/config/power.sqlite3
+/config/power.sqlite3-shm
+/config/power.sqlite3-wal
