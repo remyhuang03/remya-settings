@@ -256,10 +256,10 @@ class _NetworkStatusPageState extends State<NetworkStatusPage> {
       children: [
         _hero(primary),
         if (facts.isNotEmpty) ...[
-          const NetworkSectionTitle('Connection details'),
+          const SettingsSectionTitle('Connection details'),
           SettingsSurface(child: NetworkFacts(facts)),
         ],
-        const NetworkSectionTitle('Adapters'),
+        const SettingsSectionTitle('Adapters'),
         SettingsSurface(
           padding: .zero,
           child: physical.isEmpty
@@ -268,19 +268,19 @@ class _NetworkStatusPageState extends State<NetworkStatusPage> {
                   label: 'Network adapters',
                   value: 'No physical network adapters were detected',
                 )
-              : networkRows([for (final device in physical) _adapter(device)]),
+              : settingsRows([for (final device in physical) _adapter(device)]),
         ),
         if (virtual.isNotEmpty)
           AdvancedSection(
             storageKey: const PageStorageKey('network-status-advanced'),
             child: KeyedSubtree(
               key: const PageStorageKey('network-status-advanced-body'),
-              child: networkRows([
+              child: settingsRows([
                 for (final device in virtual) _adapter(device),
               ]),
             ),
           ),
-        const NetworkSectionTitle('Related settings'),
+        const SettingsSectionTitle('Related settings'),
         SettingsSurface(
           padding: .zero,
           child: Column(
@@ -289,6 +289,7 @@ class _NetworkStatusPageState extends State<NetworkStatusPage> {
                 page.controls.firstWhere(
                   (c) => c.id == 'network-status.data-usage',
                 ),
+                icon: categoryIcon(widget.catalog.category(page.category).icon),
                 onOpenPage: () =>
                     widget.onPage(widget.catalog.page('data-usage')),
               ),

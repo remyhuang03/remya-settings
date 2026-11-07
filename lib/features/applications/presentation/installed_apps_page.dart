@@ -81,19 +81,9 @@ class _InstalledAppsPageState extends State<InstalledAppsPage> {
           const SizedBox(height: 16),
           if (controller.isBusy) const LinearProgressIndicator(),
           if (controller.errorMessage case final error?)
-            SettingsSurface(
-              child: Column(
-                crossAxisAlignment: .start,
-                children: [
-                  const Icon(Icons.error_outline_rounded),
-                  Text(error),
-                  TextButton.icon(
-                    onPressed: controller.isBusy ? null : controller.reload,
-                    icon: const Icon(Icons.refresh_rounded),
-                    label: const Text('Retry'),
-                  ),
-                ],
-              ),
+            SettingsErrorCard(
+              message: error,
+              onRetry: controller.isBusy ? null : controller.reload,
             ),
           for (final warning in controller.warnings)
             Padding(padding: const .only(top: 12), child: Text(warning)),

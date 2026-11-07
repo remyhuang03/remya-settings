@@ -80,7 +80,7 @@ void main() {
       expect(find.text('Connect'), findsNothing);
       expect(find.text('Add device'), findsNothing);
       expect(find.text('Adapter'), findsNothing);
-      await tester.tap(find.byType(SwitchListTile));
+      await tester.tap(find.byType(Switch));
       await refresh(tester);
       expect(writes.last.$1, 'bluetooth.enabled');
       expect(writes.last.$2, {'adapter': adapter, 'enabled': true});
@@ -238,7 +238,9 @@ void main() {
         ),
       ),
     );
-    await tester.tap(find.text('Open'));
+    await tester.tap(
+      find.byKey(const ValueKey('open-page-airplane.bluetooth')),
+    );
     await refresh(tester);
     expect(opened, 'bluetooth');
   });
@@ -254,7 +256,7 @@ void main() {
     await tester.pumpWidget(host());
     await refresh(tester);
     expect(find.text('Bluetooth service is not running'), findsOneWidget);
-    expect(find.byType(SwitchListTile), findsNothing);
+    expect(find.byType(Switch), findsNothing);
     current = {'available': true, 'adapters': <Map>[], 'devices': <Map>[]};
     controller.apply(current);
     await refresh(tester);
@@ -264,10 +266,7 @@ void main() {
     controller.apply(current);
     await refresh(tester);
     expect(find.text('Blocked by a hardware switch'), findsOneWidget);
-    expect(
-      tester.widget<SwitchListTile>(find.byType(SwitchListTile)).onChanged,
-      isNull,
-    );
+    expect(tester.widget<Switch>(find.byType(Switch)).onChanged, isNull);
   });
   test(
     'adapter selection releases the previous adapter and stays session local',

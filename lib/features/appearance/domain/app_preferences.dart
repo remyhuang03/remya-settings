@@ -75,11 +75,24 @@ class AppPreferences {
     },
   };
 
-  ThemeData theme(Brightness brightness) => RemyaTheme(
-    styleVariant: styleVariant,
-    mode: themeMode.materialMode,
-    seedColor: seedColor,
-  ).theme(brightness);
+  ThemeData theme(Brightness brightness) {
+    final base = RemyaTheme(
+      styleVariant: styleVariant,
+      mode: themeMode.materialMode,
+      seedColor: seedColor,
+    ).theme(brightness);
+    // Match DropdownMenu fields to the dense, rounded fields used in setting rows.
+    return base.copyWith(
+      dropdownMenuTheme: const DropdownMenuThemeData(
+        inputDecorationTheme: InputDecorationThemeData(
+          isDense: true,
+          constraints: BoxConstraints.tightFor(height: 48),
+          contentPadding: .symmetric(horizontal: 14),
+          border: OutlineInputBorder(borderRadius: .all(.circular(14))),
+        ),
+      ),
+    );
+  }
 
   @override
   bool operator ==(Object other) =>

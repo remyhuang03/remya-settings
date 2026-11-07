@@ -69,35 +69,6 @@ class NetworkInfoRow extends StatelessWidget {
   );
 }
 
-/// Separates rows the way catalog sections do.
-Widget networkRows(List<Widget> rows) => Column(
-  children: [
-    for (var i = 0; i < rows.length; i++) ...[
-      if (i != 0) const Divider(height: 1, indent: 20, endIndent: 20),
-      rows[i],
-    ],
-  ],
-);
-
-class NetworkSectionTitle extends StatelessWidget {
-  const NetworkSectionTitle(this.title, {super.key, this.trailing});
-  final String title;
-  final Widget? trailing;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const .only(top: 28, bottom: 12),
-    child: Row(
-      children: [
-        Expanded(
-          child: Text(title, style: Theme.of(context).textTheme.titleMedium),
-        ),
-        ?trailing,
-      ],
-    ),
-  );
-}
-
 /// NetworkManager is missing or unreadable; never replaced with sample values.
 class NetworkUnavailable extends StatelessWidget {
   const NetworkUnavailable({super.key, required this.controller});

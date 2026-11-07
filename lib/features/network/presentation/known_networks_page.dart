@@ -174,7 +174,7 @@ class _ProfileTile extends StatelessWidget {
   }
 
   List<Widget> _rows(BuildContext context, String security, bool active) => [
-    networkRows([
+    settingsRows([
       _LastConnected(profile: profile, controller: controller),
       if (!active && controller.wifiEnabled)
         SettingRow(

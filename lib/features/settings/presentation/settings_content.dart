@@ -178,13 +178,7 @@ class SettingsDetail extends StatelessWidget {
           pageRows: _pageRows.keys.toSet(),
         ),
       if (page.children.isNotEmpty) ...[
-        Padding(
-          padding: const .only(top: 28, bottom: 12),
-          child: Text(
-            'Related settings',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ),
+        const SettingsSectionTitle('Related settings'),
         SettingsSurface(
           padding: .zero,
           child: Column(
@@ -256,32 +250,20 @@ class SettingsSectionCard extends StatelessWidget {
       if (section.title == 'Advanced') {
         return AdvancedSection(storageKey: tileKey, child: body);
       }
-      return Padding(
-        padding: const .only(top: 24),
-        child: SettingsSurface(
-          padding: .zero,
-          child: ExpansionTile(
-            key: tileKey,
-            title: Text(section.title),
-            subtitle: Text(
-              section.description ??
-                  'Additional reference options · Not implemented',
-            ),
-            children: [body],
-          ),
-        ),
+      return AdvancedSection(
+        storageKey: tileKey,
+        title: section.title,
+        subtitle:
+            section.description ??
+            'Reference options that are not implemented yet',
+        icon: Icons.library_books_outlined,
+        child: body,
       );
     }
     return Column(
       crossAxisAlignment: .stretch,
       children: [
-        Padding(
-          padding: const .only(top: 28, bottom: 12),
-          child: Text(
-            section.title,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ),
+        SettingsSectionTitle(section.title),
         SettingsSurface(padding: .zero, child: controls),
       ],
     );

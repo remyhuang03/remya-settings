@@ -229,7 +229,7 @@ class _WifiPageState extends State<WifiPage> {
         NetworkFailureBanner(controller: _controller),
         SettingsSurface(
           padding: .zero,
-          child: networkRows([
+          child: settingsRows([
             _radio(),
             if (_controller.wifiAdapters.length > 1) _adapter(),
           ]),
@@ -258,7 +258,7 @@ class _WifiPageState extends State<WifiPage> {
             itemBuilder: (context, index) => _network(others[index]),
           ),
         ],
-        const NetworkSectionTitle('Saved networks'),
+        const SettingsSectionTitle('Saved networks'),
         SettingsSurface(
           padding: .zero,
           child: PageLink(

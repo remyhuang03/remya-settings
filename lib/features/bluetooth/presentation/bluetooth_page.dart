@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
+import '../../settings/presentation/settings_row_layout.dart';
 import '../../settings/presentation/settings_widgets.dart';
 import '../../settings/presentation/settings_list.dart';
 import '../application/bluetooth_controller.dart';
@@ -46,6 +47,7 @@ class _BluetoothPageState extends State<BluetoothPage> {
     listenable: controller,
     builder: (context, _) {
       final adapter = controller.adapter;
+      final text = Theme.of(context).textTheme;
       final paired = controller.devices
           .where((d) => d['paired'] == true || d['bonded'] == true)
           .toList();
@@ -65,82 +67,107 @@ class _BluetoothPageState extends State<BluetoothPage> {
           else if (adapter == null)
             const SettingsSurface(child: Text('No Bluetooth adapter found.'))
           else ...[
-            if (controller.adapters.length > 1)
-              SettingsSurface(
-                child: DropdownButtonFormField<String>(
-                  key: ValueKey(adapter['id']),
-                  initialValue: adapter['id'] as String,
-                  decoration: const InputDecoration(labelText: 'Adapter'),
-                  isExpanded: true,
-                  items: [
-                    for (final a in controller.adapters)
-                      DropdownMenuItem(
-                        value: a['id'] as String,
-                        child: Text(
-                          '${a['name']} (${a['address']})',
-                          overflow: .ellipsis,
-                        ),
-                      ),
-                  ],
-                  onChanged:
-                      controller.busy || adapter['hardware_blocked'] == true
-                      ? null
-                      : (id) {
-                          if (id != null) controller.selectAdapter(id);
-                        },
-                ),
-              ),
             SettingsSurface(
-              child: SwitchListTile(
-                contentPadding: .zero,
-                title: const Text('Bluetooth'),
-                subtitle: Text(
-                  adapter['hardware_blocked'] == true
-                      ? 'Blocked by a hardware switch'
-                      : adapter['software_blocked'] == true
-                      ? 'Blocked by system radio control'
-                      : controller.powered
-                      ? 'On'
-                      : 'Off',
-                ),
-                value: controller.powered,
-                onChanged:
-                    controller.busy || adapter['hardware_blocked'] == true
-                    ? null
-                    : (enabled) => controller.set(bluetoothEnabledSettingId, {
-                        'enabled': enabled,
-                      }),
-              ),
-            ),
-            if (controller.powered) ...[
-              const SizedBox(height: 16),
-              SettingsSurface(
-                padding: .zero,
-                child: SettingRow(
-                  id: bluetoothDiscoverableSettingId,
+              padding: .zero,
+              child: settingsRows([
+                if (controller.adapters.length > 1)
+                  SettingRow(
+                    id: 'bluetooth.adapter',
+                    label: Text('Adapter', style: text.bodyLarge),
+                    control: SizedBox(
+                      width: 280,
+                      child: DropdownButtonFormField<String>(
+                        key: ValueKey(adapter['id']),
+                        initialValue: adapter['id'] as String,
+                        decoration: const InputDecoration(
+                          isDense: true,
+                          border: OutlineInputBorder(
+                            borderRadius: .all(.circular(14)),
+                          ),
+                        ),
+                        isExpanded: true,
+                        items: [
+                          for (final a in controller.adapters)
+                            DropdownMenuItem(
+                              value: a['id'] as String,
+                              child: Text(
+                                '${a['name']} (${a['address']})',
+                                overflow: .ellipsis,
+                              ),
+                            ),
+                        ],
+                        onChanged:
+                            controller.busy ||
+                                adapter['hardware_blocked'] == true
+                            ? null
+                            : (id) {
+                                if (id != null) controller.selectAdapter(id);
+                              },
+                      ),
+                    ),
+                  ),
+                SettingRow(
+                  id: bluetoothEnabledSettingId,
                   label: Column(
                     crossAxisAlignment: .start,
                     children: [
-                      const Text('Visible to nearby devices'),
-                      const SizedBox(height: 4),
+                      Text('Bluetooth', style: text.bodyLarge),
                       Text(
-                        'Discoverable: ${adapter['discoverable'] == true ? 'Yes' : 'No'}',
-                      ),
-                      const Text(
-                        'Allow nearby devices to find this computer for 60 seconds.',
+                        adapter['hardware_blocked'] == true
+                            ? 'Blocked by a hardware switch'
+                            : adapter['software_blocked'] == true
+                            ? 'Blocked by system radio control'
+                            : controller.powered
+                            ? 'On'
+                            : 'Off',
+                        style: text.bodySmall,
                       ),
                     ],
                   ),
-                  control: OutlinedButton.icon(
-                    onPressed: controller.busy
-                        ? null
-                        : () => _add(visible: true),
-                    icon: const Icon(Icons.visibility_outlined),
-                    label: const Text('Make visible'),
+                  control: Semantics(
+                    label: 'Bluetooth',
+                    child: Switch(
+                      value: controller.powered,
+                      onChanged:
+                          controller.busy || adapter['hardware_blocked'] == true
+                          ? null
+                          : (enabled) => controller.set(
+                              bluetoothEnabledSettingId,
+                              {'enabled': enabled},
+                            ),
+                    ),
                   ),
                 ),
-              ),
-            ],
+                if (controller.powered)
+                  SettingRow(
+                    id: bluetoothDiscoverableSettingId,
+                    label: Column(
+                      crossAxisAlignment: .start,
+                      children: [
+                        Text(
+                          'Visible to nearby devices',
+                          style: text.bodyLarge,
+                        ),
+                        Text(
+                          'Allow nearby devices to find this computer for 60 seconds.',
+                          style: text.bodySmall,
+                        ),
+                        Text(
+                          'Discoverable: ${adapter['discoverable'] == true ? 'Yes' : 'No'}',
+                          style: text.bodySmall,
+                        ),
+                      ],
+                    ),
+                    control: OutlinedButton.icon(
+                      onPressed: controller.busy
+                          ? null
+                          : () => _add(visible: true),
+                      icon: const Icon(Icons.visibility_outlined),
+                      label: const Text('Make visible'),
+                    ),
+                  ),
+              ]),
+            ),
             const SizedBox(height: 16),
             SettingsList(
               title: 'Paired devices',
@@ -160,6 +187,7 @@ class _BluetoothPageState extends State<BluetoothPage> {
                 key: ValueKey(paired[index]['id']),
                 controller: controller,
                 device: paired[index],
+                divider: index > 0,
               ),
             ),
             const SizedBox(height: 16),
@@ -200,22 +228,9 @@ class _BluetoothStatus extends StatelessWidget {
         ),
       ],
       if (controller.errorMessage case final error?)
-        Padding(
-          padding: const .only(bottom: 12),
-          child: SettingsSurface(
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                const Icon(Icons.error_outline_rounded),
-                Text(error),
-                TextButton.icon(
-                  onPressed: controller.sending ? null : controller.reload,
-                  icon: const Icon(Icons.refresh_rounded),
-                  label: const Text('Retry'),
-                ),
-              ],
-            ),
-          ),
+        SettingsErrorCard(
+          message: error,
+          onRetry: controller.sending ? null : controller.reload,
         ),
     ],
   );
@@ -235,11 +250,13 @@ class _DeviceCard extends StatelessWidget {
     super.key,
     required this.controller,
     required this.device,
+    required this.divider,
     this.nearby = false,
   });
   final BluetoothController controller;
   final Map device;
   final bool nearby;
+  final bool divider;
   Future<void> _forget(BuildContext context) async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -271,25 +288,30 @@ class _DeviceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final connected = device['connected'] == true;
     final blocked = device['blocked'] == true;
-    return Padding(
-      padding: const .only(bottom: 12),
-      child: SettingsSurface(
-        child: Column(
-          crossAxisAlignment: .stretch,
-          children: [
-            Row(
+    final small = Theme.of(context).textTheme.bodySmall;
+    return Column(
+      crossAxisAlignment: .stretch,
+      children: [
+        if (divider) const Divider(height: 1, indent: 20, endIndent: 20),
+        Padding(
+          padding: const .symmetric(horizontal: 20, vertical: 16),
+          child: SettingsRowLayout(
+            left: Row(
+              mainAxisSize: .min,
               children: [
-                Icon(_deviceIcon(device)),
+                Icon(
+                  _deviceIcon(device),
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 const SizedBox(width: 16),
-                Expanded(
+                Flexible(
                   child: Column(
                     crossAxisAlignment: .start,
                     children: [
                       Text(
                         device['name'] as String? ?? 'Bluetooth device',
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
-                      Text(device['address'] as String? ?? ''),
                       Text(
                         blocked
                             ? 'Blocked by system'
@@ -298,16 +320,21 @@ class _DeviceCard extends StatelessWidget {
                             : nearby
                             ? 'Not connected'
                             : 'Paired, not connected',
+                        style: small,
                       ),
                       if (device['battery'] case final num battery)
-                        Text('Battery: $battery%'),
+                        Text('Battery: $battery%', style: small),
+                      Text(
+                        'Address: ${device['address'] as String? ?? 'Unknown'}',
+                        style: small,
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Wrap(
+            right: Wrap(
+              alignment: .end,
               spacing: 8,
               runSpacing: 8,
               children: [
@@ -347,9 +374,9 @@ class _DeviceCard extends StatelessWidget {
                   ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -418,6 +445,7 @@ class _AddDeviceDialog extends StatelessWidget {
                       controller: controller,
                       device: nearby[index],
                       nearby: true,
+                      divider: index > 0,
                     ),
                   ),
                 ),

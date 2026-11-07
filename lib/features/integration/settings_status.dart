@@ -59,6 +59,7 @@ class SettingsStatus extends StatelessWidget {
             if (preferences.errorMessage case final message?)
               _ConflictWarning(
                 navigatorKey: navigatorKey,
+                area: 'Appearance',
                 title: '$message\n${preferences.store.file.path}',
                 busy: preferences.isBusy,
                 useSystem: preferences.retry,
@@ -66,8 +67,9 @@ class SettingsStatus extends StatelessWidget {
             if (preferences.hasConflict)
               _ConflictWarning(
                 navigatorKey: navigatorKey,
+                area: 'Appearance',
                 title:
-                    'Appearance differs: system ${preferences.systemTheme!.mode!.name}, Settings ${preferences.preferences.themeMode.name}.',
+                    'System: ${preferences.systemTheme!.mode!.name}\nSettings: ${preferences.preferences.themeMode.name}',
                 busy: preferences.isBusy,
                 useSystem: preferences.useSystemConfiguration,
                 useSettings: () =>
@@ -77,8 +79,8 @@ class SettingsStatus extends StatelessWidget {
               if (controller.hasConflict)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
-                  title:
-                      'Date/time configuration differs from saved Settings.\n${controller.conflictSummary}',
+                  title: controller.conflictSummary,
+                  area: 'Date and time',
                   busy: controller.isBusy,
                   useSystem: controller.useSystemConfiguration,
                   useSettings: controller.applySavedConfiguration,
@@ -88,7 +90,8 @@ class SettingsStatus extends StatelessWidget {
               if (controller.errorMessage != null)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
-                  title: 'Date and time: ${controller.errorMessage}',
+                  area: 'Date and time',
+                  title: controller.errorMessage!,
                   busy: controller.isBusy,
                   useSystem: controller.retry,
                 ),
@@ -97,7 +100,8 @@ class SettingsStatus extends StatelessWidget {
               if (controller.errorMessage case final message?)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
-                  title: 'Sound: $message',
+                  area: 'Sound',
+                  title: message,
                   busy: controller.isBusy,
                   useSystem: controller.refresh,
                 ),
@@ -106,7 +110,9 @@ class SettingsStatus extends StatelessWidget {
               if (controller.hasConflict)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
-                  title: 'Default apps differ from saved Settings. Open Apps > Default apps to inspect each association.',
+                  area: 'Default apps',
+                  title:
+                      'Open Apps > Default apps to inspect each association.',
                   busy: controller.isBusy,
                   useSystem: controller.useSystemConfiguration,
                   useSettings: controller.applySavedConfiguration,
@@ -114,7 +120,8 @@ class SettingsStatus extends StatelessWidget {
               if (controller.errorMessage case final message?)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
-                  title: 'Default apps: $message',
+                  area: 'Default apps',
+                  title: message,
                   busy: controller.isBusy,
                   useSystem: controller.reload,
                 ),
@@ -123,8 +130,8 @@ class SettingsStatus extends StatelessWidget {
               if (controller.hasConflict)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
-                  title:
-                      'Night light differs from saved Settings.\n${controller.conflictSummary}',
+                  title: controller.conflictSummary,
+                  area: 'Night light',
                   busy: controller.isBusy,
                   useSystem: controller.useSystemConfiguration,
                   useSettings: controller.applySavedConfiguration,
@@ -132,7 +139,8 @@ class SettingsStatus extends StatelessWidget {
               if (controller.errorMessage case final message?)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
-                  title: 'Night light: $message',
+                  area: 'Night light',
+                  title: message,
                   busy: controller.isBusy,
                   useSystem: controller.reload,
                 ),
@@ -141,8 +149,8 @@ class SettingsStatus extends StatelessWidget {
               if (controller.hasConflict)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
-                  title:
-                      'Saved network preferences differ from NetworkManager.\n${controller.conflictSummary}',
+                  title: controller.conflictSummary,
+                  area: 'Network',
                   busy: controller.isBusy,
                   useSystem: controller.useSystemConfiguration,
                   useSettings: controller.applySavedConfiguration,
@@ -150,7 +158,8 @@ class SettingsStatus extends StatelessWidget {
               if (controller.errorMessage case final message?)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
-                  title: 'Network: $message',
+                  area: 'Network',
+                  title: message,
                   busy: controller.isBusy,
                   useSystem: controller.reload,
                 ),
@@ -159,8 +168,8 @@ class SettingsStatus extends StatelessWidget {
               if (controller.hasConflict)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
-                  title:
-                      'Background differs from saved Settings.\n${controller.conflictSummary}',
+                  title: controller.conflictSummary,
+                  area: 'Background',
                   busy: controller.isBusy,
                   useSystem: controller.useSystemConfiguration,
                   useSettings: controller.applySavedConfiguration,
@@ -182,7 +191,8 @@ class SettingsStatus extends StatelessWidget {
               if (controller.errorMessage case final message?)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
-                  title: 'Background: $message',
+                  area: 'Background',
+                  title: message,
                   busy: controller.isBusy,
                   useSystem: controller.retry,
                 ),
@@ -196,8 +206,8 @@ class SettingsStatus extends StatelessWidget {
               if (controller.hasConflict)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
-                  title:
-                      'Display configuration differs from saved Settings.\n${controller.conflictSummary}',
+                  title: controller.conflictSummary,
+                  area: 'Display',
                   busy: controller.isBusy,
                   useSystem: controller.useSystemConfiguration,
                   useSettings: controller.applySavedConfiguration,
@@ -219,7 +229,8 @@ class SettingsStatus extends StatelessWidget {
               if (controller.errorMessage case final message?)
                 _ConflictWarning(
                   navigatorKey: navigatorKey,
-                  title: 'Display: $message',
+                  area: 'Display',
+                  title: message,
                   busy: controller.isBusy,
                   useSystem: controller.retry,
                 ),
@@ -254,7 +265,8 @@ class HostnameStatus extends StatelessWidget {
               _ConflictWarning(
                 navigatorKey: navigatorKey,
                 title:
-                    'Device name differs from saved Settings.\nSystem: ${controller.staticHostname}\nSettings: ${controller.savedHostname}',
+                    'System: ${controller.staticHostname}\nSettings: ${controller.savedHostname}',
+                area: 'Device name',
                 busy: controller.isBusy,
                 useSystem: controller.useSystemConfiguration,
                 useSettings: controller.applySavedConfiguration,
@@ -262,7 +274,8 @@ class HostnameStatus extends StatelessWidget {
             if (controller.errorMessage case final message?)
               _ConflictWarning(
                 navigatorKey: navigatorKey,
-                title: 'Device name: $message',
+                area: 'Device name',
+                title: message,
                 busy: controller.isBusy,
                 useSystem: controller.retry,
               ),
@@ -275,12 +288,18 @@ class HostnameStatus extends StatelessWidget {
 
 class _ConflictWarning extends StatelessWidget {
   const _ConflictWarning({
+    required this.area,
     required this.title,
     required this.busy,
     required this.useSystem,
     this.useSettings,
     this.navigatorKey,
   });
+
+  /// The feature the warning belongs to, such as "Sound".
+  final String area;
+
+  /// The error message or the conflict summary.
   final String title;
   final GlobalKey<NavigatorState>? navigatorKey;
   final bool busy;
@@ -300,10 +319,11 @@ class _ConflictWarning extends StatelessWidget {
     return _StatusCard(
       error: isError,
       icon: isError ? Icons.error_outline_rounded : Icons.warning_amber_rounded,
-      title: isError ? 'Unable to update settings' : 'Configuration differs',
-      message: isError
-          ? 'The change could not be completed. View details for more information.'
-          : title,
+      title: isError
+          ? '$area needs attention'
+          : '$area differs from saved Settings',
+      message: title,
+      maxLines: isError ? 2 : null,
       actions: [
         if (isError)
           TextButton(
@@ -313,7 +333,7 @@ class _ConflictWarning extends StatelessWidget {
             onPressed: () => showDialog<void>(
               context: navigatorKey?.currentState?.overlay?.context ?? context,
               builder: (context) => AlertDialog(
-                title: const Text('Error details'),
+                title: Text('$area error details'),
                 content: SingleChildScrollView(child: SelectableText(title)),
                 actions: [
                   TextButton(
@@ -356,12 +376,16 @@ class _StatusCard extends StatelessWidget {
     required this.message,
     required this.actions,
     this.error = false,
+    this.maxLines,
   });
   final IconData icon;
   final String title;
   final String message;
   final List<Widget> actions;
   final bool error;
+
+  /// Long error text is truncated here; its full text stays in Details.
+  final int? maxLines;
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -383,6 +407,8 @@ class _StatusCard extends StatelessWidget {
         if (message.isNotEmpty)
           Text(
             message,
+            maxLines: maxLines,
+            overflow: maxLines == null ? null : .ellipsis,
             style: Theme.of(context).textTheme.bodySmall
                 ?.copyWith(color: foreground),
           ),

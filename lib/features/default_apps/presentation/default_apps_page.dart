@@ -185,19 +185,9 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
               ),
             ),
           if (controller.errorMessage case final error?)
-            SettingsSurface(
-              child: Column(
-                crossAxisAlignment: .start,
-                children: [
-                  const Icon(Icons.error_outline_rounded),
-                  Text(error),
-                  TextButton.icon(
-                    onPressed: controller.isBusy ? null : controller.reload,
-                    icon: const Icon(Icons.refresh_rounded),
-                    label: const Text('Retry'),
-                  ),
-                ],
-              ),
+            SettingsErrorCard(
+              message: error,
+              onRetry: controller.isBusy ? null : controller.reload,
             ),
           if (controller.isBusy || _searching) const LinearProgressIndicator(),
           SettingsSurface(

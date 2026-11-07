@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/power/presentation/power_page.dart';
 import 'package:remya_settings/features/power/presentation/battery_usage_page.dart';
 import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_settings/features/settings/presentation/settings_row_layout.dart';
 import 'package:remya_settings/features/settings/presentation/settings_shell.dart';
 import 'package:remya_settings/features/settings/presentation/settings_category_group.dart';
 
@@ -34,6 +35,44 @@ class _PowerReadClient extends SettingsClient {
 }
 
 void main() {
+  testWidgets(
+    'long row labels wrap beside the control until the row is narrow',
+    (tester) async {
+      Future<(Rect, Rect)> layout(double width) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Align(
+              alignment: .topLeft,
+              child: SizedBox(
+                width: width,
+                child: SettingsRowLayout(
+                  left: Text('word ' * 60, key: const ValueKey('label')),
+                  right: const SizedBox(
+                    key: ValueKey('control'),
+                    width: 200,
+                    height: 40,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        return (
+          tester.getRect(find.byKey(const ValueKey('label'))),
+          tester.getRect(find.byKey(const ValueKey('control'))),
+        );
+      }
+
+      final (wideLabel, wideControl) = await layout(760);
+      expect(wideLabel.right, lessThanOrEqualTo(wideControl.left - 16));
+      expect(wideControl.right, 760);
+
+      final (narrowLabel, narrowControl) = await layout(420);
+      expect(narrowControl.top, greaterThanOrEqualTo(narrowLabel.bottom));
+      expect(narrowLabel.width, greaterThan(300));
+    },
+  );
+
   testWidgets('Power and sleep links open the implemented pages', (
     tester,
   ) async {

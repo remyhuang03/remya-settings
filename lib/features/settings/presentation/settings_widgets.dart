@@ -176,15 +176,87 @@ class SettingsSurface extends StatelessWidget {
   );
 }
 
-/// A page's default-collapsed advanced options, one rounded card with its rows.
+/// The heading above a group of settings.
+class SettingsSectionTitle extends StatelessWidget {
+  const SettingsSectionTitle(this.title, {super.key, this.trailing});
+  final String title;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const .only(top: 28, bottom: 12),
+    child: Row(
+      children: [
+        Expanded(
+          child: Text(title, style: Theme.of(context).textTheme.titleMedium),
+        ),
+        ?trailing,
+      ],
+    ),
+  );
+}
+
+/// Rows of one settings group, separated by inset dividers.
+Widget settingsRows(List<Widget> rows) => Column(
+  children: [
+    for (var i = 0; i < rows.length; i++) ...[
+      if (i != 0) const Divider(height: 1, indent: 20, endIndent: 20),
+      rows[i],
+    ],
+  ],
+);
+
+/// A page-level failure with its message and a Retry action.
+class SettingsErrorCard extends StatelessWidget {
+  const SettingsErrorCard({super.key, required this.message, this.onRetry});
+  final String message;
+
+  /// Null while a retry cannot start, such as during another operation.
+  final VoidCallback? onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const .only(bottom: 12),
+      child: SettingsSurface(
+        child: SettingsRowLayout(
+          left: Row(
+            mainAxisSize: .min,
+            children: [
+              Icon(Icons.error_outline_rounded, color: colors.error),
+              const SizedBox(width: 16),
+              Flexible(
+                child: Semantics(liveRegion: true, child: Text(message)),
+              ),
+            ],
+          ),
+          right: TextButton.icon(
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh_rounded),
+            label: const Text('Retry'),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A page's default-collapsed options, one rounded card with its rows.
 class AdvancedSection extends StatelessWidget {
   const AdvancedSection({
     super.key,
     required this.storageKey,
     required this.child,
+    this.title = 'Advanced',
+    this.subtitle,
+    this.icon = Icons.tune_rounded,
   });
   final Key storageKey;
   final Widget child;
+  final String title;
+  final String? subtitle;
+  final IconData icon;
 
   static const _radius = BorderRadius.all(.circular(28));
 
@@ -210,16 +282,10 @@ class AdvancedSection extends StatelessWidget {
               color: colors.secondaryContainer,
               shape: .circle,
             ),
-            child: Icon(
-              Icons.tune_rounded,
-              size: 20,
-              color: colors.onSecondaryContainer,
-            ),
+            child: Icon(icon, size: 20, color: colors.onSecondaryContainer),
           ),
-          title: Text(
-            'Advanced',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          title: Text(title, style: Theme.of(context).textTheme.titleMedium),
+          subtitle: subtitle == null ? null : Text(subtitle!),
           children: [
             const Divider(height: 1, indent: 20, endIndent: 20),
             child,
@@ -253,14 +319,33 @@ class SettingRow extends StatelessWidget {
 }
 
 class SettingControlTile extends StatelessWidget {
-  const SettingControlTile(this.setting, {super.key, this.onOpenPage});
+  const SettingControlTile(
+    this.setting, {
+    super.key,
+    this.onOpenPage,
+    this.icon,
+  });
   final SettingSpec setting;
 
-  /// Opens a related preview page from an otherwise unavailable row.
+  /// Turns the row into a link to a related page, including preview pages.
   final VoidCallback? onOpenPage;
+
+  /// Leading icon of a page link, matching neighboring [PageLink] rows.
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
+    if (onOpenPage case final open?) {
+      return _LinkRow(
+        key: ValueKey('open-page-${setting.id}'),
+        icon: icon,
+        title: setting.title,
+        subtitle: setting.availability == .available ? setting.reason : null,
+        availability: setting.availability,
+        reason: setting.reason,
+        onTap: open,
+      );
+    }
     if (displaySettingIds.contains(setting.id)) {
       final controller = DisplayScope.maybeOf(context);
       if (controller != null) {
@@ -289,15 +374,22 @@ class SettingControlTile extends StatelessWidget {
               if (setting.id == accentColorSettingId) const _AccentReadout(),
               if (dateTimeSettingIds.contains(setting.id) && state == null)
                 Text('System settings unavailable', style: detailStyle),
-              if (setting.id == syncNowSettingId && state != null)
+              if (setting.id == syncNowSettingId && state != null) ...[
                 Text(
                   clock!.isSyncing
                       ? 'Syncing…'
                       : state.syncError != null
                       ? 'Time synchronization unavailable'
-                      : '${state.ntpSynchronized ? 'Synchronized' : 'Not synchronized'}${state.activeTimeServer.isEmpty ? '' : ' · ${state.activeTimeServer}'}',
+                      : state.ntpSynchronized
+                      ? 'Synchronized'
+                      : 'Not synchronized',
                   style: detailStyle,
                 ),
+                if (!clock.isSyncing &&
+                    state.syncError == null &&
+                    state.activeTimeServer.isNotEmpty)
+                  Text('Server: ${state.activeTimeServer}', style: detailStyle),
+              ],
               if (setting.kind == .info)
                 Text(setting.value as String, style: detailStyle),
               if (setting.kind == .slider)
@@ -322,13 +414,7 @@ class SettingControlTile extends StatelessWidget {
               enabled: setting.availability == .available ? null : false,
               child: Tooltip(
                 message: setting.reason,
-                child: onOpenPage == null
-                    ? _PreviewControl(setting)
-                    : FilledButton(
-                        key: ValueKey('open-page-${setting.id}'),
-                        onPressed: onOpenPage,
-                        child: Text(setting.value as String),
-                      ),
+                child: _PreviewControl(setting),
               ),
             ),
     );
@@ -617,50 +703,78 @@ class PageLink extends StatelessWidget {
   final String? subtitle;
 
   @override
-  Widget build(BuildContext context) => Semantics(
-    button: true,
-    child: InkWell(
-      key: ValueKey('page-link-${page.id}'),
-      onTap: onTap,
-      child: Padding(
-        padding: const .symmetric(horizontal: 20, vertical: 16),
-        child: SettingsRowLayout(
-          left: Row(
-            mainAxisSize: .min,
-            children: [
-              Icon(icon, color: Theme.of(context).colorScheme.primary),
-              const SizedBox(width: 16),
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: .start,
-                  children: [
-                    Text(
-                      page.title,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      subtitle ?? page.description,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
+  Widget build(BuildContext context) => _LinkRow(
+    key: ValueKey('page-link-${page.id}'),
+    icon: icon,
+    title: page.title,
+    subtitle: subtitle ?? page.description,
+    availability: page.availability,
+    reason: page.reason,
+    onTap: onTap,
+  );
+}
+
+/// A whole-row link to another page: text on the left, status and chevron on the right.
+class _LinkRow extends StatelessWidget {
+  const _LinkRow({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.availability,
+    required this.reason,
+    required this.onTap,
+  });
+  final IconData? icon;
+  final String title;
+  final String? subtitle;
+  final SettingAvailability availability;
+  final String reason;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    return Semantics(
+      button: true,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const .symmetric(horizontal: 20, vertical: 16),
+          child: SettingsRowLayout(
+            left: Row(
+              mainAxisSize: .min,
+              children: [
+                if (icon != null) ...[
+                  Icon(icon, color: Theme.of(context).colorScheme.primary),
+                  const SizedBox(width: 16),
+                ],
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: .start,
+                    children: [
+                      Text(title, style: text.bodyLarge),
+                      if (subtitle case final subtitle?) ...[
+                        const SizedBox(height: 4),
+                        Text(subtitle, style: text.bodySmall),
+                      ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          right: Wrap(
-            alignment: .end,
-            crossAxisAlignment: .center,
-            spacing: 12,
-            runSpacing: 8,
-            children: [
-              if (page.availability != .available)
-                AvailabilityBadge(page.availability, reason: page.reason),
-              const Icon(Icons.chevron_right_rounded, size: 20),
-            ],
+              ],
+            ),
+            right: Row(
+              mainAxisSize: .min,
+              spacing: 12,
+              children: [
+                if (availability != .available)
+                  AvailabilityBadge(availability, reason: reason),
+                const Icon(Icons.chevron_right_rounded, size: 20),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
