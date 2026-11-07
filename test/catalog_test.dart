@@ -1,4 +1,7 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_settings/features/power/presentation/power_page.dart';
+import 'package:remya_settings/features/power/presentation/battery_usage_page.dart';
+import 'package:remya_settings_client/settings_contract.dart';
 import 'package:remya_settings/features/settings/presentation/settings_shell.dart';
 import 'package:remya_settings/features/settings/presentation/settings_category_group.dart';
 
@@ -15,7 +18,57 @@ Map<String, dynamic> readCatalog() =>
 Map<String, dynamic> _readJson(String path) =>
     jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
 
+class _PowerReadClient extends SettingsClient {
+  @override
+  Stream<SettingsChange> get changes => const Stream.empty();
+
+  @override
+  Future<Map<String, dynamic>> call(
+    String method, [
+    List<String> arguments = const [],
+  ]) async => switch (arguments.single) {
+    'power' => {'available': true, 'system': {}, 'saved': {}},
+    keepAwakeSettingId => {'value': false},
+    _ => {'observations': [], 'next': null},
+  };
+}
+
 void main() {
+  testWidgets('Power and sleep links open the implemented pages', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(1200, 900);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+    final navigation = ValueNotifier<String?>('power');
+    addTearDown(navigation.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SettingsShell(
+          catalog: SettingsCatalog.fromJson(readCatalog()),
+          navigation: navigation,
+          client: _PowerReadClient(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Energy advice'), findsNothing);
+    await tester.tap(find.byKey(const ValueKey('open-page-power.743773bd')));
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<PowerPage>(find.byType(PowerPage)).page.id,
+      'battery-saver',
+    );
+    navigation.value = null;
+    navigation.value = 'power';
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('open-page-power.03bd05ee')));
+    await tester.pumpAndSettle();
+    expect(find.byType(BatteryUsagePage), findsOneWidget);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
   test(
     'Camera catalog implements supported controls and removes discarded pages',
     () {

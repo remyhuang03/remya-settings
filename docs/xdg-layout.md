@@ -179,4 +179,4 @@ Power preferences and restoration metadata are `power.json` and `power.runtime.j
 
 `power.json` stores the last nonzero activation threshold as
 `preferred_threshold` and the turn-off policy as `off_threshold`.
-Existing files without the field follow the turn-on threshold. See [Power and energy saver](power.md).
+Existing files without the field follow the turn-on threshold. Keep awake is a session-only hypridle inhibitor and creates no files. See [Power and energy saver](power.md).

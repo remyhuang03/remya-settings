@@ -1,9 +1,11 @@
 pub mod history;
 pub mod idle;
+mod keep_awake;
 use gio::{
     glib::{Variant, variant::ToVariant},
     prelude::*,
 };
+pub use keep_awake::ID as KEEP_AWAKE;
 use remya_settings_display::{Compositor, Hyprctl, atomic_write, brightness::BrightnessBackend};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
@@ -17,6 +19,7 @@ const DEFAULT_ON_THRESHOLD: u32 = 20;
 const FOLLOW_ON_THRESHOLD: i32 = -1;
 const OFF_THRESHOLDS: &[i32] = &[FOLLOW_ON_THRESHOLD, 0, 30, 50, 70, 80, 90, 100];
 pub const IDS: &[&str] = &[
+    KEEP_AWAKE,
     "power.5a4f0131",
     "power.5e3af39c",
     "power.8b4c8522",
@@ -186,6 +189,7 @@ struct Runtime {
     manual: bool,
 }
 pub struct Power {
+    keep_awake: keep_awake::KeepAwake,
     file: PathBuf,
     idle: PathBuf,
     saved: Option<Saved>,
@@ -232,6 +236,7 @@ impl Power {
             Err(e) => (None, Some(e)),
         };
         Self {
+            keep_awake: Default::default(),
             file,
             idle,
             invalid_config: error.is_some(),
@@ -333,6 +338,9 @@ impl Power {
         json!({"available":!self.system.is_null() && self.system["profile"].is_string(),"saved":self.saved,"system":self.system,"conflict":self.conflict(),"error":self.error,"history_error":self.history_error})
     }
     pub fn read_setting(&mut self, id: &str) -> Value {
+        if id == KEEP_AWAKE {
+            return self.keep_awake.read();
+        }
         let mut state = self.read();
         state["id"] = json!(id);
         state["availability"] = json!("available");
@@ -381,6 +389,9 @@ impl Power {
         Ok(self.state())
     }
     pub fn set(&mut self, id: &str, input: &str) -> Result<Value, String> {
+        if id == KEEP_AWAKE {
+            return self.keep_awake.set(input);
+        }
         if self.invalid_config {
             return Err("Power configuration is unreadable; preserve it for repair".into());
         }
@@ -596,6 +607,7 @@ impl Power {
         Ok(())
     }
     pub fn shutdown(&mut self) {
+        self.keep_awake = Default::default();
         self.history = None;
     }
     pub fn query(&self, request: &str) -> Result<Value, String> {

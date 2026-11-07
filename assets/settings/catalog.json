@@ -3649,28 +3649,28 @@
               "value": "15 minutes"
             },
             {
+              "id": "power.keep-awake",
+              "title": "Keep awake",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Pause hypridle timers that respect idle inhibition.",
+              "value": false
+            },
+            {
               "id": "power.743773bd",
               "title": "Energy saving mode",
               "type": "action",
-              "availability": "planned",
-              "reason": "Use the Energy saver page in category navigation.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Configure Energy saver.",
+              "value": "Open"
             },
             {
               "id": "power.03bd05ee",
               "title": "Battery usage",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "power.de734a46",
-              "title": "Energy advice",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "View battery history and screen and sleep durations.",
+              "value": "Open"
             }
           ]
         },

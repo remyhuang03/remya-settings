@@ -448,6 +448,7 @@ class _SettingsShellState extends State<SettingsShell> {
         key: ValueKey(_page!.id),
         page: _page!,
         client: widget.client!,
+        onPage: (id) => _openPage(widget.catalog.page(id)),
       );
     } else if (_page?.id == 'cameras' && widget.cameras != null) {
       content = CameraPage(controller: widget.cameras!);

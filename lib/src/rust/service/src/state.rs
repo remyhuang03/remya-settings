@@ -29,6 +29,15 @@ pub const STYLE: &str = "themes.material-style-variant";
 pub const MODE: &str = "themes.material-theme-mode";
 pub const BAR_FOLDED_APPS: &str = "remya-bar.folded-apps";
 pub const BAR_SIDEBAR: &str = "remya-bar.sidebar-layout";
+pub fn linked_page(id: &str) -> Option<&'static str> {
+    match id {
+        "airplane.bluetooth" => Some("bluetooth"),
+        "power.743773bd" => Some("battery-saver"),
+        "power.03bd05ee" => Some("battery-usage"),
+        _ => None,
+    }
+}
+
 pub const BAR_CLOCK_SECONDS: &str = "remya-bar.clock-seconds";
 pub const ZONE: &str = "date-time.fb2a23dc";
 pub const MANUAL: &str = "date-time.6422d209";
@@ -960,11 +969,11 @@ impl State {
         if control["availability"] != "available" {
             return Err(format!("Unavailable:{}", control["reason"]));
         }
-        if key == "airplane.bluetooth" {
+        if let Some(page) = linked_page(key) {
             if value != "open" {
-                return Err(invalid("Use open to open Bluetooth settings"));
+                return Err(invalid("Use open to open the linked Settings page"));
             }
-            return self.execute("Open", &["bluetooth".into()]);
+            return self.execute("Open", &[page.into()]);
         }
         if account::IDS.contains(&key) {
             return self.account.set(key, value, atomic_write);

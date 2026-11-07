@@ -724,9 +724,9 @@ Windows 参考入口：`ms-settings:powersleep`。
 | Power mode | `power.5a4f0131` | 选择 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
 | Turn off screen time | `power.5e3af39c` | 选择 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
 | Sleep time | `power.8b4c8522` | 选择 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
-| Energy saving mode | `power.743773bd` | 操作 | 未实现 | — |
-| Battery usage | `power.03bd05ee` | 操作 | 未实现 | — |
-| Energy advice | `power.de734a46` | 操作 | 未实现 | — |
+| Keep awake | `power.keep-awake` | 开关 | 已实现 | hypridle D-Bus 抑制 |
+| Energy saving mode | `power.743773bd` | 操作 | 已实现 | 跳转至 Energy saver |
+| Battery usage | `power.03bd05ee` | 操作 | 已实现 | 跳转至 Battery usage |
 
 
 #### Advanced: compositor previews

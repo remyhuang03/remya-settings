@@ -16,6 +16,12 @@ Includes, duplicate targets and unsupported shapes are refused. The current-user
 hypridle instance is restarted; failure restores the previous file and attempts
 recovery. Other idle daemons are not supported.
 
+Keep awake holds a session D-Bus idle inhibitor while enabled. It requires
+hypridle to own `org.freedesktop.ScreenSaver` with D-Bus inhibition enabled.
+It pauses hypridle listeners that honor inhibition. The Settings service owns
+the cookie, so closing Settings or Bar leaves it active. Stopping Settings
+or hypridle releases it. Keep awake creates no files and starts disabled.
+
 Automatic energy saver defaults to off. Thresholds are 10, 20, 30, 50 and 100
 percent (Always), with an independent include-external-power preference (default
 false). A manual profile change suppresses automatic changes until eligibility
@@ -59,6 +65,10 @@ History queries return raw events plus preceding state/session/battery context f
 
 - `Get power` / `Get battery-saver`: saved/system values, supported profiles,
   conflict, backend error and history error.
+- `Get power.keep-awake` / `Set power.keep-awake`: live inhibitor state and
+  a JSON boolean write. Successful writes emit `Changed power.keep-awake`.
+- `Set power.743773bd open` / `Set power.03bd05ee open`: open Energy saver or
+  Battery usage.
 - `Set power.5a4f0131`: JSON profile string.
 - `Set power.5e3af39c` / `power.8b4c8522`: JSON seconds, 0 (Never) to 86400.
 - `Set battery-saver.743773bd`: JSON manual saver boolean.
@@ -88,3 +98,7 @@ automatic include-AC policy and built-in dimming, restoring the starting profile
 This workstation passed that roundtrip on 2026-11-04, and the first SQLite sample
 was read back at 96 percent with external power. The hypridle timeout/restart roundtrip also passed and restored the original file byte-for-byte. Real suspend/resume and actual
 idle timeout expiry require separate desktop verification.
+
+On a running Hyprland session, `dbus-run-session -- python test/power_interface_smoke.py --with-hypridle`
+checks CLI/D-Bus parity and the inhibitor lifecycle using a temporary hypridle
+configuration with harmless listeners.

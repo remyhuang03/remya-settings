@@ -523,6 +523,8 @@ def session_checks():
             time.sleep(0.1)
         else:
             raise AssertionError('Open did not show the settings window')
+        assert cli('set', 'power.743773bd', 'open') == {'opened': 'battery-saver'}
+        assert dbus('Set', 'power.03bd05ee', 'open') == {'opened': 'battery-usage'}
         for page in ('defaults', 'installed', 'date-time', 'updates'):
             assert cli('open', page) == {'opened': page}
         subprocess.run(['gtk-launch', 'top.remya.settings'], check=True, timeout=5)

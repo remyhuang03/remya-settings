@@ -113,12 +113,24 @@ fn run() -> Result<(), String> {
                 .await
                 .expect("service worker panicked");
                 // A rejected page must not open anything or request authorization.
-                let opened = ((method == "Open" && args[0] != "repository") || (method == "Set" && args[0] == "airplane.bluetooth")) && result.is_ok();
+                let opened_page = match (result.is_ok(), method.as_str()) {
+                    (true, "Open") if args[0] != "repository" => Some(args[0].as_str()),
+                    (true, "Set") => state::linked_page(&args[0]),
+                    _ => None,
+                };
                 let succeeded = result.is_ok();
                 match result {
                     Ok(value) => {
                         invocation.return_value(Some(&(value.to_string(),).to_variant()));
-                        if method == "Set" && [state::BAR_CLOCK_SECONDS, state::BAR_FOLDED_APPS, state::BAR_SIDEBAR].contains(&args[0].as_str()) {
+                        if method == "Set"
+                            && [
+                                state::BAR_CLOCK_SECONDS,
+                                state::BAR_FOLDED_APPS,
+                                state::BAR_SIDEBAR,
+                                remya_settings_power::KEEP_AWAKE,
+                            ]
+                            .contains(&args[0].as_str())
+                        {
                             signal(&bus, &args[0], &value);
                         }
                     }
@@ -172,7 +184,14 @@ fn run() -> Result<(), String> {
                         && let Ok(account) = state.lock().unwrap().account.read() {
                         signal(&bus, "account-information", &account);
                     }
-                    if method == "Reload" || args.first().is_some_and(|id| id == "power" || id == "battery-saver" || remya_settings_power::is_setting(id)) {
+                    if method == "Reload"
+                        || args.first().is_some_and(|id| {
+                            id == "power"
+                                || id == "battery-saver"
+                                || (id != remya_settings_power::KEEP_AWAKE
+                                    && remya_settings_power::is_setting(id))
+                        })
+                    {
                         signal(&bus, "power", &state.lock().unwrap().power.state());
                     }
                     if method == "Reload" || args.first().is_some_and(|id| id == "sound" || remya_settings_sound::is_setting(id)) {
@@ -191,8 +210,8 @@ fn run() -> Result<(), String> {
                 if let Some(message) = appearance_error {
                     signal(&bus, "error", &serde_json::json!({"message":message}));
                 }
-                if opened {
-                    signal(&bus, "navigation", &serde_json::json!({"page":if method == "Set" {"bluetooth"} else {&args[0]}}));
+                if let Some(page) = opened_page {
+                    signal(&bus, "navigation", &serde_json::json!({"page":page}));
                     let needed = state.lock().unwrap().begin_authorization();
                     if needed {
                         signal(&bus, "date-time", &serde_json::json!({"authorizing":true}));
@@ -207,7 +226,7 @@ fn run() -> Result<(), String> {
                         &state.lock().unwrap().configuration()["date-time"],
                     );
                 }
-                if opened {
+                if opened_page.is_some() {
                     signal(&bus, "hostname", &state.lock().unwrap().hostname_state());
                 }
                 if method == "Quit" && succeeded {

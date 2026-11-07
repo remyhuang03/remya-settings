@@ -8,7 +8,13 @@ import '../../settings/presentation/settings_widgets.dart';
 import '../../settings/presentation/settings_content.dart';
 
 class PowerPage extends StatefulWidget {
-  const PowerPage({super.key, required this.page, required this.client});
+  const PowerPage({
+    super.key,
+    required this.page,
+    required this.client,
+    required this.onPage,
+  });
+  final ValueChanged<String> onPage;
   final SettingsPageSpec page;
   final SettingsClient client;
   @override
@@ -16,6 +22,11 @@ class PowerPage extends StatefulWidget {
 }
 
 class _PowerPageState extends State<PowerPage> {
+  static const _pageRows = {
+    'power.743773bd': 'battery-saver',
+    'power.03bd05ee': 'battery-usage',
+  };
+
   SettingsClient get _client => widget.client;
   Map<String, dynamic> _state = {};
   String? _error;
@@ -36,7 +47,7 @@ class _PowerPageState extends State<PowerPage> {
   void initState() {
     super.initState();
     _changes = _client.changes.listen((change) {
-      if (change.topic != 'power') return;
+      if (change.topic != 'power' && change.topic != keepAwakeSettingId) return;
       if (_busy) {
         _reloadPending = true;
       } else {
@@ -49,7 +60,13 @@ class _PowerPageState extends State<PowerPage> {
 
   Future<void> _load() async {
     if (_busy) return;
-    await _attempt(_client.readPower);
+    await _attempt(() async {
+      final power = await _client.readPower();
+      if (widget.page.id == 'power') {
+        power['keep_awake'] = await _client.readKeepAwake();
+      }
+      return power;
+    });
   }
 
   Future<void> _attempt(Future<Map<String, dynamic>> Function() action) async {
@@ -59,8 +76,8 @@ class _PowerPageState extends State<PowerPage> {
       final result = await action();
       if (mounted) {
         setState(() {
-          _state = result;
-          _error = result['error'] as String?;
+          _state = {..._state, ...result};
+          _error = _state['error'] as String?;
         });
       }
     } catch (e) {
@@ -137,6 +154,11 @@ class _PowerPageState extends State<PowerPage> {
   Widget _control(SettingSpec setting) {
     final timeouts = _system['timeouts'] as Map? ?? {};
     return switch (setting.id) {
+      keepAwakeSettingId => _keepAwake(setting),
+      final id when _pageRows.containsKey(id) => SettingControlTile(
+        setting,
+        onOpenPage: () => widget.onPage(_pageRows[id]!),
+      ),
       'power.5a4f0131' => _choice(setting, _system['profile'], {
         for (final p in _system['profiles'] as List? ?? [])
           p: switch (p) {
@@ -187,6 +209,33 @@ class _PowerPageState extends State<PowerPage> {
       ),
       _ => SettingControlTile(setting),
     };
+  }
+
+  Widget _keepAwake(SettingSpec setting) {
+    final awake = _state['keep_awake'] as Map?;
+    final value = awake?['value'];
+    return SettingRow(
+      id: setting.id,
+      label: Column(
+        crossAxisAlignment: .start,
+        spacing: 6,
+        children: [
+          Text(setting.title, style: Theme.of(context).textTheme.bodyLarge),
+          Text(
+            awake?['error'] as String? ?? setting.reason,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ],
+      ),
+      control: Switch(
+        value: value == true,
+        onChanged: !_busy && value is bool
+            ? (enabled) => _attempt(
+                () async => {'keep_awake': await _client.setKeepAwake(enabled)},
+              )
+            : null,
+      ),
+    );
   }
 
   bool _visible(SettingSpec setting) => switch (setting.id) {

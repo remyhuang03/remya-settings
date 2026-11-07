@@ -978,6 +978,13 @@ See [Camera](camera.md) for dependencies, persistence and verification.
 
 The automatic Energy saver activation threshold accepts integer selections or a boolean toggle. The independent turn-off threshold uses `battery-saver.off-threshold`. See [power operations and history contract](power.md#public-operations). All writes use the owning Rust controller. History uses bounded SQLite queries.
 
+`Get("power.keep-awake")` reports the Settings-owned session inhibitor in `value`.
+`Set("power.keep-awake", "true"|"false")` acquires or releases it and emits
+`Changed("power.keep-awake", state)`. Read returns `value: null` and a diagnostic
+when hypridle is unavailable. CLI get/set use the same operations. Use
+`Set("power.743773bd", "open")` for Energy saver or
+`Set("power.03bd05ee", "open")` for Battery usage.
+
 ## Remy'a Bar appearance
 
 Use `get remya-bar.clock-seconds` and `set remya-bar.clock-seconds <true|false>`
