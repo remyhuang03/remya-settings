@@ -1,13 +1,12 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings_client/remya_settings_client.dart';
 export 'package:remya_settings_client/remya_settings_client.dart'
-    show MaterialStyleKey;
+    show MaterialStyleKey, materialThemeModeSettingId;
 
 import '../../../src/rust/appearance_bridge/api.dart';
 export '../../../src/rust/appearance_bridge/api.dart' show SystemThemeMode;
 
 const materialStyleSettingId = 'themes.material-style-variant';
-const materialThemeModeSettingId = 'themes.material-theme-mode';
 const accentSourceSettingId = 'themes.8983f367';
 const accentColorSettingId = 'themes.6f67371e';
 

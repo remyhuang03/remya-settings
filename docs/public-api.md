@@ -1011,4 +1011,6 @@ as its set value. Settings serializes edits and atomically stores the list in
 Both arrays use tile IDs. The service rejects unknown and duplicate IDs and
 rejects concurrent edits when `expected` differs from the saved order. The
 response and `Changed("remya-bar.sidebar-layout", state)` contain the committed
-layout. The same commands are available through the Settings CLI.
+layout. The same commands are available through the Settings CLI. Saved layouts
+omit retired `game`, `lock` and `audio-switcher` tiles on read. The `caffeine`
+tile ID is shown as Keep awake.

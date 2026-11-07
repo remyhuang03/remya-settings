@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:toml/toml.dart';
 
+const materialThemeModeSettingId = 'themes.material-theme-mode';
+
 /// Versioned public configuration. Keep Flutter and system backends out of here.
 class ThemeConfig {
   const ThemeConfig({

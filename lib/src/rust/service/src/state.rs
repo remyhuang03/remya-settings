@@ -313,7 +313,6 @@ impl State {
             "dnd",
             "power",
             "caffeine",
-            "game",
             "record",
             "screenshot",
             "picker",
@@ -322,20 +321,26 @@ impl State {
             "airplane",
             "keyboard",
             "clipboard",
+            "mic-mute",
         ];
-        const EXTRA: &[&str] = &["mic-mute", "lock", "audio-switcher"];
+        const RETIRED: &[&str] = &["game", "lock", "audio-switcher"];
         let validate = |tiles: &Vec<String>| {
             let mut seen = std::collections::HashSet::new();
             tiles.iter().all(|id| {
-                (DEFAULT.contains(&id.as_str()) || EXTRA.contains(&id.as_str())) && seen.insert(id)
+                DEFAULT.contains(&id.as_str()) && seen.insert(id)
             })
         };
         let path = self.config.with_file_name("remya-bar-sidebar.toml");
         let current: Vec<String> = match load(&path)? {
-            Some(config) => serde_json::from_value(config["tiles"].clone())
-                .ok()
-                .filter(validate)
-                .ok_or("Invalid sidebar layout configuration")?,
+            Some(config) => {
+                let mut tiles: Vec<String> = serde_json::from_value(config["tiles"].clone())
+                    .map_err(|_| "Invalid sidebar layout configuration")?;
+                tiles.retain(|id| !RETIRED.contains(&id.as_str()));
+                if !validate(&tiles) {
+                    return Err("Invalid sidebar layout configuration".into());
+                }
+                tiles
+            }
             None => DEFAULT.iter().map(|id| (*id).to_owned()).collect(),
         };
         let tiles = if let Some(request) = request {

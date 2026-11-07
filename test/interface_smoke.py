@@ -299,8 +299,15 @@ def sidebar_layout_checks():
     initial = cli('get', setting)
     assert initial == dbus('Get', setting)
     assert not config.exists()
-    new = ['audio', 'internet', 'lock']
-    assert cli('set', setting, json.dumps({'expected': initial['value'], 'tiles': new})) == dbus('Get', setting)
+    assert 'mic-mute' in initial['value']
+    assert not {'game', 'lock', 'audio-switcher'}.intersection(initial['value'])
+    config.write_text('tiles = ["audio", "game", "caffeine", "lock", "audio-switcher"]\n')
+    previous = ['audio', 'caffeine']
+    assert cli('get', setting)['value'] == previous
+    assert dbus('Get', setting)['value'] == previous
+    assert 'InvalidArgument' in cli('set', setting, json.dumps({'expected': previous, 'tiles': ['game']}), ok=False)
+    new = ['audio', 'internet', 'mic-mute']
+    assert cli('set', setting, json.dumps({'expected': previous, 'tiles': new})) == dbus('Get', setting)
     assert cli('get', setting)['value'] == new
     assert 'InvalidArgument' in cli('set', setting, json.dumps({'expected': new, 'tiles': ['audio', 'audio']}), ok=False)
     assert 'changed in another view' in cli('set', setting, json.dumps({'expected': [], 'tiles': []}), ok=False)
