@@ -293,6 +293,27 @@ def bar_tray_checks():
     print('PASS: Bar tray CLI and D-Bus parity, per-app edits, validation and persistence')
 
 
+def bar_layout_checks():
+    setting = 'remya-bar.layout'
+    config = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/remya-bar-layout.toml'
+    initial = cli('get', setting)
+    assert initial == dbus('Get', setting)
+    assert not config.exists()
+    assert initial['value']['groups'] == [['window', 'resources', 'media'], ['workspaces', 'clock'], ['tray'], ['battery', 'sidebar']]
+    custom = {'groups': [['clock'], ['sidebar']], 'workspace_count': 5, 'resources': ['cpu'], 'window_app_name': False, 'center': 0}
+    assert cli('set', setting, json.dumps(custom)) == dbus('Get', setting)
+    assert cli('get', setting)['value'] == custom
+    for invalid in ({**custom, 'groups': [['clock']]}, {**custom, 'workspace_count': 11}, {**custom, 'resources': []}, {**custom, 'center': 2}):
+        assert 'InvalidArgument' in cli('set', setting, json.dumps(invalid), ok=False)
+    assert dbus('Set', setting, json.dumps(initial['value'])) == cli('get', setting)
+    config.write_text('groups = false\n')
+    cli('get', setting, ok=False)
+    cli('set', setting, json.dumps(custom), ok=False)
+    assert config.read_text() == 'groups = false\n'
+    config.unlink()
+    print('PASS: bar layout CLI and D-Bus parity, validation and persistence')
+
+
 def sidebar_layout_checks():
     setting = 'remya-bar.sidebar-layout'
     config = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/remya-bar-sidebar.toml'
@@ -342,6 +363,7 @@ def session_checks():
         assert initial == dbus('Get', 'theme')
         bar_clock_checks()
         bar_tray_checks()
+        bar_layout_checks()
         sidebar_layout_checks()
         default_apps_checks()
         night_light_checks()

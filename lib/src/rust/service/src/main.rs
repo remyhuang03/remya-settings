@@ -127,6 +127,7 @@ fn run() -> Result<(), String> {
                                 state::BAR_CLOCK_SECONDS,
                                 state::BAR_FOLDED_APPS,
                                 state::BAR_SIDEBAR,
+                                state::BAR_LAYOUT,
                                 remya_settings_power::KEEP_AWAKE,
                             ]
                             .contains(&args[0].as_str())

@@ -3,6 +3,8 @@
   <!-- Get remya-bar.folded-apps returns IDs. Set accepts a JSON object with id and folded. -->
   <!-- Get remya-bar.sidebar-layout returns the visible tile IDs in order.
        Set accepts {expected,tiles}; Changed uses the same ID. -->
+  <!-- Get remya-bar.layout returns {groups,workspace_count,resources,window_app_name,center?}.
+       Set replaces it with the same JSON object; Changed uses the same ID. -->
   <!-- Wi-Fi connect accepts hidden_security with ssid for an unadvertised network. -->
   <!-- Power: Get power|battery-saver; Set power.5a4f0131 (JSON profile),
        power.5e3af39c|power.8b4c8522 (seconds, 0=Never),

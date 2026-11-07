@@ -29,6 +29,7 @@ pub const STYLE: &str = "themes.material-style-variant";
 pub const MODE: &str = "themes.material-theme-mode";
 pub const BAR_FOLDED_APPS: &str = "remya-bar.folded-apps";
 pub const BAR_SIDEBAR: &str = "remya-bar.sidebar-layout";
+pub const BAR_LAYOUT: &str = "remya-bar.layout";
 pub fn linked_page(id: &str) -> Option<&'static str> {
     match id {
         "airplane.bluetooth" => Some("bluetooth"),
@@ -58,6 +59,65 @@ const STYLES: &[&str] = &[
 ];
 fn invalid(message: &str) -> String {
     format!("InvalidArgument:{message}")
+}
+const BAR_PILLS: &[&str] = &[
+    "window",
+    "resources",
+    "media",
+    "workspaces",
+    "clock",
+    "tray",
+    "battery",
+    "sidebar",
+];
+const BAR_RESOURCES: &[&str] = &["cpu", "memory", "gpu", "network"];
+
+fn default_bar_layout() -> Value {
+    json!({
+        "groups":[["window","resources","media"],["workspaces","clock"],["tray"],["battery","sidebar"]],
+        "workspace_count":8,
+        "resources":BAR_RESOURCES,
+        "window_app_name":true,
+    })
+}
+
+fn validate_bar_layout(value: Value) -> Result<Value, String> {
+    #[derive(serde::Deserialize, serde::Serialize)]
+    #[serde(deny_unknown_fields)]
+    struct Layout {
+        groups: Vec<Vec<String>>,
+        workspace_count: u8,
+        resources: Vec<String>,
+        window_app_name: bool,
+        // TOML has no null: a missing center means no centered group.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        center: Option<usize>,
+    }
+    let error = || "Invalid Remy'a Bar layout configuration".to_owned();
+    let layout: Layout = serde_json::from_value(value).map_err(|_| error())?;
+    let mut seen = std::collections::HashSet::new();
+    let pills_valid = layout.groups.iter().all(|group| {
+        !group.is_empty()
+            && group
+                .iter()
+                .all(|id| BAR_PILLS.contains(&id.as_str()) && seen.insert(id.as_str()))
+    });
+    let mut metrics = std::collections::HashSet::new();
+    let resources_valid = !layout.resources.is_empty()
+        && layout
+            .resources
+            .iter()
+            .all(|id| BAR_RESOURCES.contains(&id.as_str()) && metrics.insert(id.as_str()));
+    // The sidebar toggle is the bar's only route to quick settings and Settings.
+    if !pills_valid
+        || !seen.contains("sidebar")
+        || !(1..=10).contains(&layout.workspace_count)
+        || !resources_valid
+        || layout.center.is_some_and(|center| center >= layout.groups.len())
+    {
+        return Err(error());
+    }
+    serde_json::to_value(layout).map_err(|e| e.to_string())
 }
 fn prefs(state: &clock::DateTimeState) -> Value {
     json!({"timezone":state.timezone,"ntp":state.ntp,"time_servers":state.time_servers,"time_locale":state.time_locale})
@@ -313,6 +373,26 @@ impl State {
         write(&self.bar_folded_apps_file(), &json!({"folded_apps":ids}))?;
         Ok(state)
     }
+    fn bar_layout(&self, request: Option<&str>) -> Result<Value, String> {
+        let path = self.config.with_file_name("remya-bar-layout.toml");
+        let layout = match request {
+            Some(request) => {
+                let layout = serde_json::from_str(request)
+                    .ok()
+                    .and_then(|value| validate_bar_layout(value).ok())
+                    .ok_or_else(|| invalid("Expected a valid Remy'a Bar layout"))?;
+                // Refuse to replace a malformed file the user may still repair.
+                load(&path)?.map(validate_bar_layout).transpose()?;
+                write(&path, &layout)?;
+                layout
+            }
+            None => match load(&path)? {
+                Some(saved) => validate_bar_layout(saved)?,
+                None => default_bar_layout(),
+            },
+        };
+        Ok(json!({"id":BAR_LAYOUT,"availability":"available","value":layout}))
+    }
     fn sidebar_layout(&self, request: Option<&str>) -> Result<Value, String> {
         const DEFAULT: &[&str] = &[
             "internet",
@@ -562,6 +642,7 @@ impl State {
                     BAR_CLOCK_SECONDS => self.read_bar_clock_seconds(),
                     BAR_FOLDED_APPS => self.read_bar_folded_apps(),
                     BAR_SIDEBAR => self.sidebar_layout(None),
+                    BAR_LAYOUT => self.bar_layout(None),
                     "theme" => {
                         self.refresh_theme()?;
                         Ok(self.theme.clone())
@@ -972,6 +1053,9 @@ impl State {
         if key == BAR_SIDEBAR {
             return self.sidebar_layout(Some(value));
         }
+        if key == BAR_LAYOUT {
+            return self.bar_layout(Some(value));
+        }
         if remya_settings_power::is_setting(key) {
             return self.power.set(key, value);
         }
@@ -1346,6 +1430,35 @@ impl Drop for State {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn bar_layout_validates_pills_options_and_requires_the_sidebar() {
+        let valid = default_bar_layout();
+        assert_eq!(validate_bar_layout(valid.clone()).unwrap(), valid);
+        let with = |key: &str, value: Value| {
+            let mut layout = valid.clone();
+            layout[key] = value;
+            layout
+        };
+        for layout in [
+            with("groups", json!([["clock"]])),
+            with("groups", json!([["sidebar", "sidebar"]])),
+            with("groups", json!([["sidebar"], []])),
+            with("groups", json!([["sidebar", "weather"]])),
+            with("workspace_count", json!(0)),
+            with("workspace_count", json!(11)),
+            with("resources", json!([])),
+            with("resources", json!(["cpu", "cpu"])),
+            with("resources", json!(["disk"])),
+            with("window_app_name", json!("yes")),
+            with("unknown", json!(true)),
+            with("center", json!(4)),
+            with("center", json!(-1)),
+        ] {
+            assert!(validate_bar_layout(layout).is_err());
+        }
+        let custom = json!({"groups":[["sidebar"],["clock","workspaces"]],"workspace_count":5,"resources":["network","cpu"],"window_app_name":false,"center":1});
+        assert_eq!(validate_bar_layout(custom.clone()).unwrap(), custom);
+    }
     #[test]
     fn theme_schema_matches_existing_client_defaults_and_validation() {
         assert_eq!(

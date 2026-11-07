@@ -1014,6 +1014,35 @@ as its set value. Settings serializes edits and atomically stores the list in
 `remya-bar-tray.toml` beside its selected configuration.
 
 
+## Remy'a Bar pill layout
+
+`Get("remya-bar.layout")` returns the main bar pill layout in `value`:
+
+```json
+{"groups":[["window","resources","media"],["workspaces","clock"],["tray"],["battery","sidebar"]],
+ "workspace_count":8,"resources":["cpu","memory","gpu","network"],"window_app_name":true}
+```
+
+`groups` is the ordered list of pill groups; the bar spaces groups evenly and
+places pills 8 pixels apart inside a group. Pill IDs are `window`, `resources`,
+`media`, `workspaces`, `clock`, `tray`, `battery` and `sidebar`. A pill absent
+from every group is hidden. Groups must be non-empty, IDs unique, and `sidebar`
+must stay visible because it is the bar's route to quick settings.
+`workspace_count` (1 to 10) sets the workspace slots per group of numbered
+workspaces. `resources` is a non-empty unique subset of `cpu`, `memory`, `gpu`
+and `network`. `window_app_name` shows the app ID above the window title.
+Optional `center` is the index of one group centered on the bar; groups before
+and after it are spaced evenly within their own side. It is omitted when no
+group is centered and must refer to an existing group.
+Clock seconds remain `remya-bar.clock-seconds`.
+
+`Set("remya-bar.layout", JSON)` replaces the whole object. Invalid input returns
+`InvalidArgument`. The response and `Changed("remya-bar.layout", state)` carry
+the committed layout. Missing configuration returns the defaults without writing
+`remya-bar-layout.toml`; malformed files are reported and protected from
+overwrites. The CLI `get`/`set` commands use the same operation, and the pure
+Dart `BarLayoutClient` extension provides typed access through `BarLayout`.
+
 ## Remya Bar sidebar layout
 
 `Get("remya-bar.sidebar-layout")` returns the ordered visible tile IDs in
