@@ -16,17 +16,17 @@ class SettingsPreview extends StatelessWidget {
       'sound' => (
         Icons.graphic_eq_rounded,
         'Make room for every sound',
-        'Output, input, and app volume · Audio devices have not been read',
+        'Output, input, and app volume.\nAudio devices have not been read.',
       ),
       'network' => (
         Icons.wifi_rounded,
         'Connect your world',
-        'Connection preview · Networks are not scanned or connected',
+        'Connection preview.\nNetworks are not scanned or connected.',
       ),
       'devices' => (
         Icons.devices_other_rounded,
         'Your devices, organized',
-        'Device preview · Devices are not scanned or paired',
+        'Device preview.\nDevices are not scanned or paired.',
       ),
       'power' => (
         Icons.battery_charging_full_rounded,
@@ -36,12 +36,12 @@ class SettingsPreview extends StatelessWidget {
       'storage' => (
         Icons.storage_rounded,
         'Room for what matters',
-        'Sample capacities · Files are not scanned or cleaned',
+        'Sample capacities.\nFiles are not scanned or cleaned.',
       ),
       'update' => (
         Icons.security_update_good_rounded,
         'Keep your system fresh',
-        'Update preview · Updates are not downloaded or installed',
+        'Update preview.\nUpdates are not downloaded or installed.',
       ),
       _ => (Icons.settings_outlined, 'Settings preview', 'Not implemented'),
     };
@@ -88,7 +88,7 @@ class _DisplayPreview extends StatelessWidget {
         children: [
           const Align(
             alignment: .centerLeft,
-            child: Text('Display arrangement · Preview'),
+            child: Text('Display arrangement preview'),
           ),
           const SizedBox(height: 24),
           SizedBox(
@@ -269,7 +269,7 @@ class _ThemePreview extends StatelessWidget {
                   decoration: BoxDecoration(color: color, shape: .circle),
                 ),
               Text(
-                'Theme preview · Cannot be applied yet',
+                'Theme preview. It cannot be applied yet.',
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],

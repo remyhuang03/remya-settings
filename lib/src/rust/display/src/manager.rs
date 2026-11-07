@@ -799,7 +799,7 @@ fn color_space(monitor: &Monitor) -> String {
         return "Not in use".into();
     }
     format!(
-        "{} · {}",
+        "Preset: {}\nFormat: {}",
         monitor.color_management_preset, monitor.current_format
     )
 }

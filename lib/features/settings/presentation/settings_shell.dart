@@ -423,7 +423,7 @@ class _SettingsShellState extends State<SettingsShell> {
                         widget.catalog.category(page.category).icon,
                       ),
                       subtitle:
-                          '${widget.catalog.category(page.category).title} · ${page.description}',
+                          '${widget.catalog.category(page.category).title}\n${page.description}',
                       onTap: () => _openPage(page),
                     ),
                 ],

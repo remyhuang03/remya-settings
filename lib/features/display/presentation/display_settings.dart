@@ -120,8 +120,8 @@ class _DisplayArrangementState extends State<DisplayArrangement> {
                     ),
                     label: Text(
                       output.disabled
-                          ? '${output.name} · Not in use'
-                          : '${output.name} · Mirrors ${output.mirror}',
+                          ? '${output.name} (not in use)'
+                          : '${output.name} (mirrors ${output.mirror})',
                     ),
                     onSelected: (_) => controller.select(output.name),
                   ),
@@ -384,7 +384,7 @@ class DisplaySettingRow extends StatelessWidget {
         '${output.physicalWidth} × ${output.physicalHeight} mm',
     ]) {
       [] => 'Not reported by this display',
-      final parts => parts.join(' · '),
+      final parts => parts.join('\n'),
     },
     displayBrightnessId => switch (controller.brightness[output.name]) {
       DisplayBrightness(percent: final int value) => '$value%',

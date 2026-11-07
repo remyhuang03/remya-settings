@@ -43,7 +43,7 @@ Map<String, dynamic> output(
   'format': 'XRGB8888',
   'desktop_mode': '1920 × 1080 logical pixels',
   'signal_mode': '1920 × 1080 at 60.00 Hz',
-  'color_space': 'srgb · XRGB8888',
+  'color_space': 'Preset: srgb\nFormat: XRGB8888',
   'modes': [
     {'width': 1920, 'height': 1080, 'refresh': 144.0},
     {'width': 1920, 'height': 1080, 'refresh': 60.0},

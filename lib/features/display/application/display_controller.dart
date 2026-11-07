@@ -161,7 +161,7 @@ class DisplayOutput {
 
   String get label {
     final detail = [make, model].where((part) => part.isNotEmpty).join(' ');
-    return detail.isEmpty ? name : '$name · $detail';
+    return detail.isEmpty ? name : '$name ($detail)';
   }
 }
 

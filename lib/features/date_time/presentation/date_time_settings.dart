@@ -51,10 +51,10 @@ class _CurrentDateTimeState extends State<CurrentDateTime> {
             key: const ValueKey('current-date-time'),
             style: Theme.of(context).textTheme.headlineSmall,
           ),
-          if (state != null)
-            Text(
-              '${state.timezone} · Automatic time ${state.ntp ? 'on' : 'off'}',
-            ),
+          if (state != null) ...[
+            Text('Time zone: ${state.timezone}'),
+            Text('Automatic time: ${state.ntp ? 'On' : 'Off'}'),
+          ],
         ],
       ),
     );
@@ -265,7 +265,7 @@ class _DateTimeChoiceState extends State<_DateTimeChoice> {
     return DropdownMenu<String>(
       key: const ValueKey('time-locale-combobox'),
       controller: _text,
-      width: 232,
+      width: 280,
       menuHeight: 300,
       initialSelection: _value,
       dropdownMenuEntries: [
