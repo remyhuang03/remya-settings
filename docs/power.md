@@ -16,6 +16,13 @@ Includes, duplicate targets and unsupported shapes are refused. The current-user
 hypridle instance is restarted; failure restores the previous file and attempts
 recovery. Other idle daemons are not supported.
 
+Settings startup and opening its GUI ensure hypridle is running. Remya Bar
+requests the same startup operation. Settings reuses an existing daemon or
+starts the packaged `hypridle.service` through the current user systemd session.
+The Hyprland session environment and an existing hypridle configuration are
+required to start the service. Timeout edits restart a systemd-managed daemon
+through its user unit.
+
 Keep awake holds a session D-Bus idle inhibitor while enabled. It requires
 hypridle to own `org.freedesktop.ScreenSaver` with D-Bus inhibition enabled.
 It pauses hypridle listeners that honor inhibition. The Settings service owns
@@ -65,6 +72,8 @@ History queries return raw events plus preceding state/session/battery context f
 
 - `Get power` / `Get battery-saver`: saved/system values, supported profiles,
   conflict, backend error and history error.
+- `Set power.idle-daemon start`: ensure hypridle is running for the graphical
+  session and return `{"running":true}` on success.
 - `Get power.keep-awake` / `Set power.keep-awake`: live inhibitor state and
   a JSON boolean write. Successful writes emit `Changed power.keep-awake`.
 - `Set power.743773bd open` / `Set power.03bd05ee open`: open Energy saver or

@@ -65,9 +65,14 @@ def keep_awake_checks(root, env, cli):
         result = subprocess.run([*cli, 'set', setting, argument], env=env,
                                 capture_output=True, text=True)
         assert result.returncode and error in result.stderr, result
+    result = subprocess.run([*cli, 'set', 'power.idle-daemon', 'stop'], env=env,
+                            capture_output=True, text=True)
+    assert result.returncode and 'InvalidArgument' in result.stderr, result
     if '--with-hypridle' not in sys.argv:
         return
     with idle_daemon(root, env) as log:
+        assert cli_json('set', 'power.idle-daemon', 'start') == {'running': True}
+        assert call('Set', 'power.idle-daemon', 'start') == {'running': True}
         assert call('Get', setting)['value'] is False
         assert cli_json('set', setting, 'true') == call('Get', setting)
         assert call('Set', setting, 'true')['value'] is True

@@ -275,6 +275,10 @@ impl Power {
             &serde_json::to_vec_pretty(saved).map_err(|e| e.to_string())?,
         )
     }
+    pub fn ensure_idle(&self) -> Result<(), String> {
+        idle::ensure_running(&self.idle)
+    }
+
     pub fn refresh(&mut self) -> Result<(), String> {
         let result = self.read_system();
         if let Err(e) = &result {

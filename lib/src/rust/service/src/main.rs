@@ -254,7 +254,11 @@ fn run() -> Result<(), String> {
     if result.get::<(u32,)>() != Some((1,)) {
         return Ok(());
     }
-    state.lock().unwrap().refresh();
+    {
+        let mut state = state.lock().unwrap();
+        state.ensure_idle();
+        state.refresh();
+    }
     let polling = state.clone();
     let poll_bus = bus.clone();
     let mut ticks = 0u32;

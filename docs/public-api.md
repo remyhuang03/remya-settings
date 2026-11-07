@@ -978,6 +978,10 @@ See [Camera](camera.md) for dependencies, persistence and verification.
 
 The automatic Energy saver activation threshold accepts integer selections or a boolean toggle. The independent turn-off threshold uses `battery-saver.off-threshold`. See [power operations and history contract](power.md#public-operations). All writes use the owning Rust controller. History uses bounded SQLite queries.
 
+`Set("power.idle-daemon", "start")` ensures hypridle is running in the
+graphical session and returns `{"running":true}`. Bar calls this on startup.
+The CLI accepts `set power.idle-daemon start`.
+
 `Get("power.keep-awake")` reports the Settings-owned session inhibitor in `value`.
 `Set("power.keep-awake", "true"|"false")` acquires or releases it and emits
 `Changed("power.keep-awake", state)`. Read returns `value: null` and a diagnostic

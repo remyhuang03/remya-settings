@@ -10,6 +10,10 @@ extension PowerClient on SettingsClient {
   Future<Map<String, dynamic>> readPower() => call('Get', ['power']);
   Future<Map<String, dynamic>> setPower(String id, Object value) =>
       call('Set', [id, jsonEncode(value)]);
+  Future<void> ensureIdleDaemon() async {
+    await call('Set', ['power.idle-daemon', 'start']);
+  }
+
   Future<Map<String, dynamic>> readKeepAwake() =>
       call('Get', [keepAwakeSettingId]);
   Future<Map<String, dynamic>> setKeepAwake(bool enabled) =>

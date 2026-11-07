@@ -890,6 +890,7 @@ impl State {
                         return Err(invalid("Unknown page"));
                     }
                     self.navigation = page.clone();
+                    self.ensure_idle();
                     self.open_gui()?;
                 }
                 Ok(json!({"opened":page}))
@@ -954,7 +955,20 @@ impl State {
             _ => Err(invalid("Unknown method")),
         }
     }
+    pub fn ensure_idle(&self) {
+        if let Err(error) = self.power.ensure_idle() {
+            eprintln!("hypridle startup: {error}");
+        }
+    }
+
     fn set(&mut self, key: &str, value: &str) -> Result<Value, String> {
+        if key == remya_settings_power::idle::START_ID {
+            if value != "start" {
+                return Err(invalid("Use start to ensure hypridle is running"));
+            }
+            self.power.ensure_idle()?;
+            return Ok(json!({"running":true}));
+        }
         if key == BAR_SIDEBAR {
             return self.sidebar_layout(Some(value));
         }

@@ -9,6 +9,7 @@
        battery-saver.743773bd|battery-saver.07945503|battery-saver.power-source (bool),
        battery-saver.9b0caf70 (0,10,20,30,50,100 or boolean toggle).
        Get/Set battery-saver.off-threshold (-1=Follow turn-on,0=Never,30,50,70,80,90,100).
+       Set power.idle-daemon with start ensures the hypridle user service is running.
        Get/Set/Changed power.keep-awake reports a session-only hypridle inhibitor (bool).
        Set power.743773bd|power.03bd05ee with open opens Energy saver or Battery usage.
        Resolve power system|settings.

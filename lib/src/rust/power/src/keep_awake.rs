@@ -24,7 +24,7 @@ impl Drop for Inhibitor {
     }
 }
 
-fn owner() -> Result<Option<String>, String> {
+pub(super) fn owner() -> Result<Option<String>, String> {
     let bus = gio::bus_get_sync(gio::BusType::Session, gio::Cancellable::NONE)
         .map_err(|e| e.to_string())?;
     let call = |method, args: &Variant| {

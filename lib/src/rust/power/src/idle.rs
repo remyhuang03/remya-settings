@@ -1,10 +1,13 @@
 //! Edit only timeouts in unambiguous listener blocks; commands stay byte-for-byte intact.
+use gio::glib::variant::ToVariant;
 use remya_settings_display::{atomic_write, run_bytes};
 use std::time::Duration;
 use std::{
-    path::Path,
+    path::{Path, PathBuf},
     process::{Command, Stdio},
 };
+pub const START_ID: &str = "power.idle-daemon";
+
 #[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Timeouts {
     pub screen: u32,
@@ -168,36 +171,118 @@ pub fn apply(path: &Path, wanted: &Timeouts) -> Result<(), String> {
     }
     Ok(())
 }
-fn restart(path: &Path) -> Result<(), String> {
+fn running() -> Result<Vec<String>, String> {
     use std::os::unix::fs::MetadataExt;
+
     let uid = std::fs::metadata("/proc/self")
         .map_err(|e| e.to_string())?
         .uid();
-    let mut pids = vec![];
-    for entry in std::fs::read_dir("/proc")
+    Ok(std::fs::read_dir("/proc")
         .map_err(|e| e.to_string())?
         .flatten()
-    {
-        let directory = entry.path();
-        if entry.metadata().is_ok_and(|m| m.uid() == uid)
-            && std::fs::read_link(directory.join("exe"))
-                .is_ok_and(|p| p.file_name().is_some_and(|n| n == "hypridle"))
-        {
-            let args = std::fs::read(directory.join("cmdline")).map_err(|e| e.to_string())?;
-            let args = args
-                .split(|b| *b == 0)
-                .filter_map(|b| std::str::from_utf8(b).ok())
-                .collect::<Vec<_>>();
-            if let Some(i) = args.iter().position(|a| *a == "--config" || *a == "-c") {
-                if args.get(i + 1).is_none_or(|a| Path::new(a) != path) {
-                    return Err("hypridle uses a different configuration".into());
+        .filter(|entry| {
+            entry.metadata().is_ok_and(|m| m.uid() == uid)
+                && std::fs::read_link(entry.path().join("exe"))
+                    .is_ok_and(|path| path.file_name().is_some_and(|name| name == "hypridle"))
+        })
+        .map(|entry| entry.file_name().to_string_lossy().into_owned())
+        .collect())
+}
+
+fn systemd_job(method: &str, previous_pid: Option<&str>) -> Result<(), String> {
+    let bus = gio::bus_get_sync(gio::BusType::Session, gio::Cancellable::NONE)
+        .map_err(|error| error.to_string())?;
+    bus.call_sync(
+        Some("org.freedesktop.systemd1"),
+        "/org/freedesktop/systemd1",
+        "org.freedesktop.systemd1.Manager",
+        method,
+        Some(&("hypridle.service", "replace").to_variant()),
+        None,
+        gio::DBusCallFlags::NO_AUTO_START,
+        2000,
+        gio::Cancellable::NONE,
+    )
+    .map_err(|error| format!("Cannot start the hypridle user service: {error}"))?;
+
+    let mut seen = None;
+    for _ in 0..20 {
+        std::thread::sleep(Duration::from_millis(100));
+        match running()?.as_slice() {
+            [pid] if Some(pid.as_str()) != previous_pid => {
+                if seen.as_ref() == Some(pid) {
+                    return Ok(());
                 }
+                seen = Some(pid.clone());
             }
-            pids.push(entry.file_name().to_string_lossy().into_owned());
+            [] | [_] => seen = None,
+            _ => return Err("Multiple hypridle instances are running".into()),
         }
     }
+    Err("The hypridle user service did not stay running".into())
+}
+
+pub fn ensure_running(path: &Path) -> Result<(), String> {
+    if ["WAYLAND_DISPLAY", "HYPRLAND_INSTANCE_SIGNATURE"]
+        .iter()
+        .any(|name| std::env::var_os(name).is_none_or(|value| value.is_empty()))
+    {
+        return Err("Unavailable:hypridle requires a Hyprland session".into());
+    }
+    if super::keep_awake::owner().is_ok_and(|owner| owner.is_some()) {
+        return Ok(());
+    }
+    match running()?.as_slice() {
+        [_] => return Ok(()),
+        [] => {}
+        _ => return Err("Multiple hypridle instances are running".into()),
+    }
+    if !path.is_file() {
+        return Err("Unavailable:No hypridle configuration found".into());
+    }
+    systemd_job("StartUnit", None)
+}
+
+fn restart(path: &Path) -> Result<(), String> {
+    let pids = running()?;
     if pids.len() > 1 {
         return Err("Multiple hypridle instances; refusing to restart".into());
+    }
+    if let Some(pid) = pids.first() {
+        let args = std::fs::read(format!("/proc/{pid}/cmdline")).map_err(|e| e.to_string())?;
+        let args = args
+            .split(|b| *b == 0)
+            .filter_map(|b| std::str::from_utf8(b).ok())
+            .collect::<Vec<_>>();
+        let config = if let Some(i) = args.iter().position(|a| *a == "--config" || *a == "-c") {
+            args.get(i + 1).map(PathBuf::from)
+        } else {
+            use std::os::unix::ffi::OsStrExt;
+            let environment =
+                std::fs::read(format!("/proc/{pid}/environ")).map_err(|e| e.to_string())?;
+            let absolute = |key: &[u8]| {
+                environment
+                    .split(|byte| *byte == 0)
+                    .find_map(|entry| entry.strip_prefix(key))
+                    .map(|value| Path::new(std::ffi::OsStr::from_bytes(value)))
+                    .filter(|path| path.is_absolute())
+            };
+            absolute(b"XDG_CONFIG_HOME=")
+                .map(Path::to_path_buf)
+                .or_else(|| absolute(b"HOME=").map(|home| home.join(".config")))
+                .map(|root| root.join("hypr/hypridle.conf"))
+        };
+        if config.as_deref() != Some(path) {
+            return Err("hypridle uses a different configuration".into());
+        }
+        let cgroup =
+            std::fs::read_to_string(format!("/proc/{pid}/cgroup")).map_err(|e| e.to_string())?;
+        if cgroup
+            .lines()
+            .any(|line| line.ends_with("/hypridle.service"))
+        {
+            return systemd_job("RestartUnit", Some(pid));
+        }
     }
     if let Some(pid) = pids.first() {
         run_bytes("kill", &["-TERM", pid], &[], Duration::from_secs(2))?;
