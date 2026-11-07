@@ -58,33 +58,19 @@ class _ExternalToolsPageState extends State<ExternalToolsPage> {
       if (_tools == null && _error == null) const LinearProgressIndicator(),
       if (_busy) const LinearProgressIndicator(),
       if (_error case final error?)
-        SettingsSurface(
-          child: Column(
-            crossAxisAlignment: .start,
-            children: [
-              const Icon(Icons.error_outline_rounded),
-              Text(error),
-              TextButton.icon(
-                onPressed: _busy ? null : _reload,
-                icon: const Icon(Icons.refresh_rounded),
-                label: const Text('Retry'),
-              ),
-            ],
-          ),
-        ),
+        SettingsErrorCard(message: error, onRetry: _busy ? null : _reload),
       if (_tools?.isEmpty == true)
         const SettingsSurface(
           child: Text(
             'No supported external settings application is installed.',
           ),
         ),
-      if (_tools case final tools?)
-        for (final tool in tools)
-          Padding(
-            padding: const .only(bottom: 12),
-            child: SettingsSurface(
-              padding: .zero,
-              child: SettingRow(
+      if (_tools case final tools? when tools.isNotEmpty)
+        SettingsSurface(
+          padding: .zero,
+          child: settingsRows([
+            for (final tool in tools)
+              SettingRow(
                 id: tool['id'] as String,
                 label: Row(
                   mainAxisSize: .min,
@@ -95,7 +81,10 @@ class _ExternalToolsPageState extends State<ExternalToolsPage> {
                       child: Column(
                         crossAxisAlignment: .start,
                         children: [
-                          Text(tool['name'] as String),
+                          Text(
+                            tool['name'] as String,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
                           if (tool['launch_error'] case final String error)
                             Text(
                               error,
@@ -108,7 +97,7 @@ class _ExternalToolsPageState extends State<ExternalToolsPage> {
                 ),
                 control: tool['launch_error'] != null
                     ? null
-                    : FilledButton.icon(
+                    : FilledButton.tonalIcon(
                         onPressed: _busy
                             ? null
                             : () => _open(tool['id'] as String),
@@ -116,8 +105,8 @@ class _ExternalToolsPageState extends State<ExternalToolsPage> {
                         label: const Text('Open'),
                       ),
               ),
-            ),
-          ),
+          ]),
+        ),
     ],
   );
 }

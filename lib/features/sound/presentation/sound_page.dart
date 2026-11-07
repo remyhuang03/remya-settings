@@ -96,6 +96,7 @@ class _SoundPageState extends State<SoundPage> {
         ),
         device: matches[index],
         controller: controller,
+        divider: index > 0,
       ),
     );
   }
@@ -126,6 +127,7 @@ class _SoundPageState extends State<SoundPage> {
         ),
         stream: matches[index],
         controller: controller,
+        divider: index > 0,
       ),
     );
   }
@@ -133,52 +135,57 @@ class _SoundPageState extends State<SoundPage> {
   Widget _direction(String direction) {
     final devices = controller.devicesFor(direction);
     final device = controller.selected(direction);
+    final output = direction == 'output';
     return Column(
       crossAxisAlignment: .stretch,
       children: [
-        Text(
-          direction == 'output' ? 'Output' : 'Input',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 12),
+        SettingsSectionTitle(output ? 'Output' : 'Input'),
         SettingsSurface(
           padding: .zero,
-          child: SettingRow(
-            id: 'sound.$direction-device',
-            label: Text(
-              direction == 'output' ? 'Output device' : 'Input device',
-            ),
-            control: DropdownMenu<String>(
-              key: ValueKey('sound-$direction-${device?['name']}'),
-              width: 232,
-              initialSelection: device?['name'] as String?,
-              enabled: controller.canChange && devices.isNotEmpty,
-              dropdownMenuEntries: [
-                for (final d in devices)
-                  DropdownMenuEntry(
-                    value: d['name'] as String,
-                    label: d['description'] as String,
+          child: settingsRows([
+            SettingRow(
+              id: 'sound.$direction-device',
+              label: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  Text(
+                    output ? 'Output device' : 'Input device',
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
-              ],
-              onSelected: (name) {
-                if (name != null) {
-                  controller.set('sound.$direction-device', {'name': name});
-                }
-              },
+                  if (device == null)
+                    Text(
+                      output
+                          ? 'No output device is available'
+                          : 'No input device is available',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    )
+                  else
+                    _DeviceFacts(device),
+                ],
+              ),
+              control: DropdownMenu<String>(
+                key: ValueKey('sound-$direction-${device?['name']}'),
+                width: 280,
+                initialSelection: device?['name'] as String?,
+                enabled: controller.canChange && devices.isNotEmpty,
+                dropdownMenuEntries: [
+                  for (final d in devices)
+                    DropdownMenuEntry(
+                      value: d['name'] as String,
+                      label: d['description'] as String,
+                    ),
+                ],
+                onSelected: (name) {
+                  if (name != null) {
+                    controller.set('sound.$direction-device', {'name': name});
+                  }
+                },
+              ),
             ),
-          ),
+            if (device != null)
+              ..._DeviceRow.controls(device, controller, primary: true),
+          ]),
         ),
-        if (device == null) ...[
-          const SizedBox(height: 16),
-          Text(
-            direction == 'output'
-                ? 'No output device is available'
-                : 'No input device is available',
-          ),
-        ] else ...[
-          const SizedBox(height: 16),
-          _DeviceRow(device: device, controller: controller, primary: true),
-        ],
       ],
     );
   }
@@ -189,21 +196,6 @@ class _SoundPageState extends State<SoundPage> {
     builder: (context, _) => Column(
       crossAxisAlignment: .stretch,
       children: [
-        if (controller.errorMessage case final error?)
-          SettingsSurface(
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                const Icon(Icons.error_outline_rounded),
-                Text(error),
-                TextButton.icon(
-                  onPressed: controller.isBusy ? null : controller.refresh,
-                  icon: const Icon(Icons.refresh_rounded),
-                  label: const Text('Retry'),
-                ),
-              ],
-            ),
-          ),
         if (controller.isBusy) const LinearProgressIndicator(),
         if (!controller.available)
           const SettingsSurface(
@@ -215,11 +207,7 @@ class _SoundPageState extends State<SoundPage> {
           switch (widget.page.id) {
             'sound-volume' => Column(
               crossAxisAlignment: .stretch,
-              children: [
-                _direction('output'),
-                const SizedBox(height: 24),
-                _direction('input'),
-              ],
+              children: [_direction('output'), _direction('input')],
             ),
             'volume-mixer' => _mixer(),
             _ => _devices(),
@@ -244,78 +232,88 @@ class _SoundPageState extends State<SoundPage> {
   );
 }
 
+/// Device facts as separate labeled lines.
+class _DeviceFacts extends StatelessWidget {
+  const _DeviceFacts(this.device);
+  final Map device;
+
+  @override
+  Widget build(BuildContext context) => Text(
+    'Sample rate: ${device['rate']} Hz\n'
+    'Channels: ${device['channels']}\n'
+    'State: ${device['state']}',
+    style: Theme.of(context).textTheme.bodySmall,
+  );
+}
+
+/// One device in the Devices list: its name and facts, then volume and mute rows.
 class _DeviceRow extends StatelessWidget {
   const _DeviceRow({
     super.key,
     required this.device,
     required this.controller,
-    this.primary = false,
+    required this.divider,
   });
   final Map device;
   final SoundController controller;
-  final bool primary;
-  @override
-  Widget build(BuildContext context) {
+  final bool divider;
+
+  static List<Widget> controls(
+    Map device,
+    SoundController controller, {
+    bool primary = false,
+  }) {
     final direction = device['direction'] as String;
-    final volume = SoundController.volume(device);
     final request = <String, Object?>{
       'direction': direction,
       'name': device['name'],
     };
-    return SettingsSurface(
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          Row(
-            children: [
-              Icon(
-                direction == 'output'
-                    ? Icons.volume_up_rounded
-                    : Icons.mic_rounded,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  device['description'] as String,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '${direction == 'output' ? 'Output' : 'Input'}\n${device['rate']} Hz\n${device['channels']} channels\nState: ${device['state']}',
-          ),
-          _Volume(
-            value: volume,
-            enabled: controller.canChange,
-            label: direction == 'output' ? 'Volume' : 'Input volume',
-            onChanged: (v) => controller.set(
-              primary ? 'sound.$direction-volume' : 'sound.device-volume',
-              {...request, 'percent': v},
-            ),
-          ),
-          SwitchListTile(
-            contentPadding: .zero,
-            title: Text(direction == 'output' ? 'Mute' : 'Mute microphone'),
-            value: SoundController.muted(device),
-            onChanged: controller.canChange
-                ? (value) => controller.set(
-                    primary ? 'sound.$direction-muted' : 'sound.device-muted',
-                    {...request, 'muted': value},
-                  )
-                : null,
-          ),
-        ],
+    return [
+      _VolumeRow(
+        value: SoundController.volume(device),
+        enabled: controller.canChange,
+        label: direction == 'output' ? 'Volume' : 'Input volume',
+        onChanged: (v) => controller.set(
+          primary ? 'sound.$direction-volume' : 'sound.device-volume',
+          {...request, 'percent': v},
+        ),
       ),
+      _MuteRow(
+        label: direction == 'output' ? 'Mute' : 'Mute microphone',
+        value: SoundController.muted(device),
+        onChanged: controller.canChange
+            ? (value) => controller.set(
+                primary ? 'sound.$direction-muted' : 'sound.device-muted',
+                {...request, 'muted': value},
+              )
+            : null,
+      ),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final output = device['direction'] == 'output';
+    return _ListItem(
+      divider: divider,
+      icon: output ? Icons.volume_up_rounded : Icons.mic_rounded,
+      title: device['description'] as String,
+      details: _DeviceFacts(device),
+      rows: controls(device, controller),
     );
   }
 }
 
 class _StreamRow extends StatelessWidget {
-  const _StreamRow({super.key, required this.stream, required this.controller});
+  const _StreamRow({
+    super.key,
+    required this.stream,
+    required this.controller,
+    required this.divider,
+  });
   final Map stream;
   final SoundController controller;
+  final bool divider;
   @override
   Widget build(BuildContext context) {
     final direction = stream['direction'] as String;
@@ -325,44 +323,46 @@ class _StreamRow extends StatelessWidget {
       'client': stream['client'],
     };
     final enabled = !controller.isBusy && controller.available;
-    return Padding(
-      padding: const .all(20),
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          Text(
-            stream['application'] as String,
-            style: Theme.of(context).textTheme.titleMedium,
+    return _ListItem(
+      divider: divider,
+      icon: direction == 'output'
+          ? Icons.music_note_rounded
+          : Icons.mic_rounded,
+      title: stream['application'] as String,
+      details: Text(
+        '${direction == 'output' ? 'Playback' : 'Recording'}: ${stream['name']}',
+        style: Theme.of(context).textTheme.bodySmall,
+      ),
+      rows: [
+        if (stream['has_volume'] == true)
+          _VolumeRow(
+            value: SoundController.volume(stream),
+            label: 'Application volume',
+            enabled: enabled && stream['volume_writable'] == true,
+            onChanged: (v) => controller.set('sound.stream-volume', {
+              ...request,
+              'percent': v,
+            }),
           ),
-          Text(
-            '${direction == 'output' ? 'Playback' : 'Recording'}\n${stream['name']}',
+        _MuteRow(
+          label: 'Mute',
+          value: SoundController.muted(stream),
+          onChanged: enabled
+              ? (v) => controller.set('sound.stream-muted', {
+                  ...request,
+                  'muted': v,
+                })
+              : null,
+        ),
+        SettingRow(
+          id: 'sound.stream-device-${stream['index']}',
+          label: Text(
+            direction == 'output' ? 'Output device' : 'Input device',
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
-          if (stream['has_volume'] == true)
-            _Volume(
-              value: SoundController.volume(stream),
-              label: 'Application volume',
-              enabled: enabled && stream['volume_writable'] == true,
-              onChanged: (v) => controller.set('sound.stream-volume', {
-                ...request,
-                'percent': v,
-              }),
-            ),
-          SwitchListTile(
-            contentPadding: .zero,
-            title: const Text('Mute'),
-            value: SoundController.muted(stream),
-            onChanged: enabled
-                ? (v) => controller.set('sound.stream-muted', {
-                    ...request,
-                    'muted': v,
-                  })
-                : null,
-          ),
-          DropdownMenu<String>(
+          control: DropdownMenu<String>(
             key: ValueKey('stream-${stream['index']}-${stream['device']}'),
-            label: Text(
-              direction == 'output' ? 'Output device' : 'Input device',
-            ),
+            width: 280,
             initialSelection: stream['device'] as String?,
             enabled: enabled,
             dropdownMenuEntries: [
@@ -381,14 +381,77 @@ class _StreamRow extends StatelessWidget {
               }
             },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
-class _Volume extends StatefulWidget {
-  const _Volume({
+/// A list entry: a heading with facts, then its setting rows.
+class _ListItem extends StatelessWidget {
+  const _ListItem({
+    required this.divider,
+    required this.icon,
+    required this.title,
+    required this.details,
+    required this.rows,
+  });
+  final bool divider;
+  final IconData icon;
+  final String title;
+  final Widget details;
+  final List<Widget> rows;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: .stretch,
+    children: [
+      if (divider) const Divider(height: 1),
+      Padding(
+        padding: const .fromLTRB(20, 18, 20, 0),
+        child: Row(
+          crossAxisAlignment: .start,
+          children: [
+            Icon(icon, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  Text(title, style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 4),
+                  details,
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      ...rows,
+    ],
+  );
+}
+
+class _MuteRow extends StatelessWidget {
+  const _MuteRow({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+  final String label;
+  final bool value;
+  final ValueChanged<bool>? onChanged;
+
+  @override
+  Widget build(BuildContext context) => SettingRow(
+    id: label,
+    label: Text(label, style: Theme.of(context).textTheme.bodyLarge),
+    control: Switch(value: value, onChanged: onChanged),
+  );
+}
+
+class _VolumeRow extends StatefulWidget {
+  const _VolumeRow({
     required this.value,
     required this.enabled,
     required this.label,
@@ -399,27 +462,41 @@ class _Volume extends StatefulWidget {
   final String label;
   final ValueChanged<double> onChanged;
   @override
-  State<_Volume> createState() => _VolumeState();
+  State<_VolumeRow> createState() => _VolumeRowState();
 }
 
-class _VolumeState extends State<_Volume> {
+class _VolumeRowState extends State<_VolumeRow> {
   double? _draft;
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: .stretch,
-    children: [
-      Text('${widget.label}: ${(_draft ?? widget.value).round()}%'),
-      Slider(
-        value: (_draft ?? widget.value).clamp(0, 150),
-        max: 150,
-        onChanged: widget.enabled ? (v) => setState(() => _draft = v) : null,
-        onChangeEnd: widget.enabled
-            ? (v) {
-                setState(() => _draft = null);
-                widget.onChanged(v.clamp(0, 150));
-              }
-            : null,
+  Widget build(BuildContext context) {
+    final value = _draft ?? widget.value;
+    return SettingRow(
+      id: widget.label,
+      label: Column(
+        crossAxisAlignment: .start,
+        children: [
+          Text(widget.label, style: Theme.of(context).textTheme.bodyLarge),
+          Text(
+            '${value.round()}%',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ],
       ),
-    ],
-  );
+      control: SizedBox(
+        width: 280,
+        child: Slider(
+          value: value.clamp(0, 150),
+          max: 150,
+          semanticFormatterCallback: (v) => '${widget.label} ${v.round()}%',
+          onChanged: widget.enabled ? (v) => setState(() => _draft = v) : null,
+          onChangeEnd: widget.enabled
+              ? (v) {
+                  setState(() => _draft = null);
+                  widget.onChanged(v.clamp(0, 150));
+                }
+              : null,
+        ),
+      ),
+    );
+  }
 }

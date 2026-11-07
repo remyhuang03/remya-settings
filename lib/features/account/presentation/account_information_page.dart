@@ -70,19 +70,9 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
         children: [
           if (controller.isBusy) const LinearProgressIndicator(),
           if (controller.errorMessage case final error?)
-            SettingsSurface(
-              child: Column(
-                crossAxisAlignment: .start,
-                children: [
-                  const Icon(Icons.error_outline_rounded),
-                  Text(error),
-                  TextButton.icon(
-                    onPressed: controller.isBusy ? null : controller.reload,
-                    icon: const Icon(Icons.refresh_rounded),
-                    label: const Text('Retry'),
-                  ),
-                ],
-              ),
+            SettingsErrorCard(
+              message: error,
+              onRetry: controller.isBusy ? null : controller.reload,
             ),
           SettingsSurface(
             child: Column(
@@ -99,35 +89,31 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                   label: const Text('Change avatar'),
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'Saved in Settings. This does not change your desktop account picture.',
+                  style: Theme.of(context).textTheme.bodySmall,
+                  textAlign: .center,
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SettingsSectionTitle('Account'),
           SettingsSurface(
             padding: .zero,
-            child: _Readout(
-              id: accountUsernameSettingId,
-              title: 'Username',
-              value: controller.value['username'] as String?,
-            ),
-          ),
-          const SizedBox(height: 16),
-          SettingsSurface(
-            padding: .zero,
-            child: Column(
-              children: [
-                for (final setting in widget.page.controls.where(
-                  (s) => !const {
-                    accountUsernameSettingId,
-                    accountAvatarSettingId,
-                  }.contains(s.id),
-                ))
-                  SettingControlTile(setting),
-              ],
-            ),
+            child: settingsRows([
+              _Readout(
+                id: accountUsernameSettingId,
+                title: 'Username',
+                value: controller.value['username'] as String?,
+              ),
+              for (final setting in widget.page.controls.where(
+                (s) => !const {
+                  accountUsernameSettingId,
+                  accountAvatarSettingId,
+                }.contains(s.id),
+              ))
+                SettingControlTile(setting),
+            ]),
           ),
         ],
       );
@@ -146,11 +132,11 @@ class _Readout extends StatelessWidget {
     label: Column(
       crossAxisAlignment: .start,
       children: [
-        Text(title, style: Theme.of(context).textTheme.labelLarge),
-        const SizedBox(height: 6),
+        Text(title, style: Theme.of(context).textTheme.bodyLarge),
+        const SizedBox(height: 4),
         SelectableText(
           value ?? 'Unavailable',
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       ],
     ),

@@ -255,54 +255,26 @@ class _PowerPageState extends State<PowerPage> {
           widget.page.description,
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        if (_error != null)
-          ListTile(
-            leading: const Icon(Icons.error_outline),
-            title: Text(_error!),
-          ),
+        const SizedBox(height: 12),
+        if (_error != null) SettingsErrorCard(message: _error!, onRetry: _load),
         if (_state['conflict'] == true)
-          Card(
-            child: Padding(
-              padding: const .all(16),
-              child: Column(
-                crossAxisAlignment: .start,
-                children: [
-                  const Text('System power settings differ from Settings.'),
-                  Text(
-                    'Saved: ${_saved['profile']}   System: ${_system['profile']}',
-                  ),
-                  Text(
-                    'Saved timeouts: ${_saved['timeouts']}\nSystem timeouts: $timeouts',
-                  ),
-                  Wrap(
-                    spacing: 8,
-                    children: [
-                      TextButton(
-                        onPressed: _busy
-                            ? null
-                            : () => _attempt(
-                                () => _client.resolvePower('system'),
-                              ),
-                        child: const Text('Adopt system'),
-                      ),
-                      TextButton(
-                        onPressed: _busy
-                            ? null
-                            : () => _attempt(
-                                () => _client.resolvePower('settings'),
-                              ),
-                        child: const Text('Apply Settings'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+          _PowerConflict(
+            saved: _saved,
+            system: {..._system, 'timeouts': timeouts},
+            onResolve: _busy
+                ? null
+                : (source) => _attempt(() => _client.resolvePower(source)),
           ),
         if ((_system['degraded'] as String? ?? '').isNotEmpty)
-          Text('Performance limited: ${_system['degraded']}'),
+          Text(
+            'Performance limited: ${_system['degraded']}',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         if (_state['history_error'] != null)
-          Text('Battery history: ${_state['history_error']}'),
+          Text(
+            'Battery history: ${_state['history_error']}',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         for (final section in widget.page.sections)
           SettingsSectionCard(
             section,
@@ -312,6 +284,98 @@ class _PowerPageState extends State<PowerPage> {
             isVisible: _visible,
           ),
       ],
+    );
+  }
+}
+
+/// Saved and system power values side by side, with both resolutions.
+class _PowerConflict extends StatelessWidget {
+  const _PowerConflict({
+    required this.saved,
+    required this.system,
+    required this.onResolve,
+  });
+  final Map saved;
+  final Map system;
+
+  /// Receives `system` or `settings`; null while another change runs.
+  final ValueChanged<String>? onResolve;
+
+  static String _duration(Object? seconds) => switch (seconds) {
+    0 => 'Never',
+    final int s when s % 3600 == 0 => '${s ~/ 3600} h',
+    final int s when s % 60 == 0 => '${s ~/ 60} min',
+    final int s => '$s s',
+    _ => 'Unknown',
+  };
+
+  static String _summary(Map values) {
+    final timeouts = values['timeouts'] as Map? ?? {};
+    return 'Power mode: ${values['profile'] ?? 'Unknown'}\n'
+        'Turn off screen: ${_duration(timeouts['screen'])}\n'
+        'Sleep: ${_duration(timeouts['sleep'])}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
+    Widget column(String title, Map values) => Column(
+      crossAxisAlignment: .start,
+      children: [
+        Text(title, style: text.labelLarge),
+        Text(_summary(values), style: text.bodySmall),
+      ],
+    );
+    return Padding(
+      padding: const .only(bottom: 12),
+      child: SettingsSurface(
+        child: Column(
+          crossAxisAlignment: .stretch,
+          spacing: 12,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.warning_amber_rounded, color: colors.tertiary),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Semantics(
+                    liveRegion: true,
+                    child: Text(
+                      'Power settings differ from saved Settings',
+                      style: text.titleSmall,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Wrap(
+              spacing: 48,
+              runSpacing: 12,
+              children: [column('System', system), column('Settings', saved)],
+            ),
+            Wrap(
+              alignment: .end,
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                TextButton(
+                  onPressed: onResolve == null
+                      ? null
+                      : () => onResolve!('system'),
+                  child: const Text('Use system configuration'),
+                ),
+                FilledButton.tonal(
+                  onPressed: onResolve == null
+                      ? null
+                      : () => onResolve!('settings'),
+                  child: const Text('Apply Settings configuration'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

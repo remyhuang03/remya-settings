@@ -3,11 +3,18 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
+import 'package:remya_settings/features/settings/presentation/settings_widgets.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/updates/application/updates_controller.dart';
 import 'package:remya_settings/features/updates/presentation/active_hours_page.dart';
 import 'package:remya_settings/features/updates/presentation/updates_page.dart';
 import 'package:remya_settings_client/settings_contract.dart';
+
+/// The switch in the setting row titled [title].
+Finder _switch(String title) => find.descendant(
+  of: find.widgetWithText(SettingRow, title),
+  matching: find.byType(Switch),
+);
 
 void main() {
   test(
@@ -110,23 +117,12 @@ void main() {
         ),
         findsOneWidget,
       );
-      final switches = tester
-          .widgetList<SwitchListTile>(find.byType(SwitchListTile))
-          .toList();
       expect(
-        switches
-            .firstWhere(
-              (item) => (item.title as Text).data == 'Include held packages',
-            )
-            .onChanged,
+        tester.widget<Switch>(_switch('Include held packages')).onChanged,
         isNull,
       );
       expect(
-        switches
-            .firstWhere(
-              (item) => (item.title as Text).data == 'Retry after failure',
-            )
-            .onChanged,
+        tester.widget<Switch>(_switch('Retry after failure')).onChanged,
         isNotNull,
       );
       expect(tester.takeException(), isNull);
@@ -164,11 +160,8 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Update now'), findsNothing);
       expect(find.textContaining('once per inactive period'), findsNothing);
-      final automatic = find.widgetWithText(
-        SwitchListTile,
-        'Automatic updates',
-      );
-      expect(tester.widget<SwitchListTile>(automatic).value, false);
+      final automatic = _switch('Automatic updates');
+      expect(tester.widget<Switch>(automatic).value, false);
       await tester.tap(automatic);
       await tester.pumpAndSettle();
       expect(writes, [(updatesAutomaticSettingId, 'true')]);
@@ -231,14 +224,7 @@ void main() {
       expect(find.text('Update now'), findsNothing);
       expect(find.text('existing diagnostic output'), findsOneWidget);
       for (final title in ['Include held packages', 'Retry after failure']) {
-        expect(
-          tester
-              .widget<SwitchListTile>(
-                find.widgetWithText(SwitchListTile, title),
-              )
-              .onChanged,
-          isNull,
-        );
+        expect(tester.widget<Switch>(_switch(title)).onChanged, isNull);
       }
       await tester.tap(find.widgetWithText(FilledButton, 'Check for updates'));
       await tester.pump();
@@ -272,8 +258,8 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        expect(find.text('09:30 (local time)'), findsOneWidget);
-        expect(find.text('01:00 (local time)'), findsOneWidget);
+        expect(find.text('09:30'), findsOneWidget);
+        expect(find.text('01:00'), findsOneWidget);
         for (final button in tester.widgetList<OutlinedButton>(
           find.byType(OutlinedButton),
         )) {

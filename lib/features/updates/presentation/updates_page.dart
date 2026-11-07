@@ -97,8 +97,9 @@ class _UpdatesPageState extends State<UpdatesPage> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
+                Text(
                   'Repository packages are upgraded with pacman by the system updater and continue in the Settings service when this window is closed. AUR packages are only listed; update them with yay in a terminal.',
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 if (value.isNotEmpty && !controller.available)
                   _Unavailable(value: value),
@@ -115,37 +116,31 @@ class _UpdatesPageState extends State<UpdatesPage> {
               ],
             ),
           ),
-          const SizedBox(height: 16),
-          _AutomaticUpdates(controller: controller),
-          const SizedBox(height: 16),
+          const SettingsSectionTitle('Update options'),
           SettingsSurface(
             padding: .zero,
-            child: Column(
-              children: [
-                SwitchListTile(
-                  title: const Text('Include held packages'),
-                  subtitle: const Text(
-                    'Also upgrade the kernel, firmware, mkinitcpio and installed NVIDIA packages while its driver is loaded. This choice applies only to this session; automatic updates always keep them held.',
-                  ),
-                  value: value['all'] == true,
-                  onChanged: controller.available && idle
-                      ? (all) =>
-                            controller.set(updatesIncludeHeldSettingId, '$all')
-                      : null,
-                ),
-                SwitchListTile(
-                  title: const Text('Retry after failure'),
-                  subtitle: const Text(
-                    'Retry with a delay of 5 seconds per attempt, up to 60 seconds. Turn this off to stop future attempts; the current package transaction will finish.',
-                  ),
-                  value: value['retry'] == true,
-                  onChanged: controller.available && !controller.pending
-                      ? (retry) =>
-                            controller.set(updatesRetrySettingId, '$retry')
-                      : null,
-                ),
-              ],
-            ),
+            child: settingsRows([
+              _AutomaticUpdates(controller: controller),
+              _SwitchRow(
+                id: updatesIncludeHeldSettingId,
+                title: 'Include held packages',
+                subtitle: 'Also upgrade the kernel, firmware, mkinitcpio and installed NVIDIA packages while its driver is loaded. This choice applies only to this session; automatic updates always keep them held.',
+                value: value['all'] == true,
+                onChanged: controller.available && idle
+                    ? (all) =>
+                          controller.set(updatesIncludeHeldSettingId, '$all')
+                    : null,
+              ),
+              _SwitchRow(
+                id: updatesRetrySettingId,
+                title: 'Retry after failure',
+                subtitle: 'Retry with a delay of 5 seconds per attempt, up to 60 seconds. Turn this off to stop future attempts; the current package transaction will finish.',
+                value: value['retry'] == true,
+                onChanged: controller.available && !controller.pending
+                    ? (retry) => controller.set(updatesRetrySettingId, '$retry')
+                    : null,
+              ),
+            ]),
           ),
           if (value['checked_at'] != null) ...[
             const SizedBox(height: 16),
@@ -263,6 +258,47 @@ class _Packages extends StatelessWidget {
   );
 }
 
+/// A switch setting with its title and explanation on the left.
+class _SwitchRow extends StatelessWidget {
+  const _SwitchRow({
+    required this.id,
+    required this.title,
+    required this.subtitle,
+    required this.value,
+    required this.onChanged,
+    this.details = const [],
+  });
+  final String id;
+  final String title;
+  final String subtitle;
+  final bool value;
+  final ValueChanged<bool>? onChanged;
+
+  /// Notes and errors shown below the explanation.
+  final List<Widget> details;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    return SettingRow(
+      id: id,
+      label: Column(
+        crossAxisAlignment: .start,
+        spacing: 4,
+        children: [
+          Text(title, style: text.bodyLarge),
+          Text(subtitle, style: text.bodySmall),
+          ...details,
+        ],
+      ),
+      control: Semantics(
+        label: title,
+        child: Switch(value: value, onChanged: onChanged),
+      ),
+    );
+  }
+}
+
 class _AutomaticUpdates extends StatelessWidget {
   const _AutomaticUpdates({required this.controller});
   final UpdatesController controller;
@@ -272,40 +308,30 @@ class _AutomaticUpdates extends StatelessWidget {
     final schedule = controller.schedule;
     final enabled = schedule['enabled'] == true;
     final error = schedule['error'] as String?;
-    return SettingsSurface(
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          SwitchListTile(
-            contentPadding: .zero,
-            title: const Text('Automatic updates'),
-            subtitle: Text(
-              'Install eligible repository updates when your active hours end (${schedule['active_start'] ?? '08:00'} to ${schedule['active_end'] ?? '23:00'}). Change them in Active hours. Off by default.',
-            ),
-            value: enabled,
-            onChanged: controller.pending || schedule['editable'] == false
-                ? null
-                : (enabled) =>
-                      controller.set(updatesAutomaticSettingId, '$enabled'),
+    final small = Theme.of(context).textTheme.bodySmall;
+    return _SwitchRow(
+      id: updatesAutomaticSettingId,
+      title: 'Automatic updates',
+      subtitle:
+          'Install eligible repository updates when your active hours end (${schedule['active_start'] ?? '08:00'} to ${schedule['active_end'] ?? '23:00'}). Change them in Active hours. Off by default.',
+      value: enabled,
+      onChanged: controller.pending || schedule['editable'] == false
+          ? null
+          : (enabled) => controller.set(updatesAutomaticSettingId, '$enabled'),
+      details: [
+        if (enabled)
+          Text(
+            'The Settings service starts with your session and updates in the background once per inactive period. If the computer was off for a whole inactive period, the missed update runs at the next sign-in, even during active hours. Automatic updates always keep the kernel, firmware and NVIDIA packages held. The current Retry choice applies.',
+            style: small,
           ),
-          if (enabled) ...[
-            const SizedBox(height: 12),
-            const Text(
-              'The Settings service starts with your session and updates in the background once per inactive period. If the computer was off for a whole inactive period, the missed update runs at the next sign-in, even during active hours. Automatic updates always keep the kernel, firmware and NVIDIA packages held. The current Retry choice applies.',
-            ),
-          ],
-          if (schedule['notice'] case final String notice)
-            Padding(padding: const .only(top: 12), child: Text(notice)),
-          if (error != null)
-            Padding(
-              padding: const .only(top: 12),
-              child: Text(
-                error,
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ),
-            ),
-        ],
-      ),
+        if (schedule['notice'] case final String notice)
+          Text(notice, style: small),
+        if (error != null)
+          Text(
+            error,
+            style: small?.copyWith(color: Theme.of(context).colorScheme.error),
+          ),
+      ],
     );
   }
 }

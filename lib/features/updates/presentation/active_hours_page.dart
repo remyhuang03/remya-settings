@@ -47,11 +47,22 @@ class _ActiveHoursPageState extends State<ActiveHoursPage> {
         final value = schedule[key] as String? ?? fallback;
         return SettingRow(
           id: id,
-          label: Text(label),
+          label: Column(
+            crossAxisAlignment: .start,
+            children: [
+              Text(label, style: Theme.of(context).textTheme.bodyLarge),
+              Text(
+                id == activeHoursEndSettingId
+                    ? 'Local time. Active hours may cross midnight; start and end must differ.'
+                    : 'Local time.',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
           control: OutlinedButton.icon(
             onPressed: editable ? () => _choose(id, value) : null,
             icon: const Icon(Icons.schedule_rounded),
-            label: Text('$value (local time)'),
+            label: Text(value),
           ),
         );
       }
@@ -59,32 +70,27 @@ class _ActiveHoursPageState extends State<ActiveHoursPage> {
       return Column(
         crossAxisAlignment: .stretch,
         children: [
+          Text(
+            'Automatic updates start when your active hours end. They run during active hours only to catch up after a missed inactive period, for example when the computer was off.',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          const SettingsSectionTitle('Active hours'),
           SettingsSurface(
             padding: .zero,
-            child: Column(
-              children: [
-                row(
-                  activeHoursStartSettingId,
-                  'Start time',
-                  'active_start',
-                  '08:00',
-                ),
-                row(activeHoursEndSettingId, 'End time', 'active_end', '23:00'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 12),
-          const Text(
-            'Automatic updates start when your active hours end. They run during active hours only to catch up after a missed inactive period, for example when the computer was off. Active hours may cross midnight; start and end must differ.',
-          ),
-          if (controller.errorMessage case final error?)
-            Padding(
-              padding: const .only(top: 12),
-              child: Text(
-                error,
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
+            child: settingsRows([
+              row(
+                activeHoursStartSettingId,
+                'Start time',
+                'active_start',
+                '08:00',
               ),
-            ),
+              row(activeHoursEndSettingId, 'End time', 'active_end', '23:00'),
+            ]),
+          ),
+          if (controller.errorMessage case final error?) ...[
+            const SizedBox(height: 12),
+            SettingsErrorCard(message: error, onRetry: controller.reload),
+          ],
         ],
       );
     },

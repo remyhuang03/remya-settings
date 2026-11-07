@@ -55,17 +55,9 @@ class _BarAppearancePageState extends State<BarAppearancePage> {
     crossAxisAlignment: .stretch,
     children: [
       if (_error case final error?)
-        SettingsSurface(
-          child: Column(
-            crossAxisAlignment: .start,
-            children: [
-              Text(error),
-              TextButton(
-                onPressed: _busy ? null : () => _update(),
-                child: const Text('Retry'),
-              ),
-            ],
-          ),
+        SettingsErrorCard(
+          message: error,
+          onRetry: _busy ? null : () => _update(),
         ),
       SettingsSectionCard(
         widget.page.sections.first,
@@ -126,36 +118,58 @@ class _FoldedTrayAppsState extends State<_FoldedTrayApps> {
   }
 
   @override
-  Widget build(BuildContext context) => SettingsSurface(
-    child: FutureBuilder<Set<String>>(
-      future: _apps,
-      builder: (context, snapshot) => Column(
-        crossAxisAlignment: .start,
-        children: [
-          Text('App tray', style: Theme.of(context).textTheme.titleMedium),
-          const Text(
-            'Fold apps from their tray menu. Pin them here to keep them visible.',
-          ),
-          if (snapshot.connectionState != .done)
-            const LinearProgressIndicator()
-          else if (snapshot.hasError)
-            TextButton(onPressed: _reload, child: const Text('Retry'))
-          else if (snapshot.data!.isEmpty)
-            const Padding(padding: .only(top: 8), child: Text('No folded apps'))
-          else
-            for (final id in snapshot.data!.toList()..sort())
-              ListTile(
-                contentPadding: .zero,
-                title: Text(id),
-                trailing: TextButton(
-                  onPressed: () => setState(
-                    () => _apps = widget.client.setBarAppFolded(id, false),
-                  ),
-                  child: const Text('Pin to tray'),
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: .stretch,
+    children: [
+      const SettingsSectionTitle('App tray'),
+      SettingsSurface(
+        padding: .zero,
+        child: FutureBuilder<Set<String>>(
+          future: _apps,
+          builder: (context, snapshot) {
+            final text = Theme.of(context).textTheme;
+            return settingsRows([
+              SettingRow(
+                id: barFoldedAppsSettingId,
+                label: Text(
+                  'Folded apps are hidden from the bar. Fold an app from its tray menu, and pin it here to show it again.',
+                  style: text.bodySmall,
                 ),
               ),
-        ],
+              if (snapshot.connectionState != .done)
+                const LinearProgressIndicator()
+              else if (snapshot.hasError)
+                SettingRow(
+                  id: '$barFoldedAppsSettingId-error',
+                  label: Text('${snapshot.error}', style: text.bodyMedium),
+                  control: TextButton.icon(
+                    onPressed: _reload,
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: const Text('Retry'),
+                  ),
+                )
+              else if (snapshot.data!.isEmpty)
+                SettingRow(
+                  id: '$barFoldedAppsSettingId-empty',
+                  label: Text('No folded apps', style: text.bodyLarge),
+                )
+              else
+                for (final id in snapshot.data!.toList()..sort())
+                  SettingRow(
+                    id: '$barFoldedAppsSettingId-$id',
+                    label: Text(id, style: text.bodyLarge),
+                    control: FilledButton.tonalIcon(
+                      onPressed: () => setState(
+                        () => _apps = widget.client.setBarAppFolded(id, false),
+                      ),
+                      icon: const Icon(Icons.push_pin_outlined),
+                      label: const Text('Pin to tray'),
+                    ),
+                  ),
+            ]);
+          },
+        ),
       ),
-    ),
+    ],
   );
 }

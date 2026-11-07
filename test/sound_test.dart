@@ -114,7 +114,8 @@ void main() {
     await host(tester, 'sound-volume');
     expect(find.text('Output'), findsOneWidget);
     expect(find.text('Input'), findsOneWidget);
-    expect(find.text('Volume: 50%'), findsOneWidget);
+    expect(find.text('Volume'), findsOneWidget);
+    expect(find.text('50%'), findsOneWidget);
     await tester.tap(find.byType(Switch).first);
     await tester.pumpAndSettle();
     expect(writes.single.$1, 'sound.output-muted');
@@ -148,7 +149,7 @@ void main() {
     };
     await controller.reload();
     await tester.pumpAndSettle();
-    expect(find.text('Volume: 25%'), findsOneWidget);
+    expect(find.text('25%'), findsOneWidget);
     expect(find.text('Use system configuration'), findsNothing);
     expect(find.text('Apply saved Settings'), findsNothing);
     expect(controller.canChange, isTrue);
