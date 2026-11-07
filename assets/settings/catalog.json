@@ -22699,17 +22699,30 @@
       "id": "remya-bar",
       "category": "appearance",
       "title": "Remy'a Bar",
-      "description": "Clock and app tray",
+      "description": "Pills, clock and app tray",
       "preview": "none",
       "availability": "available",
-      "reason": "Configure the clock and app tray in Remy'a Bar.",
+      "reason": "Configure the pills, clock and app tray in Remy'a Bar.",
       "sources": [
         "app-appearance"
       ],
       "windowsUris": [],
       "sections": [
         {
-          "title": "Clock",
+          "title": "Pills",
+          "controls": [
+            {
+              "id": "remya-bar.layout",
+              "title": "Pill layout",
+              "type": "action",
+              "availability": "available",
+              "reason": "Arrange, group, show or hide bar pills and set their options.",
+              "value": "Edit"
+            }
+          ]
+        },
+        {
+          "title": "Pill options",
           "controls": [
             {
               "id": "remya-bar.clock-seconds",
