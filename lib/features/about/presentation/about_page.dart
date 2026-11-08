@@ -47,6 +47,7 @@ class AboutPage extends StatelessWidget {
         .where((item) => item.availability == .planned)
         .length;
     final unsupported = controls.length - supported - pending;
+    final total = controls.length;
     return Column(
       crossAxisAlignment: .stretch,
       children: [
@@ -89,10 +90,12 @@ class AboutPage extends StatelessWidget {
                 spacing: 40,
                 runSpacing: 16,
                 children: [
+                  // Every count is shown so the parts visibly add up to the total.
                   for (final stat in [
                     ('Supported', supported),
                     ('Not yet done', pending),
-                    ('Total', controls.length),
+                    ('Unsupported', unsupported),
+                    ('Total', total),
                   ])
                     Column(
                       crossAxisAlignment: .start,
@@ -108,8 +111,22 @@ class AboutPage extends StatelessWidget {
                     ),
                 ],
               ),
-              const SizedBox(height: 12),
-              Text('$unsupported unsupported', style: text.bodySmall),
+              const SizedBox(height: 16),
+              ClipRRect(
+                borderRadius: .circular(4),
+                child: LinearProgressIndicator(
+                  key: const ValueKey('coverage-progress'),
+                  value: total == 0 ? 0 : supported / (total - unsupported),
+                  minHeight: 8,
+                  semanticsLabel: 'Supported share of applicable settings',
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${total - unsupported == 0 ? 0 : (supported * 100 / (total - unsupported)).round()}% of applicable settings are supported. '
+                'Unsupported settings do not apply to this platform.',
+                style: text.bodySmall,
+              ),
             ],
           ),
         ),
