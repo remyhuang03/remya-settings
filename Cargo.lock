@@ -1899,6 +1899,7 @@ dependencies = [
  "remya_settings_network",
  "remya_settings_power",
  "remya_settings_sound",
+ "remya_settings_startup",
  "remya_settings_system_information",
  "remya_settings_updates",
  "serde",
@@ -1916,6 +1917,20 @@ dependencies = [
  "serde",
  "serde_json",
  "tempfile",
+]
+
+[[package]]
+name = "remya_settings_startup"
+version = "0.1.0"
+dependencies = [
+ "gio",
+ "remya_settings_applications",
+ "remya_settings_display",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "toml 0.9.12+spec-1.1.0",
+ "xdg",
 ]
 
 [[package]]

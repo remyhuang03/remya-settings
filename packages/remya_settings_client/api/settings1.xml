@@ -23,6 +23,14 @@
   <!-- Sound: Get("sound") / Get("sound.*"), Set("sound.*", JSON); Changed("sound", state). -->
   <!-- Cameras: Get cameras/cameras.*, Set cameras.* with JSON camera/serial/value;
        Resolve cameras:<node.name> system|settings; Changed cameras. Preview frames stay GUI-local. -->
+  <!-- Startup: Get startup returns versioned entries, saved/system enabled maps, conflicts,
+       initialized/writable/error, session_autostart/status_error and skipped_invalid.
+       Get startup-candidates:<query> returns unlisted installed apps (id/name/icon).
+       Get startup.apps|startup.add-app|startup.add-command|startup.remove wraps the state.
+       Set startup.apps accepts JSON {id,enabled}; startup.add-app {application};
+       startup.add-command {name,command}; startup.remove {id}. Unknown fields are rejected.
+       Resolve startup system|settings; Changed startup follows writes, resolutions, reload
+       and changed 30-second observations. Only user XDG autostart files are written. -->
   <interface name="top.remya.settings.Settings1">
     <!-- system-information returns api_version and per-ID value/error observations;
          its 16 about.* info fields reject Set with ReadOnly. about is app metadata.

@@ -176,6 +176,13 @@ fn run() -> Result<(), String> {
                     {
                         signal(&bus, "default-apps", &default_apps);
                     }
+                    if method == "Reload"
+                        || args.first().is_some_and(|id| {
+                            id == "startup" || remya_settings_startup::IDS.contains(&id.as_str())
+                        })
+                    {
+                        signal(&bus, "startup", &state.lock().unwrap().startup.state());
+                    }
                     signal(&bus, "background", &background);
                     if accent_changed {
                         signal(&bus, "accent", &accent);
@@ -335,7 +342,11 @@ fn run() -> Result<(), String> {
                 let night_light = s.night_light.state();
                 let sound = s.sound.state();
                 let cameras = s.cameras.state();
+                let startup = s.startup.state();
                 s.refresh();
+                if s.startup.state() != startup {
+                    signal(&bus, "startup", &s.startup.state());
+                }
                 if s.cameras.state() != cameras {
                     signal(&bus, "cameras", &s.cameras.state());
                 }

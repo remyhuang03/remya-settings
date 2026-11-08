@@ -402,6 +402,7 @@ def session_checks():
         bar_layout_checks()
         sidebar_layout_checks()
         default_apps_checks()
+        startup_checks()
         night_light_checks()
         installed_apps_checks()
         appimages_checks()
@@ -608,6 +609,81 @@ def session_checks():
                 pass
 
 
+def startup_fixtures(environment):
+    """Only temporary config/data directories are passed to the service."""
+    user = Path(environment['XDG_CONFIG_HOME']) / 'autostart'
+    system = Path(environment['XDG_CONFIG_DIRS']) / 'autostart'
+    applications = Path(environment['XDG_DATA_HOME']) / 'applications'
+    for directory in (user, system, applications):
+        directory.mkdir(parents=True, exist_ok=True)
+    entry = '[Desktop Entry]\nType=Application\nName=Startup smoke\nComment=Isolated fixture\nExec=/usr/bin/true\n'
+    (system / 'startup-smoke.desktop').write_text(entry)
+    (applications / 'startup-candidate.desktop').write_text(entry.replace('Startup smoke', 'Startup candidate'))
+
+
+def startup_checks():
+    state = cli('get', 'startup')
+    assert state == dbus('Get', 'startup')
+    assert state['api_version'] == 1 and state['initialized'] and state['writable']
+    assert state['error'] is None and not state['conflict'] and len(state['entries']) == 1, state
+    assert state['entries'][0]['origin'] == 'system' and not state['entries'][0]['removable']
+    for setting in ('startup.apps', 'startup.add-app', 'startup.add-command', 'startup.remove'):
+        assert cli('get', setting) == dbus('Get', setting)
+        assert cli('get', setting)['value'] == state
+    candidates = cli('get', 'startup-candidates:candidate')
+    assert candidates == dbus('Get', 'startup-candidates:candidate')
+    assert [a['id'] for a in candidates['applications']] == ['startup-candidate.desktop']
+    config = Path(os.environ['XDG_CONFIG_HOME'])
+    override = config / 'autostart/startup-smoke.desktop'
+    source = Path(os.environ['XDG_CONFIG_DIRS']) / 'autostart/startup-smoke.desktop'
+    original = source.read_bytes()
+    monitor = subprocess.Popen(['stdbuf', '-oL', 'gdbus', 'monitor', '--session', '--dest', BUS], stdout=subprocess.PIPE)
+    try:
+        assert select.select([monitor.stdout], [], [], 5)[0]
+        os.read(monitor.stdout.fileno(), 4096)
+        off = json.dumps({'id': 'startup-smoke.desktop', 'enabled': False})
+        state = cli('set', 'startup.apps', off)
+        assert not state['system']['startup-smoke.desktop']
+        assert 'Hidden=true' in override.read_text()
+        assert override.stat().st_mode & 0o777 == 0o644
+        assert state == dbus('Get', 'startup')
+        on = json.dumps({'id': 'startup-smoke.desktop', 'enabled': True})
+        assert dbus('Set', 'startup.apps', on) == cli('get', 'startup')
+        assert not override.exists() and source.read_bytes() == original
+        dbus('Set', 'startup.add-app', json.dumps({'application': 'startup-candidate.desktop'}))
+        assert (config / 'autostart/startup-candidate.desktop').exists()
+        assert cli('get', 'startup-candidates:candidate')['applications'] == []
+        cli('set', 'startup.remove', json.dumps({'id': 'startup-candidate.desktop'}))
+        command = json.dumps({'name': 'Smoke command', 'command': '/usr/bin/true "two words" "100%"'})
+        state = cli('set', 'startup.add-command', command)
+        added = config / 'autostart/remya-smoke-command.desktop'
+        assert added.exists() and '100%%' in added.read_text()
+        assert any(e['id'] == added.name and e['removable'] for e in state['entries'])
+        assert state == dbus('Get', 'startup')
+        assert dbus('Set', 'startup.remove', json.dumps({'id': added.name})) == cli('get', 'startup')
+        assert not added.exists()
+        for payload in ({'id': '../invalid.desktop', 'enabled': False}, {'id': 'startup-smoke.desktop', 'enabled': False, 'unknown': 0}):
+            assert 'InvalidArgument' in cli('set', 'startup.apps', json.dumps(payload), ok=False)
+        bad = subprocess.run(['gdbus', 'call', '--session', '--dest', BUS, '--object-path', OBJECT, '--method', f'{INTERFACE}.Set', 'startup.apps', json.dumps({'id': '../invalid.desktop', 'enabled': False})], capture_output=True, text=True)
+        assert bad.returncode and 'InvalidArgument' in bad.stderr
+        # External changes conflict, both resolutions have CLI/D-Bus parity.
+        override.write_text(source.read_text() + 'Hidden=true\n')
+        assert cli('get', 'startup')['conflict']
+        assert 'Conflict' in cli('set', 'startup.apps', on, ok=False)
+        assert not dbus('Resolve', 'startup', 'settings')['conflict']
+        assert not override.exists()
+        override.write_text(source.read_text() + 'Hidden=true\n')
+        assert not cli('resolve', 'startup', 'system')['conflict']
+        assert cli('get', 'startup')['saved']['startup-smoke.desktop'] is False
+        dbus('Set', 'startup.apps', on)
+        assert select.select([monitor.stdout], [], [], 5)[0]
+    finally:
+        monitor.terminate()
+        signals = monitor.communicate(timeout=5)[0].decode()
+    assert "'startup'" in signals, signals
+    print('PASS: startup isolated XDG discovery, CLI/D-Bus Get/Set/Resolve parity, overrides/readback, candidates, add-app, command, remove, strict validation and Changed', flush=True)
+
+
 def main():
     if '--session' in sys.argv:
         session_checks()
@@ -623,6 +699,8 @@ def main():
         subprocess.run([sys.executable, str(ROOT.parent / 'remya-bar/tool/install.py')], env=environment, check=True)
         for entry in ('top.remya.settings', 'top.remya.settings.appimage'):
             subprocess.run(['desktop-file-validate', str(home / f'data $/applications/{entry}.desktop')], check=True)
+        environment['XDG_CONFIG_DIRS'] = str(home / 'system-config')
+        startup_fixtures(environment)
         default_apps_fixtures(environment)
         installed_apps_fixture(environment)
         appimage_fixture(home)

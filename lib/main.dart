@@ -5,6 +5,7 @@ import 'features/account/application/account_controller.dart';
 import 'features/bluetooth/application/bluetooth_controller.dart';
 import 'features/applications/application/applications_controller.dart';
 import 'features/default_apps/application/default_apps_controller.dart';
+import 'features/startup/application/startup_controller.dart';
 import 'features/network/application/network_controller.dart';
 import 'features/system_information/application/hostname_controller.dart';
 
@@ -77,6 +78,12 @@ Future<void> main() async {
         client.setDefaultApplication(id, app, types: types),
     resolve: client.resolveDefaultApps,
   );
+  final startup = StartupController(
+    read: client.readStartup,
+    candidates: client.startupCandidates,
+    write: client.changeStartup,
+    resolve: client.resolveStartup,
+  );
   final appImages = AppImagesController(
     read: client.readAppImages,
     write: (id, value) => client.call('Set', [id, value]),
@@ -144,6 +151,7 @@ Future<void> main() async {
       background: background,
       fonts: fonts,
       defaultApps: defaultApps,
+      startup: startup,
       applications: applications,
       network: network,
       bluetooth: bluetooth,
@@ -178,6 +186,8 @@ Future<void> main() async {
         appImages.apply(change.value);
         applications.reload();
         defaultApps.reload();
+      case 'startup':
+        startup.reload();
       case 'default-apps':
         defaultApps.reload();
       case 'fonts':
@@ -207,5 +217,9 @@ Future<void> main() async {
   final page = await const MethodChannel('top.remya.paths')
       .invokeMethod<String>('initialPage');
   navigation.value = page ?? 'home';
-  await Future.wait([scheduler.refresh(), defaultApps.reload()]);
+  await Future.wait([
+    scheduler.refresh(),
+    defaultApps.reload(),
+    startup.reload(),
+  ]);
 }

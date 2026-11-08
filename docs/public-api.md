@@ -44,7 +44,7 @@ No command evaluates shell input. IDs are stable catalog IDs, not translated lab
 | `get date-time` | `Get(s key)` with `date-time` | Actual clock, local time, NTP status, time zone, saved zone, and conflict |
 | `get timezones` | `Get(s key)` with `timezones` | Finite system time zone options |
 | `get configuration` | `Get(s key)` with `configuration` | Saved/system values, conflicts, and detection errors |
-| `resolve <appearance / date-time / display / night-light / hostname / background / default-apps / network> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
+| `resolve <appearance / date-time / display / night-light / hostname / background / default-apps / startup / network> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
 | `resolve display <keep / revert>` | `Resolve(ss feature, source)` | Confirm or undo a pending display change |
 | `get background` | `Get(s key)` with `background` | Saved and system background, displays, warnings, previews, conflict, write blocker, error |
 | `get accent` | `Get(s key)` with `accent` | Accent source, `#RRGGBB` seed, sampled file, sampling error |
@@ -1098,3 +1098,40 @@ response and `Changed("remya-bar.sidebar-layout", state)` contain the committed
 layout. The same commands are available through the Settings CLI. Saved layouts
 omit retired `game`, `lock` and `audio-switcher` tiles on read. The `caffeine`
 tile ID is shown as Keep awake.
+
+## Startup apps
+
+`Get startup` refreshes XDG Autostart entries and returns `api_version:1`,
+`initialized`, `writable`, `entries`, `saved`, `system`, `conflict`, `conflicts`,
+`session_autostart`, `status_error`, `skipped_invalid` and `error`.
+Each entry has `id` (filename), localized `name`/`comment`, `icon`, `exec`,
+`origin` (`system` or `user`), `enabled`, `removable` and nullable `status`
+(`running`, `finished`, `failed`, `not-started`). Conflicts contain `id`, `name`,
+`saved` and `system` booleans. Saved/system maps compare only enabled states of
+shared IDs; additions and removals are adopted automatically.
+
+`Get startup-candidates:<query>` returns `applications` with installed desktop
+`id`, `name`, and `icon`, filtered by case-insensitive name/ID and excluding listed
+entries. `Get startup.apps|startup.add-app|startup.add-command|startup.remove`
+returns `{id, availability, reason, value:<startup state>}`.
+
+| Set ID | Strict JSON payload | Behavior |
+| --- | --- | --- |
+| `startup.apps` | `{"id":"example.desktop","enabled":false}` | Set/remove Hidden in the user override and verify readback |
+| `startup.add-app` | `{"application":"example.desktop"}` | Copy an installed GIO desktop file without Hidden |
+| `startup.add-command` | `{"name":"Example","command":"/usr/bin/true"}` | Parse argv, validate executable and write a collision-safe desktop file |
+| `startup.remove` | `{"id":"remya-example.desktop"}` | Remove a user-only startup file, leaving the app installed |
+
+All writes return the new full state. Unknown fields and invalid IDs/payloads
+return `InvalidArgument:`. During conflicts writes return
+`Conflict:Resolve saved and system startup apps before changing them`.
+`Resolve startup system|settings` adopts system values or applies saved differences
+with readback. Errors preserve the saved file and remain visible in state.
+Changed topic `startup` follows Set/Resolve/Reload and changed 30-second refreshes.
+CLI operations use the same Get/Set/Resolve dispatch. The pure Dart `StartupClient`
+provides typed payload helpers and `StartupEntry` observations.
+
+Only user autostart files and `startup.toml` are written; system files and generated
+units are untouched. Changes apply on the next UWSM sign-in. Runtime observation
+failures do not block configuration. See [Startup apps](startup.md) for generator
+semantics, validation, status mapping and verification boundaries.

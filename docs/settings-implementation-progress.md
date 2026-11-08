@@ -6,12 +6,12 @@
 
 清单覆盖现有目录中的全部设置项，包括主要中文控件和保留原名的设计参考细项（受 Windows 等桌面系统启发，作为设计参考与基准对照，而非直接照搬）；实际架构和功能已针对 Linux / Hyprland 进行了适配与差异化演进。相同概念可能存在多个展示位置。下述数量统计的是控件条目，不是去重后的独立后端功能数量。参考来源与实际实现的边界见 [调研说明](windows-settings-research.md)。
 
-Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览项，共 762 项设置与 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
+Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览项，共 743 项设置与 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
 
 ## 当前概况
 
-- 设置分类：15 个；详情页面：134 个；设置条目：1601 项。
-- 已实现：214 项；未实现：1377 项；不适用：10 项。
+- 设置分类：15 个；详情页面：135 个；设置条目：1596 项。
+- 已实现：218 项；未实现：1368 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
@@ -59,15 +59,15 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 17 | 228 | 55 | 173 | 0 |
+| [系统](#category-system) | 16 | 223 | 55 | 168 | 0 |
 | [声音](#category-sound) | 3 | 17 | 14 | 3 | 0 |
-| [电源与电池](#category-power) | 3 | 40 | 0 | 40 | 0 |
+| [电源与电池](#category-power) | 3 | 41 | 15 | 26 | 0 |
 | [通知](#category-notifications) | 4 | 19 | 12 | 7 | 0 |
-| [蓝牙和设备](#category-devices) | 13 | 200 | 12 | 184 | 4 |
+| [蓝牙和设备](#category-devices) | 10 | 156 | 18 | 138 | 0 |
 | [网络和 Internet](#category-network) | 12 | 97 | 33 | 64 | 0 |
 | [外观](#category-appearance) | 10 | 298 | 23 | 275 | 0 |
-| [应用](#category-apps) | 5 | 40 | 25 | 15 | 0 |
-| [账户](#category-accounts) | 11 | 60 | 3 | 51 | 6 |
+| [应用](#category-apps) | 5 | 35 | 29 | 6 | 0 |
+| [账户](#category-accounts) | 11 | 58 | 2 | 50 | 6 |
 | [时间和语言](#category-time) | 4 | 28 | 8 | 20 | 0 |
 | [辅助功能](#category-accessibility) | 14 | 236 | 0 | 236 | 0 |
 | [隐私和安全性](#category-privacy) | 9 | 39 | 0 | 35 | 4 |
@@ -709,7 +709,7 @@ Windows 参考入口：`ms-settings:sound-devices`。
 
 能耗、屏幕超时与电池
 
-页面状态：**已接入基础功能**；条目：31；已实现 3 / 未实现 28 / 不适用 0。
+页面状态：**已接入基础功能**；条目：31；已实现 6 / 未实现 25 / 不适用 0。
 
 原因：基础功能通过 Rust 接入真实系统，其余高级项保持预览。
 
@@ -1326,7 +1326,7 @@ Windows 参考入口：`ms-settings:network-status`。
 
 无线网络与当前连接
 
-页面状态：**已实现**；条目：7；已实现 7 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：8；已实现 8 / 未实现 0 / 不适用 0。
 
 原因：已通过 NetworkManager 实现。
 
@@ -2198,33 +2198,29 @@ Windows 参考入口：`ms-settings:defaultapps`、`ms-settings:defaultbrowserse
 
 ### Startup apps — `startup`
 
-登录时启动的应用与影响
+Apps and commands that start when you sign in
 
-页面状态：**未实现**；条目：9；已实现 0 / 未实现 9 / 不适用 0。
+页面状态：**已实现**；条目：4；已实现 4 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Uses XDG autostart entries started by UWSM. Changes apply at the next sign-in.
 
 Windows 参考入口：`ms-settings:startupapps`。
 
-#### 设置
+Implementation and boundaries: [Startup apps](startup.md). Verification uses temporary XDG roots, fake systemd observations, Flutter widget tests and the normal CLI/D-Bus smoke flow (run by the architect after installation); actual UWSM sign-in remains untested.
+
+#### Settings
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Search to launch apps | `startup.c445161f` | 文本输入 | 未实现 | — |
-| Sort by | `startup.3bf3689a` | 选择 | 未实现 | — |
-| Sample application starts at boot | `startup.bf13c9a3` | 开关 | 未实现 | — |
-| Launch Impact | `startup.e46804cd` | 信息展示 | 未实现 | — |
+| Apps that start when you sign in | `startup.apps` | 开关 | 已实现 | `cargo test -p remya_settings_startup -p remya_settings_service`; `test/startup_page_test.dart`; `test/interface_smoke.py` normal installed flow: toggle/readback, conflicts; Rust tests also cover minimal disabling stubs and status fakes |
+| Add an app | `startup.add-app` | 操作 | 已实现 | Rust GIO file-copy boundary tests; `test/startup_page_test.dart`; isolated candidate and add-app CLI/D-Bus checks |
+| Remove a startup entry | `startup.remove` | 操作 | 已实现 | Rust removable-only/readback tests; `test/startup_page_test.dart` confirmation; isolated CLI/D-Bus remove/readback |
 
-
-#### Advanced: compositor previews
+#### Advanced（默认折叠）
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Session action: Launch an application or command | `startup.session-command` | 文本输入 | 未实现 | — |
-| Session action: Triggering phase | `startup.session-event` | 选择 | 未实现 | — |
-| Session action: Enable this startup item | `startup.session-enabled` | 开关 | 未实现 | — |
-| Session action: Startup sequence and dependencies | `startup.session-order` | 文本输入 | 未实现 | — |
-| Session action: Added conversation action | `startup.session-add` | 操作 | 未实现 | — |
+| Add a custom command | `startup.add-command` | 操作 | 已实现 | Rust argv/Exec quoting, collisions and validation tests; `test/startup_page_test.dart` inline errors; isolated CLI/D-Bus add-command |
 
 <a id="category-accounts"></a>
 
@@ -2355,7 +2351,7 @@ Windows 参考入口：`ms-settings:signinoptions-launchsecuritykeyenrollment`�
 
 应用、偏好与同步参考
 
-页面状态：**未实现**；条目：21；已实现 0 / 未实现 21 / 不适用 0。
+页面状态：**未实现**；条目：20；已实现 0 / 未实现 20 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 

@@ -20,6 +20,8 @@ import '../../applications/application/applications_controller.dart';
 import '../../applications/presentation/appimages_page.dart';
 import '../../applications/presentation/installed_apps_page.dart';
 import '../../default_apps/application/default_apps_controller.dart';
+import '../../startup/application/startup_controller.dart';
+import '../../startup/presentation/startup_page.dart';
 import '../../default_apps/presentation/default_apps_page.dart';
 
 import 'package:remya_settings_client/settings_contract.dart';
@@ -504,6 +506,12 @@ class _SettingsShellState extends State<SettingsShell> {
       content = AccountInformationPage(
         page: _page!,
         controller: widget.account!,
+      );
+    } else if (_page?.id == 'startup' &&
+        StartupScope.maybeOf(context) != null) {
+      content = StartupPage(
+        key: const ValueKey('startup-page'),
+        controller: StartupScope.maybeOf(context)!,
       );
     } else if (_page?.id == 'defaults' &&
         DefaultAppsScope.maybeOf(context) != null) {

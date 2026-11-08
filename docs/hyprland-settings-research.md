@@ -2,7 +2,7 @@
 
 Research date: 2026-10-26. Baseline: commit `44679b271497c40a0d37dd40299f89ae59c7aa6f`.
 
-The retained extension contains **2 categories, 35 independent pages, and 762 controls**, including previews folded into ordinary pages. The combined catalog has **13 categories, 138 pages, and 1667 controls**. Coverage files describe the currently included controls and their owning pages.
+The retained extension contains **2 categories, 35 independent pages, and 743 controls**, including previews folded into ordinary pages. The combined catalog has **15 categories, 135 pages, and 1596 controls**. Coverage files describe the currently included controls and their owning pages.
 
 Apart from the implemented Display fields and audio device/stream routing, this extension remains **UI only**. Every remaining addition is `planned`, operation controls remain disabled, and no configuration, process, device, or service is read or modified by the application. Optional components are identified in each page's availability reason. Their presence and compatibility have not been detected.
 
@@ -61,4 +61,4 @@ Catalog tests validate current category/page/control identities and source mappi
 
 Future integrations must select compatible Hyprland/component versions, preserve configuration structure and comments, validate values and paths, distinguish dynamic reloads from restart-only settings, and support rollback where writes could disrupt a session. GUI permission rules are not equivalent to a universal application sandbox. Optional shell components and update/package managers are not selected by the presence of their preview pages. These constraints do not add system-side behavior to this milestone.
 
-Related input, touchpad, touch, pen, display, graphics, audio, power, appearance, lock-screen, startup, backup and authorization previews now live under the corresponding ordinary page's default-collapsed Advanced section. Unimplemented previews remain planned and disabled; available audio controls are documented in [Sound](sound.md). Native workspace, rule, portal and session/configuration workflows without a matching ordinary page retain their own entries.
+Related input, touchpad, touch, pen, display, graphics, audio, power, appearance, lock-screen, backup and authorization previews now live under the corresponding ordinary page's default-collapsed Advanced section. Unimplemented previews remain planned and disabled; available audio controls are documented in [Sound](sound.md). Startup apps now use XDG Autostart and UWSM; see [Startup apps](startup.md). Native workspace, rule, portal and session/configuration workflows without a matching ordinary page retain their own entries.

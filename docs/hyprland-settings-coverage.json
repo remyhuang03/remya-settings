@@ -506,10 +506,6 @@
     "defaults.c0b97974",
     "defaults.e7fe6be6",
     "defaults.ff4c4bec",
-    "startup.c445161f",
-    "startup.3bf3689a",
-    "startup.bf13c9a3",
-    "startup.e46804cd",
     "your-info.a1aaf352",
     "your-info.58484bbb",
     "your-info.7e0e3d0b",
@@ -1011,14 +1007,6 @@
       "repository": "hyprwm/hyprland-wiki",
       "revision": "026b282bdde916bb7ce77689857f40cf1e829e82",
       "path": "content/configuring/core/environment-variables.md"
-    },
-    {
-      "id": "hypr-startup-reference",
-      "title": "Hyprland 会话启动",
-      "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/autostart.md",
-      "repository": "hyprwm/hyprland-wiki",
-      "revision": "026b282bdde916bb7ce77689857f40cf1e829e82",
-      "path": "content/configuring/core/autostart.md"
     },
     {
       "id": "hypr-permissions",
@@ -10512,56 +10500,6 @@
       "reference": [
         "nwg-config-project",
         "preview"
-      ]
-    },
-    {
-      "control": "startup.session-command",
-      "page": "startup",
-      "source": "hypr-startup-reference",
-      "key": "command",
-      "reference": [
-        "hypr-startup-reference",
-        "command"
-      ]
-    },
-    {
-      "control": "startup.session-event",
-      "page": "startup",
-      "source": "hypr-startup-reference",
-      "key": "event",
-      "reference": [
-        "hypr-startup-reference",
-        "event"
-      ]
-    },
-    {
-      "control": "startup.session-enabled",
-      "page": "startup",
-      "source": "hypr-startup-reference",
-      "key": "enabled",
-      "reference": [
-        "hypr-startup-reference",
-        "enabled"
-      ]
-    },
-    {
-      "control": "startup.session-order",
-      "page": "startup",
-      "source": "hypr-startup-reference",
-      "key": "order",
-      "reference": [
-        "hypr-startup-reference",
-        "order"
-      ]
-    },
-    {
-      "control": "startup.session-add",
-      "page": "startup",
-      "source": "hypr-startup-reference",
-      "key": "add",
-      "reference": [
-        "hypr-startup-reference",
-        "add"
       ]
     },
     {

@@ -15,6 +15,7 @@ use remya_settings_display::{
 use remya_settings_fonts::{self as fonts, FontManager, RealFontconfig};
 use remya_settings_network::{NetworkManager, is_network_setting};
 use remya_settings_sound::{self as sound, Sound, pulse::RealPulse};
+use remya_settings_startup::{self as startup, Startup};
 use remya_settings_system_information::account::{self, AccountInformation};
 use remya_settings_system_information::hostname::{self, HostnameManager};
 use remya_settings_updates::{self as updates, Updates};
@@ -250,6 +251,7 @@ pub struct State {
     pub background: BackgroundManager<RealDesktop>,
     fonts: FontManager<RealFontconfig>,
     pub default_apps: DefaultApps<default_apps::RealDesktop>,
+    pub startup: Startup<startup::RealSystemd>,
     pub appimages: applications::appimages::AppImages,
     pub network: NetworkManager,
     pub bluetooth: remya_settings_bluetooth::Bluetooth,
@@ -294,6 +296,11 @@ impl State {
             default_apps: DefaultApps::new(
                 default_apps::RealDesktop,
                 config.with_file_name("default-apps.toml"),
+            ),
+            startup: Startup::new(
+                startup::RealSystemd,
+                startup::Directories::detect(),
+                config.with_file_name("startup.toml"),
             ),
             bluetooth: remya_settings_bluetooth::Bluetooth::new(),
             cameras: remya_settings_camera::Cameras::new(
@@ -464,6 +471,7 @@ impl State {
         self.date_error = self.refresh_date().err();
         let _ = self.hostname.refresh();
         let _ = self.default_apps.refresh();
+        let _ = self.startup.refresh();
         // Failures stay in the manager's state for every reader.
         let _ = self.network.refresh();
         // A detection failure is retained by the manager and reported in its state.
@@ -627,7 +635,7 @@ impl State {
     pub fn configuration(&self) -> Value {
         let mut date = self.date.clone();
         date["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
-        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"network":self.network.state(),"sound":self.sound.state(),"power":self.power.state(),"cameras":self.cameras.state()})
+        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"startup":self.startup.state(),"network":self.network.state(),"sound":self.sound.state(),"power":self.power.state(),"cameras":self.cameras.state()})
     }
     pub fn controls(&self) -> Vec<&Value> {
         self.catalog["pages"]
@@ -776,6 +784,15 @@ impl State {
                         Ok(
                             json!({"id":key,"availability":"available","reason":"Uses NetworkManager through the Settings service.","value":self.network.read_value(key),"error":self.network.state()["error"]}),
                         )
+                    }
+                    "startup" => {
+                        let _ = self.startup.refresh();
+                        Ok(self.startup.state())
+                    }
+                    _ if key.starts_with("startup-candidates:") => self.startup.candidates(&key[19..]),
+                    _ if startup::IDS.contains(&key) => {
+                        let _ = self.startup.refresh();
+                        Ok(json!({"id":key,"availability":"available","reason":"Uses XDG autostart entries started by UWSM.","value":self.startup.state()}))
                     }
                     "default-apps" => {
                         let _ = self.default_apps.refresh();
@@ -1089,6 +1106,9 @@ impl State {
         if is_network_setting(key) {
             return self.network.set(key, value);
         }
+        if startup::IDS.contains(&key) {
+            return self.startup.set(key, value);
+        }
         if default_apps::IDS.contains(&key) {
             return self.default_apps.set(key, value);
         }
@@ -1278,6 +1298,9 @@ impl State {
         }
         if feature == "network" {
             return self.network.resolve(source);
+        }
+        if feature == "startup" {
+            return self.startup.resolve(source);
         }
         if feature == "default-apps" {
             return self.default_apps.resolve(source);

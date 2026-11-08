@@ -5,6 +5,7 @@ import 'features/account/application/account_controller.dart';
 import 'features/bluetooth/application/bluetooth_controller.dart';
 import 'features/applications/application/applications_controller.dart';
 import 'features/default_apps/application/default_apps_controller.dart';
+import 'features/startup/application/startup_controller.dart';
 import 'features/network/application/network_controller.dart';
 import 'features/system_information/application/hostname_controller.dart';
 
@@ -42,6 +43,7 @@ class RemyaSettingsApp extends StatefulWidget {
     this.background,
     this.fonts,
     this.defaultApps,
+    this.startup,
     this.applications,
     this.network,
     this.bluetooth,
@@ -53,6 +55,7 @@ class RemyaSettingsApp extends StatefulWidget {
   final BackgroundController? background;
   final FontsController? fonts;
   final DefaultAppsController? defaultApps;
+  final StartupController? startup;
   final ApplicationsController? applications;
   final NetworkController? network;
   final BluetoothController? bluetooth;
@@ -95,6 +98,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     widget.background?.dispose();
     widget.fonts?.dispose();
     widget.defaultApps?.dispose();
+    widget.startup?.dispose();
     widget.applications?.dispose();
     widget.network?.dispose();
     widget.bluetooth?.dispose();
@@ -199,11 +203,14 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     final withDefaultApps = widget.defaultApps == null
         ? withFonts
         : DefaultAppsScope(controller: widget.defaultApps!, child: withFonts);
-    final withApplications = widget.applications == null
+    final withStartup = widget.startup == null
         ? withDefaultApps
+        : StartupScope(controller: widget.startup!, child: withDefaultApps);
+    final withApplications = widget.applications == null
+        ? withStartup
         : ApplicationsScope(
             controller: widget.applications!,
-            child: withDefaultApps,
+            child: withStartup,
           );
     final withNetwork = widget.network == null
         ? withApplications

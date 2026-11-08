@@ -22,6 +22,9 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Night light snapshot | `night-light.toml` beside `config.toml` (debug: repository `config/`) |
 | hyprsunset configuration | `$XDG_CONFIG_HOME/hypr/hyprsunset.conf`, run by the packaged `hyprsunset.service` |
 | Video background unit | `$XDG_CONFIG_HOME/systemd/user/top.remya.settings.video-background.service` |
+| Startup enabled-state snapshot | `startup.toml` beside `config.toml` (debug: repository `config/`) |
+| User startup entries | `$XDG_CONFIG_HOME/autostart/*.desktop` (fallback `$HOME/.config/autostart/`), written as 0644 |
+| System startup entries (read only) | Each absolute `$XDG_CONFIG_DIRS` entry plus `/autostart/` (default `/etc/xdg/autostart/`) |
 | Default application snapshot | `default-apps.toml` beside `config.toml` (debug: repository `config/`) |
 | Network preference snapshot | `network.toml` beside `config.toml` (debug: repository `config/`) |
 | XDG default associations | GIO-managed `mimeapps.list` with standard desktop-specific/config/data precedence |
@@ -39,7 +42,10 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 Debug builds isolate only the Settings files listed above; hyprpaper, hyprsunset, the video
 unit, fonts and XDG default application associations remain the real desktop's.
 The default-apps snapshot uses the selected debug/release Settings config directory;
-only isolated HOME/XDG roots isolate association writes during tests.
+only isolated HOME/XDG roots isolate association writes during tests. The same
+applies to startup entries: debug mode isolates `startup.toml`, while explicit
+startup edits use the actual XDG autostart directory. Tests isolate both config
+home and config dirs. See [Startup apps](startup.md).
 
 An unset, empty, or relative `XDG_CONFIG_HOME`/`XDG_DATA_HOME` is ignored. Config
 falls back to `~/.config`; data falls back to `~/.local/share`. HOME must be

@@ -5,7 +5,7 @@ import 'package:dbus/dbus.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
 const usage = '''Usage: remya_settings <command> [arguments]
-  get <theme|system|system-information|hostname|display|display-brightness|background|accent|fonts|network|bluetooth|sound|power|battery-saver|battery-history:json|cameras|account-information|updates|font-search:query|font:family|catalog|about|page:id|setting-id>  Read state or metadata
+  get <theme|system|system-information|hostname|display|display-brightness|background|accent|fonts|startup|startup-candidates:query|network|bluetooth|sound|power|battery-saver|battery-history:json|cameras|account-information|updates|font-search:query|font:family|catalog|about|page:id|setting-id>  Read state or metadata
   get remya-bar.clock-seconds        Read the bar clock preference
   get remya-bar.folded-apps           List folded app tray IDs
   get remya-bar.layout                Read bar pill groups and options
@@ -15,7 +15,7 @@ const usage = '''Usage: remya_settings <command> [arguments]
   list                               List all controls and availability
   search <query>                     Search settings pages
   open [page-id|home|about|licenses|repository]   Open a page or repository
-  resolve <appearance|date-time|display|hostname|background|default-apps|network|power|cameras:node-name> <system|settings>  Resolve a configuration conflict
+  resolve <appearance|date-time|display|hostname|background|default-apps|startup|network|power|cameras:node-name> <system|settings>  Resolve a configuration conflict
   resolve display <keep|revert>      Confirm or undo a pending display change
   reload                             Reload configuration and system state
   watch [theme|all]                   Stream changes as JSON lines

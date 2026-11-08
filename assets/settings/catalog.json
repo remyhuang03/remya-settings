@@ -113,11 +113,6 @@
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/environment-variables.md"
     },
     {
-      "id": "hypr-startup-reference",
-      "title": "Hyprland session startup",
-      "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/autostart.md"
-    },
-    {
       "id": "hypr-permissions",
       "title": "Hyprland Permissions",
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/advanced-configuration/permissions.md"
@@ -12042,13 +12037,12 @@
       "id": "startup",
       "category": "apps",
       "title": "Startup apps",
-      "description": "Applications launched when logging in and their impact",
+      "description": "Apps and commands that start when you sign in",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Uses XDG autostart entries started by UWSM.",
       "sources": [
-        "uris",
-        "hypr-startup-reference"
+        "uris"
       ],
       "windowsUris": [
         "ms-settings:startupapps"
@@ -12058,41 +12052,28 @@
           "title": "Settings",
           "controls": [
             {
-              "id": "startup.c445161f",
-              "title": "Search to launch apps",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "startup.3bf3689a",
-              "title": "Sort by",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Name",
-                "Status",
-                "Launch Impact"
-              ],
-              "value": "Name"
-            },
-            {
-              "id": "startup.bf13c9a3",
-              "title": "Sample application starts at boot",
+              "id": "startup.apps",
+              "title": "Apps that start when you sign in",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses XDG autostart entries started by UWSM.",
               "value": false
             },
             {
-              "id": "startup.e46804cd",
-              "title": "Launch Impact",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
+              "id": "startup.add-app",
+              "title": "Add an app",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses XDG autostart entries started by UWSM.",
+              "value": ""
+            },
+            {
+              "id": "startup.remove",
+              "title": "Remove a startup entry",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses XDG autostart entries started by UWSM.",
+              "value": ""
             }
           ]
         },
@@ -12101,71 +12082,14 @@
           "collapsed": true,
           "controls": [
             {
-              "id": "startup.session-command",
-              "title": "Session action: Launch an application or command",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-startup-reference",
-                "command"
-              ]
-            },
-            {
-              "id": "startup.session-event",
-              "title": "Session action: Triggering phase",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "hyprland.start",
-              "options": [
-                "hyprland.start",
-                "hyprland.shutdown"
-              ],
-              "referencePath": [
-                "hypr-startup-reference",
-                "event"
-              ]
-            },
-            {
-              "id": "startup.session-enabled",
-              "title": "Session action: Enable this startup item",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-startup-reference",
-                "enabled"
-              ]
-            },
-            {
-              "id": "startup.session-order",
-              "title": "Session action: Startup sequence and dependencies",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-startup-reference",
-                "order"
-              ]
-            },
-            {
-              "id": "startup.session-add",
-              "title": "Session action: Added conversation action",
+              "id": "startup.add-command",
+              "title": "Add a custom command",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-startup-reference",
-                "add"
-              ]
+              "availability": "available",
+              "reason": "Uses XDG autostart entries started by UWSM.",
+              "value": ""
             }
-          ],
-          "description": "Planned compositor options from Hyprland session startup."
+          ]
         }
       ],
       "children": []
