@@ -93,3 +93,11 @@ system backend. Remya Bar consumes the effective release theme through the publi
 D-Bus service; it does not apply system preferences or depend on Settings pages.
 See [public interfaces](public-api.md) for CLI/D-Bus operation parity and
 [XDG layout](xdg-layout.md) for debug, installation, and runtime paths.
+
+Automatic cleanup is an app-owned Rust service preference in `cleanup.toml`, next
+to the main config. It does not reconcile with another system scheduler. Version 1
+stores `[automatic]` (`enabled`, `frequency`, `trash_days`, `cache_days`,
+`downloads_days`) and optional `[last_run]` (`at`, `freed_bytes`, `error`). Defaults
+are disabled, low-space, 30, 30, 0 respectively. Zero days means Never. Strict parse
+or persistence failures remain visible and do not overwrite an invalid file.
+See [Storage](storage.md) for scheduling and permanent deletion versus Trash.

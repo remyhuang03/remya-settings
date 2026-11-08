@@ -31,6 +31,8 @@ IconData categoryIcon(String icon) => switch (icon) {
 
 IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
     switch (page.id) {
+      'storage' => Icons.storage_outlined,
+      'cleanup' => Icons.cleaning_services_outlined,
       'date-time' => Icons.schedule_rounded,
       'about' => Icons.info_outline_rounded,
       'language' => Icons.translate_rounded,
@@ -80,7 +82,6 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
         'devices' => Icons.devices_other_outlined,
         'volume' => Icons.volume_up_outlined,
         'power' => Icons.battery_charging_full_rounded,
-        'storage' => Icons.storage_outlined,
         'personalization' => Icons.palette_outlined,
         'update' => Icons.system_update_alt_rounded,
         _ => categoryIcon(category.icon),

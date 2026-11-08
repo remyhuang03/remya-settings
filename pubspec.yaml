@@ -12,6 +12,7 @@ dependencies:
   dbus: ^0.8.0
   flutter_rust_bridge: 2.13.0
   material_ui: ^1.5.0
+  material_color_utilities: ^0.13.0
   toml: ^0.18.0
   remya_settings_client:
     path: packages/remya_settings_client

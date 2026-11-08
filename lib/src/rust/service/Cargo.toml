@@ -35,3 +35,4 @@ remya_settings_camera = { path = "../camera", default-features = false }
 remya_settings_power = { path = "../power" }
 
 remya_settings_startup = { path = "../startup" }
+remya_settings_storage = { path = "../storage" }

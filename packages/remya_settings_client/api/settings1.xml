@@ -31,6 +31,18 @@
        startup.add-command {name,command}; startup.remove {id}. Unknown fields are rejected.
        Resolve startup system|settings; Changed startup follows writes, resolutions, reload
        and changed 30-second observations. Only user XDG autostart files are written. -->
+  <!-- Storage: Get storage|cleanup lazily starts the shared worker scan.
+       Get each storage.*|cleanup.* ID returns availability/reason/value/options.
+       Set storage.scan {}; storage.mount {volume,action}; storage.eject {drive,action};
+       storage.label {volume,label}; storage.open {path} accepts only reported folders.
+       Set cleanup.trash {action:empty}; cleanup.cache {folders};
+       cleanup.package-cache {keep,uninstalled}; cleanup.orphans {packages:[{name,version}]};
+       cleanup.large-files {paths}; cleanup.run-now {}.
+       Set cleanup.auto bool, cleanup.auto-frequency JSON string,
+       cleanup.auto-trash|cleanup.auto-cache|cleanup.auto-downloads integer ages.
+       Worker operations return busy state; Changed storage and cleanup report completion/errors.
+       Package operations use the existing authorized private helper, never the system updater.
+       See docs/public-api.md and docs/storage.md for payload bounds and deletion semantics. -->
   <interface name="top.remya.settings.Settings1">
     <!-- system-information returns api_version and per-ID value/error observations;
          its 16 about.* info fields reject Set with ReadOnly. about is app metadata.

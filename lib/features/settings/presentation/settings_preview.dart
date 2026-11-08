@@ -33,11 +33,6 @@ class SettingsPreview extends StatelessWidget {
         'Power that fits your day',
         'Power and battery integration is not implemented',
       ),
-      'storage' => (
-        Icons.storage_rounded,
-        'Room for what matters',
-        'Sample capacities.\nFiles are not scanned or cleaned.',
-      ),
       'update' => (
         Icons.security_update_good_rounded,
         'Keep your system fresh',

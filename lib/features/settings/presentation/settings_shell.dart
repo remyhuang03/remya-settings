@@ -1,3 +1,6 @@
+import '../../storage/application/storage_controller.dart';
+import '../../storage/presentation/storage_page.dart';
+import '../../storage/presentation/cleanup_page.dart';
 import '../../power/presentation/battery_usage_page.dart';
 import '../../power/presentation/power_page.dart';
 import '../../camera/application/camera_controller.dart';
@@ -468,6 +471,15 @@ class _SettingsShellState extends State<SettingsShell> {
       content = UpdatesPage(controller: widget.updates!);
     } else if (_page?.id == 'active-hours' && widget.updates != null) {
       content = ActiveHoursPage(controller: widget.updates!);
+    } else if (_page?.id == 'storage' &&
+        StorageScope.maybeOf(context) != null) {
+      content = StoragePage(
+        controller: StorageScope.maybeOf(context)!,
+        onPage: (id) => _openPage(widget.catalog.page(id)),
+      );
+    } else if (_page?.id == 'cleanup' &&
+        StorageScope.maybeOf(context) != null) {
+      content = CleanupPage(controller: StorageScope.maybeOf(context)!);
     } else if (_page?.id == 'installed' &&
         ApplicationsScope.maybeOf(context) != null) {
       final controller = ApplicationsScope.maybeOf(context)!;

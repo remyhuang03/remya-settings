@@ -581,7 +581,7 @@
     },
     {
       "uri": "ms-settings:storagepolicies",
-      "page": "storage-sense",
+      "page": "cleanup",
       "sourceCategory": "System",
       "title": "Storage Sense"
     },
@@ -593,7 +593,7 @@
     },
     {
       "uri": "ms-settings:disksandvolumes",
-      "page": "disks",
+      "page": "storage",
       "sourceCategory": "System",
       "title": "Disks & volumes"
     },

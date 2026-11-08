@@ -27,3 +27,4 @@ export 'src/bar_tray.dart';
 export 'src/sidebar.dart';
 export 'src/bar_layout.dart';
 export 'src/startup.dart';
+export 'src/storage.dart';

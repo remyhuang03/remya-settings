@@ -10,8 +10,8 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 
 ## 当前概况
 
-- 设置分类：15 个；详情页面：135 个；设置条目：1596 项。
-- 已实现：218 项；未实现：1368 项；不适用：10 项。
+- 设置分类：15 个；详情页面：133 个；设置条目：1587 项。
+- 已实现：236 项；未实现：1341 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
@@ -59,7 +59,7 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 16 | 223 | 55 | 168 | 0 |
+| [系统](#category-system) | 14 | 214 | 73 | 141 | 0 |
 | [声音](#category-sound) | 3 | 17 | 14 | 3 | 0 |
 | [电源与电池](#category-power) | 3 | 41 | 15 | 26 | 0 |
 | [通知](#category-notifications) | 4 | 19 | 12 | 7 | 0 |
@@ -247,97 +247,65 @@ Windows 参考入口：`ms-settings:display-advancedgraphics`、`ms-settings:dis
 
 ### Storage — `storage`
 
-空间使用、磁盘与清理
+Space usage, disks and volumes
 
-页面状态：**未实现**；条目：10；已实现 0 / 未实现 10 / 不适用 0。
+页面状态：**已实现**；条目：7；已实现 7 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Rust 提供实时扫描、UDisks2 与经过校验的清理操作；自动清理属于应用偏好，不覆盖系统配置。缺少主机工具时逐项报告不适用。
 
-Windows 参考入口：`ms-settings:storagesense`。
+Windows 参考入口：`ms-settings:storagesense`、`ms-settings:disksandvolumes`。
 
-相关页面 ID：`storage-sense`、`cleanup`、`disks`、`save-locations`。
+验证：`cargo test -p remya_settings_storage -p remya_settings_service`、`test/storage_test.dart` 和隔离 `test/interface_smoke.py`。实机破坏性操作未测试；范围与精度见 [Storage](storage.md)。
 
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Disk space usage | `storage.bbb5f514` | 信息展示 | 未实现 | — |
-| Installed apps | `storage.10396df3` | 操作 | 未实现 | — |
-| Temporary files | `storage.ae5af853` | 操作 | 未实现 | — |
-| Documents and other files | `storage.fa08c5fa` | 操作 | 未实现 | — |
-| Storage awareness | `storage.008cbe6b` | 操作 | 未实现 | — |
-| Cleanup suggestions | `storage.77572238` | 操作 | 未实现 | — |
-
-#### 高级存储设置
+#### Usage
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Disks and volumes | `storage.d37bbd44` | 操作 | 未实现 | — |
-| Where to save new content | `storage.e4a69938` | 操作 | 未实现 | — |
-| Storage space | `storage.89266e3e` | 操作 | 未实现 | — |
-| Drive Optimization | `storage.3236decd` | 操作 | 未实现 | — |
+| Storage usage | `storage.usage` | 信息展示 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+| Scan again | `storage.scan` | 操作 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
 
-### Storage Sense — `storage-sense`
-
-自动清理与内容保留
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:storagepolicies`。
-
-#### 设置
+#### Disks and volumes
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Automatically clean up temporary files | `storage-sense.ed72cc7f` | 开关 | 未实现 | — |
-| Storage awareness | `storage-sense.008cbe6b` | 开关 | 未实现 | — |
-| Operating frequency | `storage-sense.9ea4e59f` | 选择 | 未实现 | — |
-| Recycle bin retention time | `storage-sense.c550ab3e` | 选择 | 未实现 | — |
-| Download directory retention time | `storage-sense.e91a10f8` | 选择 | 未实现 | — |
-| Run now | `storage-sense.275f9972` | 操作 | 未实现 | — |
+| Disks and volumes | `storage.volumes` | 信息展示 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+| Mount or unmount | `storage.mount` | 操作 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+| Eject or power off | `storage.eject` | 操作 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+| Rename volume | `storage.label` | 操作 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+| Open in file manager | `storage.open` | 操作 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
 
-### Cleanup suggestions — `cleanup`
+### Cleanup — `cleanup`
 
-临时文件、大文件与未使用内容
+Free up space and clean up automatically
 
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+页面状态：**已实现**；条目：11；已实现 11 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Rust 提供实时扫描、UDisks2 与经过校验的清理操作；自动清理属于应用偏好，不覆盖系统配置。缺少主机工具时逐项报告不适用。
 
-Windows 参考入口：`ms-settings:storagerecommendations`。
+Windows 参考入口：`ms-settings:storagepolicies`、`ms-settings:storagerecommendations`。
 
-#### 设置
+验证：`cargo test -p remya_settings_storage -p remya_settings_service`、`test/storage_test.dart` 和隔离 `test/interface_smoke.py`。实机破坏性操作未测试；范围与精度见 [Storage](storage.md)。
 
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Temporary files | `cleanup.ae5af853` | 操作 | 未实现 | — |
-| Large or unused files | `cleanup.c17cc68a` | 操作 | 未实现 | — |
-| Files synced to the cloud | `cleanup.c05f77b2` | 操作 | 未实现 | — |
-| Unused applications | `cleanup.44263144` | 操作 | 未实现 | — |
-| Clean selected items | `cleanup.679f2d39` | 操作 | 未实现 | — |
-
-### Disks and volumes — `disks`
-
-磁盘、分区与卷属性
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:disksandvolumes`。
-
-#### 设置
+#### Cleanup recommendations
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Disk directory | `disks.41d009d9` | 信息展示 | 未实现 | — |
-| Volume properties | `disks.58e6fc20` | 操作 | 未实现 | — |
-| Change volume label | `disks.5bf6fb0d` | 操作 | 未实现 | — |
-| Change drive letter | `disks.d324d258` | 操作 | 未实现 | — |
-| Resize the volume | `disks.6e9cf764` | 操作 | 未实现 | — |
-| Format the volume | `disks.c1481df0` | 操作 | 未实现 | — |
+| Trash | `cleanup.trash` | 操作 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+| Cached files | `cleanup.cache` | 操作 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+| Package cache | `cleanup.package-cache` | 操作 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+| Unused packages | `cleanup.orphans` | 操作 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+| Large files | `cleanup.large-files` | 操作 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+
+#### Automatic cleanup
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Clean up automatically | `cleanup.auto` | 开关 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+| Frequency | `cleanup.auto-frequency` | 选择 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+| Trash retention | `cleanup.auto-trash` | 选择 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+| Cache retention | `cleanup.auto-cache` | 选择 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+| Downloads retention | `cleanup.auto-downloads` | 选择 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
+| Run now | `cleanup.run-now` | 操作 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
 
 ### Project to this computer — `projection`
 
@@ -763,7 +731,7 @@ Windows 参考入口：`ms-settings:powersleep`。
 
 节能策略与自动启用和关闭阈值
 
-页面状态：**已接入基础功能**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
 
 原因：基础功能通过 Rust 接入真实系统，其余高级项保持预览。
 
@@ -783,7 +751,7 @@ Windows 参考入口：`ms-settings:batterysaver`、`ms-settings:batterysaver-se
 
 电量历史与每应用耗电
 
-页面状态：**已接入统计**；条目：5；已实现 4 / 未实现 1 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 4 / 未实现 1 / 不适用 0。
 
 原因：SQLite 电量曲线、屏幕与睡眠时长已接入；每应用耗电保持预览。
 
@@ -809,7 +777,7 @@ Windows 参考入口：`ms-settings:batterysaver-usagedetails`。
 
 声音、免打扰与弹窗
 
-页面状态：**已接入基础功能**；条目：6；已实现 5 / 未实现 1 / 不适用 0。
+页面状态：**已实现**；条目：6；已实现 5 / 未实现 1 / 不适用 0。
 
 原因：Applies to the notifications shown by Remy'a Bar, the desktop notification service.
 

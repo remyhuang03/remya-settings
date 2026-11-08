@@ -118,7 +118,9 @@ fn validate_bar_layout(value: Value) -> Result<Value, String> {
         || !seen.contains("sidebar")
         || !(1..=10).contains(&layout.workspace_count)
         || !resources_valid
-        || layout.center.is_some_and(|center| center >= layout.groups.len())
+        || layout
+            .center
+            .is_some_and(|center| center >= layout.groups.len())
     {
         return Err(error());
     }
@@ -259,6 +261,7 @@ pub struct State {
     pub sound: Sound<RealPulse>,
     pub power: remya_settings_power::Power,
     pub updates: Updates,
+    pub storage: remya_settings_storage::Storage,
     pub auth_error: Option<String>,
     privileged: Option<Arc<Mutex<Session>>>,
     gui: Option<Child>,
@@ -314,6 +317,8 @@ impl State {
                 power_history_path(&config),
             ),
             updates: Updates::new(config.with_file_name("updates.json"), atomic_write),
+            storage: remya_settings_storage::Storage::real(config.with_file_name("cleanup.toml"))
+                .expect("absolute HOME"),
             network: NetworkManager::real(config.with_file_name("network.toml")),
             appimages: applications::appimages::AppImages::real(
                 config.with_file_name("appimages.toml"),
@@ -426,9 +431,9 @@ impl State {
         const RETIRED: &[&str] = &["game", "lock", "audio-switcher"];
         let validate = |tiles: &Vec<String>| {
             let mut seen = std::collections::HashSet::new();
-            tiles.iter().all(|id| {
-                DEFAULT.contains(&id.as_str()) && seen.insert(id)
-            })
+            tiles
+                .iter()
+                .all(|id| DEFAULT.contains(&id.as_str()) && seen.insert(id))
         };
         let path = self.config.with_file_name("remya-bar-sidebar.toml");
         let current: Vec<String> = match load(&path)? {
@@ -843,6 +848,8 @@ impl State {
                     }
                     "account-information" => self.account.read(),
                     _ if account::IDS.contains(&key) => self.account.read_setting(key),
+                    "storage" | "cleanup" => Ok(self.storage.read(key)),
+                    _ if remya_settings_storage::is_setting(key) => Ok(self.storage.read_setting(key)),
                     "updates" => {
                         self.updates.refresh();
                         Ok(self.updates.state())
@@ -1056,6 +1063,7 @@ impl State {
                 Ok(json!({"closed":true}))
             }
             "Quit" if self.updates.busy() => Err("Busy:An update operation is running; wait for it to finish before quitting the service".into()),
+            "Quit" if self.storage.busy() => Err("Busy:A storage operation is running; wait for it to finish before quitting the service".into()),
             "Quit" => Ok(json!({"quitting":true})),
             _ => Err(invalid("Unknown method")),
         }
@@ -1112,7 +1120,52 @@ impl State {
         if default_apps::IDS.contains(&key) {
             return self.default_apps.set(key, value);
         }
+        if remya_settings_storage::is_setting(key) {
+            if self.updates.busy() {
+                return Err("Busy:Wait for the system update operation to finish".into());
+            }
+            let request = match key {
+                "cleanup.package-cache" => {
+                    let p: remya_settings_storage::packages::PackageCache =
+                        remya_settings_storage::payload(value)?;
+                    remya_settings_storage::packages::validate_keep(p.keep)?;
+                    Some(Request::PackageCache {
+                        keep: p.keep,
+                        uninstalled: p.uninstalled,
+                    })
+                }
+                "cleanup.orphans" => {
+                    let p: remya_settings_storage::packages::RemovePackages =
+                        remya_settings_storage::payload(value)?;
+                    Some(Request::RemovePackages {
+                        packages: p.packages,
+                    })
+                }
+                _ => None,
+            };
+            if let Some(request) = request {
+                let session = self
+                    .privileged
+                    .as_ref()
+                    .ok_or_else(|| {
+                        self.auth_error
+                            .clone()
+                            .unwrap_or("Open Settings and authorize system changes first".into())
+                    })?
+                    .clone();
+                return self.storage.start_privileged(move || {
+                    session
+                        .try_lock()
+                        .map_err(|_| "Busy:Another authorized operation is running")?
+                        .call(&request)
+                });
+            }
+            return self.storage.set(key, value);
+        }
         if updates::is_setting(key) {
+            if self.storage.busy() {
+                return Err("Busy:Wait for the storage operation to finish".into());
+            }
             return self.updates.set(key, value);
         }
         if remya_settings_camera::is_setting(key) {

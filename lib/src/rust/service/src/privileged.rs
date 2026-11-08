@@ -6,6 +6,13 @@ use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
 #[derive(Serialize, Deserialize)]
 #[serde(tag = "operation", deny_unknown_fields)]
 pub enum Request {
+    PackageCache {
+        keep: u8,
+        uninstalled: bool,
+    },
+    RemovePackages {
+        packages: Vec<remya_settings_storage::packages::Package>,
+    },
     Uninstall {
         removal: remya_settings_applications::Removal,
     },
@@ -33,16 +40,18 @@ pub enum Request {
     Restart {},
 }
 
+const MAX_FRAME: usize = 64 * 1024;
+
 fn read_frame(reader: &mut impl BufRead) -> Result<Option<String>, String> {
     let mut bytes = Vec::new();
     let count = reader
-        .take(8193)
+        .take((MAX_FRAME + 1) as u64)
         .read_until(b'\n', &mut bytes)
         .map_err(|e| e.to_string())?;
     if count == 0 {
         return Ok(None);
     }
-    if count > 8192 || bytes.last() != Some(&b'\n') {
+    if count > MAX_FRAME || bytes.last() != Some(&b'\n') {
         return Err("Invalid or oversized privilege request".into());
     }
     String::from_utf8(bytes)
@@ -68,6 +77,19 @@ pub fn serve() -> Result<(), String> {
         let request = serde_json::from_str::<Request>(&line);
         let result = request.map_err(|e| e.to_string()).and_then(|request| {
             let state = match request {
+                Request::PackageCache { keep, uninstalled } => {
+                    return remya_settings_storage::packages::clean_cache(
+                        &remya_settings_storage::packages::RealProcess,
+                        keep,
+                        uninstalled,
+                    );
+                }
+                Request::RemovePackages { packages } => {
+                    return remya_settings_storage::packages::remove_packages(
+                        &remya_settings_storage::packages::RealProcess,
+                        &packages,
+                    );
+                }
                 Request::Uninstall { removal } => {
                     return remya_settings_applications::uninstall(&removal, true);
                 }
@@ -147,7 +169,7 @@ impl Session {
     }
     fn send(&mut self, request: &Request) -> Result<(), String> {
         let encoded = serde_json::to_vec(request).map_err(|e| e.to_string())?;
-        if encoded.len() >= 8192 {
+        if encoded.len() >= MAX_FRAME {
             return Err("InvalidArgument:Privilege request is too large".into());
         }
         let input = self.input.as_mut().ok_or("Privilege input closed")?;
@@ -190,8 +212,28 @@ mod tests {
     }
     #[test]
     fn framing_and_whitelist() {
+        let request = Request::RemovePackages {
+            packages: (0..500)
+                .map(|i| remya_settings_storage::packages::Package {
+                    name: format!("package-{i:03}"),
+                    version: "1.0.0-1".into(),
+                })
+                .collect(),
+        };
+        let mut frame = serde_json::to_vec(&request).unwrap();
+        frame.push(b'\n');
+        assert!(frame.len() <= MAX_FRAME);
+        assert!(read_frame(&mut frame.as_slice()).unwrap().is_some());
+
+        assert!(
+            serde_json::from_str::<Request>(
+                r#"{"operation":"PackageCache","keep":2,"uninstalled":false,"path":"/tmp"}"#
+            )
+            .is_err()
+        );
+        assert!(serde_json::from_str::<Request>(r#"{"operation":"RemovePackages","packages":[{"name":"x","version":"1","command":"id"}]}"#).is_err());
         assert!(read_frame(&mut &b"abc"[..]).is_err());
-        assert!(read_frame(&mut &vec![b'x'; 8193][..]).is_err());
+        assert!(read_frame(&mut &vec![b'x'; MAX_FRAME + 1][..]).is_err());
         assert!(serde_json::from_str::<Request>(r#"{"operation":"Exec","command":"id"}"#).is_err());
         assert!(
             serde_json::from_str::<Request>(r#"{"operation":"Sync","path":"/etc/passwd"}"#)

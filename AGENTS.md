@@ -19,7 +19,7 @@
 - Put Rust crates under `lib/src/rust/<crate>/`. Group backend functionality by feature; create crates only for concrete responsibility or dependency boundaries.
 - `lib/src/rust/core/` is the initial empty backend crate. Do not turn it into a catch-all for unrelated features.
 - Extract shared code only when multiple features need it; avoid speculative layers and empty feature scaffolding.
-- Implement backend logic and complex or performance-critical computation in Rust. The appearance feature is connected through `flutter_rust_bridge` 2.13.0. Keep system appearance code in `lib/src/rust/appearance/`, system update code in `lib/src/rust/updates/`, Hyprland display code in `lib/src/rust/display/`, NetworkManager code in `lib/src/rust/network/` and XDG autostart code in `lib/src/rust/startup/`; do not move them into Dart or the empty core crate.
+- Implement backend logic and complex or performance-critical computation in Rust. The appearance feature is connected through `flutter_rust_bridge` 2.13.0. Keep system appearance code in `lib/src/rust/appearance/`, system update code in `lib/src/rust/updates/`, Hyprland display code in `lib/src/rust/display/`, NetworkManager code in `lib/src/rust/network/`, XDG autostart code in `lib/src/rust/startup/` and storage and cleanup code in `lib/src/rust/storage/`; do not move them into Dart or the empty core crate.
 - Keep generated bridge code separate from handwritten code and regenerate it instead of editing it manually. Use `flutter_rust_bridge.yaml`, the matching 2.13.0 generator, and FVM formatting after generation. Linux CMake builds and bundles the Rust shared library.
 
 ## Public Interfaces and Dependent Applications

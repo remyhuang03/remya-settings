@@ -1533,331 +1533,225 @@
       "id": "storage",
       "category": "system",
       "title": "Storage",
-      "description": "Space usage, disk and cleanup",
-      "preview": "storage",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "description": "Space usage, disks and volumes",
+      "preview": "none",
+      "availability": "available",
+      "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
       "sources": [
         "uris"
       ],
       "windowsUris": [
-        "ms-settings:storagesense"
+        "ms-settings:storagesense",
+        "ms-settings:disksandvolumes"
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Usage",
           "controls": [
             {
-              "id": "storage.bbb5f514",
-              "title": "Disk space usage",
+              "id": "storage.usage",
+              "title": "Storage usage",
               "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Example: 256 GB / 512 GB"
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "Read from the storage service"
             },
             {
-              "id": "storage.10396df3",
-              "title": "Installed apps",
+              "id": "storage.scan",
+              "title": "Scan again",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "storage.ae5af853",
-              "title": "Temporary files",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "storage.fa08c5fa",
-              "title": "Documents and other files",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "storage.008cbe6b",
-              "title": "Storage awareness",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "storage.77572238",
-              "title": "Cleanup suggestions",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "Run"
             }
           ]
         },
         {
-          "title": "Advanced storage settings",
+          "title": "Disks and volumes",
           "controls": [
             {
-              "id": "storage.d37bbd44",
+              "id": "storage.volumes",
               "title": "Disks and volumes",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "Read from the storage service"
+            },
+            {
+              "id": "storage.mount",
+              "title": "Mount or unmount",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "Run"
             },
             {
-              "id": "storage.e4a69938",
-              "title": "Where to save new content",
+              "id": "storage.eject",
+              "title": "Eject or power off",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "Run"
             },
             {
-              "id": "storage.89266e3e",
-              "title": "Storage space",
+              "id": "storage.label",
+              "title": "Rename volume",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "Run"
             },
             {
-              "id": "storage.3236decd",
-              "title": "Drive Optimization",
+              "id": "storage.open",
+              "title": "Open in file manager",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": [
-        "storage-sense",
-        "cleanup",
-        "disks"
-      ]
-    },
-    {
-      "id": "storage-sense",
-      "category": "system",
-      "title": "Storage Sense",
-      "description": "Automatic cleaning and content retention",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:storagepolicies"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "storage-sense.ed72cc7f",
-              "title": "Automatically clean up temporary files",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "storage-sense.008cbe6b",
-              "title": "Storage awareness",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "storage-sense.9ea4e59f",
-              "title": "Operating frequency",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "When disk space is insufficient",
-                "Every day",
-                "Weekly",
-                "Monthly"
-              ],
-              "value": "When disk space is insufficient"
-            },
-            {
-              "id": "storage-sense.c550ab3e",
-              "title": "Recycle bin retention time",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "30 days",
-                "1 day",
-                "14 days",
-                "60 days",
-                "Never"
-              ],
-              "value": "30 days"
-            },
-            {
-              "id": "storage-sense.e91a10f8",
-              "title": "Download directory retention time",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Never",
-                "30 days",
-                "60 days"
-              ],
-              "value": "Never"
-            },
-            {
-              "id": "storage-sense.275f9972",
-              "title": "Run now",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
               "value": "Run"
             }
           ]
         }
       ],
-      "children": []
+      "children": [
+        "cleanup"
+      ]
     },
     {
       "id": "cleanup",
       "category": "system",
-      "title": "Cleanup suggestions",
-      "description": "Temporary files, large files and unused content",
+      "title": "Cleanup",
+      "description": "Free up space and clean up automatically",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
       "sources": [
         "uris"
       ],
       "windowsUris": [
+        "ms-settings:storagepolicies",
         "ms-settings:storagerecommendations"
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Cleanup recommendations",
           "controls": [
             {
-              "id": "cleanup.ae5af853",
-              "title": "Temporary files",
+              "id": "cleanup.trash",
+              "title": "Trash",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "Run"
             },
             {
-              "id": "cleanup.c17cc68a",
-              "title": "Large or unused files",
+              "id": "cleanup.cache",
+              "title": "Cached files",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "Run"
             },
             {
-              "id": "cleanup.c05f77b2",
-              "title": "Files synced to the cloud",
+              "id": "cleanup.package-cache",
+              "title": "Package cache",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "Run"
             },
             {
-              "id": "cleanup.44263144",
-              "title": "Unused applications",
+              "id": "cleanup.orphans",
+              "title": "Unused packages",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "Run"
             },
             {
-              "id": "cleanup.679f2d39",
-              "title": "Clean selected items",
+              "id": "cleanup.large-files",
+              "title": "Large files",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Clean up"
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "Run"
             }
           ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "disks",
-      "category": "system",
-      "title": "Disks and volumes",
-      "description": "Disk, partition and volume properties",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:disksandvolumes"
-      ],
-      "sections": [
+        },
         {
-          "title": "Settings",
+          "title": "Automatic cleanup",
           "controls": [
             {
-              "id": "disks.41d009d9",
-              "title": "Disk directory",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not scanned yet"
+              "id": "cleanup.auto",
+              "title": "Clean up automatically",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": false
             },
             {
-              "id": "disks.58e6fc20",
-              "title": "Volume properties",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "id": "cleanup.auto-frequency",
+              "title": "Frequency",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "low-space",
+              "options": [
+                "low-space",
+                "daily",
+                "weekly",
+                "monthly"
+              ]
             },
             {
-              "id": "disks.5bf6fb0d",
-              "title": "Change volume label",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "id": "cleanup.auto-trash",
+              "title": "Trash retention",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "30",
+              "options": [
+                "0",
+                "1",
+                "14",
+                "30",
+                "60"
+              ]
             },
             {
-              "id": "disks.d324d258",
-              "title": "Change drive letter",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "id": "cleanup.auto-cache",
+              "title": "Cache retention",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "30",
+              "options": [
+                "0",
+                "30",
+                "60",
+                "90"
+              ]
             },
             {
-              "id": "disks.6e9cf764",
-              "title": "Resize the volume",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "id": "cleanup.auto-downloads",
+              "title": "Downloads retention",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "0",
+              "options": [
+                "0",
+                "30",
+                "60",
+                "90"
+              ]
             },
             {
-              "id": "disks.c1481df0",
-              "title": "Format the volume",
+              "id": "cleanup.run-now",
+              "title": "Run now",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Uses the Rust storage service with live readback and validated operations; missing host tools are reported at runtime.",
+              "value": "Run"
             }
           ]
         }

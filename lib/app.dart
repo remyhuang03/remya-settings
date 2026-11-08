@@ -1,3 +1,4 @@
+import 'features/storage/application/storage_controller.dart';
 import 'features/camera/application/camera_controller.dart';
 import 'features/updates/application/updates_controller.dart';
 import 'features/sound/application/sound_controller.dart';
@@ -44,6 +45,7 @@ class RemyaSettingsApp extends StatefulWidget {
     this.fonts,
     this.defaultApps,
     this.startup,
+    this.storage,
     this.applications,
     this.network,
     this.bluetooth,
@@ -56,6 +58,7 @@ class RemyaSettingsApp extends StatefulWidget {
   final FontsController? fonts;
   final DefaultAppsController? defaultApps;
   final StartupController? startup;
+  final StorageController? storage;
   final ApplicationsController? applications;
   final NetworkController? network;
   final BluetoothController? bluetooth;
@@ -99,6 +102,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     widget.fonts?.dispose();
     widget.defaultApps?.dispose();
     widget.startup?.dispose();
+    widget.storage?.dispose();
     widget.applications?.dispose();
     widget.network?.dispose();
     widget.bluetooth?.dispose();
@@ -212,9 +216,12 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
             controller: widget.applications!,
             child: withStartup,
           );
-    final withNetwork = widget.network == null
+    final withStorage = widget.storage == null
         ? withApplications
-        : NetworkScope(controller: widget.network!, child: withApplications);
+        : StorageScope(controller: widget.storage!, child: withApplications);
+    final withNetwork = widget.network == null
+        ? withStorage
+        : NetworkScope(controller: widget.network!, child: withStorage);
     final withBluetooth = widget.bluetooth == null
         ? withNetwork
         : BluetoothScope(controller: widget.bluetooth!, child: withNetwork);

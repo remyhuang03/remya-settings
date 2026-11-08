@@ -1135,3 +1135,37 @@ Only user autostart files and `startup.toml` are written; system files and gener
 units are untouched. Changes apply on the next UWSM sign-in. Runtime observation
 failures do not block configuration. See [Startup apps](startup.md) for generator
 semantics, validation, status mapping and verification boundaries.
+## Storage
+
+`Get storage` starts a lazy worker scan and returns `api_version:1`, `initialized`, `writable`, `conflict:false`, `error`, `busy`, `usage`, `drives`, `disks_error` and `reclaimable_bytes`. `usage` contains `scanning`, `progress:{files,bytes}`, `scanned_at` (Unix seconds), `volume:{mount_point,device,total,used,free}`, `categories:[{id,label,bytes,path}]`, `skipped` and `error`. Unavailable observations are null, never sample device values. Category IDs are documents, pictures, videos, music, downloads, desktop, cache, trash, home-other and system; unset XDG folders are omitted.
+
+Each drive reports `id`, `model`, `vendor`, `size`, `removable`, `media_removable`, `ejectable`, `can_power_off`, `connection`, `rotational`, `volumes`. A volume reports `id`, `device`, `label`, `fs_type`, `size`, `offset`, `number`, `mount_points`, optional `usage:{total,used,free}`, `system`, `can_mount`, `can_unmount`, `can_rename`. UDisks2 object paths are identifiers, not device path inputs.
+
+| Set ID | Strict JSON payload |
+| --- | --- |
+| `storage.scan` | `{}` |
+| `storage.mount` | `{"volume":"<reported object path>","action":"mount"}` or `"unmount"` |
+| `storage.eject` | `{"drive":"<reported object path>","action":"eject"}` or `"power-off"` |
+| `storage.label` | `{"volume":"<reported object path>","label":"Data"}` |
+| `storage.open` | `{"path":"<reported folder>"}` |
+
+`storage.usage` and `storage.volumes` are read-only. Get of any Storage/Cleanup setting returns `{api_version,id,availability,reason,value,options,writable,error}`. Missing host tools are `unsupported` per ID. Mutations return the current page state; `busy:true` means the worker has accepted the request. Watch Changed and check `busy`/`error` for completion, including asynchronous failures. `Changed storage` and `Changed cleanup` carry full states. Invalid payloads and unreported paths reject `InvalidArgument:`; unsafe system-volume operations are rejected, never simulated. See [storage behavior and accuracy](storage.md).
+
+## Cleanup
+
+`Get cleanup` lazily starts the same scan and returns `api_version:1`, `initialized`, `writable`, `conflict:false`, `error`, `busy`, `scanning`, `trash:{items,bytes,broken}`, `cache:{bytes,folders:[{name,bytes}]}`, `package_cache:{bytes,files,candidates:{"1":bytes,"2":bytes,"3":bytes},uninstalled_bytes,missing_tool}`, `orphans:{packages:[{name,version,bytes}],bytes}`, `large_files:{files:[{path,bytes,modified}]}`, `automatic`, `last_run` and `reclaimable_bytes`. A failed component reports its `error` rather than a fabricated observation. Trash `items` and `bytes` count only entries with readable metadata; `broken` counts skipped entries, which are never purged. Only a Trash list failure reports `error`. Large-file bytes and the 100 MB threshold use allocated blocks (`st_blocks * 512`); suggestions exclude files below hidden directories relative to HOME. Category paths are normalized absolute paths without trailing separators.
+
+| Set ID | Strict JSON payload |
+| --- | --- |
+| `cleanup.trash` | `{"action":"empty"}` |
+| `cleanup.cache` | `{"folders":["<reported direct child>"]}` |
+| `cleanup.package-cache` | `{"keep":2,"uninstalled":false}` (keep 1..3) |
+| `cleanup.orphans` | `{"packages":[{"name":"<orphan>","version":"<reported version>"}]}` |
+| `cleanup.large-files` | `{"paths":["<reported file inside HOME>"]}` |
+| `cleanup.auto` | JSON boolean |
+| `cleanup.auto-frequency` | JSON string: `"low-space"`, `"daily"`, `"weekly"`, `"monthly"` |
+| `cleanup.auto-trash` | JSON integer: 0, 1, 14, 30, 60 |
+| `cleanup.auto-cache` / `cleanup.auto-downloads` | JSON integer: 0, 30, 60, 90 |
+| `cleanup.run-now` | `{}` |
+
+Zero age means Never. Automatic preferences are app-owned and strictly persisted in `cleanup.toml`; invalid files remain intact and disable policy writes. `last_run` is null or `{at,freed_bytes,error?}`. Run now uses saved ages even when disabled. Automatic runs never perform privileged package operations. Package writes require the existing authorized Settings session, reject during system updates, and revalidate keep bounds, orphan membership/version, package-name characters, count and pacman lock in the root helper. Destructive user-file operations validate reported paths and refuse symlink traversal. CLI `get`/`set` and the pure Dart `StorageClient` use this same dispatch.

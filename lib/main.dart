@@ -1,3 +1,4 @@
+import 'features/storage/application/storage_controller.dart';
 import 'features/camera/application/camera_controller.dart';
 import 'features/updates/application/updates_controller.dart';
 import 'features/sound/application/sound_controller.dart';
@@ -123,6 +124,12 @@ Future<void> main() async {
     read: client.readUpdates,
     write: (id, value) => client.call('Set', [id, value]),
   );
+  final storage = StorageController(
+    readStorage: client.readStorage,
+    readCleanup: client.readCleanup,
+    write: (id, value) => client.call('Set', [id, value]),
+    formatDate: client.formatCalendarDate,
+  );
   final navigation = ValueNotifier<String?>(null);
   final scheduler = SettingsScheduler([
     preferences.reload,
@@ -152,6 +159,7 @@ Future<void> main() async {
       fonts: fonts,
       defaultApps: defaultApps,
       startup: startup,
+      storage: storage,
       applications: applications,
       network: network,
       bluetooth: bluetooth,
@@ -188,6 +196,8 @@ Future<void> main() async {
         defaultApps.reload();
       case 'startup':
         startup.reload();
+      case 'storage' || 'cleanup':
+        storage.apply(change.topic, change.value);
       case 'default-apps':
         defaultApps.reload();
       case 'fonts':

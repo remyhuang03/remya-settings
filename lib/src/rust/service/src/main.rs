@@ -45,6 +45,7 @@ fn run() -> Result<(), String> {
     };
     let initial = state::State::new(config);
     let appimages = initial.appimages.clone();
+    let storage = initial.storage.clone();
     let bluetooth = initial.bluetooth.clone();
     let state = Arc::new(Mutex::new(initial));
     let xml = include_str!("../../../../../packages/remya_settings_client/api/settings1.xml");
@@ -190,8 +191,10 @@ fn run() -> Result<(), String> {
                     if args.first().is_some_and(|id| id.starts_with("installed.")) {
                         signal(&bus, "installed-apps", &serde_json::json!({}));
                     }
-                    if args.first().is_some_and(|id| remya_settings_system_information::account::IDS.contains(&id.as_str()))
-                        && let Ok(account) = state.lock().unwrap().account.read() {
+                    if args.first().is_some_and(|id| {
+                        remya_settings_system_information::account::IDS.contains(&id.as_str())
+                    }) && let Ok(account) = state.lock().unwrap().account.read()
+                    {
                         signal(&bus, "account-information", &account);
                     }
                     if method == "Reload"
@@ -204,13 +207,26 @@ fn run() -> Result<(), String> {
                     {
                         signal(&bus, "power", &state.lock().unwrap().power.state());
                     }
-                    if method == "Reload" || args.first().is_some_and(|id| id == "sound" || remya_settings_sound::is_setting(id)) {
+                    if method == "Reload"
+                        || args
+                            .first()
+                            .is_some_and(|id| id == "sound" || remya_settings_sound::is_setting(id))
+                    {
                         signal(&bus, "sound", &state.lock().unwrap().sound.state());
                     }
-                    if method == "Reload" || args.first().is_some_and(|id| id == "cameras" || id.starts_with("cameras:") || remya_settings_camera::is_setting(id)) {
+                    if method == "Reload"
+                        || args.first().is_some_and(|id| {
+                            id == "cameras"
+                                || id.starts_with("cameras:")
+                                || remya_settings_camera::is_setting(id)
+                        })
+                    {
                         signal(&bus, "cameras", &state.lock().unwrap().cameras.state());
                     }
-                    if args.first().is_some_and(|id| remya_settings_updates::is_setting(id)) {
+                    if args
+                        .first()
+                        .is_some_and(|id| remya_settings_updates::is_setting(id))
+                    {
                         signal(&bus, "updates", &state.lock().unwrap().updates.state());
                     }
                     if args.first().is_some_and(|id| id.starts_with("fonts.")) {
@@ -301,11 +317,16 @@ fn run() -> Result<(), String> {
                 signal(&poll_bus, "updates", &state.updates.state());
             }
         }
+        if storage.take_dirty() {
+            signal(&poll_bus, "storage", &storage.state("storage"));
+            signal(&poll_bus, "cleanup", &storage.state("cleanup"));
+        }
         if appimages.take_dirty() {
             signal(&poll_bus, "appimages", &appimages.state());
         }
         if ticks.is_multiple_of(60) {
             appimages.auto_tick();
+            storage.auto_tick();
         }
         let mut expired = false;
         if let Ok(mut state) = polling.try_lock() {

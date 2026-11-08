@@ -406,6 +406,7 @@ def session_checks():
         night_light_checks()
         installed_apps_checks()
         appimages_checks()
+        storage_checks()
         # Read-only here: test/network_smoke.py exercises writes on a private stub.
         assert set(cli('get', 'network')) == set(dbus('Get', 'network'))
         assert cli('get', 'wifi.enabled')['availability'] == 'available'
@@ -682,6 +683,46 @@ def startup_checks():
         signals = monitor.communicate(timeout=5)[0].decode()
     assert "'startup'" in signals, signals
     print('PASS: startup isolated XDG discovery, CLI/D-Bus Get/Set/Resolve parity, overrides/readback, candidates, add-app, command, remove, strict validation and Changed', flush=True)
+def storage_checks():
+    """Use the installed CLI and existing isolated session; never run cleanup."""
+    import tomllib
+
+    config = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/cleanup.toml'
+    config.parent.mkdir(parents=True, exist_ok=True)
+    # Keep the preference round trips from making an automatic run due.
+    config.write_text('version = 1\n[automatic]\nenabled = false\nfrequency = "low-space"\ntrash_days = 0\ncache_days = 0\ndownloads_days = 0\n[last_run]\nat = ' + str(int(time.time()) + 86400) + '\nfreed_bytes = 0\n')
+    deadline = time.monotonic() + 30
+    while True:
+        state = cli('get', 'cleanup')
+        if not state['busy'] and not state['scanning']:
+            break
+        assert time.monotonic() < deadline, 'Storage scan did not settle'
+        time.sleep(0.2)
+    for page in ('storage', 'cleanup'):
+        assert cli('get', page) == dbus('Get', page)
+    for id, value, field in [
+        ('cleanup.auto-frequency', '"weekly"', 'frequency'),
+        ('cleanup.auto-trash', '14', 'trash_days'),
+        ('cleanup.auto-cache', '60', 'cache_days'),
+        ('cleanup.auto-downloads', '90', 'downloads_days'),
+        ('cleanup.auto', 'true', 'enabled'),
+        ('cleanup.auto', 'false', 'enabled'),
+    ]:
+        assert cli('set', id, value) == dbus('Set', id, json.dumps(value))
+        assert cli('get', id) == dbus('Get', id)
+        assert tomllib.loads(config.read_text())['automatic'][field] == json.loads(value)
+    for id, payload in [
+        ('storage.open', '{"path":"/not-reported"}'),
+        ('storage.mount', '{"volume":"/not-reported","action":"mount"}'),
+        ('cleanup.auto-cache', '14'),
+        ('cleanup.auto', '{"enabled":true,"unknown":1}'),
+    ]:
+        assert cli('set', id, payload, ok=False)
+        rejected = subprocess.run(['gdbus', 'call', '--session', '--dest', BUS,
+            '--object-path', OBJECT, '--method', f'{INTERFACE}.Set', json.dumps(id), json.dumps(payload)],
+            capture_output=True, text=True, timeout=30)
+        assert rejected.returncode != 0, (id, rejected.stdout)
+    print('PASS: installed Storage/Cleanup CLI-D-Bus state parity, five automatic preferences and file readback, invalid payload/path rejection')
 
 
 def main():

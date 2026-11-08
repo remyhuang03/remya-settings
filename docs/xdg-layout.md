@@ -188,3 +188,11 @@ Power preferences and restoration metadata are `power.json` and `power.runtime.j
 `power.json` stores the last nonzero activation threshold as
 `preferred_threshold` and the turn-off policy as `off_threshold`.
 Existing files without the field follow the turn-on threshold. Keep awake is a session-only hypridle inhibitor and creates no files. See [Power and energy saver](power.md).
+
+Storage and Cleanup store the app-owned automatic policy in `cleanup.toml` beside
+`config.toml` (or beside `config.local.toml` in debug mode). Invalid policy files
+remain unchanged. Measurements, mounted devices, file lists and manual cleanup
+selections are live state, not persisted system preferences. User folders come
+from GLib XDG user directories, cache from absolute XDG_CACHE_HOME with the HOME
+fallback, and Trash uses the FreeDesktop trash crate including per-mount roots.
+See [Storage](storage.md) for deletion boundaries.
