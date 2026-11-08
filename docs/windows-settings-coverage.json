@@ -896,7 +896,7 @@
       ],
       "page": "mouse",
       "coverage": "control",
-      "control": "mouse.reference.76e18b09"
+      "control": "mouse.pointer-speed"
     },
     {
       "area": "Bluetooth & devices",
@@ -905,8 +905,7 @@
         "Roll the mouse wheel to scroll"
       ],
       "page": "mouse",
-      "coverage": "control",
-      "control": "mouse.reference.f26b3e91"
+      "coverage": "section"
     },
     {
       "area": "Bluetooth & devices",
@@ -915,8 +914,7 @@
         "Lines to scroll at a time"
       ],
       "page": "mouse",
-      "coverage": "control",
-      "control": "mouse.reference.3bbac4aa"
+      "coverage": "section"
     },
     {
       "area": "Bluetooth & devices",
@@ -925,8 +923,7 @@
         "Scroll inactive windows when hovering over them"
       ],
       "page": "mouse",
-      "coverage": "control",
-      "control": "mouse.reference.8907aa76"
+      "coverage": "section"
     },
     {
       "area": "Bluetooth & devices",
@@ -943,8 +940,7 @@
         "Change the cursor speed"
       ],
       "page": "touchpad",
-      "coverage": "control",
-      "control": "touchpad.reference.8f2e9734"
+      "coverage": "section"
     },
     {
       "area": "Bluetooth & devices",
@@ -953,8 +949,7 @@
         "Touchpad sensitivity"
       ],
       "page": "touchpad",
-      "coverage": "control",
-      "control": "touchpad.reference.79eb339a"
+      "coverage": "section"
     },
     {
       "area": "Bluetooth & devices",
@@ -964,7 +959,7 @@
       ],
       "page": "touchpad",
       "coverage": "control",
-      "control": "touchpad.reference.45d5f5e6"
+      "control": "touchpad.tap-to-click"
     },
     {
       "area": "Bluetooth & devices",
@@ -974,7 +969,7 @@
       ],
       "page": "touchpad",
       "coverage": "control",
-      "control": "touchpad.reference.380325e1"
+      "control": "touchpad.tap-buttons"
     },
     {
       "area": "Bluetooth & devices",
@@ -984,7 +979,7 @@
       ],
       "page": "touchpad",
       "coverage": "control",
-      "control": "touchpad.reference.c6871bd5"
+      "control": "touchpad.tap-and-drag"
     },
     {
       "area": "Bluetooth & devices",
@@ -994,7 +989,7 @@
       ],
       "page": "touchpad",
       "coverage": "control",
-      "control": "touchpad.reference.0c650d0c"
+      "control": "touchpad.click-method"
     },
     {
       "area": "Bluetooth & devices",
@@ -1004,7 +999,7 @@
       ],
       "page": "touchpad",
       "coverage": "control",
-      "control": "touchpad.reference.ddf2ff25"
+      "control": "touchpad.natural-scroll"
     },
     {
       "area": "Bluetooth & devices",
@@ -1013,8 +1008,7 @@
         "Pinch to Zoom"
       ],
       "page": "touchpad",
-      "coverage": "control",
-      "control": "touchpad.reference.9fd08601"
+      "coverage": "section"
     },
     {
       "area": "Bluetooth & devices",
@@ -1033,8 +1027,7 @@
         "Intensity (supported on some devices only)"
       ],
       "page": "touchpad",
-      "coverage": "control",
-      "control": "touchpad.reference.bbbc35e5"
+      "coverage": "section"
     },
     {
       "area": "Bluetooth & devices",

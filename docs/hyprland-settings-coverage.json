@@ -221,41 +221,6 @@
     "printers.98323162",
     "printers.1b618ab5",
     "printers.reference.c1c02196",
-    "mouse.ad43aa5f",
-    "mouse.2f06ebc7",
-    "mouse.62b5a139",
-    "mouse.33146c4a",
-    "mouse.1b83c1e4",
-    "mouse.bb950acc",
-    "mouse.efd4a33a",
-    "mouse.reference.76e18b09",
-    "mouse.reference.f26b3e91",
-    "mouse.reference.3bbac4aa",
-    "mouse.reference.8907aa76",
-    "touchpad.5c2f0621",
-    "touchpad.0b02e5ac",
-    "touchpad.5e254c65",
-    "touchpad.eacee367",
-    "touchpad.b59ea1b8",
-    "touchpad.6025c7de",
-    "touchpad.7b141aed",
-    "touchpad.9ca343b1",
-    "touchpad.8bd607db",
-    "touchpad.0fd19b47",
-    "touchpad.4fe1093e",
-    "touchpad.489e5e53",
-    "touchpad.8a817c68",
-    "touchpad.f7d769a7",
-    "touchpad.2b27039e",
-    "touchpad.reference.8f2e9734",
-    "touchpad.reference.79eb339a",
-    "touchpad.reference.45d5f5e6",
-    "touchpad.reference.380325e1",
-    "touchpad.reference.c6871bd5",
-    "touchpad.reference.0c650d0c",
-    "touchpad.reference.ddf2ff25",
-    "touchpad.reference.9fd08601",
-    "touchpad.reference.bbbc35e5",
     "touch.5cfa5330",
     "touch.de9f8969",
     "touch.reference.b3eb626b",
@@ -824,14 +789,6 @@
       "path": "content/configuring/core/binds/_index.md"
     },
     {
-      "id": "hypr-bind-flags",
-      "title": "Hyprland 快捷键标志",
-      "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/flags.md",
-      "repository": "hyprwm/hyprland-wiki",
-      "revision": "026b282bdde916bb7ce77689857f40cf1e829e82",
-      "path": "content/configuring/core/binds/flags.md"
-    },
-    {
       "id": "hypr-submaps",
       "title": "Hyprland 快捷键子映射",
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/submaps.md",
@@ -1043,7 +1000,6 @@
     "hypr-group-groupbar",
     "hypr-misc",
     "hypr-layout",
-    "hypr-binds",
     "hypr-ecosystem",
     "hypr-input-capture",
     "hypr-debug",
@@ -1062,9 +1018,6 @@
     "hypr-layout-overview",
     "hypr-layout-monocle",
     "hypr-workspaces",
-    "hypr-keybinds",
-    "hypr-bind-flags",
-    "hypr-keybind-submaps",
     "hypr-compositor-permissions",
     "hypr-desktop-portals",
     "hypr-config-files",
@@ -2111,118 +2064,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "mouse.compositor-accel-profile",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "accel-profile",
-      "reference": [
-        "hypr-options",
-        "input",
-        "accel_profile"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "mouse.compositor-emulate-discrete-scroll",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "emulate-discrete-scroll",
-      "reference": [
-        "hypr-options",
-        "input",
-        "emulate_discrete_scroll"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "mouse.compositor-float-switch-override-focus",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "float-switch-override-focus",
-      "reference": [
-        "hypr-options",
-        "input",
-        "float_switch_override_focus"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "mouse.compositor-focus-on-close",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "focus-on-close",
-      "reference": [
-        "hypr-options",
-        "input",
-        "focus_on_close"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "mouse.compositor-follow-mouse",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "follow-mouse",
-      "reference": [
-        "hypr-options",
-        "input",
-        "follow_mouse"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0 - 3]"
-    },
-    {
-      "control": "mouse.compositor-follow-mouse-shrink",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "follow-mouse-shrink",
-      "reference": [
-        "hypr-options",
-        "input",
-        "follow_mouse_shrink"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 300]"
-    },
-    {
-      "control": "mouse.compositor-follow-mouse-threshold",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "follow-mouse-threshold",
-      "reference": [
-        "hypr-options",
-        "input",
-        "follow_mouse_threshold"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.0`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "mouse.compositor-force-no-accel",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "force-no-accel",
-      "reference": [
-        "hypr-options",
-        "input",
-        "force_no_accel"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
       "control": "language.keyboard-kb-file",
       "page": "language",
       "source": "hypr-options",
@@ -2307,48 +2148,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "mouse.compositor-left-handed",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "left-handed",
-      "reference": [
-        "hypr-options",
-        "input",
-        "left_handed"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "mouse.compositor-mouse-refocus",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "mouse-refocus",
-      "reference": [
-        "hypr-options",
-        "input",
-        "mouse_refocus"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "mouse.compositor-natural-scroll",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "natural-scroll",
-      "reference": [
-        "hypr-options",
-        "input",
-        "natural_scroll"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
       "control": "accessibility-keyboard.compositor-numlock-by-default",
       "page": "accessibility-keyboard",
       "source": "hypr-options",
@@ -2361,20 +2160,6 @@
       "nativeType": "bool",
       "documentedDefault": "`false`",
       "documentedLimits": ""
-    },
-    {
-      "control": "mouse.compositor-off-window-axis-events",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "off-window-axis-events",
-      "reference": [
-        "hypr-options",
-        "input",
-        "off_window_axis_events"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0 - 3]"
     },
     {
       "control": "accessibility-keyboard.compositor-repeat-delay",
@@ -2416,300 +2201,6 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "mouse.compositor-rotation",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "rotation",
-      "reference": [
-        "hypr-options",
-        "input",
-        "rotation"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 359]"
-    },
-    {
-      "control": "mouse.compositor-scroll-button",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "scroll-button",
-      "reference": [
-        "hypr-options",
-        "input",
-        "scroll_button"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 300]"
-    },
-    {
-      "control": "mouse.compositor-scroll-button-lock",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "scroll-button-lock",
-      "reference": [
-        "hypr-options",
-        "input",
-        "scroll_button_lock"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "mouse.compositor-scroll-points",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "scroll-points",
-      "reference": [
-        "hypr-options",
-        "input",
-        "scroll_points"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "mouse.compositor-scroll-method",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "scroll-method",
-      "reference": [
-        "hypr-options",
-        "input",
-        "scroll_method"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "mouse.compositor-scroll-factor",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "scroll-factor",
-      "reference": [
-        "hypr-options",
-        "input",
-        "scroll_factor"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": "[0 - 100]"
-    },
-    {
-      "control": "mouse.compositor-sensitivity",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "sensitivity",
-      "reference": [
-        "hypr-options",
-        "input",
-        "sensitivity"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.0`",
-      "documentedLimits": "[-1.0 - 1.0]"
-    },
-    {
-      "control": "mouse.compositor-special-fallthrough",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "special-fallthrough",
-      "reference": [
-        "hypr-options",
-        "input",
-        "special_fallthrough"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "mouse.compositor-swallow-focus-click",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "swallow-focus-click",
-      "reference": [
-        "hypr-options",
-        "input",
-        "swallow_focus_click"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.compositor-clickfinger-behavior",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "clickfinger-behavior",
-      "reference": [
-        "hypr-options",
-        "input.touchpad",
-        "clickfinger_behavior"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.compositor-disable-while-typing",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "disable-while-typing",
-      "reference": [
-        "hypr-options",
-        "input.touchpad",
-        "disable_while_typing"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.compositor-drag-3fg",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "drag-3fg",
-      "reference": [
-        "hypr-options",
-        "input.touchpad",
-        "drag_3fg"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "touchpad.compositor-drag-lock",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "drag-lock",
-      "reference": [
-        "hypr-options",
-        "input.touchpad",
-        "drag_lock"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "touchpad.compositor-flip-x",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "flip-x",
-      "reference": [
-        "hypr-options",
-        "input.touchpad",
-        "flip_x"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.compositor-flip-y",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "flip-y",
-      "reference": [
-        "hypr-options",
-        "input.touchpad",
-        "flip_y"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.compositor-middle-button-emulation",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "middle-button-emulation",
-      "reference": [
-        "hypr-options",
-        "input.touchpad",
-        "middle_button_emulation"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.compositor-natural-scroll",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "natural-scroll",
-      "reference": [
-        "hypr-options",
-        "input.touchpad",
-        "natural_scroll"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.compositor-scroll-factor",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "scroll-factor",
-      "reference": [
-        "hypr-options",
-        "input.touchpad",
-        "scroll_factor"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": "[0.0 - 100]"
-    },
-    {
-      "control": "touchpad.compositor-tap-and-drag",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "tap-and-drag",
-      "reference": [
-        "hypr-options",
-        "input.touchpad",
-        "tap_and_drag"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.compositor-tap-button-map",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "tap-button-map",
-      "reference": [
-        "hypr-options",
-        "input.touchpad",
-        "tap_button_map"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": "\"lrm\"/\"lmr\""
-    },
-    {
-      "control": "touchpad.compositor-tap-to-click",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "tap-to-click",
-      "reference": [
-        "hypr-options",
-        "input.touchpad",
-        "tap_to_click"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
       "documentedLimits": ""
     },
     {
@@ -2781,202 +2272,6 @@
       "nativeType": "int",
       "documentedDefault": "`2`",
       "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "touchpad.workspace-close-max-timeout",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "close-max-timeout",
-      "reference": [
-        "hypr-options",
-        "gestures",
-        "close_max_timeout"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`1000`",
-      "documentedLimits": "[10 - 2000]"
-    },
-    {
-      "control": "touchpad.workspace-workspace-swipe-cancel-ratio",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "workspace-swipe-cancel-ratio",
-      "reference": [
-        "hypr-options",
-        "gestures",
-        "workspace_swipe_cancel_ratio"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.5`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "touchpad.workspace-workspace-swipe-create-new",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "workspace-swipe-create-new",
-      "reference": [
-        "hypr-options",
-        "gestures",
-        "workspace_swipe_create_new"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.workspace-workspace-swipe-direction-lock",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "workspace-swipe-direction-lock",
-      "reference": [
-        "hypr-options",
-        "gestures",
-        "workspace_swipe_direction_lock"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.workspace-workspace-swipe-direction-lock-threshold",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "workspace-swipe-direction-lock-threshold",
-      "reference": [
-        "hypr-options",
-        "gestures",
-        "workspace_swipe_direction_lock_threshold"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`10`",
-      "documentedLimits": "[0 - 200]"
-    },
-    {
-      "control": "touchpad.workspace-workspace-swipe-distance",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "workspace-swipe-distance",
-      "reference": [
-        "hypr-options",
-        "gestures",
-        "workspace_swipe_distance"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`300`",
-      "documentedLimits": "[0 - 2000]"
-    },
-    {
-      "control": "touchpad.workspace-workspace-swipe-forever",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "workspace-swipe-forever",
-      "reference": [
-        "hypr-options",
-        "gestures",
-        "workspace_swipe_forever"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.workspace-workspace-swipe-invert",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "workspace-swipe-invert",
-      "reference": [
-        "hypr-options",
-        "gestures",
-        "workspace_swipe_invert"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.workspace-workspace-swipe-min-speed-to-force",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "workspace-swipe-min-speed-to-force",
-      "reference": [
-        "hypr-options",
-        "gestures",
-        "workspace_swipe_min_speed_to_force"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`30`",
-      "documentedLimits": "[0 - 200]"
-    },
-    {
-      "control": "touchpad.workspace-workspace-swipe-touch",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "workspace-swipe-touch",
-      "reference": [
-        "hypr-options",
-        "gestures",
-        "workspace_swipe_touch"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.workspace-workspace-swipe-touch-invert",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "workspace-swipe-touch-invert",
-      "reference": [
-        "hypr-options",
-        "gestures",
-        "workspace_swipe_touch_invert"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.workspace-workspace-swipe-use-r",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "workspace-swipe-use-r",
-      "reference": [
-        "hypr-options",
-        "gestures",
-        "workspace_swipe_use_r"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.scrolling-move-snap-to-grid",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "move-snap-to-grid",
-      "reference": [
-        "hypr-options",
-        "gestures.scrolling",
-        "move_snap_to_grid"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.scrolling-move-snap-cursor",
-      "page": "touchpad",
-      "source": "hypr-options",
-      "key": "move-snap-cursor",
-      "reference": [
-        "hypr-options",
-        "gestures.scrolling",
-        "move_snap_cursor"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
     },
     {
       "control": "hypr-group.auto-group",
@@ -3651,20 +2946,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "mouse.compositor-drag-focus",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "always-follow-on-dnd",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "always_follow_on_dnd"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
       "control": "themes.compositor-resize-animation",
       "page": "themes",
       "source": "hypr-options",
@@ -4029,20 +3310,6 @@
       "documentedLimits": "[0 - 5000]"
     },
     {
-      "control": "mouse.compositor-middle-paste",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "middle-click-paste",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "middle_click_paste"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
       "control": "power.wake-pointer",
       "page": "power",
       "source": "hypr-options",
@@ -4054,20 +3321,6 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "mouse.compositor-monitor-focus",
-      "page": "mouse",
-      "source": "hypr-options",
-      "key": "mouse-move-focuses-monitor",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "mouse_move_focuses_monitor"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
       "documentedLimits": ""
     },
     {
@@ -4265,202 +3518,6 @@
       "nativeType": "float",
       "documentedDefault": "`0.1`",
       "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "hypr-binds.allow-pin-fullscreen",
-      "page": "hypr-binds",
-      "source": "hypr-options",
-      "key": "allow-pin-fullscreen",
-      "reference": [
-        "hypr-options",
-        "binds",
-        "allow_pin_fullscreen"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-binds.allow-workspace-cycles",
-      "page": "hypr-binds",
-      "source": "hypr-options",
-      "key": "allow-workspace-cycles",
-      "reference": [
-        "hypr-options",
-        "binds",
-        "allow_workspace_cycles"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-binds.disable-keybind-grabbing",
-      "page": "hypr-binds",
-      "source": "hypr-options",
-      "key": "disable-keybind-grabbing",
-      "reference": [
-        "hypr-options",
-        "binds",
-        "disable_keybind_grabbing"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-binds.drag-threshold",
-      "page": "hypr-binds",
-      "source": "hypr-options",
-      "key": "drag-threshold",
-      "reference": [
-        "hypr-options",
-        "binds",
-        "drag_threshold"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - ...]"
-    },
-    {
-      "control": "hypr-binds.focus-preferred-method",
-      "page": "hypr-binds",
-      "source": "hypr-options",
-      "key": "focus-preferred-method",
-      "reference": [
-        "hypr-options",
-        "binds",
-        "focus_preferred_method"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 1]"
-    },
-    {
-      "control": "hypr-binds.hide-special-on-workspace-change",
-      "page": "hypr-binds",
-      "source": "hypr-options",
-      "key": "hide-special-on-workspace-change",
-      "reference": [
-        "hypr-options",
-        "binds",
-        "hide_special_on_workspace_change"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-binds.ignore-group-lock",
-      "page": "hypr-binds",
-      "source": "hypr-options",
-      "key": "ignore-group-lock",
-      "reference": [
-        "hypr-options",
-        "binds",
-        "ignore_group_lock"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-binds.movefocus-cycles-fullscreen",
-      "page": "hypr-binds",
-      "source": "hypr-options",
-      "key": "movefocus-cycles-fullscreen",
-      "reference": [
-        "hypr-options",
-        "binds",
-        "movefocus_cycles_fullscreen"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-binds.movefocus-cycles-groupfirst",
-      "page": "hypr-binds",
-      "source": "hypr-options",
-      "key": "movefocus-cycles-groupfirst",
-      "reference": [
-        "hypr-options",
-        "binds",
-        "movefocus_cycles_groupfirst"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-binds.pass-mouse-when-bound",
-      "page": "hypr-binds",
-      "source": "hypr-options",
-      "key": "pass-mouse-when-bound",
-      "reference": [
-        "hypr-options",
-        "binds",
-        "pass_mouse_when_bound"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-binds.scroll-event-delay",
-      "page": "hypr-binds",
-      "source": "hypr-options",
-      "key": "scroll-event-delay",
-      "reference": [
-        "hypr-options",
-        "binds",
-        "scroll_event_delay"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`300`",
-      "documentedLimits": "[0 - 2000]"
-    },
-    {
-      "control": "hypr-binds.window-direction-monitor-fallback",
-      "page": "hypr-binds",
-      "source": "hypr-options",
-      "key": "window-direction-monitor-fallback",
-      "reference": [
-        "hypr-options",
-        "binds",
-        "window_direction_monitor_fallback"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-binds.workspace-back-and-forth",
-      "page": "hypr-binds",
-      "source": "hypr-options",
-      "key": "workspace-back-and-forth",
-      "reference": [
-        "hypr-options",
-        "binds",
-        "workspace_back_and_forth"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "hypr-binds.workspace-center-on",
-      "page": "hypr-binds",
-      "source": "hypr-options",
-      "key": "workspace-center-on",
-      "reference": [
-        "hypr-options",
-        "binds",
-        "workspace_center_on"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0 - 1]"
     },
     {
       "control": "graphics.xwayland-enabled",
@@ -7473,90 +6530,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "touchpad.binding-action",
-      "page": "touchpad",
-      "source": "hypr-gesture-reference",
-      "key": "action",
-      "reference": [
-        "hypr-gesture-reference",
-        "Fields",
-        "action"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.binding-direction",
-      "page": "touchpad",
-      "source": "hypr-gesture-reference",
-      "key": "direction",
-      "reference": [
-        "hypr-gesture-reference",
-        "Fields",
-        "direction"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.binding-fingers",
-      "page": "touchpad",
-      "source": "hypr-gesture-reference",
-      "key": "fingers",
-      "reference": [
-        "hypr-gesture-reference",
-        "Fields",
-        "fingers"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "",
-      "documentedLimits": "[2 - 9]"
-    },
-    {
-      "control": "touchpad.binding-disable-inhibit",
-      "page": "touchpad",
-      "source": "hypr-gesture-reference",
-      "key": "disable-inhibit",
-      "reference": [
-        "hypr-gesture-reference",
-        "Fields",
-        "disable_inhibit"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.binding-mods",
-      "page": "touchpad",
-      "source": "hypr-gesture-reference",
-      "key": "mods",
-      "reference": [
-        "hypr-gesture-reference",
-        "Fields",
-        "mods"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "touchpad.binding-scale",
-      "page": "touchpad",
-      "source": "hypr-gesture-reference",
-      "key": "scale",
-      "reference": [
-        "hypr-gesture-reference",
-        "Fields",
-        "scale"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "",
-      "documentedLimits": "[0.1 - 10.0]"
-    },
-    {
       "control": "power.idle-lock-cmd",
       "page": "power",
       "source": "hypr-idle",
@@ -9337,296 +8310,6 @@
       ]
     },
     {
-      "control": "hypr-keybinds.modifiers",
-      "page": "hypr-keybinds",
-      "source": "hypr-binds",
-      "key": "modifiers",
-      "reference": [
-        "hypr-binds",
-        "modifiers"
-      ]
-    },
-    {
-      "control": "hypr-keybinds.key",
-      "page": "hypr-keybinds",
-      "source": "hypr-binds",
-      "key": "key",
-      "reference": [
-        "hypr-binds",
-        "key"
-      ]
-    },
-    {
-      "control": "hypr-keybinds.dispatcher",
-      "page": "hypr-keybinds",
-      "source": "hypr-binds",
-      "key": "dispatcher",
-      "reference": [
-        "hypr-binds",
-        "dispatcher"
-      ]
-    },
-    {
-      "control": "hypr-keybinds.arguments",
-      "page": "hypr-keybinds",
-      "source": "hypr-binds",
-      "key": "arguments",
-      "reference": [
-        "hypr-binds",
-        "arguments"
-      ]
-    },
-    {
-      "control": "hypr-keybinds.description",
-      "page": "hypr-keybinds",
-      "source": "hypr-binds",
-      "key": "description",
-      "reference": [
-        "hypr-binds",
-        "description"
-      ]
-    },
-    {
-      "control": "hypr-keybinds.add",
-      "page": "hypr-keybinds",
-      "source": "hypr-binds",
-      "key": "add",
-      "reference": [
-        "hypr-binds",
-        "add"
-      ]
-    },
-    {
-      "control": "hypr-keybinds.conflicts",
-      "page": "hypr-keybinds",
-      "source": "hypr-binds",
-      "key": "conflicts",
-      "reference": [
-        "hypr-binds",
-        "conflicts"
-      ]
-    },
-    {
-      "control": "hypr-keybinds.cheatsheet",
-      "page": "hypr-keybinds",
-      "source": "hypr-binds",
-      "key": "cheatsheet",
-      "reference": [
-        "hypr-binds",
-        "cheatsheet"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.locked",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "locked",
-      "reference": [
-        "hypr-bind-flags",
-        "locked"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.release",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "release",
-      "reference": [
-        "hypr-bind-flags",
-        "release"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.click",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "click",
-      "reference": [
-        "hypr-bind-flags",
-        "click"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.drag",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "drag",
-      "reference": [
-        "hypr-bind-flags",
-        "drag"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.long-press",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "long-press",
-      "reference": [
-        "hypr-bind-flags",
-        "long_press"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.repeating",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "repeating",
-      "reference": [
-        "hypr-bind-flags",
-        "repeating"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.non-consuming",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "non-consuming",
-      "reference": [
-        "hypr-bind-flags",
-        "non_consuming"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.auto-consuming",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "auto-consuming",
-      "reference": [
-        "hypr-bind-flags",
-        "auto_consuming"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.mouse",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "mouse",
-      "reference": [
-        "hypr-bind-flags",
-        "mouse"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.transparent",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "transparent",
-      "reference": [
-        "hypr-bind-flags",
-        "transparent"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.ignore-mods",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "ignore-mods",
-      "reference": [
-        "hypr-bind-flags",
-        "ignore_mods"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.description",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "description",
-      "reference": [
-        "hypr-bind-flags",
-        "description"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.dont-inhibit",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "dont-inhibit",
-      "reference": [
-        "hypr-bind-flags",
-        "dont_inhibit"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.submap-universal",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "submap-universal",
-      "reference": [
-        "hypr-bind-flags",
-        "submap_universal"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.device",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "device",
-      "reference": [
-        "hypr-bind-flags",
-        "device"
-      ]
-    },
-    {
-      "control": "hypr-bind-flags.allow-input-capture",
-      "page": "hypr-bind-flags",
-      "source": "hypr-bind-flags",
-      "key": "allow-input-capture",
-      "reference": [
-        "hypr-bind-flags",
-        "allow_input_capture"
-      ]
-    },
-    {
-      "control": "hypr-keybind-submaps.name",
-      "page": "hypr-keybind-submaps",
-      "source": "hypr-submaps",
-      "key": "name",
-      "reference": [
-        "hypr-submaps",
-        "name"
-      ]
-    },
-    {
-      "control": "hypr-keybind-submaps.enter",
-      "page": "hypr-keybind-submaps",
-      "source": "hypr-submaps",
-      "key": "enter",
-      "reference": [
-        "hypr-submaps",
-        "enter"
-      ]
-    },
-    {
-      "control": "hypr-keybind-submaps.exit",
-      "page": "hypr-keybind-submaps",
-      "source": "hypr-submaps",
-      "key": "exit",
-      "reference": [
-        "hypr-submaps",
-        "exit"
-      ]
-    },
-    {
-      "control": "hypr-keybind-submaps.reset",
-      "page": "hypr-keybind-submaps",
-      "source": "hypr-submaps",
-      "key": "reset",
-      "reference": [
-        "hypr-submaps",
-        "reset"
-      ]
-    },
-    {
-      "control": "hypr-keybind-submaps.bindings",
-      "page": "hypr-keybind-submaps",
-      "source": "hypr-submaps",
-      "key": "bindings",
-      "reference": [
-        "hypr-submaps",
-        "bindings"
-      ]
-    },
-    {
       "control": "device-list.input-device",
       "page": "device-list",
       "source": "hypr-devices",
@@ -10820,6 +9503,487 @@
       ],
       "availability": "available",
       "verification": "Rust sound reconciliation tests; test/sound_test.dart; isolated PipeWire audio verification"
+    },
+    {
+      "control": "mouse.primary-button",
+      "page": "mouse",
+      "source": "hypr-options",
+      "key": "left-handed",
+      "reference": [
+        "hypr-options",
+        "input",
+        "left_handed"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "mouse.pointer-speed",
+      "page": "mouse",
+      "source": "hypr-options",
+      "key": "sensitivity",
+      "reference": [
+        "hypr-options",
+        "input",
+        "sensitivity"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "mouse.acceleration",
+      "page": "mouse",
+      "source": "hypr-options",
+      "key": "accel-profile",
+      "reference": [
+        "hypr-options",
+        "input",
+        "accel_profile"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "mouse.natural-scroll",
+      "page": "mouse",
+      "source": "hypr-options",
+      "key": "natural-scroll",
+      "reference": [
+        "hypr-options",
+        "input",
+        "natural_scroll"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "mouse.scroll-speed",
+      "page": "mouse",
+      "source": "hypr-options",
+      "key": "scroll-factor",
+      "reference": [
+        "hypr-options",
+        "input",
+        "scroll_factor"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "mouse.focus-follows",
+      "page": "mouse",
+      "source": "hypr-options",
+      "key": "follow-mouse",
+      "reference": [
+        "hypr-options",
+        "input",
+        "follow_mouse"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "mouse.middle-click-paste",
+      "page": "mouse",
+      "source": "hypr-options",
+      "key": "middle-click-paste",
+      "reference": [
+        "hypr-options",
+        "misc",
+        "middle_click_paste"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "mouse.refocus",
+      "page": "mouse",
+      "source": "hypr-options",
+      "key": "mouse-refocus",
+      "reference": [
+        "hypr-options",
+        "input",
+        "mouse_refocus"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "mouse.monitor-focus",
+      "page": "mouse",
+      "source": "hypr-options",
+      "key": "mouse-move-focuses-monitor",
+      "reference": [
+        "hypr-options",
+        "misc",
+        "mouse_move_focuses_monitor"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "mouse.discrete-scroll",
+      "page": "mouse",
+      "source": "hypr-options",
+      "key": "emulate-discrete-scroll",
+      "reference": [
+        "hypr-options",
+        "input",
+        "emulate_discrete_scroll"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "mouse.scroll-outside",
+      "page": "mouse",
+      "source": "hypr-options",
+      "key": "off-window-axis-events",
+      "reference": [
+        "hypr-options",
+        "input",
+        "off_window_axis_events"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.disable-while-typing",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "disable-while-typing",
+      "reference": [
+        "hypr-options",
+        "input",
+        "touchpad",
+        "disable_while_typing"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.tap-to-click",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "tap-to-click",
+      "reference": [
+        "hypr-options",
+        "input",
+        "touchpad",
+        "tap_to_click"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.tap-buttons",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "tap-button-map",
+      "reference": [
+        "hypr-options",
+        "input",
+        "touchpad",
+        "tap_button_map"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.tap-and-drag",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "tap-and-drag",
+      "reference": [
+        "hypr-options",
+        "input",
+        "touchpad",
+        "tap_and_drag"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.drag-lock",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "drag-lock",
+      "reference": [
+        "hypr-options",
+        "input",
+        "touchpad",
+        "drag_lock"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.click-method",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "clickfinger-behavior",
+      "reference": [
+        "hypr-options",
+        "input",
+        "touchpad",
+        "clickfinger_behavior"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.natural-scroll",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "natural-scroll",
+      "reference": [
+        "hypr-options",
+        "input",
+        "touchpad",
+        "natural_scroll"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.scroll-speed",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "scroll-factor",
+      "reference": [
+        "hypr-options",
+        "input",
+        "touchpad",
+        "scroll_factor"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.three-finger-drag",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "drag-3fg",
+      "reference": [
+        "hypr-options",
+        "input",
+        "touchpad",
+        "drag_3fg"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.middle-button",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "middle-button-emulation",
+      "reference": [
+        "hypr-options",
+        "input",
+        "touchpad",
+        "middle_button_emulation"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.swipe-distance",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "workspace-swipe-distance",
+      "reference": [
+        "hypr-options",
+        "gestures",
+        "workspace_swipe_distance"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.swipe-invert",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "workspace-swipe-invert",
+      "reference": [
+        "hypr-options",
+        "gestures",
+        "workspace_swipe_invert"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.swipe-create-new",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "workspace-swipe-create-new",
+      "reference": [
+        "hypr-options",
+        "gestures",
+        "workspace_swipe_create_new"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.swipe-cancel-ratio",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "workspace-swipe-cancel-ratio",
+      "reference": [
+        "hypr-options",
+        "gestures",
+        "workspace_swipe_cancel_ratio"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.swipe-min-speed",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "workspace-swipe-min-speed-to-force",
+      "reference": [
+        "hypr-options",
+        "gestures",
+        "workspace_swipe_min_speed_to_force"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.swipe-forever",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "workspace-swipe-forever",
+      "reference": [
+        "hypr-options",
+        "gestures",
+        "workspace_swipe_forever"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "touchpad.swipe-direction-lock",
+      "page": "touchpad",
+      "source": "hypr-options",
+      "key": "workspace-swipe-direction-lock",
+      "reference": [
+        "hypr-options",
+        "gestures",
+        "workspace_swipe_direction_lock"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "keyboard-shortcuts.workspace-back-and-forth",
+      "page": "keyboard-shortcuts",
+      "source": "hypr-options",
+      "key": "workspace-back-and-forth",
+      "reference": [
+        "hypr-options",
+        "binds",
+        "workspace_back_and_forth"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "keyboard-shortcuts.workspace-cycles",
+      "page": "keyboard-shortcuts",
+      "source": "hypr-options",
+      "key": "allow-workspace-cycles",
+      "reference": [
+        "hypr-options",
+        "binds",
+        "allow_workspace_cycles"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "keyboard-shortcuts.scroll-delay",
+      "page": "keyboard-shortcuts",
+      "source": "hypr-options",
+      "key": "scroll-event-delay",
+      "reference": [
+        "hypr-options",
+        "binds",
+        "scroll_event_delay"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "keyboard-shortcuts.pass-mouse",
+      "page": "keyboard-shortcuts",
+      "source": "hypr-options",
+      "key": "pass-mouse-when-bound",
+      "reference": [
+        "hypr-options",
+        "binds",
+        "pass_mouse_when_bound"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "keyboard-shortcuts.list",
+      "page": "keyboard-shortcuts",
+      "source": "hypr-binds",
+      "key": "list",
+      "reference": [
+        "hypr-binds"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "keyboard-shortcuts.add",
+      "page": "keyboard-shortcuts",
+      "source": "hypr-binds",
+      "key": "add",
+      "reference": [
+        "hypr-binds"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "keyboard-shortcuts.remove",
+      "page": "keyboard-shortcuts",
+      "source": "hypr-binds",
+      "key": "remove",
+      "reference": [
+        "hypr-binds"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "keyboard-shortcuts.disable",
+      "page": "keyboard-shortcuts",
+      "source": "hypr-binds",
+      "key": "disable",
+      "reference": [
+        "hypr-binds"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "keyboard-shortcuts.record",
+      "page": "keyboard-shortcuts",
+      "source": "hypr-submaps",
+      "key": "record",
+      "reference": [
+        "hypr-submaps"
+      ],
+      "availability": "available",
+      "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
     }
   ]
 }

@@ -21,6 +21,8 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | hyprpaper configuration | `$XDG_CONFIG_HOME/hypr/hyprpaper.conf`, with one `hyprpaper.conf.remya-backup` |
 | Night light snapshot | `night-light.toml` beside `config.toml` (debug: repository `config/`) |
 | hyprsunset configuration | `$XDG_CONFIG_HOME/hypr/hyprsunset.conf`, run by the packaged `hyprsunset.service` |
+| Input settings snapshot | `input.toml` beside `config.toml` (debug: repository `config/`) |
+| Input settings for Hyprland | `$XDG_CONFIG_HOME/hypr/remya-settings/input.lua`, required by a managed block at the end of `hyprland.lua` |
 | Video background unit | `$XDG_CONFIG_HOME/systemd/user/top.remya.settings.video-background.service` |
 | Startup enabled-state snapshot | `startup.toml` beside `config.toml` (debug: repository `config/`) |
 | User startup entries | `$XDG_CONFIG_HOME/autostart/*.desktop` (fallback `$HOME/.config/autostart/`), written as 0644 |
@@ -94,8 +96,8 @@ the same atomic writer; invalid files are retained and reported.
 The display system target is `$XDG_CONFIG_HOME/hypr/monitors.lua` (fallback
 `~/.config/hypr/monitors.lua`), also in debug builds, written only after an explicit
 change. The first write keeps the original as `monitors.lua.remya-backup`. Symlinks
-and file permissions are preserved. Settings never edits `hyprland.lua`; it must
-already load `monitors.lua`.
+and file permissions are preserved. For displays Settings never edits `hyprland.lua`; it must
+already load `monitors.lua`. Input settings append one managed `require` block instead; see [Input devices and shortcuts](input.md).
 
 ## Date/time preference
 

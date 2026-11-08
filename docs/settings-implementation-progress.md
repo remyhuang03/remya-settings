@@ -6,12 +6,12 @@
 
 清单覆盖现有目录中的全部设置项，包括主要中文控件和保留原名的设计参考细项（受 Windows 等桌面系统启发，作为设计参考与基准对照，而非直接照搬）；实际架构和功能已针对 Linux / Hyprland 进行了适配与差异化演进。相同概念可能存在多个展示位置。下述数量统计的是控件条目，不是去重后的独立后端功能数量。参考来源与实际实现的边界见 [调研说明](windows-settings-research.md)。
 
-Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览项，共 743 项设置与 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
+Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 681 项设置与 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
 
 ## 当前概况
 
-- 设置分类：15 个；详情页面：125 个；设置条目：1514 项。
-- 已实现：266 项；未实现：1238 项；不适用：10 项。
+- 设置分类：15 个；详情页面：122 个；设置条目：1419 项。
+- 已实现：305 项；未实现：1104 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
@@ -27,6 +27,8 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 - Night light 通过 Rust 写 `hyprsunset.conf` 并经 `hyprctl hyprsunset` 控制运行状态，定时由 hyprsunset 原生 profile 执行；见[公开接口](public-api.md)。
 
 - 系统更新由随图形会话启动的常驻服务执行：普通用户检查仓库（checkupdates）与 AUR（yay -Qua，仅列出），仓库升级经 pkexec 调用固定的 root 更新器在独立 systemd 单元中运行 `pacman -Syu`；自动更新在活动时间结束时运行，只有错过整个非活动时段时才在活动时间补跑。见[系统更新文档](updates.md)。
+
+- 鼠标、触控板与键盘快捷键通过 Rust 读取 Hyprland 实时选项与键绑定，写入 Settings 自有的 `hypr/remya-settings/input.lua`（由 `hyprland.lua` 末尾受管块 require）并回读；冲突按系统配置同步规则处理。快捷键页不再放在窗口与工作区分类；见[输入设备与快捷键](input.md)。
 
 - 显示通过 Rust 经 `hyprctl` 读取并实时应用 Hyprland 显示规则，确认后写入 `monitors.lua`，并按系统配置同步规则处理冲突；亮度为实时值（logind 背光 / `ddcutil`），不保存。
 
@@ -63,7 +65,7 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 | [声音](#category-sound) | 3 | 17 | 14 | 3 | 0 |
 | [电源与电池](#category-power) | 3 | 41 | 15 | 26 | 0 |
 | [通知](#category-notifications) | 4 | 19 | 12 | 7 | 0 |
-| [蓝牙和设备](#category-devices) | 10 | 155 | 18 | 137 | 0 |
+| [蓝牙和设备](#category-devices) | 11 | 103 | 57 | 46 | 0 |
 | [网络和 Internet](#category-network) | 8 | 63 | 63 | 0 | 0 |
 | [外观](#category-appearance) | 10 | 298 | 23 | 275 | 0 |
 | [应用](#category-apps) | 5 | 35 | 29 | 6 | 0 |
@@ -72,7 +74,7 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 | [辅助功能](#category-accessibility) | 10 | 198 | 0 | 198 | 0 |
 | [隐私和安全性](#category-privacy) | 9 | 39 | 0 | 35 | 4 |
 | [系统更新](#category-update) | 2 | 9 | 9 | 0 | 0 |
-| [窗口与工作区](#category-hyprland) | 23 | 258 | 0 | 258 | 0 |
+| [窗口与工作区](#category-hyprland) | 19 | 215 | 0 | 215 | 0 |
 | [会话与配置](#category-session) | 9 | 82 | 0 | 82 | 0 |
 
 <a id="category-system"></a>
@@ -151,7 +153,6 @@ Display 交互：Position 使用 X/Y 输入；刷新操作移动到排列框右�
 | --- | --- | --- | --- | --- |
 | Graphics | `display.2f32a8c2` | 操作 | 未实现 | — |
 
-
 #### Advanced: compositor previews
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
@@ -206,7 +207,6 @@ Windows 参考入口：`ms-settings:display-advancedgraphics`、`ms-settings:dis
 | Add desktop apps | `graphics.f6aaf67c` | 操作 | 未实现 | — |
 | Add app store apps | `graphics.232eb7f3` | 操作 | 未实现 | — |
 | Apply GPU preferences | `graphics.49ad9ee9` | 选择 | 未实现 | — |
-
 
 #### Advanced: compositor previews
 
@@ -416,7 +416,6 @@ Windows 参考入口：`ms-settings:about`。
 | Logical processors | `about.cpu-threads` | 信息展示 | 已实现 | Rust 字段校验；Flutter 宽/窄窗口测试；实机 sysfs 与 CLI/D-Bus 回读 |
 | Kernel version | `about.kernel-version` | 信息展示 | 已实现 | Rust 字段校验；Flutter 宽/窄窗口测试；实机 sysfs 与 CLI/D-Bus 回读 |
 | Rename device | `about.0f142010` | 操作 | 已实现 | 私有 hostnamed D-Bus 成功/拒绝/冲突/回读测试；初始化、双向同步与持久化失败测试；宽/窄窗口编辑图标及弹窗验证；未改实机名称 |
-
 
 Windows reference settings 已按要求删除；其 Rename this PC 来源覆盖映射到保留的 `about.0f142010`。内存为 Linux 可用总容量。
 
@@ -696,7 +695,6 @@ Windows 参考入口：`ms-settings:powersleep`。
 | Energy saving mode | `power.743773bd` | 操作 | 已实现 | 跳转至 Energy saver |
 | Battery usage | `power.03bd05ee` | 操作 | 已实现 | 跳转至 Battery usage |
 
-
 #### Advanced: compositor previews
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
@@ -931,7 +929,6 @@ Windows 参考入口：`ms-settings:connecteddevices`。
 | Monitors and docking stations | `device-list.eabd0e62` | 操作 | 未实现 | — |
 | Remove the device | `device-list.9064c223` | 操作 | 未实现 | — |
 
-
 #### Advanced: compositor previews
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
@@ -998,146 +995,136 @@ Windows 参考入口：`ms-settings:camera`。
 
 ### Mouse — `mouse`
 
-指针、滚轮与主按钮
+Buttons, pointer speed, scrolling and focus
 
-页面状态：**未实现**；条目：35；已实现 0 / 未实现 35 / 不适用 0。
+页面状态：**已实现**；条目：12；已实现 12 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Uses Hyprland input options through the Settings service.
 
 Windows 参考入口：`ms-settings:mousetouchpad`。
 
-#### 设置
+实现与边界见 [输入设备与快捷键](input.md)：读取 `hyprctl descriptions` 实时值，经 `hyprctl eval` 校验后写入 Settings 自有的 `hypr/remya-settings/input.lua` 并回读；鼠标示意图随主按钮与自然滚动变化，依赖父项的选项自动隐藏。
+
+#### Buttons
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Primary mouse button | `mouse.ad43aa5f` | 选择 | 未实现 | — |
-| Pointer speed | `mouse.2f06ebc7` | 滑块 | 未实现 | — |
-| Improve pointer accuracy | `mouse.62b5a139` | 开关 | 未实现 | — |
-| Scroll mode | `mouse.33146c4a` | 选择 | 未实现 | — |
-| Number of scrolling lines | `mouse.1b83c1e4` | 选择 | 未实现 | — |
-| Scroll inactive window on hover | `mouse.bb950acc` | 开关 | 未实现 | — |
-| Other mouse settings | `mouse.efd4a33a` | 操作 | 未实现 | — |
+| Connected mice | `mouse.devices` | 信息展示 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Primary mouse button | `mouse.primary-button` | 选择 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
 
-#### Windows 参考细项
+#### Pointer
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Mouse pointer speed | `mouse.reference.76e18b09` | 滑块 | 未实现 | — |
-| Roll the mouse wheel to scroll | `mouse.reference.f26b3e91` | 开关 | 未实现 | — |
-| Lines to scroll at a time | `mouse.reference.3bbac4aa` | 选择 | 未实现 | — |
-| Scroll inactive windows when hovering over them | `mouse.reference.8907aa76` | 开关 | 未实现 | — |
+| Pointer speed | `mouse.pointer-speed` | 滑块 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Pointer acceleration | `mouse.acceleration` | 选择 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
 
-
-#### Advanced: compositor previews
+#### Scrolling
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Pointer: Pointer acceleration profile (accel_profile) | `mouse.compositor-accel-profile` | 文本输入 | 未实现 | — |
-| Pointer: Discrete scroll simulation (emulate_discrete_scroll) | `mouse.compositor-emulate-discrete-scroll` | 滑块 | 未实现 | — |
-| Pointer: Tile and float switching focus strategies (float_switch_override_focus) | `mouse.compositor-float-switch-override-focus` | 滑块 | 未实现 | — |
-| Pointer: Focus after closing the window (focus_on_close) | `mouse.compositor-focus-on-close` | 滑块 | 未实现 | — |
-| Pointer: Focus follows mouse mode (follow_mouse) | `mouse.compositor-follow-mouse` | 滑块 | 未实现 | — |
-| Pointer: Focus detection area shrink (follow_mouse_shrink) | `mouse.compositor-follow-mouse-shrink` | 滑块 | 未实现 | — |
-| Pointer: Focus switching movement threshold (follow_mouse_threshold) | `mouse.compositor-follow-mouse-threshold` | 文本输入 | 未实现 | — |
-| Pointer: Forced to turn off acceleration (force_no_accel) | `mouse.compositor-force-no-accel` | 开关 | 未实现 | — |
-| Pointer: Left-handed pointer mode (left_handed) | `mouse.compositor-left-handed` | 开关 | 未实现 | — |
-| Pointer: Refocus when crossing windows (mouse_refocus) | `mouse.compositor-mouse-refocus` | 开关 | 未实现 | — |
-| Pointer: Natural scroll (natural_scroll) | `mouse.compositor-natural-scroll` | 开关 | 未实现 | — |
-| Pointer: Off-window scroll event processing (off_window_axis_events) | `mouse.compositor-off-window-axis-events` | 滑块 | 未实现 | — |
-| Pointer: Device rotation angle (rotation) | `mouse.compositor-rotation` | 滑块 | 未实现 | — |
-| Pointer: Scroll trigger button (scroll_button) | `mouse.compositor-scroll-button` | 滑块 | 未实现 | — |
-| Pointer: Scroll button lock (scroll_button_lock) | `mouse.compositor-scroll-button-lock` | 开关 | 未实现 | — |
-| Pointer: Customize scroll acceleration sampling points (scroll_points) | `mouse.compositor-scroll-points` | 文本输入 | 未实现 | — |
-| Pointer: Scroll method (scroll_method) | `mouse.compositor-scroll-method` | 文本输入 | 未实现 | — |
-| Pointer: Scroll multiple (scroll_factor) | `mouse.compositor-scroll-factor` | 滑块 | 未实现 | — |
-| Pointer: Pointer sensitivity (sensitivity) | `mouse.compositor-sensitivity` | 滑块 | 未实现 | — |
-| Pointer: Special workspace focus penetration (special_fallthrough) | `mouse.compositor-special-fallthrough` | 开关 | 未实现 | — |
-| Pointer: Swallow the first click when focusing (swallow_focus_click) | `mouse.compositor-swallow-focus-click` | 开关 | 未实现 | — |
-| Follow focus during drag and drop (always_follow_on_dnd) | `mouse.compositor-drag-focus` | 开关 | 未实现 | — |
-| Middle-click paste (middle_click_paste) | `mouse.compositor-middle-paste` | 开关 | 未实现 | — |
-| Focus monitor on pointer movement (mouse_move_focuses_monitor) | `mouse.compositor-monitor-focus` | 开关 | 未实现 | — |
+| Natural scrolling | `mouse.natural-scroll` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Scroll speed | `mouse.scroll-speed` | 滑块 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+
+#### Focus and selection
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Window focus | `mouse.focus-follows` | 选择 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Middle-click paste | `mouse.middle-click-paste` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+
+#### Advanced
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Refocus without crossing a window edge | `mouse.refocus` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Focus the display under the pointer | `mouse.monitor-focus` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Wheel step emulation | `mouse.discrete-scroll` | 选择 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Scrolling just outside a window | `mouse.scroll-outside` | 选择 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
 
 ### Touchpad — `touchpad`
 
-轻触、滚动与多指手势
+Taps, clicks, scrolling and swipe gestures
 
-页面状态：**未实现**；条目：56；已实现 0 / 未实现 56 / 不适用 0。
+页面状态：**已实现**；条目：18；已实现 18 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Uses Hyprland input options through the Settings service.
 
 Windows 参考入口：`ms-settings:devices-touchpad`。
 
-#### 设置
+实现与边界见 [输入设备与快捷键](input.md)；触控板示意图随右键方式切换为按键区域或多指点击，轻触相关选项在轻触关闭时自动隐藏。逐设备启用/禁用因 Hyprland 无可回读接口而未提供。
+
+#### Taps
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Touchpad | `touchpad.5c2f0621` | 开关 | 未实现 | — |
-| Keep the touchpad on when connecting a mouse | `touchpad.0b02e5ac` | 开关 | 未实现 | — |
-| Cursor speed | `touchpad.5e254c65` | 滑块 | 未实现 | — |
-| Touchpad sensitivity | `touchpad.eacee367` | 选择 | 未实现 | — |
-| One-finger tap and click | `touchpad.b59ea1b8` | 开关 | 未实现 | — |
-| Right-click with two fingers | `touchpad.6025c7de` | 开关 | 未实现 | — |
-| Drag multiple selections after double tapping | `touchpad.7b141aed` | 开关 | 未实现 | — |
-| Right click on the lower right corner | `touchpad.9ca343b1` | 开关 | 未实现 | — |
-| Two-finger scrolling | `touchpad.8bd607db` | 开关 | 未实现 | — |
-| Pinch to zoom | `touchpad.0fd19b47` | 开关 | 未实现 | — |
-| Scroll direction | `touchpad.4fe1093e` | 选择 | 未实现 | — |
-| Three-finger gesture | `touchpad.489e5e53` | 选择 | 未实现 | — |
-| Four-finger gesture | `touchpad.8a817c68` | 选择 | 未实现 | — |
-| Tactile feedback | `touchpad.f7d769a7` | 开关 | 未实现 | — |
-| Feedback intensity | `touchpad.2b27039e` | 滑块 | 未实现 | — |
+| Connected touchpads | `touchpad.devices` | 信息展示 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Tap to click | `touchpad.tap-to-click` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Two-finger tap | `touchpad.tap-buttons` | 选择 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Tap and drag | `touchpad.tap-and-drag` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Keep dragging after lifting a finger | `touchpad.drag-lock` | 选择 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
 
-#### Windows 参考细项
+#### Clicks and dragging
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Change the cursor speed | `touchpad.reference.8f2e9734` | 滑块 | 未实现 | — |
-| Touchpad sensitivity | `touchpad.reference.79eb339a` | 开关 | 未实现 | — |
-| Tap with a single finger to single-click | `touchpad.reference.45d5f5e6` | 开关 | 未实现 | — |
-| Tap with two fingers to right-click | `touchpad.reference.380325e1` | 开关 | 未实现 | — |
-| Tap twice and drag to multi-select | `touchpad.reference.c6871bd5` | 开关 | 未实现 | — |
-| Press the lower right corner of the touchpad to right-click | `touchpad.reference.0c650d0c` | 开关 | 未实现 | — |
-| Drag two fingers to scroll | `touchpad.reference.ddf2ff25` | 开关 | 未实现 | — |
-| Pinch to Zoom | `touchpad.reference.9fd08601` | 开关 | 未实现 | — |
-| Intensity (supported on some devices only) | `touchpad.reference.bbbc35e5` | 滑块 | 未实现 | — |
+| Right click | `touchpad.click-method` | 选择 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Drag with several fingers | `touchpad.three-finger-drag` | 选择 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Turn off the touchpad while typing | `touchpad.disable-while-typing` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
 
-
-#### Advanced: compositor previews
+#### Scrolling
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Touchpad: Distribute clicks according to finger number (clickfinger_behavior) | `touchpad.compositor-clickfinger-behavior` | 开关 | 未实现 | — |
-| Touchpad: Disable touchpad while typing (disable_while_typing) | `touchpad.compositor-disable-while-typing` | 开关 | 未实现 | — |
-| Touchpad: Three-finger drag (drag_3fg) | `touchpad.compositor-drag-3fg` | 滑块 | 未实现 | — |
-| Touchpad: Drag lock (drag_lock) | `touchpad.compositor-drag-lock` | 滑块 | 未实现 | — |
-| Touchpad: flip x (flip_x) | `touchpad.compositor-flip-x` | 开关 | 未实现 | — |
-| Touchpad: flip y (flip_y) | `touchpad.compositor-flip-y` | 开关 | 未实现 | — |
-| Touchpad: Middle button emulation (middle_button_emulation) | `touchpad.compositor-middle-button-emulation` | 开关 | 未实现 | — |
-| Touchpad: Natural scroll (natural_scroll) | `touchpad.compositor-natural-scroll` | 开关 | 未实现 | — |
-| Touchpad: Scroll multiple (scroll_factor) | `touchpad.compositor-scroll-factor` | 滑块 | 未实现 | — |
-| Touchpad: tap and drag (tap_and_drag) | `touchpad.compositor-tap-and-drag` | 开关 | 未实现 | — |
-| Touchpad: Tap button mapping (tap_button_map) | `touchpad.compositor-tap-button-map` | 文本输入 | 未实现 | — |
-| Touchpad: tap to click (tap_to_click) | `touchpad.compositor-tap-to-click` | 开关 | 未实现 | — |
-| Workspace gesture: close max timeout (close_max_timeout) | `touchpad.workspace-close-max-timeout` | 滑块 | 未实现 | — |
-| Workspace gesture: workspace swipe cancel ratio (workspace_swipe_cancel_ratio) | `touchpad.workspace-workspace-swipe-cancel-ratio` | 滑块 | 未实现 | — |
-| Workspace gesture: workspace swipe create new (workspace_swipe_create_new) | `touchpad.workspace-workspace-swipe-create-new` | 开关 | 未实现 | — |
-| Workspace gesture: workspace swipe direction lock (workspace_swipe_direction_lock) | `touchpad.workspace-workspace-swipe-direction-lock` | 开关 | 未实现 | — |
-| Workspace gesture: workspace swipe direction lock threshold (workspace_swipe_direction_lock_threshold) | `touchpad.workspace-workspace-swipe-direction-lock-threshold` | 滑块 | 未实现 | — |
-| Workspace gesture: workspace swipe distance (workspace_swipe_distance) | `touchpad.workspace-workspace-swipe-distance` | 滑块 | 未实现 | — |
-| Workspace gesture: workspace swipe forever (workspace_swipe_forever) | `touchpad.workspace-workspace-swipe-forever` | 开关 | 未实现 | — |
-| Workspace gesture: workspace swipe invert (workspace_swipe_invert) | `touchpad.workspace-workspace-swipe-invert` | 开关 | 未实现 | — |
-| Workspace gesture: workspace swipe min speed to force (workspace_swipe_min_speed_to_force) | `touchpad.workspace-workspace-swipe-min-speed-to-force` | 滑块 | 未实现 | — |
-| Workspace gesture: workspace swipe touch (workspace_swipe_touch) | `touchpad.workspace-workspace-swipe-touch` | 开关 | 未实现 | — |
-| Workspace gesture: workspace swipe touch invert (workspace_swipe_touch_invert) | `touchpad.workspace-workspace-swipe-touch-invert` | 开关 | 未实现 | — |
-| Workspace gesture: workspace swipe use r (workspace_swipe_use_r) | `touchpad.workspace-workspace-swipe-use-r` | 开关 | 未实现 | — |
-| Scrolling gesture: move snap to grid (move_snap_to_grid) | `touchpad.scrolling-move-snap-to-grid` | 开关 | 未实现 | — |
-| Scrolling gesture: move snap cursor (move_snap_cursor) | `touchpad.scrolling-move-snap-cursor` | 开关 | 未实现 | — |
-| Gesture binding: Gesture action (action) | `touchpad.binding-action` | 文本输入 | 未实现 | — |
-| Gesture binding: Gesture direction (direction) | `touchpad.binding-direction` | 文本输入 | 未实现 | — |
-| Gesture binding: Number of fingers (fingers) | `touchpad.binding-fingers` | 滑块 | 未实现 | — |
-| Gesture binding: Bypass shortcut key suppression (disable_inhibit) | `touchpad.binding-disable-inhibit` | 开关 | 未实现 | — |
-| Gesture binding: Modifier keys (mods) | `touchpad.binding-mods` | 文本输入 | 未实现 | — |
-| Gesture binding: scale (scale) | `touchpad.binding-scale` | 滑块 | 未实现 | — |
+| Natural scrolling | `touchpad.natural-scroll` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Scroll speed | `touchpad.scroll-speed` | 滑块 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+
+#### Workspace swipe
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Swipe distance | `touchpad.swipe-distance` | 滑块 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Invert swipe direction | `touchpad.swipe-invert` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Create a workspace past the last one | `touchpad.swipe-create-new` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+
+#### Advanced
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Middle click by pressing both buttons | `touchpad.middle-button` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Swipe needed to switch | `touchpad.swipe-cancel-ratio` | 滑块 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Speed that always switches | `touchpad.swipe-min-speed` | 滑块 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Keep swiping past neighbouring workspaces | `touchpad.swipe-forever` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Lock the swipe direction | `touchpad.swipe-direction-lock` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+
+### Keyboard shortcuts — `keyboard-shortcuts`
+
+Key combinations for windows, workspaces, apps and commands
+
+页面状态：**已实现**；条目：9；已实现 9 / 未实现 0 / 不适用 0。
+
+原因：Uses Hyprland key bindings through the Settings service.
+
+实现与边界见 [输入设备与快捷键](input.md)：键盘图按修饰键高亮已绑定按键；自定义快捷键与关闭的快捷键以 `hl.bind` / `hl.unbind` 写入 `input.lua` 并按实时 `hyprctl binds` 校验；录制时进入空 submap 暂停合成器快捷键。底层为 Hyprland 键绑定。
+
+#### Shortcuts
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Your shortcuts | `keyboard-shortcuts.add` | 操作 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| All shortcuts | `keyboard-shortcuts.list` | 信息展示 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Turned-off shortcuts | `keyboard-shortcuts.disable` | 操作 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Remove a custom shortcut | `keyboard-shortcuts.remove` | 操作 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Record a key combination | `keyboard-shortcuts.record` | 操作 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+
+#### Advanced
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Pressing the current workspace's shortcut | `keyboard-shortcuts.workspace-back-and-forth` | 选择 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Remember the previous workspace across switches | `keyboard-shortcuts.workspace-cycles` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Delay between scroll shortcuts | `keyboard-shortcuts.scroll-delay` | 滑块 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
+| Pass mouse events after a shortcut | `keyboard-shortcuts.pass-mouse` | 开关 | 已实现 | `cargo test -p remya_settings_input`; `test/input_test.dart`; `test/input_smoke.py`（嵌套 Hyprland 0.57） |
 
 ### Touch — `touch`
 
@@ -1162,7 +1149,6 @@ Windows 参考入口：`ms-settings:devices-touch`。
 | --- | --- | --- | --- | --- |
 | Three- and four-finger touch gestures | `touch.reference.b3eb626b` | 开关 | 未实现 | — |
 | Touch the screen to wake (supported on some devices only) | `touch.reference.4283e4ac` | 开关 | 未实现 | — |
-
 
 #### Advanced: compositor previews
 
@@ -1560,7 +1546,6 @@ Windows 参考入口：`ms-settings:personalization-colors`、`ms-settings:color
 | Transparency Effects | `themes.reference.ed936eee` | 开关 | 未实现 | — |
 | Themes | `themes.reference.94d5186b` | 选择 | 未实现 | — |
 
-
 #### Advanced: compositor previews
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
@@ -1665,7 +1650,6 @@ Windows 参考入口：`ms-settings:lockscreen`。
 | Personalize your lock screen | `lockscreen.reference.3ada0526` | 开关 | 未实现 | — |
 | Get fun facts, tips, tricks, and more on your lock screen | `lockscreen.reference.252498b5` | 开关 | 未实现 | — |
 | Show the lock screen background picture on the sign-in screen | `lockscreen.reference.6437619e` | 开关 | 未实现 | — |
-
 
 #### Advanced: compositor previews
 
@@ -1912,7 +1896,6 @@ Windows 参考入口：`ms-settings:fonts`。
 | Install fonts | `fonts.158ba0bb` | 操作 | 已实现 | 见下文“Background, accent and fonts” |
 | Font details | `fonts.fc3969c7` | 操作 | 已实现 | 见下文“Background, accent and fonts” |
 | Uninstall fonts | `fonts.f869cae5` | 操作 | 已实现 | 见下文“Background, accent and fonts” |
-
 
 #### Advanced: compositor previews
 
@@ -2208,8 +2191,6 @@ Windows 参考入口：`ms-settings:signinoptions-launchsecuritykeyenrollment`�
 | Set key PIN | `security-key.ef14bdad` | 操作 | 未实现 | — |
 | Reset security keys | `security-key.9d94adb9` | 操作 | 未实现 | — |
 
-
-
 ### System backup — `backup`
 
 应用、偏好与同步参考
@@ -2244,7 +2225,6 @@ Windows 参考入口：`ms-settings:sync`、`ms-settings:backup`。
 | Language preferences and dictionary | `backup.reference.b695b07e` | 开关 | 未实现 | — |
 | Other Windows settings | `backup.reference.802b32da` | 开关 | 未实现 | — |
 
-
 #### Advanced: compositor previews
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
@@ -2273,7 +2253,6 @@ Windows 参考入口：`ms-settings:assignedaccess`。
 | Start setup | `kiosk.279497bb` | 操作 | 未实现 | — |
 | Session name | `kiosk.864aff36` | 文本输入 | 未实现 | — |
 | Select application | `kiosk.9ec480c1` | 操作 | 未实现 | — |
-
 
 ### Passkeys — `passkeys`
 
@@ -2385,7 +2364,6 @@ Windows 参考入口：`ms-settings:regionlanguage`、`ms-settings:regionformatt
 | Language options | `language.feb9d380` | 操作 | 未实现 | — |
 | Manage language settings | `language.5f7e5146` | 操作 | 未实现 | — |
 
-
 #### Advanced: compositor previews
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
@@ -2486,7 +2464,6 @@ Windows 参考入口：`ms-settings:easeofaccess-visualeffects`。
 | Transparency effects | `visual-effects.reference.8e1825a1` | 开关 | 未实现 | — |
 | Animation effects | `visual-effects.reference.6aa5bc02` | 开关 | 未实现 | — |
 | Dismiss notifications after preferred amount of time | `visual-effects.reference.5b6b06b4` | 选择 | 未实现 | — |
-
 
 ### Magnifier — `magnifier`
 
@@ -2737,7 +2714,6 @@ Windows 参考入口：`ms-settings:easeofaccess-closedcaptioning`。
 | Position | `captions.reference.07051098` | 选择 | 未实现 | — |
 | Caption Style | `captions.reference.0472a68c` | 选择 | 未实现 | — |
 
-
 ### Keyboard assistance — `accessibility-keyboard`
 
 粘滞键、筛选键与屏幕键盘
@@ -2808,7 +2784,6 @@ Windows 参考入口：`ms-settings:easeofaccess-keyboard`。
 | Underline acess keys | `accessibility-keyboard.reference.4a5a5e4c` | 开关 | 未实现 | — |
 | Use the print screen to open screen capture | `accessibility-keyboard.reference.6f3d637b` | 开关 | 未实现 | — |
 
-
 #### Advanced: compositor previews
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
@@ -2852,7 +2827,6 @@ Windows 参考入口：`ms-settings:easeofaccess-mouse`。
 | Mouse keys speed | `mouse-keys.reference.fe021cfe` | 滑块 | 未实现 | — |
 | Mouse keys acceleration | `mouse-keys.reference.df0cfb8c` | 滑块 | 未实现 | — |
 
-
 <a id="category-privacy"></a>
 
 ## 隐私和安全性
@@ -2880,7 +2854,6 @@ Windows 参考入口：`ms-settings:windowsdefender`。
 | Application and browser controls | `security.3e8cd48e` | 操作 | 未实现 | — |
 | Equipment security | `security.b23021fa` | 操作 | 未实现 | — |
 | Equipment performance and operating condition | `security.dcf23926` | 操作 | 未实现 | — |
-
 
 #### Advanced: compositor previews
 
@@ -3225,35 +3198,6 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 | --- | --- | --- | --- | --- |
 | Single window aspect ratio · single_window_aspect_ratio | `hypr-layout.single-window-aspect-ratio` | 文本输入 | 未实现 | — |
 | Single window aspect ratio tolerance · single_window_aspect_ratio_tolerance | `hypr-layout.single-window-aspect-ratio-tolerance` | 滑块 | 未实现 | — |
-
-### Hyprland · Shortcut key processing strategy — `hypr-binds`
-
-合成器高级设置：binds · Hyprland
-
-页面状态：**未实现**；条目：14；已实现 0 / 未实现 14 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 快捷键处理策略
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| allow pin fullscreen · allow_pin_fullscreen | `hypr-binds.allow-pin-fullscreen` | 开关 | 未实现 | — |
-| allow workspace cycles · allow_workspace_cycles | `hypr-binds.allow-workspace-cycles` | 开关 | 未实现 | — |
-| disable keybind grabbing · disable_keybind_grabbing | `hypr-binds.disable-keybind-grabbing` | 开关 | 未实现 | — |
-| drag threshold · drag_threshold | `hypr-binds.drag-threshold` | 文本输入 | 未实现 | — |
-| focus preferred method · focus_preferred_method | `hypr-binds.focus-preferred-method` | 滑块 | 未实现 | — |
-| hide special on workspace change · hide_special_on_workspace_change | `hypr-binds.hide-special-on-workspace-change` | 开关 | 未实现 | — |
-| ignore group lock · ignore_group_lock | `hypr-binds.ignore-group-lock` | 开关 | 未实现 | — |
-| movefocus cycles fullscreen · movefocus_cycles_fullscreen | `hypr-binds.movefocus-cycles-fullscreen` | 开关 | 未实现 | — |
-| movefocus cycles groupfirst · movefocus_cycles_groupfirst | `hypr-binds.movefocus-cycles-groupfirst` | 开关 | 未实现 | — |
-| pass mouse when bound · pass_mouse_when_bound | `hypr-binds.pass-mouse-when-bound` | 开关 | 未实现 | — |
-| scroll event delay · scroll_event_delay | `hypr-binds.scroll-event-delay` | 滑块 | 未实现 | — |
-| window direction monitor fallback · window_direction_monitor_fallback | `hypr-binds.window-direction-monitor-fallback` | 开关 | 未实现 | — |
-| workspace back and forth · workspace_back_and_forth | `hypr-binds.workspace-back-and-forth` | 滑块 | 未实现 | — |
-| workspace center on · workspace_center_on | `hypr-binds.workspace-center-on` | 滑块 | 未实现 | — |
 
 ### Dwindle layout — `hypr-layout-dwindle`
 
@@ -3624,80 +3568,6 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 | Show or hide special workspaces | `hypr-workspaces.toggle-special` | 操作 | 未实现 | — |
 | Edit workspace rules | `hypr-workspaces.rules` | 操作 | 未实现 | — |
 
-### Keyboard and mouse shortcuts — `hypr-keybinds`
-
-修饰键、按键代码、动作和条件 · Hyprland
-
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-binds](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/_index.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Modifier key combinations | `hypr-keybinds.modifiers` | 文本输入 | 未实现 | — |
-| Key symbol or keycode | `hypr-keybinds.key` | 文本输入 | 未实现 | — |
-| Window or application actions | `hypr-keybinds.dispatcher` | 文本输入 | 未实现 | — |
-| Action parameters | `hypr-keybinds.arguments` | 文本输入 | 未实现 | — |
-| Shortcut key description | `hypr-keybinds.description` | 文本输入 | 未实现 | — |
-| New binding | `hypr-keybinds.add` | 操作 | 未实现 | — |
-| Check for binding conflicts | `hypr-keybinds.conflicts` | 操作 | 未实现 | — |
-| Shortcut key cheat sheet | `hypr-keybinds.cheatsheet` | 操作 | 未实现 | — |
-
-### Shortcut key trigger conditions — `hypr-bind-flags`
-
-锁屏、释放、长按、重复与设备限定 · Hyprland
-
-页面状态：**未实现**；条目：16；已实现 0 / 未实现 16 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-bind-flags](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/flags.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| locked · locked | `hypr-bind-flags.locked` | 开关 | 未实现 | — |
-| release · release | `hypr-bind-flags.release` | 开关 | 未实现 | — |
-| click · click | `hypr-bind-flags.click` | 开关 | 未实现 | — |
-| drag · drag | `hypr-bind-flags.drag` | 开关 | 未实现 | — |
-| long press · long_press | `hypr-bind-flags.long-press` | 开关 | 未实现 | — |
-| repeating · repeating | `hypr-bind-flags.repeating` | 开关 | 未实现 | — |
-| non consuming · non_consuming | `hypr-bind-flags.non-consuming` | 开关 | 未实现 | — |
-| auto consuming · auto_consuming | `hypr-bind-flags.auto-consuming` | 开关 | 未实现 | — |
-| mouse · mouse | `hypr-bind-flags.mouse` | 开关 | 未实现 | — |
-| transparent · transparent | `hypr-bind-flags.transparent` | 开关 | 未实现 | — |
-| ignore mods · ignore_mods | `hypr-bind-flags.ignore-mods` | 开关 | 未实现 | — |
-| description · description | `hypr-bind-flags.description` | 开关 | 未实现 | — |
-| dont inhibit · dont_inhibit | `hypr-bind-flags.dont-inhibit` | 开关 | 未实现 | — |
-| submap universal · submap_universal | `hypr-bind-flags.submap-universal` | 开关 | 未实现 | — |
-| device · device | `hypr-bind-flags.device` | 开关 | 未实现 | — |
-| allow input capture · allow_input_capture | `hypr-bind-flags.allow-input-capture` | 开关 | 未实现 | — |
-
-### Keybind submaps — `hypr-keybind-submaps`
-
-模式切换与分层快捷键 · Hyprland
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-submaps](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/submaps.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Submap name | `hypr-keybind-submaps.name` | 文本输入 | 未实现 | — |
-| Enter the binding of the submap | `hypr-keybind-submaps.enter` | 文本输入 | 未实现 | — |
-| Exit the binding of a submap | `hypr-keybind-submaps.exit` | 文本输入 | 未实现 | — |
-| Return to default mapping | `hypr-keybind-submaps.reset` | 操作 | 未实现 | — |
-| Binding within submap | `hypr-keybind-submaps.bindings` | 操作 | 未实现 | — |
-
 <a id="category-session"></a>
 
 ## 会话与配置
@@ -3962,7 +3832,6 @@ Wayland、XDG、主题与应用环境 · Hyprland
 - A separate native Linux process loaded an isolated Dark + Monochrome configuration. Invoking its actual dropdown callbacks changed the complete application to Vibrant + Light and persisted both choices; restarting restored those values. Native engine screenshots confirmed both appearances and the corrected license view inside the persistent sidebar.
 - Wayland protocol logs confirmed `xdg_toplevel.set_min_size(1000, 0)` before mapping. The test process used its own temporary configuration directory; personal configuration was not modified.
 - No seed-color setting, automatic external-file watcher, host integration, or cross-process file locking is included. External edits require Reload configuration; avoid simultaneous editing by multiple instances.
-
 
 ## System appearance backend (supersedes the app-only preview above)
 

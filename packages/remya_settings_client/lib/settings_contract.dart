@@ -21,6 +21,7 @@ export 'src/updates.dart';
 export 'src/camera.dart';
 
 export 'src/power.dart';
+export 'src/input.dart';
 export 'src/bar_clock.dart';
 export 'src/notifications.dart';
 export 'src/bar_tray.dart';

@@ -39,7 +39,7 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'typing' || 'text-input' => Icons.edit_note_rounded,
       'keyboard' || 'accessibility-keyboard' => Icons.keyboard_outlined,
       'time-more' || 'system-more' || 'appearance-more' => Icons.add_rounded,
-      'hypr-keybinds' => Icons.keyboard_outlined,
+      'keyboard-shortcuts' => Icons.keyboard_command_key_rounded,
       'speech' || 'online-speech' => Icons.record_voice_over_outlined,
       final id when id.startsWith('regionlanguage-') =>
         Icons.keyboard_alt_outlined,

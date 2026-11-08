@@ -30,6 +30,9 @@ import '../../applications/presentation/installed_apps_page.dart';
 import '../../default_apps/application/default_apps_controller.dart';
 import '../../startup/application/startup_controller.dart';
 import '../../startup/presentation/startup_page.dart';
+import '../../input/presentation/keyboard_shortcuts_page.dart';
+import '../../input/presentation/mouse_page.dart';
+import '../../input/presentation/touchpad_page.dart';
 import '../../default_apps/presentation/default_apps_page.dart';
 
 import 'package:remya_settings_client/settings_contract.dart';
@@ -458,6 +461,8 @@ class _SettingsShellState extends State<SettingsShell> {
         page: _page!,
         onPage: _openPage,
       );
+    } else if (_inputPage(_page) case final page?) {
+      content = page;
     } else if (_page?.id == 'remya-bar' && widget.client != null) {
       content = BarAppearancePage(client: widget.client!, page: _page!);
     } else if (_page?.id == 'battery-usage' && widget.client != null) {
@@ -585,6 +590,34 @@ class _SettingsShellState extends State<SettingsShell> {
         ),
       ),
     );
+  }
+
+  Widget? _inputPage(SettingsPageSpec? page) {
+    final client = widget.client;
+    if (page == null || client == null) return null;
+    final key = ValueKey('input-${page.id}');
+    final catalog = widget.catalog;
+    return switch (page.id) {
+      'mouse' => MousePage(
+        key: key,
+        catalog: catalog,
+        page: page,
+        client: client,
+      ),
+      'touchpad' => TouchpadPage(
+        key: key,
+        catalog: catalog,
+        page: page,
+        client: client,
+      ),
+      'keyboard-shortcuts' => KeyboardShortcutsPage(
+        key: key,
+        catalog: catalog,
+        page: page,
+        client: client,
+      ),
+      _ => null,
+    };
   }
 
   Widget? _networkPage(SettingsPageSpec? page) {

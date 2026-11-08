@@ -44,7 +44,7 @@ No command evaluates shell input. IDs are stable catalog IDs, not translated lab
 | `get date-time` | `Get(s key)` with `date-time` | Actual clock, local time, NTP status, time zone, saved zone, and conflict |
 | `get timezones` | `Get(s key)` with `timezones` | Finite system time zone options |
 | `get configuration` | `Get(s key)` with `configuration` | Saved/system values, conflicts, and detection errors |
-| `resolve <appearance / date-time / display / night-light / hostname / background / default-apps / startup / network> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
+| `resolve <appearance / date-time / display / night-light / hostname / background / default-apps / startup / network / input> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
 | `resolve display <keep / revert>` | `Resolve(ss feature, source)` | Confirm or undo a pending display change |
 | `get background` | `Get(s key)` with `background` | Saved and system background, displays, warnings, previews, conflict, write blocker, error |
 | `get accent` | `Get(s key)` with `accent` | Accent source, `#RRGGBB` seed, sampled file, sampling error |
@@ -1150,6 +1150,47 @@ Only user autostart files and `startup.toml` are written; system files and gener
 units are untouched. Changes apply on the next UWSM sign-in. Runtime observation
 failures do not block configuration. See [Startup apps](startup.md) for generator
 semantics, validation, status mapping and verification boundaries.
+## Mouse, touchpad and keyboard shortcuts
+
+`Get input` returns `options` (saved values by catalog ID), `system` (live
+values), `saved`, `conflict`, `conflicts` (option IDs, plus `keyboard-shortcuts`
+when custom or turned-off shortcuts differ from `input.lua`), `shortcuts` (live
+binds grouped by `submap` and `keys`, each with `modifiers`, `key`, `label`,
+nullable `code`, `description`, `actions`, `locked`, `mouse` and `custom`),
+`custom`, `disabled`, `key_labels` (XKB keycode to label in the active layout),
+`layout`, `mice`, `touchpads`, `recording`, `write_blocked` and `error`.
+`Get <id>` for any ID below returns `{id, availability, reason, value, error}`.
+
+| Set ID | Value |
+| --- | --- |
+| `mouse.primary-button` | `true` for left-handed buttons, `false` otherwise |
+| `mouse.pointer-speed` | number from -1 to 1 |
+| `mouse.acceleration` | `"adaptive"` or `"flat"` |
+| `mouse.natural-scroll`, `mouse.middle-click-paste`, `mouse.refocus`, `mouse.monitor-focus` | boolean |
+| `mouse.scroll-speed`, `touchpad.scroll-speed` | number from 0 to 100 |
+| `mouse.focus-follows` | 0 to 3 (`input:follow_mouse`) |
+| `mouse.discrete-scroll` | 0 to 2; `mouse.scroll-outside`: 0 to 3 |
+| `touchpad.disable-while-typing`, `touchpad.tap-to-click`, `touchpad.tap-and-drag`, `touchpad.click-method`, `touchpad.natural-scroll`, `touchpad.middle-button` | boolean (`click-method` true clicks by finger count) |
+| `touchpad.tap-buttons` | `"lrm"` or `"lmr"` |
+| `touchpad.drag-lock`, `touchpad.three-finger-drag` | 0 to 2 |
+| `touchpad.swipe-distance` | 0 to 2000; `touchpad.swipe-min-speed`: 0 to 200; `touchpad.swipe-cancel-ratio`: 0 to 1 |
+| `touchpad.swipe-invert`, `touchpad.swipe-create-new`, `touchpad.swipe-forever`, `touchpad.swipe-direction-lock` | boolean |
+| `keyboard-shortcuts.workspace-back-and-forth` | 0 to 2; `keyboard-shortcuts.scroll-delay`: 0 to 2000 ms |
+| `keyboard-shortcuts.workspace-cycles`, `keyboard-shortcuts.pass-mouse` | boolean |
+| `keyboard-shortcuts.add` | `{"keys":"SUPER + code:24","action":"command","command":"foot","description":"","replace":false,"previous":null}`; `action` is `command`, `close`, `float`, `fullscreen`, `maximize`, `pin` or `scratchpad` |
+| `keyboard-shortcuts.remove` | `{"keys":"SUPER + Return"}` (custom shortcuts only) |
+| `keyboard-shortcuts.disable` | `{"keys":"SUPER + J","disabled":true}`; `false` restores it |
+| `keyboard-shortcuts.record` | `true` enters the pass-through recording submap, `false` leaves it |
+
+`Get keyboard-shortcuts.lookup:{"keys":"SUPER + code:24"}` returns the canonical
+`keys`, `modifiers`, `label` and the live `conflicts`. `add` refuses a combination
+already in use with `Conflict:` unless `replace` is true; `previous` names the
+custom shortcut being edited. A plain key needs Super, Ctrl or Alt unless it is a
+function, media or Print key. Writes return the full `input` state and emit
+`Changed("input", state)`. During conflicts writes fail;
+`Resolve input system|settings` adopts the live values or reapplies the saved ones
+with readback. See [Input devices and shortcuts](input.md).
+
 ## Storage
 
 `Get storage` starts a lazy worker scan and returns `api_version:1`, `initialized`, `writable`, `conflict:false`, `error`, `busy`, `usage`, `drives`, `disks_error` and `reclaimable_bytes`. `usage` contains `scanning`, `progress:{files,bytes}`, `scanned_at` (Unix seconds), `volume:{mount_point,device,total,used,free}`, `categories:[{id,label,bytes,path}]`, `skipped` and `error`. Unavailable observations are null, never sample device values. Category IDs are documents, pictures, videos, music, downloads, desktop, cache, trash, home-other and system; unset XDG folders are omitted.

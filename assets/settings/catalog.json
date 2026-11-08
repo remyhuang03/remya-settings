@@ -83,11 +83,6 @@
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/_index.md"
     },
     {
-      "id": "hypr-bind-flags",
-      "title": "Hyprland shortcut key logo",
-      "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/flags.md"
-    },
-    {
       "id": "hypr-submaps",
       "title": "Hyprland shortcut key submapping",
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/submaps.md"
@@ -4863,504 +4858,168 @@
       "id": "mouse",
       "category": "devices",
       "title": "Mouse",
-      "description": "Pointers, scroll wheels and home buttons",
+      "description": "Buttons, pointer speed, scrolling and focus",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Uses Hyprland input options through the Settings service.",
       "sources": [
         "uris",
-        "hypr-options",
-        "hyprviz-project"
+        "hypr-options"
       ],
       "windowsUris": [
         "ms-settings:mousetouchpad"
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Buttons",
           "controls": [
             {
-              "id": "mouse.ad43aa5f",
+              "id": "mouse.devices",
+              "title": "Connected mice",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": ""
+            },
+            {
+              "id": "mouse.primary-button",
               "title": "Primary mouse button",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": "Left",
               "options": [
                 "Left",
                 "Right"
-              ],
-              "value": "Left"
-            },
-            {
-              "id": "mouse.2f06ebc7",
-              "title": "Pointer speed",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "mouse.62b5a139",
-              "title": "Improve pointer accuracy",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "mouse.33146c4a",
-              "title": "Scroll mode",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Multiple lines at a time",
-                "One screen at a time"
-              ],
-              "value": "Multiple lines at a time"
-            },
-            {
-              "id": "mouse.1b83c1e4",
-              "title": "Number of scrolling lines",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "3",
-                "5",
-                "10"
-              ],
-              "value": "3"
-            },
-            {
-              "id": "mouse.bb950acc",
-              "title": "Scroll inactive window on hover",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "mouse.efd4a33a",
-              "title": "Other mouse settings",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              ]
             }
           ]
         },
         {
-          "title": "Windows reference settings",
-          "collapsed": true,
+          "title": "Pointer",
           "controls": [
             {
-              "id": "mouse.reference.76e18b09",
-              "title": "Mouse pointer speed",
+              "id": "mouse.pointer-speed",
+              "title": "Pointer speed",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Mouse",
-                "Mouse pointer speed"
-              ],
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": 0,
+              "min": -1,
+              "max": 1
             },
             {
-              "id": "mouse.reference.f26b3e91",
-              "title": "Roll the mouse wheel to scroll",
+              "id": "mouse.acceleration",
+              "title": "Pointer acceleration",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": "Adaptive",
+              "options": [
+                "Adaptive",
+                "Flat"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Scrolling",
+          "controls": [
+            {
+              "id": "mouse.natural-scroll",
+              "title": "Natural scrolling",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Mouse",
-                "Roll the mouse wheel to scroll"
-              ],
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
               "value": false
             },
             {
-              "id": "mouse.reference.3bbac4aa",
-              "title": "Lines to scroll at a time",
+              "id": "mouse.scroll-speed",
+              "title": "Scroll speed",
+              "type": "slider",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": 1,
+              "min": 0,
+              "max": 3
+            }
+          ]
+        },
+        {
+          "title": "Focus and selection",
+          "controls": [
+            {
+              "id": "mouse.focus-follows",
+              "title": "Window focus",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Mouse",
-                "Lines to scroll at a time"
-              ],
-              "value": "Not configured",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": "Follow pointer",
               "options": [
-                "Not configured"
+                "Follow pointer",
+                "Click to focus",
+                "Never follow pointer",
+                "Keep keyboard focus separate"
               ]
             },
             {
-              "id": "mouse.reference.8907aa76",
-              "title": "Scroll inactive windows when hovering over them",
+              "id": "mouse.middle-click-paste",
+              "title": "Middle-click paste",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Mouse",
-                "Scroll inactive windows when hovering over them"
-              ],
-              "value": false
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": true
             }
           ]
         },
         {
           "title": "Advanced",
-          "collapsed": true,
           "controls": [
             {
-              "id": "mouse.compositor-accel-profile",
-              "title": "Pointer: Pointer acceleration profile (accel_profile)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "accel_profile"
-              ]
-            },
-            {
-              "id": "mouse.compositor-emulate-discrete-scroll",
-              "title": "Pointer: Discrete scroll simulation (emulate_discrete_scroll)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "emulate_discrete_scroll"
-              ]
-            },
-            {
-              "id": "mouse.compositor-float-switch-override-focus",
-              "title": "Pointer: Tile and float switching focus strategies (float_switch_override_focus)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "float_switch_override_focus"
-              ]
-            },
-            {
-              "id": "mouse.compositor-focus-on-close",
-              "title": "Pointer: Focus after closing the window (focus_on_close)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "focus_on_close"
-              ]
-            },
-            {
-              "id": "mouse.compositor-follow-mouse",
-              "title": "Pointer: Focus follows mouse mode (follow_mouse)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.0,
-              "min": 0.0,
-              "max": 3.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "follow_mouse"
-              ]
-            },
-            {
-              "id": "mouse.compositor-follow-mouse-shrink",
-              "title": "Pointer: Focus detection area shrink (follow_mouse_shrink)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 300.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "follow_mouse_shrink"
-              ]
-            },
-            {
-              "id": "mouse.compositor-follow-mouse-threshold",
-              "title": "Pointer: Focus switching movement threshold (follow_mouse_threshold)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "0.0",
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "follow_mouse_threshold"
-              ]
-            },
-            {
-              "id": "mouse.compositor-force-no-accel",
-              "title": "Pointer: Forced to turn off acceleration (force_no_accel)",
+              "id": "mouse.refocus",
+              "title": "Refocus without crossing a window edge",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "force_no_accel"
-              ]
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": true
             },
             {
-              "id": "mouse.compositor-left-handed",
-              "title": "Pointer: Left-handed pointer mode (left_handed)",
+              "id": "mouse.monitor-focus",
+              "title": "Focus the display under the pointer",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "left_handed"
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": true
+            },
+            {
+              "id": "mouse.discrete-scroll",
+              "title": "Wheel step emulation",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": "Non-standard devices",
+              "options": [
+                "Non-standard devices",
+                "Off",
+                "All devices"
               ]
             },
             {
-              "id": "mouse.compositor-mouse-refocus",
-              "title": "Pointer: Refocus when crossing windows (mouse_refocus)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "mouse_refocus"
-              ]
-            },
-            {
-              "id": "mouse.compositor-natural-scroll",
-              "title": "Pointer: Natural scroll (natural_scroll)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "natural_scroll"
-              ]
-            },
-            {
-              "id": "mouse.compositor-off-window-axis-events",
-              "title": "Pointer: Off-window scroll event processing (off_window_axis_events)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.0,
-              "min": 0.0,
-              "max": 3.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "off_window_axis_events"
-              ]
-            },
-            {
-              "id": "mouse.compositor-rotation",
-              "title": "Pointer: Device rotation angle (rotation)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 359.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "rotation"
-              ]
-            },
-            {
-              "id": "mouse.compositor-scroll-button",
-              "title": "Pointer: Scroll trigger button (scroll_button)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 300.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "scroll_button"
-              ]
-            },
-            {
-              "id": "mouse.compositor-scroll-button-lock",
-              "title": "Pointer: Scroll button lock (scroll_button_lock)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "scroll_button_lock"
-              ]
-            },
-            {
-              "id": "mouse.compositor-scroll-points",
-              "title": "Pointer: Customize scroll acceleration sampling points (scroll_points)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "scroll_points"
-              ]
-            },
-            {
-              "id": "mouse.compositor-scroll-method",
-              "title": "Pointer: Scroll method (scroll_method)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "scroll_method"
-              ]
-            },
-            {
-              "id": "mouse.compositor-scroll-factor",
-              "title": "Pointer: Scroll multiple (scroll_factor)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.0,
-              "min": 0.0,
-              "max": 100.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "scroll_factor"
-              ]
-            },
-            {
-              "id": "mouse.compositor-sensitivity",
-              "title": "Pointer: Pointer sensitivity (sensitivity)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": -1.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "sensitivity"
-              ]
-            },
-            {
-              "id": "mouse.compositor-special-fallthrough",
-              "title": "Pointer: Special workspace focus penetration (special_fallthrough)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "special_fallthrough"
-              ]
-            },
-            {
-              "id": "mouse.compositor-swallow-focus-click",
-              "title": "Pointer: Swallow the first click when focusing (swallow_focus_click)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "input",
-                "swallow_focus_click"
-              ]
-            },
-            {
-              "id": "mouse.compositor-drag-focus",
-              "title": "Follow focus during drag and drop (always_follow_on_dnd)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "misc",
-                "always_follow_on_dnd"
-              ]
-            },
-            {
-              "id": "mouse.compositor-middle-paste",
-              "title": "Middle-click paste (middle_click_paste)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "misc",
-                "middle_click_paste"
-              ]
-            },
-            {
-              "id": "mouse.compositor-monitor-focus",
-              "title": "Focus monitor on pointer movement (mouse_move_focuses_monitor)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "misc",
-                "mouse_move_focuses_monitor"
+              "id": "mouse.scroll-outside",
+              "title": "Scrolling just outside a window",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": "Send to the window",
+              "options": [
+                "Send to the window",
+                "Ignore",
+                "Clamp to the window",
+                "Warp the pointer"
               ]
             }
           ],
-          "description": "Planned compositor options from Hyprland configuration options, HyprViz page organization."
+          "collapsed": true
         }
       ],
       "children": []
@@ -5369,14 +5028,13 @@
       "id": "touchpad",
       "category": "devices",
       "title": "Touchpad",
-      "description": "Touch, scroll, and multi-finger gestures",
+      "description": "Taps, clicks, scrolling and swipe gestures",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Uses Hyprland input options through the Settings service.",
       "sources": [
         "uris",
         "hypr-options",
-        "hyprviz-project",
         "hypr-gesture-reference"
       ],
       "windowsUris": [
@@ -5384,729 +5042,309 @@
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Taps",
           "controls": [
             {
-              "id": "touchpad.5c2f0621",
-              "title": "Touchpad",
+              "id": "touchpad.devices",
+              "title": "Connected touchpads",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": ""
+            },
+            {
+              "id": "touchpad.tap-to-click",
+              "title": "Tap to click",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": true
             },
             {
-              "id": "touchpad.0b02e5ac",
-              "title": "Keep the touchpad on when connecting a mouse",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "touchpad.5e254c65",
-              "title": "Cursor speed",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "touchpad.eacee367",
-              "title": "Touchpad sensitivity",
+              "id": "touchpad.tap-buttons",
+              "title": "Two-finger tap",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": "Right click",
               "options": [
-                "Medium",
-                "Low",
-                "high",
-                "Highest"
-              ],
-              "value": "Medium"
+                "Right click",
+                "Middle click"
+              ]
             },
             {
-              "id": "touchpad.b59ea1b8",
-              "title": "One-finger tap and click",
+              "id": "touchpad.tap-and-drag",
+              "title": "Tap and drag",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": true
             },
             {
-              "id": "touchpad.6025c7de",
-              "title": "Right-click with two fingers",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "touchpad.7b141aed",
-              "title": "Drag multiple selections after double tapping",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "touchpad.9ca343b1",
-              "title": "Right click on the lower right corner",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "touchpad.8bd607db",
-              "title": "Two-finger scrolling",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "touchpad.0fd19b47",
-              "title": "Pinch to zoom",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "touchpad.4fe1093e",
-              "title": "Scroll direction",
+              "id": "touchpad.drag-lock",
+              "title": "Keep dragging after lifting a finger",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": "Off",
               "options": [
-                "Scroll down while moving down",
-                "Natural scrolling"
-              ],
-              "value": "Scroll down while moving down"
-            },
-            {
-              "id": "touchpad.489e5e53",
-              "title": "Three-finger gesture",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Switch apps",
-                "Switch desktop",
-                "Adjust audio"
-              ],
-              "value": "Switch apps"
-            },
-            {
-              "id": "touchpad.8a817c68",
-              "title": "Four-finger gesture",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Switch desktop",
-                "Switch apps",
-                "None"
-              ],
-              "value": "Switch desktop"
-            },
-            {
-              "id": "touchpad.f7d769a7",
-              "title": "Tactile feedback",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "touchpad.2b27039e",
-              "title": "Feedback intensity",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
+                "Off",
+                "Briefly",
+                "Until tapped again"
+              ]
             }
           ]
         },
         {
-          "title": "Windows reference settings",
-          "collapsed": true,
+          "title": "Clicks and dragging",
           "controls": [
             {
-              "id": "touchpad.reference.8f2e9734",
-              "title": "Change the cursor speed",
+              "id": "touchpad.click-method",
+              "title": "Right click",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": "Press the lower right corner",
+              "options": [
+                "Press the lower right corner",
+                "Click with two fingers"
+              ]
+            },
+            {
+              "id": "touchpad.three-finger-drag",
+              "title": "Drag with several fingers",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": "Off",
+              "options": [
+                "Off",
+                "Three fingers",
+                "Four fingers"
+              ]
+            },
+            {
+              "id": "touchpad.disable-while-typing",
+              "title": "Turn off the touchpad while typing",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": true
+            }
+          ]
+        },
+        {
+          "title": "Scrolling",
+          "controls": [
+            {
+              "id": "touchpad.natural-scroll",
+              "title": "Natural scrolling",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": false
+            },
+            {
+              "id": "touchpad.scroll-speed",
+              "title": "Scroll speed",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Touchpad",
-                "Change the cursor speed"
-              ],
-              "value": 50,
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": 1,
               "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
+              "max": 3
+            }
+          ]
+        },
+        {
+          "title": "Workspace swipe",
+          "controls": [
             {
-              "id": "touchpad.reference.79eb339a",
-              "title": "Touchpad sensitivity",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Touchpad",
-                "Touchpad sensitivity"
-              ],
-              "value": false
-            },
-            {
-              "id": "touchpad.reference.45d5f5e6",
-              "title": "Tap with a single finger to single-click",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Touchpad",
-                "Tap with a single finger to single-click"
-              ],
-              "value": false
-            },
-            {
-              "id": "touchpad.reference.380325e1",
-              "title": "Tap with two fingers to right-click",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Touchpad",
-                "Tap with two fingers to right-click"
-              ],
-              "value": false
-            },
-            {
-              "id": "touchpad.reference.c6871bd5",
-              "title": "Tap twice and drag to multi-select",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Touchpad",
-                "Tap twice and drag to multi-select"
-              ],
-              "value": false
-            },
-            {
-              "id": "touchpad.reference.0c650d0c",
-              "title": "Press the lower right corner of the touchpad to right-click",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Touchpad",
-                "Press the lower right corner of the touchpad to right-click"
-              ],
-              "value": false
-            },
-            {
-              "id": "touchpad.reference.ddf2ff25",
-              "title": "Drag two fingers to scroll",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Touchpad",
-                "Drag two fingers to scroll"
-              ],
-              "value": false
-            },
-            {
-              "id": "touchpad.reference.9fd08601",
-              "title": "Pinch to Zoom",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Touchpad",
-                "Pinch to Zoom"
-              ],
-              "value": false
-            },
-            {
-              "id": "touchpad.reference.bbbc35e5",
-              "title": "Intensity (supported on some devices only)",
+              "id": "touchpad.swipe-distance",
+              "title": "Swipe distance",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Touchpad",
-                "Touchpad feedback (supported on some devices only)",
-                "Intensity (supported on some devices only)"
-              ],
-              "value": 50,
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": 300,
               "min": 0,
-              "max": 100,
-              "unit": "%"
+              "max": 2000,
+              "unit": "px"
+            },
+            {
+              "id": "touchpad.swipe-invert",
+              "title": "Invert swipe direction",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": true
+            },
+            {
+              "id": "touchpad.swipe-create-new",
+              "title": "Create a workspace past the last one",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": true
             }
           ]
         },
         {
           "title": "Advanced",
-          "collapsed": true,
           "controls": [
             {
-              "id": "touchpad.compositor-clickfinger-behavior",
-              "title": "Touchpad: Distribute clicks according to finger number (clickfinger_behavior)",
+              "id": "touchpad.middle-button",
+              "title": "Middle click by pressing both buttons",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "input.touchpad",
-                "clickfinger_behavior"
-              ]
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": false
             },
             {
-              "id": "touchpad.compositor-disable-while-typing",
-              "title": "Touchpad: Disable touchpad while typing (disable_while_typing)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "input.touchpad",
-                "disable_while_typing"
-              ]
-            },
-            {
-              "id": "touchpad.compositor-drag-3fg",
-              "title": "Touchpad: Three-finger drag (drag_3fg)",
+              "id": "touchpad.swipe-cancel-ratio",
+              "title": "Swipe needed to switch",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input.touchpad",
-                "drag_3fg"
-              ]
-            },
-            {
-              "id": "touchpad.compositor-drag-lock",
-              "title": "Touchpad: Drag lock (drag_lock)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input.touchpad",
-                "drag_lock"
-              ]
-            },
-            {
-              "id": "touchpad.compositor-flip-x",
-              "title": "Touchpad: flip x (flip_x)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "input.touchpad",
-                "flip_x"
-              ]
-            },
-            {
-              "id": "touchpad.compositor-flip-y",
-              "title": "Touchpad: flip y (flip_y)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "input.touchpad",
-                "flip_y"
-              ]
-            },
-            {
-              "id": "touchpad.compositor-middle-button-emulation",
-              "title": "Touchpad: Middle button emulation (middle_button_emulation)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "input.touchpad",
-                "middle_button_emulation"
-              ]
-            },
-            {
-              "id": "touchpad.compositor-natural-scroll",
-              "title": "Touchpad: Natural scroll (natural_scroll)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "input.touchpad",
-                "natural_scroll"
-              ]
-            },
-            {
-              "id": "touchpad.compositor-scroll-factor",
-              "title": "Touchpad: Scroll multiple (scroll_factor)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.0,
-              "min": 0.0,
-              "max": 100.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "input.touchpad",
-                "scroll_factor"
-              ]
-            },
-            {
-              "id": "touchpad.compositor-tap-and-drag",
-              "title": "Touchpad: tap and drag (tap_and_drag)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "input.touchpad",
-                "tap_and_drag"
-              ]
-            },
-            {
-              "id": "touchpad.compositor-tap-button-map",
-              "title": "Touchpad: Tap button mapping (tap_button_map)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-options",
-                "input.touchpad",
-                "tap_button_map"
-              ]
-            },
-            {
-              "id": "touchpad.compositor-tap-to-click",
-              "title": "Touchpad: tap to click (tap_to_click)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "input.touchpad",
-                "tap_to_click"
-              ]
-            },
-            {
-              "id": "touchpad.workspace-close-max-timeout",
-              "title": "Workspace gesture: close max timeout (close_max_timeout)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1000.0,
-              "min": 10.0,
-              "max": 2000.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "gestures",
-                "close_max_timeout"
-              ]
-            },
-            {
-              "id": "touchpad.workspace-workspace-swipe-cancel-ratio",
-              "title": "Workspace gesture: workspace swipe cancel ratio (workspace_swipe_cancel_ratio)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
               "value": 0.5,
-              "min": 0.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "gestures",
-                "workspace_swipe_cancel_ratio"
-              ]
+              "min": 0,
+              "max": 1
             },
             {
-              "id": "touchpad.workspace-workspace-swipe-create-new",
-              "title": "Workspace gesture: workspace swipe create new (workspace_swipe_create_new)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "gestures",
-                "workspace_swipe_create_new"
-              ]
-            },
-            {
-              "id": "touchpad.workspace-workspace-swipe-direction-lock",
-              "title": "Workspace gesture: workspace swipe direction lock (workspace_swipe_direction_lock)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "gestures",
-                "workspace_swipe_direction_lock"
-              ]
-            },
-            {
-              "id": "touchpad.workspace-workspace-swipe-direction-lock-threshold",
-              "title": "Workspace gesture: workspace swipe direction lock threshold (workspace_swipe_direction_lock_threshold)",
+              "id": "touchpad.swipe-min-speed",
+              "title": "Speed that always switches",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 10.0,
-              "min": 0.0,
-              "max": 200.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "gestures",
-                "workspace_swipe_direction_lock_threshold"
-              ]
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": 30,
+              "min": 0,
+              "max": 200
             },
             {
-              "id": "touchpad.workspace-workspace-swipe-distance",
-              "title": "Workspace gesture: workspace swipe distance (workspace_swipe_distance)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 300.0,
-              "min": 0.0,
-              "max": 2000.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "gestures",
-                "workspace_swipe_distance"
-              ]
-            },
-            {
-              "id": "touchpad.workspace-workspace-swipe-forever",
-              "title": "Workspace gesture: workspace swipe forever (workspace_swipe_forever)",
+              "id": "touchpad.swipe-forever",
+              "title": "Keep swiping past neighbouring workspaces",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "gestures",
-                "workspace_swipe_forever"
-              ]
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": false
             },
             {
-              "id": "touchpad.workspace-workspace-swipe-invert",
-              "title": "Workspace gesture: workspace swipe invert (workspace_swipe_invert)",
+              "id": "touchpad.swipe-direction-lock",
+              "title": "Lock the swipe direction",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "gestures",
-                "workspace_swipe_invert"
-              ]
-            },
-            {
-              "id": "touchpad.workspace-workspace-swipe-min-speed-to-force",
-              "title": "Workspace gesture: workspace swipe min speed to force (workspace_swipe_min_speed_to_force)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 30.0,
-              "min": 0.0,
-              "max": 200.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "gestures",
-                "workspace_swipe_min_speed_to_force"
-              ]
-            },
-            {
-              "id": "touchpad.workspace-workspace-swipe-touch",
-              "title": "Workspace gesture: workspace swipe touch (workspace_swipe_touch)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "gestures",
-                "workspace_swipe_touch"
-              ]
-            },
-            {
-              "id": "touchpad.workspace-workspace-swipe-touch-invert",
-              "title": "Workspace gesture: workspace swipe touch invert (workspace_swipe_touch_invert)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "gestures",
-                "workspace_swipe_touch_invert"
-              ]
-            },
-            {
-              "id": "touchpad.workspace-workspace-swipe-use-r",
-              "title": "Workspace gesture: workspace swipe use r (workspace_swipe_use_r)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "gestures",
-                "workspace_swipe_use_r"
-              ]
-            },
-            {
-              "id": "touchpad.scrolling-move-snap-to-grid",
-              "title": "Scrolling gesture: move snap to grid (move_snap_to_grid)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "gestures.scrolling",
-                "move_snap_to_grid"
-              ]
-            },
-            {
-              "id": "touchpad.scrolling-move-snap-cursor",
-              "title": "Scrolling gesture: move snap cursor (move_snap_cursor)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "gestures.scrolling",
-                "move_snap_cursor"
-              ]
-            },
-            {
-              "id": "touchpad.binding-action",
-              "title": "Gesture binding: Gesture action (action)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-gesture-reference",
-                "Fields",
-                "action"
-              ]
-            },
-            {
-              "id": "touchpad.binding-direction",
-              "title": "Gesture binding: Gesture direction (direction)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-gesture-reference",
-                "Fields",
-                "direction"
-              ]
-            },
-            {
-              "id": "touchpad.binding-fingers",
-              "title": "Gesture binding: Number of fingers (fingers)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 2.0,
-              "min": 2.0,
-              "max": 9.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-gesture-reference",
-                "Fields",
-                "fingers"
-              ]
-            },
-            {
-              "id": "touchpad.binding-disable-inhibit",
-              "title": "Gesture binding: Bypass shortcut key suppression (disable_inhibit)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-gesture-reference",
-                "Fields",
-                "disable_inhibit"
-              ]
-            },
-            {
-              "id": "touchpad.binding-mods",
-              "title": "Gesture binding: Modifier keys (mods)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-gesture-reference",
-                "Fields",
-                "mods"
-              ]
-            },
-            {
-              "id": "touchpad.binding-scale",
-              "title": "Gesture binding: scale (scale)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.1,
-              "min": 0.1,
-              "max": 10.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-gesture-reference",
-                "Fields",
-                "scale"
-              ]
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": true
             }
           ],
-          "description": "Planned compositor options from Hyprland configuration options, HyprViz page organization, Hyprland gesture binding."
+          "collapsed": true
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "keyboard-shortcuts",
+      "category": "devices",
+      "title": "Keyboard shortcuts",
+      "description": "Key combinations for windows, workspaces, apps and commands",
+      "preview": "none",
+      "availability": "available",
+      "reason": "Uses Hyprland key bindings through the Settings service.",
+      "sources": [
+        "hypr-binds",
+        "hypr-options"
+      ],
+      "windowsUris": [],
+      "sections": [
+        {
+          "title": "Shortcuts",
+          "controls": [
+            {
+              "id": "keyboard-shortcuts.add",
+              "title": "Your shortcuts",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses Hyprland key bindings through the Settings service.",
+              "value": ""
+            },
+            {
+              "id": "keyboard-shortcuts.list",
+              "title": "All shortcuts",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses Hyprland key bindings through the Settings service.",
+              "value": ""
+            },
+            {
+              "id": "keyboard-shortcuts.disable",
+              "title": "Turned-off shortcuts",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses Hyprland key bindings through the Settings service.",
+              "value": ""
+            },
+            {
+              "id": "keyboard-shortcuts.remove",
+              "title": "Remove a custom shortcut",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses Hyprland key bindings through the Settings service.",
+              "value": ""
+            },
+            {
+              "id": "keyboard-shortcuts.record",
+              "title": "Record a key combination",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses Hyprland key bindings through the Settings service.",
+              "value": ""
+            }
+          ]
+        },
+        {
+          "title": "Advanced",
+          "controls": [
+            {
+              "id": "keyboard-shortcuts.workspace-back-and-forth",
+              "title": "Pressing the current workspace's shortcut",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": "Stays",
+              "options": [
+                "Stays",
+                "Returns to the previous workspace",
+                "Returns on the same display"
+              ]
+            },
+            {
+              "id": "keyboard-shortcuts.workspace-cycles",
+              "title": "Remember the previous workspace across switches",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": false
+            },
+            {
+              "id": "keyboard-shortcuts.scroll-delay",
+              "title": "Delay between scroll shortcuts",
+              "type": "slider",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": 300,
+              "min": 0,
+              "max": 2000,
+              "unit": "ms"
+            },
+            {
+              "id": "keyboard-shortcuts.pass-mouse",
+              "title": "Pass mouse events after a shortcut",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Uses Hyprland input options through the Settings service.",
+              "value": false
+            }
+          ],
+          "collapsed": true
         }
       ],
       "children": []
@@ -17055,222 +16293,6 @@
       "children": []
     },
     {
-      "id": "hypr-binds",
-      "category": "hyprland",
-      "title": "Hyprland · Shortcut key processing strategy",
-      "description": "Advanced compositor settings: binds · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-options",
-        "hyprviz-project"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Shortcut key processing strategy",
-          "controls": [
-            {
-              "id": "hypr-binds.allow-pin-fullscreen",
-              "title": "allow pin fullscreen · allow_pin_fullscreen",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "binds",
-                "allow_pin_fullscreen"
-              ]
-            },
-            {
-              "id": "hypr-binds.allow-workspace-cycles",
-              "title": "allow workspace cycles · allow_workspace_cycles",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "binds",
-                "allow_workspace_cycles"
-              ]
-            },
-            {
-              "id": "hypr-binds.disable-keybind-grabbing",
-              "title": "disable keybind grabbing · disable_keybind_grabbing",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "binds",
-                "disable_keybind_grabbing"
-              ]
-            },
-            {
-              "id": "hypr-binds.drag-threshold",
-              "title": "drag threshold · drag_threshold",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "0",
-              "referencePath": [
-                "hypr-options",
-                "binds",
-                "drag_threshold"
-              ]
-            },
-            {
-              "id": "hypr-binds.focus-preferred-method",
-              "title": "focus preferred method · focus_preferred_method",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "binds",
-                "focus_preferred_method"
-              ]
-            },
-            {
-              "id": "hypr-binds.hide-special-on-workspace-change",
-              "title": "hide special on workspace change · hide_special_on_workspace_change",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "binds",
-                "hide_special_on_workspace_change"
-              ]
-            },
-            {
-              "id": "hypr-binds.ignore-group-lock",
-              "title": "ignore group lock · ignore_group_lock",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "binds",
-                "ignore_group_lock"
-              ]
-            },
-            {
-              "id": "hypr-binds.movefocus-cycles-fullscreen",
-              "title": "movefocus cycles fullscreen · movefocus_cycles_fullscreen",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "binds",
-                "movefocus_cycles_fullscreen"
-              ]
-            },
-            {
-              "id": "hypr-binds.movefocus-cycles-groupfirst",
-              "title": "movefocus cycles groupfirst · movefocus_cycles_groupfirst",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "binds",
-                "movefocus_cycles_groupfirst"
-              ]
-            },
-            {
-              "id": "hypr-binds.pass-mouse-when-bound",
-              "title": "pass mouse when bound · pass_mouse_when_bound",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "binds",
-                "pass_mouse_when_bound"
-              ]
-            },
-            {
-              "id": "hypr-binds.scroll-event-delay",
-              "title": "scroll event delay · scroll_event_delay",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 300.0,
-              "min": 0.0,
-              "max": 2000.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "binds",
-                "scroll_event_delay"
-              ]
-            },
-            {
-              "id": "hypr-binds.window-direction-monitor-fallback",
-              "title": "window direction monitor fallback · window_direction_monitor_fallback",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "binds",
-                "window_direction_monitor_fallback"
-              ]
-            },
-            {
-              "id": "hypr-binds.workspace-back-and-forth",
-              "title": "workspace back and forth · workspace_back_and_forth",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "binds",
-                "workspace_back_and_forth"
-              ]
-            },
-            {
-              "id": "hypr-binds.workspace-center-on",
-              "title": "workspace center on · workspace_center_on",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.0,
-              "min": 0.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "binds",
-                "workspace_center_on"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "hypr-ecosystem",
       "category": "session",
       "title": "Hyprland · Ecosystem options",
@@ -20090,420 +19112,6 @@
       "children": [
         "hypr-workspace-rule-rules"
       ]
-    },
-    {
-      "id": "hypr-keybinds",
-      "category": "hyprland",
-      "title": "Keyboard and mouse shortcuts",
-      "description": "Modifier keys, key codes, actions and conditions · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-binds"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "hypr-keybinds.modifiers",
-              "title": "Modifier key combinations",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-binds",
-                "modifiers"
-              ]
-            },
-            {
-              "id": "hypr-keybinds.key",
-              "title": "Key symbol or keycode",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-binds",
-                "key"
-              ]
-            },
-            {
-              "id": "hypr-keybinds.dispatcher",
-              "title": "Window or application actions",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-binds",
-                "dispatcher"
-              ]
-            },
-            {
-              "id": "hypr-keybinds.arguments",
-              "title": "Action parameters",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-binds",
-                "arguments"
-              ]
-            },
-            {
-              "id": "hypr-keybinds.description",
-              "title": "Shortcut key description",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-binds",
-                "description"
-              ]
-            },
-            {
-              "id": "hypr-keybinds.add",
-              "title": "New binding",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-binds",
-                "add"
-              ]
-            },
-            {
-              "id": "hypr-keybinds.conflicts",
-              "title": "Check for binding conflicts",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-binds",
-                "conflicts"
-              ]
-            },
-            {
-              "id": "hypr-keybinds.cheatsheet",
-              "title": "Shortcut key cheat sheet",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-binds",
-                "cheatsheet"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": [
-        "hypr-bind-flags",
-        "hypr-keybind-submaps"
-      ]
-    },
-    {
-      "id": "hypr-bind-flags",
-      "category": "hyprland",
-      "title": "Shortcut key trigger conditions",
-      "description": "Lock screen, release, long press, repeat and device restrictions · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-bind-flags"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "hypr-bind-flags.locked",
-              "title": "locked · locked",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "locked"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.release",
-              "title": "release · release",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "release"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.click",
-              "title": "click · click",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "click"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.drag",
-              "title": "drag · drag",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "drag"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.long-press",
-              "title": "long press · long_press",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "long_press"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.repeating",
-              "title": "repeating · repeating",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "repeating"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.non-consuming",
-              "title": "non consuming · non_consuming",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "non_consuming"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.auto-consuming",
-              "title": "auto consuming · auto_consuming",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "auto_consuming"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.mouse",
-              "title": "mouse · mouse",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "mouse"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.transparent",
-              "title": "transparent · transparent",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "transparent"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.ignore-mods",
-              "title": "ignore mods · ignore_mods",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "ignore_mods"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.description",
-              "title": "description · description",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "description"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.dont-inhibit",
-              "title": "dont inhibit · dont_inhibit",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "dont_inhibit"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.submap-universal",
-              "title": "submap universal · submap_universal",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "submap_universal"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.device",
-              "title": "device · device",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "device"
-              ]
-            },
-            {
-              "id": "hypr-bind-flags.allow-input-capture",
-              "title": "allow input capture · allow_input_capture",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-bind-flags",
-                "allow_input_capture"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-keybind-submaps",
-      "category": "hyprland",
-      "title": "Keybind submaps",
-      "description": "Mode switching and layering shortcut keys · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-submaps"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "hypr-keybind-submaps.name",
-              "title": "Submap name",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-submaps",
-                "name"
-              ]
-            },
-            {
-              "id": "hypr-keybind-submaps.enter",
-              "title": "Enter the binding of the submap",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-submaps",
-                "enter"
-              ]
-            },
-            {
-              "id": "hypr-keybind-submaps.exit",
-              "title": "Exit the binding of a submap",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-submaps",
-                "exit"
-              ]
-            },
-            {
-              "id": "hypr-keybind-submaps.reset",
-              "title": "Return to default mapping",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-submaps",
-                "reset"
-              ]
-            },
-            {
-              "id": "hypr-keybind-submaps.bindings",
-              "title": "Binding within submap",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-submaps",
-                "bindings"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
     },
     {
       "id": "hypr-compositor-permissions",

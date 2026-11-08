@@ -13,6 +13,7 @@ use remya_settings_display::{
     is_night_light_setting,
 };
 use remya_settings_fonts::{self as fonts, FontManager, RealFontconfig};
+use remya_settings_input::{self as input, Input, RealHypr};
 use remya_settings_network::{NetworkManager, is_network_setting};
 use remya_settings_sound::{self as sound, Sound, pulse::RealPulse};
 use remya_settings_startup::{self as startup, Startup};
@@ -253,6 +254,7 @@ pub struct State {
     fonts: FontManager<RealFontconfig>,
     pub default_apps: DefaultApps<default_apps::RealDesktop>,
     pub startup: Startup<startup::RealSystemd>,
+    pub input: Input<RealHypr>,
     pub appimages: applications::appimages::AppImages,
     pub network: NetworkManager,
     pub bluetooth: remya_settings_bluetooth::Bluetooth,
@@ -304,6 +306,11 @@ impl State {
                 startup::RealSystemd,
                 startup::Directories::detect(),
                 config.with_file_name("startup.toml"),
+            ),
+            input: Input::new(
+                RealHypr,
+                hypr_config_dir(),
+                config.with_file_name("input.toml"),
             ),
             bluetooth: remya_settings_bluetooth::Bluetooth::new(),
             proxy: remya_settings_network::proxy::Proxy::new(),
@@ -478,6 +485,7 @@ impl State {
         let _ = self.hostname.refresh();
         let _ = self.default_apps.refresh();
         let _ = self.startup.refresh();
+        let _ = self.input.refresh();
         // Failures stay in the manager's state for every reader.
         let _ = self.network.refresh();
         // A detection failure is retained by the manager and reported in its state.
@@ -641,7 +649,7 @@ impl State {
     pub fn configuration(&self) -> Value {
         let mut date = self.date.clone();
         date["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
-        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"startup":self.startup.state(),"network":self.network.state(),"sound":self.sound.state(),"power":self.power.state(),"cameras":self.cameras.state()})
+        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"startup":self.startup.state(),"input":self.input.state(),"network":self.network.state(),"sound":self.sound.state(),"power":self.power.state(),"cameras":self.cameras.state()})
     }
     pub fn controls(&self) -> Vec<&Value> {
         self.catalog["pages"]
@@ -798,6 +806,15 @@ impl State {
                         Ok(
                             json!({"id":key,"availability":"available","reason":"Uses NetworkManager through the Settings service.","value":self.network.read_value(key),"error":self.network.state()["error"]}),
                         )
+                    }
+                    "input" => {
+                        let _ = self.input.refresh();
+                        Ok(self.input.state())
+                    }
+                    _ if key.starts_with(input::LOOKUP) => self.input.lookup(&key[input::LOOKUP.len()..]),
+                    _ if input::is_setting(key) => {
+                        let _ = self.input.refresh();
+                        Ok(json!({"id":key,"availability":"available","reason":"Uses Hyprland input settings and key bindings.","value":self.input.setting_value(key),"error":self.input.state()["error"]}))
                     }
                     "startup" => {
                         let _ = self.startup.refresh();
@@ -1136,6 +1153,9 @@ impl State {
         if is_network_setting(key) {
             return self.network.set(key, value);
         }
+        if input::is_setting(key) {
+            return self.input.set(key, value);
+        }
         if startup::IDS.contains(&key) {
             return self.startup.set(key, value);
         }
@@ -1374,6 +1394,9 @@ impl State {
         if feature == "network" {
             return self.network.resolve(source);
         }
+        if feature == "input" {
+            return self.input.resolve(source);
+        }
         if feature == "startup" {
             return self.startup.resolve(source);
         }
@@ -1467,6 +1490,10 @@ impl State {
             .is_some()
         {
             self.bluetooth.cleanup();
+            if self.input.is_recording() {
+                // A closed or crashed recorder must not leave compositor shortcuts suspended.
+                let _ = self.input.stop_recording();
+            }
             self.gui = None;
         }
     }

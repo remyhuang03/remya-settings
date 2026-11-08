@@ -204,6 +204,13 @@ fn run() -> Result<(), String> {
                         signal(&bus, "account-information", &account);
                     }
                     if method == "Reload"
+                        || args
+                            .first()
+                            .is_some_and(|id| id == "input" || remya_settings_input::is_setting(id))
+                    {
+                        signal(&bus, "input", &state.lock().unwrap().input.state());
+                    }
+                    if method == "Reload"
                         || args.first().is_some_and(|id| {
                             id == "power"
                                 || id == "battery-saver"
