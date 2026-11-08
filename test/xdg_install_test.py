@@ -18,7 +18,7 @@ def load_installer(repository):
 
 class InstallTest(unittest.TestCase):
     def test_xdg_defaults_and_relative_values(self):
-        for repository in [ROOT, ROOT.parent / 'remya_bar']:
+        for repository in [ROOT, ROOT.parent / 'remya-bar']:
             installer = load_installer(repository)
             self.assertEqual(installer.data_home({'HOME': '/home/test'}), Path('/home/test/.local/share'))
             self.assertEqual(installer.data_home({'HOME': '/home/test', 'XDG_DATA_HOME': 'relative'}), Path('/home/test/.local/share'))
@@ -27,7 +27,7 @@ class InstallTest(unittest.TestCase):
                 installer.data_home({'HOME': 'relative'})
 
     def test_install_update_preserves_config_and_rejects_unrelated_commands(self):
-        for repository in [ROOT, ROOT.parent / 'remya_bar']:
+        for repository in [ROOT, ROOT.parent / 'remya-bar']:
             installer = load_installer(repository)
             with self.subTest(app=installer.APP_ID), tempfile.TemporaryDirectory() as temporary:
                 directory = Path(temporary)

@@ -6,7 +6,7 @@ import '../../settings/presentation/settings_widgets.dart';
 import '../../settings/domain/settings_catalog.dart';
 
 const appVersion = '0.1.0+2026-10-26';
-const repositoryUrl = 'https://github.com/remyhuang03/remya_settings';
+const repositoryUrl = 'https://github.com/remyhuang03/remya-settings';
 
 Future<void> openSettingsRepository() async {
   final result = await Process.run('xdg-open', [repositoryUrl]);

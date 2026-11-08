@@ -9,7 +9,7 @@ Future<void> openRemyaSettings({
   if (debugExecutable != null) {
     if (!await debugExecutable.exists()) {
       throw const FileSystemException(
-        'Build the sibling remya_settings repository with fvm flutter build linux --debug first.',
+        'Build the sibling remya-settings repository with fvm flutter build linux --debug first.',
       );
     }
     await Process.start(debugExecutable.path, ['open', page], mode: .detached);

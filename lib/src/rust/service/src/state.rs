@@ -913,7 +913,7 @@ impl State {
                         Ok(field)
                     }
                     "about" => Ok(
-                        json!({"name":"Remy'a Settings","version":"0.1.0+2026-10-26","application_id":"top.remya.settings","repository":"https://github.com/remyhuang03/remya_settings","license":"PolyForm-Noncommercial-1.0.0","api_version":1}),
+                        json!({"name":"Remy'a Settings","version":"0.1.0+2026-10-26","application_id":"top.remya.settings","repository":"https://github.com/remyhuang03/remya-settings","license":"PolyForm-Noncommercial-1.0.0","api_version":1}),
                     ),
                     "catalog" => {
                         let mut v = self.catalog.clone();
@@ -964,7 +964,7 @@ impl State {
                 let page = &args[0];
                 if page == "repository" {
                     Command::new("xdg-open")
-                        .arg("https://github.com/remyhuang03/remya_settings")
+                        .arg("https://github.com/remyhuang03/remya-settings")
                         .spawn()
                         .map_err(|e| e.to_string())?;
                 } else {

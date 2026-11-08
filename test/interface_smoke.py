@@ -620,7 +620,7 @@ def main():
                            HYPRLAND_CONFIG=str(home / 'hyprland.lua'), NO_AT_BRIDGE='1', GIO_USE_VFS='local', GTK_USE_PORTAL='0')
         (home / 'hyprland.lua').write_text('-- Isolated appearance smoke-test entrypoint\n')
         subprocess.run([sys.executable, str(ROOT / 'tool/install.py')], env=environment, check=True)
-        subprocess.run([sys.executable, str(ROOT.parent / 'remya_bar/tool/install.py')], env=environment, check=True)
+        subprocess.run([sys.executable, str(ROOT.parent / 'remya-bar/tool/install.py')], env=environment, check=True)
         for entry in ('top.remya.settings', 'top.remya.settings.appimage'):
             subprocess.run(['desktop-file-validate', str(home / f'data $/applications/{entry}.desktop')], check=True)
         default_apps_fixtures(environment)
