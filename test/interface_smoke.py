@@ -299,7 +299,7 @@ def bar_layout_checks():
     initial = cli('get', setting)
     assert initial == dbus('Get', setting)
     assert not config.exists()
-    assert initial['value']['groups'] == [['window', 'resources', 'media'], ['workspaces', 'clock'], ['tray'], ['battery', 'sidebar']]
+    assert initial['value']['groups'] == [['notifications', 'window', 'resources', 'media'], ['workspaces', 'clock'], ['tray'], ['battery', 'sidebar']]
     custom = {'groups': [['clock'], ['sidebar']], 'workspace_count': 5, 'resources': ['cpu'], 'window_app_name': False, 'center': 0}
     assert cli('set', setting, json.dumps(custom)) == dbus('Get', setting)
     assert cli('get', setting)['value'] == custom

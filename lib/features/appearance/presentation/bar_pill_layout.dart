@@ -4,6 +4,7 @@ import 'package:remya_settings_client/settings_contract.dart';
 import '../../settings/presentation/settings_widgets.dart';
 
 const barPillNames = {
+  'notifications': 'Notifications',
   'window': 'Active window',
   'resources': 'System resources',
   'media': 'Media',
@@ -660,6 +661,7 @@ class BarPillSample extends StatelessWidget {
           Icon(icon, color: colors.onSurfaceVariant),
       ]),
       'battery' => pill([const Icon(Icons.battery_std_rounded)]),
+      'notifications' => pill([const Icon(Icons.notifications_rounded)]),
       _ => pill([
         const Icon(Icons.wifi_rounded),
         const Icon(Icons.bluetooth_rounded),

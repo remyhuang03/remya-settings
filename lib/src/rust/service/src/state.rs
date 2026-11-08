@@ -61,6 +61,7 @@ fn invalid(message: &str) -> String {
     format!("InvalidArgument:{message}")
 }
 const BAR_PILLS: &[&str] = &[
+    "notifications",
     "window",
     "resources",
     "media",
@@ -74,7 +75,7 @@ const BAR_RESOURCES: &[&str] = &["cpu", "memory", "gpu", "network"];
 
 fn default_bar_layout() -> Value {
     json!({
-        "groups":[["window","resources","media"],["workspaces","clock"],["tray"],["battery","sidebar"]],
+        "groups":[["notifications","window","resources","media"],["workspaces","clock"],["tray"],["battery","sidebar"]],
         "workspace_count":8,
         "resources":BAR_RESOURCES,
         "window_app_name":true,

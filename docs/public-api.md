@@ -1019,12 +1019,12 @@ as its set value. Settings serializes edits and atomically stores the list in
 `Get("remya-bar.layout")` returns the main bar pill layout in `value`:
 
 ```json
-{"groups":[["window","resources","media"],["workspaces","clock"],["tray"],["battery","sidebar"]],
+{"groups":[["notifications","window","resources","media"],["workspaces","clock"],["tray"],["battery","sidebar"]],
  "workspace_count":8,"resources":["cpu","memory","gpu","network"],"window_app_name":true}
 ```
 
 `groups` is the ordered list of pill groups; the bar spaces groups evenly and
-places pills 8 pixels apart inside a group. Pill IDs are `window`, `resources`,
+places pills 8 pixels apart inside a group. Pill IDs are `notifications`, `window`, `resources`,
 `media`, `workspaces`, `clock`, `tray`, `battery` and `sidebar`. A pill absent
 from every group is hidden. Groups must be non-empty, IDs unique, and `sidebar`
 must stay visible because it is the bar's route to quick settings.

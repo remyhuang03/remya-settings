@@ -6,6 +6,7 @@ const barLayoutSettingId = 'remya-bar.layout';
 
 /// Pill IDs in their default order. The service rejects any other ID.
 const barPillIds = [
+  'notifications',
   'window',
   'resources',
   'media',
@@ -31,7 +32,7 @@ class BarLayout {
 
   static const defaults = BarLayout(
     groups: [
-      ['window', 'resources', 'media'],
+      ['notifications', 'window', 'resources', 'media'],
       ['workspaces', 'clock'],
       ['tray'],
       ['battery', 'sidebar'],

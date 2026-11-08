@@ -49,7 +49,13 @@ void main() {
     expect(BarLayout.fromJson(layout.toJson()), layout);
     expect(BarLayout.defaults.toJson().containsKey('center'), isFalse);
     expect(BarLayout.fromJson(BarLayout.defaults.toJson()).hidden, isEmpty);
-    expect(layout.hidden, ['media', 'workspaces', 'tray', 'battery']);
+    expect(layout.hidden, [
+      'notifications',
+      'media',
+      'workspaces',
+      'tray',
+      'battery',
+    ]);
     expect(() => BarLayout.fromJson({'groups': []}), throwsFormatException);
   });
 
