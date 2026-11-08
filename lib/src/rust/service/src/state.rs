@@ -44,6 +44,7 @@ pub fn linked_page(id: &str) -> Option<&'static str> {
 }
 
 pub const BAR_CLOCK_SECONDS: &str = "remya-bar.clock-seconds";
+pub const BAR_KEY_PREVIEW: &str = "remya-bar.keyboard-preview";
 pub const ZONE: &str = "date-time.fb2a23dc";
 pub const MANUAL: &str = "date-time.6422d209";
 pub const AUTO: &str = "date-time.db451de3";
@@ -347,20 +348,31 @@ impl State {
     fn date_file(&self) -> PathBuf {
         self.config.with_file_name("date-time.toml")
     }
-    fn bar_clock_file(&self) -> PathBuf {
-        self.config.with_file_name("remya-bar.toml")
-    }
-    fn read_bar_clock_seconds(&self) -> Result<Value, String> {
-        let value = match load(&self.bar_clock_file())? {
+    fn bar_bool_preference(&self, id: &str, request: Option<&str>) -> Result<Value, String> {
+        let (file, field) = if id == BAR_CLOCK_SECONDS {
+            ("remya-bar.toml", "clock_seconds")
+        } else {
+            ("remya-bar-keyboard.toml", "preview")
+        };
+        let path = self.config.with_file_name(file);
+        let mut value = match load(&path)? {
             None => true,
             Some(config) => config
                 .as_object()
                 .filter(|object| object.len() == 1)
-                .and_then(|object| object.get("clock_seconds"))
+                .and_then(|object| object.get(field))
                 .and_then(Value::as_bool)
-                .ok_or("Invalid Remy'a Bar configuration: clock_seconds must be a boolean")?,
+                .ok_or_else(|| {
+                    format!("Invalid Remy'a Bar configuration: {field} must be a boolean")
+                })?,
         };
-        Ok(json!({"id":BAR_CLOCK_SECONDS,"availability":"available","value":value}))
+        if let Some(request) = request {
+            value = request
+                .parse::<bool>()
+                .map_err(|_| invalid("Use true or false"))?;
+            write(&path, &json!({(field):value}))?;
+        }
+        Ok(json!({"id":id,"availability":"available","value":value}))
     }
     fn bar_folded_apps_file(&self) -> PathBuf {
         self.config.with_file_name("remya-bar-tray.toml")
@@ -430,7 +442,7 @@ impl State {
             "screenshot",
             "picker",
             "dark",
-            "vpn",
+            "dnd-quick",
             "airplane",
             "keyboard",
             "clipboard",
@@ -449,6 +461,12 @@ impl State {
                 let mut tiles: Vec<String> = serde_json::from_value(config["tiles"].clone())
                     .map_err(|_| "Invalid sidebar layout configuration")?;
                 tiles.retain(|id| !RETIRED.contains(&id.as_str()));
+                if let Some(index) = tiles.iter().position(|id| id == "vpn") {
+                    if tiles.iter().any(|id| id == "dnd-quick") {
+                        return Err("Invalid sidebar layout configuration".into());
+                    }
+                    tiles[index] = "dnd-quick".into();
+                }
                 if !validate(&tiles) {
                     return Err("Invalid sidebar layout configuration".into());
                 }
@@ -665,7 +683,7 @@ impl State {
             "Get" => {
                 let key = args[0].as_str();
                 match key {
-                    BAR_CLOCK_SECONDS => self.read_bar_clock_seconds(),
+                    BAR_CLOCK_SECONDS | BAR_KEY_PREVIEW => self.bar_bool_preference(key, None),
                     key if notifications::is_setting(key) => {
                         notifications::get(&self.config, key)
                     }
@@ -1301,13 +1319,8 @@ impl State {
         if notifications::IDS.contains(&key) {
             return notifications::set(&self.config, key, value);
         }
-        if key == BAR_CLOCK_SECONDS {
-            let enabled = value
-                .parse::<bool>()
-                .map_err(|_| invalid("Use true or false"))?;
-            self.read_bar_clock_seconds()?;
-            write(&self.bar_clock_file(), &json!({"clock_seconds":enabled}))?;
-            return self.read_bar_clock_seconds();
+        if matches!(key, BAR_CLOCK_SECONDS | BAR_KEY_PREVIEW) {
+            return self.bar_bool_preference(key, Some(value));
         }
         self.refresh_date()?;
         let (request, keys) = match key {

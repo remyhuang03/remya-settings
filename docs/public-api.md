@@ -1111,8 +1111,17 @@ Both arrays use tile IDs. The service rejects unknown and duplicate IDs and
 rejects concurrent edits when `expected` differs from the saved order. The
 response and `Changed("remya-bar.sidebar-layout", state)` contain the committed
 layout. The same commands are available through the Settings CLI. Saved layouts
-omit retired `game`, `lock` and `audio-switcher` tiles on read. The `caffeine`
+omit retired `game`, `lock` and `audio-switcher` tiles on read. The retired
+`vpn` slot becomes `dnd-quick` (the compact Do Not Disturb tile) on read.
+Layouts that hid VPN can add the compact tile from the editor. The `caffeine`
 tile ID is shown as Keep awake.
+
+## Remya Bar keyboard preview
+
+`Get("remya-bar.keyboard-preview")` returns a boolean in `value`, defaulting
+to `true`. `Set("remya-bar.keyboard-preview", "true" | "false")` controls
+touch key previews and emits `Changed` with the same ID. Both operations
+also work through the CLI and the public `SidebarClient` extension.
 
 ## Startup apps
 

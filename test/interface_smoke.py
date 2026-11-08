@@ -356,12 +356,14 @@ def sidebar_layout_checks():
     assert initial == dbus('Get', setting)
     assert not config.exists()
     assert 'mic-mute' in initial['value']
-    assert not {'game', 'lock', 'audio-switcher'}.intersection(initial['value'])
-    config.write_text('tiles = ["audio", "game", "caffeine", "lock", "audio-switcher"]\n')
-    previous = ['audio', 'caffeine']
+    assert 'dnd-quick' in initial['value']
+    assert not {'game', 'lock', 'audio-switcher', 'vpn'}.intersection(initial['value'])
+    config.write_text('tiles = ["audio", "game", "vpn", "caffeine", "lock", "audio-switcher"]\n')
+    previous = ['audio', 'dnd-quick', 'caffeine']
     assert cli('get', setting)['value'] == previous
     assert dbus('Get', setting)['value'] == previous
     assert 'InvalidArgument' in cli('set', setting, json.dumps({'expected': previous, 'tiles': ['game']}), ok=False)
+    assert 'InvalidArgument' in cli('set', setting, json.dumps({'expected': previous, 'tiles': ['vpn']}), ok=False)
     new = ['audio', 'internet', 'mic-mute']
     assert cli('set', setting, json.dumps({'expected': previous, 'tiles': new})) == dbus('Get', setting)
     assert cli('get', setting)['value'] == new
@@ -373,6 +375,24 @@ def sidebar_layout_checks():
     assert config.read_text() == 'tiles = false\n'
     config.unlink()
     print('PASS: sidebar layout CLI and D-Bus parity, concurrent edit detection and persistence')
+
+
+def keyboard_preview_checks():
+    setting = 'remya-bar.keyboard-preview'
+    config = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/remya-bar-keyboard.toml'
+    assert cli('get', setting) == dbus('Get', setting) == {
+        'id': setting, 'availability': 'available', 'value': True,
+    }
+    assert not config.exists()
+    assert cli('set', setting, 'false') == dbus('Get', setting)
+    assert cli('get', setting)['value'] is False
+    assert config.read_text().strip() == 'preview = false'
+    assert 'InvalidArgument' in cli('set', setting, 'maybe', ok=False)
+    assert dbus('Set', setting, 'true') == cli('get', setting)
+    config.write_text('preview = "invalid"\n')
+    cli('set', setting, 'false', ok=False)
+    assert config.read_text() == 'preview = "invalid"\n'
+    config.unlink()
 
 
 def session_checks():
@@ -397,6 +417,7 @@ def session_checks():
         pid = service_pid()
         assert initial == dbus('Get', 'theme')
         bar_clock_checks()
+        keyboard_preview_checks()
         notification_checks()
         bar_tray_checks()
         bar_layout_checks()

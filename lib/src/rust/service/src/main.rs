@@ -127,6 +127,7 @@ fn run() -> Result<(), String> {
                         if method == "Set"
                             && ([
                                 state::BAR_CLOCK_SECONDS,
+                                state::BAR_KEY_PREVIEW,
                                 state::BAR_FOLDED_APPS,
                                 state::BAR_SIDEBAR,
                                 state::BAR_LAYOUT,

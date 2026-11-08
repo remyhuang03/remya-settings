@@ -1,5 +1,6 @@
 <node>
   <!-- Get and Set remya-bar.clock-seconds read/write a boolean. Changed uses the same ID. -->
+  <!-- Get and Set remya-bar.keyboard-preview read/write a boolean. Changed uses the same ID. -->
   <!-- Notifications: Get notifications reads all preferences; Get/Set notifications.*,
        quiet-schedule.* and priority-notifications.* per docs/public-api.md#notifications.
        Changed uses the written ID. -->

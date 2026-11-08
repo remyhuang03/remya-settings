@@ -19947,6 +19947,19 @@
               "value": "Manage"
             }
           ]
+        },
+        {
+          "title": "On-screen keyboard",
+          "controls": [
+            {
+              "id": "remya-bar.keyboard-preview",
+              "title": "Show touch key previews",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Show a character preview when pressing a key on a touchscreen.",
+              "value": true
+            }
+          ]
         }
       ],
       "children": []

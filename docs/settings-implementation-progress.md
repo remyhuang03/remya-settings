@@ -10,8 +10,8 @@ Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 
 
 ## 当前概况
 
-- 设置分类：15 个；详情页面：122 个；设置条目：1419 项。
-- 已实现：305 项；未实现：1104 项；不适用：10 项。
+- 设置分类：15 个；详情页面：122 个；设置条目：1420 项。
+- 已实现：306 项；未实现：1104 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
@@ -1931,6 +1931,7 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 | Pill layout | `remya-bar.layout` | 操作 | 已实现 | Settings 服务校验并原子持久化分组、排序、显隐与 pill 选项，CLI/D-Bus 对等测试，Bar 实时应用 |
 | Show seconds | `remya-bar.clock-seconds` | 开关 | 已实现 | Settings 服务持久化，CLI/D-Bus 对等测试，安装版开关联动三个 Hyprland 输出 |
 | Folded apps | `remya-bar.folded-apps` | 操作 | 已实现 | Settings 持久化托盘折叠状态，支持从设置页恢复固定。 |
+| Show touch key previews | `remya-bar.keyboard-preview` | 开关 | 已实现 | Settings persists the preference and exposes it through CLI and D-Bus. |
 
 ### More — `appearance-more`
 

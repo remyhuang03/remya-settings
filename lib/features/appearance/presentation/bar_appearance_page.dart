@@ -23,6 +23,7 @@ class BarAppearancePage extends StatefulWidget {
 
 class _BarAppearancePageState extends State<BarAppearancePage> {
   bool? _showSeconds;
+  bool? _keyboardPreview;
   BarLayout? _layout;
   bool _busy = true;
   String? _error;
@@ -31,9 +32,14 @@ class _BarAppearancePageState extends State<BarAppearancePage> {
   @override
   void initState() {
     super.initState();
-    _changes = widget.client.changes
-        .where((change) => change.topic == barLayoutSettingId)
-        .listen((_) => _load(), onError: (Object _) {});
+    _changes = widget.client.changes.listen((change) {
+      if (change.topic == barLayoutSettingId) {
+        unawaited(_load());
+      } else if (change.value['value'] case final bool enabled
+          when change.topic == barKeyboardPreviewSettingId) {
+        setState(() => _keyboardPreview = enabled);
+      }
+    }, onError: (Object _) {});
     _load();
   }
 
@@ -56,14 +62,16 @@ class _BarAppearancePageState extends State<BarAppearancePage> {
   }
 
   Future<void> _load() => _run(() async {
-    final (seconds, layout) = await (
+    final (seconds, layout, preview) = await (
       widget.client.readBarClockSeconds(),
       widget.client.readBarLayout(),
+      widget.client.readBarKeyboardPreview(),
     ).wait;
     if (mounted) {
       setState(() {
         _showSeconds = seconds;
         _layout = layout;
+        _keyboardPreview = preview;
       });
     }
   });
@@ -71,6 +79,11 @@ class _BarAppearancePageState extends State<BarAppearancePage> {
   Future<void> _setSeconds(bool enabled) => _run(() async {
     final value = await widget.client.setBarClockSeconds(enabled);
     if (mounted) setState(() => _showSeconds = value);
+  });
+
+  Future<void> _setKeyboardPreview(bool enabled) => _run(() async {
+    final value = await widget.client.setBarKeyboardPreview(enabled);
+    if (mounted) setState(() => _keyboardPreview = value);
   });
 
   // The service keeps the last valid layout; a rejected edit leaves it shown.
@@ -107,6 +120,17 @@ class _BarAppearancePageState extends State<BarAppearancePage> {
             onLayout: _busy ? null : _setLayout,
           ),
         _FoldedTrayApps(client: widget.client),
+        if (_keyboardPreview case final preview?) ...[
+          SettingsSectionTitle(sections[3].title),
+          SettingRow(
+            id: barKeyboardPreviewSettingId,
+            label: Text(sections[3].controls.single.title),
+            control: Switch(
+              value: preview,
+              onChanged: _busy ? null : _setKeyboardPreview,
+            ),
+          ),
+        ],
       ],
     );
   }
