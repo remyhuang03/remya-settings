@@ -72,6 +72,14 @@
 - Target Linux only; do not generate other platforms without explicit instruction.
 - Let the native runner own initial window setup and respect Wayland compositor policy. Change desktop configuration only through explicitly selected, implemented system settings; never alter unrelated compositor policy or window rules.
 
+### Icons
+- Use `Icon` and named `Icons` constants from `package:material_ui/material_ui.dart`, for example `const Icon(Icons.airplanemode_active_rounded)`. Do not use raw code points.
+- Choose the icon for its meaning and keep its rounded/outlined style consistent with nearby controls. Use existing icons instead of custom drawings, image assets, or new dependencies for standard symbols.
+- Register catalog page icons in `pageIcon` in `lib/features/settings/presentation/settings_widgets.dart`; do not leave a specific page using its category's generic fallback.
+- Give icon-only actions a tooltip or semantic label; retain visible text where the UI already provides it.
+- Before rebuilding a release after icon changes, invalidate only the generated `.dart_tool/flutter_build/*/release_bundle_linux-x64_assets.stamp` files so the bundled icon-font subset includes the new glyphs.
+- Inspect the installed release on the desktop to confirm the intended glyph renders. Passing analysis, widget tests, or a release build alone does not verify icon appearance.
+
 ## Validation
 - Run `fvm flutter pub get` after dependency changes. Use `fvm flutter run -d linux` for interactive verification and release builds when release behavior changes.
 - Keep durable tests for non-trivial logic and regressions; remove temporary UI inspection tests after verification and avoid duplicate coverage.
