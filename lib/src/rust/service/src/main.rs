@@ -1,4 +1,5 @@
 mod events;
+mod notifications;
 mod privileged;
 mod state;
 use gio::glib::{self, variant::ToVariant};
@@ -123,7 +124,7 @@ fn run() -> Result<(), String> {
                     Ok(value) => {
                         invocation.return_value(Some(&(value.to_string(),).to_variant()));
                         if method == "Set"
-                            && [
+                            && ([
                                 state::BAR_CLOCK_SECONDS,
                                 state::BAR_FOLDED_APPS,
                                 state::BAR_SIDEBAR,
@@ -131,6 +132,7 @@ fn run() -> Result<(), String> {
                                 remya_settings_power::KEEP_AWAKE,
                             ]
                             .contains(&args[0].as_str())
+                                || notifications::IDS.contains(&args[0].as_str()))
                         {
                             signal(&bus, &args[0], &value);
                         }

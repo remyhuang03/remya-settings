@@ -275,6 +275,41 @@ def bar_clock_checks():
     print('PASS: Bar clock default, CLI and D-Bus read/write parity, Changed, persistence and invalid input')
 
 
+def notification_checks():
+    config = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/notifications.toml'
+    dnd, start, apps = 'notifications.do-not-disturb', 'quiet-schedule.start', 'priority-notifications.apps'
+    assert not config.exists()
+    assert cli('get', 'notifications') == dbus('Get', 'notifications')
+    assert cli('get', 'notifications')['value']['popup_duration'] == 5
+    assert cli('get', dnd) == dbus('Get', dnd) == {'id': dnd, 'availability': 'available', 'value': False}
+    monitor = subprocess.Popen(
+        ['stdbuf', '-oL', 'gdbus', 'monitor', '--session', '--dest', BUS],
+        stdout=subprocess.PIPE,
+    )
+    try:
+        assert select.select([monitor.stdout], [], [], 5)[0]
+        os.read(monitor.stdout.fileno(), 4096)
+        assert cli('set', dnd, 'true') == dbus('Get', dnd)
+        assert dbus('Set', start, '23:30') == cli('get', start)
+        app = '{"id":"org.telegram.desktop","name":"Telegram","priority":true}'
+        assert cli('set', apps, app)['value'] == [{'id': 'org.telegram.desktop', 'name': 'Telegram'}]
+        assert select.select([monitor.stdout], [], [], 5)[0]
+    finally:
+        monitor.terminate()
+        signals = monitor.communicate(timeout=5)[0].decode()
+    assert all(f"'{topic}'" in signals for topic in (dnd, start, apps)), signals
+    saved = config.read_text()
+    assert 'do_not_disturb = true' in saved and 'schedule_start = "23:30"' in saved
+    for setting, value in [(dnd, 'maybe'), (start, '24:00'), ('notifications.popup-duration', '61')]:
+        assert 'InvalidArgument' in cli('set', setting, value, ok=False)
+    config.write_text('popup_duration = 0\n')
+    cli('get', dnd, ok=False)
+    cli('set', dnd, 'false', ok=False)
+    assert config.read_text() == 'popup_duration = 0\n'
+    config.unlink()
+    print('PASS: notification defaults, CLI and D-Bus parity, Changed, persistence and invalid input')
+
+
 def bar_tray_checks():
     setting = 'remya-bar.folded-apps'
     config = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/remya-bar-tray.toml'
@@ -362,6 +397,7 @@ def session_checks():
         pid = service_pid()
         assert initial == dbus('Get', 'theme')
         bar_clock_checks()
+        notification_checks()
         bar_tray_checks()
         bar_layout_checks()
         sidebar_layout_checks()

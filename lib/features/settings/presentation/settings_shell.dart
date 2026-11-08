@@ -31,6 +31,7 @@ import '../../about/presentation/licenses_view.dart';
 import '../../appearance/presentation/bar_appearance_page.dart';
 import '../../fonts/application/fonts_controller.dart';
 import '../../fonts/presentation/fonts_page.dart';
+import '../../notifications/presentation/notifications_page.dart';
 import '../domain/settings_catalog.dart';
 import 'settings_content.dart';
 import 'settings_category_group.dart';
@@ -438,6 +439,15 @@ class _SettingsShellState extends State<SettingsShell> {
         }.contains(_page?.id) &&
         widget.sound != null) {
       content = SoundPage(controller: widget.sound!, page: _page!);
+    } else if (NotificationsPage.pageIds.contains(_page?.id) &&
+        widget.client != null) {
+      content = NotificationsPage(
+        key: ValueKey(_page!.id),
+        client: widget.client!,
+        catalog: widget.catalog,
+        page: _page!,
+        onPage: _openPage,
+      );
     } else if (_page?.id == 'remya-bar' && widget.client != null) {
       content = BarAppearancePage(client: widget.client!, page: _page!);
     } else if (_page?.id == 'battery-usage' && widget.client != null) {

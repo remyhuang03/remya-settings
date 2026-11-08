@@ -1003,6 +1003,50 @@ The ordinary-user service stores `clock_seconds` as a boolean in
 reported and protected from overwrites. This preference controls the clock
 capsule across outputs and has no system counterpart.
 
+## Notifications
+
+These preferences belong to the desktop notification service (Remy'a Bar) and
+have no system counterpart. `Get("notifications")` (CLI `get notifications`)
+returns every preference in `value`:
+
+```json
+{"do_not_disturb":false,"popup_duration":5,"sounds":true,
+ "schedule":false,"schedule_start":"22:00","schedule_end":"07:00","schedule_repeat":"every-day",
+ "fullscreen":false,"priority_calls":true,"priority_apps":[]}
+```
+
+Each ID below is read with `Get(id)` and written with `Set(id, value)`; both
+return `{"id":<id>,"availability":"available","value":<value>}`, and a write
+emits `Changed` with the ID as topic.
+
+| ID | Value |
+| --- | --- |
+| `notifications.do-not-disturb` | `true` or `false` |
+| `notifications.popup-duration` | whole seconds, 1 to 60 |
+| `notifications.sounds` | `true` or `false` |
+| `quiet-schedule.enabled` | `true` or `false` |
+| `quiet-schedule.start`, `quiet-schedule.end` | 24-hour `HH:MM` |
+| `quiet-schedule.repeat` | `every-day`, `weekdays` or `weekends` (the day a period starts) |
+| `quiet-schedule.fullscreen` | `true` or `false` |
+| `priority-notifications.calls` | `true` or `false` |
+| `priority-notifications.apps` | JSON `{"id":"org.telegram.desktop","name":"Telegram","priority":true}` adds or replaces an app; `priority: false` removes it. `Get` returns the list of `{id,name}` |
+
+`notifications.automatic-dnd` and `notifications.priority` are page links:
+`Set(id, "open")` opens Automatic Do Not Disturb or Priority notification.
+Invalid values return `InvalidArgument`. The service stores everything in
+`notifications.toml` beside its configuration; a missing file means the
+defaults above, and a malformed file is reported and protected from
+overwrites. The pure Dart `NotificationsClient` extension and
+`NotificationPreferences` provide typed access.
+
+Do Not Disturb is in effect when switched on manually, during a scheduled
+period (a period that ends earlier than it starts runs past midnight and
+belongs to the day it starts), or, with `fullscreen`, while any display shows
+a full screen window. It hides popups and sounds except for Critical
+notifications, call notifications (`call` or `call.incoming` category) when
+`priority_calls` is on, and apps in `priority_apps`, matched by desktop entry
+ID or app name, ignoring case. History still collects everything.
+
 ### Remya Bar folded applications
 
 `Get("remya-bar.folded-apps")` returns an available setting whose `value` is

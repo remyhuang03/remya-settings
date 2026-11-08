@@ -1,5 +1,8 @@
 <node>
   <!-- Get and Set remya-bar.clock-seconds read/write a boolean. Changed uses the same ID. -->
+  <!-- Notifications: Get notifications reads all preferences; Get/Set notifications.*,
+       quiet-schedule.* and priority-notifications.* per docs/public-api.md#notifications.
+       Changed uses the written ID. -->
   <!-- Get remya-bar.folded-apps returns IDs. Set accepts a JSON object with id and folded. -->
   <!-- Get remya-bar.sidebar-layout returns the visible tile IDs in order.
        Set accepts {expected,tiles}; Changed uses the same ID. -->

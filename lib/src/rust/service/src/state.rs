@@ -1,3 +1,4 @@
+use crate::notifications;
 use crate::privileged::{Request, Session};
 use gio::glib::{Variant, variant::ToVariant};
 use remya_settings_appearance::api as appearance;
@@ -35,6 +36,8 @@ pub fn linked_page(id: &str) -> Option<&'static str> {
         "airplane.bluetooth" => Some("bluetooth"),
         "power.743773bd" => Some("battery-saver"),
         "power.03bd05ee" => Some("battery-usage"),
+        "notifications.automatic-dnd" => Some("quiet-schedule"),
+        "notifications.priority" => Some("priority-notifications"),
         _ => None,
     }
 }
@@ -641,6 +644,9 @@ impl State {
                 let key = args[0].as_str();
                 match key {
                     BAR_CLOCK_SECONDS => self.read_bar_clock_seconds(),
+                    key if notifications::is_setting(key) => {
+                        notifications::get(&self.config, key)
+                    }
                     BAR_FOLDED_APPS => self.read_bar_folded_apps(),
                     BAR_SIDEBAR => self.sidebar_layout(None),
                     BAR_LAYOUT => self.bar_layout(None),
@@ -1176,6 +1182,9 @@ impl State {
         }
         if key == BAR_FOLDED_APPS {
             return self.set_bar_folded_app(value);
+        }
+        if notifications::IDS.contains(&key) {
+            return notifications::set(&self.config, key, value);
         }
         if key == BAR_CLOCK_SECONDS {
             let enabled = value

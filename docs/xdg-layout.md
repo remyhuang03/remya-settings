@@ -10,6 +10,7 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Debug Bar fallback | Sibling Settings repository's local config, then installed XDG config |
 | Installed/shared Settings preferences | `$XDG_CONFIG_HOME/remya/settings/config.toml` |
 | Bar clock preference | `remya-bar.toml` beside the selected Settings configuration |
+| Notification preferences (used by the bar) | `notifications.toml` beside the selected Settings configuration |
 | Bar sidebar tile layout | `remya-bar-sidebar.toml` beside the selected Settings configuration |
 | Bar pill layout and options | `remya-bar-layout.toml` beside the selected Settings configuration |
 | Bar folded tray apps | `remya-bar-tray.toml` beside the selected Settings configuration |

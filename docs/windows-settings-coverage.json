@@ -741,16 +741,6 @@
       "area": "System",
       "path": [
         "Notifications",
-        "Allow notifications to play sounds"
-      ],
-      "page": "notifications",
-      "coverage": "control",
-      "control": "notifications.reference.da472fb3"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Notifications",
         "Show notifications on the lock screen"
       ],
       "page": "notifications",
@@ -761,95 +751,10 @@
       "area": "System",
       "path": [
         "Notifications",
-        "Show reminders and incoming VoIP calls on the lock screen"
-      ],
-      "page": "notifications",
-      "coverage": "control",
-      "control": "notifications.reference.1517c6c9"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Notifications",
-        "Show notification bell icon"
-      ],
-      "page": "notifications",
-      "coverage": "control",
-      "control": "notifications.reference.d08d71db"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Notifications",
-        "Do not disturb"
-      ],
-      "page": "notifications",
-      "coverage": "control",
-      "control": "notifications.reference.30527137"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Notifications",
         "Turn on do not disturb automatically"
       ],
       "page": "notifications",
       "coverage": "section"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Notifications",
-        "Turn on do not disturb automatically",
-        "During these times"
-      ],
-      "page": "notifications",
-      "coverage": "control",
-      "control": "notifications.reference.40e74cde"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Notifications",
-        "Turn on do not disturb automatically",
-        "When duplicating your display (priority notification banners are also hidden)"
-      ],
-      "page": "notifications",
-      "coverage": "control",
-      "control": "notifications.reference.1c052cd8"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Notifications",
-        "Turn on do not disturb automatically",
-        "When playing a game"
-      ],
-      "page": "notifications",
-      "coverage": "control",
-      "control": "notifications.reference.210adac4"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Notifications",
-        "Turn on do not disturb automatically",
-        "When using an app in full-screen mode (priority notification banners are also hidden)"
-      ],
-      "page": "notifications",
-      "coverage": "control",
-      "control": "notifications.reference.3554d597"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Notifications",
-        "Turn on do not disturb automatically",
-        "For the first hour after a Windows feature update"
-      ],
-      "page": "notifications",
-      "coverage": "control",
-      "control": "notifications.reference.3d050709"
     },
     {
       "area": "System",
@@ -869,41 +774,6 @@
       ],
       "page": "notifications",
       "coverage": "section"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Notifications",
-        "Set Priority Notifications",
-        "Calls and reminders",
-        "Show incoming calls, including VoIP"
-      ],
-      "page": "notifications",
-      "coverage": "control",
-      "control": "notifications.reference.beb97dd8"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Notifications",
-        "Set Priority Notifications",
-        "Calls and reminders",
-        "Show reminders, regardless of app used"
-      ],
-      "page": "notifications",
-      "coverage": "control",
-      "control": "notifications.reference.8ad51f25"
-    },
-    {
-      "area": "System",
-      "path": [
-        "Notifications",
-        "Set Priority Notifications",
-        "Apps"
-      ],
-      "page": "notifications",
-      "coverage": "control",
-      "control": "notifications.reference.7e9418df"
     },
     {
       "area": "System",

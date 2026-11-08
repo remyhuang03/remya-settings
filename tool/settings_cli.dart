@@ -9,6 +9,7 @@ const usage = '''Usage: remya_settings <command> [arguments]
   get remya-bar.clock-seconds        Read the bar clock preference
   get remya-bar.folded-apps           List folded app tray IDs
   get remya-bar.layout                Read bar pill groups and options
+  get notifications                   Read notification and Do Not Disturb preferences
   set <setting-id> <value|->           Apply an available setting; - reads the value from stdin
   install-appimage <path>            Install an AppImage and show its progress in Settings
   list                               List all controls and availability

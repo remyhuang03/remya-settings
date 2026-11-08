@@ -5,6 +5,9 @@ Colors and themes contains the system Light/Dark selector, the accent color, and
 Appearance → Remy'a Bar contains Show seconds, enabled by default. The Settings
 service saves this app preference and publishes changes to running bars. See
 [the clock preference API](public-api.md#remya-bar-appearance).
+Notifications, Automatic Do Not Disturb and Priority notification hold the
+preferences of the bar's notification service; see
+[notifications](public-api.md#notifications).
 
 ## Configuration ownership
 

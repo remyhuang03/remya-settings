@@ -4158,10 +4158,10 @@
       "id": "notifications",
       "category": "notifications",
       "title": "Notifications",
-      "description": "App Notifications, Do Not Disturb and Priority",
+      "description": "Sounds, Do Not Disturb and popups",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Applies to the notifications shown by Remy'a Bar, the desktop notification service.",
       "sources": [
         "uris"
       ],
@@ -4170,110 +4170,60 @@
       ],
       "sections": [
         {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "notifications.7a66c0d0",
-              "title": "Notice",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "notifications.e0ab8430",
-              "title": "Allow notifications to play sounds",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "notifications.4a3428cc",
-              "title": "Lock screen notification",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "notifications.d6aba528",
-              "title": "Lock screen reminders and incoming calls",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "notifications.d503fb54",
-              "title": "Show notification bell icon",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        },
-        {
           "title": "Do not disturb",
           "controls": [
             {
-              "id": "notifications.a04cba4d",
+              "id": "notifications.do-not-disturb",
               "title": "Do not disturb",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Hide notification popups and sounds. Critical notifications and priority notifications still show; history keeps everything.",
               "value": false
             },
             {
-              "id": "notifications.7abaf526",
-              "title": "Automatically turn on Do Not Disturb",
+              "id": "notifications.automatic-dnd",
+              "title": "Turn on Do Not Disturb automatically",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Open the schedule and full screen conditions.",
+              "value": "Open"
             },
             {
-              "id": "notifications.5ca577ba",
-              "title": "Set up priority notifications",
+              "id": "notifications.priority",
+              "title": "Set priority notifications",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Choose calls and apps that break through Do Not Disturb.",
+              "value": "Open"
             }
           ]
         },
         {
-          "title": "Other settings",
+          "title": "Popups",
           "controls": [
             {
-              "id": "notifications.d04ff1cd",
-              "title": "Display welcome experience after update",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "notifications.bf018b80",
-              "title": "Get tips and advice when using the system",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "notifications.af16c789",
-              "title": "Screen indicator position",
+              "id": "notifications.popup-duration",
+              "title": "Popup duration",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "How long popups stay when the sender does not set a duration. Critical notifications stay until closed.",
               "options": [
-                "Bottom center",
-                "Upper left corner",
-                "Top center"
+                "3 seconds",
+                "5 seconds",
+                "8 seconds",
+                "10 seconds",
+                "15 seconds",
+                "30 seconds"
               ],
-              "value": "Bottom center"
+              "value": "5 seconds"
+            },
+            {
+              "id": "notifications.sounds",
+              "title": "Play sounds",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Play the sound a notification requests, or the theme's message sound. Senders can ask for silence.",
+              "value": true
             }
           ]
         },
@@ -4281,19 +4231,6 @@
           "title": "Windows reference settings",
           "collapsed": true,
           "controls": [
-            {
-              "id": "notifications.reference.da472fb3",
-              "title": "Allow notifications to play sounds",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Notifications",
-                "Allow notifications to play sounds"
-              ],
-              "value": false
-            },
             {
               "id": "notifications.reference.c7fafa9e",
               "title": "Show notifications on the lock screen",
@@ -4304,156 +4241,6 @@
                 "Notifications",
                 "Notifications",
                 "Show notifications on the lock screen"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.1517c6c9",
-              "title": "Show reminders and incoming VoIP calls on the lock screen",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Notifications",
-                "Show reminders and incoming VoIP calls on the lock screen"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.d08d71db",
-              "title": "Show notification bell icon",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Notifications",
-                "Show notification bell icon"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.30527137",
-              "title": "Do not disturb",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Do not disturb"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.40e74cde",
-              "title": "During these times",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Turn on do not disturb automatically",
-                "During these times"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "notifications.reference.1c052cd8",
-              "title": "When duplicating your display (priority notification banners are also hidden)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Turn on do not disturb automatically",
-                "When duplicating your display (priority notification banners are also hidden)"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.210adac4",
-              "title": "When playing a game",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Turn on do not disturb automatically",
-                "When playing a game"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.3554d597",
-              "title": "When using an app in full-screen mode (priority notification banners are also hidden)",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Turn on do not disturb automatically",
-                "When using an app in full-screen mode (priority notification banners are also hidden)"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            },
-            {
-              "id": "notifications.reference.3d050709",
-              "title": "For the first hour after a Windows feature update",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Turn on do not disturb automatically",
-                "For the first hour after a Windows feature update"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.beb97dd8",
-              "title": "Show incoming calls, including VoIP",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Set Priority Notifications",
-                "Calls and reminders",
-                "Show incoming calls, including VoIP"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.8ad51f25",
-              "title": "Show reminders, regardless of app used",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Set Priority Notifications",
-                "Calls and reminders",
-                "Show reminders, regardless of app used"
-              ],
-              "value": false
-            },
-            {
-              "id": "notifications.reference.7e9418df",
-              "title": "Apps",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Notifications",
-                "Set Priority Notifications",
-                "Apps"
               ],
               "value": false
             }
@@ -4545,10 +4332,10 @@
       "id": "quiet-schedule",
       "category": "notifications",
       "title": "Automatic Do Not Disturb",
-      "description": "Time, full screen and presentation conditions",
+      "description": "Schedule and full screen conditions",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Turns on Do Not Disturb automatically for Remy'a Bar notifications.",
       "sources": [
         "uris"
       ],
@@ -4559,76 +4346,57 @@
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Schedule",
           "controls": [
             {
-              "id": "quiet-schedule.a4bf60fc",
+              "id": "quiet-schedule.enabled",
               "title": "During these times",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Turn on Do Not Disturb between the start and end times.",
               "value": false
             },
             {
-              "id": "quiet-schedule.00e784e0",
-              "title": "When copying a monitor",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "quiet-schedule.00e302dd",
-              "title": "While playing games",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "quiet-schedule.98b0a144",
-              "title": "When the app is in full screen mode",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "quiet-schedule.52bb4227",
-              "title": "First hour after system update",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "quiet-schedule.e8868af6",
+              "id": "quiet-schedule.start",
               "title": "Start time",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
+              "availability": "available",
+              "reason": "24-hour time, such as 22:00.",
+              "value": "22:00"
             },
             {
-              "id": "quiet-schedule.a0bb9f49",
+              "id": "quiet-schedule.end",
               "title": "End time",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
+              "availability": "available",
+              "reason": "24-hour time; earlier than the start ends on the next day.",
+              "value": "07:00"
             },
             {
-              "id": "quiet-schedule.6e708ba7",
+              "id": "quiet-schedule.repeat",
               "title": "Repeat",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Days on which the schedule starts.",
               "options": [
                 "Every day",
-                "Working days",
-                "Weekend"
+                "Weekdays",
+                "Weekends"
               ],
               "value": "Every day"
+            }
+          ]
+        },
+        {
+          "title": "Conditions",
+          "controls": [
+            {
+              "id": "quiet-schedule.fullscreen",
+              "title": "When an app is full screen",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Turn on Do Not Disturb while any display shows a full screen window.",
+              "value": false
             }
           ]
         }
@@ -4639,41 +4407,33 @@
       "id": "priority-notifications",
       "category": "notifications",
       "title": "Priority notification",
-      "description": "Incoming calls, reminders and exceptions apps",
+      "description": "Calls and apps that break through Do Not Disturb",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Priority notifications still pop up and play sounds while Do Not Disturb is on.",
       "sources": [
         "uris"
       ],
       "windowsUris": [],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Priority",
           "controls": [
             {
-              "id": "priority-notifications.79d29523",
-              "title": "Show incoming call notification",
+              "id": "priority-notifications.calls",
+              "title": "Incoming calls",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
+              "availability": "available",
+              "reason": "Show call notifications (category call.incoming) during Do Not Disturb.",
+              "value": true
             },
             {
-              "id": "priority-notifications.64f96963",
-              "title": "Always show reminders",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "priority-notifications.c4e0313c",
-              "title": "Add priority applications",
+              "id": "priority-notifications.apps",
+              "title": "Priority apps",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Apps whose notifications show during Do Not Disturb.",
+              "value": "Manage"
             }
           ]
         }

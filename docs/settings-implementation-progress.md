@@ -10,8 +10,8 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 
 ## 当前概况
 
-- 设置分类：15 个；详情页面：134 个；设置条目：1619 项。
-- 已实现：195 项；未实现：1414 项；不适用：10 项。
+- 设置分类：15 个；详情页面：134 个；设置条目：1601 项。
+- 已实现：214 项；未实现：1377 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
@@ -62,10 +62,10 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 | [系统](#category-system) | 17 | 228 | 55 | 173 | 0 |
 | [声音](#category-sound) | 3 | 17 | 14 | 3 | 0 |
 | [电源与电池](#category-power) | 3 | 40 | 0 | 40 | 0 |
-| [通知](#category-notifications) | 4 | 41 | 0 | 41 | 0 |
+| [通知](#category-notifications) | 4 | 19 | 12 | 7 | 0 |
 | [蓝牙和设备](#category-devices) | 13 | 200 | 12 | 184 | 4 |
 | [网络和 Internet](#category-network) | 12 | 97 | 33 | 64 | 0 |
-| [外观](#category-appearance) | 9 | 295 | 20 | 275 | 0 |
+| [外观](#category-appearance) | 10 | 298 | 23 | 275 | 0 |
 | [应用](#category-apps) | 5 | 40 | 25 | 15 | 0 |
 | [账户](#category-accounts) | 11 | 60 | 3 | 51 | 6 |
 | [时间和语言](#category-time) | 4 | 28 | 8 | 20 | 0 |
@@ -807,59 +807,38 @@ Windows 参考入口：`ms-settings:batterysaver-usagedetails`。
 
 ### Notifications — `notifications`
 
-应用通知、免打扰与优先级
+声音、免打扰与弹窗
 
-页面状态：**未实现**；条目：24；已实现 0 / 未实现 24 / 不适用 0。
+页面状态：**已接入基础功能**；条目：6；已实现 5 / 未实现 1 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Applies to the notifications shown by Remy'a Bar, the desktop notification service.
 
 Windows 参考入口：`ms-settings:notifications`。
 
 相关页面 ID：`quiet-schedule`、`priority-notifications`。
 
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Notice | `notifications.7a66c0d0` | 开关 | 未实现 | — |
-| Allow notifications to play sounds | `notifications.e0ab8430` | 开关 | 未实现 | — |
-| Lock screen notification | `notifications.4a3428cc` | 开关 | 未实现 | — |
-| Lock screen reminders and incoming calls | `notifications.d6aba528` | 开关 | 未实现 | — |
-| Show notification bell icon | `notifications.d503fb54` | 开关 | 未实现 | — |
+偏好保存在 `notifications.toml`，由 Remy'a Bar 通知服务实时应用；见 [公共接口](public-api.md#notifications)。已删除不适用于 Linux / Hyprland 的条目（锁屏通知、铃铛图标、欢迎体验与提示）。
 
 #### 免打扰
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Do not disturb | `notifications.a04cba4d` | 开关 | 未实现 | — |
-| Automatically turn on Do Not Disturb | `notifications.7abaf526` | 操作 | 未实现 | — |
-| Set up priority notifications | `notifications.5ca577ba` | 操作 | 未实现 | — |
+| Do not disturb | `notifications.do-not-disturb` | 开关 | 已实现 | Settings 服务持久化与 CLI/D-Bus 对等测试；Bar 通知服务实时隐藏非优先弹窗与声音，实机验证 |
+| Turn on Do Not Disturb automatically | `notifications.automatic-dnd` | 操作 | 已实现 | 打开 Automatic Do Not Disturb 页面；`test/notifications_page_test.dart` |
+| Set priority notifications | `notifications.priority` | 操作 | 已实现 | 打开 Priority notification 页面 |
 
-#### 其他设置
+#### 弹窗
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Display welcome experience after update | `notifications.d04ff1cd` | 开关 | 未实现 | — |
-| Get tips and advice when using the system | `notifications.bf018b80` | 开关 | 未实现 | — |
-| Screen indicator position | `notifications.af16c789` | 选择 | 未实现 | — |
+| Popup duration | `notifications.popup-duration` | 选择 | 已实现 | Settings 校验 1–60 秒并持久化；Bar 实时应用默认弹窗时长 |
+| Play sounds | `notifications.sounds` | 开关 | 已实现 | Bar 通过 libcanberra `canberra-gtk-play` 播放请求或主题消息声音，遵守 suppress-sound |
 
 #### Windows 参考细项
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Allow notifications to play sounds | `notifications.reference.da472fb3` | 开关 | 未实现 | — |
 | Show notifications on the lock screen | `notifications.reference.c7fafa9e` | 开关 | 未实现 | — |
-| Show reminders and incoming VoIP calls on the lock screen | `notifications.reference.1517c6c9` | 开关 | 未实现 | — |
-| Show notification bell icon | `notifications.reference.d08d71db` | 开关 | 未实现 | — |
-| Do not disturb | `notifications.reference.30527137` | 开关 | 未实现 | — |
-| During these times | `notifications.reference.40e74cde` | 选择 | 未实现 | — |
-| When duplicating your display (priority notification banners are also hidden) | `notifications.reference.1c052cd8` | 开关 | 未实现 | — |
-| When playing a game | `notifications.reference.210adac4` | 开关 | 未实现 | — |
-| When using an app in full-screen mode (priority notification banners are also hidden) | `notifications.reference.3554d597` | 选择 | 未实现 | — |
-| For the first hour after a Windows feature update | `notifications.reference.3d050709` | 开关 | 未实现 | — |
-| Show incoming calls, including VoIP | `notifications.reference.beb97dd8` | 开关 | 未实现 | — |
-| Show reminders, regardless of app used | `notifications.reference.8ad51f25` | 开关 | 未实现 | — |
-| Apps | `notifications.reference.7e9418df` | 开关 | 未实现 | — |
 
 ### Focus — `focus`
 
@@ -884,42 +863,41 @@ Windows 参考入口：`ms-settings:quiethours`。
 
 ### Automatic Do Not Disturb — `quiet-schedule`
 
-时间、全屏与演示条件
+计划与全屏条件
 
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Turns on Do Not Disturb automatically for Remy'a Bar notifications.
 
-Windows 参考入口：`ms-settings:quietmomentsscheduled`、`ms-settings:quietmomentspresentation`、`ms-settings:quietmomentsgame`。
-
-#### 设置
+#### 计划
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| During these times | `quiet-schedule.a4bf60fc` | 开关 | 未实现 | — |
-| When copying a monitor | `quiet-schedule.00e784e0` | 开关 | 未实现 | — |
-| While playing games | `quiet-schedule.00e302dd` | 开关 | 未实现 | — |
-| When the app is in full screen mode | `quiet-schedule.98b0a144` | 开关 | 未实现 | — |
-| First hour after system update | `quiet-schedule.52bb4227` | 开关 | 未实现 | — |
-| Start time | `quiet-schedule.e8868af6` | 文本输入 | 未实现 | — |
-| End time | `quiet-schedule.a0bb9f49` | 文本输入 | 未实现 | — |
-| Repeat | `quiet-schedule.6e708ba7` | 选择 | 未实现 | — |
+| During these times | `quiet-schedule.enabled` | 开关 | 已实现 | Bar Rust 按计划计算免打扰（跨午夜属于开始日）；Rust 单元测试 |
+| Start time | `quiet-schedule.start` | 文本输入 | 已实现 | HH:MM 校验与持久化；Rust 单元测试 |
+| End time | `quiet-schedule.end` | 文本输入 | 已实现 | HH:MM 校验与持久化；Rust 单元测试 |
+| Repeat | `quiet-schedule.repeat` | 选择 | 已实现 | 每天 / 工作日 / 周末；Rust 单元测试 |
+
+#### 条件
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| When an app is full screen | `quiet-schedule.fullscreen` | 开关 | 已实现 | 各输出上报 Hyprland 全屏状态，任一全屏即免打扰；Rust 单元测试 |
 
 ### Priority notification — `priority-notifications`
 
-来电、提醒与例外应用
+穿透免打扰的来电与应用
 
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+页面状态：**已实现**；条目：2；已实现 2 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Priority notifications still pop up and play sounds while Do Not Disturb is on.
 
-#### 设置
+#### 优先
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Show incoming call notification | `priority-notifications.79d29523` | 开关 | 未实现 | — |
-| Always show reminders | `priority-notifications.64f96963` | 开关 | 未实现 | — |
-| Add priority applications | `priority-notifications.c4e0313c` | 操作 | 未实现 | — |
+| Incoming calls | `priority-notifications.calls` | 开关 | 已实现 | category 为 call / call.incoming 的通知穿透免打扰；Rust 单元测试 |
+| Priority apps | `priority-notifications.apps` | 操作 | 已实现 | 按 desktop-entry 或应用名匹配；从已安装应用添加；Rust 单元测试 |
 
 <a id="category-devices"></a>
 
