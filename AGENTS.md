@@ -19,7 +19,7 @@
 - Put Rust crates under `lib/src/rust/<crate>/`. Group backend functionality by feature; create crates only for concrete responsibility or dependency boundaries.
 - `lib/src/rust/core/` is the initial empty backend crate. Do not turn it into a catch-all for unrelated features.
 - Extract shared code only when multiple features need it; avoid speculative layers and empty feature scaffolding.
-- Implement backend logic and complex or performance-critical computation in Rust. The appearance feature is connected through `flutter_rust_bridge` 2.13.0. Keep system appearance code in `lib/src/rust/appearance/`, system update code in `lib/src/rust/updates/`, Hyprland display code in `lib/src/rust/display/`, NetworkManager and desktop proxy code in `lib/src/rust/network/`, XDG autostart code in `lib/src/rust/startup/` and storage and cleanup code in `lib/src/rust/storage/`; do not move them into Dart or the empty core crate.
+- Implement backend logic and complex or performance-critical computation in Rust. The appearance feature is connected through `flutter_rust_bridge` 2.13.0. Keep system appearance code in `lib/src/rust/appearance/`, system update code in `lib/src/rust/updates/`, Hyprland display code in `lib/src/rust/display/`, NetworkManager and desktop proxy code in `lib/src/rust/network/`, XDG autostart code in `lib/src/rust/startup/`, mouse, touchpad and keyboard shortcut code in `lib/src/rust/input/` and storage and cleanup code in `lib/src/rust/storage/`; do not move them into Dart or the empty core crate.
 - Keep generated bridge code separate from handwritten code and regenerate it instead of editing it manually. Use `flutter_rust_bridge.yaml`, the matching 2.13.0 generator, and FVM formatting after generation. Linux CMake builds and bundles the Rust shared library.
 
 ## Public Interfaces and Dependent Applications
@@ -34,7 +34,7 @@
 - Debug dependent applications may pass the Settings debug executable to the public opener; keep release launch on the D-Bus interface and document missing-build guidance.
 - `packages/remya_settings_client` is the public integration boundary for dependent apps. Keep its pure Dart contract usable without Flutter and its theme adapter free of Settings UI or backend dependencies. Update its current contract directly when methods or payload shapes change; do not retain obsolete interface versions for compatibility.
 - Keep debug application preferences in repository config/config.local.toml regardless of launch cwd. Profile/release preferences use XDG_CONFIG_HOME/remya/settings/config.toml with the standard HOME fallback. Keep installation bundles and desktop, D-Bus and systemd user unit metadata under XDG_DATA_HOME and commands under HOME/.local/bin. Ignore relative XDG values.
-- Support Hyprland's Lua configuration only for display persistence: write only `hl.monitor` rules in `$XDG_CONFIG_HOME/hypr/monitors.lua`, and refuse to edit a file with content the strict reader cannot prove safe. Risky display changes need the service-owned keep-or-revert countdown, and persist only after confirmation.
+- Support Hyprland's Lua configuration only for display and input persistence: write only `hl.monitor` rules in `$XDG_CONFIG_HOME/hypr/monitors.lua`, and only rendered `hl.config` input options and `hl.bind`/`hl.unbind` shortcuts in the Settings-owned `$XDG_CONFIG_HOME/hypr/remya-settings/input.lua`, loaded by one managed `require` block in `hyprland.lua`. Refuse to edit a file with content the strict reader cannot prove safe. Risky display changes need the service-owned keep-or-revert countdown, and persist only after confirmation.
 - Do not automatically migrate or remove prior installations or user configuration. Use `tool/install.py`; refuse to overwrite unrelated commands or update a running installed bundle. It may ask the resident service to Quit (refused while a system update runs) and restart its user unit afterwards.
 - Keep `docs/public-api.md` and `docs/xdg-layout.md` synchronized with implementation. Use isolated XDG roots and GSettings state for system-write verification.
 
@@ -82,7 +82,7 @@
 
 ## Validation
 - Run `fvm flutter pub get` after dependency changes. Use `fvm flutter run -d linux` for interactive verification and release builds when release behavior changes.
-- Keep durable tests for non-trivial logic and regressions; remove temporary UI inspection tests after verification and avoid duplicate coverage.
+- Keep durable tests only for non-trivial logic and regressions. Check trivial content (static text, catalog wording, one-off UI inspection) with temporary test files and delete them once they pass; avoid duplicate coverage.
 - A successful build does not verify desktop behavior. Check affected window behavior and interactions on the real desktop; report untested boundaries.
 - Validate configuration input, preserve the last valid state on errors, and use atomic persistence when writing configuration is introduced. Never commit secrets or machine-specific configuration.
 
