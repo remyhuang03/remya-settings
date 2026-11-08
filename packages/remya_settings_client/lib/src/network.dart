@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'dbus_client.dart';
 
+const airplaneEnabledSettingId = 'airplane.enabled';
+const airplaneWifiSettingId = 'airplane.wifi';
+
 const wifiEnabledSettingId = 'wifi.enabled';
 const wifiAdapterSettingId = 'wifi.adapter';
 const wifiDisconnectSettingId = 'wifi.disconnect';
@@ -15,6 +18,11 @@ const knownNetworkPasswordSettingId = 'known-networks.change-password';
 const knownNetworkForgetSettingId = 'known-networks.forget';
 
 extension NetworkClient on SettingsClient {
+  Future<Map<String, dynamic>> readAirplane() => call('Get', ['airplane']);
+  Future<Map<String, dynamic>> setAirplaneEnabled(bool enabled) =>
+      call('Set', [airplaneEnabledSettingId, '$enabled']);
+  Future<Map<String, dynamic>> setAirplaneWifiEnabled(bool enabled) =>
+      call('Set', [airplaneWifiSettingId, '$enabled']);
   Future<Map<String, dynamic>> readNetwork() => call('Get', ['network']);
   Future<Map<String, dynamic>> readNetworkTraffic() =>
       call('Get', ['network-traffic']);

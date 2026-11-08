@@ -178,18 +178,6 @@
       "title": "Display"
     },
     {
-      "uri": "ms-settings:easeofaccess-eyecontrol",
-      "page": "eye-control",
-      "sourceCategory": "Ease of access",
-      "title": "Eye control"
-    },
-    {
-      "uri": "ms-settings:easeofaccess-hearingaids",
-      "page": "hearing",
-      "sourceCategory": "Ease of access",
-      "title": "Hearing devices"
-    },
-    {
       "uri": "ms-settings:easeofaccess-highcontrast",
       "page": "contrast",
       "sourceCategory": "Ease of access",
@@ -214,12 +202,6 @@
       "title": "Mouse"
     },
     {
-      "uri": "ms-settings:easeofaccess-mousepointer",
-      "page": "pointer",
-      "sourceCategory": "Ease of access",
-      "title": "Mouse pointer & touch"
-    },
-    {
       "uri": "ms-settings:easeofaccess-narrator",
       "page": "narrator",
       "sourceCategory": "Ease of access",
@@ -230,12 +212,6 @@
       "page": "narrator",
       "sourceCategory": "Ease of access",
       "title": "Narrator"
-    },
-    {
-      "uri": "ms-settings:easeofaccess-speechrecognition",
-      "page": "voice-access",
-      "sourceCategory": "Ease of access",
-      "title": "Speech"
     },
     {
       "uri": "ms-settings:easeofaccess-visualeffects",
@@ -272,12 +248,6 @@
       "page": "airplane",
       "sourceCategory": "Network and internet",
       "title": "Airplane mode"
-    },
-    {
-      "uri": "ms-settings:network-cellular",
-      "page": "cellular",
-      "sourceCategory": "Network and internet",
-      "title": "Cellular & SIM"
     },
     {
       "uri": "ms-settings:network-ethernet",
@@ -1169,54 +1139,6 @@
       "control": "vpn.reference.b8f24d72"
     },
     {
-      "area": "Network & internet",
-      "path": [
-        "Cellular"
-      ],
-      "page": "cellular",
-      "coverage": "section"
-    },
-    {
-      "area": "Network & internet",
-      "path": [
-        "Cellular",
-        "Let Windows keep me connected"
-      ],
-      "page": "cellular",
-      "coverage": "control",
-      "control": "cellular.reference.0a6416ca"
-    },
-    {
-      "area": "Network & internet",
-      "path": [
-        "Cellular",
-        "Metered Connection"
-      ],
-      "page": "cellular",
-      "coverage": "control",
-      "control": "cellular.reference.3a1637fd"
-    },
-    {
-      "area": "Network & internet",
-      "path": [
-        "Cellular",
-        "Data roaming options (dropdown)"
-      ],
-      "page": "cellular",
-      "coverage": "control",
-      "control": "cellular.reference.120ca531"
-    },
-    {
-      "area": "Network & internet",
-      "path": [
-        "Cellular",
-        "Use cellular whenever Wi-Fi is poor"
-      ],
-      "page": "cellular",
-      "coverage": "control",
-      "control": "cellular.reference.a4a32b75"
-    },
-    {
       "area": "Personalization",
       "path": [
         "Background"
@@ -1903,14 +1825,6 @@
     {
       "area": "Vision",
       "path": [
-        "Mouse pointer and touch"
-      ],
-      "page": "pointer",
-      "coverage": "section"
-    },
-    {
-      "area": "Vision",
-      "path": [
         "Mouse pointer and touch",
         "Mouse pointer style"
       ],
@@ -1927,26 +1841,6 @@
       "page": "cursor",
       "coverage": "control",
       "control": "cursor.reference.966d030b"
-    },
-    {
-      "area": "Vision",
-      "path": [
-        "Mouse pointer and touch",
-        "Touch indicator"
-      ],
-      "page": "pointer",
-      "coverage": "control",
-      "control": "pointer.reference.09b6b51e"
-    },
-    {
-      "area": "Vision",
-      "path": [
-        "Mouse pointer and touch",
-        "Make the touch indicator circle darker and larger"
-      ],
-      "page": "pointer",
-      "coverage": "control",
-      "control": "pointer.reference.5ed3015e"
     },
     {
       "area": "Vision",
@@ -2791,45 +2685,6 @@
     {
       "area": "Interaction",
       "path": [
-        "Speech"
-      ],
-      "page": "voice-access",
-      "coverage": "section"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Speech",
-        "Voice access (main toggle)"
-      ],
-      "page": "voice-access",
-      "coverage": "section"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Speech",
-        "Voice access (main toggle)",
-        "Start voice access after you sign in to your PC"
-      ],
-      "page": "voice-access",
-      "coverage": "control",
-      "control": "voice-access.reference.1353c86e"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Speech",
-        "Voice access (main toggle)",
-        "Start voice access before you sign in to your PC"
-      ],
-      "page": "voice-access",
-      "coverage": "control",
-      "control": "voice-access.reference.5c4cd1f8"
-    },
-    {
-      "area": "Interaction",
-      "path": [
         "Keyboard"
       ],
       "page": "accessibility-keyboard",
@@ -3152,143 +3007,6 @@
       "page": "mouse-keys",
       "coverage": "control",
       "control": "mouse-keys.reference.df0cfb8c"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Eye Control"
-      ],
-      "page": "eye-control",
-      "coverage": "section"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Eye Control",
-        "Eye Control (toggle)"
-      ],
-      "page": "eye-control",
-      "coverage": "control",
-      "control": "eye-control.reference.907d9244"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Eye Control",
-        "Gaze app (Eye Control in-app settings)"
-      ],
-      "page": "eye-control",
-      "coverage": "section"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Eye Control",
-        "Gaze app (Eye Control in-app settings)",
-        "Choose how to \"click\" - Click by dwelling/with a switch"
-      ],
-      "page": "eye-control",
-      "coverage": "control",
-      "control": "eye-control.reference.21352930"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Eye Control",
-        "Gaze app (Eye Control in-app settings)",
-        "Show gaze cursor"
-      ],
-      "page": "eye-control",
-      "coverage": "control",
-      "control": "eye-control.reference.6a77b7f2"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Eye Control",
-        "Gaze app (Eye Control in-app settings)",
-        "Use shape writing"
-      ],
-      "page": "eye-control",
-      "coverage": "control",
-      "control": "eye-control.reference.d6f76a93"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Eye Control",
-        "Gaze app (Eye Control in-app settings)",
-        "Use advanced mouse features"
-      ],
-      "page": "eye-control",
-      "coverage": "control",
-      "control": "eye-control.reference.4b13d6bb"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Eye Control",
-        "Gaze app (Eye Control in-app settings)",
-        "Typing dwell time"
-      ],
-      "page": "eye-control",
-      "coverage": "control",
-      "control": "eye-control.reference.78e70cc1"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Eye Control",
-        "Gaze app (Eye Control in-app settings)",
-        "General dwell time"
-      ],
-      "page": "eye-control",
-      "coverage": "control",
-      "control": "eye-control.reference.cd2d145c"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Eye Control",
-        "Gaze app (Eye Control in-app settings)",
-        "Smoothing"
-      ],
-      "page": "eye-control",
-      "coverage": "control",
-      "control": "eye-control.reference.116858e7"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Eye Control",
-        "Gaze app (Eye Control in-app settings)",
-        "Lag"
-      ],
-      "page": "eye-control",
-      "coverage": "control",
-      "control": "eye-control.reference.20b71f9e"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Eye Control",
-        "Gaze app (Eye Control in-app settings)",
-        "Dock bottom"
-      ],
-      "page": "eye-control",
-      "coverage": "control",
-      "control": "eye-control.reference.2938eea9"
-    },
-    {
-      "area": "Interaction",
-      "path": [
-        "Eye Control",
-        "Gaze app (Eye Control in-app settings)",
-        "Keyboard dock button"
-      ],
-      "page": "eye-control",
-      "coverage": "control",
-      "control": "eye-control.reference.da32acee"
     },
     {
       "area": "File Explorer settings",

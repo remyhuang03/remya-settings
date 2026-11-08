@@ -1,4 +1,5 @@
 //! Network status, Wi-Fi and known networks through NetworkManager.
+pub mod airplane;
 pub mod nm;
 
 use remya_settings_display::atomic_write;

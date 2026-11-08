@@ -34,7 +34,6 @@ pub const BAR_SIDEBAR: &str = "remya-bar.sidebar-layout";
 pub const BAR_LAYOUT: &str = "remya-bar.layout";
 pub fn linked_page(id: &str) -> Option<&'static str> {
     match id {
-        "airplane.bluetooth" => Some("bluetooth"),
         "power.743773bd" => Some("battery-saver"),
         "power.03bd05ee" => Some("battery-usage"),
         "notifications.automatic-dnd" => Some("quiet-schedule"),
@@ -768,6 +767,12 @@ impl State {
                     }
                     // Polled every second: answered from the last state, without a NM read.
                     "network-traffic" => Ok(self.network.traffic()),
+                    "airplane" => remya_settings_network::airplane::read(&self.bluetooth),
+                    remya_settings_network::airplane::ENABLED | remya_settings_network::airplane::WIFI => {
+                        let state = remya_settings_network::airplane::read(&self.bluetooth)?;
+                        let value = if key == remya_settings_network::airplane::ENABLED { &state["enabled"] } else { &state["wifi_enabled"] };
+                        Ok(json!({"id":key,"availability":"available","value":value}))
+                    }
                     "bluetooth" => self.bluetooth.read(),
                     _ if remya_settings_bluetooth::is_setting(key) => {
                         let state = self.bluetooth.read()?;
@@ -1107,6 +1112,16 @@ impl State {
         }
         if account::IDS.contains(&key) {
             return self.account.set(key, value, atomic_write);
+        }
+        if [
+            remya_settings_network::airplane::ENABLED,
+            remya_settings_network::airplane::WIFI,
+        ]
+        .contains(&key)
+        {
+            let result = remya_settings_network::airplane::set(&self.bluetooth, key, value);
+            let _ = self.network.refresh();
+            return result;
         }
         if remya_settings_bluetooth::is_setting(key) {
             return self.bluetooth.set(key, value);

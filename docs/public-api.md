@@ -847,7 +847,6 @@ unknown fields, unknown targets and incorrect adapter/device membership fail.
 | `bluetooth.forget` | `{"adapter":"<id>","device":"<id>"}` removes the device and its bond |
 | `bluetooth.cancel` | `{}` cancels pending pairing |
 | `bluetooth.respond` | `{"request":<prompt-id>,"pin":"1234"}`, `{"request":<id>,"passkey":123456}`, or `{"request":<id>,"accept":true}`; `accept:false` rejects any pending request |
-| `airplane.bluetooth` | Literal `open`, equivalent to opening the Bluetooth page |
 
 `bluetooth.adapter`, `bluetooth.devices` and `bluetooth.information` are read-only
 catalog entries. Adapter selection is local to each client; each operation sends
@@ -1169,3 +1168,21 @@ Each drive reports `id`, `model`, `vendor`, `size`, `removable`, `media_removabl
 | `cleanup.run-now` | `{}` |
 
 Zero age means Never. Automatic preferences are app-owned and strictly persisted in `cleanup.toml`; invalid files remain intact and disable policy writes. `last_run` is null or `{at,freed_bytes,error?}`. Run now uses saved ages even when disabled. Automatic runs never perform privileged package operations. Package writes require the existing authorized Settings session, reject during system updates, and revalidate keep bounds, orphan membership/version, package-name characters, count and pacman lock in the root helper. Destructive user-file operations validate reported paths and refuse symlink traversal. CLI `get`/`set` and the pure Dart `StorageClient` use this same dispatch.
+
+## Airplane mode
+
+`Get airplane` returns `api_version: 1`, `available`, derived `enabled`,
+`wifi_enabled`, `wwan_enabled`, `bluetooth_enabled`, and live BlueZ `adapters`.
+Missing services return errors; they never imply that radios are off.
+`Get airplane.enabled` and `Get airplane.wifi` wrap their boolean in `value`.
+`Set airplane.enabled true|false` disables/enables NetworkManager Wi-Fi and WWAN
+and all BlueZ adapters; `Set airplane.wifi true|false` changes only Wi-Fi.
+Both return the verified aggregate state. `Changed` uses the written setting ID.
+
+CLI examples: `remya_settings get airplane`,
+`remya_settings set airplane.enabled true`, `remya_settings set airplane.wifi true`.
+Pure Dart callers use `readAirplane`, `setAirplaneEnabled` and
+`setAirplaneWifiEnabled` from the client network extension. No preference is
+persisted or restored at startup; Off enables all radios rather than restoring
+the previous mix. Partial failures report errors and retain successful shutdowns.
+See [network behavior and verification](network.md#airplane-mode).

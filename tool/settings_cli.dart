@@ -5,7 +5,7 @@ import 'package:dbus/dbus.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
 const usage = '''Usage: remya_settings <command> [arguments]
-  get <theme|system|system-information|hostname|display|display-brightness|background|accent|fonts|startup|startup-candidates:query|network|bluetooth|sound|power|battery-saver|battery-history:json|cameras|account-information|updates|storage|cleanup|font-search:query|font:family|catalog|about|page:id|setting-id>  Read state or metadata
+  get <theme|system|system-information|hostname|display|display-brightness|background|accent|fonts|startup|startup-candidates:query|network|airplane|bluetooth|sound|power|battery-saver|battery-history:json|cameras|account-information|updates|storage|cleanup|font-search:query|font:family|catalog|about|page:id|setting-id>  Read state or metadata
   get remya-bar.clock-seconds        Read the bar clock preference
   get remya-bar.folded-apps           List folded app tray IDs
   get remya-bar.layout                Read bar pill groups and options

@@ -133,7 +133,12 @@ fn run() -> Result<(), String> {
                                 remya_settings_power::KEEP_AWAKE,
                             ]
                             .contains(&args[0].as_str())
-                                || notifications::IDS.contains(&args[0].as_str()))
+                                || notifications::IDS.contains(&args[0].as_str())
+                                || [
+                                    remya_settings_network::airplane::ENABLED,
+                                    remya_settings_network::airplane::WIFI,
+                                ]
+                                .contains(&args[0].as_str()))
                         {
                             signal(&bus, &args[0], &value);
                         }

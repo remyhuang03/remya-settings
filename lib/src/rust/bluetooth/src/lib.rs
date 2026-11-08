@@ -202,6 +202,16 @@ impl Bluetooth {
         }
         self.send(id, parse(value)?)
     }
+    /// Service-owned aggregate operation; the worker verifies every adapter.
+    pub fn set_all_powered(&self, enabled: bool) -> Result<Value, String> {
+        self.send(
+            "power-all",
+            Request {
+                enabled: Some(enabled),
+                ..Default::default()
+            },
+        )
+    }
     pub fn cleanup(&self) {
         let _ = self.send("cleanup", Request::default());
     }

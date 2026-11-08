@@ -40,9 +40,7 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'keyboard' || 'accessibility-keyboard' => Icons.keyboard_outlined,
       'time-more' || 'system-more' || 'appearance-more' => Icons.add_rounded,
       'hypr-keybinds' => Icons.keyboard_outlined,
-      'speech' ||
-      'online-speech' ||
-      'voice-access' => Icons.record_voice_over_outlined,
+      'speech' || 'online-speech' => Icons.record_voice_over_outlined,
       final id when id.startsWith('regionlanguage-') =>
         Icons.keyboard_alt_outlined,
       'projection' => Icons.desktop_windows_outlined,
@@ -60,8 +58,9 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'bluetooth' => Icons.bluetooth_rounded,
       'printers' => Icons.print_outlined,
       'cameras' => Icons.camera_alt_outlined,
-      'mouse' || 'pointer' || 'cursor' => Icons.mouse_outlined,
+      'mouse' || 'cursor' => Icons.mouse_outlined,
       'touchpad' => Icons.touch_app_outlined,
+      'airplane' => Icons.airplanemode_active_rounded,
       'wifi' => Icons.wifi_outlined,
       'known-networks' => Icons.bookmark_outline_rounded,
       'ethernet' => Icons.lan_outlined,

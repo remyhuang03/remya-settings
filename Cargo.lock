@@ -2025,6 +2025,7 @@ name = "remya_settings_network"
 version = "0.1.0"
 dependencies = [
  "gio",
+ "remya_settings_bluetooth",
  "remya_settings_display",
  "serde",
  "serde_json",

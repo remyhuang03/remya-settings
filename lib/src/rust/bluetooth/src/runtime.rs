@@ -406,6 +406,63 @@ fn command(state: &Shared, id: &str, request: Request) -> Result<Value, String> 
         state.borrow_mut().refresh();
         return Ok(state.borrow().publish());
     }
+    if id == "power-all" {
+        let mut s = state.borrow_mut();
+        s.refresh();
+        if !s.available {
+            return Err("Unavailable:Bluetooth service is not available".into());
+        }
+        if s.running() || !s.stopping.is_empty() {
+            return Err("Bluetooth operation or scan cleanup is still in progress".into());
+        }
+        let enabled = request
+            .enabled
+            .ok_or_else(|| invalid("enabled is required"))?;
+        let owner = s.owner.clone().ok_or("Bluetooth service is unavailable")?;
+        let adapters: Vec<_> = s
+            .objects
+            .iter()
+            .filter(|(_, v)| v.contains_key(ADAPTER))
+            .map(|(p, _)| p.as_str().to_owned())
+            .collect();
+        let mut errors = vec![];
+        for adapter in &adapters {
+            let result = s
+                .sync(
+                    &owner,
+                    adapter,
+                    PROPERTIES,
+                    "Set",
+                    Some(&(ADAPTER, "Powered", enabled.to_variant()).to_variant()),
+                )
+                .and_then(|_| {
+                    s.sync(
+                        &owner,
+                        adapter,
+                        PROPERTIES,
+                        "Get",
+                        Some(&(ADAPTER, "Powered").to_variant()),
+                    )
+                })
+                .and_then(|v| {
+                    if v.get::<(Variant,)>().and_then(|v| v.0.get::<bool>()) == Some(enabled) {
+                        Ok(())
+                    } else {
+                        Err("Bluetooth power readback did not match".into())
+                    }
+                });
+            if let Err(error) = result {
+                errors.push(format!("{adapter}: {error}"));
+            }
+        }
+        s.refresh();
+        let value = s.publish();
+        return if errors.is_empty() {
+            Ok(value)
+        } else {
+            Err(errors.join("; "))
+        };
+    }
     if id == "cleanup" {
         cleanup(state);
         return Ok(state.borrow().publish());

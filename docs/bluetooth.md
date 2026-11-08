@@ -31,7 +31,8 @@ GUI disposal and service-observed GUI exit cancel pending pairing and release on
 Settings' own scans. Other applications' discovery sessions are preserved. BlueZ
 restart or hot-unplug invalidates the operation without retrying a write.
 The dedicated GLib context handles Agent calls while pairing is pending; the
-service's global mutex is not held waiting for a PIN or radio operation.
+service's global mutex is not held waiting for a PIN. Aggregate airplane-mode
+writes wait for the bounded Bluetooth worker reply and verified radio readback.
 
 ## State ownership
 
@@ -41,14 +42,15 @@ First use and subsequent reads adopt actual state without writing defaults. Blue
 retains keys; Settings neither reads nor exports them. No stored target is restored
 on startup, and no stable user preference is introduced for reconciliation.
 
-The Airplane mode page links to Bluetooth; its remaining previews do not control
-Bluetooth or imply that global airplane mode is implemented.
+The Airplane mode page controls all adapter power states
+through the Bluetooth worker, together with NetworkManager Wi-Fi/WWAN radios.
+See [Airplane mode](network.md#airplane-mode).
 
 ## Verification
 
 - `test/bluetooth_test.dart`: page states, pairing dialogs, explicit confirmation,
   code validation, optional battery, removal confirmation, error recovery, narrow
-  layout and the Airplane mode link.
+  layout.
 - `cargo test -p remya_settings_bluetooth`: state parsing and input redaction.
 - `python test/bluetooth_smoke.py [debug|release]`: private system and session buses,
   real service transport, target checks, every Agent prompt, rejection, incorrect

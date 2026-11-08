@@ -10,8 +10,8 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 
 ## 当前概况
 
-- 设置分类：15 个；详情页面：133 个；设置条目：1587 项。
-- 已实现：236 项；未实现：1341 项；不适用：10 项。
+- 设置分类：15 个；详情页面：128 个；设置条目：1536 项。
+- 已实现：237 项；未实现：1289 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
@@ -63,13 +63,13 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 | [声音](#category-sound) | 3 | 17 | 14 | 3 | 0 |
 | [电源与电池](#category-power) | 3 | 41 | 15 | 26 | 0 |
 | [通知](#category-notifications) | 4 | 19 | 12 | 7 | 0 |
-| [蓝牙和设备](#category-devices) | 10 | 156 | 18 | 138 | 0 |
-| [网络和 Internet](#category-network) | 12 | 97 | 33 | 64 | 0 |
+| [蓝牙和设备](#category-devices) | 10 | 155 | 18 | 137 | 0 |
+| [网络和 Internet](#category-network) | 11 | 85 | 34 | 51 | 0 |
 | [外观](#category-appearance) | 10 | 298 | 23 | 275 | 0 |
 | [应用](#category-apps) | 5 | 35 | 29 | 6 | 0 |
 | [账户](#category-accounts) | 11 | 58 | 2 | 50 | 6 |
 | [时间和语言](#category-time) | 4 | 28 | 8 | 20 | 0 |
-| [辅助功能](#category-accessibility) | 14 | 236 | 0 | 236 | 0 |
+| [辅助功能](#category-accessibility) | 10 | 198 | 0 | 198 | 0 |
 | [隐私和安全性](#category-privacy) | 9 | 39 | 0 | 35 | 4 |
 | [系统更新](#category-update) | 2 | 9 | 9 | 0 | 0 |
 | [窗口与工作区](#category-hyprland) | 23 | 258 | 0 | 258 | 0 |
@@ -1143,7 +1143,7 @@ Windows 参考入口：`ms-settings:devices-touchpad`。
 
 触摸手势与唤醒
 
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1155,7 +1155,6 @@ Windows 参考入口：`ms-settings:devices-touch`。
 | --- | --- | --- | --- | --- |
 | Three- and four-finger touch gestures | `touch.5cfa5330` | 开关 | 未实现 | — |
 | Touch screen to wake up | `touch.de9f8969` | 开关 | 未实现 | — |
-| Touch indicator | `touch.e963918e` | 开关 | 未实现 | — |
 
 #### Windows 参考细项
 
@@ -1442,21 +1441,16 @@ Windows 参考入口：`ms-settings:network-mobilehotspot`。
 
 ### Airplane mode — `airplane`
 
-无线设备与独立无线开关
+页面状态：**已实现**；条目：2；已实现 2 / 未实现 0 / 不适用 0。
 
-页面状态：**未实现**；条目：3；已实现 1 / 未实现 2 / 不适用 0。
-
-原因：Bluetooth 入口可用；飞行模式及 Wi-Fi 控件仍为预览。
+通过 NetworkManager 的 WirelessEnabled / WwanEnabled 与所有 BlueZ Adapter1.Powered 控制无线电；状态实时派生，不保存或在启动时恢复。关闭飞行模式会启用这些无线电；硬件阻止、授权失败和部分失败均报告错误，并保留真实读回状态。有线网络不受影响。
 
 Windows 参考入口：`ms-settings:network-airplanemode`、`ms-settings:proximity`。
 
-#### 设置
-
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Airplane mode | `airplane.599fbf62` | 开关 | 未实现 | — |
-| Wi-Fi wireless devices | `airplane.3d2af662` | 开关 | 未实现 | — |
-| Bluetooth | `airplane.bluetooth` | 操作 | 已实现 | 打开 Bluetooth 页面；`test/bluetooth_test.dart` |
+| Airplane mode | `airplane.enabled` | 开关 | 已实现 | Rust network airplane tests; `test/airplane_test.dart`; `test/airplane_smoke.py` |
+| Wi-Fi wireless devices | `airplane.wifi` | 开关 | 已实现 | 同上；写入后读回验证 |
 
 ### Proxy — `proxy`
 
@@ -1519,36 +1513,6 @@ Windows 参考入口：`ms-settings:network-proxy`。
 | Traffic restrictions | `data-usage.a4d31b25` | 文本输入 | 未实现 | — |
 | Reset statistics | `data-usage.800eddaf` | 操作 | 未实现 | — |
 
-### Mobile networks — `cellular`
-
-SIM、流量、漫游与 APN
-
-页面状态：**未实现**；条目：11；已实现 0 / 未实现 11 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:network-cellular`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Mobile networks | `cellular.bd841818` | 开关 | 未实现 | — |
-| Automatically keep connected | `cellular.86e5dce3` | 开关 | 未实现 | — |
-| Billing based on traffic flow | `cellular.2bebdc73` | 开关 | 未实现 | — |
-| Data Roaming | `cellular.68aa3b06` | 选择 | 未实现 | — |
-| Use cellular networks when Wi-Fi is poor | `cellular.33c77eb1` | 开关 | 未实现 | — |
-| SIM card properties | `cellular.3cb586c5` | 操作 | 未实现 | — |
-| APN | `cellular.4a7de9b1` | 文本输入 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Let Windows keep me connected | `cellular.reference.0a6416ca` | 开关 | 未实现 | — |
-| Metered Connection | `cellular.reference.3a1637fd` | 开关 | 未实现 | — |
-| Data roaming options (dropdown) | `cellular.reference.120ca531` | 选择 | 未实现 | — |
-| Use cellular whenever Wi-Fi is poor | `cellular.reference.a4a32b75` | 开关 | 未实现 | — |
 
 ### Advanced network settings — `network-advanced`
 
@@ -2592,29 +2556,6 @@ Windows 参考入口：`ms-settings:easeofaccess-visualeffects`。
 | Animation effects | `visual-effects.reference.6aa5bc02` | 开关 | 未实现 | — |
 | Dismiss notifications after preferred amount of time | `visual-effects.reference.5b6b06b4` | 选择 | 未实现 | — |
 
-### Touch indicator — `pointer`
-
-触摸指示器外观
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.
-
-Windows 参考入口：`ms-settings:easeofaccess-mousepointer`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Touch indicator | `pointer.09f053c7` | 开关 | 未实现 | — |
-| Darken and enlarge touch indicators | `pointer.14b7860f` | 开关 | 未实现 | — |
-
-#### Windows reference settings
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Touch indicator | `pointer.reference.09b6b51e` | 开关 | 未实现 | — |
-| Make the touch indicator circle darker and larger | `pointer.reference.5ed3015e` | 开关 | 未实现 | — |
 
 ### Magnifier — `magnifier`
 
@@ -2865,32 +2806,6 @@ Windows 参考入口：`ms-settings:easeofaccess-closedcaptioning`。
 | Position | `captions.reference.07051098` | 选择 | 未实现 | — |
 | Caption Style | `captions.reference.0472a68c` | 选择 | 未实现 | — |
 
-### Voice access — `voice-access`
-
-通过语音控制设备
-
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:easeofaccess-speechrecognition`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Voice access | `voice-access.3712e4ef` | 开关 | 未实现 | — |
-| Start after login | `voice-access.c42bf921` | 开关 | 未实现 | — |
-| Start before login | `voice-access.21f929d8` | 开关 | 未实现 | — |
-| Voice access languages | `voice-access.26a8d374` | 选择 | 未实现 | — |
-| Set up the microphone | `voice-access.56f17992` | 操作 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Start voice access after you sign in to your PC | `voice-access.reference.1353c86e` | 开关 | 未实现 | — |
-| Start voice access before you sign in to your PC | `voice-access.reference.5c4cd1f8` | 开关 | 未实现 | — |
 
 ### Keyboard assistance — `accessibility-keyboard`
 
@@ -3006,67 +2921,6 @@ Windows 参考入口：`ms-settings:easeofaccess-mouse`。
 | Mouse keys speed | `mouse-keys.reference.fe021cfe` | 滑块 | 未实现 | — |
 | Mouse keys acceleration | `mouse-keys.reference.df0cfb8c` | 滑块 | 未实现 | — |
 
-### Eye control — `eye-control`
-
-眼动设备、停留与指针
-
-页面状态：**未实现**；条目：22；已实现 0 / 未实现 22 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:easeofaccess-eyecontrol`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Eye movement control | `eye-control.4f780bcb` | 开关 | 未实现 | — |
-| Click method | `eye-control.c4f9e8b6` | 选择 | 未实现 | — |
-| Show gaze cursor | `eye-control.f1f7bb34` | 开关 | 未实现 | — |
-| Shape writing | `eye-control.9d4cca2d` | 开关 | 未实现 | — |
-| Advanced mouse functions | `eye-control.cfdf7df6` | 开关 | 未实现 | — |
-| Enter stay time | `eye-control.969166aa` | 滑块 | 未实现 | — |
-| Regular length of stay | `eye-control.cbc0cef4` | 滑块 | 未实现 | — |
-| Smoothing | `eye-control.ab22223d` | 滑块 | 未实现 | — |
-| Delay | `eye-control.e9f09214` | 滑块 | 未实现 | — |
-| Parking location | `eye-control.ca848e41` | 选择 | 未实现 | — |
-| Keyboard dock button | `eye-control.9e089fc0` | 开关 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Eye Control (toggle) | `eye-control.reference.907d9244` | 开关 | 未实现 | — |
-| Choose how to "click" - Click by dwelling/with a switch | `eye-control.reference.21352930` | 选择 | 未实现 | — |
-| Show gaze cursor | `eye-control.reference.6a77b7f2` | 开关 | 未实现 | — |
-| Use shape writing | `eye-control.reference.d6f76a93` | 开关 | 未实现 | — |
-| Use advanced mouse features | `eye-control.reference.4b13d6bb` | 开关 | 未实现 | — |
-| Typing dwell time | `eye-control.reference.78e70cc1` | 滑块 | 未实现 | — |
-| General dwell time | `eye-control.reference.cd2d145c` | 滑块 | 未实现 | — |
-| Smoothing | `eye-control.reference.116858e7` | 滑块 | 未实现 | — |
-| Lag | `eye-control.reference.20b71f9e` | 滑块 | 未实现 | — |
-| Dock bottom | `eye-control.reference.2938eea9` | 选择 | 未实现 | — |
-| Keyboard dock button | `eye-control.reference.da32acee` | 选择 | 未实现 | — |
-
-### Hearing devices — `hearing`
-
-蓝牙 LE Audio 助听设备
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:easeofaccess-hearingaids`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Add hearing devices | `hearing.111c1d53` | 操作 | 未实现 | — |
-| Default | `hearing.9a0158b4` | 选择 | 未实现 | — |
-| Left ear volume | `hearing.62883390` | 滑块 | 未实现 | — |
-| Right ear volume | `hearing.d5119674` | 滑块 | 未实现 | — |
-| Microphone ambient sound | `hearing.c5d3fccf` | 开关 | 未实现 | — |
 
 <a id="category-privacy"></a>
 

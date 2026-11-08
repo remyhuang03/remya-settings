@@ -72,6 +72,38 @@ fn write_call(
         .map_err(|e| format!("NetworkManager rejected the change: {e}"))
 }
 
+/// Live radio preferences, including WWAN even when no modem is attached.
+pub(crate) fn radios() -> Result<(bool, bool), String> {
+    let reply = read_call(
+        &bus()?,
+        ROOT,
+        PROPERTIES,
+        "GetAll",
+        Some(&(NM,).to_variant()),
+    )?;
+    let props = reply
+        .get::<(Props,)>()
+        .ok_or("Invalid NetworkManager radio state")?
+        .0;
+    Ok((
+        number(&props, "WirelessEnabled").ok_or("Missing Wi-Fi radio state")?,
+        number(&props, "WwanEnabled").ok_or("Missing WWAN radio state")?,
+    ))
+}
+
+pub(crate) fn set_radio(property: &str, enabled: bool) -> Result<(), String> {
+    if !["WirelessEnabled", "WwanEnabled"].contains(&property) {
+        return Err("Invalid radio property".into());
+    }
+    write_call(
+        ROOT,
+        PROPERTIES,
+        "Set",
+        &(NM, property, enabled.to_variant()).to_variant(),
+    )
+    .map(drop)
+}
+
 fn object(path: &str) -> Result<ObjectPath, String> {
     ObjectPath::try_from(path.to_owned()).map_err(|_| format!("Invalid object path: {path}"))
 }

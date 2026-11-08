@@ -196,3 +196,7 @@ selections are live state, not persisted system preferences. User folders come
 from GLib XDG user directories, cache from absolute XDG_CACHE_HOME with the HOME
 fallback, and Trash uses the FreeDesktop trash crate including per-mount roots.
 See [Storage](storage.md) for deletion boundaries.
+
+Airplane mode creates no Settings files. Its value is derived from live
+NetworkManager Wi-Fi/WWAN and BlueZ adapter power; no airplane state is restored
+at startup. Radio persistence belongs to NetworkManager and BlueZ.

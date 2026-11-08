@@ -18,7 +18,7 @@ A global system settings application for **Hyprland on Linux**, built with **Flu
 > **Early Development & Preview Only — Not Ready for Daily Use**
 >
 > - **Under Active Development**: This software is in an early, experimental stage of development and has **not** reached a usable production state.
-> - **Majority of Features Unavailable**: Out of 1,667 controls across 138 catalog pages, **1,480 controls are unimplemented UI-only previews** (`planned`) and 10 are platform-inapplicable (`unsupported`). Only 177 controls currently have backend integrations.
+> - **Majority of Features Unavailable**: Out of 1,536 controls across 128 catalog pages, **1,289 controls are unimplemented UI-only previews** (`planned`) and 10 are platform-inapplicable (`unsupported`). Only 237 controls currently have backend integrations.
 > - **Implemented Features Are Unstable**: Even the implemented integrations are unstable, subject to breaking changes, and may have incomplete hardware verification boundaries.
 > - **For Preview & Evaluation Only**: This repository is currently intended strictly for design preview and development reference. Use at your own risk on real systems.
 

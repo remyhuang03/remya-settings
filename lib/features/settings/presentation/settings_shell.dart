@@ -19,6 +19,7 @@ import '../../network/application/network_controller.dart';
 import '../../network/presentation/known_networks_page.dart';
 import '../../network/presentation/network_status_page.dart';
 import '../../network/presentation/wifi_page.dart';
+import '../../network/presentation/airplane_page.dart';
 import '../../applications/application/applications_controller.dart';
 import '../../applications/presentation/appimages_page.dart';
 import '../../applications/presentation/installed_apps_page.dart';
@@ -509,6 +510,8 @@ class _SettingsShellState extends State<SettingsShell> {
       content = AppImagesPage(
         controller: ApplicationsScope.maybeOf(context)!.appImages!,
       );
+    } else if (_page?.id == 'airplane' && widget.client != null) {
+      content = AirplanePage(client: widget.client!);
     } else if (_page?.id == 'bluetooth' &&
         BluetoothScope.maybeOf(context) != null) {
       content = BluetoothPage(controller: BluetoothScope.maybeOf(context)!);

@@ -1,13 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/bluetooth/application/bluetooth_controller.dart';
 import 'package:remya_settings/features/bluetooth/presentation/bluetooth_page.dart';
-import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
-import 'package:remya_settings/features/settings/presentation/settings_content.dart';
 
 const adapter = '/org/bluez/hci0';
 Map<String, dynamic> state({
@@ -216,33 +213,6 @@ void main() {
     expect(tester.takeException(), isNull);
     await tester.tap(find.text('Done'));
     await refresh(tester);
-  });
-  testWidgets('airplane Bluetooth entry navigates to the implemented page', (
-    tester,
-  ) async {
-    final catalog = SettingsCatalog.fromJson(
-      jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
-          as Map<String, dynamic>,
-    );
-    String? opened;
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: SingleChildScrollView(
-            child: SettingsDetail(
-              catalog: catalog,
-              page: catalog.page('airplane'),
-              onPage: (p) => opened = p.id,
-            ),
-          ),
-        ),
-      ),
-    );
-    await tester.tap(
-      find.byKey(const ValueKey('open-page-airplane.bluetooth')),
-    );
-    await refresh(tester);
-    expect(opened, 'bluetooth');
   });
   testWidgets('missing service, no adapter and hardware block are explicit', (
     tester,

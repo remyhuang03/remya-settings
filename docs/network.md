@@ -59,3 +59,28 @@ See [public API](public-api.md#network).
 - `test/service_controllers_test.dart` covers failed-write retention and unresolved conflicts in the GUI controller.
 - On a real NetworkManager 1.58, a disposable `autoconnect=no` profile was added, changed, re-keyed, put in conflict, resolved and forgotten without activating it, and real state and scans were read.
 - **Not tested on a real connection:** turning the radio off, connecting, disconnecting and switching networks, because the workstation's only link is Wi-Fi. These are marked implemented by the owner's explicit decision, with stub verification only. Captive-portal sign-in, more than one Wi-Fi adapter and the `iwd` backend have also not been run on real hardware.
+
+## Airplane mode
+
+The Airplane mode page uses the ordinary-user Rust service to set NetworkManager
+`WirelessEnabled` and `WwanEnabled`, and every BlueZ `Adapter1.Powered`. On disables
+all these radios; Off enables all of them, including radios previously off.
+Ethernet is unaffected. Wi-Fi also has an independent switch.
+No connection profiles or pairing keys are removed.
+
+Airplane mode is derived from fresh live radio readback, including external
+changes; there is no saved airplane preference, startup write or reconciliation
+conflict. This is a live-state exclusion. A running BlueZ with no adapters is a
+valid empty inventory; an unavailable NetworkManager or BlueZ prevents changes.
+Hardware blocks, denied authorization, busy Bluetooth operations, partial writes
+and mismatched readback are errors. Every radio shutdown is attempted even when
+another fails; successful shutdowns are never rolled back. Refresh displays the
+actual state so a failed operation never implies that all radios are off.
+
+The GUI polls while this page is open. CLI/D-Bus use the same controller and
+verified writes. Verification: network airplane unit tests, `test/airplane_test.dart`
+and private system/session-bus `test/airplane_smoke.py`; no real radios are changed
+by these automated checks.
+
+Upstream contracts: [NetworkManager radio properties](https://networkmanager.pages.freedesktop.org/NetworkManager/NetworkManager/gdbus-org.freedesktop.NetworkManager.html)
+and [BlueZ adapter power](https://github.com/bluez/bluez/blob/master/doc/org.bluez.Adapter.rst).
