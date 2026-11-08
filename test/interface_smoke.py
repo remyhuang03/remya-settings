@@ -410,7 +410,7 @@ def session_checks():
         # Read-only here: test/network_smoke.py exercises writes on a private stub.
         assert set(cli('get', 'network')) == set(dbus('Get', 'network'))
         assert cli('get', 'wifi.enabled')['availability'] == 'available'
-        assert 'Unavailable' in cli('set', 'known-networks.mac', 'stable', ok=False)
+        assert 'InvalidArgument' in cli('set', 'known-networks.mac', 'stable', ok=False)
         assert 'InvalidArgument' in cli('set', 'wifi.connect', 'not json', ok=False)
         clock = cli('get', 'date-time')
         zone_options = cli('get', 'timezones')

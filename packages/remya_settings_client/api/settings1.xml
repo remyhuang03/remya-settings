@@ -12,7 +12,12 @@
        airplane.enabled and airplane.wifi accept boolean strings. Set airplane.enabled
        disables/enables NM Wi-Fi/WWAN and all BlueZ adapters with readback.
        Changed uses the written ID. No airplane preference is persisted/restored. -->
-  <!-- Wi-Fi connect accepts hidden_security with ssid for an unadvertised network. -->
+  <!-- Wi-Fi connect accepts hidden_security with ssid for an unadvertised network.
+       Network: Set ethernet.*, vpn.*, hotspot.* and known-networks.* per
+       docs/public-api.md#network; profile edits take {uuid,value} JSON.
+       Proxy: Get proxy reads the live GSettings desktop proxy; Set proxy.mode
+       (none|detect|script|manual), proxy.script (URL), proxy.http|https|socks
+       (host:port or empty), proxy.ignore (JSON list). Changed uses the written ID. -->
   <!-- Power: Get power|battery-saver; Set power.5a4f0131 (JSON profile),
        power.5e3af39c|power.8b4c8522 (seconds, 0=Never),
        battery-saver.743773bd|battery-saver.07945503|battery-saver.power-source (bool),

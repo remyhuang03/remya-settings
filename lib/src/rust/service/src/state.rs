@@ -256,6 +256,7 @@ pub struct State {
     pub appimages: applications::appimages::AppImages,
     pub network: NetworkManager,
     pub bluetooth: remya_settings_bluetooth::Bluetooth,
+    pub proxy: remya_settings_network::proxy::Proxy,
     pub cameras: remya_settings_camera::Cameras<remya_settings_camera::native::Native>,
     pub sound: Sound<RealPulse>,
     pub power: remya_settings_power::Power,
@@ -305,6 +306,7 @@ impl State {
                 config.with_file_name("startup.toml"),
             ),
             bluetooth: remya_settings_bluetooth::Bluetooth::new(),
+            proxy: remya_settings_network::proxy::Proxy::new(),
             cameras: remya_settings_camera::Cameras::new(
                 remya_settings_camera::native::Native,
                 config.with_file_name("cameras.toml"),
@@ -768,6 +770,8 @@ impl State {
                     // Polled every second: answered from the last state, without a NM read.
                     "network-traffic" => Ok(self.network.traffic()),
                     "airplane" => remya_settings_network::airplane::read(&self.bluetooth),
+                    "proxy" => Ok(self.proxy.read()),
+                    _ if remya_settings_network::proxy::IDS.contains(&key) => self.proxy.get(key),
                     remya_settings_network::airplane::ENABLED | remya_settings_network::airplane::WIFI => {
                         let state = remya_settings_network::airplane::read(&self.bluetooth)?;
                         let value = if key == remya_settings_network::airplane::ENABLED { &state["enabled"] } else { &state["wifi_enabled"] };
@@ -1122,6 +1126,9 @@ impl State {
             let result = remya_settings_network::airplane::set(&self.bluetooth, key, value);
             let _ = self.network.refresh();
             return result;
+        }
+        if remya_settings_network::proxy::IDS.contains(&key) {
+            return self.proxy.set(key, value);
         }
         if remya_settings_bluetooth::is_setting(key) {
             return self.bluetooth.set(key, value);

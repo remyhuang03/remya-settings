@@ -156,6 +156,8 @@ class _NetworkStatusPageState extends State<NetworkStatusPage> {
           )
         : null,
     children: [
+      _path(primary),
+      if (primary != null) const SizedBox(height: 20),
       if (primary != null)
         LayoutBuilder(
           builder: (context, constraints) {
@@ -164,11 +166,14 @@ class _NetworkStatusPageState extends State<NetworkStatusPage> {
               label: 'Download',
               icon: Icons.arrow_downward_rounded,
               history: _down,
+              total: _lastDown,
             );
             final upload = _SpeedTile(
+              key: const ValueKey('network-status.usage'),
               label: 'Upload',
               icon: Icons.arrow_upward_rounded,
               history: _up,
+              total: _lastUp,
             );
             return constraints.maxWidth < 480
                 ? Column(
@@ -185,6 +190,62 @@ class _NetworkStatusPageState extends State<NetworkStatusPage> {
           },
         ),
     ],
+  );
+
+  /// This device, the router it reaches and the internet beyond it.
+  Widget _path(Map? primary) {
+    final internet = switch (_controller.connectivity) {
+      'full' => PathLink.working,
+      'limited' || 'portal' => PathLink.degraded,
+      'unknown' when primary != null => PathLink.degraded,
+      _ => PathLink.broken,
+    };
+    return NetworkPath(
+      key: const ValueKey('network-status.connection'),
+      nodes: [
+        (
+          icon: Icons.computer_outlined,
+          label: 'This device',
+          detail: primary?['interface'] as String?,
+        ),
+        (
+          icon: Icons.router_outlined,
+          label: 'Router',
+          detail: primary?['gateway'] as String?,
+        ),
+        (icon: Icons.public_rounded, label: 'Internet', detail: null),
+      ],
+      links: [
+        primary == null ? PathLink.broken : PathLink.working,
+        primary == null ? PathLink.broken : internet,
+      ],
+    );
+  }
+
+  Widget _connectivityCheck() => SettingRow(
+    id: connectivityCheckSettingId,
+    label: Column(
+      crossAxisAlignment: .start,
+      children: [
+        Text(
+          'Check internet connectivity',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'NetworkManager periodically contacts ${Uri.tryParse(_controller.value['check_uri'] as String? ?? '')?.host ?? 'a check address'} to detect sign-in pages and lost internet access.',
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ],
+    ),
+    control: Switch(
+      value: _controller.connectivityCheckEnabled,
+      onChanged:
+          _controller.canChangePreferences &&
+              _controller.allowed('enable-disable-connectivity-check')
+          ? (value) => _controller.set(connectivityCheckSettingId, '$value')
+          : null,
+    ),
   );
 
   Widget _adapter(Map device) {
@@ -232,7 +293,6 @@ class _NetworkStatusPageState extends State<NetworkStatusPage> {
     if (!_controller.isAvailable) {
       return NetworkUnavailable(controller: _controller);
     }
-    final page = widget.page;
     final primary = _controller.primaryDevice;
     final physical = _controller.devices.where((d) => d['physical'] == true);
     final virtual = _controller.devices.where((d) => d['physical'] != true);
@@ -270,40 +330,18 @@ class _NetworkStatusPageState extends State<NetworkStatusPage> {
                 )
               : settingsRows([for (final device in physical) _adapter(device)]),
         ),
-        if (virtual.isNotEmpty)
+        if (virtual.isNotEmpty || _controller.connectivityCheckAvailable)
           AdvancedSection(
             storageKey: const PageStorageKey('network-status-advanced'),
             child: KeyedSubtree(
               key: const PageStorageKey('network-status-advanced-body'),
               child: settingsRows([
+                if (_controller.connectivityCheckAvailable)
+                  _connectivityCheck(),
                 for (final device in virtual) _adapter(device),
               ]),
             ),
           ),
-        const SettingsSectionTitle('Related settings'),
-        SettingsSurface(
-          padding: .zero,
-          child: Column(
-            children: [
-              SettingControlTile(
-                page.controls.firstWhere(
-                  (c) => c.id == 'network-status.data-usage',
-                ),
-                icon: categoryIcon(widget.catalog.category(page.category).icon),
-                onOpenPage: () =>
-                    widget.onPage(widget.catalog.page('data-usage')),
-              ),
-              for (final id in page.children)
-                PageLink(
-                  page: widget.catalog.page(id),
-                  icon: categoryIcon(
-                    widget.catalog.category(page.category).icon,
-                  ),
-                  onTap: () => widget.onPage(widget.catalog.page(id)),
-                ),
-            ],
-          ),
-        ),
       ],
     );
   }
@@ -316,10 +354,14 @@ class _SpeedTile extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.history,
+    this.total,
   });
   final String label;
   final IconData icon;
   final List<double> history;
+
+  /// Bytes moved since the adapter came up.
+  final int? total;
 
   @override
   Widget build(BuildContext context) {
@@ -327,7 +369,8 @@ class _SpeedTile extends StatelessWidget {
     final text = Theme.of(context).textTheme;
     final value = history.isEmpty ? 'Measuring' : formatSpeed(history.last);
     return Semantics(
-      label: '$label speed $value',
+      label:
+          '$label speed $value${total == null ? '' : ', ${formatBytes(total!)} since connected'}',
       container: true,
       child: Material(
         color: colors.surfaceContainerLowest,
@@ -354,6 +397,11 @@ class _SpeedTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(value, style: text.headlineSmall),
+                  if (total case final bytes?)
+                    Text(
+                      '${formatBytes(bytes)} since connected',
+                      style: text.bodySmall,
+                    ),
                 ],
               ),
             ),

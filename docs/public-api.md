@@ -776,7 +776,23 @@ See [Network settings](network.md) for behavior, secrets and limits. NetworkMana
 | `set known-networks.autoconnect <json>` | `Set(id, json)` | `{"uuid","value":true\|false}` |
 | `set known-networks.metered <json>` | `Set(id, json)` | `{"uuid","value":"automatic"\|"yes"\|"no"}` |
 | `set known-networks.change-password <json>` | `Set(id, json)` | `{"uuid","value":"password"}` for personal networks |
-| `set known-networks.forget <uuid>` | `Set(id, uuid)` | Deletes the profile, verified by readback |
+| `set known-networks.forget <uuid>` | `Set(id, uuid)` | Deletes a Wi-Fi profile, verified by readback |
+| `set known-networks.priority <json>` | `Set(id, json)` | `{"uuid","value":-999..999}` |
+| `set known-networks.mac <json>` | `Set(id, json)` | `{"uuid","value":""\|"permanent"\|"stable"\|"random"}`; refused with the `iwd` backend |
+| `set <known-networks\|ethernet>.<ip\|dns> <json>` | `Set(id, json)` | `{"uuid","value":{"ipv4","addresses","gateway","auto_dns","dns","ipv6","dns_over_tls"}}`, the full addressing of a Wi-Fi or wired profile; reapplied when connected |
+| `set ethernet.<autoconnect\|metered> <json>` | `Set(id, json)` | As for known networks, for wired profiles |
+| `set ethernet.connect <json>` | `Set(id, json)` | `{"interface","value":true\|false}` connects with NetworkManager's choice of profile or disconnects |
+| `set network-status.connectivity-check <true/false>` | `Set(id, value)` | NetworkManager `ConnectivityCheckEnabled`, saved and reconciled |
+| `set vpn.connect <json>` | `Set(id, json)` | `{"uuid","value":true\|false}` for VPN and WireGuard profiles |
+| `set vpn.import <path>` | `Set(id, path)` | Absolute `.conf` (WireGuard) or `.ovpn` (OpenVPN) file through `nmcli`; the new profile is disconnected with autoconnect off |
+| `set vpn.remove <uuid>` | `Set(id, uuid)` | Deletes a VPN profile |
+| `set hotspot.configure <json>` | `Set(id, json)` | `{"ssid","band":"auto"\|"2.4"\|"5","password"?}`; creates the hotspot profile (password required) or updates it |
+| `set hotspot.enabled <true/false>` | `Set(id, value)` | Starts or stops the hotspot on the selected Wi-Fi adapter; live, not saved |
+| `get proxy` | `Get("proxy")` | Live `available`, `error`, `mode` (`none`, `detect`, `script`, `manual`), `script`, `http`, `https`, `socks` (`host:port` or null), `ignore` |
+| `set proxy.mode <none/detect/script/manual>` | `Set(id, value)` | `script` needs a saved address |
+| `set proxy.script <url>` | `Set(id, value)` | `http`, `https` or `file:///` address; switches to script |
+| `set proxy.<http\|https\|socks> <host:port>` | `Set(id, value)` | Empty clears the server |
+| `set proxy.ignore <json>` | `Set(id, json)` | List of hosts reached directly |
 | `set network-status.sign-in open` | `Set(id, value)` | Opens the connectivity address in a captive portal |
 | `resolve network <system/settings>` | `Resolve("network", source)` | Adopts system preferences, or applies saved ones with readback |
 
@@ -787,7 +803,7 @@ An existing saved SSID reuses its profile and must match the requested security.
 Use `-` as the CLI value to read it from stdin, so a password does not appear in the process list:
 `printf '%s' '{"ssid":"Cafe","password":"..."}' | remya_settings set wifi.connect -`
 
-Every other `network-status.*`, `wifi.*` and `known-networks.*` control is read-only or `planned`. `known-networks.mac`, `known-networks.priority` and `network-status.data-usage` return `Unavailable`. `Get("configuration")` includes `network`. `Changed("network", state)` reports NetworkManager changes, excluding signal strength between scans. `NetworkClient` in `packages/remya_settings_client` exposes these without Flutter.
+Every other `network-status.*`, `wifi.*`, `known-networks.*`, `ethernet.*`, `vpn.*` and `hotspot.*` control is read-only. Profiles in `get network` carry `kind` (`wifi`, `hotspot`, `ethernet`, `vpn`, `wireguard`), `interface`, `vpn_type`, `priority`, `mac`, `ip`, `hotspot`, `active` and `activating`; the state also has `connectivity_check_available`, `connectivity_check_enabled`, `wifi_backend`, `dns_mode` and `config_invalid`, and devices have `ap` and `bands`. `resolve network system` also replaces an invalid saved file. `Get("configuration")` includes `network`. `Changed("network", state)` reports NetworkManager changes, excluding signal strength between scans; `Changed(<proxy id>, state)` follows proxy writes. `NetworkClient` in `packages/remya_settings_client` exposes these without Flutter.
 
 ## Night light
 

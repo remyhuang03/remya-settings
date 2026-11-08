@@ -347,7 +347,7 @@
     {
       "id": "network",
       "title": "Network & internet",
-      "description": "Wi-Fi, Ethernet and VPN",
+      "description": "Wi-Fi, Ethernet, VPN and proxy",
       "icon": "wifi"
     },
     {
@@ -6468,15 +6468,16 @@
       "id": "network-status",
       "category": "network",
       "title": "Network status",
-      "description": "Connection details and network adapters",
+      "description": "Internet connection, live traffic and adapters",
       "preview": "network",
-      "availability": "planned",
-      "reason": "Connection details and adapters use NetworkManager; Data usage is not implemented.",
+      "availability": "available",
+      "reason": "Uses NetworkManager through the Settings service.",
       "sources": [
         "uris"
       ],
       "windowsUris": [
-        "ms-settings:network-status"
+        "ms-settings:network-status",
+        "ms-settings:network-advancedsettings"
       ],
       "sections": [
         {
@@ -6501,6 +6502,14 @@
             {
               "id": "network-status.traffic",
               "title": "Current speed",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from the active adapter"
+            },
+            {
+              "id": "network-status.usage",
+              "title": "Data used since connected",
               "type": "info",
               "availability": "available",
               "reason": "Uses NetworkManager through the Settings service.",
@@ -6569,14 +6578,6 @@
               "availability": "available",
               "reason": "Uses NetworkManager through the Settings service.",
               "value": "Open"
-            },
-            {
-              "id": "network-status.data-usage",
-              "title": "Data usage",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Open"
             }
           ]
         },
@@ -6604,14 +6605,19 @@
               "availability": "available",
               "reason": "Uses NetworkManager through the Settings service.",
               "value": "Read from NetworkManager"
+            },
+            {
+              "id": "network-status.connectivity-check",
+              "title": "Check internet connectivity",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": true
             }
           ]
         }
       ],
-      "children": [
-        "ip-dns",
-        "network-advanced"
-      ]
+      "children": []
     },
     {
       "id": "wifi",
@@ -6724,8 +6730,8 @@
       "title": "Known networks",
       "description": "Saved networks and connection preferences",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Saved networks use NetworkManager; Random hardware address and Connection priority are not implemented.",
+      "availability": "available",
+      "reason": "Uses NetworkManager through the Settings service.",
       "sources": [
         "uris"
       ],
@@ -6827,14 +6833,31 @@
               "id": "known-networks.mac",
               "title": "Random hardware address",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Off",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Default",
               "options": [
-                "Off",
-                "Stable for this network",
-                "Random for each connection"
+                "Default",
+                "Device address",
+                "Random per network",
+                "Random each time"
               ]
+            },
+            {
+              "id": "known-networks.ip",
+              "title": "IP assignment",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Edit"
+            },
+            {
+              "id": "known-networks.dns",
+              "title": "DNS server assignment",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Edit"
             },
             {
               "id": "known-networks.change-password",
@@ -6861,10 +6884,15 @@
             {
               "id": "known-networks.priority",
               "title": "Connection priority",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "0"
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Normal",
+              "options": [
+                "Low",
+                "Normal",
+                "High"
+              ]
             }
           ]
         }
@@ -6875,10 +6903,10 @@
       "id": "ethernet",
       "category": "network",
       "title": "Ethernet",
-      "description": "Wired network and IP and DNS settings",
+      "description": "Wired connections, addressing and DNS",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Uses NetworkManager through the Settings service.",
       "sources": [
         "uris"
       ],
@@ -6887,83 +6915,68 @@
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Ethernet",
           "controls": [
             {
-              "id": "ethernet.b639d60c",
+              "id": "ethernet.status",
               "title": "Connection status",
               "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
             },
             {
-              "id": "ethernet.403096d1",
-              "title": "Network configuration files",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Public",
-                "Dedicated"
-              ],
-              "value": "Public"
+              "id": "ethernet.connect",
+              "title": "Connect",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Connect"
             },
             {
-              "id": "ethernet.2bebdc73",
-              "title": "Billing based on traffic flow",
+              "id": "ethernet.autoconnect",
+              "title": "Connect automatically",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": true
             },
             {
-              "id": "ethernet.0e517641",
-              "title": "IP allocation",
+              "id": "ethernet.metered",
+              "title": "Metered connection",
               "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Automatic DHCP",
-                "Manual"
-              ],
-              "value": "Automatic DHCP"
-            },
-            {
-              "id": "ethernet.9e3297e9",
-              "title": "DNS distribution",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Automatic",
               "options": [
                 "Automatic",
-                "Manual"
-              ],
-              "value": "Automatic"
+                "Metered",
+                "Not metered"
+              ]
             },
             {
-              "id": "ethernet.010efa2c",
-              "title": "IP address",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
+              "id": "ethernet.ip",
+              "title": "IP assignment",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Edit"
             },
             {
-              "id": "ethernet.86ab111e",
-              "title": "Gateway",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
+              "id": "ethernet.dns",
+              "title": "DNS server assignment",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Edit"
             },
             {
-              "id": "ethernet.b10ffae1",
-              "title": "Preferred DNS",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
+              "id": "ethernet.details",
+              "title": "Connection details",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
             }
           ]
         }
@@ -6974,10 +6987,10 @@
       "id": "vpn",
       "category": "network",
       "title": "VPN",
-      "description": "Connection configuration and traffic policy",
+      "description": "WireGuard and VPN plugin connections",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Uses NetworkManager through the Settings service.",
       "sources": [
         "uris"
       ],
@@ -6986,102 +6999,47 @@
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "VPN connections",
           "controls": [
             {
-              "id": "vpn.887aa7eb",
-              "title": "Add VPN",
+              "id": "vpn.connections",
+              "title": "VPN connections",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
+            },
+            {
+              "id": "vpn.connect",
+              "title": "Connect",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": false
+            },
+            {
+              "id": "vpn.import",
+              "title": "Import a VPN file",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Add"
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Import"
             },
             {
-              "id": "vpn.5ef1920d",
-              "title": "Connection name",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
+              "id": "vpn.remove",
+              "title": "Remove",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Remove"
             },
             {
-              "id": "vpn.2eb291f6",
-              "title": "Server address",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "vpn.805e1a09",
-              "title": "VPN Types",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Automatic",
-                "IKEv2",
-                "L2TP"
-              ],
-              "value": "Automatic"
-            },
-            {
-              "id": "vpn.efb20f32",
-              "title": "Login information type",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "User name and password",
-                "Certificates"
-              ],
-              "value": "User name and password"
-            },
-            {
-              "id": "vpn.1c70d283",
-              "title": "Allow metered connections",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "vpn.a42231a7",
-              "title": "Allow VPN use while roaming",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "vpn.reference.f20bc91d",
-              "title": "Allow VPN over metered networks",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "VPN",
-                "Allow VPN over metered networks"
-              ],
-              "value": false
-            },
-            {
-              "id": "vpn.reference.b8f24d72",
-              "title": "Allow VPN while roaming",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "VPN",
-                "Allow VPN while roaming"
-              ],
-              "value": false
+              "id": "vpn.external",
+              "title": "VPNs managed by other apps",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
             }
           ]
         }
@@ -7091,11 +7049,11 @@
     {
       "id": "hotspot",
       "category": "network",
-      "title": "Mobile Hotspot",
-      "description": "Shared connection, frequency band and power saving",
+      "title": "Mobile hotspot",
+      "description": "Share this device's internet connection over Wi-Fi",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Uses NetworkManager through the Settings service.",
       "sources": [
         "uris"
       ],
@@ -7104,76 +7062,47 @@
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Mobile hotspot",
           "controls": [
             {
-              "id": "hotspot.351d8ca9",
-              "title": "Mobile Hotspot",
+              "id": "hotspot.enabled",
+              "title": "Mobile hotspot",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
               "value": false
             },
             {
-              "id": "hotspot.8a5fabb4",
-              "title": "Sharing Internet Sources",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Ethernet",
-                "Wi-Fi"
-              ],
-              "value": "Ethernet"
+              "id": "hotspot.source",
+              "title": "Sharing internet from",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
             },
             {
-              "id": "hotspot.48902a81",
-              "title": "Sharing method",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Wi-Fi",
-                "Bluetooth"
-              ],
-              "value": "Wi-Fi"
-            },
-            {
-              "id": "hotspot.e290dbc9",
+              "id": "hotspot.name",
               "title": "Network name",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
             },
             {
-              "id": "hotspot.c1412226",
-              "title": "Network password",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
+              "id": "hotspot.band",
+              "title": "Network band",
+              "type": "info",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Read from NetworkManager"
             },
             {
-              "id": "hotspot.fea27d68",
-              "title": "Frequency band",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Any",
-                "2.4 GHz",
-                "5 GHz"
-              ],
-              "value": "Any"
-            },
-            {
-              "id": "hotspot.dc01e4b5",
-              "title": "Turn off hotspot when no device is connected",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
+              "id": "hotspot.configure",
+              "title": "Name, password and band",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses NetworkManager through the Settings service.",
+              "value": "Edit"
             }
           ]
         }
@@ -7224,10 +7153,10 @@
       "id": "proxy",
       "category": "network",
       "title": "Proxy",
-      "description": "Automatic detection, scripting and manual proxies",
+      "description": "Desktop proxy for apps that follow system settings",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Uses the desktop proxy in GSettings; it follows live state.",
       "sources": [
         "uris"
       ],
@@ -7236,278 +7165,61 @@
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Proxy",
           "controls": [
             {
-              "id": "proxy.22b15396",
-              "title": "Automatically detect settings",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
+              "id": "proxy.mode",
+              "title": "Proxy",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Uses the desktop proxy in GSettings; it follows live state.",
+              "value": "Off",
+              "options": [
+                "Off",
+                "Automatically detect",
+                "Setup script",
+                "Manual"
+              ]
             },
             {
-              "id": "proxy.bcc75aea",
-              "title": "Using setup scripts",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "proxy.58d46c1e",
+              "id": "proxy.script",
               "title": "Script address",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses the desktop proxy in GSettings; it follows live state.",
               "value": ""
             },
             {
-              "id": "proxy.0727a1b1",
-              "title": "Use a proxy server",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "proxy.903f8d36",
-              "title": "Proxy address",
+              "id": "proxy.http",
+              "title": "HTTP proxy",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses the desktop proxy in GSettings; it follows live state.",
               "value": ""
             },
             {
-              "id": "proxy.6cbb7335",
-              "title": "Port",
+              "id": "proxy.https",
+              "title": "HTTPS proxy",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses the desktop proxy in GSettings; it follows live state.",
               "value": ""
             },
             {
-              "id": "proxy.908eea6f",
-              "title": "Bypass proxy address",
+              "id": "proxy.socks",
+              "title": "SOCKS host",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses the desktop proxy in GSettings; it follows live state.",
               "value": ""
             },
             {
-              "id": "proxy.f87cf52b",
-              "title": "Local address does not use proxy",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "ip-dns",
-      "category": "network",
-      "title": "IP and DNS",
-      "description": "Address allocation, name resolution and link information",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "ip-dns.allocation",
-              "title": "IP allocation",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Automatic DHCP",
-                "Manual"
-              ],
-              "value": "Automatic DHCP"
-            },
-            {
-              "id": "ip-dns.ipv4",
-              "title": "IPv4 address",
+              "id": "proxy.ignore",
+              "title": "Don't use the proxy for",
               "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Uses the desktop proxy in GSettings; it follows live state.",
               "value": ""
-            },
-            {
-              "id": "ip-dns.prefix",
-              "title": "Subnet prefix length",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "ip-dns.gateway",
-              "title": "Gateway",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "ip-dns.dns",
-              "title": "Preferred DNS",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "ip-dns.backup-dns",
-              "title": "Backup DNS",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "ip-dns.dns-over-https",
-              "title": "DNS over HTTPS",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "data-usage",
-      "category": "network",
-      "title": "Data usage",
-      "description": "Time range, traffic limit and application usage",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "data-usage.2be90408",
-              "title": "Time frame",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Past 30 days",
-                "Past 7 days",
-                "Past 24 hours"
-              ],
-              "value": "Past 30 days"
-            },
-            {
-              "id": "data-usage.55685047",
-              "title": "Enter traffic limit",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "data-usage.45989fef",
-              "title": "Restriction types",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Monthly",
-                "Disposable",
-                "No restrictions"
-              ],
-              "value": "Monthly"
-            },
-            {
-              "id": "data-usage.a4d31b25",
-              "title": "Traffic restrictions",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": ""
-            },
-            {
-              "id": "data-usage.800eddaf",
-              "title": "Reset statistics",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "network-advanced",
-      "category": "network",
-      "title": "Advanced network settings",
-      "description": "Adapters, Shares and Network Reset",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:network-advancedsettings"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "network-advanced.f6baeffd",
-              "title": "Network adapter",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "network-advanced.40e1a0e7",
-              "title": "Advanced sharing settings",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "network-advanced.7d98a49a",
-              "title": "Data usage",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "network-advanced.bb3c0b53",
-              "title": "Network reset",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
             }
           ]
         }

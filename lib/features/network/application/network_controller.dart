@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings_client/remya_settings_client.dart';
 
@@ -27,7 +29,19 @@ class NetworkController extends ChangeNotifier {
   bool get wifiEnabled => value['wifi_enabled'] == true;
   bool get wifiHardwareEnabled => value['wifi_hardware_enabled'] == true;
   String get connectivity => value['connectivity'] as String? ?? 'unknown';
-  bool get connectivityChecked => value['connectivity_check'] == true;
+  bool get connectivityCheckAvailable =>
+      value['connectivity_check_available'] == true;
+  bool get connectivityCheckEnabled =>
+      value['connectivity_check_enabled'] == true;
+
+  /// iwd picks networks and randomizes addresses itself.
+  bool get wifiBackendIwd => value['wifi_backend'] == 'iwd';
+
+  /// DNS over TLS takes effect only through systemd-resolved.
+  bool get dnsOverTlsSupported => value['dns_mode'] == 'systemd-resolved';
+
+  /// The saved file is unreadable; only an explicit choice replaces it.
+  bool get configInvalid => value['config_invalid'] == true;
   bool get canSignIn => connectivity == 'portal' && value['check_uri'] != null;
   String? get connecting => value['connecting'] as String?;
   String? get adapter => value['adapter'] as String?;
@@ -35,6 +49,26 @@ class NetworkController extends ChangeNotifier {
   List<Map> get conflicts => (value['conflicts'] as List? ?? []).cast<Map>();
   List<Map> get profiles => (value['profiles'] as List? ?? []).cast<Map>();
   List<Map> get devices => (value['devices'] as List? ?? []).cast<Map>();
+  List<Map> profilesOf(Set<String> kinds) =>
+      profiles.where((p) => kinds.contains(p['kind'])).toList();
+  List<Map> get wifiProfiles => profilesOf(const {'wifi'});
+  List<Map> get vpnProfiles => profilesOf(const {'vpn', 'wireguard'});
+  Map? get hotspotProfile => profilesOf(const {'hotspot'}).firstOrNull;
+  List<Map> get ethernetDevices => devices
+      .where((d) => d['kind'] == 'ethernet' && d['physical'] == true)
+      .toList();
+
+  /// Tunnels such as Tailscale that another program manages.
+  List<Map> get externalTunnels => devices
+      .where(
+        (d) =>
+            const {'tun', 'wireguard'}.contains(d['kind']) &&
+            d['state'] == 'unmanaged',
+      )
+      .toList();
+  Map? profile(String? uuid) => uuid == null
+      ? null
+      : profiles.where((p) => p['uuid'] == uuid).firstOrNull;
   List<Map> get wifiAdapters =>
       devices.where((d) => d['kind'] == 'wifi').toList();
   Map? get wifiAdapter =>
@@ -90,6 +124,10 @@ class NetworkController extends ChangeNotifier {
 
   Future<void> set(String id, String setting) =>
       _change(() => write(id, setting));
+
+  /// Changes one preference of a saved connection.
+  Future<void> edit(String id, String uuid, Object value) =>
+      set(id, jsonEncode({'uuid': uuid, 'value': value}));
 
   /// Background refresh: a rejected scan must not replace visible results or errors.
   Future<void> scan() async {

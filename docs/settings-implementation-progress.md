@@ -10,8 +10,8 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 
 ## 当前概况
 
-- 设置分类：15 个；详情页面：128 个；设置条目：1536 项。
-- 已实现：237 项；未实现：1289 项；不适用：10 项。
+- 设置分类：15 个；详情页面：125 个；设置条目：1514 项。
+- 已实现：266 项；未实现：1238 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
@@ -20,7 +20,7 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 
 - Camera 通过原生 PipeWire 读取设备能力、调节图像参数和处理配置冲突；支持显式开启的本地实时预览。见[Camera 文档](camera.md)。
 
-- 网络通过 Rust / system D-Bus 连接 NetworkManager，提供网络状态、Wi-Fi 与已知网络；设置项见[网络文档](network.md)。
+- 网络通过 Rust / system D-Bus 连接 NetworkManager，提供网络状态、Wi-Fi、已知网络、以太网、VPN 与移动热点；代理读写 GSettings 桌面代理并跟随实时状态；设置项见[网络文档](network.md)。
 
 - Night light 行标题与通用设置行统一使用 `bodyLarge`。
 
@@ -64,7 +64,7 @@ Hyprland 内容包含 35 个独立页面及并入常规页面 Advanced 的预览
 | [电源与电池](#category-power) | 3 | 41 | 15 | 26 | 0 |
 | [通知](#category-notifications) | 4 | 19 | 12 | 7 | 0 |
 | [蓝牙和设备](#category-devices) | 10 | 155 | 18 | 137 | 0 |
-| [网络和 Internet](#category-network) | 11 | 85 | 34 | 51 | 0 |
+| [网络和 Internet](#category-network) | 8 | 63 | 63 | 0 | 0 |
 | [外观](#category-appearance) | 10 | 298 | 23 | 275 | 0 |
 | [应用](#category-apps) | 5 | 35 | 29 | 6 | 0 |
 | [账户](#category-accounts) | 11 | 58 | 2 | 50 | 6 |
@@ -1246,19 +1246,19 @@ Windows 参考入口：`ms-settings:mobile-devices`、`ms-settings:mobile-device
 
 ## 网络和 Internet
 
-Wi-Fi、以太网与 VPN
+Wi-Fi、以太网、VPN 与代理
+
+二级页面调整：删除 `ip-dns`（IP 与 DNS 并入以太网和已知网络的每个连接）、`data-usage`（NetworkManager 无按应用计量与限额；累计用量并入网络状态）与 `network-advanced`（连接性检查并入网络状态的 Advanced，其余 Windows 专有条目删除）；页面顺序改为 网络状态、Wi-Fi、已知网络、以太网、VPN、移动热点、飞行模式、代理。
 
 ### Network status — `network-status`
 
-连接详情与网络适配器
+Internet connection, live traffic and adapters
 
-页面状态：**未实现**；条目：14；已实现 13 / 未实现 1 / 不适用 0。
+页面状态：**已实现**；条目：15；已实现 15 / 未实现 0 / 不适用 0。
 
-原因：已通过 NetworkManager 实现；Data usage 未实现。
+通过 NetworkManager 读取连接、实时流量、累计用量与适配器；连接路径图显示本机、路由器与 Internet 各段状态。Advanced 中的连接性检查写入 NM `ConnectivityCheckEnabled` 并参与配置冲突比对。
 
-Windows 参考入口：`ms-settings:network-status`。
-
-相关页面 ID：`ip-dns`、`network-advanced`。
+Windows 参考入口：`ms-settings:network-status`、`ms-settings:network-advancedsettings`。
 
 #### Connection
 
@@ -1267,6 +1267,7 @@ Windows 参考入口：`ms-settings:network-status`。
 | Connection status | `network-status.connection` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
 | Network name | `network-status.name` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
 | Current speed | `network-status.traffic` | 信息展示 | 已实现 | Rust 假后端；已安装应用实测 |
+| Data used since connected | `network-status.usage` | 信息展示 | 已实现 | Rust 假后端；`test/network_test.dart` 速度与累计用量 |
 | Connection type | `network-status.type` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
 | IPv4 address | `network-status.ipv4` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
 | Gateway | `network-status.gateway` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
@@ -1275,7 +1276,6 @@ Windows 参考入口：`ms-settings:network-status`。
 | Link speed | `network-status.link-speed` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
 | Hardware address | `network-status.hardware-address` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
 | Sign in to this network | `network-status.sign-in` | 操作 | 已实现 | 仅桩验证（Rust 假后端与 `test/network_smoke.py`），按用户授权标记，未在真机切断当前网络测试 |
-| Data usage | `network-status.data-usage` | 操作 | 未实现 | — |
 
 #### Adapters
 
@@ -1288,6 +1288,7 @@ Windows 参考入口：`ms-settings:network-status`。
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Virtual adapters | `network-status.virtual-adapters` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
+| Check internet connectivity | `network-status.connectivity-check` | 开关 | 已实现 | Rust 假后端冲突与双向解决；`test/network_smoke.py` 写入读回 |
 
 ### Wi-Fi — `wifi`
 
@@ -1329,11 +1330,11 @@ Windows 参考入口：`ms-settings:network-wifi`。
 
 ### Known networks — `known-networks`
 
-已保存的网络与连接偏好
+Saved networks and connection preferences
 
-页面状态：**未实现**；条目：13；已实现 11 / 未实现 2 / 不适用 0。
+页面状态：**已实现**；条目：15；已实现 15 / 未实现 0 / 不适用 0。
 
-原因：已通过 NetworkManager 实现；随机硬件地址和连接优先级未实现。
+已保存 Wi-Fi 的偏好均通过 NM 配置文件 `Update` 写入并读回。随机硬件地址写入 `assigned-mac-address`；连接优先级写入 `autoconnect-priority`（低 -10 / 普通 0 / 高 10），二者在 iwd 后端时自动隐藏。IP 与 DNS 编辑与以太网共用对话框。
 
 Windows 参考入口：`ms-settings:network-wifisettings`。
 
@@ -1355,7 +1356,9 @@ Windows 参考入口：`ms-settings:network-wifisettings`。
 | Last connected | `known-networks.last-connected` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
 | Connect automatically | `known-networks.autoconnect` | 开关 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
 | Metered connection | `known-networks.metered` | 选择 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
-| Random hardware address | `known-networks.mac` | 选择 | 未实现 | — |
+| Random hardware address | `known-networks.mac` | 选择 | 已实现 | Rust 假后端；`test/network_smoke.py` 经 Update/GetSettings 读回；iwd 后端时隐藏 |
+| IP assignment | `known-networks.ip` | 操作 | 已实现 | Rust 假后端校验与 Reapply；`test/network_smoke.py` |
+| DNS server assignment | `known-networks.dns` | 操作 | 已实现 | 同上 |
 | Change password | `known-networks.change-password` | 操作 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
 | Forget | `known-networks.forget` | 操作 | 已实现 | Rust 假后端与 `test/network_smoke.py`；真实 NM 读取或一次性配置实测 |
 
@@ -1363,81 +1366,69 @@ Windows 参考入口：`ms-settings:network-wifisettings`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Connection priority | `known-networks.priority` | 文本输入 | 未实现 | — |
+| Connection priority | `known-networks.priority` | 选择 | 已实现 | Rust 假后端；`test/network_smoke.py` 读回；`test/network_test.dart`；iwd 后端时隐藏 |
 
 ### Ethernet — `ethernet`
 
-有线网络与 IP、DNS 设置
+Wired connections, addressing and DNS
 
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**已实现**；条目：7；已实现 7 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+每个物理有线适配器显示状态、连接按钮与连接详情；其绑定的配置文件可修改自动连接、按流量计费、IP 分配与 DNS 分配。已连接时以 `Device.Reapply` 立即生效。原 Windows 网络配置文件（公用 / 专用）条目已移除。
 
 Windows 参考入口：`ms-settings:network-ethernet`。
 
-#### 设置
+#### Ethernet
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Connection status | `ethernet.b639d60c` | 信息展示 | 未实现 | — |
-| Network configuration files | `ethernet.403096d1` | 选择 | 未实现 | — |
-| Billing based on traffic flow | `ethernet.2bebdc73` | 开关 | 未实现 | — |
-| IP allocation | `ethernet.0e517641` | 选择 | 未实现 | — |
-| DNS distribution | `ethernet.9e3297e9` | 选择 | 未实现 | — |
-| IP address | `ethernet.010efa2c` | 文本输入 | 未实现 | — |
-| Gateway | `ethernet.86ab111e` | 文本输入 | 未实现 | — |
-| Preferred DNS | `ethernet.b10ffae1` | 文本输入 | 未实现 | — |
+| Connection status | `ethernet.status` | 信息展示 | 已实现 | Rust 假后端；已安装应用读取真实 eno1 |
+| Connect | `ethernet.connect` | 操作 | 已实现 | 仅桩验证（Rust 假后端），未在真机断开唯一有线连接 |
+| Connect automatically | `ethernet.autoconnect` | 开关 | 已实现 | Rust 假后端；`test/network_smoke.py` |
+| Metered connection | `ethernet.metered` | 选择 | 已实现 | Rust 假后端；`test/network_smoke.py` |
+| IP assignment | `ethernet.ip` | 操作 | 已实现 | Rust 假后端；`test/network_smoke.py` 手动 IPv4/DNS 读回；`test/network_test.dart` 对话框校验 |
+| DNS server assignment | `ethernet.dns` | 操作 | 已实现 | 同上 |
+| Connection details | `ethernet.details` | 信息展示 | 已实现 | Rust 假后端；已安装应用读取真实 eno1 |
 
 ### VPN — `vpn`
 
-连接配置与流量策略
+WireGuard and VPN plugin connections
 
-页面状态：**未实现**；条目：9；已实现 0 / 未实现 9 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+列出 NM 的 VPN 插件与 WireGuard 配置文件，开关连接；通过 `nmcli connection import` 复用 NetworkManager 自带的 WireGuard 与 VPN 插件导入器，导入后关闭自动连接并保持断开。由 Tailscale 等其他程序管理的隧道只读显示。手工创建表单与 Windows 漫游 / 计费条目已移除。
 
 Windows 参考入口：`ms-settings:network-vpn`。
 
-#### 设置
+#### VPN connections
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Add VPN | `vpn.887aa7eb` | 操作 | 未实现 | — |
-| Connection name | `vpn.5ef1920d` | 文本输入 | 未实现 | — |
-| Server address | `vpn.2eb291f6` | 文本输入 | 未实现 | — |
-| VPN Types | `vpn.805e1a09` | 选择 | 未实现 | — |
-| Login information type | `vpn.efb20f32` | 选择 | 未实现 | — |
-| Allow metered connections | `vpn.1c70d283` | 开关 | 未实现 | — |
-| Allow VPN use while roaming | `vpn.a42231a7` | 开关 | 未实现 | — |
+| VPN connections | `vpn.connections` | 信息展示 | 已实现 | Rust 假后端；`test/network_smoke.py`；`test/network_test.dart` |
+| Connect | `vpn.connect` | 开关 | 已实现 | Rust 假后端与 `test/network_smoke.py`（桩） |
+| Import a VPN file | `vpn.import` | 操作 | 已实现 | Rust 假后端；真实 NM 1.58 导入一次性 WireGuard 文件后删除 |
+| Remove | `vpn.remove` | 操作 | 已实现 | Rust 假后端；真实 NM 1.58 删除上述一次性配置 |
+| VPNs managed by other apps | `vpn.external` | 信息展示 | 已实现 | `test/network_test.dart`；已安装应用读取真实 tailscale0 |
 
-#### Windows 参考细项
+### Mobile hotspot — `hotspot`
 
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Allow VPN over metered networks | `vpn.reference.f20bc91d` | 开关 | 未实现 | — |
-| Allow VPN while roaming | `vpn.reference.b8f24d72` | 开关 | 未实现 | — |
+Share this device's internet connection over Wi-Fi
 
-### Mobile Hotspot — `hotspot`
+页面状态：**已实现**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
 
-共享连接、频段与省电
-
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+以 NM 接入点配置文件（`mode=ap`、`ipv4.method=shared`、WPA2 CCMP）共享当前连接，适配器需支持 AP；频段按适配器能力限制。开关状态为实时状态，不保存或启动恢复；名称与频段作为配置文件偏好参与冲突比对。密码只写入 NM。无对应后端的共享来源、共享方式、空闲自动关闭条目已移除。
 
 Windows 参考入口：`ms-settings:network-mobilehotspot`。
 
-#### 设置
+#### Mobile hotspot
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Mobile Hotspot | `hotspot.351d8ca9` | 开关 | 未实现 | — |
-| Sharing Internet Sources | `hotspot.8a5fabb4` | 选择 | 未实现 | — |
-| Sharing method | `hotspot.48902a81` | 选择 | 未实现 | — |
-| Network name | `hotspot.e290dbc9` | 文本输入 | 未实现 | — |
-| Network password | `hotspot.c1412226` | 文本输入 | 未实现 | — |
-| Frequency band | `hotspot.fea27d68` | 选择 | 未实现 | — |
-| Turn off hotspot when no device is connected | `hotspot.dc01e4b5` | 开关 | 未实现 | — |
+| Mobile hotspot | `hotspot.enabled` | 开关 | 已实现 | 仅桩验证（Rust 假后端与 `test/network_smoke.py`），未在真机广播热点 |
+| Sharing internet from | `hotspot.source` | 信息展示 | 已实现 | `test/network_test.dart` |
+| Network name | `hotspot.name` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py` |
+| Network band | `hotspot.band` | 信息展示 | 已实现 | Rust 假后端与 `test/network_smoke.py` |
+| Name, password and band | `hotspot.configure` | 操作 | 已实现 | Rust 假后端与 `test/network_smoke.py`；`test/network_test.dart` 设置对话框 |
 
 ### Airplane mode — `airplane`
 
@@ -1454,84 +1445,24 @@ Windows 参考入口：`ms-settings:network-airplanemode`、`ms-settings:proximi
 
 ### Proxy — `proxy`
 
-自动检测、脚本与手动代理
+Desktop proxy for apps that follow system settings
 
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**已实现**；条目：6；已实现 6 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+读写 GSettings `org.gnome.system.proxy`（GIO、libproxy、Chromium、Firefox 使用）。代理工具会频繁切换，因此实时跟随系统状态，不保存或比对（已在 AGENTS.md 记录）。模式为关闭 / 自动检测（WPAD）/ 设置脚本 / 手动；手动包含 HTTP、HTTPS、SOCKS 与例外主机。
 
 Windows 参考入口：`ms-settings:network-proxy`。
 
-#### 设置
+#### Proxy
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Automatically detect settings | `proxy.22b15396` | 开关 | 未实现 | — |
-| Using setup scripts | `proxy.bcc75aea` | 开关 | 未实现 | — |
-| Script address | `proxy.58d46c1e` | 文本输入 | 未实现 | — |
-| Use a proxy server | `proxy.0727a1b1` | 开关 | 未实现 | — |
-| Proxy address | `proxy.903f8d36` | 文本输入 | 未实现 | — |
-| Port | `proxy.6cbb7335` | 文本输入 | 未实现 | — |
-| Bypass proxy address | `proxy.908eea6f` | 文本输入 | 未实现 | — |
-| Local address does not use proxy | `proxy.f87cf52b` | 开关 | 未实现 | — |
-
-### IP and DNS — `ip-dns`
-
-地址分配与名称解析
-
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| IP allocation | `ip-dns.allocation` | 选择 | 未实现 | — |
-| IPv4 address | `ip-dns.ipv4` | 文本输入 | 未实现 | — |
-| Subnet prefix length | `ip-dns.prefix` | 文本输入 | 未实现 | — |
-| Gateway | `ip-dns.gateway` | 文本输入 | 未实现 | — |
-| Preferred DNS | `ip-dns.dns` | 文本输入 | 未实现 | — |
-| Backup DNS | `ip-dns.backup-dns` | 文本输入 | 未实现 | — |
-| DNS over HTTPS | `ip-dns.dns-over-https` | 开关 | 未实现 | — |
-
-### Data usage — `data-usage`
-
-时间范围、流量限额与应用用量
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Time frame | `data-usage.2be90408` | 选择 | 未实现 | — |
-| Enter traffic limit | `data-usage.55685047` | 操作 | 未实现 | — |
-| Restriction types | `data-usage.45989fef` | 选择 | 未实现 | — |
-| Traffic restrictions | `data-usage.a4d31b25` | 文本输入 | 未实现 | — |
-| Reset statistics | `data-usage.800eddaf` | 操作 | 未实现 | — |
-
-
-### Advanced network settings — `network-advanced`
-
-适配器、共享与网络重置
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:network-advancedsettings`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Network adapter | `network-advanced.f6baeffd` | 操作 | 未实现 | — |
-| Advanced sharing settings | `network-advanced.40e1a0e7` | 操作 | 未实现 | — |
-| Data usage | `network-advanced.7d98a49a` | 操作 | 未实现 | — |
-| Network reset | `network-advanced.bb3c0b53` | 操作 | 未实现 | — |
+| Proxy | `proxy.mode` | 选择 | 已实现 | Rust GSettings 内存后端测试；`test/network_smoke.py` 隔离 keyfile 后端 |
+| Script address | `proxy.script` | 文本输入 | 已实现 | Rust GSettings 内存后端测试；`test/network_smoke.py` 隔离 keyfile 后端 |
+| HTTP proxy | `proxy.http` | 文本输入 | 已实现 | Rust GSettings 内存后端测试；`test/network_smoke.py` 隔离 keyfile 后端 |
+| HTTPS proxy | `proxy.https` | 文本输入 | 已实现 | Rust GSettings 内存后端测试；`test/network_smoke.py` 隔离 keyfile 后端 |
+| SOCKS host | `proxy.socks` | 文本输入 | 已实现 | Rust GSettings 内存后端测试；`test/network_smoke.py` 隔离 keyfile 后端 |
+| Don't use the proxy for | `proxy.ignore` | 文本输入 | 已实现 | Rust GSettings 内存后端测试；`test/network_smoke.py` 隔离 keyfile 后端 |
 
 <a id="category-appearance"></a>
 

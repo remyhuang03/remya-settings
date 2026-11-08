@@ -233,7 +233,7 @@
     },
     {
       "uri": "ms-settings:network-advancedsettings",
-      "page": "network-advanced",
+      "page": "network-status",
       "sourceCategory": "Network and internet",
       "title": "Advanced settings"
     },
@@ -1117,26 +1117,6 @@
       ],
       "page": "vpn",
       "coverage": "section"
-    },
-    {
-      "area": "Network & internet",
-      "path": [
-        "VPN",
-        "Allow VPN over metered networks"
-      ],
-      "page": "vpn",
-      "coverage": "control",
-      "control": "vpn.reference.f20bc91d"
-    },
-    {
-      "area": "Network & internet",
-      "path": [
-        "VPN",
-        "Allow VPN while roaming"
-      ],
-      "page": "vpn",
-      "coverage": "control",
-      "control": "vpn.reference.b8f24d72"
     },
     {
       "area": "Personalization",

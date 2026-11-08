@@ -20,6 +20,10 @@ import '../../network/presentation/known_networks_page.dart';
 import '../../network/presentation/network_status_page.dart';
 import '../../network/presentation/wifi_page.dart';
 import '../../network/presentation/airplane_page.dart';
+import '../../network/presentation/ethernet_page.dart';
+import '../../network/presentation/hotspot_page.dart';
+import '../../network/presentation/proxy_page.dart';
+import '../../network/presentation/vpn_page.dart';
 import '../../applications/application/applications_controller.dart';
 import '../../applications/presentation/appimages_page.dart';
 import '../../applications/presentation/installed_apps_page.dart';
@@ -512,6 +516,8 @@ class _SettingsShellState extends State<SettingsShell> {
       );
     } else if (_page?.id == 'airplane' && widget.client != null) {
       content = AirplanePage(client: widget.client!);
+    } else if (_page?.id == 'proxy' && widget.client != null) {
+      content = ProxyPage(client: widget.client!);
     } else if (_page?.id == 'bluetooth' &&
         BluetoothScope.maybeOf(context) != null) {
       content = BluetoothPage(controller: BluetoothScope.maybeOf(context)!);
@@ -598,6 +604,9 @@ class _SettingsShellState extends State<SettingsShell> {
         onPage: _openPage,
       ),
       'known-networks' => KnownNetworksPage(controller: controller, page: page),
+      'ethernet' => EthernetPage(controller: controller),
+      'vpn' => VpnPage(controller: controller),
+      'hotspot' => HotspotPage(controller: controller),
       _ => null,
     };
   }

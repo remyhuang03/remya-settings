@@ -25,18 +25,8 @@ class Network(network.Stub):
             '<property name="WirelessEnabled" type="b" access="readwrite"/>',
             '<property name="WirelessEnabled" type="b" access="readwrite"/>'
             '<property name="WwanEnabled" type="b" access="readwrite"/>')
-        self.wwan = True
         super().__init__()
-
-    def get_property(self, _bus, _sender, _path, _interface, name):
-        return network.v('b', self.wwan if name == 'WwanEnabled' else self.enabled)
-
-    def set_property(self, _bus, _sender, _path, _interface, name, value):
-        if name == 'WwanEnabled':
-            self.calls.append(f'set {name} {value.get_boolean()}')
-            self.wwan = value.get_boolean()
-            return True
-        return super().set_property(_bus, _sender, _path, _interface, name, value)
+        self.props['WwanEnabled'] = True
 
 
 class Bluetooth(bluetooth.Stub):

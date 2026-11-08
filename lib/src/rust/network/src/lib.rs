@@ -1,6 +1,7 @@
-//! Network status, Wi-Fi and known networks through NetworkManager.
+//! Network status, Wi-Fi, Ethernet, VPN, hotspot and saved connections through NetworkManager.
 pub mod airplane;
 pub mod nm;
+pub mod proxy;
 
 use remya_settings_display::atomic_write;
 use serde::{Deserialize, Serialize};
@@ -8,7 +9,8 @@ use serde_json::{Value, json};
 use std::{
     collections::BTreeMap,
     fs,
-    path::PathBuf,
+    net::{IpAddr, Ipv4Addr},
+    path::{Path, PathBuf},
     time::{Duration, Instant},
 };
 
@@ -20,22 +22,46 @@ pub const WIFI_CONNECT: &str = "wifi.connect";
 pub const ADD: &str = "known-networks.add";
 pub const AUTOCONNECT: &str = "known-networks.autoconnect";
 pub const METERED: &str = "known-networks.metered";
+pub const PRIORITY: &str = "known-networks.priority";
+pub const MAC: &str = "known-networks.mac";
+pub const KNOWN_IP: &str = "known-networks.ip";
+pub const KNOWN_DNS: &str = "known-networks.dns";
 pub const CHANGE_PASSWORD: &str = "known-networks.change-password";
 pub const FORGET: &str = "known-networks.forget";
 pub const SIGN_IN: &str = "network-status.sign-in";
+pub const CONNECTIVITY_CHECK: &str = "network-status.connectivity-check";
+pub const ETHERNET_CONNECT: &str = "ethernet.connect";
+pub const ETHERNET_AUTOCONNECT: &str = "ethernet.autoconnect";
+pub const ETHERNET_METERED: &str = "ethernet.metered";
+pub const ETHERNET_IP: &str = "ethernet.ip";
+pub const ETHERNET_DNS: &str = "ethernet.dns";
+pub const VPN_CONNECT: &str = "vpn.connect";
+pub const VPN_IMPORT: &str = "vpn.import";
+pub const VPN_REMOVE: &str = "vpn.remove";
+pub const HOTSPOT_ENABLED: &str = "hotspot.enabled";
+pub const HOTSPOT_CONFIGURE: &str = "hotspot.configure";
 
 const PERMISSION: &str = "org.freedesktop.NetworkManager.";
 const REASON_WAIT: Duration = Duration::from_secs(2);
+const MAX_IMPORT_BYTES: u64 = 1 << 20;
 
 pub fn is_network_setting(id: &str) -> bool {
-    ["wifi.", "known-networks.", "network-status."]
-        .iter()
-        .any(|prefix| id.starts_with(prefix))
+    [
+        "wifi.",
+        "known-networks.",
+        "network-status.",
+        "ethernet.",
+        "vpn.",
+        "hotspot.",
+    ]
+    .iter()
+    .any(|prefix| id.starts_with(prefix))
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum Security {
+    #[default]
     Open,
     Owe,
     Wep,
@@ -112,27 +138,64 @@ pub struct Network {
     pub known_uuid: Option<String>,
 }
 
-#[derive(Clone, Debug, Serialize, PartialEq)]
+/// Addressing and name resolution of one profile, in NetworkManager's terms.
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct Ip {
+    /// `ipv4.method`; Settings writes `auto` or `manual`.
+    pub ipv4: String,
+    /// `address/prefix`.
+    pub addresses: Vec<String>,
+    pub gateway: String,
+    /// The inverse of `ignore-auto-dns`.
+    pub auto_dns: bool,
+    /// IPv4 and IPv6 servers, in order.
+    pub dns: Vec<String>,
+    /// `ipv6.method`; Settings writes `auto` or `disabled`.
+    pub ipv6: String,
+    /// `default`, `no`, `opportunistic` or `yes`; applies with systemd-resolved.
+    pub dns_over_tls: String,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct Hotspot {
+    pub ssid: String,
+    /// `auto`, `2.4` or `5`.
+    pub band: String,
+}
+
+#[derive(Clone, Debug, Default, Serialize, PartialEq)]
 pub struct Profile {
     #[serde(skip)]
     pub path: String,
     pub uuid: String,
     pub name: String,
+    /// `wifi`, `hotspot`, `ethernet`, `vpn` or `wireguard`.
+    pub kind: String,
+    pub interface: Option<String>,
+    pub vpn_type: Option<String>,
     pub ssid: String,
     #[serde(skip)]
     pub raw: Vec<u8>,
     pub security: Security,
     pub autoconnect: bool,
     pub metered: String,
+    pub priority: i32,
+    /// `assigned-mac-address`, empty for the NetworkManager default.
+    pub mac: String,
+    pub ip: Ip,
+    pub hotspot: Option<Hotspot>,
     pub hidden: bool,
     pub last_connected: u64,
     pub active: bool,
+    pub activating: bool,
     pub read_only: bool,
     #[serde(skip)]
     pub unsaved: bool,
 }
 
-#[derive(Clone, Debug, Serialize, PartialEq)]
+#[derive(Clone, Debug, Default, Serialize, PartialEq)]
 pub struct Device {
     #[serde(skip)]
     pub path: String,
@@ -149,6 +212,10 @@ pub struct Device {
     pub dns: Vec<String>,
     pub ipv6: Vec<String>,
     pub networks: Vec<Network>,
+    /// Wi-Fi access point mode.
+    pub ap: bool,
+    /// Wi-Fi bands: `2.4` and `5`.
+    pub bands: Vec<String>,
 }
 
 #[derive(Clone, Debug, Serialize, PartialEq)]
@@ -164,10 +231,15 @@ pub struct Active {
 #[derive(Clone, Debug, Default, Serialize, PartialEq)]
 pub struct Snapshot {
     pub connectivity: String,
-    pub connectivity_check: bool,
+    pub connectivity_check_available: bool,
+    pub connectivity_check_enabled: bool,
     pub check_uri: Option<String>,
     pub wifi_enabled: bool,
     pub wifi_hardware_enabled: bool,
+    /// `wpa_supplicant` or `iwd`.
+    pub wifi_backend: String,
+    /// NetworkManager's DNS plugin, such as `systemd-resolved` or `default`.
+    pub dns_mode: String,
     pub primary_uuid: Option<String>,
     pub permissions: BTreeMap<String, String>,
     pub devices: Vec<Device>,
@@ -178,7 +250,9 @@ pub struct Snapshot {
 /// Merges access points per network, links saved profiles and fixes display order.
 pub fn finish_snapshot(mut snapshot: Snapshot) -> Snapshot {
     for profile in &mut snapshot.profiles {
-        profile.active = snapshot.active.iter().any(|a| a.uuid == profile.uuid);
+        let states = snapshot.active.iter().filter(|a| a.uuid == profile.uuid);
+        profile.active = states.clone().next().is_some();
+        profile.activating = states.into_iter().any(|a| a.state == 1);
     }
     snapshot.profiles.sort_by(|a, b| {
         (b.active, b.last_connected, &a.name).cmp(&(a.active, a.last_connected, &b.name))
@@ -196,7 +270,7 @@ pub fn finish_snapshot(mut snapshot: Snapshot) -> Snapshot {
             }
             network.known_uuid = profiles
                 .iter()
-                .find(|p| p.raw == network.raw && !p.unsaved)
+                .find(|p| p.kind == "wifi" && p.raw == network.raw && !p.unsaved)
                 .map(|p| p.uuid.clone());
             merged.push(network);
         }
@@ -214,6 +288,8 @@ pub struct NewNetwork {
     pub password: Option<String>,
     pub hidden: bool,
     pub autoconnect: bool,
+    /// An access point on this band instead of a client profile.
+    pub hotspot_band: Option<String>,
 }
 
 impl NewNetwork {
@@ -222,32 +298,17 @@ impl NewNetwork {
     }
 }
 
-#[derive(Debug, PartialEq)]
-pub enum Change {
-    Autoconnect(bool),
-    Metered(String),
-    Password(String),
-}
-
-pub trait Backend: Send {
-    fn read(&self) -> Result<Snapshot, String>;
-    fn set_wifi(&self, enabled: bool) -> Result<(), String>;
-    fn scan(&self, device: &str) -> Result<(), String>;
-    fn disconnect(&self, device: &str) -> Result<(), String>;
-    fn activate(&self, profile: &str, device: &str) -> Result<String, String>;
-    /// Returns the profile and active connection paths.
-    fn add_activate(&self, spec: &NewNetwork, device: &str) -> Result<(String, String), String>;
-    fn add(&self, spec: &NewNetwork) -> Result<(), String>;
-    fn update(&self, profile: &str, change: &Change) -> Result<(), String>;
-    fn forget(&self, profile: &str) -> Result<(), String>;
-    fn save(&self, profile: &str) -> Result<(), String>;
-    fn open(&self, uri: &str) -> Result<(), String>;
-}
-
+/// The stable preferences of one profile, saved for reconciliation.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-struct Prefs {
-    autoconnect: bool,
-    metered: String,
+#[serde(deny_unknown_fields)]
+pub struct Prefs {
+    pub autoconnect: bool,
+    pub metered: String,
+    pub priority: i32,
+    pub mac: String,
+    pub ip: Ip,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hotspot: Option<Hotspot>,
 }
 
 impl From<&Profile> for Prefs {
@@ -255,16 +316,51 @@ impl From<&Profile> for Prefs {
         Self {
             autoconnect: p.autoconnect,
             metered: p.metered.clone(),
+            priority: p.priority,
+            mac: p.mac.clone(),
+            ip: p.ip.clone(),
+            hotspot: p.hotspot.clone(),
         }
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, PartialEq)]
+pub enum Change {
+    Prefs(Prefs),
+    Password(String),
+}
+
+pub trait Backend: Send {
+    fn read(&self) -> Result<Snapshot, String>;
+    fn set_wifi(&self, enabled: bool) -> Result<(), String>;
+    fn set_connectivity_check(&self, enabled: bool) -> Result<(), String>;
+    fn scan(&self, device: &str) -> Result<(), String>;
+    fn disconnect(&self, device: &str) -> Result<(), String>;
+    /// `profile` or `device` may be `/` to let NetworkManager choose.
+    fn activate(&self, profile: &str, device: &str) -> Result<String, String>;
+    fn deactivate(&self, active: &str) -> Result<(), String>;
+    /// Applies the profile's saved addressing to the device without reconnecting.
+    fn reapply(&self, device: &str) -> Result<(), String>;
+    /// Returns the profile and active connection paths.
+    fn add_activate(&self, spec: &NewNetwork, device: &str) -> Result<(String, String), String>;
+    fn add(&self, spec: &NewNetwork) -> Result<(), String>;
+    /// Imports a VPN file of a NetworkManager import type.
+    fn import(&self, kind: &str, path: &Path) -> Result<(), String>;
+    fn update(&self, profile: &str, change: &Change) -> Result<(), String>;
+    fn forget(&self, profile: &str) -> Result<(), String>;
+    fn save(&self, profile: &str) -> Result<(), String>;
+    fn open(&self, uri: &str) -> Result<(), String>;
+}
+
+#[derive(Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Config {
     version: u8,
+    connectivity_check: bool,
     profiles: BTreeMap<String, Prefs>,
 }
+
+const CONFIG_VERSION: u8 = 2;
 
 struct Pending {
     active: String,
@@ -298,6 +394,14 @@ struct AddRequest {
     autoconnect: bool,
 }
 
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct HotspotRequest {
+    ssid: String,
+    band: String,
+    password: Option<String>,
+}
+
 fn enabled() -> bool {
     true
 }
@@ -322,15 +426,67 @@ fn validate_password(security: Security, password: Option<&str>) -> Result<(), S
     Ok(())
 }
 
+fn validate_ssid(ssid: &str) -> Result<(), String> {
+    if ssid.is_empty() || ssid.len() > 32 {
+        return Err(invalid("Use 1 to 32 bytes for the network name"));
+    }
+    Ok(())
+}
+
+/// Settings edits automatic and manual IPv4 and automatic or disabled IPv6; other
+/// methods set elsewhere may be kept as they are.
+fn validate_ip(current: &Ip, ip: &Ip) -> Result<(), String> {
+    if !["auto", "manual"].contains(&ip.ipv4.as_str()) && ip.ipv4 != current.ipv4 {
+        return Err(invalid("Use automatic or manual IPv4 addressing"));
+    }
+    for address in &ip.addresses {
+        let valid = address.split_once('/').is_some_and(|(addr, prefix)| {
+            addr.parse::<Ipv4Addr>().is_ok()
+                && prefix.parse::<u8>().is_ok_and(|p| (1..=32).contains(&p))
+        });
+        if !valid {
+            return Err(invalid(
+                "Use an IPv4 address with a prefix length from 1 to 32",
+            ));
+        }
+    }
+    if ip.ipv4 == "manual" && ip.addresses.is_empty() {
+        return Err(invalid("Manual IPv4 needs an address"));
+    }
+    if !ip.gateway.is_empty() && ip.gateway.parse::<Ipv4Addr>().is_err() {
+        return Err(invalid("Use an IPv4 address for the gateway"));
+    }
+    if ip
+        .dns
+        .iter()
+        .any(|server| server.parse::<IpAddr>().is_err())
+    {
+        return Err(invalid("Use IPv4 or IPv6 addresses for DNS servers"));
+    }
+    if !ip.auto_dns && ip.dns.is_empty() {
+        return Err(invalid("Manual DNS needs at least one server"));
+    }
+    if !["auto", "disabled"].contains(&ip.ipv6.as_str()) && ip.ipv6 != current.ipv6 {
+        return Err(invalid("Use automatic or disabled IPv6"));
+    }
+    if !["default", "no", "opportunistic", "yes"].contains(&ip.dns_over_tls.as_str()) {
+        return Err(invalid(
+            "Use default, no, opportunistic or yes for DNS over TLS",
+        ));
+    }
+    Ok(())
+}
+
 pub struct Manager<B> {
     backend: B,
     path: PathBuf,
-    saved: Option<BTreeMap<String, Prefs>>,
+    saved: Option<Config>,
     snapshot: Option<Snapshot>,
     read_error: Option<String>,
     config_error: Option<String>,
     failure: Option<Value>,
     pending: Option<Pending>,
+    tunnel: Option<Pending>,
     selected: Option<String>,
 }
 
@@ -353,40 +509,45 @@ impl<B: Backend> Manager<B> {
             config_error: None,
             failure: None,
             pending: None,
+            tunnel: None,
             selected: None,
         }
     }
 
-    fn persist(&self, profiles: &BTreeMap<String, Prefs>) -> Result<(), String> {
-        let bytes = toml::to_string(&Config {
-            version: 1,
-            profiles: profiles.clone(),
-        })
-        .map_err(|e| e.to_string())?;
+    fn persist(&self, config: &Config) -> Result<(), String> {
+        let bytes = toml::to_string(config).map_err(|e| e.to_string())?;
         atomic_write(&self.path, bytes.as_bytes())
     }
 
-    fn observed_prefs(snapshot: &Snapshot) -> BTreeMap<String, Prefs> {
-        snapshot
-            .profiles
-            .iter()
-            .filter(|p| !p.unsaved)
-            .map(|p| (p.uuid.clone(), p.into()))
-            .collect()
+    fn observed(snapshot: &Snapshot) -> Config {
+        Config {
+            version: CONFIG_VERSION,
+            connectivity_check: snapshot.connectivity_check_enabled,
+            profiles: snapshot
+                .profiles
+                .iter()
+                .filter(|p| !p.unsaved)
+                .map(|p| (p.uuid.clone(), p.into()))
+                .collect(),
+        }
     }
 
-    fn load_saved(&mut self, observed: &BTreeMap<String, Prefs>) -> Result<(), String> {
+    fn load_saved(&mut self, observed: &Config) -> Result<(), String> {
         if self.saved.is_some() {
             return Ok(());
         }
         match fs::read_to_string(&self.path) {
             Ok(text) => {
-                let config: Config = toml::from_str(&text)
-                    .map_err(|e| format!("Invalid network configuration: {e}"))?;
-                if config.version != 1 {
-                    return Err("Unsupported network configuration version".into());
+                let invalid = |e: toml::de::Error| format!("Invalid network configuration: {e}");
+                let raw: toml::Table = toml::from_str(&text).map_err(invalid)?;
+                if raw.get("version").and_then(toml::Value::as_integer)
+                    != Some(CONFIG_VERSION.into())
+                {
+                    return Err(
+                        "The saved network configuration is from another Settings version".into(),
+                    );
                 }
-                self.saved = Some(config.profiles);
+                self.saved = Some(toml::from_str(&text).map_err(invalid)?);
             }
             Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
                 self.persist(observed)?;
@@ -399,16 +560,18 @@ impl<B: Backend> Manager<B> {
 
     /// Profile inventory belongs to NetworkManager: a saved entry cannot recreate
     /// a deleted profile without its secrets, so additions and removals are adopted.
-    fn adopt_inventory(&mut self, observed: &BTreeMap<String, Prefs>) -> Result<(), String> {
+    fn adopt_inventory(&mut self, observed: &Config) -> Result<(), String> {
         let Some(saved) = &mut self.saved else {
             return Ok(());
         };
-        let before = saved.len();
-        saved.retain(|uuid, _| observed.contains_key(uuid));
-        let mut changed = saved.len() != before;
-        for (uuid, prefs) in observed {
-            if !saved.contains_key(uuid) {
-                saved.insert(uuid.clone(), prefs.clone());
+        let before = saved.profiles.len();
+        saved
+            .profiles
+            .retain(|uuid, _| observed.profiles.contains_key(uuid));
+        let mut changed = saved.profiles.len() != before;
+        for (uuid, prefs) in &observed.profiles {
+            if !saved.profiles.contains_key(uuid) {
+                saved.profiles.insert(uuid.clone(), prefs.clone());
                 changed = true;
             }
         }
@@ -419,11 +582,12 @@ impl<B: Backend> Manager<B> {
         Ok(())
     }
 
-    fn settle_pending(&mut self) {
+    fn settle(&mut self, tunnel: bool) {
         let Some(snapshot) = &self.snapshot else {
             return;
         };
-        let Some(pending) = &self.pending else {
+        let slot = if tunnel { &self.tunnel } else { &self.pending };
+        let Some(pending) = slot else {
             return;
         };
         let state = snapshot
@@ -440,7 +604,12 @@ impl<B: Backend> Manager<B> {
         {
             return;
         }
-        let pending = self.pending.take().unwrap();
+        let pending = if tunnel {
+            self.tunnel.take()
+        } else {
+            self.pending.take()
+        }
+        .unwrap();
         if state == Some(2) {
             if pending.new_profile
                 && let Err(error) = self.backend.save(&pending.profile)
@@ -455,9 +624,11 @@ impl<B: Backend> Manager<B> {
             let _ = self.backend.forget(&pending.profile);
         }
         // NM_DEVICE_STATE_REASON no-secrets and supplicant-disconnect.
-        let needs_password = matches!(pending.reason, Some(7 | 8));
+        let needs_password = !tunnel && matches!(pending.reason, Some(7 | 8));
         let message = match pending.reason {
-            Some(7 | 8) => format!("Could not connect to {}: check the password", pending.ssid),
+            Some(7 | 8) if !tunnel => {
+                format!("Could not connect to {}: check the password", pending.ssid)
+            }
             Some(11) => format!("Connecting to {} timed out", pending.ssid),
             _ => format!("Could not connect to {}", pending.ssid),
         };
@@ -485,13 +656,14 @@ impl<B: Backend> Manager<B> {
             }
         };
         self.read_error = None;
-        let observed = Self::observed_prefs(&snapshot);
+        let observed = Self::observed(&snapshot);
         self.snapshot = Some(snapshot);
         let result = self
             .load_saved(&observed)
             .and_then(|()| self.adopt_inventory(&observed));
         self.config_error = result.err();
-        self.settle_pending();
+        self.settle(false);
+        self.settle(true);
         Ok(())
     }
 
@@ -538,8 +710,12 @@ impl<B: Backend> Manager<B> {
             return vec![];
         };
         let mut result = vec![];
+        if saved.connectivity_check != snapshot.connectivity_check_enabled {
+            result.push(json!({"uuid":null,"name":"Internet connectivity check",
+                "saved":saved.connectivity_check,"system":snapshot.connectivity_check_enabled}));
+        }
         for profile in &snapshot.profiles {
-            let Some(prefs) = saved.get(&profile.uuid) else {
+            let Some(prefs) = saved.profiles.get(&profile.uuid) else {
                 continue;
             };
             let actual = Prefs::from(profile);
@@ -560,13 +736,45 @@ impl<B: Backend> Manager<B> {
         self.saved.is_some() && self.read_error.is_none() && self.config_error.is_none()
     }
 
+    /// Preference writes need a valid saved configuration that agrees with the system.
+    fn guard_preferences(&mut self) -> Result<(), String> {
+        self.refresh()?;
+        if !self.writable() {
+            return Err("Network configuration is not writable".into());
+        }
+        if self.conflict() {
+            return Err(
+                "Conflict:Resolve the saved and system network conflict before changing it".into(),
+            );
+        }
+        Ok(())
+    }
+
     fn profile(&self, uuid: &str) -> Result<Profile, String> {
         self.snapshot()?
             .profiles
             .iter()
             .find(|p| p.uuid == uuid)
             .cloned()
-            .ok_or_else(|| invalid("Unknown network"))
+            .ok_or_else(|| invalid("Unknown connection"))
+    }
+
+    fn hotspot_profile(&self) -> Option<Profile> {
+        self.snapshot()
+            .ok()?
+            .profiles
+            .iter()
+            .find(|p| p.kind == "hotspot")
+            .cloned()
+    }
+
+    fn active_of(&self, uuid: &str) -> Option<Active> {
+        self.snapshot()
+            .ok()?
+            .active
+            .iter()
+            .find(|a| a.uuid == uuid)
+            .cloned()
     }
 
     pub fn state(&self) -> Value {
@@ -596,6 +804,7 @@ impl<B: Backend> Manager<B> {
         let conflicts = self.conflicts();
         value["conflict"] = json!(!conflicts.is_empty());
         value["conflicts"] = json!(conflicts);
+        value["config_invalid"] = json!(self.read_error.is_none() && self.config_error.is_some());
         value["error"] = json!(self.read_error.as_ref().or(self.config_error.as_ref()));
         value["failure"] = json!(self.failure);
         value["connecting"] = json!(self.pending.as_ref().map(|p| &p.ssid));
@@ -627,9 +836,19 @@ impl<B: Backend> Manager<B> {
                 .find(|d| d.uuid.is_some() && d.uuid == s.primary_uuid)
         });
         let primary_field = |field: fn(&Device) -> Value| primary.map_or(Value::Null, field);
+        let filter = |key: &str, keep: &dyn Fn(&Value) -> bool| {
+            json!(
+                state[key]
+                    .as_array()
+                    .into_iter()
+                    .flatten()
+                    .filter(|v| keep(v))
+                    .collect::<Vec<_>>()
+            )
+        };
         match id {
             "network-status.connection" => state["connectivity"].clone(),
-            "network-status.traffic" => self.traffic(),
+            "network-status.traffic" | "network-status.usage" => self.traffic(),
             "network-status.name" => primary_field(|d| json!(d.connection)),
             "network-status.type" => primary_field(|d| json!(d.kind)),
             "network-status.ipv4" => primary_field(|d| json!(d.ipv4)),
@@ -640,15 +859,9 @@ impl<B: Backend> Manager<B> {
             "network-status.hardware-address" => primary_field(|d| json!(d.hardware_address)),
             "network-status.adapters" | "network-status.virtual-adapters" => {
                 let physical = id == "network-status.adapters";
-                json!(
-                    state["devices"]
-                        .as_array()
-                        .into_iter()
-                        .flatten()
-                        .filter(|d| d["physical"] == physical)
-                        .collect::<Vec<_>>()
-                )
+                filter("devices", &|d| d["physical"] == physical)
             }
+            CONNECTIVITY_CHECK => state["connectivity_check_enabled"].clone(),
             WIFI_ENABLED => state["wifi_enabled"].clone(),
             WIFI_ADAPTER => state["adapter"].clone(),
             "wifi.current" => json!(
@@ -656,41 +869,66 @@ impl<B: Backend> Manager<B> {
                     .and_then(|d| d.networks.iter().find(|n| n.in_use))
             ),
             "wifi.networks" => json!(self.adapter().map(|d| &d.networks)),
+            "ethernet.status" | "ethernet.details" => filter("devices", &|d| {
+                d["kind"] == "ethernet" && d["physical"] == true
+            }),
+            "vpn.connections" => filter("profiles", &|p| {
+                p["kind"] == "vpn" || p["kind"] == "wireguard"
+            }),
+            "vpn.external" => filter("devices", &|d| {
+                ["tun", "wireguard"].contains(&d["kind"].as_str().unwrap_or_default())
+                    && d["state"] == "unmanaged"
+            }),
+            HOTSPOT_ENABLED => json!(self.hotspot_profile().is_some_and(|p| p.active)),
+            "hotspot.name" | "hotspot.band" => {
+                json!(self.hotspot_profile().and_then(|p| p.hotspot))
+            }
+            "hotspot.source" => primary_field(|d| json!(d.connection)),
             _ => Value::Null,
         }
     }
 
-    fn change_profile(&mut self, uuid: &str, change: Change) -> Result<Value, String> {
-        self.refresh()?;
-        if !self.writable() {
-            return Err("Network configuration is not writable".into());
-        }
-        if self.conflict() {
-            return Err(
-                "Conflict:Resolve the saved and system network conflict before changing it".into(),
-            );
-        }
-        self.allowed("settings.modify.system", "change saved networks")?;
+    /// Writes one profile's preferences, verifies readback and saves them.
+    fn change_profile(&mut self, uuid: &str, prefs: Prefs) -> Result<Value, String> {
+        self.guard_preferences()?;
+        self.allowed("settings.modify.system", "change saved connections")?;
         let profile = self.profile(uuid)?;
         if profile.read_only {
-            return Err("Unavailable:This saved network is read-only".into());
+            return Err("Unavailable:This saved connection is read-only".into());
         }
-        self.backend.update(&profile.path, &change)?;
+        let ip_changed = prefs.ip != profile.ip;
+        self.backend
+            .update(&profile.path, &Change::Prefs(prefs.clone()))?;
         self.refresh()?;
         let after = self.profile(uuid)?;
-        let matches = match &change {
-            Change::Autoconnect(value) => after.autoconnect == *value,
-            Change::Metered(value) => after.metered == *value,
-            Change::Password(_) => true,
-        };
-        if !matches {
+        if Prefs::from(&after) != prefs {
             return Err("NetworkManager readback does not match the requested value".into());
         }
         let saved = self.saved.as_mut().ok_or("Network configuration missing")?;
-        saved.insert(uuid.to_owned(), (&after).into());
+        saved.profiles.insert(uuid.to_owned(), prefs);
         let copy = saved.clone();
         self.persist(&copy)?;
+        if ip_changed {
+            self.reapply(uuid)?;
+        }
         Ok(self.state())
+    }
+
+    /// Applies new addressing to a connected device; the profile is already saved.
+    fn reapply(&mut self, uuid: &str) -> Result<(), String> {
+        let device = self
+            .snapshot()?
+            .devices
+            .iter()
+            .find(|d| d.uuid.as_deref() == Some(uuid))
+            .map(|d| d.path.clone());
+        if let Some(device) = device {
+            self.backend
+                .reapply(&device)
+                .map_err(|e| format!("Saved; reconnect to apply it: {e}"))?;
+            self.refresh()?;
+        }
+        Ok(())
     }
 
     fn begin_connect(&mut self, request: ConnectRequest) -> Result<(), String> {
@@ -712,7 +950,7 @@ impl<B: Backend> Manager<B> {
                     .ok()?
                     .profiles
                     .iter()
-                    .find(|profile| profile.raw == ssid)
+                    .find(|profile| profile.kind == "wifi" && profile.raw == ssid)
                     .map(|profile| profile.uuid.clone())
             } else {
                 network.and_then(|network| network.known_uuid.clone())
@@ -720,6 +958,9 @@ impl<B: Backend> Manager<B> {
         });
         if let Some(uuid) = uuid {
             let profile = self.profile(&uuid)?;
+            if profile.kind != "wifi" {
+                return Err(invalid("This connection is not a Wi-Fi network"));
+            }
             if request
                 .hidden_security
                 .is_some_and(|security| security != profile.security)
@@ -753,9 +994,7 @@ impl<B: Backend> Manager<B> {
                 .ssid
                 .as_deref()
                 .ok_or_else(|| invalid("Hidden networks require an SSID"))?;
-            if ssid.is_empty() || ssid.len() > 32 {
-                return Err(invalid("Use 1 to 32 bytes for the network name"));
-            }
+            validate_ssid(ssid)?;
             (ssid, ssid.as_bytes(), security)
         } else {
             let network = network.ok_or_else(|| invalid("Network not found; refresh the list"))?;
@@ -776,6 +1015,7 @@ impl<B: Backend> Manager<B> {
             password: request.password,
             hidden,
             autoconnect: true,
+            hotspot_band: None,
         };
         let (profile, active) = self.backend.add_activate(&spec, &adapter.path)?;
         self.drop_trial();
@@ -801,15 +1041,222 @@ impl<B: Backend> Manager<B> {
         }
     }
 
+    fn profile_request<T: serde::de::DeserializeOwned>(
+        value: &str,
+        message: &str,
+    ) -> Result<(String, T), String> {
+        #[derive(Deserialize)]
+        #[serde(deny_unknown_fields)]
+        struct Request<T> {
+            uuid: String,
+            value: T,
+        }
+        // Messages from the parser could quote a password.
+        let request: Request<T> = serde_json::from_str(value).map_err(|_| invalid(message))?;
+        Ok((request.uuid, request.value))
+    }
+
+    /// Changes one preference of a saved connection of one of `kinds`.
+    fn edit(
+        &mut self,
+        value: &str,
+        kinds: &[&str],
+        apply: impl FnOnce(&Profile, &Snapshot, &mut Prefs, Value) -> Result<(), String>,
+    ) -> Result<Value, String> {
+        let (uuid, requested): (String, Value) =
+            Self::profile_request(value, "Expected uuid and value")?;
+        self.refresh()?;
+        let profile = self.profile(&uuid)?;
+        if !kinds.contains(&profile.kind.as_str()) {
+            return Err(invalid("This setting does not apply to this connection"));
+        }
+        let mut prefs = Prefs::from(&profile);
+        apply(&profile, self.snapshot()?, &mut prefs, requested)?;
+        self.change_profile(&uuid, prefs)
+    }
+
+    fn set_tunnel(&mut self, value: &str) -> Result<(), String> {
+        let (uuid, connect): (String, bool) =
+            Self::profile_request(value, "Expected uuid and true or false")?;
+        self.refresh()?;
+        let profile = self.profile(&uuid)?;
+        if !["vpn", "wireguard"].contains(&profile.kind.as_str()) {
+            return Err(invalid("This connection is not a VPN"));
+        }
+        self.allowed("network-control", "change network connections")?;
+        if connect {
+            let active = self.backend.activate(&profile.path, "/")?;
+            self.tunnel = Some(Pending {
+                active,
+                profile: profile.path,
+                ssid: profile.name,
+                uuid: Some(uuid),
+                new_profile: false,
+                device: "/".into(),
+                reason: None,
+                started: Instant::now(),
+            });
+        } else if let Some(active) = self.active_of(&uuid) {
+            self.tunnel = None;
+            self.backend.deactivate(&active.path)?;
+        }
+        Ok(())
+    }
+
+    /// Imports through `nmcli`; the new VPN stays disconnected until it is chosen.
+    fn import(&mut self, value: &str) -> Result<(), String> {
+        let path = Path::new(value);
+        let kind = match path.extension().and_then(|e| e.to_str()) {
+            Some("conf") => "wireguard",
+            Some("ovpn") => "openvpn",
+            _ => return Err(invalid("Choose a WireGuard .conf or OpenVPN .ovpn file")),
+        };
+        let metadata = fs::metadata(path).map_err(|_| invalid("Choose an existing file"))?;
+        if !path.is_absolute() || !metadata.is_file() || metadata.len() > MAX_IMPORT_BYTES {
+            return Err(invalid(
+                "Choose a VPN file of at most 1 MiB by its full path",
+            ));
+        }
+        self.refresh()?;
+        self.allowed("settings.modify.system", "add VPN connections")?;
+        let before: Vec<String> = self
+            .snapshot()?
+            .profiles
+            .iter()
+            .map(|p| p.uuid.clone())
+            .collect();
+        self.backend.import(kind, path)?;
+        self.refresh()?;
+        let added: Vec<Profile> = self
+            .snapshot()?
+            .profiles
+            .iter()
+            .filter(|p| {
+                !before.contains(&p.uuid) && ["vpn", "wireguard"].contains(&p.kind.as_str())
+            })
+            .cloned()
+            .collect();
+        if added.is_empty() {
+            return Err("NetworkManager did not add the VPN".into());
+        }
+        for profile in added {
+            if let Some(active) = self.active_of(&profile.uuid) {
+                self.backend.deactivate(&active.path)?;
+            }
+            if profile.autoconnect {
+                let mut prefs = Prefs::from(&profile);
+                prefs.autoconnect = false;
+                self.backend.update(&profile.path, &Change::Prefs(prefs))?;
+            }
+        }
+        // Inventory adoption records the new profiles as they now are.
+        if let Some(saved) = &mut self.saved {
+            saved.profiles.retain(|uuid, _| before.contains(uuid));
+        }
+        self.refresh()
+    }
+
+    fn set_hotspot(&mut self, enabled: bool) -> Result<(), String> {
+        self.refresh()?;
+        let adapter = self.require_adapter()?;
+        let profile = self
+            .hotspot_profile()
+            .ok_or("Unavailable:Set up the hotspot name and password first")?;
+        self.allowed("network-control", "change network connections")?;
+        if !enabled {
+            if let Some(active) = self.active_of(&profile.uuid) {
+                self.backend.deactivate(&active.path)?;
+            }
+            return Ok(());
+        }
+        if !adapter.ap {
+            return Err("Unavailable:This Wi-Fi adapter cannot share a hotspot".into());
+        }
+        if !self.snapshot()?.wifi_enabled {
+            return Err("Unavailable:Wi-Fi is turned off".into());
+        }
+        let active = self.backend.activate(&profile.path, &adapter.path)?;
+        self.tunnel = Some(Pending {
+            active,
+            profile: profile.path,
+            ssid: profile.name,
+            uuid: Some(profile.uuid),
+            new_profile: false,
+            device: adapter.path,
+            reason: None,
+            started: Instant::now(),
+        });
+        Ok(())
+    }
+
+    fn configure_hotspot(&mut self, value: &str) -> Result<Value, String> {
+        // Messages from the parser could quote the password.
+        let request: HotspotRequest = serde_json::from_str(value)
+            .map_err(|_| invalid("Expected ssid, band and an optional password"))?;
+        validate_ssid(&request.ssid)?;
+        if !["auto", "2.4", "5"].contains(&request.band.as_str()) {
+            return Err(invalid("Use auto, 2.4 or 5 for the band"));
+        }
+        if let Some(password) = &request.password {
+            validate_password(Security::Wpa2, Some(password))?;
+        }
+        self.guard_preferences()?;
+        let adapter = self.require_adapter()?;
+        if !adapter.ap {
+            return Err("Unavailable:This Wi-Fi adapter cannot share a hotspot".into());
+        }
+        if request.band != "auto" && !adapter.bands.contains(&request.band) {
+            return Err(invalid("This Wi-Fi adapter does not support that band"));
+        }
+        self.allowed("settings.modify.system", "change saved connections")?;
+        let hotspot = Hotspot {
+            ssid: request.ssid.clone(),
+            band: request.band,
+        };
+        let Some(profile) = self.hotspot_profile() else {
+            if request.password.is_none() {
+                return Err(invalid("Enter a hotspot password"));
+            }
+            self.backend.add(&NewNetwork {
+                ssid: request.ssid.into_bytes(),
+                security: Security::Wpa2,
+                password: request.password,
+                hidden: false,
+                autoconnect: false,
+                hotspot_band: Some(hotspot.band),
+            })?;
+            self.refresh()?;
+            if self.hotspot_profile().is_none() {
+                return Err("NetworkManager did not save the hotspot".into());
+            }
+            return Ok(self.state());
+        };
+        if let Some(password) = request.password {
+            self.backend
+                .update(&profile.path, &Change::Password(password))?;
+        }
+        let mut prefs = Prefs::from(&profile);
+        prefs.hotspot = Some(hotspot);
+        let state = self.change_profile(&profile.uuid, prefs)?;
+        // A running access point picks up its new name, band or password on restart.
+        if profile.active {
+            self.backend.activate(&profile.path, &adapter.path)?;
+            self.refresh()?;
+            return Ok(self.state());
+        }
+        Ok(state)
+    }
+
     pub fn set(&mut self, key: &str, value: &str) -> Result<Value, String> {
         self.failure = None;
+        let flag = || match value {
+            "true" => Ok(true),
+            "false" => Ok(false),
+            _ => Err(invalid("Expected true or false")),
+        };
         match key {
             WIFI_ENABLED => {
-                let enabled = match value {
-                    "true" => true,
-                    "false" => false,
-                    _ => return Err(invalid("Expected true or false")),
-                };
+                let enabled = flag()?;
                 self.refresh()?;
                 if !self.snapshot()?.wifi_hardware_enabled {
                     return Err("Unavailable:Wi-Fi is blocked by a hardware switch".into());
@@ -820,6 +1267,28 @@ impl<B: Backend> Manager<B> {
                 if self.snapshot()?.wifi_enabled != enabled {
                     return Err("NetworkManager readback does not match the requested value".into());
                 }
+            }
+            CONNECTIVITY_CHECK => {
+                let enabled = flag()?;
+                self.guard_preferences()?;
+                if !self.snapshot()?.connectivity_check_available {
+                    return Err(
+                        "Unavailable:NetworkManager has no connectivity check address".into(),
+                    );
+                }
+                self.allowed(
+                    "enable-disable-connectivity-check",
+                    "change connectivity checking",
+                )?;
+                self.backend.set_connectivity_check(enabled)?;
+                self.refresh()?;
+                if self.snapshot()?.connectivity_check_enabled != enabled {
+                    return Err("NetworkManager readback does not match the requested value".into());
+                }
+                let saved = self.saved.as_mut().ok_or("Network configuration missing")?;
+                saved.connectivity_check = enabled;
+                let copy = saved.clone();
+                self.persist(&copy)?;
             }
             WIFI_ADAPTER => {
                 self.refresh()?;
@@ -864,9 +1333,7 @@ impl<B: Backend> Manager<B> {
             ADD => {
                 let request: AddRequest = serde_json::from_str(value)
                     .map_err(|_| invalid("Expected ssid, security, and an optional password"))?;
-                if request.ssid.is_empty() || request.ssid.len() > 32 {
-                    return Err(invalid("Use 1 to 32 bytes for the network name"));
-                }
+                validate_ssid(&request.ssid)?;
                 if !request.security.creatable() {
                     return Err("Unavailable:Settings cannot create this type of network".into());
                 }
@@ -874,7 +1341,9 @@ impl<B: Backend> Manager<B> {
                 self.refresh()?;
                 self.allowed("settings.modify.system", "change saved networks")?;
                 let ssid = request.ssid.into_bytes();
-                if self.snapshot()?.profiles.iter().any(|p| p.raw == ssid) {
+                let saved =
+                    |s: &Snapshot| s.profiles.iter().any(|p| p.kind == "wifi" && p.raw == ssid);
+                if saved(self.snapshot()?) {
                     return Err(invalid("This network is already saved"));
                 }
                 self.backend.add(&NewNetwork {
@@ -883,64 +1352,157 @@ impl<B: Backend> Manager<B> {
                     password: request.password,
                     hidden: request.hidden,
                     autoconnect: request.autoconnect,
+                    hotspot_band: None,
                 })?;
                 self.refresh()?;
-                if !self.snapshot()?.profiles.iter().any(|p| p.raw == ssid) {
+                if !saved(self.snapshot()?) {
                     return Err("NetworkManager did not save the network".into());
                 }
             }
-            AUTOCONNECT | METERED | CHANGE_PASSWORD => {
-                #[derive(Deserialize)]
-                #[serde(deny_unknown_fields)]
-                struct Request {
-                    uuid: String,
-                    value: Value,
-                }
-                let request: Request =
-                    serde_json::from_str(value).map_err(|_| invalid("Expected uuid and value"))?;
-                let change = match key {
-                    AUTOCONNECT => Change::Autoconnect(
-                        request
-                            .value
-                            .as_bool()
-                            .ok_or_else(|| invalid("Expected true or false"))?,
-                    ),
-                    METERED => {
-                        let value = request.value.as_str().unwrap_or_default();
-                        if !["automatic", "yes", "no"].contains(&value) {
-                            return Err(invalid("Use automatic, yes or no"));
-                        }
-                        Change::Metered(value.to_owned())
-                    }
-                    _ => {
-                        let password = request.value.as_str().unwrap_or_default().to_owned();
-                        self.refresh()?;
-                        let security = self.profile(&request.uuid)?.security;
-                        if !security.personal() {
-                            return Err(
-                                "Unavailable:Settings changes personal network passwords only"
-                                    .into(),
-                            );
-                        }
-                        validate_password(security, Some(&password))?;
-                        Change::Password(password)
-                    }
+            AUTOCONNECT | ETHERNET_AUTOCONNECT => {
+                let kinds: &[&str] = if key == AUTOCONNECT {
+                    &["wifi"]
+                } else {
+                    &["ethernet"]
                 };
-                return self.change_profile(&request.uuid, change);
+                return self.edit(value, kinds, |_, _, prefs, v| {
+                    prefs.autoconnect = v
+                        .as_bool()
+                        .ok_or_else(|| invalid("Expected true or false"))?;
+                    Ok(())
+                });
             }
-            FORGET => {
-                self.refresh()?;
+            METERED | ETHERNET_METERED => {
+                let kinds: &[&str] = if key == METERED {
+                    &["wifi"]
+                } else {
+                    &["ethernet"]
+                };
+                return self.edit(value, kinds, |_, _, prefs, v| {
+                    let v = v.as_str().unwrap_or_default();
+                    if !["automatic", "yes", "no"].contains(&v) {
+                        return Err(invalid("Use automatic, yes or no"));
+                    }
+                    prefs.metered = v.to_owned();
+                    Ok(())
+                });
+            }
+            PRIORITY => {
+                return self.edit(value, &["wifi"], |_, snapshot, prefs, v| {
+                    if snapshot.wifi_backend == "iwd" {
+                        return Err("Unavailable:iwd chooses networks itself".into());
+                    }
+                    prefs.priority = v
+                        .as_i64()
+                        .filter(|p| (-999..=999).contains(p))
+                        .ok_or_else(|| invalid("Use a priority from -999 to 999"))?
+                        as i32;
+                    Ok(())
+                });
+            }
+            MAC => {
+                return self.edit(value, &["wifi"], |profile, snapshot, prefs, v| {
+                    if snapshot.wifi_backend == "iwd" {
+                        return Err("Unavailable:iwd randomizes addresses itself".into());
+                    }
+                    let v = v.as_str().unwrap_or("-");
+                    if !["", "permanent", "stable", "random"].contains(&v) && v != profile.mac {
+                        return Err(invalid("Use default, permanent, stable or random"));
+                    }
+                    prefs.mac = v.to_owned();
+                    Ok(())
+                });
+            }
+            KNOWN_IP | KNOWN_DNS | ETHERNET_IP | ETHERNET_DNS => {
+                let kinds: &[&str] = if key.starts_with("known-") {
+                    &["wifi"]
+                } else {
+                    &["ethernet"]
+                };
+                return self.edit(value, kinds, |profile, _, prefs, v| {
+                    let ip: Ip = serde_json::from_value(v)
+                        .map_err(|_| invalid("Expected ipv4, addresses, gateway, auto_dns, dns, ipv6 and dns_over_tls"))?;
+                    validate_ip(&profile.ip, &ip)?;
+                    prefs.ip = ip;
+                    Ok(())
+                });
+            }
+            CHANGE_PASSWORD => {
+                let (uuid, password): (String, String) =
+                    Self::profile_request(value, "Expected uuid and value")?;
+                self.guard_preferences()?;
                 self.allowed("settings.modify.system", "change saved networks")?;
-                let profile = self.profile(value)?;
+                let profile = self.profile(&uuid)?;
+                if !profile.security.personal() || profile.kind != "wifi" {
+                    return Err(
+                        "Unavailable:Settings changes personal network passwords only".into(),
+                    );
+                }
                 if profile.read_only {
-                    return Err("Unavailable:This saved network is read-only".into());
+                    return Err("Unavailable:This saved connection is read-only".into());
+                }
+                validate_password(profile.security, Some(&password))?;
+                self.backend
+                    .update(&profile.path, &Change::Password(password))?;
+                self.refresh()?;
+            }
+            FORGET | VPN_REMOVE => {
+                self.refresh()?;
+                self.allowed("settings.modify.system", "change saved connections")?;
+                let profile = self.profile(value)?;
+                let tunnel = ["vpn", "wireguard"].contains(&profile.kind.as_str());
+                if (key == VPN_REMOVE) != tunnel {
+                    return Err(invalid("Use the matching page to remove this connection"));
+                }
+                if profile.read_only {
+                    return Err("Unavailable:This saved connection is read-only".into());
                 }
                 self.backend.forget(&profile.path)?;
                 self.refresh()?;
                 if self.snapshot()?.profiles.iter().any(|p| p.uuid == value) {
-                    return Err("NetworkManager did not remove the network".into());
+                    return Err("NetworkManager did not remove the connection".into());
                 }
             }
+            ETHERNET_CONNECT => {
+                #[derive(Deserialize)]
+                #[serde(deny_unknown_fields)]
+                struct Request {
+                    interface: String,
+                    value: bool,
+                }
+                let request: Request = serde_json::from_str(value)
+                    .map_err(|_| invalid("Expected interface and true or false"))?;
+                self.refresh()?;
+                let device = self
+                    .snapshot()?
+                    .devices
+                    .iter()
+                    .find(|d| {
+                        d.kind == "ethernet" && d.physical && d.interface == request.interface
+                    })
+                    .cloned()
+                    .ok_or_else(|| invalid("Choose a detected Ethernet adapter"))?;
+                self.allowed("network-control", "change network connections")?;
+                if request.value {
+                    if device.state == "unavailable" {
+                        return Err("Unavailable:Plug in a network cable first".into());
+                    }
+                    self.backend.activate("/", &device.path)?;
+                } else {
+                    self.backend.disconnect(&device.path)?;
+                }
+                self.refresh()?;
+            }
+            VPN_CONNECT => {
+                self.set_tunnel(value)?;
+                self.refresh()?;
+            }
+            VPN_IMPORT => self.import(value)?,
+            HOTSPOT_ENABLED => {
+                self.set_hotspot(flag()?)?;
+                self.refresh()?;
+            }
+            HOTSPOT_CONFIGURE => return self.configure_hotspot(value),
             SIGN_IN => {
                 self.refresh()?;
                 let snapshot = self.snapshot()?;
@@ -960,35 +1522,45 @@ impl<B: Backend> Manager<B> {
     }
 
     pub fn resolve(&mut self, source: &str) -> Result<Value, String> {
-        self.refresh()?;
-        if !self.writable() {
-            return Err("Network configuration is not writable".into());
-        }
+        let _ = self.refresh();
+        self.snapshot()?;
         match source {
+            // Also replaces an unreadable file, by the user's explicit choice.
             "system" => {
-                let observed = Self::observed_prefs(self.snapshot()?);
+                let observed = Self::observed(self.snapshot()?);
                 self.persist(&observed)?;
                 self.saved = Some(observed);
+                self.config_error = None;
             }
             "settings" => {
-                self.allowed("settings.modify.system", "change saved networks")?;
-                let saved = self.saved.clone().unwrap_or_default();
+                if !self.writable() {
+                    return Err("Network configuration is not writable".into());
+                }
+                self.allowed("settings.modify.system", "change saved connections")?;
+                let saved = self.saved.clone().ok_or("Network configuration missing")?;
+                if saved.connectivity_check != self.snapshot()?.connectivity_check_enabled {
+                    self.backend
+                        .set_connectivity_check(saved.connectivity_check)?;
+                }
+                let mut reapply = vec![];
                 for profile in self.snapshot()?.profiles.clone() {
-                    let Some(prefs) = saved.get(&profile.uuid) else {
+                    let Some(prefs) = saved.profiles.get(&profile.uuid) else {
                         continue;
                     };
-                    if prefs.autoconnect != profile.autoconnect {
+                    if *prefs != Prefs::from(&profile) {
                         self.backend
-                            .update(&profile.path, &Change::Autoconnect(prefs.autoconnect))?;
-                    }
-                    if prefs.metered != profile.metered {
-                        self.backend
-                            .update(&profile.path, &Change::Metered(prefs.metered.clone()))?;
+                            .update(&profile.path, &Change::Prefs(prefs.clone()))?;
+                        if prefs.ip != profile.ip {
+                            reapply.push(profile.uuid);
+                        }
                     }
                 }
                 self.refresh()?;
                 if self.conflict() {
                     return Err("NetworkManager readback does not match the saved values".into());
+                }
+                for uuid in reapply {
+                    self.reapply(&uuid)?;
                 }
             }
             _ => return Err(invalid("Unknown resolution")),
@@ -996,7 +1568,6 @@ impl<B: Backend> Manager<B> {
         Ok(self.state())
     }
 }
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1014,21 +1585,29 @@ mod tests {
     #[derive(Clone, Default)]
     struct Fake(Arc<Mutex<World>>);
 
+    fn ip() -> Ip {
+        Ip {
+            ipv4: "auto".into(),
+            auto_dns: true,
+            ipv6: "auto".into(),
+            dns_over_tls: "default".into(),
+            ..Default::default()
+        }
+    }
+
     fn profile(uuid: &str, ssid: &str, security: Security) -> Profile {
         Profile {
             path: format!("/c/{uuid}"),
             uuid: uuid.into(),
             name: ssid.into(),
+            kind: "wifi".into(),
             ssid: ssid.into(),
             raw: ssid.into(),
             security,
             autoconnect: true,
             metered: "automatic".into(),
-            hidden: false,
-            last_connected: 0,
-            active: false,
-            read_only: false,
-            unsaved: false,
+            ip: ip(),
+            ..Default::default()
         }
     }
 
@@ -1051,15 +1630,10 @@ mod tests {
             kind: "wifi".into(),
             state: "disconnected".into(),
             physical: true,
-            hardware_address: None,
-            connection: None,
-            uuid: None,
-            speed_mbps: None,
-            ipv4: vec![],
-            gateway: None,
-            dns: vec![],
-            ipv6: vec![],
             networks,
+            ap: true,
+            bands: vec!["2.4".into(), "5".into()],
+            ..Default::default()
         }
     }
 
@@ -1078,6 +1652,41 @@ mod tests {
                 return Err("rejected".into());
             }
             world.snapshot.wifi_enabled = enabled;
+            Ok(())
+        }
+        fn set_connectivity_check(&self, enabled: bool) -> Result<(), String> {
+            let mut world = self.0.lock().unwrap();
+            world.calls.push(format!("check {enabled}"));
+            world.snapshot.connectivity_check_enabled = enabled;
+            Ok(())
+        }
+        fn deactivate(&self, active: &str) -> Result<(), String> {
+            let mut world = self.0.lock().unwrap();
+            world.calls.push(format!("deactivate {active}"));
+            world.snapshot.active.retain(|a| a.path != active);
+            Ok(())
+        }
+        fn reapply(&self, device: &str) -> Result<(), String> {
+            self.0
+                .lock()
+                .unwrap()
+                .calls
+                .push(format!("reapply {device}"));
+            Ok(())
+        }
+        fn import(&self, kind: &str, _: &Path) -> Result<(), String> {
+            let mut world = self.0.lock().unwrap();
+            world.calls.push(format!("import {kind}"));
+            let mut vpn = profile("wg", "wg0", Security::Open);
+            vpn.kind = "wireguard".into();
+            world.snapshot.profiles.push(vpn);
+            world.snapshot.active.push(Active {
+                path: "/a/wg".into(),
+                uuid: "wg".into(),
+                name: "wg0".into(),
+                kind: "wireguard".into(),
+                state: 2,
+            });
             Ok(())
         }
         fn scan(&self, device: &str) -> Result<(), String> {
@@ -1127,10 +1736,16 @@ mod tests {
         fn add(&self, spec: &NewNetwork) -> Result<(), String> {
             let mut world = self.0.lock().unwrap();
             world.calls.push(format!("add {}", spec.ssid_name()));
-            world
-                .snapshot
-                .profiles
-                .push(profile("added", &spec.ssid_name(), spec.security));
+            let mut added = profile("added", &spec.ssid_name(), spec.security);
+            if let Some(band) = &spec.hotspot_band {
+                added.kind = "hotspot".into();
+                added.autoconnect = spec.autoconnect;
+                added.hotspot = Some(Hotspot {
+                    ssid: spec.ssid_name(),
+                    band: band.clone(),
+                });
+            }
+            world.snapshot.profiles.push(added);
             Ok(())
         }
         fn update(&self, path: &str, change: &Change) -> Result<(), String> {
@@ -1148,10 +1763,13 @@ mod tests {
                 .iter_mut()
                 .find(|p| p.path == path)
                 .unwrap();
-            match change {
-                Change::Autoconnect(v) => target.autoconnect = *v,
-                Change::Metered(v) => target.metered = v.clone(),
-                Change::Password(_) => {}
+            if let Change::Prefs(prefs) = change {
+                target.autoconnect = prefs.autoconnect;
+                target.metered = prefs.metered.clone();
+                target.priority = prefs.priority;
+                target.mac = prefs.mac.clone();
+                target.ip = prefs.ip.clone();
+                target.hotspot = prefs.hotspot.clone();
             }
             Ok(())
         }
@@ -1627,5 +2245,247 @@ mod tests {
         manager.set(FORGET, "home").unwrap();
         assert!(calls(&fake).contains(&"forget /c/home".to_owned()));
         assert!(manager.set(FORGET, "home").is_err());
+    }
+
+    fn ethernet(fake: &Fake) {
+        let mut world = fake.0.lock().unwrap();
+        let mut wired = profile("wired", "Wired connection 1", Security::Open);
+        wired.kind = "ethernet".into();
+        wired.raw.clear();
+        wired.ssid.clear();
+        world.snapshot.profiles.push(wired);
+        let mut device = adapter("eno1", vec![]);
+        device.kind = "ethernet".into();
+        device.state = "connected".into();
+        device.uuid = Some("wired".into());
+        world.snapshot.devices.push(device);
+        world.snapshot.active.push(Active {
+            path: "/a/wired".into(),
+            uuid: "wired".into(),
+            name: "Wired connection 1".into(),
+            kind: "802-3-ethernet".into(),
+            state: 2,
+        });
+    }
+
+    fn manual_ip() -> String {
+        json!({"uuid":"wired","value":{"ipv4":"manual","addresses":["192.168.1.20/24"],
+            "gateway":"192.168.1.1","auto_dns":false,"dns":["1.1.1.1","2606:4700:4700::1111"],
+            "ipv6":"disabled","dns_over_tls":"default"}})
+        .to_string()
+    }
+
+    #[test]
+    fn ip_settings_validate_save_and_reapply_to_the_connected_device() {
+        let (fake, mut manager, root) = setup();
+        ethernet(&fake);
+        manager.refresh().unwrap();
+        for bad in [
+            json!({"ipv4":"manual","addresses":[],"gateway":"","auto_dns":true,"dns":[],"ipv6":"auto","dns_over_tls":"default"}),
+            json!({"ipv4":"auto","addresses":["10.0.0.1/33"],"gateway":"","auto_dns":true,"dns":[],"ipv6":"auto","dns_over_tls":"default"}),
+            json!({"ipv4":"auto","addresses":[],"gateway":"x","auto_dns":true,"dns":[],"ipv6":"auto","dns_over_tls":"default"}),
+            json!({"ipv4":"auto","addresses":[],"gateway":"","auto_dns":false,"dns":[],"ipv6":"auto","dns_over_tls":"default"}),
+            json!({"ipv4":"shared","addresses":[],"gateway":"","auto_dns":true,"dns":[],"ipv6":"auto","dns_over_tls":"default"}),
+            json!({"ipv4":"auto","addresses":[],"gateway":"","auto_dns":true,"dns":[],"ipv6":"manual","dns_over_tls":"default"}),
+        ] {
+            let request = json!({"uuid":"wired","value":bad}).to_string();
+            assert!(
+                manager
+                    .set(ETHERNET_IP, &request)
+                    .unwrap_err()
+                    .starts_with("InvalidArgument:")
+            );
+        }
+        assert!(
+            manager.set(KNOWN_IP, &manual_ip()).is_err(),
+            "Wi-Fi page edits Wi-Fi only"
+        );
+        let state = manager.set(ETHERNET_DNS, &manual_ip()).unwrap();
+        let wired = state["profiles"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|p| p["uuid"] == "wired")
+            .unwrap()
+            .clone();
+        assert_eq!(wired["ip"]["addresses"][0], "192.168.1.20/24");
+        assert!(calls(&fake).contains(&"reapply /d/eno1".to_owned()));
+        let text = fs::read_to_string(root.path().join("network.toml")).unwrap();
+        assert!(text.contains("192.168.1.20/24"));
+        assert_eq!(manager.state()["conflict"], false);
+    }
+
+    #[test]
+    fn priority_and_mac_are_wifi_preferences_skipped_by_iwd() {
+        let (fake, mut manager, _root) = setup();
+        manager.refresh().unwrap();
+        manager
+            .set(PRIORITY, r#"{"uuid":"home","value":10}"#)
+            .unwrap();
+        manager
+            .set(MAC, r#"{"uuid":"home","value":"stable"}"#)
+            .unwrap();
+        let world = fake.0.lock().unwrap().snapshot.profiles[0].clone();
+        assert_eq!((world.priority, world.mac.as_str()), (10, "stable"));
+        assert!(
+            manager
+                .set(PRIORITY, r#"{"uuid":"home","value":1000}"#)
+                .is_err()
+        );
+        assert!(
+            manager
+                .set(MAC, r#"{"uuid":"home","value":"00:11"}"#)
+                .is_err()
+        );
+        fake.0.lock().unwrap().snapshot.wifi_backend = "iwd".into();
+        assert!(
+            manager
+                .set(PRIORITY, r#"{"uuid":"home","value":5}"#)
+                .unwrap_err()
+                .starts_with("Unavailable:")
+        );
+    }
+
+    #[test]
+    fn connectivity_check_is_reconciled_both_ways() {
+        let (fake, mut manager, _root) = setup();
+        {
+            let mut world = fake.0.lock().unwrap();
+            world.snapshot.connectivity_check_available = true;
+            world.snapshot.connectivity_check_enabled = true;
+        }
+        manager.refresh().unwrap();
+        manager.set(CONNECTIVITY_CHECK, "false").unwrap();
+        fake.0.lock().unwrap().snapshot.connectivity_check_enabled = true;
+        manager.refresh().unwrap();
+        let state = manager.state();
+        assert_eq!(state["conflicts"][0]["name"], "Internet connectivity check");
+        manager.resolve("settings").unwrap();
+        assert!(!fake.0.lock().unwrap().snapshot.connectivity_check_enabled);
+        fake.0.lock().unwrap().snapshot.connectivity_check_available = false;
+        assert!(
+            manager
+                .set(CONNECTIVITY_CHECK, "true")
+                .unwrap_err()
+                .starts_with("Unavailable:")
+        );
+    }
+
+    #[test]
+    fn invalid_configuration_is_replaced_only_by_choosing_the_system() {
+        let (_fake, mut manager, root) = setup();
+        fs::write(root.path().join("network.toml"), "version = 1").unwrap();
+        manager.refresh().unwrap();
+        assert_eq!(manager.state()["config_invalid"], true);
+        assert!(
+            manager.state()["error"]
+                .as_str()
+                .unwrap()
+                .contains("another Settings version")
+        );
+        assert!(manager.resolve("settings").is_err());
+        manager.resolve("system").unwrap();
+        assert_eq!(manager.state()["writable"], true);
+        assert!(
+            fs::read_to_string(root.path().join("network.toml"))
+                .unwrap()
+                .contains("version = 2")
+        );
+    }
+
+    #[test]
+    fn hotspot_is_set_up_once_then_toggled_without_persisting_its_state() {
+        let (fake, mut manager, _root) = setup();
+        manager.refresh().unwrap();
+        assert!(
+            manager
+                .set(HOTSPOT_ENABLED, "true")
+                .unwrap_err()
+                .contains("Set up")
+        );
+        let request = r#"{"ssid":"Remy","band":"5"}"#;
+        assert!(
+            manager
+                .set(HOTSPOT_CONFIGURE, request)
+                .unwrap_err()
+                .contains("password")
+        );
+        let request = r#"{"ssid":"Remy","band":"5","password":"hotspot-secret"}"#;
+        let state = manager.set(HOTSPOT_CONFIGURE, request).unwrap();
+        assert!(!state.to_string().contains("hotspot-secret"));
+        let hotspot = manager.hotspot_profile().unwrap();
+        assert!(!hotspot.autoconnect);
+        assert!(
+            manager.state()["profiles"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|p| p["kind"] == "hotspot")
+        );
+        manager.set(HOTSPOT_ENABLED, "true").unwrap();
+        assert!(calls(&fake).contains(&"activate /c/added /d/wlan0".to_owned()));
+        manager
+            .set(HOTSPOT_CONFIGURE, r#"{"ssid":"Remy 2","band":"auto"}"#)
+            .unwrap();
+        assert_eq!(
+            manager.hotspot_profile().unwrap().hotspot.unwrap().ssid,
+            "Remy 2"
+        );
+        fake.0.lock().unwrap().snapshot.devices[0].ap = false;
+        assert!(
+            manager
+                .set(HOTSPOT_ENABLED, "true")
+                .unwrap_err()
+                .contains("cannot share")
+        );
+    }
+
+    #[test]
+    fn imported_vpn_starts_disconnected_and_can_be_removed() {
+        let (fake, mut manager, root) = setup();
+        manager.refresh().unwrap();
+        assert!(
+            manager
+                .set(VPN_IMPORT, "/etc/passwd")
+                .unwrap_err()
+                .starts_with("InvalidArgument:")
+        );
+        let file = root.path().join("wg0.conf");
+        fs::write(&file, "[Interface]\n").unwrap();
+        manager.set(VPN_IMPORT, file.to_str().unwrap()).unwrap();
+        assert!(calls(&fake).contains(&"deactivate /a/wg".to_owned()));
+        let vpn = manager.profile("wg").unwrap();
+        assert!(!vpn.autoconnect && !vpn.active);
+        assert_eq!(manager.state()["conflict"], false);
+        manager
+            .set(VPN_CONNECT, r#"{"uuid":"wg","value":true}"#)
+            .unwrap();
+        assert!(calls(&fake).contains(&"activate /c/wg /".to_owned()));
+        assert!(manager.set(FORGET, "wg").is_err());
+        manager.set(VPN_REMOVE, "wg").unwrap();
+        assert!(manager.profile("wg").is_err());
+    }
+
+    #[test]
+    fn ethernet_connects_through_networkmanager_choice_and_needs_a_cable() {
+        let (fake, mut manager, _root) = setup();
+        ethernet(&fake);
+        manager.refresh().unwrap();
+        manager
+            .set(ETHERNET_CONNECT, r#"{"interface":"eno1","value":false}"#)
+            .unwrap();
+        assert!(calls(&fake).contains(&"disconnect /d/eno1".to_owned()));
+        fake.0.lock().unwrap().snapshot.devices[1].state = "unavailable".into();
+        assert!(
+            manager
+                .set(ETHERNET_CONNECT, r#"{"interface":"eno1","value":true}"#)
+                .unwrap_err()
+                .contains("cable")
+        );
+        assert!(
+            manager
+                .set(ETHERNET_CONNECT, r#"{"interface":"wlan0","value":true}"#)
+                .is_err()
+        );
     }
 }

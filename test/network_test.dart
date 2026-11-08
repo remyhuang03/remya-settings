@@ -4,9 +4,12 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/network/application/network_controller.dart';
+import 'package:remya_settings/features/network/presentation/ethernet_page.dart';
+import 'package:remya_settings/features/network/presentation/hotspot_page.dart';
 import 'package:remya_settings/features/network/presentation/known_networks_page.dart';
 import 'package:remya_settings/features/network/presentation/network_status_page.dart';
 import 'package:remya_settings/features/network/presentation/network_widgets.dart';
+import 'package:remya_settings/features/network/presentation/vpn_page.dart';
 import 'package:remya_settings/features/network/presentation/wifi_page.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 
@@ -47,19 +50,38 @@ Map<String, dynamic> _state({bool wifi = true, List<Map>? adapters}) => {
         },
       ],
   'profiles': [
-    {
-      'uuid': 'saved',
-      'name': 'Home',
-      'ssid': 'Home',
-      'security': 'wpa2',
-      'autoconnect': true,
-      'metered': 'automatic',
-      'hidden': false,
-      'last_connected': 0,
-      'active': false,
-      'read_only': false,
-    },
+    _profile('saved', 'Home', 'wifi')..['ssid'] = 'Home',
+    _profile('wired', 'Wired connection 1', 'ethernet'),
+    _profile('wg', 'Office', 'wireguard'),
   ],
+};
+
+Map<String, dynamic> _ip() => {
+  'ipv4': 'auto',
+  'addresses': <String>[],
+  'gateway': '',
+  'auto_dns': true,
+  'dns': <String>[],
+  'ipv6': 'auto',
+  'dns_over_tls': 'default',
+};
+
+Map<String, dynamic> _profile(String uuid, String name, String kind) => {
+  'uuid': uuid,
+  'name': name,
+  'kind': kind,
+  'ssid': '',
+  'security': kind == 'wifi' ? 'wpa2' : 'open',
+  'autoconnect': true,
+  'metered': 'automatic',
+  'priority': 0,
+  'mac': '',
+  'ip': _ip(),
+  'hidden': false,
+  'last_connected': 0,
+  'active': false,
+  'activating': false,
+  'read_only': false,
 };
 
 void main() {
@@ -224,7 +246,7 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('known networks filter, expand and keep random address planned', (
+  testWidgets('known networks list Wi-Fi only and edit MAC and priority', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(900, 1400));
@@ -239,16 +261,167 @@ void main() {
       ),
     );
     expect(find.text('Home'), findsOneWidget);
+    expect(find.text('Wired connection 1'), findsNothing);
     await tester.tap(find.text('Home'));
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('known-networks.mac')), findsOneWidget);
-    expect(find.text('Planned'), findsWidgets);
+    expect(find.text('Planned'), findsNothing);
+    await tester.ensureVisible(find.text('Advanced'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Advanced'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('High'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('High'));
+    await tester.pump();
+    expect(writes.last, (
+      'known-networks.priority',
+      '{"uuid":"saved","value":10}',
+    ));
     await tester.enterText(
       find.byKey(const ValueKey('known-networks.search')),
       'nothing',
     );
     await tester.pumpAndSettle();
     expect(find.text('Home'), findsNothing);
+  });
+
+  testWidgets('iwd hides MAC randomization and priority', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(900, 1400));
+    final network = controller(_state()..['wifi_backend'] = 'iwd');
+    addTearDown(network.dispose);
+    await tester.pumpWidget(
+      host(
+        KnownNetworksPage(
+          controller: network,
+          page: catalog.page('known-networks'),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Home'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('known-networks.mac')), findsNothing);
+    expect(find.text('Advanced'), findsNothing);
+  });
+
+  testWidgets('Ethernet edits manual IP and validates before writing', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(900, 1600));
+    final state = _state()
+      ..['devices'] = [
+        {
+          'interface': 'eno1',
+          'kind': 'ethernet',
+          'state': 'connected',
+          'physical': true,
+          'uuid': 'wired',
+          'speed_mbps': 1000,
+          'ipv4': ['192.168.1.5/24'],
+          'dns': <String>[],
+          'ipv6': <String>[],
+          'networks': <Map>[],
+        },
+      ];
+    final network = controller(state);
+    addTearDown(network.dispose);
+    await tester.pumpWidget(host(EthernetPage(controller: network)));
+    expect(find.text('Connected, 1000 Mb/s\nAdapter eno1'), findsOneWidget);
+    expect(find.text('Automatic (DHCP)'), findsNWidgets(2));
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(const ValueKey('ethernet.ip')),
+        matching: find.text('Edit'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Manual'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const ValueKey('ip-address')), '300.1');
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    expect(find.text('Enter an IPv4 address'), findsOneWidget);
+    expect(writes, isEmpty);
+    await tester.enterText(
+      find.byKey(const ValueKey('ip-address')),
+      '192.168.1.20',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('ip-gateway')),
+      '192.168.1.1',
+    );
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    final (id, value) = writes.single;
+    expect(id, 'ethernet.ip');
+    final sent = jsonDecode(value) as Map;
+    expect(sent['uuid'], 'wired');
+    expect(sent['value']['addresses'], ['192.168.1.20/24']);
+    expect(sent['value']['gateway'], '192.168.1.1');
+    expect(sent['value']['ipv4'], 'manual');
+  });
+
+  testWidgets('the hotspot asks for a name and password before starting', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(900, 1400));
+    final network = controller(
+      _state()
+        ..['devices'] = [
+          {
+            'interface': 'wlan0',
+            'kind': 'wifi',
+            'state': 'disconnected',
+            'physical': true,
+            'ap': true,
+            'bands': ['2.4'],
+            'networks': <Map>[],
+          },
+        ],
+    );
+    addTearDown(network.dispose);
+    await tester.pumpWidget(host(HotspotPage(controller: network)));
+    await tester.tap(find.byKey(const ValueKey('hotspot.enabled')));
+    await tester.pumpAndSettle();
+    expect(find.text('Set up mobile hotspot'), findsOneWidget);
+    expect(find.text('5 GHz'), findsNothing);
+    await tester.enterText(find.byType(TextField).first, 'Remy');
+    await tester.enterText(find.byType(TextField).last, 'short');
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    expect(writes, isEmpty);
+    await tester.enterText(find.byType(TextField).last, 'long-enough');
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    expect(writes.single.$1, 'hotspot.configure');
+    expect(jsonDecode(writes.single.$2), {
+      'ssid': 'Remy',
+      'band': 'auto',
+      'password': 'long-enough',
+    });
+  });
+
+  testWidgets('VPN connections toggle and list tunnels of other apps', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(900, 1400));
+    final state = _state();
+    (state['devices'] as List).add({
+      'interface': 'tailscale0',
+      'kind': 'tun',
+      'state': 'unmanaged',
+      'physical': false,
+      'networks': <Map>[],
+    });
+    final network = controller(state);
+    addTearDown(network.dispose);
+    await tester.pumpWidget(host(VpnPage(controller: network)));
+    expect(find.text('Office'), findsOneWidget);
+    expect(find.text('WireGuard'), findsOneWidget);
+    expect(find.text('tailscale0'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('vpn.connect-wg')));
+    await tester.pump();
+    expect(writes.single, ('vpn.connect', '{"uuid":"wg","value":true}'));
   });
 
   test('speeds use readable units', () {

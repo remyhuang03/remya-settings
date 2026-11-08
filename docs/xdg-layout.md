@@ -26,7 +26,7 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | User startup entries | `$XDG_CONFIG_HOME/autostart/*.desktop` (fallback `$HOME/.config/autostart/`), written as 0644 |
 | System startup entries (read only) | Each absolute `$XDG_CONFIG_DIRS` entry plus `/autostart/` (default `/etc/xdg/autostart/`) |
 | Default application snapshot | `default-apps.toml` beside `config.toml` (debug: repository `config/`) |
-| Network preference snapshot | `network.toml` beside `config.toml` (debug: repository `config/`) |
+| Network preference snapshot | `network.toml` (version 2) beside `config.toml` (debug: repository `config/`) |
 | XDG default associations | GIO-managed `mimeapps.list` with standard desktop-specific/config/data precedence |
 | Settings avatar | `avatar.png` beside `config.toml`; debug: `<settings-repository>/config/avatar.png` |
 | AppImage preferences | `appimages.toml` beside `config.toml` (debug: repository `config/`) |

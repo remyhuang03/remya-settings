@@ -7,6 +7,7 @@ import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_widgets.dart';
 import '../../settings/presentation/settings_list.dart';
 import '../application/network_controller.dart';
+import 'ip_settings.dart';
 import 'network_widgets.dart';
 
 class KnownNetworksPage extends StatefulWidget {
@@ -42,7 +43,7 @@ class _KnownNetworksPageState extends State<KnownNetworksPage> {
       return NetworkUnavailable(controller: _controller);
     }
     final query = _query.toLowerCase();
-    final profiles = _controller.profiles
+    final profiles = _controller.wifiProfiles
         .where((p) => (p['name'] as String).toLowerCase().contains(query))
         .toList();
     final indices = {
@@ -237,8 +238,64 @@ class _ProfileTile extends StatelessWidget {
           ],
         ),
       ),
-      SettingControlTile(
-        page.controls.firstWhere((c) => c.id == 'known-networks.mac'),
+      if (!controller.wifiBackendIwd)
+        SettingRow(
+          id: knownNetworkMacSettingId,
+          label: Column(
+            crossAxisAlignment: .start,
+            children: [
+              Text(
+                'Random hardware address',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Makes this device harder to track. Takes effect the next time it connects.',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
+          control: DropdownMenu<String>(
+            width: 232,
+            key: ValueKey('mac-${profile['mac']}'),
+            initialSelection: profile['mac'] as String,
+            enabled: _editable,
+            onSelected: (value) {
+              if (value != null && value != profile['mac']) {
+                controller.edit(knownNetworkMacSettingId, _uuid, value);
+              }
+            },
+            dropdownMenuEntries: [
+              const DropdownMenuEntry(value: '', label: 'System default'),
+              const DropdownMenuEntry(value: 'permanent', label: 'Off'),
+              const DropdownMenuEntry(
+                value: 'stable',
+                label: 'On, fixed for this network',
+              ),
+              const DropdownMenuEntry(
+                value: 'random',
+                label: 'On, new each connection',
+              ),
+              if (!const {
+                '',
+                'permanent',
+                'stable',
+                'random',
+              }.contains(profile['mac']))
+                DropdownMenuEntry(
+                  value: profile['mac'] as String,
+                  label: 'Set elsewhere: ${profile['mac']}',
+                ),
+            ],
+          ),
+        ),
+      ...addressRows(
+        context: context,
+        controller: controller,
+        profile: profile,
+        ipId: knownNetworkIpSettingId,
+        dnsId: knownNetworkDnsSettingId,
+        editable: _editable,
       ),
       if (personalSecurity(security))
         SettingRow(
@@ -266,16 +323,72 @@ class _ProfileTile extends StatelessWidget {
         ),
       ),
     ]),
-    Padding(
-      padding: const .fromLTRB(16, 0, 16, 16),
-      child: AdvancedSection(
-        storageKey: PageStorageKey('known-advanced-$_uuid'),
-        child: SettingControlTile(
-          page.controls.firstWhere((c) => c.id == 'known-networks.priority'),
+    // iwd chooses among saved networks itself and ignores priorities.
+    if (!controller.wifiBackendIwd)
+      Padding(
+        padding: const .fromLTRB(16, 0, 16, 16),
+        child: AdvancedSection(
+          storageKey: PageStorageKey('known-advanced-$_uuid'),
+          child: _PriorityRow(
+            profile: profile,
+            enabled: _editable,
+            onChanged: (value) =>
+                controller.edit(knownNetworkPrioritySettingId, _uuid, value),
+          ),
         ),
       ),
-    ),
   ];
+}
+
+/// Higher-priority networks are joined first when several saved ones are in range.
+class _PriorityRow extends StatelessWidget {
+  const _PriorityRow({
+    required this.profile,
+    required this.enabled,
+    required this.onChanged,
+  });
+  final Map profile;
+  final bool enabled;
+  final ValueChanged<int> onChanged;
+
+  static const _levels = {-10: 'Low', 0: 'Normal', 10: 'High'};
+
+  @override
+  Widget build(BuildContext context) {
+    final priority = profile['priority'] as int;
+    return SettingRow(
+      id: knownNetworkPrioritySettingId,
+      label: Column(
+        crossAxisAlignment: .start,
+        children: [
+          Text(
+            'Connection priority',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            _levels.containsKey(priority)
+                ? 'Preferred over lower-priority networks in range'
+                : 'Set elsewhere: $priority. Choose a level to replace it.',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ],
+      ),
+      control: SegmentedButton<int>(
+        emptySelectionAllowed: true,
+        segments: [
+          for (final MapEntry(:key, :value) in _levels.entries)
+            ButtonSegment(value: key, label: Text(value)),
+        ],
+        selected: {if (_levels.containsKey(priority)) priority},
+        onSelectionChanged: enabled
+            ? (value) {
+                if (value.isNotEmpty) onChanged(value.single);
+              }
+            : null,
+      ),
+    );
+  }
 }
 
 /// Formats through the service so the date follows the system LC_TIME.

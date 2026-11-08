@@ -1,10 +1,13 @@
 //! NetworkManager over the system D-Bus. Passwords are written, never read back.
-use crate::{Active, Backend, Change, Device, Network, NewNetwork, Profile, Security, Snapshot};
+use crate::{
+    Active, Backend, Change, Device, Hotspot, Ip, Network, NewNetwork, Prefs, Profile, Security,
+    Snapshot,
+};
 use gio::{
     SignalSubscription,
     glib::{Variant, variant::ObjectPath, variant::ToVariant},
 };
-use std::{collections::HashMap, process::Command, rc::Rc};
+use std::{collections::HashMap, path::Path, process::Command, rc::Rc};
 
 const NM: &str = "org.freedesktop.NetworkManager";
 const ROOT: &str = "/org/freedesktop/NetworkManager";
@@ -17,6 +20,7 @@ const ACTIVE: &str = "org.freedesktop.NetworkManager.Connection.Active";
 const ACCESS_POINT: &str = "org.freedesktop.NetworkManager.AccessPoint";
 const WIFI_SETTING: &str = "802-11-wireless";
 const SECURITY_SETTING: &str = "802-11-wireless-security";
+const ETHERNET_SETTING: &str = "802-3-ethernet";
 /// Lets polkit ask for authorization only on explicit writes.
 const WRITE_TIMEOUT_MS: i32 = 120_000;
 
@@ -208,19 +212,117 @@ fn access_point(props: &Props, active: Option<&str>, path: &str) -> Option<Netwo
     })
 }
 
+fn strings(props: Option<&Props>, key: &str) -> Vec<String> {
+    props
+        .and_then(|p| p.get(key))
+        .and_then(|v| v.get::<Vec<String>>())
+        .unwrap_or_default()
+}
+
+fn ip_of(settings: &Settings) -> Ip {
+    let v4 = settings.get("ipv4");
+    let v6 = settings.get("ipv6");
+    let mut dns = strings(v4, "dns-data");
+    dns.extend(strings(v6, "dns-data"));
+    let addresses = v4
+        .and_then(|c| c.get("address-data"))
+        .map(|list| {
+            children(list)
+                .filter_map(|item| {
+                    let item = item.get::<Props>()?;
+                    Some(format!(
+                        "{}/{}",
+                        string(&item, "address")?,
+                        number::<u32>(&item, "prefix")?
+                    ))
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+    let connection = settings.get("connection");
+    Ip {
+        ipv4: v4
+            .and_then(|c| string(c, "method"))
+            .unwrap_or_else(|| "auto".into()),
+        addresses,
+        gateway: v4.and_then(|c| string(c, "gateway")).unwrap_or_default(),
+        auto_dns: !v4
+            .and_then(|c| number::<bool>(c, "ignore-auto-dns"))
+            .unwrap_or(false),
+        dns,
+        ipv6: v6
+            .and_then(|c| string(c, "method"))
+            .unwrap_or_else(|| "auto".into()),
+        dns_over_tls: match connection.and_then(|c| number::<i32>(c, "dns-over-tls")) {
+            Some(0) => "no",
+            Some(1) => "opportunistic",
+            Some(2) => "yes",
+            _ => "default",
+        }
+        .into(),
+    }
+}
+
+fn mac_of(section: Option<&Props>) -> String {
+    let Some(section) = section else {
+        return String::new();
+    };
+    string(section, "assigned-mac-address")
+        .or_else(|| {
+            let bytes = section.get("cloned-mac-address")?.get::<Vec<u8>>()?;
+            (!bytes.is_empty()).then(|| {
+                bytes
+                    .iter()
+                    .map(|b| format!("{b:02X}"))
+                    .collect::<Vec<_>>()
+                    .join(":")
+            })
+        })
+        .unwrap_or_default()
+}
+
 fn profile(path: &str, props: &Props, settings: &Settings) -> Option<Profile> {
     let connection = settings.get("connection")?;
-    let wireless = settings.get(WIFI_SETTING)?;
-    let raw = wireless.get("ssid")?.get::<Vec<u8>>()?;
+    let wireless = settings.get(WIFI_SETTING);
+    let kind = match string(connection, "type")?.as_str() {
+        WIFI_SETTING if wireless.and_then(|w| string(w, "mode")).as_deref() == Some("ap") => {
+            "hotspot"
+        }
+        WIFI_SETTING => "wifi",
+        ETHERNET_SETTING => "ethernet",
+        "vpn" => "vpn",
+        "wireguard" => "wireguard",
+        _ => return None,
+    };
+    let raw = match wireless {
+        Some(w) => w.get("ssid")?.get::<Vec<u8>>()?,
+        None => vec![],
+    };
     let security = settings
         .get(SECURITY_SETTING)
         .and_then(|s| string(s, "key-mgmt"));
     let flags = number::<u32>(props, "Flags").unwrap_or(0);
+    let ssid = String::from_utf8_lossy(&raw).into_owned();
     Some(Profile {
         path: path.to_owned(),
         uuid: string(connection, "uuid")?,
         name: string(connection, "id")?,
-        ssid: String::from_utf8_lossy(&raw).into_owned(),
+        kind: kind.into(),
+        interface: string(connection, "interface-name"),
+        vpn_type: settings
+            .get("vpn")
+            .and_then(|v| string(v, "service-type"))
+            .map(|s| s.rsplit('.').next().unwrap_or_default().to_owned()),
+        hotspot: (kind == "hotspot").then(|| Hotspot {
+            ssid: ssid.clone(),
+            band: match wireless.and_then(|w| string(w, "band")).as_deref() {
+                Some("bg") => "2.4",
+                Some("a") => "5",
+                _ => "auto",
+            }
+            .into(),
+        }),
+        ssid,
         raw,
         security: crate::security_of_profile(security.as_deref()),
         autoconnect: number(connection, "autoconnect").unwrap_or(true),
@@ -230,13 +332,89 @@ fn profile(path: &str, props: &Props, settings: &Settings) -> Option<Profile> {
             _ => "automatic",
         }
         .into(),
-        hidden: number(wireless, "hidden").unwrap_or(false),
+        priority: number(connection, "autoconnect-priority").unwrap_or(0),
+        mac: mac_of(wireless.or_else(|| settings.get(ETHERNET_SETTING))),
+        ip: ip_of(settings),
+        hidden: wireless.and_then(|w| number(w, "hidden")).unwrap_or(false),
         last_connected: number(connection, "timestamp").unwrap_or(0),
         active: false,
+        activating: false,
         // Unsaved and externally generated profiles.
         unsaved: flags & 1 != 0,
         read_only: flags & 8 != 0 || number(connection, "read-only").unwrap_or(false),
     })
+}
+
+/// Writes every preference Settings owns, leaving the rest of the profile intact.
+fn write_prefs(settings: &mut Settings, prefs: &Prefs) {
+    let metered: i32 = match prefs.metered.as_str() {
+        "yes" => 1,
+        "no" => 2,
+        _ => 0,
+    };
+    let tls: i32 = match prefs.ip.dns_over_tls.as_str() {
+        "no" => 0,
+        "opportunistic" => 1,
+        "yes" => 2,
+        _ => -1,
+    };
+    let connection = settings.entry("connection".into()).or_default();
+    connection.insert("autoconnect".into(), prefs.autoconnect.to_variant());
+    connection.insert("metered".into(), metered.to_variant());
+    connection.insert("autoconnect-priority".into(), prefs.priority.to_variant());
+    connection.insert("dns-over-tls".into(), tls.to_variant());
+    let (v4_dns, v6_dns): (Vec<String>, Vec<String>) =
+        prefs.ip.dns.iter().cloned().partition(|s| !s.contains(':'));
+    let addresses: Vec<Props> = prefs
+        .ip
+        .addresses
+        .iter()
+        .filter_map(|a| a.split_once('/'))
+        .map(|(address, prefix)| {
+            Props::from([
+                ("address".to_owned(), address.to_variant()),
+                (
+                    "prefix".to_owned(),
+                    prefix.parse::<u32>().unwrap_or(24).to_variant(),
+                ),
+            ])
+        })
+        .collect();
+    let v4 = settings.entry("ipv4".into()).or_default();
+    // The legacy forms would contradict the data forms.
+    for key in ["addresses", "dns", "gateway"] {
+        v4.remove(key);
+    }
+    v4.insert("method".into(), prefs.ip.ipv4.to_variant());
+    v4.insert("address-data".into(), addresses.to_variant());
+    if !prefs.ip.gateway.is_empty() {
+        v4.insert("gateway".into(), prefs.ip.gateway.to_variant());
+    }
+    v4.insert("dns-data".into(), v4_dns.to_variant());
+    v4.insert("ignore-auto-dns".into(), (!prefs.ip.auto_dns).to_variant());
+    let v6 = settings.entry("ipv6".into()).or_default();
+    v6.remove("dns");
+    v6.insert("method".into(), prefs.ip.ipv6.to_variant());
+    v6.insert("dns-data".into(), v6_dns.to_variant());
+    v6.insert("ignore-auto-dns".into(), (!prefs.ip.auto_dns).to_variant());
+    for section in [WIFI_SETTING, ETHERNET_SETTING] {
+        if let Some(target) = settings.get_mut(section) {
+            target.remove("cloned-mac-address");
+            target.remove("assigned-mac-address");
+            if !prefs.mac.is_empty() {
+                target.insert("assigned-mac-address".into(), prefs.mac.to_variant());
+            }
+        }
+    }
+    if let (Some(hotspot), Some(wireless)) = (&prefs.hotspot, settings.get_mut(WIFI_SETTING)) {
+        wireless.insert("ssid".into(), hotspot.ssid.as_bytes().to_variant());
+        match hotspot.band.as_str() {
+            "2.4" => wireless.insert("band".into(), "bg".to_variant()),
+            "5" => wireless.insert("band".into(), "a".to_variant()),
+            _ => wireless.remove("band"),
+        };
+        wireless.remove("channel");
+    }
 }
 
 fn new_settings(spec: &NewNetwork) -> Result<Settings, String> {
@@ -248,28 +426,86 @@ fn new_settings(spec: &NewNetwork) -> Result<Settings, String> {
     settings.insert(
         "connection".into(),
         Props::from([
-            ("id".to_owned(), spec.ssid_name().to_variant()),
+            (
+                "id".to_owned(),
+                if spec.hotspot_band.is_some() {
+                    "Hotspot".to_owned()
+                } else {
+                    spec.ssid_name()
+                }
+                .to_variant(),
+            ),
             ("uuid".to_owned(), uuid.to_variant()),
             ("type".to_owned(), WIFI_SETTING.to_variant()),
             ("autoconnect".to_owned(), spec.autoconnect.to_variant()),
         ]),
     );
-    settings.insert(
-        WIFI_SETTING.into(),
-        Props::from([
-            ("ssid".to_owned(), spec.ssid.to_variant()),
-            ("mode".to_owned(), "infrastructure".to_variant()),
-            ("hidden".to_owned(), spec.hidden.to_variant()),
-        ]),
-    );
+    let mode = if spec.hotspot_band.is_some() {
+        "ap"
+    } else {
+        "infrastructure"
+    };
+    let mut wireless = Props::from([
+        ("ssid".to_owned(), spec.ssid.to_variant()),
+        ("mode".to_owned(), mode.to_variant()),
+        ("hidden".to_owned(), spec.hidden.to_variant()),
+    ]);
     if let Some(key_mgmt) = spec.security.key_mgmt() {
         let mut security = Props::from([("key-mgmt".to_owned(), key_mgmt.to_variant())]);
         if let Some(password) = &spec.password {
             security.insert("psk".into(), password.to_variant());
         }
+        if spec.hotspot_band.is_some() {
+            // WPA2-only CCMP, as `nmcli device wifi hotspot` sets up, for wide client support.
+            for key in ["proto", "pairwise", "group"] {
+                let value = if key == "proto" { "rsn" } else { "ccmp" };
+                security.insert(key.into(), vec![value].to_variant());
+            }
+        }
         settings.insert(SECURITY_SETTING.into(), security);
     }
+    if let Some(band) = &spec.hotspot_band {
+        match band.as_str() {
+            "2.4" => drop(wireless.insert("band".into(), "bg".to_variant())),
+            "5" => drop(wireless.insert("band".into(), "a".to_variant())),
+            _ => {}
+        }
+        settings.insert(
+            "ipv4".into(),
+            Props::from([("method".to_owned(), "shared".to_variant())]),
+        );
+        settings.insert(
+            "ipv6".into(),
+            Props::from([("method".to_owned(), "ignore".to_variant())]),
+        );
+    }
+    settings.insert(WIFI_SETTING.into(), wireless);
     Ok(settings)
+}
+
+/// NetworkManager does not publish its Wi-Fi backend; its configuration names it.
+/// shortcut: ignores section scoping and file precedence; read `NetworkManager --print-config` if that matters.
+fn wifi_backend() -> &'static str {
+    let mut files = vec![std::path::PathBuf::from(
+        "/etc/NetworkManager/NetworkManager.conf",
+    )];
+    for dir in [
+        "/usr/lib/NetworkManager/conf.d",
+        "/run/NetworkManager/conf.d",
+        "/etc/NetworkManager/conf.d",
+    ] {
+        if let Ok(entries) = std::fs::read_dir(dir) {
+            files.extend(entries.flatten().map(|e| e.path()));
+        }
+    }
+    let iwd = files
+        .iter()
+        .filter_map(|f| std::fs::read_to_string(f).ok())
+        .any(|text| {
+            text.lines()
+                .any(|line| line.replace(' ', "").trim() == "wifi.backend=iwd")
+        });
+    if iwd { "iwd" } else { "wpa_supplicant" }
 }
 
 impl Backend for RealNm {
@@ -373,6 +609,14 @@ impl Backend for RealNm {
             let mut dns = addresses(v4, "NameserverData", "address", false);
             dns.extend(ipv6_dns(v6));
             let interface = string(props, "Interface").unwrap_or_default();
+            // NM_WIFI_DEVICE_CAP_AP, FREQ_VALID, FREQ_2GHZ and FREQ_5GHZ.
+            const AP: u32 = 0x40;
+            const FREQ_VALID: u32 = 0x100;
+            const FREQ_2GHZ: u32 = 0x200;
+            const FREQ_5GHZ: u32 = 0x400;
+            let caps = wireless
+                .and_then(|w| number::<u32>(w, "WirelessCapabilities"))
+                .unwrap_or(0);
             devices.push(Device {
                 path: path.clone(),
                 physical: is_physical(props, &interface),
@@ -390,6 +634,18 @@ impl Backend for RealNm {
                 dns,
                 ipv6: addresses(v6, "AddressData", "address", true),
                 networks,
+                ap: caps & AP != 0,
+                bands: if wireless.is_none() {
+                    vec![]
+                } else if caps & FREQ_VALID == 0 {
+                    vec!["2.4".into(), "5".into()]
+                } else {
+                    [(FREQ_2GHZ, "2.4"), (FREQ_5GHZ, "5")]
+                        .iter()
+                        .filter(|(flag, _)| caps & flag != 0)
+                        .map(|(_, band)| (*band).to_owned())
+                        .collect()
+                },
             });
         }
         let primary = string(manager, "PrimaryConnection");
@@ -406,8 +662,21 @@ impl Backend for RealNm {
                 _ => "unknown",
             }
             .into(),
-            connectivity_check: number(manager, "ConnectivityCheckAvailable").unwrap_or(false)
-                && number(manager, "ConnectivityCheckEnabled").unwrap_or(false),
+            connectivity_check_available: number(manager, "ConnectivityCheckAvailable")
+                .unwrap_or(false),
+            connectivity_check_enabled: number(manager, "ConnectivityCheckEnabled")
+                .unwrap_or(false),
+            wifi_backend: wifi_backend().into(),
+            dns_mode: read_call(
+                &bus,
+                "/org/freedesktop/NetworkManager/DnsManager",
+                PROPERTIES,
+                "Get",
+                Some(&("org.freedesktop.NetworkManager.DnsManager", "Mode").to_variant()),
+            )
+            .ok()
+            .and_then(|reply| reply.child_value(0).as_variant()?.str().map(str::to_owned))
+            .unwrap_or_else(|| "unknown".into()),
             check_uri: string(manager, "ConnectivityCheckUri"),
             wifi_enabled: number(manager, "WirelessEnabled").unwrap_or(false),
             wifi_hardware_enabled: number(manager, "WirelessHardwareEnabled").unwrap_or(false),
@@ -427,6 +696,54 @@ impl Backend for RealNm {
             &(NM, "WirelessEnabled", enabled.to_variant()).to_variant(),
         )
         .map(drop)
+    }
+
+    fn set_connectivity_check(&self, enabled: bool) -> Result<(), String> {
+        write_call(
+            ROOT,
+            PROPERTIES,
+            "Set",
+            &(NM, "ConnectivityCheckEnabled", enabled.to_variant()).to_variant(),
+        )
+        .map(drop)
+    }
+
+    fn deactivate(&self, active: &str) -> Result<(), String> {
+        write_call(
+            ROOT,
+            NM,
+            "DeactivateConnection",
+            &(object(active)?,).to_variant(),
+        )
+        .map(drop)
+    }
+
+    fn reapply(&self, device: &str) -> Result<(), String> {
+        write_call(
+            device,
+            DEVICE,
+            "Reapply",
+            &(Settings::new(), 0u64, 0u32).to_variant(),
+        )
+        .map(drop)
+    }
+
+    fn import(&self, kind: &str, path: &Path) -> Result<(), String> {
+        // nmcli carries NetworkManager's own WireGuard and VPN-plugin importers.
+        let output = Command::new("nmcli")
+            .args(["connection", "import", "type", kind, "file"])
+            .arg(path)
+            .env("LC_ALL", "C")
+            .output()
+            .map_err(|e| format!("Cannot run nmcli: {e}"))?;
+        if output.status.success() {
+            return Ok(());
+        }
+        let message = String::from_utf8_lossy(&output.stderr);
+        Err(format!(
+            "NetworkManager could not import the file: {}",
+            message.trim().trim_start_matches("Error: ")
+        ))
     }
 
     fn scan(&self, device: &str) -> Result<(), String> {
@@ -498,28 +815,14 @@ impl Backend for RealNm {
             .get::<(Settings,)>()
             .ok_or("Invalid connection settings")?
             .0;
-        let (section, values): (&str, Vec<(&str, Variant)>) = match change {
-            Change::Autoconnect(value) => ("connection", vec![("autoconnect", value.to_variant())]),
-            Change::Metered(value) => {
-                let code: i32 = match value.as_str() {
-                    "yes" => 1,
-                    "no" => 2,
-                    _ => 0,
-                };
-                ("connection", vec![("metered", code.to_variant())])
-            }
+        match change {
+            Change::Prefs(prefs) => write_prefs(&mut settings, prefs),
             // Flags 0 moves an agent-owned password into NetworkManager's own storage.
-            Change::Password(value) => (
-                SECURITY_SETTING,
-                vec![
-                    ("psk", value.to_variant()),
-                    ("psk-flags", 0u32.to_variant()),
-                ],
-            ),
-        };
-        let target = settings.entry(section.into()).or_default();
-        for (key, value) in values {
-            target.insert(key.into(), value);
+            Change::Password(value) => {
+                let target = settings.entry(SECURITY_SETTING.into()).or_default();
+                target.insert("psk".into(), value.to_variant());
+                target.insert("psk-flags".into(), 0u32.to_variant());
+            }
         }
         // GetSettings omits secrets; NetworkManager keeps stored ones when none are sent.
         write_call(profile, CONNECTION, "Update", &(settings,).to_variant()).map(drop)

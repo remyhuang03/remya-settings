@@ -392,3 +392,162 @@ class NetworkFacts extends StatelessWidget {
     );
   }
 }
+
+String formatBytes(int bytes) {
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  var value = bytes.toDouble();
+  var unit = 0;
+  while (value >= 1000 && unit < units.length - 1) {
+    value /= 1000;
+    unit++;
+  }
+  return unit == 0
+      ? '$bytes B'
+      : '${value.toStringAsFixed(value < 10 ? 1 : 0)} ${units[unit]}';
+}
+
+/// How far a link in a [NetworkPath] carries traffic.
+enum PathLink { working, degraded, broken }
+
+/// One stop along a [NetworkPath].
+typedef PathNode = ({IconData icon, String label, String? detail});
+
+/// Where traffic goes, from this device to its destination, with each hop's state.
+class NetworkPath extends StatelessWidget {
+  const NetworkPath({super.key, required this.nodes, required this.links})
+    : assert(links.length == nodes.length - 1);
+  final List<PathNode> nodes;
+  final List<PathLink> links;
+
+  String _linkLabel(PathLink link) => switch (link) {
+    .working => 'working',
+    .degraded => 'limited',
+    .broken => 'not connected',
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
+    Widget node(PathNode node) => Column(
+      mainAxisSize: .min,
+      children: [
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: colors.surfaceContainerLowest,
+            shape: .circle,
+          ),
+          child: Icon(node.icon, color: colors.primary),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          node.label,
+          style: text.labelLarge,
+          textAlign: .center,
+          maxLines: 2,
+          overflow: .ellipsis,
+        ),
+        if (node.detail case final detail?)
+          Text(
+            detail,
+            style: text.bodySmall,
+            textAlign: .center,
+            maxLines: 2,
+            overflow: .ellipsis,
+          ),
+      ],
+    );
+    Widget link(PathLink link) {
+      final (color, icon) = switch (link) {
+        .working => (colors.primary, Icons.check_rounded),
+        .degraded => (colors.tertiary, Icons.priority_high_rounded),
+        .broken => (colors.outlineVariant, Icons.close_rounded),
+      };
+      return Padding(
+        padding: const .only(top: 16),
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                height: 4,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: .circular(2),
+                ),
+              ),
+            ),
+            Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(color: color, shape: .circle),
+              child: Icon(icon, size: 14, color: colors.surface),
+            ),
+            Expanded(
+              child: Container(
+                height: 4,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: .circular(2),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Semantics(
+      container: true,
+      label: [
+        for (var i = 0; i < links.length; i++)
+          '${nodes[i].label} to ${nodes[i + 1].label}: ${_linkLabel(links[i])}',
+      ].join('. '),
+      child: ExcludeSemantics(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            // Nodes share the width with links that keep at least a third of it.
+            final width = (constraints.maxWidth / (nodes.length * 1.5)).clamp(
+              56.0,
+              112.0,
+            );
+            return Row(
+              crossAxisAlignment: .start,
+              children: [
+                for (var i = 0; i < nodes.length; i++) ...[
+                  SizedBox(width: width, child: node(nodes[i])),
+                  if (i < links.length) Expanded(child: link(links[i])),
+                ],
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+/// Text for a connection's addressing, as a readout beside its Edit button.
+String ipSummary(Map ip) => switch (ip['ipv4']) {
+  'manual' => [
+    'Manual',
+    ...(ip['addresses'] as List).cast<String>(),
+    if ((ip['gateway'] as String).isNotEmpty) 'Gateway ${ip['gateway']}',
+  ].join('\n'),
+  'auto' => 'Automatic (DHCP)',
+  'shared' => 'Shared to other devices',
+  'disabled' => 'IPv4 off',
+  final String method => 'Set elsewhere: $method',
+  _ => 'Unknown',
+};
+
+String dnsSummary(Map ip) {
+  final servers = (ip['dns'] as List).cast<String>();
+  if (ip['auto_dns'] == true) {
+    return servers.isEmpty
+        ? 'Automatic (DHCP)'
+        : ['Automatic, plus', ...servers].join('\n');
+  }
+  return ['Manual', ...servers].join('\n');
+}

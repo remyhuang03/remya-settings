@@ -33,6 +33,8 @@ XML = f'''<node>
   <method name="GetManagedObjects"><arg type="a{{oa{{sa{{sv}}}}}}" direction="out"/></method></interface>
 <interface name="{NM}">
   <property name="WirelessEnabled" type="b" access="readwrite"/>
+  <property name="ConnectivityCheckEnabled" type="b" access="readwrite"/>
+  <method name="DeactivateConnection"><arg type="o"/></method>
   <method name="GetPermissions"><arg type="a{{ss}}" direction="out"/></method>
   <method name="ActivateConnection"><arg type="o"/><arg type="o"/><arg type="o"/><arg type="o" direction="out"/></method>
   <method name="AddAndActivateConnection2"><arg type="a{{sa{{sv}}}}"/><arg type="o"/><arg type="o"/><arg type="a{{sv}}"/>
@@ -44,6 +46,7 @@ XML = f'''<node>
   <method name="Update"><arg type="a{{sa{{sv}}}}"/></method>
   <method name="Delete"/><method name="Save"/></interface>
 <interface name="{DEVICE}"><method name="Disconnect"/>
+  <method name="Reapply"><arg type="a{{sa{{sv}}}}"/><arg type="t"/><arg type="u"/></method>
   <signal name="StateChanged"><arg type="u"/><arg type="u"/><arg type="u"/></signal></interface>
 <interface name="{WIRELESS}"><method name="RequestScan"><arg type="a{{sv}}"/></method></interface>
 <interface name="top.remya.smoke.Control">
@@ -62,7 +65,7 @@ class Stub:
     """Implements only the NetworkManager calls the Settings backend makes."""
 
     def __init__(self):
-        self.enabled = True
+        self.props = {'WirelessEnabled': True, 'ConnectivityCheckEnabled': True}
         self.calls = []
         self.next = 10
         self.active = None
@@ -73,6 +76,13 @@ class Stub:
         self.info = Gio.DBusNodeInfo.new_for_xml(XML)
         self.bus = Gio.bus_get_sync(Gio.BusType.SYSTEM)
         self.add_profile({'id': 'Home', 'ssid': b'Home', 'key': 'wpa-psk'}, 'home-uuid')
+        for uuid, name, kind in (('wired-uuid', 'Wired', '802-3-ethernet'), ('wg-uuid', 'Office', 'wireguard')):
+            path = f'{BASE}/Settings/{self.next}'
+            self.next += 1
+            self.profiles[path] = {'connection': {'id': v('s', name), 'uuid': v('s', uuid), 'type': v('s', kind),
+                                                  'autoconnect': v('b', False)}, kind: {}}
+            self.flags[path] = 0
+            self.register(path, CONNECTION)
         for path, names in {
             '/org/freedesktop': ['org.freedesktop.DBus.ObjectManager'],
             BASE: [NM, 'top.remya.smoke.Control'],
@@ -89,12 +99,12 @@ class Stub:
         self.bus.register_object(
             path, self.info.lookup_interface(name), self.method, self.get_property, self.set_property)
 
-    def get_property(self, *_):
-        return v('b', self.enabled)
+    def get_property(self, _bus, _sender, _path, _interface, name):
+        return v('b', self.props[name])
 
     def set_property(self, _bus, _sender, _path, _interface, name, value):
         self.calls.append(f'set {name} {value.get_boolean()}')
-        self.enabled = value.get_boolean()
+        self.props[name] = value.get_boolean()
         self.changed()
         return True
 
@@ -190,7 +200,7 @@ class Stub:
             created = self.adopt(settings, True)
             active = self.start(created, values[1], self.secrets[created].get_string())
             reply = v('(ooa{sv})', (created, active, {}))
-        elif name == 'Disconnect':
+        elif name in ('Disconnect', 'DeactivateConnection'):
             self.active = None
             self.changed()
         elif name == 'Calls':
@@ -234,7 +244,8 @@ class Stub:
         active = self.active
         active_ap = f'{BASE}/ap/3' if active and active['device'].endswith('/1') else '/'
         result[BASE] = {NM: {'Connectivity': v('u', 4), 'ConnectivityCheckAvailable': v('b', True),
-                             'ConnectivityCheckEnabled': v('b', True), 'WirelessEnabled': v('b', self.enabled),
+                             'ConnectivityCheckEnabled': v('b', self.props['ConnectivityCheckEnabled']),
+                             'WirelessEnabled': v('b', self.props['WirelessEnabled']),
                              'WirelessHardwareEnabled': v('b', True),
                              'PrimaryConnection': v('o', active['path'] if active and active['state'] == 2 else '/')}}
         for index, kind, name in ((1, 2, 'wlan0'), (2, 2, 'wlan1'), (3, 1, 'eth0'), (4, 30, 'p2p0'), (5, 32, 'lo')):
@@ -248,7 +259,9 @@ class Stub:
                                'Ip6Config': v('o', '/')}}
             if kind == 2:
                 device[WIRELESS] = {'AccessPoints': v('ao', list(result)[:6] if index == 1 else []),
-                                    'ActiveAccessPoint': v('o', active_ap if index == 1 else '/'), 'Bitrate': v('u', 300000)}
+                                    'ActiveAccessPoint': v('o', active_ap if index == 1 else '/'), 'Bitrate': v('u', 300000),
+                                    # AP, valid bands, 2.4 GHz and 5 GHz.
+                                    'WirelessCapabilities': v('u', 0x740)}
             result[path] = device
         result[f'{BASE}/IP4/1'] = {f'{NM}.IP4Config': {
             'AddressData': v('aa{sv}', [{'address': v('s', '10.0.0.2'), 'prefix': v('u', 24)}]),
@@ -316,8 +329,8 @@ def checks():
     call('Set', 'wifi.adapter', 'wlan0')
 
     # Unavailable and malformed requests are rejected without simulating success.
-    assert 'Unavailable' in call('Set', 'known-networks.mac', 'stable', ok=False)
-    assert 'Unavailable' in call('Set', 'network-status.data-usage', 'open', ok=False)
+    assert 'InvalidArgument' in call('Set', 'known-networks.mac', 'stable', ok=False)
+    assert 'InvalidArgument' in call('Set', 'ip-dns.dns', '1.1.1.1', ok=False)
     assert 'Unavailable' in call('Set', 'wifi.connect', '{"ssid":"Corp","password":"long-enough"}', ok=False)
     assert 'Unavailable' in call('Set', 'wifi.connect', '{"ssid":"Old","password":"long-enough"}', ok=False)
     assert 'InvalidArgument' in call('Set', 'wifi.connect', '{"ssid":"Cafe","password":"short"}', ok=False)
@@ -355,7 +368,38 @@ def checks():
         lab = next(p for p in call('Get', 'network')['profiles'] if p['uuid'] == uuid)
         assert lab[field] == json.loads(value)
     assert 'InvalidArgument' in call('Set', 'known-networks.metered', f'{{"uuid":"{uuid}","value":"maybe"}}', ok=False)
-    assert 'Unavailable' in call('Set', 'known-networks.priority', f'{{"uuid":"{uuid}","value":5}}', ok=False)
+    call('Set', 'known-networks.priority', f'{{"uuid":"{uuid}","value":5}}')
+    call('Set', 'known-networks.mac', f'{{"uuid":"{uuid}","value":"stable"}}')
+    lab = next(p for p in call('Get', 'network')['profiles'] if p['uuid'] == uuid)
+    assert lab['priority'] == 5 and lab['mac'] == 'stable'
+
+    # Addressing round-trips through Update and GetSettings; each page edits its own kind.
+    manual = {'ipv4': 'manual', 'addresses': ['192.168.7.2/24'], 'gateway': '192.168.7.1', 'auto_dns': False,
+              'dns': ['192.168.7.1', 'fd00::1'], 'ipv6': 'disabled', 'dns_over_tls': 'default'}
+    call('Set', 'ethernet.ip', json.dumps({'uuid': 'wired-uuid', 'value': manual}))
+    assert next(p for p in call('Get', 'network')['profiles'] if p['uuid'] == 'wired-uuid')['ip'] == manual
+    assert 'InvalidArgument' in call('Set', 'known-networks.ip', json.dumps({'uuid': 'wired-uuid', 'value': manual}), ok=False)
+    assert call('Set', 'network-status.connectivity-check', 'false')['connectivity_check_enabled'] is False
+    assert call('Set', 'network-status.connectivity-check', 'true')['connectivity_check_enabled'] is True
+
+    # The hotspot is created once, without autoconnect, then started and stopped.
+    assert 'Set up' in call('Set', 'hotspot.enabled', 'true', ok=False)
+    call('Set', 'hotspot.configure', '{"ssid":"Remy AP","band":"5","password":"hotspot-secret"}')
+    spot = next(p for p in call('Get', 'network')['profiles'] if p['kind'] == 'hotspot')
+    assert spot['hotspot'] == {'ssid': 'Remy AP', 'band': '5'} and not spot['autoconnect']
+    assert spot['ip']['ipv4'] == 'shared'
+    call('Set', 'hotspot.enabled', 'true')
+    wait(lambda s: any(p['kind'] == 'hotspot' and p['active'] for p in s['profiles']), 'hotspot should start')
+    call('Set', 'hotspot.enabled', 'false')
+    wait(lambda s: not any(p['active'] for p in s['profiles'] if p['kind'] == 'hotspot'), 'hotspot should stop')
+
+    # VPN profiles connect without a device and are removed only from the VPN page.
+    call('Set', 'vpn.connect', '{"uuid":"wg-uuid","value":true}')
+    wait(lambda s: next(p for p in s['profiles'] if p['uuid'] == 'wg-uuid')['active'], 'VPN should connect')
+    call('Set', 'vpn.connect', '{"uuid":"wg-uuid","value":false}')
+    wait(lambda s: not next(p for p in s['profiles'] if p['uuid'] == 'wg-uuid')['active'], 'VPN should stop')
+    assert 'InvalidArgument' in call('Set', 'vpn.remove', 'home-uuid', ok=False)
+    assert 'InvalidArgument' in call('Set', 'vpn.import', '/etc/hostname', ok=False)
     call('Set', 'known-networks.change-password', f'{{"uuid":"{uuid}","value":"another-password"}}')
     assert 'psk-flags 0' in control('Calls')
 
@@ -378,8 +422,15 @@ def checks():
     control('Quit')
     state = wait(lambda s: not s['available'], 'stopped NetworkManager should be reported')
     assert state['error'] and 'devices' not in state
-    assert 'Unavailable' in call('Set', 'known-networks.mac', 'x', ok=False)
+    assert 'NetworkManager' in call('Set', 'known-networks.mac', '{"uuid":"home-uuid","value":"stable"}', ok=False)
     assert 'NetworkManager' in call('Set', 'wifi.enabled', 'true', ok=False)
+
+    # The desktop proxy lives in the private keyfile GSettings backend.
+    assert call('Set', 'proxy.http', '127.0.0.1:8080')['http'] == '127.0.0.1:8080'
+    assert call('Set', 'proxy.mode', 'manual')['mode'] == 'manual'
+    assert 'InvalidArgument' in call('Set', 'proxy.socks', 'no-port', ok=False)
+    assert 'InvalidArgument' in call('Set', 'proxy.mode', 'script', ok=False)
+    assert call('Get', 'proxy')['ignore'] == ['localhost', '127.0.0.0/8', '::1']
     call('Quit')
 
 
@@ -407,7 +458,7 @@ def session(binary, root):
     emitted = [m for m in messages if not m.startswith('method call')]
     assert len(emitted) > 10 and not any(
         secret in m for m in emitted
-        for secret in ('right-password', 'wrong-password', 'another-password'))
+        for secret in ('right-password', 'wrong-password', 'another-password', 'hotspot-secret'))
     assert 'password' not in (Path(root) / 'config/network.toml').read_text()
 
 

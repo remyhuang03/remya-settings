@@ -161,7 +161,12 @@ class SettingsStatus extends StatelessWidget {
                   area: 'Network',
                   title: message,
                   busy: controller.isBusy,
-                  useSystem: controller.reload,
+                  useSystem: controller.configInvalid
+                      ? controller.useSystemConfiguration
+                      : controller.reload,
+                  retryLabel: controller.configInvalid
+                      ? 'Use system configuration'
+                      : 'Retry',
                 ),
             ],
             if (background case final controller?) ...[
@@ -294,7 +299,11 @@ class _ConflictWarning extends StatelessWidget {
     required this.useSystem,
     this.useSettings,
     this.navigatorKey,
+    this.retryLabel = 'Retry',
   });
+
+  /// The error action; replacing an unreadable file says so.
+  final String retryLabel;
 
   /// The feature the warning belongs to, such as "Sound".
   final String area;
@@ -357,7 +366,7 @@ class _ConflictWarning extends StatelessWidget {
             ),
             onPressed: busy ? null : () => _resolve(useSystem),
             icon: const Icon(Icons.refresh_rounded),
-            label: const Text('Retry'),
+            label: Text(retryLabel),
           )
         else
           FilledButton.tonal(

@@ -16,6 +16,27 @@ const knownNetworkAutoconnectSettingId = 'known-networks.autoconnect';
 const knownNetworkMeteredSettingId = 'known-networks.metered';
 const knownNetworkPasswordSettingId = 'known-networks.change-password';
 const knownNetworkForgetSettingId = 'known-networks.forget';
+const knownNetworkPrioritySettingId = 'known-networks.priority';
+const knownNetworkMacSettingId = 'known-networks.mac';
+const knownNetworkIpSettingId = 'known-networks.ip';
+const knownNetworkDnsSettingId = 'known-networks.dns';
+const connectivityCheckSettingId = 'network-status.connectivity-check';
+const ethernetConnectSettingId = 'ethernet.connect';
+const ethernetAutoconnectSettingId = 'ethernet.autoconnect';
+const ethernetMeteredSettingId = 'ethernet.metered';
+const ethernetIpSettingId = 'ethernet.ip';
+const ethernetDnsSettingId = 'ethernet.dns';
+const vpnConnectSettingId = 'vpn.connect';
+const vpnImportSettingId = 'vpn.import';
+const vpnRemoveSettingId = 'vpn.remove';
+const hotspotEnabledSettingId = 'hotspot.enabled';
+const hotspotConfigureSettingId = 'hotspot.configure';
+const proxyModeSettingId = 'proxy.mode';
+const proxyScriptSettingId = 'proxy.script';
+const proxyHttpSettingId = 'proxy.http';
+const proxyHttpsSettingId = 'proxy.https';
+const proxySocksSettingId = 'proxy.socks';
+const proxyIgnoreSettingId = 'proxy.ignore';
 
 extension NetworkClient on SettingsClient {
   Future<Map<String, dynamic>> readAirplane() => call('Get', ['airplane']);
@@ -62,6 +83,19 @@ extension NetworkClient on SettingsClient {
       'autoconnect': autoconnect,
     }),
   ]);
+  Future<Map<String, dynamic>> readProxy() => call('Get', ['proxy']);
+  Future<Map<String, dynamic>> setProxy(String id, String value) =>
+      call('Set', [id, value]);
+  Future<Map<String, dynamic>> configureHotspot({
+    required String ssid,
+    required String band,
+    String? password,
+  }) => call('Set', [
+    hotspotConfigureSettingId,
+    jsonEncode({'ssid': ssid, 'band': band, 'password': ?password}),
+  ]);
+
+  /// Changes one preference of a saved connection: `{uuid, value}`.
   Future<Map<String, dynamic>> changeKnownNetwork(
     String id,
     String uuid,
