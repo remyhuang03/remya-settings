@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/background/application/background_controller.dart';
 import 'package:remya_settings/features/background/presentation/background_page.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
+import 'package:remya_settings_client/settings_contract.dart';
 
 Map<String, dynamic> _state() => {
   'initialized': true,
@@ -52,7 +53,37 @@ class _Harness {
   );
 }
 
-Future<void> _pump(WidgetTester tester, BackgroundController controller) async {
+/// Serves the `desktop` option group and records writes.
+class _DesktopClient extends SettingsClient {
+  Map<String, dynamic> options = {
+    'background.blur-enabled': false,
+    'background.blur-variant': 0,
+    'background.blur-size': 8,
+    'background.blur-passes': 1,
+    'background.fallback-color': '#141318',
+    'background.hide-logo': true,
+  };
+  final calls = <List<String>>[];
+
+  @override
+  Stream<SettingsChange> get changes => const Stream.empty();
+
+  @override
+  Future<Map<String, dynamic>> call(
+    String method, [
+    List<String> arguments = const [],
+  ]) async {
+    calls.add([method, ...arguments]);
+    if (method == 'Set') options[arguments[0]] = jsonDecode(arguments[1]);
+    return {'options': options, 'conflict': false, 'conflicts': <String>[]};
+  }
+}
+
+Future<void> _pump(
+  WidgetTester tester,
+  BackgroundController controller, {
+  SettingsClient? client,
+}) async {
   final catalog = SettingsCatalog.fromJson(
     jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
         as Map<String, dynamic>,
@@ -62,8 +93,10 @@ Future<void> _pump(WidgetTester tester, BackgroundController controller) async {
       home: Scaffold(
         body: SingleChildScrollView(
           child: BackgroundPage(
+            catalog: catalog,
             page: catalog.page('background'),
             controller: controller,
+            client: client,
             pickFile: (_) async => '/picked/photo.png',
           ),
         ),
@@ -175,24 +208,30 @@ void main() {
     expect(find.byKey(const ValueKey('background-display-A')), findsNothing);
     expect(await browse(), '*');
   });
-  testWidgets('compositor previews stay disabled inside Advanced', (
-    tester,
-  ) async {
+  testWidgets('blur options follow the switch', (tester) async {
+    tester.view.physicalSize = const Size(1200, 3000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     final h = _Harness(_state());
+    final client = _DesktopClient();
     addTearDown(h.controller.dispose);
     await h.controller.reload();
-    await _pump(tester, h.controller);
-    final control = find.byKey(const ValueKey('background.blur-enabled'));
-    expect(control.hitTestable(), findsNothing);
-    await tester.ensureVisible(find.text('Advanced'));
+    await _pump(tester, h.controller, client: client);
+    expect(find.byKey(const ValueKey('background.blur-size')), findsNothing);
+
+    final toggle = find.descendant(
+      of: find.byKey(const ValueKey('background.blur-enabled')),
+      matching: find.byType(Switch),
+    );
+    await tester.tap(toggle);
+    await tester.pumpAndSettle();
+    expect(client.calls.last, ['Set', 'background.blur-enabled', 'true']);
+    expect(find.byKey(const ValueKey('background.blur-size')), findsOneWidget);
+
     await tester.tap(find.text('Advanced'));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(control);
-    final toggle = tester.widget<Switch>(
-      find.descendant(of: control, matching: find.byType(Switch)),
-    );
-    expect(toggle.onChanged, isNull);
-    expect(find.text('Planned'), findsWidgets);
+    expect(find.byKey(const ValueKey('background.blur-noise')), findsOneWidget);
+    expect(find.text('#141318'), findsOneWidget);
     expect(h.writes, isEmpty);
   });
 }

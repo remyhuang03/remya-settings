@@ -24,6 +24,8 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | hyprsunset configuration | `$XDG_CONFIG_HOME/hypr/hyprsunset.conf`, run by the packaged `hyprsunset.service` |
 | Input settings snapshot | `input.toml` beside `config.toml` (debug: repository `config/`) |
 | Input settings for Hyprland | `$XDG_CONFIG_HOME/hypr/remya-settings/input.lua`, required by a managed block at the end of `hyprland.lua` |
+| Desktop options snapshot | `desktop.toml` beside `config.toml` (debug: repository `config/`) |
+| Desktop options for Hyprland (blur, fallback background, display wake) | `$XDG_CONFIG_HOME/hypr/remya-settings/desktop.lua`, required by its own managed block at the end of `hyprland.lua` |
 | Video background unit | `$XDG_CONFIG_HOME/systemd/user/top.remya.settings.video-background.service` |
 | Startup enabled-state snapshot | `startup.toml` beside `config.toml` (debug: repository `config/`) |
 | User startup entries | `$XDG_CONFIG_HOME/autostart/*.desktop` (fallback `$HOME/.config/autostart/`), written as 0644 |

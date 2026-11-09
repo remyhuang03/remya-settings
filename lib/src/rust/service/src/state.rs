@@ -256,6 +256,7 @@ pub struct State {
     pub default_apps: DefaultApps<default_apps::RealDesktop>,
     pub startup: Startup<startup::RealSystemd>,
     pub input: Input<RealHypr>,
+    pub desktop: Input<RealHypr>,
     pub appimages: applications::appimages::AppImages,
     pub network: NetworkManager,
     pub bluetooth: remya_settings_bluetooth::Bluetooth,
@@ -309,9 +310,16 @@ impl State {
                 config.with_file_name("startup.toml"),
             ),
             input: Input::new(
+                &input::INPUT,
                 RealHypr,
                 hypr_config_dir(),
                 config.with_file_name("input.toml"),
+            ),
+            desktop: Input::new(
+                &input::DESKTOP,
+                RealHypr,
+                hypr_config_dir(),
+                config.with_file_name("desktop.toml"),
             ),
             bluetooth: remya_settings_bluetooth::Bluetooth::new(),
             proxy: remya_settings_network::proxy::Proxy::new(),
@@ -504,6 +512,7 @@ impl State {
         let _ = self.default_apps.refresh();
         let _ = self.startup.refresh();
         let _ = self.input.refresh();
+        let _ = self.desktop.refresh();
         // Failures stay in the manager's state for every reader.
         let _ = self.network.refresh();
         // A detection failure is retained by the manager and reported in its state.
@@ -667,7 +676,7 @@ impl State {
     pub fn configuration(&self) -> Value {
         let mut date = self.date.clone();
         date["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
-        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"startup":self.startup.state(),"input":self.input.state(),"network":self.network.state(),"sound":self.sound.state(),"power":self.power.state(),"cameras":self.cameras.state()})
+        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"startup":self.startup.state(),"input":self.input.state(),"desktop":self.desktop.state(),"network":self.network.state(),"sound":self.sound.state(),"power":self.power.state(),"cameras":self.cameras.state()})
     }
     pub fn controls(&self) -> Vec<&Value> {
         self.catalog["pages"]
@@ -828,6 +837,14 @@ impl State {
                     "input" => {
                         let _ = self.input.refresh();
                         Ok(self.input.state())
+                    }
+                    "desktop" => {
+                        let _ = self.desktop.refresh();
+                        Ok(self.desktop.state())
+                    }
+                    _ if input::is_desktop_setting(key) => {
+                        let _ = self.desktop.refresh();
+                        Ok(json!({"id":key,"availability":"available","reason":"Uses Hyprland decoration and misc options.","value":self.desktop.setting_value(key),"error":self.desktop.state()["error"]}))
                     }
                     _ if key.starts_with(input::LOOKUP) => self.input.lookup(&key[input::LOOKUP.len()..]),
                     _ if input::is_setting(key) => {
@@ -1174,6 +1191,9 @@ impl State {
         if input::is_setting(key) {
             return self.input.set(key, value);
         }
+        if input::is_desktop_setting(key) {
+            return self.desktop.set(key, value);
+        }
         if startup::IDS.contains(&key) {
             return self.startup.set(key, value);
         }
@@ -1409,6 +1429,9 @@ impl State {
         }
         if feature == "input" {
             return self.input.resolve(source);
+        }
+        if feature == "desktop" {
+            return self.desktop.resolve(source);
         }
         if feature == "startup" {
             return self.startup.resolve(source);

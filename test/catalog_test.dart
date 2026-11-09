@@ -378,7 +378,7 @@ void main() {
       catalog.search('direct_scanout').map((p) => p.id),
       contains('graphics'),
     );
-    expect(catalog.search('hypridle').map((p) => p.id), contains('power'));
+    expect(catalog.search('lock screen').map((p) => p.id), contains('power'));
     expect(
       catalog.search('window rules').map((p) => p.id),
       contains('hypr-window-rule-props'),

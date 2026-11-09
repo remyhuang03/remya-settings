@@ -9,9 +9,18 @@ PowerProfiles is required at `org.freedesktop.UPower.PowerProfiles`, object
 changes write `ActiveProfile` and verify fresh readback. UPower supplies aggregate
 battery percentage, state and external-power status.
 
-Screen and sleep timeouts edit only unambiguous listeners in
-`$XDG_CONFIG_HOME/hypr/hypridle.conf`. Commands remain intact. Never comments out
-the listener using `# remya-disabled: ` prefixes, which Settings can reverse.
+Screen, lock and sleep timeouts edit only unambiguous listeners in
+`$XDG_CONFIG_HOME/hypr/hypridle.conf`: screen off is the `hl.dsp.dpms` disable
+action, lock is `on-timeout = loginctl lock-session`, and sleep is a suspend
+command. Commands remain intact. Never comments out the listener using
+`# remya-disabled: ` prefixes, which Settings can reverse. A missing lock
+listener reads as Never; choosing a time appends one. **Lock before sleep**
+is the `before_sleep_cmd = loginctl lock-session` line in `general`; turning it
+off comments it out the same way, turning it on restores it or adds it to
+`general`, and a different `before_sleep_cmd` command is never replaced. The
+locking options are shown only when `general` sets `lock_cmd`, reported as
+`system.can_lock`, because `loginctl lock-session` does nothing otherwise. The
+Power page draws all three timeouts on one idle timeline.
 Includes, duplicate targets and unsupported shapes are refused. The current-user
 hypridle instance is restarted; failure restores the previous file and attempts
 recovery. Other idle daemons are not supported.
@@ -79,7 +88,11 @@ History queries return raw events plus preceding state/session/battery context f
 - `Set power.743773bd open` / `Set power.03bd05ee open`: open Energy saver or
   Battery usage.
 - `Set power.5a4f0131`: JSON profile string.
-- `Set power.5e3af39c` / `power.8b4c8522`: JSON seconds, 0 (Never) to 86400.
+- `Set power.5e3af39c` / `power.8b4c8522` / `power.lock-after`: JSON seconds,
+  0 (Never) to 86400, for screen off, sleep and lock.
+- `Set power.lock-before-sleep`: JSON boolean.
+- Display wake (`power.wake-key`, `power.wake-pointer`) belongs to the `desktop`
+  Hyprland options; see the public API.
 - `Set battery-saver.743773bd`: JSON manual saver boolean.
 - `Set battery-saver.9b0caf70`: JSON threshold 0, 10, 20, 30, 50 or 100.
   A JSON boolean supports a switch for the same setting. False selects Never
@@ -105,7 +118,7 @@ policy predicates, safe timeout transformations and service dispatch.
 is read-only for host settings. Add `exercise` to switch profiles, exercise the
 automatic include-AC policy and built-in dimming, restoring the starting profile.
 This workstation passed that roundtrip on 2026-11-04, and the first SQLite sample
-was read back at 96 percent with external power. The hypridle timeout/restart roundtrip also passed and restored the original file byte-for-byte. Real suspend/resume and actual
+was read back at 96 percent with external power. The hypridle timeout/restart roundtrip also passed and restored the original file byte-for-byte; on 2026-11-09 it also changed the lock timeout and toggled lock before sleep on the live configuration before restoring it. Real suspend/resume and actual
 idle timeout expiry require separate desktop verification.
 
 On a running Hyprland session, `dbus-run-session -- python test/power_interface_smoke.py --with-hypridle`

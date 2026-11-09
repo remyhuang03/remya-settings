@@ -1,6 +1,6 @@
-//! The Settings-owned `remya-settings/input.lua` and its one-line `require` in
-//! `hyprland.lua`. Only the exact shapes rendered here are accepted, so a file that
-//! has been edited into something else is never overwritten.
+//! The Settings-owned `remya-settings/<group>.lua` files and their one-line `require`
+//! blocks in `hyprland.lua`. Only the exact shapes rendered here are accepted, so a
+//! file that has been edited into something else is never overwritten.
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -12,6 +12,8 @@ pub enum Kind {
     Float(f64, f64),
     /// Writable strings. Reads may also report Hyprland's empty default.
     Text(&'static [&'static str]),
+    /// `#rrggbb`, written as an opaque Hyprland `rgba(rrggbbff)` string.
+    Color,
 }
 
 pub struct Opt {
@@ -46,6 +48,10 @@ impl Opt {
                 Some(v) => Ok(json!(v)),
                 None => invalid(format!("Use one of {}", allowed.join(", "))),
             },
+            Kind::Color => match value.as_str().and_then(hex) {
+                Some(v) => Ok(json!(v)),
+                None => invalid("Use a color such as #1e1e2e".into()),
+            },
         }
     }
 
@@ -59,8 +65,22 @@ impl Opt {
                 Some("[[EMPTY]]") | None => json!(""),
                 Some(text) => json!(text),
             },
+            // Hyprland reports colors as AARRGGBB; Settings only writes opaque ones.
+            Kind::Color => json!(
+                current
+                    .as_str()
+                    .filter(|c| c.len() == 8)
+                    .and_then(|c| hex(&format!("#{}", &c[2..])))
+            ),
         }
     }
+}
+
+/// Lowercase `#rrggbb`, or None.
+fn hex(text: &str) -> Option<String> {
+    let digits = text.strip_prefix('#')?;
+    (digits.len() == 6 && digits.chars().all(|c| c.is_ascii_hexdigit()))
+        .then(|| format!("#{}", digits.to_ascii_lowercase()))
 }
 
 /// Settings writes three decimals; finer readback differences are noise.
@@ -69,11 +89,11 @@ fn round(v: f64) -> f64 {
 }
 
 macro_rules! opts {
-    ($(($id:literal, $name:expr, $kind:expr)),* $(,)?) => {
-        pub const OPTIONS: &[Opt] = &[$(Opt { id: $id, name: $name, kind: $kind }),*];
+    ($table:ident: $(($id:literal, $name:expr, $kind:expr)),* $(,)?) => {
+        pub const $table: &[Opt] = &[$(Opt { id: $id, name: $name, kind: $kind }),*];
     };
 }
-opts![
+opts![INPUT_OPTIONS:
     ("mouse.primary-button", "input:left_handed", Kind::Bool),
     (
         "mouse.pointer-speed",
@@ -220,8 +240,73 @@ opts![
     ),
 ];
 
+opts![DESKTOP_OPTIONS:
+    ("background.blur-enabled", "decoration:blur:enabled", Kind::Bool),
+    ("background.blur-variant", "decoration:blur:variant", Kind::Int(0, 10)),
+    ("background.blur-size", "decoration:blur:size", Kind::Int(1, 100)),
+    ("background.blur-passes", "decoration:blur:passes", Kind::Int(1, 10)),
+    ("background.blur-noise", "decoration:blur:noise", Kind::Float(0.0, 1.0)),
+    ("background.blur-contrast", "decoration:blur:contrast", Kind::Float(0.0, 2.0)),
+    ("background.blur-brightness", "decoration:blur:brightness", Kind::Float(0.0, 2.0)),
+    ("background.blur-vibrancy", "decoration:blur:vibrancy", Kind::Float(0.0, 1.0)),
+    ("background.blur-xray", "decoration:blur:xray", Kind::Bool),
+    ("background.blur-popups", "decoration:blur:popups", Kind::Bool),
+    ("background.blur-special", "decoration:blur:special", Kind::Bool),
+    ("background.fallback-color", "misc:background_color", Kind::Color),
+    ("background.hide-logo", "misc:disable_hyprland_logo", Kind::Bool),
+    ("power.wake-key", "misc:key_press_enables_dpms", Kind::Bool),
+    ("power.wake-pointer", "misc:mouse_move_enables_dpms", Kind::Bool),
+];
+
+/// One Settings-owned Lua file and the options it may contain.
+pub struct Group {
+    /// File stem, `require` module and service feature name.
+    pub name: &'static str,
+    pub options: &'static [Opt],
+    /// Whether the file also holds `hl.bind`/`hl.unbind` shortcuts.
+    pub shortcuts: bool,
+    pub header: &'static str,
+}
+
+pub const INPUT: Group = Group {
+    name: "input",
+    options: INPUT_OPTIONS,
+    shortcuts: true,
+    header: "-- Managed by Remy'a Settings. Change Mouse, Touchpad and Keyboard shortcuts in Settings.",
+};
+
+pub const DESKTOP: Group = Group {
+    name: "desktop",
+    options: DESKTOP_OPTIONS,
+    shortcuts: false,
+    header: "-- Managed by Remy'a Settings. Change Background and Power & battery in Settings.",
+};
+
+impl Group {
+    pub fn option(&self, id: &str) -> Option<&'static Opt> {
+        self.options.iter().find(|o| o.id == id)
+    }
+
+    fn begin(&self) -> String {
+        format!("-- BEGIN Remy'a Settings {}", self.name)
+    }
+
+    fn end(&self) -> String {
+        format!("-- END Remy'a Settings {}", self.name)
+    }
+
+    pub fn block(&self) -> String {
+        format!(
+            "{}\nrequire(\"remya-settings.{}\")\n{}\n",
+            self.begin(),
+            self.name,
+            self.end()
+        )
+    }
+}
+
 pub fn option(id: &str) -> Option<&'static Opt> {
-    OPTIONS.iter().find(|o| o.id == id)
+    INPUT.option(id).or_else(|| DESKTOP.option(id))
 }
 
 /// The fixed actions a custom shortcut may run; nothing else reaches the Lua file.
@@ -258,12 +343,6 @@ pub struct File {
     pub shortcuts: Vec<Shortcut>,
 }
 
-pub const HEADER: &str =
-    "-- Managed by Remy'a Settings. Change Mouse, Touchpad and Keyboard shortcuts in Settings.";
-pub const BEGIN: &str = "-- BEGIN Remy'a Settings input";
-pub const END: &str = "-- END Remy'a Settings input";
-pub const BLOCK: &str = "-- BEGIN Remy'a Settings input\nrequire(\"remya-settings.input\")\n-- END Remy'a Settings input\n";
-
 pub fn quote(text: &str) -> String {
     format!("\"{}\"", text.replace('\\', "\\\\").replace('"', "\\\""))
 }
@@ -282,7 +361,12 @@ pub fn literal(value: &Value) -> String {
 
 pub fn option_line(opt: &Opt, value: &Value) -> String {
     let path = opt.path();
-    let mut text = literal(value);
+    let mut text = match (opt.kind, value) {
+        // `parse` finds the value by rendering `null` in its place, so keep that spelling.
+        (Kind::Color, Value::String(c)) => quote(&format!("rgba({}ff)", c.trim_start_matches('#'))),
+        (Kind::Color, _) => quote("rgba(nullff)"),
+        _ => literal(value),
+    };
     for key in path.iter().rev() {
         text = format!("{{ {key} = {text} }}");
     }
@@ -312,9 +396,9 @@ pub fn bind_line(shortcut: &Shortcut) -> String {
     }
 }
 
-pub fn render(file: &File) -> String {
-    let mut text = format!("{HEADER}\n");
-    for opt in OPTIONS {
+pub fn render(group: &Group, file: &File) -> String {
+    let mut text = format!("{}\n", group.header);
+    for opt in group.options {
         if let Some(value) = file.options.get(opt.id) {
             text += &option_line(opt, value);
             text.push('\n');
@@ -357,6 +441,7 @@ fn value(text: &str, kind: Kind) -> Option<Value> {
         Kind::Text(_) => string(text)
             .filter(|(_, rest)| rest.is_empty())
             .map(|(s, _)| s.into()),
+        Kind::Color => hex(&format!("#{text}")).map(Value::from),
     }
 }
 
@@ -387,13 +472,17 @@ fn bind(line: &str) -> Option<Shortcut> {
     Some(shortcut)
 }
 
-pub fn parse(text: &str) -> Result<File, String> {
+pub fn parse(group: &Group, text: &str) -> Result<File, String> {
     let mut file = File::default();
+    let name = group.name;
     for (number, line) in text.lines().enumerate() {
         let line = line.trim();
-        let refuse = || format!("Settings cannot safely edit input.lua line {}", number + 1);
+        let refuse = || format!("Settings cannot safely edit {name}.lua line {}", number + 1);
         if line.is_empty() || line.starts_with("--") {
             continue;
+        }
+        if !group.shortcuts && (line.starts_with("hl.unbind(") || line.starts_with("hl.bind(")) {
+            return Err(refuse());
         }
         if let Some(keys) = line.strip_prefix("hl.unbind(") {
             match string(keys) {
@@ -406,7 +495,7 @@ pub fn parse(text: &str) -> Result<File, String> {
             file.shortcuts.push(bind(line).ok_or_else(refuse)?);
             continue;
         }
-        let parsed = OPTIONS.iter().find_map(|opt| {
+        let parsed = group.options.iter().find_map(|opt| {
             let empty = option_line(opt, &Value::Null);
             let (prefix, suffix) = empty.split_once("null")?;
             let inner = line.strip_prefix(prefix)?.strip_suffix(suffix)?;
@@ -415,10 +504,10 @@ pub fn parse(text: &str) -> Result<File, String> {
         let (opt, value) = parsed.ok_or_else(refuse)?;
         file.options.insert(opt.id.into(), value);
     }
-    if render(&file) != format!("{HEADER}\n{}", strip_header(text)) {
-        return Err(
-            "Settings cannot safely edit input.lua: it was changed outside Settings".into(),
-        );
+    if render(group, &file) != format!("{}\n{}", group.header, strip_header(text)) {
+        return Err(format!(
+            "Settings cannot safely edit {name}.lua: it was changed outside Settings"
+        ));
     }
     Ok(file)
 }
@@ -431,20 +520,24 @@ fn strip_header(text: &str) -> String {
 }
 
 /// Appends the `require` block, or confirms the existing one is intact.
-pub fn with_block(main: &str) -> Result<Option<String>, String> {
-    match (main.find(BEGIN), main.find(END)) {
+pub fn with_block(group: &Group, main: &str) -> Result<Option<String>, String> {
+    let (begin, end, block) = (group.begin(), group.end(), group.block());
+    match (main.find(&begin), main.find(&end)) {
         (None, None) => {
             let separator = if main.is_empty() || main.ends_with('\n') {
                 ""
             } else {
                 "\n"
             };
-            Ok(Some(format!("{main}{separator}{BLOCK}")))
+            Ok(Some(format!("{main}{separator}{block}")))
         }
-        (Some(start), Some(end)) if main[start..end + END.len()] == BLOCK[..BLOCK.len() - 1] => {
+        (Some(start), Some(stop)) if main[start..stop + end.len()] == block[..block.len() - 1] => {
             Ok(None)
         }
-        _ => Err("The Remy'a Settings input block in hyprland.lua was edited".into()),
+        _ => Err(format!(
+            "The Remy'a Settings {} block in hyprland.lua was edited",
+            group.name
+        )),
     }
 }
 
@@ -478,11 +571,11 @@ mod tests {
 
     #[test]
     fn rendered_files_read_back_exactly() {
-        let text = render(&sample());
+        let text = render(&INPUT, &sample());
         assert!(text.contains("hl.config({ input = { touchpad = { tap_to_click = false } } })"));
         assert!(text.find("hl.unbind").unwrap() < text.find("hl.bind").unwrap());
-        assert_eq!(parse(&text).unwrap(), sample());
-        assert_eq!(parse("").unwrap(), File::default());
+        assert_eq!(parse(&INPUT, &text).unwrap(), sample());
+        assert_eq!(parse(&INPUT, "").unwrap(), File::default());
     }
 
     #[test]
@@ -494,7 +587,7 @@ mod tests {
             "hl.bind(\"SUPER + K\", hl.dsp.exec_cmd(\"a\" .. \"b\"))\n",
             "hl.config({ input = { kb_layout = \"de\" } })\n",
         ] {
-            assert!(parse(text).is_err(), "{text}");
+            assert!(parse(&INPUT, text).is_err(), "{text}");
         }
     }
 
@@ -515,9 +608,33 @@ mod tests {
     #[test]
     fn require_block_is_added_once_and_guarded() {
         let main = "hl.config({})";
-        let added = with_block(main).unwrap().unwrap();
-        assert!(added.ends_with(BLOCK) && added.starts_with("hl.config({})\n"));
-        assert_eq!(with_block(&added).unwrap(), None);
-        assert!(with_block(&added.replace("require", "-- require")).is_err());
+        let added = with_block(&INPUT, main).unwrap().unwrap();
+        assert!(added.ends_with(&INPUT.block()) && added.starts_with("hl.config({})\n"));
+        assert_eq!(with_block(&INPUT, &added).unwrap(), None);
+        assert!(with_block(&INPUT, &added.replace("require", "-- require")).is_err());
+        // Each group keeps its own block beside the others.
+        let both = with_block(&DESKTOP, &added).unwrap().unwrap();
+        assert!(both.contains("require(\"remya-settings.desktop\")"));
+        assert_eq!(with_block(&INPUT, &both).unwrap(), None);
+    }
+
+    #[test]
+    fn desktop_colors_and_shortcut_refusal() {
+        let color = DESKTOP.option("background.fallback-color").unwrap();
+        assert_eq!(color.validate(&json!("#1E1E2E")).unwrap(), json!("#1e1e2e"));
+        assert!(color.validate(&json!("red")).is_err());
+        assert_eq!(color.observed(&json!("ff141318")), json!("#141318"));
+        let file = File {
+            options: BTreeMap::from([
+                ("background.fallback-color".into(), json!("#141318")),
+                ("background.blur-passes".into(), json!(3)),
+            ]),
+            ..File::default()
+        };
+        let text = render(&DESKTOP, &file);
+        assert!(text.contains("hl.config({ misc = { background_color = \"rgba(141318ff)\" } })"));
+        assert_eq!(parse(&DESKTOP, &text).unwrap(), file);
+        assert!(parse(&DESKTOP, "hl.bind(\"SUPER + Q\", hl.dsp.window.close())\n").is_err());
+        assert!(parse(&INPUT, &text).is_err());
     }
 }

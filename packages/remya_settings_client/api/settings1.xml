@@ -20,7 +20,8 @@
        (none|detect|script|manual), proxy.script (URL), proxy.http|https|socks
        (host:port or empty), proxy.ignore (JSON list). Changed uses the written ID. -->
   <!-- Power: Get power|battery-saver; Set power.5a4f0131 (JSON profile),
-       power.5e3af39c|power.8b4c8522 (seconds, 0=Never),
+       power.5e3af39c|power.8b4c8522|power.lock-after (seconds, 0=Never),
+       power.lock-before-sleep (bool),
        battery-saver.743773bd|battery-saver.07945503|battery-saver.power-source (bool),
        battery-saver.9b0caf70 (0,10,20,30,50,100 or boolean toggle).
        Get/Set battery-saver.off-threshold (-1=Follow turn-on,0=Never,30,50,70,80,90,100).
@@ -30,6 +31,10 @@
        Resolve power system|settings.
        Get battery-history:{from,to,after,limit} returns observations and next cursor.
        Changed power reports state; see docs/power.md. -->
+  <!-- Desktop options: Get desktop; Set background.blur-* (bool or number),
+       background.fallback-color ("#rrggbb"), background.hide-logo, power.wake-key,
+       power.wake-pointer (bool); Resolve desktop system|settings; Changed desktop.
+       See docs/public-api.md. -->
   <!-- Sound: Get("sound") / Get("sound.*"), Set("sound.*", JSON); Changed("sound", state). -->
   <!-- Cameras: Get cameras/cameras.*, Set cameras.* with JSON camera/serial/value;
        Resolve cameras:<node.name> system|settings; Changed cameras. Preview frames stay GUI-local. -->

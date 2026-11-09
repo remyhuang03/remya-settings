@@ -471,6 +471,7 @@ class _SettingsShellState extends State<SettingsShell> {
         widget.client != null) {
       content = PowerPage(
         key: ValueKey(_page!.id),
+        catalog: widget.catalog,
         page: _page!,
         client: widget.client!,
         onPage: (id) => _openPage(widget.catalog.page(id)),
@@ -550,6 +551,7 @@ class _SettingsShellState extends State<SettingsShell> {
         catalog: widget.catalog,
         page: _page!,
         systemInformation: widget.systemInformation,
+        client: widget.client,
         onPage: _openPage,
       );
     } else if (_category == 'home') {

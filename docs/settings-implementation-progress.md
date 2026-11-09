@@ -6,12 +6,12 @@
 
 清单覆盖现有目录中的全部设置项，包括主要中文控件和保留原名的设计参考细项（受 Windows 等桌面系统启发，作为设计参考与基准对照，而非直接照搬）；实际架构和功能已针对 Linux / Hyprland 进行了适配与差异化演进。相同概念可能存在多个展示位置。下述数量统计的是控件条目，不是去重后的独立后端功能数量。参考来源与实际实现的边界见 [调研说明](windows-settings-research.md)。
 
-Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 681 项设置与 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
+Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 645 项设置与 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
 
 ## 当前概况
 
-- 设置分类：15 个；详情页面：122 个；设置条目：1420 项。
-- 已实现：306 项；未实现：1104 项；不适用：10 项。
+- 设置分类：15 个；详情页面：122 个；设置条目：1384 项。
+- 已实现：323 项；未实现：1051 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
@@ -61,13 +61,13 @@ Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 14 | 214 | 73 | 141 | 0 |
+| [系统](#category-system) | 14 | 206 | 73 | 133 | 0 |
 | [声音](#category-sound) | 3 | 17 | 14 | 3 | 0 |
-| [电源与电池](#category-power) | 3 | 41 | 15 | 26 | 0 |
+| [电源与电池](#category-power) | 3 | 20 | 19 | 1 | 0 |
 | [通知](#category-notifications) | 4 | 19 | 12 | 7 | 0 |
 | [蓝牙和设备](#category-devices) | 11 | 103 | 57 | 46 | 0 |
 | [网络和 Internet](#category-network) | 8 | 63 | 63 | 0 | 0 |
-| [外观](#category-appearance) | 10 | 298 | 23 | 275 | 0 |
+| [外观](#category-appearance) | 10 | 292 | 37 | 255 | 0 |
 | [应用](#category-apps) | 5 | 35 | 29 | 6 | 0 |
 | [账户](#category-accounts) | 11 | 58 | 2 | 50 | 6 |
 | [时间和语言](#category-time) | 4 | 28 | 8 | 20 | 0 |
@@ -87,7 +87,7 @@ Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 
 
 排列、亮度、颜色、缩放、分辨率与刷新率
 
-页面状态：**未实现**；条目：39；已实现 30 / 未实现 9 / 不适用 0。
+页面状态：**未实现**；条目：31；已实现 30 / 未实现 1 / 不适用 0。
 
 原因：显示设置通过 Hyprland 实现；夜间模式与 Graphics 页面尚未实现。
 
@@ -152,19 +152,6 @@ Display 交互：Position 使用 X/Y 输入；刷新操作移动到排列框右�
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Graphics | `display.2f32a8c2` | 操作 | 未实现 | — |
-
-#### Advanced: compositor previews
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Compositor variable refresh rate (vrr) | `display.compositor-vrr` | 滑块 | 未实现 | — |
-| Output assignment: Output name or description match | `display.assignment-output` | 文本输入 | 未实现 | — |
-| Output assignment: Enable this output | `display.assignment-enabled` | 开关 | 未实现 | — |
-| Output assignment: Display logical coordinates | `display.assignment-position` | 文本输入 | 未实现 | — |
-| Output assignment: Mirror output target | `display.assignment-mirror` | 文本输入 | 未实现 | — |
-| Output assignment: Workspace and output allocation | `display.assignment-workspace` | 文本输入 | 未实现 | — |
-| Output assignment: Unknown monitor fallback rules | `display.assignment-fallback` | 文本输入 | 未实现 | — |
-| Output assignment: Save layout draft | `display.assignment-save` | 操作 | 未实现 | — |
 
 ### Night light — `night-light`
 
@@ -676,9 +663,9 @@ Windows 参考入口：`ms-settings:sound-devices`。
 
 能耗、屏幕超时与电池
 
-页面状态：**已接入基础功能**；条目：31；已实现 6 / 未实现 25 / 不适用 0。
+页面状态：**已实现**；条目：10；已实现 10 / 未实现 0 / 不适用 0。
 
-原因：基础功能通过 Rust 接入真实系统，其余高级项保持预览。
+原因：电源模式、hypridle 超时与锁定、显示唤醒均通过 Rust 接入真实系统。
 
 Windows 参考入口：`ms-settings:powersleep`。
 
@@ -690,40 +677,19 @@ Windows 参考入口：`ms-settings:powersleep`。
 | --- | --- | --- | --- | --- |
 | Power mode | `power.5a4f0131` | 选择 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
 | Turn off screen time | `power.5e3af39c` | 选择 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
+| Lock screen after | `power.lock-after` | 选择 | 已实现 | `cargo test -p remya_settings_power idle`；`test/power_test.dart`；本机 hypridle.conf 读回无改动 |
 | Sleep time | `power.8b4c8522` | 选择 | 已实现 | Rust power tests; live PowerProfiles/backlight readback |
+| Lock before sleep | `power.lock-before-sleep` | 开关 | 已实现 | `cargo test -p remya_settings_power idle`；`test/power_test.dart`；本机 hypridle.conf 读回无改动 |
 | Keep awake | `power.keep-awake` | 开关 | 已实现 | hypridle D-Bus 抑制 |
 | Energy saving mode | `power.743773bd` | 操作 | 已实现 | 跳转至 Energy saver |
 | Battery usage | `power.03bd05ee` | 操作 | 已实现 | 跳转至 Battery usage |
 
-#### Advanced: compositor previews
+#### Advanced
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Wake displays on key press (key_press_enables_dpms) | `power.wake-key` | 开关 | 未实现 | — |
-| Wake displays on pointer movement (mouse_move_enables_dpms) | `power.wake-pointer` | 开关 | 未实现 | — |
-| Idle: Lock screen command (lock_cmd) | `power.idle-lock-cmd` | 文本输入 | 未实现 | — |
-| Idle: Unlock command (unlock_cmd) | `power.idle-unlock-cmd` | 文本输入 | 未实现 | — |
-| Idle: on lock cmd (on_lock_cmd) | `power.idle-on-lock-cmd` | 文本输入 | 未实现 | — |
-| Idle: on unlock cmd (on_unlock_cmd) | `power.idle-on-unlock-cmd` | 文本输入 | 未实现 | — |
-| Idle: Before sleep command (before_sleep_cmd) | `power.idle-before-sleep-cmd` | 文本输入 | 未实现 | — |
-| Idle: Post-wakeup command (after_sleep_cmd) | `power.idle-after-sleep-cmd` | 文本输入 | 未实现 | — |
-| Idle: Ignore D-Bus idle inhibition (ignore_dbus_inhibit) | `power.idle-ignore-dbus-inhibit` | 开关 | 未实现 | — |
-| Idle: Ignore systemd idle suppression (ignore_systemd_inhibit) | `power.idle-ignore-systemd-inhibit` | 开关 | 未实现 | — |
-| Idle: Ignore Wayland idle inhibition (ignore_wayland_inhibit) | `power.idle-ignore-wayland-inhibit` | 开关 | 未实现 | — |
-| Idle: Sleep waiting lock screen strategy (inhibit_sleep) | `power.idle-inhibit-sleep` | 文本输入 | 未实现 | — |
-| Idle listener: Timeout seconds (timeout) | `power.idle-listener-timeout` | 文本输入 | 未实现 | — |
-| Idle listener: Idle timeout action (on-timeout) | `power.idle-listener-on-timeout` | 文本输入 | 未实现 | — |
-| Idle listener: Resume activity action (on-resume) | `power.idle-listener-on-resume` | 文本输入 | 未实现 | — |
-| Idle listener: Ignore idle inhibition (ignore_inhibit) | `power.idle-listener-ignore-inhibit` | 开关 | 未实现 | — |
-| Idle listener: Idle trigger condition command (condition_cmd) | `power.idle-listener-condition-cmd` | 文本输入 | 未实现 | — |
-| Idle listener: Conditional retry interval (condition_retry) | `power.idle-listener-condition-retry` | 文本输入 | 未实现 | — |
-| Session power action: End graphics session | `power.session-logout` | 操作 | 未实现 | — |
-| Session power action: Lock session | `power.session-lock` | 操作 | 未实现 | — |
-| Session power action: hang | `power.session-suspend` | 操作 | 未实现 | — |
-| Session power action: Hibernate | `power.session-hibernate` | 操作 | 未实现 | — |
-| Session power action: Restart | `power.session-reboot` | 操作 | 未实现 | — |
-| Session power action: Turn off the power | `power.session-poweroff` | 操作 | 未实现 | — |
-| Session power action: Wait for the application to exit | `power.session-timeout` | 文本输入 | 未实现 | — |
+| Wake displays on key press | `power.wake-key` | 开关 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57） |
+| Wake displays on pointer movement | `power.wake-pointer` | 开关 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57） |
 
 ### Energy saver — `battery-saver`
 
@@ -1458,11 +1424,11 @@ Windows 参考入口：`ms-settings:network-proxy`。
 
 ### Background — `background`
 
-桌面背景：图片（hyprpaper）或视频（mpvpaper）
+桌面背景：图片（hyprpaper）或视频（mpvpaper），以及窗口模糊
 
-页面状态：**未实现**；条目：28；已实现 8 / 未实现 20 / 不适用 0。
+页面状态：**已实现**；条目：21；已实现 21 / 未实现 0 / 不适用 0。
 
-原因：图片和视频背景已实现；合成器背景与模糊选项仍为不可用预览。
+原因：图片和视频背景、窗口模糊、备用背景色与 Hyprland 标志均已实现。
 
 Windows 参考入口：`ms-settings:personalization-background`。
 
@@ -1475,6 +1441,15 @@ Windows 参考入口：`ms-settings:personalization-background`。
 | Background file | `background.9e58290b` | 操作 | 已实现 | 见下文“Background, accent and fonts” |
 | Fit | `background.56c289eb` | 选择 | 已实现 | 见下文“Background, accent and fonts” |
 
+#### Window blur
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Blur behind windows | `background.blur-enabled` | 开关 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57）；`test/background_test.dart` |
+| Blur style | `background.blur-variant` | 选择 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57）；`test/background_test.dart` |
+| Blur radius | `background.blur-size` | 滑块 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57）；`test/background_test.dart` |
+| Blur passes | `background.blur-passes` | 滑块 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57）；`test/background_test.dart` |
+
 #### Advanced
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
@@ -1483,31 +1458,15 @@ Windows 参考入口：`ms-settings:personalization-background`。
 | Show splash text | `background.splash` | 开关 | 已实现 | 见下文“Background, accent and fonts” |
 | Splash offset | `background.splash-offset` | 滑块 | 已实现 | 见下文“Background, accent and fonts” |
 | Splash opacity | `background.splash-opacity` | 滑块 | 已实现 | 见下文“Background, accent and fonts” |
-
-Compositor background and blur options below are disabled previews; they do not change Hyprland configuration.
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| enabled | `background.blur-enabled` | 开关 | 未实现 | — |
-| Brightness adjustment | `background.blur-brightness` | 滑块 | 未实现 | — |
-| Contrast | `background.blur-contrast` | 滑块 | 未实现 | — |
-| Ignore window transparency | `background.blur-ignore-opacity` | 开关 | 未实现 | — |
-| Fuzzy performance optimization | `background.blur-new-optimizations` | 开关 | 未实现 | — |
-| Noise intensity | `background.blur-noise` | 滑块 | 未实现 | — |
-| Number of fuzzy iterations | `background.blur-passes` | 滑块 | 未实现 | — |
-| Blurred pop-ups | `background.blur-popups` | 开关 | 未实现 | — |
-| Pop-up window transparency threshold | `background.blur-popups-ignorealpha` | 滑块 | 未实现 | — |
-| Window or control size | `background.blur-size` | 文本输入 | 未实现 | — |
-| Special workspace is blurred | `background.blur-special` | 开关 | 未实现 | — |
-| Blur color saturation improvement | `background.blur-vibrancy` | 滑块 | 未实现 | — |
-| Effect of dark area saturation | `background.blur-vibrancy-darkness` | 滑块 | 未实现 | — |
-| Penetration effect | `background.blur-xray` | 开关 | 未实现 | — |
-| Display welcome banner | `background.compositor-splash-color` | 颜色 | 未实现 | — |
-| background color | `background.compositor-background-color` | 文本输入 | 未实现 | — |
-| disable hyprland logo | `background.compositor-disable-hyprland-logo` | 开关 | 未实现 | — |
-| disable splash rendering | `background.compositor-disable-splash-rendering` | 开关 | 未实现 | — |
-| force default wallpaper | `background.compositor-force-default-wallpaper` | 滑块 | 未实现 | — |
-| splash font family | `background.compositor-splash-font-family` | 文本输入 | 未实现 | — |
+| Noise | `background.blur-noise` | 滑块 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57）；`test/background_test.dart` |
+| Contrast | `background.blur-contrast` | 滑块 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57）；`test/background_test.dart` |
+| Brightness | `background.blur-brightness` | 滑块 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57）；`test/background_test.dart` |
+| Vibrancy | `background.blur-vibrancy` | 滑块 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57）；`test/background_test.dart` |
+| Floating windows blur only the background | `background.blur-xray` | 开关 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57）；`test/background_test.dart` |
+| Blur menus | `background.blur-popups` | 开关 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57）；`test/background_test.dart` |
+| Blur behind special workspaces | `background.blur-special` | 开关 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57）；`test/background_test.dart` |
+| Fallback color | `background.fallback-color` | 颜色 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57）；`test/background_test.dart` |
+| Hide Hyprland logo | `background.hide-logo` | 开关 | 已实现 | Rust `remya_settings_input` desktop tests；`test/desktop_smoke.py`（嵌套 Hyprland 0.57）；`test/background_test.dart` |
 
 ### Colors and themes — `themes`
 

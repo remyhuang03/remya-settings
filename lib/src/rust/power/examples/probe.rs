@@ -9,6 +9,12 @@ fn main() {
         let wanted = remya_settings_power::idle::Timeouts {
             screen: values.screen + 1,
             sleep: values.sleep + 1,
+            lock: if values.lock == 0 {
+                300
+            } else {
+                values.lock + 1
+            },
+            lock_before_sleep: !values.lock_before_sleep,
         };
         let result = remya_settings_power::idle::apply(&idle, &wanted);
         let restore = remya_settings_power::idle::apply(&idle, &values);

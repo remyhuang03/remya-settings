@@ -114,8 +114,12 @@ class SettingsDetail extends StatelessWidget {
     required this.page,
     required this.onPage,
     this.systemInformation,
+    this.client,
   });
   final SettingsCatalog catalog;
+
+  /// Reaches the service directly for pages without an app-wide controller.
+  final SettingsClient? client;
   final SettingsPageSpec page;
   final ValueChanged<SettingsPageSpec> onPage;
 
@@ -142,7 +146,12 @@ class SettingsDetail extends StatelessWidget {
     }
     if (page.id == 'background') {
       if (BackgroundScope.maybeOf(context) case final controller?) {
-        return BackgroundPage(page: page, controller: controller);
+        return BackgroundPage(
+          catalog: catalog,
+          page: page,
+          controller: controller,
+          client: client,
+        );
       }
     }
     return _preview(context);

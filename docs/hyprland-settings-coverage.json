@@ -1527,9 +1527,8 @@
         "decoration.blur",
         "enabled"
       ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
     },
     {
       "control": "background.blur-brightness",
@@ -1541,9 +1540,8 @@
         "decoration.blur",
         "brightness"
       ],
-      "nativeType": "float",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0.0 - 2.0]"
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
     },
     {
       "control": "background.blur-contrast",
@@ -1555,37 +1553,8 @@
         "decoration.blur",
         "contrast"
       ],
-      "nativeType": "float",
-      "documentedDefault": "`0.8916`",
-      "documentedLimits": "[0.0 - 2.0]"
-    },
-    {
-      "control": "background.blur-ignore-opacity",
-      "page": "background",
-      "source": "hypr-options",
-      "key": "ignore-opacity",
-      "reference": [
-        "hypr-options",
-        "decoration.blur",
-        "ignore_opacity"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "background.blur-new-optimizations",
-      "page": "background",
-      "source": "hypr-options",
-      "key": "new-optimizations",
-      "reference": [
-        "hypr-options",
-        "decoration.blur",
-        "new_optimizations"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
     },
     {
       "control": "background.blur-noise",
@@ -1597,9 +1566,8 @@
         "decoration.blur",
         "noise"
       ],
-      "nativeType": "float",
-      "documentedDefault": "`0.0117`",
-      "documentedLimits": "[0.0 - 1.0]"
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
     },
     {
       "control": "background.blur-passes",
@@ -1611,9 +1579,8 @@
         "decoration.blur",
         "passes"
       ],
-      "nativeType": "int",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0 - 10]"
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
     },
     {
       "control": "background.blur-popups",
@@ -1625,23 +1592,8 @@
         "decoration.blur",
         "popups"
       ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "background.blur-popups-ignorealpha",
-      "page": "background",
-      "source": "hypr-options",
-      "key": "popups-ignorealpha",
-      "reference": [
-        "hypr-options",
-        "decoration.blur",
-        "popups_ignorealpha"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.2`",
-      "documentedLimits": "[0.0 - 1.0]"
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
     },
     {
       "control": "background.blur-size",
@@ -1653,9 +1605,8 @@
         "decoration.blur",
         "size"
       ],
-      "nativeType": "int",
-      "documentedDefault": "`8`",
-      "documentedLimits": ""
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
     },
     {
       "control": "background.blur-special",
@@ -1667,9 +1618,8 @@
         "decoration.blur",
         "special"
       ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
     },
     {
       "control": "background.blur-vibrancy",
@@ -1681,23 +1631,8 @@
         "decoration.blur",
         "vibrancy"
       ],
-      "nativeType": "float",
-      "documentedDefault": "`0.1696`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "background.blur-vibrancy-darkness",
-      "page": "background",
-      "source": "hypr-options",
-      "key": "vibrancy-darkness",
-      "reference": [
-        "hypr-options",
-        "decoration.blur",
-        "vibrancy_darkness"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.0`",
-      "documentedLimits": "[0.0 - 1.0]"
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
     },
     {
       "control": "background.blur-xray",
@@ -1709,9 +1644,8 @@
         "decoration.blur",
         "xray"
       ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
     },
     {
       "control": "themes.shadow-enabled",
@@ -2988,7 +2922,7 @@
       "documentedLimits": "[1 - 20]"
     },
     {
-      "control": "background.compositor-background-color",
+      "control": "background.fallback-color",
       "page": "background",
       "source": "hypr-options",
       "key": "background-color",
@@ -2997,9 +2931,8 @@
         "misc",
         "background_color"
       ],
-      "nativeType": "color",
-      "documentedDefault": "`0x111111`",
-      "documentedLimits": ""
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
     },
     {
       "control": "sound.compositor-bell",
@@ -3058,7 +2991,7 @@
       "documentedLimits": ""
     },
     {
-      "control": "background.compositor-disable-hyprland-logo",
+      "control": "background.hide-logo",
       "page": "background",
       "source": "hypr-options",
       "key": "disable-hyprland-logo",
@@ -3067,9 +3000,8 @@
         "misc",
         "disable_hyprland_logo"
       ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
     },
     {
       "control": "hypr-misc.disable-scale-notification",
@@ -3080,20 +3012,6 @@
         "hypr-options",
         "misc",
         "disable_scale_notification"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "background.compositor-disable-splash-rendering",
-      "page": "background",
-      "source": "hypr-options",
-      "key": "disable-splash-rendering",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "disable_splash_rendering"
       ],
       "nativeType": "bool",
       "documentedDefault": "`false`",
@@ -3226,20 +3144,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "background.compositor-force-default-wallpaper",
-      "page": "background",
-      "source": "hypr-options",
-      "key": "force-default-wallpaper",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "force_default_wallpaper"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`-1`",
-      "documentedLimits": "[-1 - 2]"
-    },
-    {
       "control": "hypr-misc.initial-workspace-token-timeout",
       "page": "hypr-misc",
       "source": "hypr-options",
@@ -3277,9 +3181,8 @@
         "misc",
         "key_press_enables_dpms"
       ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "availability": "available",
+      "verification": "Rust power idle tests; test/desktop_smoke.py (nested Hyprland 0.57); test/power_test.dart"
     },
     {
       "control": "hypr-misc.layers-hog-keyboard-focus",
@@ -3319,9 +3222,8 @@
         "misc",
         "mouse_move_enables_dpms"
       ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "availability": "available",
+      "verification": "Rust power idle tests; test/desktop_smoke.py (nested Hyprland 0.57); test/power_test.dart"
     },
     {
       "control": "hypr-misc.name-vk-after-proc",
@@ -3422,20 +3324,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "background.compositor-splash-font-family",
-      "page": "background",
-      "source": "hypr-options",
-      "key": "splash-font-family",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "splash_font_family"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
       "control": "hypr-misc.swallow-exception-regex",
       "page": "hypr-misc",
       "source": "hypr-options",
@@ -3461,34 +3349,6 @@
       ],
       "nativeType": "string",
       "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "display.compositor-vrr",
-      "page": "display",
-      "source": "hypr-options",
-      "key": "vrr",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "vrr"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 3]"
-    },
-    {
-      "control": "background.compositor-splash-color",
-      "page": "background",
-      "source": "hypr-options",
-      "key": "splash",
-      "reference": [
-        "hypr-options",
-        "misc.col",
-        "splash"
-      ],
-      "nativeType": "color",
-      "documentedDefault": "`0x55ffffff`",
       "documentedLimits": ""
     },
     {
@@ -6530,230 +6390,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "power.idle-lock-cmd",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "lock-cmd",
-      "reference": [
-        "hypr-idle",
-        "General",
-        "lock_cmd"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-unlock-cmd",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "unlock-cmd",
-      "reference": [
-        "hypr-idle",
-        "General",
-        "unlock_cmd"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-on-lock-cmd",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "on-lock-cmd",
-      "reference": [
-        "hypr-idle",
-        "General",
-        "on_lock_cmd"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-on-unlock-cmd",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "on-unlock-cmd",
-      "reference": [
-        "hypr-idle",
-        "General",
-        "on_unlock_cmd"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-before-sleep-cmd",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "before-sleep-cmd",
-      "reference": [
-        "hypr-idle",
-        "General",
-        "before_sleep_cmd"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-after-sleep-cmd",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "after-sleep-cmd",
-      "reference": [
-        "hypr-idle",
-        "General",
-        "after_sleep_cmd"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-ignore-dbus-inhibit",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "ignore-dbus-inhibit",
-      "reference": [
-        "hypr-idle",
-        "General",
-        "ignore_dbus_inhibit"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-ignore-systemd-inhibit",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "ignore-systemd-inhibit",
-      "reference": [
-        "hypr-idle",
-        "General",
-        "ignore_systemd_inhibit"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-ignore-wayland-inhibit",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "ignore-wayland-inhibit",
-      "reference": [
-        "hypr-idle",
-        "General",
-        "ignore_wayland_inhibit"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-inhibit-sleep",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "inhibit-sleep",
-      "reference": [
-        "hypr-idle",
-        "General",
-        "inhibit_sleep"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-listener-timeout",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "timeout",
-      "reference": [
-        "hypr-idle",
-        "Listeners",
-        "timeout"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "none, value must be specified",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-listener-on-timeout",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "on-timeout",
-      "reference": [
-        "hypr-idle",
-        "Listeners",
-        "on-timeout"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-listener-on-resume",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "on-resume",
-      "reference": [
-        "hypr-idle",
-        "Listeners",
-        "on-resume"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-listener-ignore-inhibit",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "ignore-inhibit",
-      "reference": [
-        "hypr-idle",
-        "Listeners",
-        "ignore_inhibit"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-listener-condition-cmd",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "condition-cmd",
-      "reference": [
-        "hypr-idle",
-        "Listeners",
-        "condition_cmd"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "power.idle-listener-condition-retry",
-      "page": "power",
-      "source": "hypr-idle",
-      "key": "condition-retry",
-      "reference": [
-        "hypr-idle",
-        "Listeners",
-        "condition_retry"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": ""
-    },
-    {
       "control": "lockscreen.general-hide-cursor",
       "page": "lockscreen",
       "source": "hypr-lock",
@@ -8640,76 +8276,6 @@
       ]
     },
     {
-      "control": "display.assignment-output",
-      "page": "display",
-      "source": "nwg-displays-project",
-      "key": "output",
-      "reference": [
-        "nwg-displays-project",
-        "output"
-      ]
-    },
-    {
-      "control": "display.assignment-enabled",
-      "page": "display",
-      "source": "nwg-displays-project",
-      "key": "enabled",
-      "reference": [
-        "nwg-displays-project",
-        "enabled"
-      ]
-    },
-    {
-      "control": "display.assignment-position",
-      "page": "display",
-      "source": "nwg-displays-project",
-      "key": "position",
-      "reference": [
-        "nwg-displays-project",
-        "position"
-      ]
-    },
-    {
-      "control": "display.assignment-mirror",
-      "page": "display",
-      "source": "nwg-displays-project",
-      "key": "mirror",
-      "reference": [
-        "nwg-displays-project",
-        "mirror"
-      ]
-    },
-    {
-      "control": "display.assignment-workspace",
-      "page": "display",
-      "source": "nwg-displays-project",
-      "key": "workspace",
-      "reference": [
-        "nwg-displays-project",
-        "workspace"
-      ]
-    },
-    {
-      "control": "display.assignment-fallback",
-      "page": "display",
-      "source": "nwg-displays-project",
-      "key": "fallback",
-      "reference": [
-        "nwg-displays-project",
-        "fallback"
-      ]
-    },
-    {
-      "control": "display.assignment-save",
-      "page": "display",
-      "source": "nwg-displays-project",
-      "key": "save",
-      "reference": [
-        "nwg-displays-project",
-        "save"
-      ]
-    },
-    {
       "control": "graphics.gpu-devices",
       "page": "graphics",
       "source": "hypr-gpu-reference",
@@ -9306,76 +8872,6 @@
       "reference": [
         "hypr-ipc",
         "report"
-      ]
-    },
-    {
-      "control": "power.session-logout",
-      "page": "power",
-      "source": "hypr-power-reference",
-      "key": "logout",
-      "reference": [
-        "hypr-power-reference",
-        "logout"
-      ]
-    },
-    {
-      "control": "power.session-lock",
-      "page": "power",
-      "source": "hypr-power-reference",
-      "key": "lock",
-      "reference": [
-        "hypr-power-reference",
-        "lock"
-      ]
-    },
-    {
-      "control": "power.session-suspend",
-      "page": "power",
-      "source": "hypr-power-reference",
-      "key": "suspend",
-      "reference": [
-        "hypr-power-reference",
-        "suspend"
-      ]
-    },
-    {
-      "control": "power.session-hibernate",
-      "page": "power",
-      "source": "hypr-power-reference",
-      "key": "hibernate",
-      "reference": [
-        "hypr-power-reference",
-        "hibernate"
-      ]
-    },
-    {
-      "control": "power.session-reboot",
-      "page": "power",
-      "source": "hypr-power-reference",
-      "key": "reboot",
-      "reference": [
-        "hypr-power-reference",
-        "reboot"
-      ]
-    },
-    {
-      "control": "power.session-poweroff",
-      "page": "power",
-      "source": "hypr-power-reference",
-      "key": "poweroff",
-      "reference": [
-        "hypr-power-reference",
-        "poweroff"
-      ]
-    },
-    {
-      "control": "power.session-timeout",
-      "page": "power",
-      "source": "hypr-power-reference",
-      "key": "timeout",
-      "reference": [
-        "hypr-power-reference",
-        "timeout"
       ]
     },
     {
@@ -9984,6 +9480,45 @@
       ],
       "availability": "available",
       "verification": "Rust input tests; test/input_smoke.py (nested Hyprland 0.57); test/input_test.dart"
+    },
+    {
+      "control": "background.blur-variant",
+      "page": "background",
+      "source": "hypr-options",
+      "key": "variant",
+      "reference": [
+        "hypr-options",
+        "decoration.blur",
+        "variant"
+      ],
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
+    },
+    {
+      "control": "power.lock-after",
+      "page": "power",
+      "source": "hypr-idle",
+      "key": "timeout",
+      "reference": [
+        "hypr-idle",
+        "Listeners",
+        "timeout"
+      ],
+      "availability": "available",
+      "verification": "Rust power idle tests; test/desktop_smoke.py (nested Hyprland 0.57); test/power_test.dart"
+    },
+    {
+      "control": "power.lock-before-sleep",
+      "page": "power",
+      "source": "hypr-idle",
+      "key": "before-sleep-cmd",
+      "reference": [
+        "hypr-idle",
+        "General",
+        "before_sleep_cmd"
+      ],
+      "availability": "available",
+      "verification": "Rust power idle tests; test/desktop_smoke.py (nested Hyprland 0.57); test/power_test.dart"
     }
   ]
 }

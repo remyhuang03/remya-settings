@@ -8,10 +8,50 @@ use std::{
 };
 pub const START_ID: &str = "power.idle-daemon";
 
-#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Debug, Default, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Timeouts {
     pub screen: u32,
     pub sleep: u32,
+    /// Seconds before `loginctl lock-session`; 0 when no lock listener is active.
+    #[serde(default)]
+    pub lock: u32,
+    /// Whether `before_sleep_cmd` locks the session.
+    #[serde(default)]
+    pub lock_before_sleep: bool,
+}
+
+const LOCK: &str = "loginctl lock-session";
+const BEFORE_SLEEP: &str = "before_sleep_cmd = loginctl lock-session";
+
+/// The single top-level `general { ... }` block, if any.
+fn general(text: &str) -> Result<Option<(usize, usize)>, String> {
+    let mut found = None;
+    let mut start = None;
+    let mut offset = 0;
+    for line in text.split_inclusive('\n') {
+        let clean = line.split('#').next().unwrap_or("").trim();
+        if clean == "general {" {
+            if found.is_some() || start.is_some() {
+                return Err("Ambiguous general sections".into());
+            }
+            start = Some(offset);
+        } else if clean == "}" {
+            if let Some(s) = start.take() {
+                found = Some((s, offset + line.len()));
+            }
+        }
+        offset += line.len();
+    }
+    Ok(found)
+}
+
+/// Whether hypridle has a `lock_cmd`, without which `loginctl lock-session` does nothing.
+pub fn can_lock(text: &str) -> bool {
+    general(text).ok().flatten().is_some_and(|(start, end)| {
+        text[start..end]
+            .lines()
+            .any(|l| l.trim().starts_with("lock_cmd") && l.contains('='))
+    })
 }
 fn listeners(text: &str) -> Result<Vec<(usize, usize, &str)>, String> {
     let mut result = vec![];
@@ -51,6 +91,8 @@ fn target(block: &str) -> Option<&'static str> {
         .trim();
     if action == "$suspend_cmd" || action == "systemctl suspend" || action == "loginctl suspend" {
         Some("sleep")
+    } else if action == LOCK {
+        Some("lock")
     } else if action == r#"hyprctl dispatch 'hl.dsp.dpms({ action = "disable" })'"# {
         Some("screen")
     } else {
@@ -63,10 +105,13 @@ fn expanded(text: &str) -> String {
         .collect()
 }
 pub fn read(text: &str) -> Result<Timeouts, String> {
+    // A turned-off lock before sleep stays as a `remya-disabled` comment.
+    let lock_before_sleep = text.lines().any(|l| l.trim() == BEFORE_SLEEP);
     let expanded = expanded(text);
     let text = expanded.as_str();
     let mut screen = None;
     let mut sleep = None;
+    let mut lock = None;
     if text.lines().any(|l| l.trim().starts_with("source")) {
         return Err("Included hypridle configurations cannot be edited safely".into());
     }
@@ -89,10 +134,10 @@ pub fn read(text: &str) -> Result<Timeouts, String> {
     }
     for (_, _, block) in listeners(text)? {
         if let Some(kind) = target(block) {
-            let slot = if kind == "screen" {
-                &mut screen
-            } else {
-                &mut sleep
+            let slot = match kind {
+                "screen" => &mut screen,
+                "lock" => &mut lock,
+                _ => &mut sleep,
             };
             if slot.is_some() {
                 return Err(format!("Ambiguous {kind} listeners"));
@@ -118,19 +163,24 @@ pub fn read(text: &str) -> Result<Timeouts, String> {
     Ok(Timeouts {
         screen: screen.ok_or("No screen listener")?,
         sleep: sleep.ok_or("No sleep listener")?,
+        lock: lock.unwrap_or(0),
+        lock_before_sleep,
     })
 }
 pub fn edit(text: &str, wanted: &Timeouts) -> Result<String, String> {
-    read(text)?;
+    let current = read(text)?;
     let expanded = expanded(text);
     let text = expanded.as_str();
     let mut out = text.to_owned();
+    let has_lock = listeners(text)?
+        .iter()
+        .any(|(_, _, block)| target(block) == Some("lock"));
     for (start, end, block) in listeners(text)?.into_iter().rev() {
         if let Some(kind) = target(block) {
-            let value = if kind == "screen" {
-                wanted.screen
-            } else {
-                wanted.sleep
+            let value = match kind {
+                "screen" => wanted.screen,
+                "lock" => wanted.lock,
+                _ => wanted.sleep,
             };
             let mut changed = String::new();
             for line in block.split_inclusive('\n') {
@@ -154,7 +204,55 @@ pub fn edit(text: &str, wanted: &Timeouts) -> Result<String, String> {
             out.replace_range(start..end, &changed);
         }
     }
-    Ok(out)
+    if !has_lock && wanted.lock > 0 {
+        let separator = if out.is_empty() || out.ends_with('\n') {
+            ""
+        } else {
+            "\n"
+        };
+        out += &format!(
+            "{separator}\nlistener {{\n    timeout = {}\n    on-timeout = {LOCK}\n}}\n",
+            wanted.lock
+        );
+    }
+    edit_before_sleep(out, current.lock_before_sleep, wanted.lock_before_sleep)
+}
+
+/// Turns the locking `before_sleep_cmd` on or off; other commands are never replaced.
+fn edit_before_sleep(text: String, current: bool, wanted: bool) -> Result<String, String> {
+    let ours = |l: &str| l.trim() == BEFORE_SLEEP;
+    let present = text.lines().any(ours);
+    if wanted == current && (wanted || !present) {
+        return Ok(text);
+    }
+    if present {
+        return Ok(text
+            .split_inclusive('\n')
+            .map(|l| {
+                if ours(l) && !wanted {
+                    format!("# remya-disabled: {l}")
+                } else {
+                    l.to_owned()
+                }
+            })
+            .collect());
+    }
+    if text
+        .lines()
+        .any(|l| l.trim().starts_with("before_sleep_cmd"))
+    {
+        return Err("before_sleep_cmd already runs another command".into());
+    }
+    Ok(match general(&text)? {
+        Some((start, _)) => {
+            let open = start
+                + text[start..]
+                    .find('\n')
+                    .map_or(text.len() - start, |i| i + 1);
+            format!("{}    {BEFORE_SLEEP}\n{}", &text[..open], &text[open..])
+        }
+        None => format!("general {{\n    {BEFORE_SLEEP}\n}}\n\n{text}"),
+    })
 }
 pub fn apply(path: &Path, wanted: &Timeouts) -> Result<(), String> {
     let original = std::fs::read_to_string(path).map_err(|e| e.to_string())?;
@@ -322,6 +420,7 @@ mod tests {
         let t = Timeouts {
             screen: 300,
             sleep: 900,
+            ..Default::default()
         };
         let changed = edit(s, &t).unwrap();
         assert_eq!(read(&changed).unwrap(), t);
@@ -336,33 +435,75 @@ mod regression_tests {
     #[test]
     fn never_and_restore() {
         let original = "listener {\n timeout = 600\n on-timeout = hyprctl dispatch 'hl.dsp.dpms({ action = \"disable\" })'\n on-resume = restore-script\n}\nlistener {\n timeout = 1200\n on-timeout = systemctl suspend\n}\n";
-        let off = edit(
-            original,
-            &Timeouts {
-                screen: 0,
-                sleep: 0,
-            },
-        )
-        .unwrap();
+        let off = edit(original, &Timeouts::default()).unwrap();
         assert!(!off.lines().any(|l| l.trim() == "listener {"));
-        assert_eq!(
-            read(&off).unwrap(),
-            Timeouts {
-                screen: 0,
-                sleep: 0
-            }
-        );
+        assert_eq!(read(&off).unwrap(), Timeouts::default());
         assert_eq!(
             edit(
                 &off,
                 &Timeouts {
                     screen: 600,
-                    sleep: 1200
+                    sleep: 1200,
+                    ..Default::default()
                 }
             )
             .unwrap(),
             original
         );
         assert!(read(&format!("source = another.conf\n{original}")).is_err());
+    }
+}
+
+#[cfg(test)]
+mod lock_tests {
+    use super::*;
+    const BASE: &str = "general {\n    lock_cmd = hyprlock\n}\n\nlistener {\n timeout = 600\n on-timeout = hyprctl dispatch 'hl.dsp.dpms({ action = \"disable\" })'\n}\nlistener {\n timeout = 1200\n on-timeout = systemctl suspend\n}\n";
+
+    #[test]
+    fn lock_listener_and_before_sleep_round_trip() {
+        assert!(can_lock(BASE));
+        assert!(!can_lock("listener {\n}\n"));
+        let mut wanted = read(BASE).unwrap();
+        assert_eq!((wanted.lock, wanted.lock_before_sleep), (0, false));
+        wanted.lock = 300;
+        wanted.lock_before_sleep = true;
+        let on = edit(BASE, &wanted).unwrap();
+        assert_eq!(read(&on).unwrap(), wanted);
+        assert!(
+            on.starts_with("general {\n    before_sleep_cmd = loginctl lock-session\n    lock_cmd")
+        );
+        // Turning both off keeps them as comments; turning them on again restores them.
+        let off_wanted = Timeouts {
+            lock: 0,
+            lock_before_sleep: false,
+            ..wanted.clone()
+        };
+        let off = edit(&on, &off_wanted).unwrap();
+        assert_eq!(read(&off).unwrap(), off_wanted);
+        assert!(off.contains("# remya-disabled: listener {"));
+        let again = Timeouts {
+            lock: 900,
+            ..wanted.clone()
+        };
+        assert_eq!(read(&edit(&off, &again).unwrap()).unwrap(), again);
+    }
+
+    #[test]
+    fn custom_before_sleep_and_missing_general() {
+        let custom = BASE.replace(
+            "lock_cmd = hyprlock",
+            "lock_cmd = hyprlock\n    before_sleep_cmd = my-script",
+        );
+        let mut wanted = read(&custom).unwrap();
+        assert!(!wanted.lock_before_sleep);
+        assert_eq!(edit(&custom, &wanted).unwrap(), custom);
+        wanted.lock_before_sleep = true;
+        assert!(edit(&custom, &wanted).is_err());
+        let bare = BASE.replace("general {\n    lock_cmd = hyprlock\n}\n\n", "");
+        let mut wanted = read(&bare).unwrap();
+        wanted.lock_before_sleep = true;
+        let added = edit(&bare, &wanted).unwrap();
+        assert!(added.starts_with("general {\n    before_sleep_cmd"));
+        assert_eq!(read(&added).unwrap(), wanted);
     }
 }

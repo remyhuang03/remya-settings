@@ -570,7 +570,6 @@
         {
           "title": "Advanced",
           "collapsed": true,
-          "description": "Planned compositor options from Hyprland Display, Hyprland configuration options, HyprViz page organization, nwg-displays output and workspace allocation.",
           "controls": [
             {
               "id": "display.3b3ebb60",
@@ -794,106 +793,6 @@
                 "hypr-monitors",
                 "Fields",
                 "reserved_area"
-              ]
-            },
-            {
-              "id": "display.compositor-vrr",
-              "title": "Compositor variable refresh rate (vrr)",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 3.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "misc",
-                "vrr"
-              ]
-            },
-            {
-              "id": "display.assignment-output",
-              "title": "Output assignment: Output name or description match",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Set this for each display on the Display page. This page still previews the remaining layout options.",
-              "value": "",
-              "referencePath": [
-                "nwg-displays-project",
-                "output"
-              ]
-            },
-            {
-              "id": "display.assignment-enabled",
-              "title": "Output assignment: Enable this output",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Set this for each display on the Display page. This page still previews the remaining layout options.",
-              "value": false,
-              "referencePath": [
-                "nwg-displays-project",
-                "enabled"
-              ]
-            },
-            {
-              "id": "display.assignment-position",
-              "title": "Output assignment: Display logical coordinates",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Set this for each display on the Display page. This page still previews the remaining layout options.",
-              "value": "",
-              "referencePath": [
-                "nwg-displays-project",
-                "position"
-              ]
-            },
-            {
-              "id": "display.assignment-mirror",
-              "title": "Output assignment: Mirror output target",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Set this for each display on the Display page. This page still previews the remaining layout options.",
-              "value": "",
-              "referencePath": [
-                "nwg-displays-project",
-                "mirror"
-              ]
-            },
-            {
-              "id": "display.assignment-workspace",
-              "title": "Output assignment: Workspace and output allocation",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "nwg-displays-project",
-                "workspace"
-              ]
-            },
-            {
-              "id": "display.assignment-fallback",
-              "title": "Output assignment: Unknown monitor fallback rules",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "nwg-displays-project",
-                "fallback"
-              ]
-            },
-            {
-              "id": "display.assignment-save",
-              "title": "Output assignment: Save layout draft",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "nwg-displays-project",
-                "save"
               ]
             }
           ]
@@ -3476,13 +3375,12 @@
       "description": "Energy consumption, screen timeout and sleep",
       "preview": "power",
       "availability": "available",
-      "reason": "Rust power profiles, safe hypridle timeouts and energy saver policies.",
+      "reason": "Rust power profiles, hypridle timeouts and locking, display wake and energy saver policies.",
       "sources": [
         "uris",
         "hypr-options",
         "hyprviz-project",
-        "hypr-idle",
-        "hypr-power-reference"
+        "hypr-idle"
       ],
       "windowsUris": [
         "ms-settings:powersleep"
@@ -3519,6 +3417,28 @@
               "value": "5 minutes"
             },
             {
+              "id": "power.lock-after",
+              "title": "Lock screen after",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Locks the session through hypridle after this much inactivity.",
+              "value": "Never",
+              "options": [
+                "Never",
+                "1 minute",
+                "5 minutes",
+                "10 minutes",
+                "20 minutes",
+                "30 minutes",
+                "1 hour"
+              ],
+              "referencePath": [
+                "hypr-idle",
+                "Listeners",
+                "timeout"
+              ]
+            },
+            {
               "id": "power.8b4c8522",
               "title": "Sleep time",
               "type": "choice",
@@ -3531,6 +3451,19 @@
                 "Never"
               ],
               "value": "15 minutes"
+            },
+            {
+              "id": "power.lock-before-sleep",
+              "title": "Lock before sleep",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Lock the session before the computer sleeps, so it wakes up locked.",
+              "value": true,
+              "referencePath": [
+                "hypr-idle",
+                "General",
+                "before_sleep_cmd"
+              ]
             },
             {
               "id": "power.keep-awake",
@@ -3564,11 +3497,11 @@
           "controls": [
             {
               "id": "power.wake-key",
-              "title": "Wake displays on key press (key_press_enables_dpms)",
+              "title": "Wake displays on key press",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
+              "availability": "available",
+              "reason": "When displays are off, pressing a key turns them on again.",
+              "value": true,
               "referencePath": [
                 "hypr-options",
                 "misc",
@@ -3577,311 +3510,18 @@
             },
             {
               "id": "power.wake-pointer",
-              "title": "Wake displays on pointer movement (mouse_move_enables_dpms)",
+              "title": "Wake displays on pointer movement",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
+              "availability": "available",
+              "reason": "When displays are off, moving the mouse or touchpad turns them on again.",
+              "value": true,
               "referencePath": [
                 "hypr-options",
                 "misc",
                 "mouse_move_enables_dpms"
               ]
-            },
-            {
-              "id": "power.idle-lock-cmd",
-              "title": "Idle: Lock screen command (lock_cmd)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "lock_cmd"
-              ]
-            },
-            {
-              "id": "power.idle-unlock-cmd",
-              "title": "Idle: Unlock command (unlock_cmd)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "unlock_cmd"
-              ]
-            },
-            {
-              "id": "power.idle-on-lock-cmd",
-              "title": "Idle: on lock cmd (on_lock_cmd)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "on_lock_cmd"
-              ]
-            },
-            {
-              "id": "power.idle-on-unlock-cmd",
-              "title": "Idle: on unlock cmd (on_unlock_cmd)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "on_unlock_cmd"
-              ]
-            },
-            {
-              "id": "power.idle-before-sleep-cmd",
-              "title": "Idle: Before sleep command (before_sleep_cmd)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "before_sleep_cmd"
-              ]
-            },
-            {
-              "id": "power.idle-after-sleep-cmd",
-              "title": "Idle: Post-wakeup command (after_sleep_cmd)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "after_sleep_cmd"
-              ]
-            },
-            {
-              "id": "power.idle-ignore-dbus-inhibit",
-              "title": "Idle: Ignore D-Bus idle inhibition (ignore_dbus_inhibit)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "ignore_dbus_inhibit"
-              ]
-            },
-            {
-              "id": "power.idle-ignore-systemd-inhibit",
-              "title": "Idle: Ignore systemd idle suppression (ignore_systemd_inhibit)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "ignore_systemd_inhibit"
-              ]
-            },
-            {
-              "id": "power.idle-ignore-wayland-inhibit",
-              "title": "Idle: Ignore Wayland idle inhibition (ignore_wayland_inhibit)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "ignore_wayland_inhibit"
-              ]
-            },
-            {
-              "id": "power.idle-inhibit-sleep",
-              "title": "Idle: Sleep waiting lock screen strategy (inhibit_sleep)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "2",
-              "referencePath": [
-                "hypr-idle",
-                "General",
-                "inhibit_sleep"
-              ]
-            },
-            {
-              "id": "power.idle-listener-timeout",
-              "title": "Idle listener: Timeout seconds (timeout)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "none, value must be specified",
-              "referencePath": [
-                "hypr-idle",
-                "Listeners",
-                "timeout"
-              ]
-            },
-            {
-              "id": "power.idle-listener-on-timeout",
-              "title": "Idle listener: Idle timeout action (on-timeout)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "Listeners",
-                "on-timeout"
-              ]
-            },
-            {
-              "id": "power.idle-listener-on-resume",
-              "title": "Idle listener: Resume activity action (on-resume)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "Listeners",
-                "on-resume"
-              ]
-            },
-            {
-              "id": "power.idle-listener-ignore-inhibit",
-              "title": "Idle listener: Ignore idle inhibition (ignore_inhibit)",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-idle",
-                "Listeners",
-                "ignore_inhibit"
-              ]
-            },
-            {
-              "id": "power.idle-listener-condition-cmd",
-              "title": "Idle listener: Idle trigger condition command (condition_cmd)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-idle",
-                "Listeners",
-                "condition_cmd"
-              ]
-            },
-            {
-              "id": "power.idle-listener-condition-retry",
-              "title": "Idle listener: Conditional retry interval (condition_retry)",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional component hypridle settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "0",
-              "referencePath": [
-                "hypr-idle",
-                "Listeners",
-                "condition_retry"
-              ]
-            },
-            {
-              "id": "power.session-logout",
-              "title": "Session power action: End graphics session",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-power-reference",
-                "logout"
-              ]
-            },
-            {
-              "id": "power.session-lock",
-              "title": "Session power action: Lock session",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-power-reference",
-                "lock"
-              ]
-            },
-            {
-              "id": "power.session-suspend",
-              "title": "Session power action: hang",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-power-reference",
-                "suspend"
-              ]
-            },
-            {
-              "id": "power.session-hibernate",
-              "title": "Session power action: Hibernate",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-power-reference",
-                "hibernate"
-              ]
-            },
-            {
-              "id": "power.session-reboot",
-              "title": "Session power action: Restart",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-power-reference",
-                "reboot"
-              ]
-            },
-            {
-              "id": "power.session-poweroff",
-              "title": "Session power action: Turn off the power",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-power-reference",
-                "poweroff"
-              ]
-            },
-            {
-              "id": "power.session-timeout",
-              "title": "Session power action: Wait for the application to exit",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional session exit component and system power service settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-power-reference",
-                "timeout"
-              ]
             }
-          ],
-          "description": "Planned compositor options from Hyprland configuration options, HyprViz page organization, hypridle idle management, Hyprland session exit."
+          ]
         }
       ],
       "children": [
@@ -6470,8 +6110,8 @@
       "title": "Background",
       "description": "Image or video desktop background",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Desktop backgrounds are implemented; the compositor background and blur options remain unimplemented previews.",
+      "availability": "available",
+      "reason": "Image and video backgrounds, window blur and the fallback color work through hyprpaper, mpvpaper and Hyprland.",
       "sources": [
         "uris",
         "hypr-paper",
@@ -6534,6 +6174,82 @@
           ]
         },
         {
+          "title": "Window blur",
+          "controls": [
+            {
+              "id": "background.blur-enabled",
+              "title": "Blur behind windows",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Translucent windows, bars and menus show a blurred background.",
+              "value": true,
+              "referencePath": [
+                "hypr-options",
+                "decoration.blur",
+                "enabled"
+              ]
+            },
+            {
+              "id": "background.blur-variant",
+              "title": "Blur style",
+              "type": "choice",
+              "availability": "available",
+              "reason": "Animated styles such as Drops, Water, Aurora and Fluid jar use noticeably more GPU power.",
+              "value": "Standard",
+              "options": [
+                "Standard",
+                "Frost",
+                "Ripple",
+                "Drops",
+                "Water",
+                "Fluid jar",
+                "Prism",
+                "Heat shimmer",
+                "Acrylic",
+                "Aurora",
+                "Haze"
+              ],
+              "referencePath": [
+                "hypr-options",
+                "decoration.blur",
+                "variant"
+              ]
+            },
+            {
+              "id": "background.blur-size",
+              "title": "Blur radius",
+              "type": "slider",
+              "availability": "available",
+              "reason": "How far each pass spreads the background.",
+              "value": 8,
+              "min": 1,
+              "max": 30,
+              "unit": " px",
+              "referencePath": [
+                "hypr-options",
+                "decoration.blur",
+                "size"
+              ]
+            },
+            {
+              "id": "background.blur-passes",
+              "title": "Blur passes",
+              "type": "slider",
+              "availability": "available",
+              "reason": "More passes give a smoother blur and cost more GPU time.",
+              "value": 1,
+              "min": 1,
+              "max": 6,
+              "unit": "",
+              "referencePath": [
+                "hypr-options",
+                "decoration.blur",
+                "passes"
+              ]
+            }
+          ]
+        },
+        {
           "title": "Advanced",
           "collapsed": true,
           "controls": [
@@ -6581,85 +6297,14 @@
               "unit": ""
             },
             {
-              "id": "background.blur-enabled",
-              "title": "enabled",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur",
-                "enabled"
-              ]
-            },
-            {
-              "id": "background.blur-brightness",
-              "title": "Brightness adjustment",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.0,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur",
-                "brightness"
-              ]
-            },
-            {
-              "id": "background.blur-contrast",
-              "title": "Contrast",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.8916,
-              "min": 0.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur",
-                "contrast"
-              ]
-            },
-            {
-              "id": "background.blur-ignore-opacity",
-              "title": "Ignore window transparency",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur",
-                "ignore_opacity"
-              ]
-            },
-            {
-              "id": "background.blur-new-optimizations",
-              "title": "Fuzzy performance optimization",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": true,
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur",
-                "new_optimizations"
-              ]
-            },
-            {
               "id": "background.blur-noise",
-              "title": "Noise intensity",
+              "title": "Noise",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "availability": "available",
+              "reason": "Grain added to the blur to hide color banding.",
               "value": 0.0117,
-              "min": 0.0,
-              "max": 1.0,
+              "min": 0,
+              "max": 0.2,
               "unit": "",
               "referencePath": [
                 "hypr-options",
@@ -6668,85 +6313,46 @@
               ]
             },
             {
-              "id": "background.blur-passes",
-              "title": "Number of fuzzy iterations",
+              "id": "background.blur-contrast",
+              "title": "Contrast",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 1.0,
-              "min": 0.0,
-              "max": 10.0,
+              "availability": "available",
+              "reason": "Contrast of the blurred background.",
+              "value": 0.8916,
+              "min": 0,
+              "max": 2,
               "unit": "",
               "referencePath": [
                 "hypr-options",
                 "decoration.blur",
-                "passes"
+                "contrast"
               ]
             },
             {
-              "id": "background.blur-popups",
-              "title": "Blurred pop-ups",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur",
-                "popups"
-              ]
-            },
-            {
-              "id": "background.blur-popups-ignorealpha",
-              "title": "Pop-up window transparency threshold",
+              "id": "background.blur-brightness",
+              "title": "Brightness",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.2,
-              "min": 0.0,
-              "max": 1.0,
+              "availability": "available",
+              "reason": "Brightness of the blurred background.",
+              "value": 0.8172,
+              "min": 0,
+              "max": 2,
               "unit": "",
               "referencePath": [
                 "hypr-options",
                 "decoration.blur",
-                "popups_ignorealpha"
-              ]
-            },
-            {
-              "id": "background.blur-size",
-              "title": "Window or control size",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "8",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur",
-                "size"
-              ]
-            },
-            {
-              "id": "background.blur-special",
-              "title": "Special workspace is blurred",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur",
-                "special"
+                "brightness"
               ]
             },
             {
               "id": "background.blur-vibrancy",
-              "title": "Blur color saturation improvement",
+              "title": "Vibrancy",
               "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "availability": "available",
+              "reason": "Extra saturation for the colors seen through the blur.",
               "value": 0.1696,
-              "min": 0.0,
-              "max": 1.0,
+              "min": 0,
+              "max": 1,
               "unit": "",
               "referencePath": [
                 "hypr-options",
@@ -6755,27 +6361,11 @@
               ]
             },
             {
-              "id": "background.blur-vibrancy-darkness",
-              "title": "Effect of dark area saturation",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": 0.0,
-              "min": 0.0,
-              "max": 1.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "decoration.blur",
-                "vibrancy_darkness"
-              ]
-            },
-            {
               "id": "background.blur-xray",
-              "title": "Penetration effect",
+              "title": "Floating windows blur only the background",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "availability": "available",
+              "reason": "Floating windows ignore the tiled windows beneath them and blur the desktop background instead.",
               "value": false,
               "referencePath": [
                 "hypr-options",
@@ -6784,12 +6374,38 @@
               ]
             },
             {
-              "id": "background.compositor-background-color",
-              "title": "background color",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "0x111111",
+              "id": "background.blur-popups",
+              "title": "Blur menus",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Also blur right-click menus and other pop-ups.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "decoration.blur",
+                "popups"
+              ]
+            },
+            {
+              "id": "background.blur-special",
+              "title": "Blur behind special workspaces",
+              "type": "toggle",
+              "availability": "available",
+              "reason": "Blur the workspace behind a shown special workspace. This costs extra GPU time.",
+              "value": false,
+              "referencePath": [
+                "hypr-options",
+                "decoration.blur",
+                "special"
+              ]
+            },
+            {
+              "id": "background.fallback-color",
+              "title": "Fallback color",
+              "type": "color",
+              "availability": "available",
+              "reason": "Shown when no background image or video covers a display, for example while it starts.",
+              "value": "#111111",
               "referencePath": [
                 "hypr-options",
                 "misc",
@@ -6797,71 +6413,16 @@
               ]
             },
             {
-              "id": "background.compositor-disable-hyprland-logo",
-              "title": "disable hyprland logo",
+              "id": "background.hide-logo",
+              "title": "Hide Hyprland logo",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
+              "availability": "available",
+              "reason": "Hide the logo Hyprland draws when no background is shown.",
               "value": false,
               "referencePath": [
                 "hypr-options",
                 "misc",
                 "disable_hyprland_logo"
-              ]
-            },
-            {
-              "id": "background.compositor-disable-splash-rendering",
-              "title": "disable splash rendering",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-options",
-                "misc",
-                "disable_splash_rendering"
-              ]
-            },
-            {
-              "id": "background.compositor-force-default-wallpaper",
-              "title": "force default wallpaper",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": -1.0,
-              "min": -1.0,
-              "max": 2.0,
-              "unit": "",
-              "referencePath": [
-                "hypr-options",
-                "misc",
-                "force_default_wallpaper"
-              ]
-            },
-            {
-              "id": "background.compositor-splash-font-family",
-              "title": "splash font family",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-options",
-                "misc",
-                "splash_font_family"
-              ]
-            },
-            {
-              "id": "background.compositor-splash-color",
-              "title": "Display welcome banner",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "#ffffff",
-              "referencePath": [
-                "hypr-options",
-                "misc.col",
-                "splash"
               ]
             }
           ]

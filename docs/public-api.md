@@ -44,7 +44,7 @@ No command evaluates shell input. IDs are stable catalog IDs, not translated lab
 | `get date-time` | `Get(s key)` with `date-time` | Actual clock, local time, NTP status, time zone, saved zone, and conflict |
 | `get timezones` | `Get(s key)` with `timezones` | Finite system time zone options |
 | `get configuration` | `Get(s key)` with `configuration` | Saved/system values, conflicts, and detection errors |
-| `resolve <appearance / date-time / display / night-light / hostname / background / default-apps / startup / network / input> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
+| `resolve <appearance / date-time / display / night-light / hostname / background / default-apps / startup / network / input / desktop> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
 | `resolve display <keep / revert>` | `Resolve(ss feature, source)` | Confirm or undo a pending display change |
 | `get background` | `Get(s key)` with `background` | Saved and system background, displays, warnings, previews, conflict, write blocker, error |
 | `get accent` | `Get(s key)` with `accent` | Accent source, `#RRGGBB` seed, sampled file, sampling error |
@@ -1199,6 +1199,28 @@ function, media or Print key. Writes return the full `input` state and emit
 `Changed("input", state)`. During conflicts writes fail;
 `Resolve input system|settings` adopts the live values or reapplies the saved ones
 with readback. See [Input devices and shortcuts](input.md).
+
+## Window blur, fallback background and display wake
+
+`Get desktop` returns the same shape as `Get input` without shortcut fields:
+`options`, `system`, `saved`, `conflict`, `conflicts`, `write_blocked` and
+`error`. Values are persisted in the Settings-owned
+`hypr/remya-settings/desktop.lua`, required by its own managed block, and in
+`desktop.toml`; the file accepts no shortcuts. `Get <id>` returns
+`{id, availability, reason, value, error}`. Writes apply live through
+`hyprctl eval`, read back, return the full state and emit
+`Changed("desktop", state)`. `Resolve desktop system|settings` reconciles.
+
+| Set ID | Value |
+| --- | --- |
+| `background.blur-enabled`, `background.blur-xray`, `background.blur-popups`, `background.blur-special` | boolean |
+| `background.blur-variant` | 0 to 10 (`decoration:blur:variant`; 0 is the standard Kawase blur) |
+| `background.blur-size` | 1 to 100; `background.blur-passes`: 1 to 10 |
+| `background.blur-noise`, `background.blur-vibrancy` | number from 0 to 1 |
+| `background.blur-contrast`, `background.blur-brightness` | number from 0 to 2 |
+| `background.fallback-color` | `"#rrggbb"`, written as opaque `rgba(rrggbbff)` (`misc:background_color`) |
+| `background.hide-logo` | boolean (`misc:disable_hyprland_logo`) |
+| `power.wake-key`, `power.wake-pointer` | boolean (`misc:key_press_enables_dpms`, `misc:mouse_move_enables_dpms`) |
 
 ## Storage
 

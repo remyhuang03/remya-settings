@@ -17,7 +17,7 @@ struct World {
 struct Fake(Arc<Mutex<World>>);
 
 fn option_from_line(line: &str) -> Option<(&'static config::Opt, Value)> {
-    OPTIONS.iter().find_map(|opt| {
+    INPUT.options.iter().find_map(|opt| {
         let empty = config::option_line(opt, &Value::Null);
         let (prefix, suffix) = empty.split_once("null")?;
         let inner = line.strip_prefix(prefix)?.strip_suffix(suffix)?;
@@ -29,7 +29,8 @@ impl World {
     fn reload(&mut self) {
         self.reloads += 1;
         self.binds = self.base_binds.clone();
-        let file = config::parse(&fs::read_to_string(&self.file).unwrap_or_default()).unwrap();
+        let file =
+            config::parse(&INPUT, &fs::read_to_string(&self.file).unwrap_or_default()).unwrap();
         for (id, value) in file.options {
             let opt = config::option(&id).unwrap();
             self.options.insert(opt.name, value);
@@ -51,7 +52,7 @@ impl Hypr for Fake {
         let mut w = self.0.lock().unwrap();
         Ok(match args {
             ["-j", "descriptions"] => {
-                let mut all: Vec<Value> = OPTIONS
+                let mut all: Vec<Value> = INPUT.options
                     .iter()
                     .map(|o| json!({"name": o.name, "current": w.options.get(o.name).cloned().unwrap_or(match o.kind {
                         config::Kind::Bool => json!(false),
@@ -117,7 +118,12 @@ fn setup() -> Setup {
         w.base_binds = vec![(64, "Q".into()), (64, "J".into())];
         w.binds = w.base_binds.clone();
     }
-    let input = Input::new(world.clone(), hypr.clone(), dir.path().join("input.toml"));
+    let input = Input::new(
+        &INPUT,
+        world.clone(),
+        hypr.clone(),
+        dir.path().join("input.toml"),
+    );
     Setup {
         _dir: dir,
         hypr,
@@ -154,7 +160,7 @@ fn option_changes_apply_live_persist_and_survive_reload() {
     assert!(
         fs::read_to_string(s.hypr.join("hyprland.lua"))
             .unwrap()
-            .ends_with(config::BLOCK)
+            .ends_with(&INPUT.block())
     );
     s.world
         .0

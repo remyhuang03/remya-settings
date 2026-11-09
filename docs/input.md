@@ -8,8 +8,10 @@ them as a Hyprland feature.
 
 ## Values and persistence
 
-Each option in `config::OPTIONS` maps a catalog ID to a Hyprland option name
-and type. Live values come from one `hyprctl -j descriptions` call. Hyprland's
+Each option in `config::INPUT_OPTIONS` maps a catalog ID to a Hyprland option name
+and type. The same engine serves a second group, `config::DESKTOP`, whose window
+blur, fallback background and display wake options live in their own
+`remya-settings/desktop.lua` and `desktop.toml` and never contain shortcuts. Live values come from one `hyprctl -j descriptions` call. Hyprland's
 own range checks are repeated in Rust; the GUI offers narrower slider ranges.
 
 A change is applied in four steps:

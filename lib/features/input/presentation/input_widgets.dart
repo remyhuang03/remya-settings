@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_content.dart';
 import '../../settings/presentation/settings_widgets.dart';
-import '../application/input_controller.dart';
+import '../application/hypr_options_controller.dart';
 
 /// Service values for each catalog option, in the catalog's option order.
 const choiceValues = <String, List<Object>>{
@@ -17,6 +17,7 @@ const choiceValues = <String, List<Object>>{
   'touchpad.click-method': [false, true],
   'touchpad.three-finger-drag': [0, 1, 2],
   'keyboard-shortcuts.workspace-back-and-forth': [0, 1, 2],
+  'background.blur-variant': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 };
 
 /// Slider range, step and readout; the service accepts the wider Hyprland range.
@@ -71,7 +72,25 @@ final sliderShapes = <String, SliderShape>{
     step: 50,
     text: (v) => '${v.round()} ms',
   ),
+  'background.blur-size': (
+    min: 1,
+    max: 30,
+    step: 1,
+    text: (v) => '${v.round()} px',
+  ),
+  'background.blur-passes': (
+    min: 1,
+    max: 6,
+    step: 1,
+    text: (v) => '${v.round()}',
+  ),
+  'background.blur-noise': (min: 0, max: 0.2, step: 0.005, text: _decimal),
+  'background.blur-contrast': (min: 0, max: 2, step: 0.05, text: _decimal),
+  'background.blur-brightness': (min: 0, max: 2, step: 0.05, text: _decimal),
+  'background.blur-vibrancy': (min: 0, max: 1, step: 0.05, text: _decimal),
 };
+
+String _decimal(double v) => v.toStringAsFixed(2);
 
 /// Readable text of a stored value, for rows and the conflict summary.
 String describeValue(SettingSpec setting, Object? value) {
@@ -95,7 +114,7 @@ String describeValue(SettingSpec setting, Object? value) {
 class InputRows {
   InputRows(this.context, this.controller, this.dragging, this.onDrag);
   final BuildContext context;
-  final InputController controller;
+  final HyprOptionsController controller;
 
   /// Slider positions while a thumb is held; only the release writes, since each
   /// write rewrites the Hyprland file and reloads the compositor.
@@ -235,7 +254,7 @@ class InputPageFrame extends StatelessWidget {
   });
   final SettingsCatalog catalog;
   final SettingsPageSpec page;
-  final InputController controller;
+  final HyprOptionsController controller;
   final Widget hero;
   final Widget Function(SettingSpec) controlBuilder;
   final bool Function(SettingSpec)? isVisible;
@@ -258,7 +277,10 @@ class InputPageFrame extends StatelessWidget {
         if (controller.writeBlocked case final reason?)
           SettingsErrorCard(message: reason, onRetry: controller.reload),
         if (controller.hasConflict)
-          InputConflictCard(catalog: catalog, controller: controller),
+          InputConflictCard(
+            controls: catalog.pages.expand((p) => p.controls),
+            controller: controller,
+          ),
         hero,
         for (final section in page.sections)
           SettingsSectionCard(
@@ -273,15 +295,17 @@ class InputPageFrame extends StatelessWidget {
   );
 }
 
-/// Saved and system values of every differing input setting, with both resolutions.
+/// Saved and system values of every differing option, with both resolutions.
 class InputConflictCard extends StatelessWidget {
   const InputConflictCard({
     super.key,
-    required this.catalog,
+    required this.controls,
     required this.controller,
+    this.title = 'Input settings differ from saved Settings',
   });
-  final SettingsCatalog catalog;
-  final InputController controller;
+  final Iterable<SettingSpec> controls;
+  final HyprOptionsController controller;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -290,9 +314,7 @@ class InputConflictCard extends StatelessWidget {
     final ids = (controller.state['conflicts'] as List? ?? []).cast<String>();
     final system = controller.state['system'] as Map? ?? {};
     final saved = controller.state['saved'] as Map? ?? {};
-    final specs = {
-      for (final c in catalog.pages.expand((p) => p.controls)) c.id: c,
-    };
+    final specs = {for (final c in controls) c.id: c};
     final lines = [
       for (final id in ids)
         if (id == 'keyboard-shortcuts')
@@ -316,10 +338,7 @@ class InputConflictCard extends StatelessWidget {
                 Expanded(
                   child: Semantics(
                     liveRegion: true,
-                    child: Text(
-                      'Input settings differ from saved Settings',
-                      style: text.titleSmall,
-                    ),
+                    child: Text(title, style: text.titleSmall),
                   ),
                 ),
               ],

@@ -2,8 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_settings_client/settings_contract.dart';
 
+import '../../input/application/hypr_options_controller.dart';
+import '../../input/presentation/input_widgets.dart';
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_widgets.dart';
 import '../application/background_controller.dart';
@@ -39,12 +43,18 @@ Future<String?> _pickWithDialog(bool video) async =>
 class BackgroundPage extends StatefulWidget {
   const BackgroundPage({
     super.key,
+    required this.catalog,
     required this.page,
     required this.controller,
+    this.client,
     this.pickFile = _pickWithDialog,
   });
+  final SettingsCatalog catalog;
   final SettingsPageSpec page;
   final BackgroundController controller;
+
+  /// Window blur and the fallback background come from the `desktop` options.
+  final SettingsClient? client;
   final BackgroundFilePicker pickFile;
 
   @override
@@ -53,8 +63,18 @@ class BackgroundPage extends StatefulWidget {
 
 class _BackgroundPageState extends State<BackgroundPage> {
   Set<String> _selection = const {};
+  late final _desktop = widget.client == null
+      ? null
+      : (HyprOptionsController(widget.client!, feature: 'desktop')..reload());
+  final _dragging = <String, double>{};
 
   BackgroundController get _controller => widget.controller;
+
+  @override
+  void dispose() {
+    _desktop?.dispose();
+    super.dispose();
+  }
 
   Set<String> get _displays => _controller.validDisplaySelection(_selection);
 
@@ -95,7 +115,7 @@ class _BackgroundPageState extends State<BackgroundPage> {
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: _controller,
+    listenable: Listenable.merge([_controller, ?_desktop]),
     builder: (context, _) => Column(
       crossAxisAlignment: .stretch,
       children: [
@@ -114,18 +134,106 @@ class _BackgroundPageState extends State<BackgroundPage> {
               );
             }),
           ),
-        Padding(
-          padding: const .only(top: 28, bottom: 12),
-          child: Text(
-            widget.page.sections.first.title,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ),
+        _heading(widget.page.sections.first.title),
         SettingsSurface(padding: .zero, child: _main()),
+        if (_desktop case final desktop?) ..._blur(desktop),
         _advanced(),
       ],
     ),
   );
+
+  Widget _heading(String title) => Padding(
+    padding: const .only(top: 28, bottom: 12),
+    child: Text(title, style: Theme.of(context).textTheme.titleMedium),
+  );
+
+  InputRows _rows(HyprOptionsController desktop) => InputRows(
+    context,
+    desktop,
+    _dragging,
+    (id, value) => setState(
+      () => value == null ? _dragging.remove(id) : _dragging[id] = value,
+    ),
+  );
+
+  bool get _blurOn => _desktop?.option('background.blur-enabled') == true;
+
+  List<Widget> _blur(HyprOptionsController desktop) {
+    final section = widget.page.sections[1];
+    final rows = _rows(desktop);
+    return [
+      _heading(section.title),
+      if (desktop.errorMessage case final error?)
+        SettingsErrorCard(message: error, onRetry: desktop.reload),
+      if (desktop.writeBlocked case final reason?)
+        SettingsErrorCard(message: reason, onRetry: desktop.reload),
+      if (desktop.hasConflict)
+        InputConflictCard(
+          controls: widget.catalog.pages.expand((p) => p.controls),
+          controller: desktop,
+          title: 'Blur, background and display wake differ from saved Settings',
+        ),
+      if (!desktop.isLoaded)
+        const Padding(
+          padding: .all(32),
+          child: Center(child: CircularProgressIndicator()),
+        )
+      else
+        SettingsSurface(
+          padding: .zero,
+          child: Column(
+            children: [
+              for (final setting in section.controls)
+                if (setting.id == 'background.blur-enabled' || _blurOn)
+                  rows.build(
+                    setting,
+                    subtitle: setting.id == 'background.blur-variant'
+                        ? setting.reason
+                        : null,
+                  ),
+            ],
+          ),
+        ),
+    ];
+  }
+
+  /// Fine blur tuning while blur is on, and what shows when no background does.
+  List<Widget> _desktopAdvancedRows() {
+    final desktop = _desktop;
+    if (desktop == null || !desktop.isLoaded) return const [];
+    final rows = _rows(desktop);
+    final controls = widget.page.controls;
+    Widget subheading(String title) => Padding(
+      padding: const .fromLTRB(20, 24, 20, 4),
+      child: Text(title, style: Theme.of(context).textTheme.titleMedium),
+    );
+    return [
+      if (_blurOn) ...[
+        subheading('Window blur'),
+        for (final setting in controls.where(
+          (s) =>
+              s.id.startsWith('background.blur-') &&
+              !widget.page.sections[1].controls.contains(s),
+        ))
+          rows.build(setting, subtitle: setting.reason),
+      ],
+      subheading('When no background is shown'),
+      _Row(
+        setting: _setting('background.fallback-color'),
+        control: _ColorButton(
+          color: desktop.option('background.fallback-color') as String?,
+          title: _setting('background.fallback-color').title,
+          onChanged: desktop.canChange
+              ? (hex) => desktop.set('background.fallback-color', hex)
+              : null,
+        ),
+      ),
+      rows.build(
+        _setting('background.hide-logo'),
+        subtitle: _setting('background.hide-logo').reason,
+      ),
+    ];
+  }
 
   Widget _main() {
     final enabled = _controller.canChange;
@@ -265,25 +373,7 @@ class _BackgroundPageState extends State<BackgroundPage> {
       key: const PageStorageKey('background-advanced-body'),
       child: Column(
         crossAxisAlignment: .stretch,
-        children: [
-          ..._advancedRows(),
-          for (final (title, prefix) in const [
-            ('Compositor background', 'background.compositor-'),
-            ('Compositor blur', 'background.blur-'),
-          ]) ...[
-            Padding(
-              padding: const .fromLTRB(20, 24, 20, 12),
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-            for (final setting in widget.page.controls.where(
-              (s) => s.id.startsWith(prefix),
-            ))
-              SettingControlTile(setting),
-          ],
-        ],
+        children: [..._advancedRows(), ..._desktopAdvancedRows()],
       ),
     ),
   );
@@ -551,4 +641,59 @@ class _CommitSliderState extends State<_CommitSlider> {
       ),
     );
   }
+}
+
+/// The current color as a swatch; the picker applies only a confirmed choice.
+class _ColorButton extends StatelessWidget {
+  const _ColorButton({
+    required this.color,
+    required this.title,
+    required this.onChanged,
+  });
+  final String? color;
+  final String title;
+  final ValueChanged<String>? onChanged;
+
+  static Color? _parse(String? hex) => hex == null || hex.length != 7
+      ? null
+      : Color(int.parse(hex.substring(1), radix: 16) | 0xff000000);
+
+  static String _hex(Color color) =>
+      '#${(color.toARGB32() & 0xffffff).toRadixString(16).padLeft(6, '0')}';
+
+  Future<void> _pick(BuildContext context) async {
+    var picked = _parse(color) ?? Colors.black;
+    final confirmed = await ColorPicker(
+      color: picked,
+      onColorChanged: (next) => picked = next,
+      pickersEnabled: const {
+        ColorPickerType.primary: true,
+        ColorPickerType.accent: false,
+        ColorPickerType.wheel: true,
+      },
+      enableShadesSelection: true,
+      showColorCode: true,
+      colorCodeHasColor: true,
+      heading: Text(title, style: Theme.of(context).textTheme.titleMedium),
+      subheading: const Text('Shades'),
+      wheelSubheading: const Text('Shades'),
+    ).showPickerDialog(context);
+    if (confirmed) onChanged?.call(_hex(picked));
+  }
+
+  @override
+  Widget build(BuildContext context) => FilledButton.icon(
+    key: const ValueKey('background-fallback-color'),
+    onPressed: onChanged == null ? null : () => _pick(context),
+    icon: Container(
+      width: 20,
+      height: 20,
+      decoration: BoxDecoration(
+        color: _parse(color),
+        shape: .circle,
+        border: .all(color: Theme.of(context).colorScheme.outline),
+      ),
+    ),
+    label: Text(color ?? 'Unknown'),
+  );
 }

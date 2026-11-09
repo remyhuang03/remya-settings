@@ -1,12 +1,15 @@
-//! Mouse, touchpad and keyboard shortcut settings on Hyprland.
+//! Settings-owned Hyprland options: mouse, touchpad and keyboard shortcuts (`input`)
+//! and window blur, fallback background and display wake (`desktop`).
 //!
 //! Option values are live compositor state read through `hyprctl descriptions`.
-//! Settings persists its changes in `hypr/remya-settings/input.lua`, required at the
-//! end of `hyprland.lua`, and keeps its own copy in `input.toml` for reconciliation.
+//! Settings persists each group's changes in `hypr/remya-settings/<group>.lua`,
+//! required at the end of `hyprland.lua`, and keeps its own copy in `<group>.toml`
+//! for reconciliation.
 pub mod config;
 pub mod keys;
 
-use config::{File, OPTIONS, Shortcut};
+pub use config::{DESKTOP, INPUT};
+use config::{File, Group, Shortcut};
 use keys::{Keys, Layout};
 use remya_settings_display::{Hyprctl, atomic_write, run_bytes};
 use serde::{Deserialize, Serialize};
@@ -28,7 +31,11 @@ pub const LOOKUP: &str = "keyboard-shortcuts.lookup:";
 const RECORD_SUBMAP: &str = "remya-settings-record";
 
 pub fn is_setting(id: &str) -> bool {
-    config::option(id).is_some() || [ADD, REMOVE, DISABLE, RECORD, LIST].contains(&id)
+    INPUT.option(id).is_some() || [ADD, REMOVE, DISABLE, RECORD, LIST].contains(&id)
+}
+
+pub fn is_desktop_setting(id: &str) -> bool {
+    DESKTOP.option(id).is_some()
 }
 
 fn invalid(message: impl std::fmt::Display) -> String {
@@ -84,6 +91,7 @@ struct Observed {
 }
 
 pub struct Input<H> {
+    group: &'static Group,
     hypr: H,
     hypr_dir: PathBuf,
     saved_path: PathBuf,
@@ -161,8 +169,9 @@ fn action_label(dispatcher: &str) -> String {
 }
 
 impl<H: Hypr> Input<H> {
-    pub fn new(hypr: H, hypr_dir: PathBuf, saved_path: PathBuf) -> Self {
+    pub fn new(group: &'static Group, hypr: H, hypr_dir: PathBuf, saved_path: PathBuf) -> Self {
         Self {
+            group,
             hypr,
             hypr_dir,
             saved_path,
@@ -175,7 +184,8 @@ impl<H: Hypr> Input<H> {
     }
 
     fn file_path(&self) -> PathBuf {
-        self.hypr_dir.join("remya-settings/input.lua")
+        self.hypr_dir
+            .join(format!("remya-settings/{}.lua", self.group.name))
     }
 
     fn main_path(&self) -> PathBuf {
@@ -184,7 +194,7 @@ impl<H: Hypr> Input<H> {
 
     fn read_file(&self) -> Result<File, String> {
         match fs::read_to_string(self.file_path()) {
-            Ok(text) => config::parse(&text),
+            Ok(text) => config::parse(self.group, &text),
             Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(File::default()),
             Err(e) => Err(format!("{}: {e}", self.file_path().display())),
         }
@@ -199,7 +209,7 @@ impl<H: Hypr> Input<H> {
                 .map(|d| d["current"].clone())
         };
         let mut options = BTreeMap::new();
-        for opt in OPTIONS {
+        for opt in self.group.options {
             let value = current(opt.name)
                 .ok_or_else(|| format!("Hyprland does not report {}", opt.name))?;
             options.insert(opt.id.to_owned(), opt.observed(&value));
@@ -213,18 +223,21 @@ impl<H: Hypr> Input<H> {
         let (options, autoreload) = self.read_options()?;
         self.observed.options = options;
         self.observed.autoreload = autoreload;
-        self.observed.binds = self
-            .hypr
-            .json("binds")?
-            .as_array()
-            .cloned()
-            .unwrap_or_default();
-        self.observed.devices = self.hypr.json("devices")?;
-        self.observed.layout = layout(&self.observed.devices);
+        if self.group.shortcuts {
+            self.observed.binds = self
+                .hypr
+                .json("binds")?
+                .as_array()
+                .cloned()
+                .unwrap_or_default();
+            self.observed.devices = self.hypr.json("devices")?;
+            self.observed.layout = layout(&self.observed.devices);
+        }
         if !self.main_path().exists() {
-            self.write_blocked = Some(
-                "Settings saves input settings only in a Lua hyprland.lua configuration".into(),
-            );
+            self.write_blocked = Some(format!(
+                "Settings saves {} settings only in a Lua hyprland.lua configuration",
+                self.group.name
+            ));
         }
         self.observed.file = match self.read_file() {
             Ok(file) => Some(file),
@@ -276,7 +289,9 @@ impl<H: Hypr> Input<H> {
         let (Some(saved), Some(file)) = (&self.saved, &self.observed.file) else {
             return vec![];
         };
-        let mut ids: Vec<String> = OPTIONS
+        let mut ids: Vec<String> = self
+            .group
+            .options
             .iter()
             .filter(
                 |o| match (saved.options.get(o.id), self.observed.options.get(o.id)) {
@@ -406,7 +421,7 @@ impl<H: Hypr> Input<H> {
     }
 
     pub fn setting_value(&self, id: &str) -> Value {
-        match config::option(id) {
+        match self.group.option(id) {
             Some(_) => self.state()["options"][id].clone(),
             None => self.state(),
         }
@@ -418,12 +433,15 @@ impl<H: Hypr> Input<H> {
             return Err(reason.clone());
         }
         if !self.conflicts().is_empty() {
-            return Err("Resolve the input settings conflict first".into());
+            return Err(format!(
+                "Resolve the {} settings conflict first",
+                self.group.name
+            ));
         }
         let saved = self
             .saved
             .clone()
-            .ok_or("Input settings are not initialized")?;
+            .ok_or(format!("{} settings are not initialized", self.group.name))?;
         Ok((saved, self.observed.file.clone().unwrap_or_default()))
     }
 
@@ -434,7 +452,10 @@ impl<H: Hypr> Input<H> {
                 return Ok(value);
             }
             if started.elapsed() > Duration::from_secs(3) {
-                return Err("Hyprland did not load the changed input configuration".into());
+                return Err(format!(
+                    "Hyprland did not load the changed {} configuration",
+                    self.group.name
+                ));
             }
             thread::sleep(Duration::from_millis(50));
         }
@@ -463,7 +484,9 @@ impl<H: Hypr> Input<H> {
     /// Persists `next`, applying option changes live first so Hyprland validates them.
     fn write(&mut self, next: Saved, mut owned: File) -> Result<(), String> {
         let live = self.observed.options.clone();
-        let changed: Vec<_> = OPTIONS
+        let changed: Vec<_> = self
+            .group
+            .options
             .iter()
             .filter(|o| match (next.options.get(o.id), live.get(o.id)) {
                 (Some(a), Some(b)) => !same(a, b),
@@ -504,10 +527,10 @@ impl<H: Hypr> Input<H> {
     fn write_files(&self, owned: &File, binds_changed: bool, next: &Saved) -> Result<(), String> {
         let main = fs::read_to_string(self.main_path())
             .map_err(|e| format!("{}: {e}", self.main_path().display()))?;
-        let block = config::with_block(&main)?;
-        let text = config::render(owned);
-        if config::parse(&text).as_ref() != Ok(owned) {
-            return Err("Refusing to write input settings that do not read back".into());
+        let block = config::with_block(self.group, &main)?;
+        let text = config::render(self.group, owned);
+        if config::parse(self.group, &text).as_ref() != Ok(owned) {
+            return Err("Refusing to write settings that do not read back".into());
         }
         let path = self.file_path();
         let before = fs::read(&path).ok();
@@ -653,6 +676,9 @@ impl<H: Hypr> Input<H> {
         }
         let (mut next, owned) = self.current()?;
         match id {
+            _ if !self.group.shortcuts && self.group.option(id).is_none() => {
+                return Err(invalid("Unknown setting"));
+            }
             ADD => {
                 let (shortcut, replace) = self.validate_shortcut(&value)?;
                 let previous = value["previous"].as_str().map(str::to_owned);
@@ -715,7 +741,10 @@ impl<H: Hypr> Input<H> {
                 }
             }
             _ => {
-                let opt = config::option(id).ok_or_else(|| invalid("Unknown setting"))?;
+                let opt = self
+                    .group
+                    .option(id)
+                    .ok_or_else(|| invalid("Unknown setting"))?;
                 next.options.insert(id.into(), opt.validate(&value)?);
             }
         }

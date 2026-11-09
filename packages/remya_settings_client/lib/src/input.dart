@@ -7,13 +7,19 @@ const removeShortcutId = 'keyboard-shortcuts.remove';
 const disableShortcutId = 'keyboard-shortcuts.disable';
 const recordShortcutId = 'keyboard-shortcuts.record';
 
-/// Mouse, touchpad and keyboard shortcut settings on Hyprland.
+/// Settings-owned Hyprland options: `input` (mouse, touchpad and keyboard
+/// shortcuts) and `desktop` (window blur, fallback background and display wake).
 extension InputClient on SettingsClient {
-  Future<Map<String, dynamic>> readInput() => call('Get', ['input']);
+  Future<Map<String, dynamic>> readHyprOptions(String feature) =>
+      call('Get', [feature]);
+  Future<Map<String, dynamic>> resolveHyprOptions(
+    String feature,
+    String source,
+  ) => call('Resolve', [feature, source]);
+
+  /// Sets any `input` or `desktop` option; the service routes it by ID.
   Future<Map<String, dynamic>> setInput(String id, Object value) =>
       call('Set', [id, jsonEncode(value)]);
-  Future<Map<String, dynamic>> resolveInput(String source) =>
-      call('Resolve', ['input', source]);
 
   /// The canonical spelling of [keys] and the live shortcuts already using it.
   Future<Map<String, dynamic>> lookupShortcut(String keys) => call('Get', [

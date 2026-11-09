@@ -3,18 +3,23 @@ import 'dart:async';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
+import '../../input/application/hypr_options_controller.dart';
+import '../../input/presentation/input_widgets.dart';
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_widgets.dart';
 import '../../settings/presentation/settings_content.dart';
+import 'idle_timeline.dart';
 
 class PowerPage extends StatefulWidget {
   const PowerPage({
     super.key,
     required this.page,
+    required this.catalog,
     required this.client,
     required this.onPage,
   });
   final ValueChanged<String> onPage;
+  final SettingsCatalog catalog;
   final SettingsPageSpec page;
   final SettingsClient client;
   @override
@@ -34,6 +39,19 @@ class _PowerPageState extends State<PowerPage> {
   bool _reloadPending = false;
   Timer? _timer;
   StreamSubscription<SettingsChange>? _changes;
+
+  /// Display wake comes from the Settings-owned Hyprland `desktop` options.
+  late final _desktop = widget.page.id == 'power'
+      ? (HyprOptionsController(_client, feature: 'desktop')
+          ..addListener(_rebuild)
+          ..reload())
+      : null;
+  final _dragging = <String, double>{};
+
+  void _rebuild() {
+    if (mounted) setState(() {});
+  }
+
   Map get _system => _state['system'] as Map? ?? {};
   Map get _saved => _state['saved'] as Map? ?? {};
   int get _turnOnAt => _saved['threshold'] as int? ?? 0;
@@ -99,6 +117,7 @@ class _PowerPageState extends State<PowerPage> {
       _attempt(() => _client.setPower(id, value));
   @override
   void dispose() {
+    _desktop?.dispose();
     _timer?.cancel();
     unawaited(_changes?.cancel());
     super.dispose();
@@ -168,9 +187,25 @@ class _PowerPageState extends State<PowerPage> {
             _ => '$p',
           },
       }),
-      'power.5e3af39c' || 'power.8b4c8522' => _choice(
+      'power.wake-key' ||
+      'power.wake-pointer' when _desktop != null => InputRows(
+        context,
+        _desktop,
+        _dragging,
+        (_, _) {},
+      ).build(setting, subtitle: setting.reason),
+      'power.lock-before-sleep' => _toggle(
         setting,
-        timeouts[setting.id == 'power.5e3af39c' ? 'screen' : 'sleep'],
+        timeouts['lock_before_sleep'] == true,
+        description: setting.reason,
+      ),
+      'power.5e3af39c' || 'power.8b4c8522' || 'power.lock-after' => _choice(
+        setting,
+        timeouts[switch (setting.id) {
+          'power.5e3af39c' => 'screen',
+          'power.lock-after' => 'lock',
+          _ => 'sleep',
+        }],
         {
           0: 'Never',
           60: '1 minute',
@@ -242,8 +277,41 @@ class _PowerPageState extends State<PowerPage> {
     'battery-saver.power-source' => _turnOnAt > 0,
     energySaverOffThresholdId => _turnOnAt > 0 && _turnOnAt < 100,
     'battery-saver.07945503' => _system['has_backlight'] == true,
+    // `loginctl lock-session` does nothing until hypridle has a lock_cmd.
+    'power.lock-after' || 'power.lock-before-sleep' => _canLock,
+    'power.wake-key' || 'power.wake-pointer' => _desktop?.isLoaded == true,
     _ => true,
   };
+
+  bool get _canLock => _system['can_lock'] == true;
+
+  Widget _timeline(Map timeouts) {
+    final timeline = IdleTimeline(
+      screen: timeouts['screen'] as int? ?? 0,
+      lock: _canLock ? timeouts['lock'] as int? ?? 0 : 0,
+      sleep: timeouts['sleep'] as int? ?? 0,
+      lockBeforeSleep: _canLock && timeouts['lock_before_sleep'] == true,
+    );
+    final text = Theme.of(context).textTheme;
+    return Padding(
+      padding: const .only(bottom: 8),
+      child: SettingsSurface(
+        child: Column(
+          spacing: 8,
+          children: [
+            timeline,
+            Text(timeline.caption, textAlign: .center, style: text.bodyMedium),
+            if (!_canLock)
+              Text(
+                'Locking options appear once hypridle.conf sets lock_cmd in its general section.',
+                textAlign: .center,
+                style: text.bodySmall,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -275,6 +343,18 @@ class _PowerPageState extends State<PowerPage> {
             'Battery history: ${_state['history_error']}',
             style: Theme.of(context).textTheme.bodySmall,
           ),
+        if (_desktop case final desktop?) ...[
+          if (desktop.errorMessage case final error?)
+            SettingsErrorCard(message: error, onRetry: desktop.reload),
+          if (desktop.hasConflict)
+            InputConflictCard(
+              controls: widget.catalog.pages.expand((p) => p.controls),
+              controller: desktop,
+              title: 'Blur, background and display wake differ from saved Settings',
+            ),
+        ],
+        if (widget.page.id == 'power' && _system['timeouts'] is Map)
+          _timeline(timeouts),
         for (final section in widget.page.sections)
           SettingsSectionCard(
             section,
@@ -313,7 +393,9 @@ class _PowerConflict extends StatelessWidget {
     final timeouts = values['timeouts'] as Map? ?? {};
     return 'Power mode: ${values['profile'] ?? 'Unknown'}\n'
         'Turn off screen: ${_duration(timeouts['screen'])}\n'
-        'Sleep: ${_duration(timeouts['sleep'])}';
+        'Lock screen: ${_duration(timeouts['lock'])}\n'
+        'Sleep: ${_duration(timeouts['sleep'])}\n'
+        'Lock before sleep: ${timeouts['lock_before_sleep'] == true ? 'On' : 'Off'}';
   }
 
   @override

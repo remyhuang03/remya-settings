@@ -14,6 +14,8 @@ const BUS: &str = "org.freedesktop.UPower.PowerProfiles";
 const PATH: &str = "/org/freedesktop/UPower/PowerProfiles";
 const AUTO_ON_ID: &str = "battery-saver.9b0caf70";
 const AUTO_OFF_ID: &str = "battery-saver.off-threshold";
+const LOCK_ID: &str = "power.lock-after";
+const LOCK_SLEEP_ID: &str = "power.lock-before-sleep";
 const ON_THRESHOLDS: &[u32] = &[0, 10, 20, 30, 50, 100];
 const DEFAULT_ON_THRESHOLD: u32 = 20;
 const FOLLOW_ON_THRESHOLD: i32 = -1;
@@ -23,6 +25,8 @@ pub const IDS: &[&str] = &[
     "power.5a4f0131",
     "power.5e3af39c",
     "power.8b4c8522",
+    LOCK_ID,
+    LOCK_SLEEP_ID,
     "battery-saver.743773bd",
     AUTO_ON_ID,
     AUTO_OFF_ID,
@@ -290,9 +294,9 @@ impl Power {
     }
     fn read_system(&mut self) -> Result<(), String> {
         let (active, profiles, degraded) = profile()?;
-        let timeouts =
-            idle::read(&std::fs::read_to_string(&self.idle).map_err(|e| e.to_string())?)?;
-        self.system = json!({"profile":active,"profiles":profiles,"degraded":degraded,"timeouts":timeouts,"battery":battery().unwrap_or_else(|e|json!({"error":e})),"has_backlight":std::fs::read_dir("/sys/class/backlight").is_ok_and(|mut d|d.next().is_some())});
+        let text = std::fs::read_to_string(&self.idle).map_err(|e| e.to_string())?;
+        let timeouts = idle::read(&text)?;
+        self.system = json!({"profile":active,"profiles":profiles,"degraded":degraded,"timeouts":timeouts,"can_lock":idle::can_lock(&text),"battery":battery().unwrap_or_else(|e|json!({"error":e})),"has_backlight":std::fs::read_dir("/sys/class/backlight").is_ok_and(|mut d|d.next().is_some())});
         if self.invalid_config {
             return Err("Power configuration is unreadable; preserve it for repair".into());
         }
@@ -301,6 +305,7 @@ impl Power {
                 || !s.valid_thresholds()
                 || s.timeouts.screen > 86400
                 || s.timeouts.sleep > 86400
+                || s.timeouts.lock > 86400
             {
                 return Err("Invalid saved power configuration".into());
             }
@@ -352,6 +357,8 @@ impl Power {
             "power.5a4f0131" => state["system"]["profile"].clone(),
             "power.5e3af39c" => state["system"]["timeouts"]["screen"].clone(),
             "power.8b4c8522" => state["system"]["timeouts"]["sleep"].clone(),
+            LOCK_ID => state["system"]["timeouts"]["lock"].clone(),
+            LOCK_SLEEP_ID => state["system"]["timeouts"]["lock_before_sleep"].clone(),
             "battery-saver.743773bd" => json!(state["system"]["profile"] == "power-saver"),
             AUTO_ON_ID => state["saved"]["threshold"].clone(),
             AUTO_OFF_ID => state["saved"]["off_threshold"].clone(),
@@ -429,15 +436,19 @@ impl Power {
                 self.restore = None;
                 self.manual = true;
             }
-            "power.5e3af39c" | "power.8b4c8522" => {
+            LOCK_SLEEP_ID => {
+                s.timeouts.lock_before_sleep = v.as_bool().ok_or("Expected boolean")?;
+                idle::apply(&self.idle, &s.timeouts)?;
+            }
+            "power.5e3af39c" | "power.8b4c8522" | LOCK_ID => {
                 let seconds = v
                     .as_u64()
                     .filter(|v| *v <= 86400)
                     .ok_or("Expected seconds in 0..86400")? as u32;
-                if id == "power.5e3af39c" {
-                    s.timeouts.screen = seconds
-                } else {
-                    s.timeouts.sleep = seconds
+                match id {
+                    "power.5e3af39c" => s.timeouts.screen = seconds,
+                    LOCK_ID => s.timeouts.lock = seconds,
+                    _ => s.timeouts.sleep = seconds,
                 }
                 idle::apply(&self.idle, &s.timeouts)?;
             }
