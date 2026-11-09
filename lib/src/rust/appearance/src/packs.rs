@@ -44,7 +44,22 @@ pub const SIZES: std::ops::RangeInclusive<i32> = 8..=256;
 const CURSOR_MARKER: &str = "Remy'a Settings cursor";
 const ARCHIVE_LIMIT: u64 = 512 * 1024 * 1024;
 const EXTRACTED_LIMIT: u64 = 2 * 1024 * 1024 * 1024;
+const ARCHIVE_ENTRIES: usize = 200_000;
 const TIMEOUT: Duration = Duration::from_secs(120);
+
+/// Reads a regular file of at most `limit` bytes; links are followed, devices and
+/// FIFOs refused, so a theme cannot make the service read without end.
+fn read_small(path: &Path, limit: u64) -> Option<Vec<u8>> {
+    use std::io::Read;
+    let file = fs::File::open(path).ok()?;
+    let meta = file.metadata().ok()?;
+    if !meta.is_file() || meta.len() > limit {
+        return None;
+    }
+    let mut bytes = vec![];
+    file.take(limit).read_to_end(&mut bytes).ok()?;
+    Some(bytes)
+}
 
 fn invalid(message: impl std::fmt::Display) -> String {
     format!("InvalidArgument:{message}")
@@ -56,6 +71,8 @@ pub fn valid_name(name: &str) -> bool {
         && name.len() <= 255
         && !matches!(name, "." | "..")
         && !name.starts_with('.')
+        // A leading '-' would be read as an option by kwriteconfig6 and hyprctl.
+        && !name.starts_with('-')
         && !name
             .chars()
             .any(|c| c.is_control() || matches!(c, '/' | '"' | '\\' | '$' | '`'))
@@ -168,8 +185,9 @@ pub struct Pack {
 }
 
 fn index(dir: &Path) -> Option<glib::KeyFile> {
+    let bytes = read_small(&dir.join("index.theme"), 1024 * 1024)?;
     let file = glib::KeyFile::new();
-    file.load_from_file(dir.join("index.theme"), glib::KeyFileFlags::NONE)
+    file.load_from_bytes(&glib::Bytes::from_owned(bytes), glib::KeyFileFlags::NONE)
         .ok()?;
     Some(file)
 }
@@ -316,8 +334,7 @@ pub fn cursor_preview(roots: &Roots, theme: &str, size: u32) -> Result<Value, St
         let Some(file) = cursor_file(roots, theme, names, 0) else {
             continue;
         };
-        let Some(all) = fs::read(&file)
-            .ok()
+        let Some(all) = read_small(&file, 16 * 1024 * 1024)
             .and_then(|b| xcursor::parser::parse_xcursor(&b))
         else {
             continue;
@@ -349,10 +366,19 @@ pub fn cursor_preview(roots: &Roots, theme: &str, size: u32) -> Result<Value, St
     Ok(json!({"id": pack.id, "sizes": sizes, "images": images, "scalable": pack.scalable}))
 }
 
-fn tree_size(path: &Path) -> Result<u64, String> {
+/// Size of a pack folder. Links must be relative and stay inside `root`, as the
+/// links between cursor names do.
+fn tree_size(root: &Path, path: &Path) -> Result<u64, String> {
     let meta = fs::symlink_metadata(path).map_err(|e| format!("{}: {e}", path.display()))?;
     let kind = meta.file_type();
     if kind.is_symlink() {
+        let target = fs::read_link(path).map_err(|e| e.to_string())?;
+        if !link_stays_inside(root, path, &target) {
+            return Err(invalid(format!(
+                "{} links outside the theme",
+                path.display()
+            )));
+        }
         return Ok(0);
     }
     if kind.is_file() {
@@ -366,12 +392,52 @@ fn tree_size(path: &Path) -> Result<u64, String> {
     }
     let mut total = 0;
     for entry in fs::read_dir(path).map_err(|e| e.to_string())? {
-        total += tree_size(&entry.map_err(|e| e.to_string())?.path())?;
+        total += tree_size(root, &entry.map_err(|e| e.to_string())?.path())?;
         if total > EXTRACTED_LIMIT {
             return Err(invalid("The theme is larger than 2 GiB"));
         }
     }
     Ok(total)
+}
+
+fn link_stays_inside(root: &Path, link: &Path, target: &Path) -> bool {
+    use std::path::Component;
+    let Ok(base) = link.parent().unwrap_or(root).strip_prefix(root) else {
+        return false;
+    };
+    let mut depth = base.components().count();
+    for part in target.components() {
+        match part {
+            Component::Normal(_) => depth += 1,
+            Component::CurDir => {}
+            Component::ParentDir if depth > 0 => depth -= 1,
+            _ => return false,
+        }
+    }
+    true
+}
+
+/// Counts and sizes an archive's entries from `bsdtar -tv` before anything is unpacked.
+fn check_archive(from: &str) -> Result<(), String> {
+    let listing = run_bytes("bsdtar", &["-t", "-v", "-f", from], &[], TIMEOUT)
+        .map_err(|e| invalid(format!("The archive cannot be read: {e}")))?;
+    let mut total: u64 = 0;
+    for (count, line) in String::from_utf8_lossy(&listing).lines().enumerate() {
+        if count >= ARCHIVE_ENTRIES {
+            return Err(invalid("The archive has too many files"));
+        }
+        // Mode, links, owner, group, size, ...
+        let size = line
+            .split_whitespace()
+            .nth(4)
+            .and_then(|s| s.parse::<u64>().ok())
+            .ok_or_else(|| invalid("The archive cannot be read"))?;
+        total = total.saturating_add(size);
+        if total > EXTRACTED_LIMIT {
+            return Err(invalid("The theme is larger than 2 GiB"));
+        }
+    }
+    Ok(())
 }
 
 /// Copies a folder, keeping symbolic links as links (cursor themes rely on them).
@@ -433,7 +499,7 @@ pub fn install(roots: &Roots, source: &Path) -> Result<Vec<String>, String> {
         let name = source
             .file_name()
             .ok_or_else(|| invalid("Choose a theme folder"))?;
-        tree_size(source)?;
+        tree_size(source, source)?;
         copy_tree(source, &staging.path().join(name))?;
     } else {
         if meta.len() > ARCHIVE_LIMIT {
@@ -445,6 +511,7 @@ pub fn install(roots: &Roots, source: &Path) -> Result<Vec<String>, String> {
                 .ok_or_else(|| invalid("Unsupported file name"))?,
             staging.path().to_str().ok_or("Unsupported icon folder")?,
         );
+        check_archive(from)?;
         // bsdtar refuses absolute paths, `..` and writes through links unless told otherwise.
         run_bytes(
             "bsdtar",
@@ -462,7 +529,7 @@ pub fn install(roots: &Roots, source: &Path) -> Result<Vec<String>, String> {
         )
         .map_err(|e| invalid(format!("The archive cannot be unpacked: {e}")))?;
     }
-    tree_size(staging.path())?;
+    tree_size(staging.path(), staging.path())?;
     let mut folders = vec![];
     theme_folders(staging.path(), 0, &mut folders);
     let mut moves = vec![];
@@ -1332,6 +1399,29 @@ mod tests {
         remove(&r, "Two").unwrap();
         assert!(remove(&r, "Two").is_err());
         assert!(remove(&r, "../download").is_err());
+    }
+
+    #[test]
+    fn untrusted_packs_cannot_escape_or_make_reads_unbounded() {
+        let dir = tempfile::tempdir().unwrap();
+        let r = roots(dir.path());
+        let download = dir.path().join("download");
+        for (id, target) in [("Abs", "/etc/hostname"), ("Up", "../../../outside")] {
+            theme(&download, id, "[Icon Theme]\nName=x\n", true);
+            std::os::unix::fs::symlink(target, download.join(id).join("cursors/text")).unwrap();
+            assert!(
+                install(&r, &download.join(id))
+                    .unwrap_err()
+                    .contains("links outside the theme"),
+                "{id}"
+            );
+        }
+        // An index.theme that is a device is ignored instead of read forever.
+        fs::create_dir_all(download.join("Dev")).unwrap();
+        std::os::unix::fs::symlink("/dev/zero", download.join("Dev/index.theme")).unwrap();
+        let pack = inspect(&download.join("Dev"), "Dev");
+        assert!(!pack.icons && pack.name == "Dev");
+        assert!(!valid_name("-x") && !valid_name("--delete"));
     }
 
     #[test]

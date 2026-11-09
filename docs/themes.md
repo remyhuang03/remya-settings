@@ -76,12 +76,16 @@ difference as a conflict instead of changing that script.
 
 `Set cursor.install` or `Set themes.icon-install` with an absolute path to a
 folder or an archive installs every theme folder inside it (up to four levels
-deep) into `$XDG_DATA_HOME/icons`. Archives are unpacked by `bsdtar`, which
-refuses absolute paths, `..` and writes through links, into a staging folder in
-the same directory. Archives over 512 MiB, unpacked packs over 2 GiB, special
-files, invalid folder names, `default`, `hicolor` and names that already exist
-are refused; nothing is moved until every theme in the pack passes. Symbolic
-links, which cursor themes rely on, are kept.
+deep) into `$XDG_DATA_HOME/icons`. Archives are listed first and refused when
+they hold more than 200,000 entries or more than 2 GiB unpacked; `bsdtar` then
+unpacks them into a staging folder in the same directory, refusing absolute
+paths, `..` and writes through links. Archives over 512 MiB, special files,
+invalid folder names (including names starting with `-`), `default`, `hicolor`
+and names that already exist are refused; nothing is moved until every theme in
+the pack passes. Relative symbolic links inside the pack, which cursor themes
+rely on, are kept; links that are absolute or lead outside it are refused.
+`index.theme` and cursor files are read only when they are regular files of at
+most 1 MiB and 16 MiB.
 
 `Set cursor.remove` or `Set themes.icon-remove` with a folder name deletes that
 theme from the user icon folder. A selected theme cannot be removed, and themes
