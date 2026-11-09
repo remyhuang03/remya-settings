@@ -33,6 +33,9 @@ import '../../startup/presentation/startup_page.dart';
 import '../../input/presentation/keyboard_shortcuts_page.dart';
 import '../../input/presentation/mouse_page.dart';
 import '../../input/presentation/touchpad_page.dart';
+import '../../multitasking/presentation/multitasking_page.dart';
+import '../../themes/presentation/cursor_page.dart';
+import '../../themes/presentation/themes_page.dart';
 import '../../default_apps/presentation/default_apps_page.dart';
 
 import 'package:remya_settings_client/settings_contract.dart';
@@ -617,6 +620,26 @@ class _SettingsShellState extends State<SettingsShell> {
         catalog: catalog,
         page: page,
         client: client,
+      ),
+      'multitasking' => MultitaskingPage(
+        key: key,
+        catalog: catalog,
+        page: page,
+        client: client,
+      ),
+      'cursor' => CursorPage(
+        key: key,
+        catalog: catalog,
+        page: page,
+        client: client,
+        onPage: _openPage,
+      ),
+      'themes' => ThemesPage(
+        key: key,
+        catalog: catalog,
+        page: page,
+        client: client,
+        onPage: _openPage,
       ),
       _ => null,
     };

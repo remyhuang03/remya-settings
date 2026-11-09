@@ -12,17 +12,17 @@ use std::sync::OnceLock;
 
 const SCHEMA: &str = "org.gnome.desktop.interface";
 
-struct Context {
-    config: PathBuf,
-    themes: Vec<PathBuf>,
-    gtk4: bool,
-    gnome: Option<gio::Settings>,
-    verify_backend: bool,
-    environment: Environment,
+pub(crate) struct Context {
+    pub config: PathBuf,
+    pub themes: Vec<PathBuf>,
+    pub gtk4: bool,
+    pub gnome: Option<gio::Settings>,
+    pub verify_backend: bool,
+    pub environment: Environment,
 }
 
 impl Context {
-    fn current() -> Result<Self, String> {
+    pub fn current() -> Result<Self, String> {
         let home = env::var_os("HOME")
             .map(PathBuf::from)
             .filter(|path| path.is_absolute());
@@ -79,7 +79,7 @@ impl Context {
         })
     }
 
-    fn lock(&self) -> Result<File, String> {
+    pub fn lock(&self) -> Result<File, String> {
         let directory = self.config.join("remya/settings");
         fs::create_dir_all(&directory).map_err(|error| error.to_string())?;
         let lock = OpenOptions::new()
@@ -117,7 +117,11 @@ impl SystemThemeMode {
     }
 }
 
-fn result(name: &str, status: ThemeTargetStatus, detail: impl Into<String>) -> ThemeTargetResult {
+pub(crate) fn result(
+    name: &str,
+    status: ThemeTargetStatus,
+    detail: impl Into<String>,
+) -> ThemeTargetResult {
     ThemeTargetResult {
         name: name.into(),
         status,
@@ -125,7 +129,7 @@ fn result(name: &str, status: ThemeTargetStatus, detail: impl Into<String>) -> T
     }
 }
 
-fn gtk_settings(context: &Context, toolkit: &str) -> Result<glib::KeyFile, String> {
+pub(crate) fn gtk_settings(context: &Context, toolkit: &str) -> Result<glib::KeyFile, String> {
     let path = context.config.join(toolkit).join("settings.ini");
     let bytes = read_optional(&path)?.unwrap_or_default();
     let text =
@@ -269,17 +273,17 @@ fn theme_variant(current: &str, mode: SystemThemeMode, roots: &[PathBuf]) -> Opt
         .find(|candidate| theme_exists(candidate, roots))
 }
 
-struct SettingChange {
+pub(crate) struct SettingChange {
     key: &'static str,
     original: Option<glib::Variant>,
     previous: glib::Variant,
     value: glib::Variant,
 }
 
-fn setting_change(
+pub(crate) fn setting_change(
     settings: &gio::Settings,
     key: &'static str,
-    value: &str,
+    value: glib::Variant,
 ) -> Result<Option<SettingChange>, String> {
     let schema = settings
         .settings_schema()
@@ -287,7 +291,6 @@ fn setting_change(
     if !schema.has_key(key) {
         return Ok(None);
     }
-    let value = value.to_variant();
     if settings.value(key) == value {
         return Ok(None);
     }
@@ -307,11 +310,11 @@ fn setting_change(
     }))
 }
 
-struct AppearancePlan {
-    settings_changes: Vec<SettingChange>,
-    files: Vec<FileChange>,
-    targets: Vec<ThemeTargetResult>,
-    mode: SystemThemeMode,
+/// GNOME settings and file edits applied together, or rolled back together.
+pub(crate) struct AppearancePlan {
+    pub settings_changes: Vec<SettingChange>,
+    pub files: Vec<FileChange>,
+    pub targets: Vec<ThemeTargetResult>,
 }
 
 fn prepare_context(context: &Context, mode: SystemThemeMode) -> Result<AppearancePlan, String> {
@@ -320,7 +323,7 @@ fn prepare_context(context: &Context, mode: SystemThemeMode) -> Result<Appearanc
     if let Some(settings) = &context.gnome {
         let schema = settings.settings_schema().ok_or("Missing GNOME schema")?;
         if schema.has_key("color-scheme") {
-            let change = setting_change(settings, "color-scheme", mode.scheme())?;
+            let change = setting_change(settings, "color-scheme", mode.scheme().to_variant())?;
             targets.push(result(
                 "GNOME / libadwaita",
                 if change.is_some() {
@@ -341,7 +344,7 @@ fn prepare_context(context: &Context, mode: SystemThemeMode) -> Result<Appearanc
         if schema.has_key("gtk-theme") {
             let current = settings.string("gtk-theme");
             if let Some(name) = theme_variant(&current, mode, &context.themes) {
-                let change = setting_change(settings, "gtk-theme", &name)?;
+                let change = setting_change(settings, "gtk-theme", name.to_variant())?;
                 targets.push(result(
                     "GTK theme variant",
                     if change.is_some() {
@@ -421,7 +424,6 @@ fn prepare_context(context: &Context, mode: SystemThemeMode) -> Result<Appearanc
         settings_changes,
         files,
         targets,
-        mode,
     })
 }
 
@@ -459,12 +461,11 @@ fn read_setting(
 }
 
 impl AppearancePlan {
-    fn apply(self, context: &Context) -> Result<SystemThemeState, String> {
+    pub fn apply(self, context: &Context) -> Result<Vec<ThemeTargetResult>, String> {
         let Self {
             settings_changes,
             files,
             targets,
-            mode,
         } = self;
         let mut attempted_files = 0;
         let mut settings_attempted = false;
@@ -556,16 +557,17 @@ impl AppearancePlan {
                 )
             });
         }
-        Ok(SystemThemeState {
-            mode: Some(mode),
-            targets,
-        })
+        Ok(targets)
     }
 }
 
 fn apply_context(context: &Context, mode: SystemThemeMode) -> Result<SystemThemeState, String> {
     let _lock = context.lock()?;
-    prepare_context(context, mode)?.apply(context)
+    let targets = prepare_context(context, mode)?.apply(context)?;
+    Ok(SystemThemeState {
+        mode: Some(mode),
+        targets,
+    })
 }
 
 pub(crate) fn read() -> Result<SystemThemeState, String> {
@@ -576,7 +578,7 @@ pub(crate) fn apply(mode: SystemThemeMode) -> Result<SystemThemeState, String> {
 }
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use super::*;
     use std::path::Path;
 
@@ -588,13 +590,16 @@ mod tests {
         }
     }
 
-    fn context(config: &Path) -> Context {
+    pub(crate) fn context(config: &Path) -> Context {
         let schemas = config.join("schemas");
         fs::create_dir_all(&schemas).unwrap();
         fs::write(schemas.join("appearance.gschema.xml"), r#"<schemalist>
 <schema id="org.gnome.desktop.interface" path="/org/gnome/desktop/interface/">
 <key name="color-scheme" type="s"><default>'default'</default><choices><choice value="default"/><choice value="prefer-dark"/><choice value="prefer-light"/></choices></key>
 <key name="gtk-theme" type="s"><default>'Adwaita'</default></key>
+<key name="cursor-theme" type="s"><default>'Adwaita'</default></key>
+<key name="cursor-size" type="i"><default>24</default></key>
+<key name="icon-theme" type="s"><default>'Adwaita'</default></key>
 </schema></schemalist>"#).unwrap();
         assert!(
             Command::new("glib-compile-schemas")

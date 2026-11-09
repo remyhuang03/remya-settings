@@ -1173,9 +1173,9 @@
         "Colors",
         "Transparency Effects"
       ],
-      "page": "themes",
+      "page": "background",
       "coverage": "control",
-      "control": "themes.reference.ed936eee"
+      "control": "background.blur-enabled"
     },
     {
       "area": "Personalization",
@@ -1231,8 +1231,7 @@
         "Themes"
       ],
       "page": "themes",
-      "coverage": "control",
-      "control": "themes.reference.94d5186b"
+      "coverage": "removed"
     },
     {
       "area": "Personalization",
@@ -1771,9 +1770,9 @@
         "Visual effects",
         "Transparency effects"
       ],
-      "page": "visual-effects",
+      "page": "background",
       "coverage": "control",
-      "control": "visual-effects.reference.8e1825a1"
+      "control": "background.blur-enabled"
     },
     {
       "area": "Vision",
@@ -1781,9 +1780,9 @@
         "Visual effects",
         "Animation effects"
       ],
-      "page": "visual-effects",
+      "page": "animations",
       "coverage": "control",
-      "control": "visual-effects.reference.6aa5bc02"
+      "control": "animations.enabled"
     },
     {
       "area": "Vision",
@@ -1803,7 +1802,7 @@
       ],
       "page": "cursor",
       "coverage": "control",
-      "control": "cursor.reference.8a9af3b1"
+      "control": "cursor.theme"
     },
     {
       "area": "Vision",
@@ -1813,39 +1812,7 @@
       ],
       "page": "cursor",
       "coverage": "control",
-      "control": "cursor.reference.966d030b"
-    },
-    {
-      "area": "Vision",
-      "path": [
-        "Text cursor",
-        "Text cursor indicator",
-        "Text cursor indicator size"
-      ],
-      "page": "cursor",
-      "coverage": "control",
-      "control": "cursor.reference.4c40f3ca"
-    },
-    {
-      "area": "Vision",
-      "path": [
-        "Text cursor",
-        "Text cursor indicator",
-        "Text cursor indicator color"
-      ],
-      "page": "cursor",
-      "coverage": "control",
-      "control": "cursor.reference.b0cd3942"
-    },
-    {
-      "area": "Vision",
-      "path": [
-        "Text cursor",
-        "Text cursor thickness"
-      ],
-      "page": "cursor",
-      "coverage": "control",
-      "control": "cursor.reference.7beee9f0"
+      "control": "cursor.size"
     },
     {
       "area": "Vision",

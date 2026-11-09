@@ -115,8 +115,18 @@ class SettingsDetail extends StatelessWidget {
     required this.onPage,
     this.systemInformation,
     this.client,
+    this.controlBuilder,
+    this.isVisible,
+    this.leading = const [],
   });
+  final bool Function(SettingSpec)? isVisible;
   final SettingsCatalog catalog;
+
+  /// Builds the rows a feature implements itself; null keeps the catalog row.
+  final Widget? Function(SettingSpec)? controlBuilder;
+
+  /// Shown above the sections, such as a configuration conflict.
+  final List<Widget> leading;
 
   /// Reaches the service directly for pages without an app-wide controller.
   final SettingsClient? client;
@@ -172,6 +182,7 @@ class SettingsDetail extends StatelessWidget {
       ),
       const SizedBox(height: 12),
       Text(page.reason, style: Theme.of(context).textTheme.bodySmall),
+      ...leading,
       if (page.preview != 'none') ...[
         const SizedBox(height: 24),
         if (page.id == 'display' && DisplayScope.maybeOf(context) != null)
@@ -184,6 +195,17 @@ class SettingsDetail extends StatelessWidget {
           section,
           onPageRow: (id) => onPage(catalog.page(_pageRows[id]!)),
           pageRows: _pageRows.keys.toSet(),
+          isVisible: isVisible,
+          controlBuilder: controlBuilder == null
+              ? null
+              : (setting) =>
+                    controlBuilder!(setting) ??
+                    SettingControlTile(
+                      setting,
+                      onOpenPage: _pageRows.containsKey(setting.id)
+                          ? () => onPage(catalog.page(_pageRows[setting.id]!))
+                          : null,
+                    ),
         ),
       if (page.children.isNotEmpty) ...[
         const SettingsSectionTitle('Related settings'),

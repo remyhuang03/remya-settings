@@ -6,12 +6,12 @@
 
 清单覆盖现有目录中的全部设置项，包括主要中文控件和保留原名的设计参考细项（受 Windows 等桌面系统启发，作为设计参考与基准对照，而非直接照搬）；实际架构和功能已针对 Linux / Hyprland 进行了适配与差异化演进。相同概念可能存在多个展示位置。下述数量统计的是控件条目，不是去重后的独立后端功能数量。参考来源与实际实现的边界见 [调研说明](windows-settings-research.md)。
 
-Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 645 项设置与 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
+Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 615 项设置与 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
 
 ## 当前概况
 
-- 设置分类：15 个；详情页面：122 个；设置条目：1384 项。
-- 已实现：324 项；未实现：1050 项；不适用：10 项。
+- 设置分类：15 个；详情页面：123 个；设置条目：1335 项。
+- 已实现：359 项；未实现：966 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
@@ -29,6 +29,8 @@ Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 
 - 系统更新由随图形会话启动的常驻服务执行：普通用户检查仓库（checkupdates）与 AUR（yay -Qua，仅列出），仓库升级经 pkexec 调用固定的 root 更新器在独立 systemd 单元中运行 `pacman -Syu`；自动更新在活动时间结束时运行，只有错过整个非活动时段时才在活动时间补跑。见[系统更新文档](updates.md)。
 
 - 鼠标、触控板与键盘快捷键通过 Rust 读取 Hyprland 实时选项与键绑定，写入 Settings 自有的 `hypr/remya-settings/input.lua`（由 `hyprland.lua` 末尾受管块 require）并回读；冲突按系统配置同步规则处理。快捷键页不再放在窗口与工作区分类；见[输入设备与快捷键](input.md)。
+
+- 多任务（系统）与光标（外观）：窗口布局、间距、边框、吸附与边框拖动，以及光标隐藏与指针移动，写入 Settings 自有的 `hypr/remya-settings/desktop.lua`；光标主题、大小与图标主题写入 GNOME 接口设置、GTK、KDE、XCursor 默认主题、fish 与 Hyprland 环境，并支持从文件夹或归档添加、删除用户主题包；见[光标与图标主题](themes.md)。
 
 - 显示通过 Rust 经 `hyprctl` 读取并实时应用 Hyprland 显示规则，确认后写入 `monitors.lua`，并按系统配置同步规则处理冲突；亮度为实时值（logind 背光 / `ddcutil`），不保存。
 
@@ -61,20 +63,20 @@ Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 14 | 206 | 73 | 133 | 0 |
+| [系统](#category-system) | 14 | 183 | 91 | 92 | 0 |
 | [声音](#category-sound) | 3 | 17 | 14 | 3 | 0 |
 | [电源与电池](#category-power) | 3 | 20 | 19 | 1 | 0 |
 | [通知](#category-notifications) | 4 | 19 | 12 | 7 | 0 |
 | [蓝牙和设备](#category-devices) | 11 | 103 | 57 | 46 | 0 |
 | [网络和 Internet](#category-network) | 8 | 63 | 63 | 0 | 0 |
-| [外观](#category-appearance) | 10 | 292 | 37 | 255 | 0 |
+| [外观](#category-appearance) | 13 | 279 | 54 | 225 | 0 |
 | [应用](#category-apps) | 5 | 35 | 30 | 5 | 0 |
 | [账户](#category-accounts) | 11 | 58 | 2 | 50 | 6 |
 | [时间和语言](#category-time) | 4 | 28 | 8 | 20 | 0 |
-| [辅助功能](#category-accessibility) | 10 | 198 | 0 | 198 | 0 |
+| [辅助功能](#category-accessibility) | 10 | 194 | 0 | 194 | 0 |
 | [隐私和安全性](#category-privacy) | 9 | 39 | 0 | 35 | 4 |
 | [系统更新](#category-update) | 2 | 9 | 9 | 0 | 0 |
-| [窗口与工作区](#category-hyprland) | 19 | 215 | 0 | 215 | 0 |
+| [窗口与工作区](#category-hyprland) | 17 | 206 | 0 | 206 | 0 |
 | [会话与配置](#category-session) | 9 | 82 | 0 | 82 | 0 |
 
 <a id="category-system"></a>
@@ -294,6 +296,60 @@ Windows 参考入口：`ms-settings:storagepolicies`、`ms-settings:storagerecom
 | Downloads retention | `cleanup.auto-downloads` | 选择 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
 | Run now | `cleanup.run-now` | 操作 | 已实现 | Rust storage tests、Flutter storage widget tests、隔离 CLI/D-Bus parity |
 
+### Multitasking — `multitasking`
+
+Window layout, spacing, borders, snapping and resizing
+
+页面状态：**已实现**；条目：18；已实现 18 / 未实现 0 / 不适用 0。
+
+原因：Uses Hyprland window options through the Settings service.
+
+Windows 参考入口：`ms-settings:multitasking`。
+
+实现与边界见 [输入设备与快捷键](input.md) 的 desktop 分组：读取 `hyprctl descriptions` 实时值，经 `hyprctl eval` 校验后写入 Settings 自有的 `hypr/remya-settings/desktop.lua` 并回读。布局缩略图选择排列方式，页首示意图随布局、间距与边框宽度（拖动中也）实时变化；吸附与边框拖动的子选项在父项关闭时自动隐藏。原 `hypr-general` 与 `hypr-general-snap` 页面并入本页，界面语言覆盖（locale）因与“语言和区域”重复而删除。
+
+#### Window layout
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Arrange windows | `multitasking.layout` | 选择 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+
+#### Spacing and borders
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Space between windows | `multitasking.gaps-in` | 滑块 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Space at screen edges | `multitasking.gaps-out` | 滑块 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Border width | `multitasking.border-size` | 滑块 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+
+#### Snapping
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Snap floating windows | `multitasking.snap` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Snap to other windows within | `multitasking.snap-window-gap` | 滑块 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Snap to screen edges within | `multitasking.snap-monitor-gap` | 滑块 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Keep window spacing when snapping | `multitasking.snap-respect-gaps` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Share one border between snapped windows | `multitasking.snap-border-overlap` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+
+#### Resizing
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Resize by dragging window borders | `multitasking.resize-on-border` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Extra grab area outside the border | `multitasking.border-grab-area` | 滑块 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Show the resize pointer on borders | `multitasking.border-hover-icon` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+
+#### Advanced
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Space between floating windows and screen edges | `multitasking.float-gaps` | 滑块 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Space between workspaces while switching | `multitasking.gaps-workspaces` | 滑块 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Floating window resize corner | `multitasking.resize-corner` | 选择 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Block the window behind a dialog | `multitasking.modal-parent-blocking` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Keep focus when no window is in that direction | `multitasking.no-focus-fallback` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Allow screen tearing for games | `multitasking.allow-tearing` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
 ### Project to this computer — `projection`
 
 无线显示与投影许可
@@ -479,82 +535,6 @@ Windows 参考入口：`ms-settings:developers`。
 | Display delete confirmation dialog | `file-explorer.reference.163ce553` | 开关 | 未实现 | — |
 | View (Icon size, Auto arrange icons, Show desktop icons) | `file-explorer.reference.f24ca65a` | 选择 | 未实现 | — |
 | Sort by (Name, Size, Item type, Date modified) | `file-explorer.reference.ed11d482` | 选择 | 未实现 | — |
-
-### Cursor — `cursor`
-
-光标主题、指针外观、文本光标与光标行为；暂未实现
-
-页面状态：**未实现**；条目：41；已实现 0 / 未实现 41 / 不适用 0。
-
-原因：Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.
-
-Windows 参考入口：`ms-settings:easeofaccess-cursor`。
-
-#### Cursor theme
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Mouse cursor | `cursor.cb5e32b2` | 操作 | 未实现 | — |
-| Hyprcursor theme name | `cursor.theme` | 文本输入 | 未实现 | — |
-| Hyprcursor cursor size | `cursor.size` | 文本输入 | 未实现 | — |
-| XCursor fallback theme | `cursor.xcursor-theme` | 文本输入 | 未实现 | — |
-| XCursor rollback size | `cursor.xcursor-size` | 文本输入 | 未实现 | — |
-| GTK application cursor theme | `cursor.gtk` | 文本输入 | 未实现 | — |
-
-#### Pointer
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Pointer style | `cursor.6de7c60b` | 选择 | 未实现 | — |
-| Customize pointer color | `cursor.86209eba` | 颜色 | 未实现 | — |
-| Pointer size | `cursor.e8c2f48c` | 滑块 | 未实现 | — |
-
-#### Text cursor
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Text cursor indicator | `cursor.bb54f6b0` | 开关 | 未实现 | — |
-| Indicator size | `cursor.5829d690` | 滑块 | 未实现 | — |
-| Indicator color | `cursor.d04d1b72` | 颜色 | 未实现 | — |
-| Text cursor thickness | `cursor.60ececbf` | 滑块 | 未实现 | — |
-
-#### Windows reference settings
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Mouse pointer style | `cursor.reference.8a9af3b1` | 选择 | 未实现 | — |
-| Size | `cursor.reference.966d030b` | 选择 | 未实现 | — |
-| Text cursor indicator size | `cursor.reference.4c40f3ca` | 滑块 | 未实现 | — |
-| Text cursor indicator color | `cursor.reference.b0cd3942` | 选择 | 未实现 | — |
-| Text cursor thickness | `cursor.reference.7beee9f0` | 滑块 | 未实现 | — |
-
-#### Advanced
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| default monitor · default_monitor | `cursor.default-monitor` | 文本输入 | 未实现 | — |
-| Using Hyprcursor theme · enable_hyprcursor | `cursor.enable-hyprcursor` | 开关 | 未实现 | — |
-| Hide cursor on key press · hide_on_key_press | `cursor.hide-on-key-press` | 开关 | 未实现 | — |
-| hide on tablet · hide_on_tablet | `cursor.hide-on-tablet` | 开关 | 未实现 | — |
-| hide on touch · hide_on_touch | `cursor.hide-on-touch` | 开关 | 未实现 | — |
-| hotspot padding · hotspot_padding | `cursor.hotspot-padding` | 滑块 | 未实现 | — |
-| Idle hidden cursor timeout · inactive_timeout | `cursor.inactive-timeout` | 滑块 | 未实现 | — |
-| invisible · invisible | `cursor.invisible` | 开关 | 未实现 | — |
-| min refresh rate · min_refresh_rate | `cursor.min-refresh-rate` | 滑块 | 未实现 | — |
-| no break fs vrr · no_break_fs_vrr | `cursor.no-break-fs-vrr` | 滑块 | 未实现 | — |
-| Disable hardware cursors · no_hardware_cursors | `cursor.no-hardware-cursors` | 滑块 | 未实现 | — |
-| Disable automatic pointer movement · no_warps | `cursor.no-warps` | 开关 | 未实现 | — |
-| persistent warps · persistent_warps | `cursor.persistent-warps` | 开关 | 未实现 | — |
-| sync gsettings theme · sync_gsettings_theme | `cursor.sync-gsettings-theme` | 开关 | 未实现 | — |
-| use cpu buffer · use_cpu_buffer | `cursor.use-cpu-buffer` | 滑块 | 未实现 | — |
-| warp back after non mouse input · warp_back_after_non_mouse_input | `cursor.warp-back-after-non-mouse-input` | 开关 | 未实现 | — |
-| warp on change workspace · warp_on_change_workspace | `cursor.warp-on-change-workspace` | 滑块 | 未实现 | — |
-| warp on monitor change · warp_on_monitor_change | `cursor.warp-on-monitor-change` | 滑块 | 未实现 | — |
-| warp on toggle special · warp_on_toggle_special | `cursor.warp-on-toggle-special` | 滑块 | 未实现 | — |
-| zoom detached camera · zoom_detached_camera | `cursor.zoom-detached-camera` | 开关 | 未实现 | — |
-| zoom disable aa · zoom_disable_aa | `cursor.zoom-disable-aa` | 开关 | 未实现 | — |
-| Cursor zoom factor · zoom_factor | `cursor.zoom-factor` | 滑块 | 未实现 | — |
-| Fixed zoom anchor point · zoom_rigid | `cursor.zoom-rigid` | 开关 | 未实现 | — |
 
 ### More — `system-more`
 
@@ -1472,11 +1452,13 @@ Windows 参考入口：`ms-settings:personalization-background`。
 
 深浅色、强调色、Material 调色板与主题
 
-页面状态：**未实现**；条目：84；已实现 4 / 未实现 80 / 不适用 0。
+页面状态：**已实现**；条目：7；已实现 7 / 未实现 0 / 不适用 0。
 
-原因：Light/Dark, accent color and Material palette work. Other theme controls remain previews.
+原因：Light/Dark, accent color, Material palette and icon themes use the Settings service and the app configuration.
 
 Windows 参考入口：`ms-settings:personalization-colors`、`ms-settings:colors`、`ms-settings:themes`。
+
+图标主题与主题包见下文“Multitasking, cursor and icon themes (2026-11-09)”。窗口装饰与动画预览移至“窗口外观”和“动画”页面；Windows 主题包（选择主题、保存主题、背景、声音链接）、透明效果（与“背景”中的窗口模糊重复）、渐变编辑器、桌面组件预设与屏幕着色器路径已删除。
 
 #### Color
 
@@ -1486,101 +1468,194 @@ Windows 参考入口：`ms-settings:personalization-colors`、`ms-settings:color
 | Accent color source | `themes.8983f367` | 选择 | 已实现 | 见下文“Background, accent and fonts” |
 | Accent Color | `themes.6f67371e` | 颜色 | 已实现 | 见下文“Background, accent and fonts” |
 | Material style variant | `themes.material-style-variant` | 选择 | 已实现 | App-only TOML persistence and runtime theme; Tonal spot default; see app-preferences.md and appearance tests |
-| Transparency effect | `themes.3630e7d0` | 开关 | 未实现 | — |
 
-#### Themes
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Choose a topic | `themes.a9039704` | 操作 | 未实现 | — |
-| Save theme | `themes.d582c922` | 操作 | 未实现 | — |
-| Background | `themes.b13d33a5` | 操作 | 未实现 | — |
-| Sound | `themes.ab9ff81d` | 操作 | 未实现 | — |
-| Desktop icon settings | `themes.26420e25` | 操作 | 未实现 | — |
-
-#### Windows reference settings
+#### Icons
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Transparency Effects | `themes.reference.ed936eee` | 开关 | 未实现 | — |
-| Themes | `themes.reference.94d5186b` | 选择 | 未实现 | — |
+| Icon theme | `themes.icon-theme` | 选择 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Add an icon or cursor theme | `themes.icon-install` | 操作 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Remove an added theme | `themes.icon-remove` | 操作 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
 
-#### Advanced: compositor previews
+### Cursor — `cursor`
+
+Cursor theme, size, hiding and pointer movement
+
+页面状态：**已实现**；条目：14；已实现 14 / 未实现 0 / 不适用 0。
+
+原因：Uses GNOME interface settings, GTK, KDE, XCursor and Hyprland through the Settings service.
+
+Windows 参考入口：`ms-settings:easeofaccess-cursor`、`ms-settings:easeofaccess-mousepointer`。
+
+光标主题与大小写入 GNOME 接口设置、GTK 3/4 settings.ini、XCursor `default` 主题、KDE（kcminputrc，经 kwriteconfig6）、fish 与 Hyprland 环境块，并经 `hyprctl setcursor` 即时生效；隐藏与指针移动选项属于 desktop 分组。主题包从图标搜索路径与 `XCURSOR_PATH` 发现，可从文件夹或归档添加到用户图标目录、删除用户添加的主题。Windows 专属的指针颜色、文本光标指示器与参考项，以及缩放（属于放大镜）、调试类光标选项已删除。
+
+#### Cursor theme
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Window border: Active window border gradient (active_border) | `themes.border-active-border` | 文本输入 | 未实现 | — |
-| Window border: Inactive window border gradient (inactive_border) | `themes.border-inactive-border` | 文本输入 | 未实现 | — |
-| Window border: Disable group window borders (nogroup_border) | `themes.border-nogroup-border` | 文本输入 | 未实现 | — |
-| Window border: Disable group active window borders (nogroup_border_active) | `themes.border-nogroup-border-active` | 文本输入 | 未实现 | — |
-| Window decoration: Active window transparency (active_opacity) | `themes.decoration-active-opacity` | 滑块 | 未实现 | — |
-| Window decoration: Border participates in window drawing (border_part_of_window) | `themes.decoration-border-part-of-window` | 开关 | 未实现 | — |
-| Window decoration: Darkening degree of surrounding area (dim_around) | `themes.decoration-dim-around` | 滑块 | 未实现 | — |
-| Window decoration: Dim inactive windows (dim_inactive) | `themes.decoration-dim-inactive` | 开关 | 未实现 | — |
-| Window decoration: Modal window parent window dims (dim_modal) | `themes.decoration-dim-modal` | 开关 | 未实现 | — |
-| Window decoration: Darkening the background of special workspace (dim_special) | `themes.decoration-dim-special` | 文本输入 | 未实现 | — |
-| Window decoration: Inactive window dimming strength (dim_strength) | `themes.decoration-dim-strength` | 滑块 | 未实现 | — |
-| Window decoration: Full screen window transparency (fullscreen_opacity) | `themes.decoration-fullscreen-opacity` | 滑块 | 未实现 | — |
-| Window decoration: Inactive window transparency (inactive_opacity) | `themes.decoration-inactive-opacity` | 滑块 | 未实现 | — |
-| Window decoration: Corner radius (rounding) | `themes.decoration-rounding` | 滑块 | 未实现 | — |
-| Window decoration: Rounding curvature (rounding_power) | `themes.decoration-rounding-power` | 滑块 | 未实现 | — |
-| Window decoration: Screen shader path (screen_shader) | `themes.decoration-screen-shader` | 文本输入 | 未实现 | — |
-| Window shadow: enabled (enabled) | `themes.shadow-enabled` | 开关 | 未实现 | — |
-| Window shadow: color (color) | `themes.shadow-color` | 文本输入 | 未实现 | — |
-| Window shadow: Inactive color (color_inactive) | `themes.shadow-color-inactive` | 文本输入 | 未实现 | — |
-| Window shadow: offset·offset | `themes.shadow-offset` | 文本输入 | 未实现 | — |
-| Window shadow: Range of influence (range) | `themes.shadow-range` | 滑块 | 未实现 | — |
-| Window shadow: Rendering strength (render_power) | `themes.shadow-render-power` | 滑块 | 未实现 | — |
-| Window shadow: scale (scale) | `themes.shadow-scale` | 滑块 | 未实现 | — |
-| Window shadow: sharp (sharp) | `themes.shadow-sharp` | 开关 | 未实现 | — |
-| Window glow: enabled (enabled) | `themes.glow-enabled` | 开关 | 未实现 | — |
-| Window glow: color (color) | `themes.glow-color` | 颜色 | 未实现 | — |
-| Window glow: Inactive color (color_inactive) | `themes.glow-color-inactive` | 文本输入 | 未实现 | — |
-| Window glow: Range of influence (range) | `themes.glow-range` | 滑块 | 未实现 | — |
-| Window glow: Rendering strength (render_power) | `themes.glow-render-power` | 滑块 | 未实现 | — |
-| Motion blur: enabled (enabled) | `themes.motion-blur-enabled` | 开关 | 未实现 | — |
-| Motion blur: samples (samples) | `themes.motion-blur-samples` | 滑块 | 未实现 | — |
-| Window motion: enabled (enabled) | `themes.wobble-enabled` | 开关 | 未实现 | — |
-| Window motion: mesh (mesh) | `themes.wobble-mesh` | 滑块 | 未实现 | — |
-| Window motion: stiffness (stiffness) | `themes.wobble-stiffness` | 滑块 | 未实现 | — |
-| Window motion: damping (damping) | `themes.wobble-damping` | 滑块 | 未实现 | — |
-| Window motion: mass (mass) | `themes.wobble-mass` | 滑块 | 未实现 | — |
-| Window motion: intensity (intensity) | `themes.wobble-intensity` | 滑块 | 未实现 | — |
-| Window motion: value epsilon (value_epsilon) | `themes.wobble-value-epsilon` | 滑块 | 未实现 | — |
-| Window motion: velocity epsilon (velocity_epsilon) | `themes.wobble-velocity-epsilon` | 滑块 | 未实现 | — |
-| Animation: enabled (enabled) | `themes.animation-enabled` | 开关 | 未实现 | — |
-| Animation: Workspace animations are connected end to end (workspace_wraparound) | `themes.animation-workspace-wraparound` | 开关 | 未实现 | — |
-| Window group border: border active (border_active) | `themes.group-border-border-active` | 文本输入 | 未实现 | — |
-| Window group border: border inactive (border_inactive) | `themes.group-border-border-inactive` | 文本输入 | 未实现 | — |
-| Window group border: border locked active (border_locked_active) | `themes.group-border-border-locked-active` | 文本输入 | 未实现 | — |
-| Window group border: border locked inactive (border_locked_inactive) | `themes.group-border-border-locked-inactive` | 文本输入 | 未实现 | — |
-| Window group tab: active (active) | `themes.groupbar-active` | 文本输入 | 未实现 | — |
-| Window group tab: inactive (inactive) | `themes.groupbar-inactive` | 文本输入 | 未实现 | — |
-| Window group tab: locked active (locked_active) | `themes.groupbar-locked-active` | 文本输入 | 未实现 | — |
-| Window group tab: locked inactive (locked_inactive) | `themes.groupbar-locked-inactive` | 文本输入 | 未实现 | — |
-| Animate manual window resizing (animate_manual_resizes) | `themes.compositor-resize-animation` | 开关 | 未实现 | — |
-| Animate window dragging (animate_mouse_windowdragging) | `themes.compositor-drag-animation` | 开关 | 未实现 | — |
-| Animation editor: Animation node name | `themes.animation-editor-leaf` | 文本输入 | 未实现 | — |
-| Animation editor: Enable this node animation | `themes.animation-editor-enabled` | 开关 | 未实现 | — |
-| Animation editor: Animation duration (100 ms unit) | `themes.animation-editor-speed` | 文本输入 | 未实现 | — |
-| Animation editor: Animation style | `themes.animation-editor-style` | 文本输入 | 未实现 | — |
-| Animation editor: Curve name | `themes.animation-editor-curve` | 文本输入 | 未实现 | — |
-| Animation editor: Bézier Control Point | `themes.animation-editor-bezier` | 文本输入 | 未实现 | — |
-| Animation editor: Spring Quality | `themes.animation-editor-spring-mass` | 文本输入 | 未实现 | — |
-| Animation editor: Spring stiffness | `themes.animation-editor-spring-stiffness` | 文本输入 | 未实现 | — |
-| Animation editor: Spring damping | `themes.animation-editor-spring-damping` | 文本输入 | 未实现 | — |
-| Animation editor: View animation node inheritance | `themes.animation-editor-inheritance` | 操作 | 未实现 | — |
-| Gradient: Gradient color scale and transparency | `themes.gradient-stops` | 文本输入 | 未实现 | — |
-| Gradient: Gradient angle | `themes.gradient-angle` | 文本输入 | 未实现 | — |
-| Gradient: Active and inactive color matching | `themes.gradient-active` | 文本输入 | 未实现 | — |
-| Gradient: Preview gradient | `themes.gradient-preview` | 操作 | 未实现 | — |
-| Desktop component: Desktop Style Presets | `themes.desktop-component-preset` | 文本输入 | 未实现 | — |
-| Desktop component: Panel components and configuration | `themes.desktop-component-panel` | 文本输入 | 未实现 | — |
-| Desktop component: Dock components and configuration | `themes.desktop-component-dock` | 文本输入 | 未实现 | — |
-| Desktop component: App Drawer Components and Configuration | `themes.desktop-component-drawer` | 文本输入 | 未实现 | — |
-| Desktop component: Notification center style | `themes.desktop-component-notifications` | 文本输入 | 未实现 | — |
-| Desktop component: Exit menu style | `themes.desktop-component-exit-menu` | 文本输入 | 未实现 | — |
-| Desktop component: System Tray Module | `themes.desktop-component-tray` | 操作 | 未实现 | — |
+| Cursor theme | `cursor.theme` | 选择 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Cursor size | `cursor.size` | 滑块 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+
+#### Theme packs
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Add a cursor or icon theme | `cursor.install` | 操作 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Remove an added theme | `cursor.remove` | 操作 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Theme folders | `cursor.folders` | 信息展示 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+
+#### Hiding
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Hide while typing | `cursor.hide-on-key-press` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Hide when not moved for | `cursor.inactive-timeout` | 滑块 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Hide while using a touchscreen | `cursor.hide-on-touch` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Hide while using a pen tablet | `cursor.hide-on-tablet` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+
+#### Pointer movement
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Keep the pointer where you leave it | `cursor.no-warps` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Move the pointer after switching workspaces | `cursor.warp-on-change-workspace` | 选择 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Return to the last position in a window | `cursor.persistent-warps` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+
+#### Advanced
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Hardware cursor | `cursor.hardware` | 选择 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Prefer scalable cursor themes | `cursor.enable-hyprcursor` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+### Window appearance — `window-appearance`
+
+边框颜色、圆角、不透明度、调暗与阴影
+
+页面状态：**未实现**；条目：26；已实现 0 / 未实现 26 / 不适用 0。
+
+原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+
+由原“颜色和主题”的高级预览整理而来：边框颜色、圆角、不透明度、调暗、阴影与发光。尚未接入 Hyprland 选项文件，仅为预览。
+
+#### Borders
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Active window border color | `window-appearance.active-border` | 文本输入 | 未实现 | — |
+| Inactive window border color | `window-appearance.inactive-border` | 文本输入 | 未实现 | — |
+
+#### Corners
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Corner radius | `window-appearance.rounding` | 滑块 | 未实现 | — |
+| Corner curvature | `window-appearance.rounding-power` | 滑块 | 未实现 | — |
+
+#### Opacity
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Active window opacity | `window-appearance.active-opacity` | 滑块 | 未实现 | — |
+| Inactive window opacity | `window-appearance.inactive-opacity` | 滑块 | 未实现 | — |
+| Full screen window opacity | `window-appearance.fullscreen-opacity` | 滑块 | 未实现 | — |
+
+#### Dimming
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Dim inactive windows | `window-appearance.dim-inactive` | 开关 | 未实现 | — |
+| Inactive window dimming | `window-appearance.dim-strength` | 滑块 | 未实现 | — |
+| Dim the parent of a dialog | `window-appearance.dim-modal` | 开关 | 未实现 | — |
+| Dimming around windows that request it | `window-appearance.dim-around` | 滑块 | 未实现 | — |
+| Dimming behind the special workspace | `window-appearance.dim-special` | 文本输入 | 未实现 | — |
+
+#### Shadow
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Window shadow | `window-appearance.shadow` | 开关 | 未实现 | — |
+| Shadow color | `window-appearance.shadow-color` | 文本输入 | 未实现 | — |
+| Inactive window shadow color | `window-appearance.shadow-color-inactive` | 文本输入 | 未实现 | — |
+| Shadow size | `window-appearance.shadow-range` | 滑块 | 未实现 | — |
+| Shadow falloff | `window-appearance.shadow-render-power` | 滑块 | 未实现 | — |
+| Shadow offset | `window-appearance.shadow-offset` | 文本输入 | 未实现 | — |
+| Shadow scale | `window-appearance.shadow-scale` | 滑块 | 未实现 | — |
+| Sharp shadow | `window-appearance.shadow-sharp` | 开关 | 未实现 | — |
+
+#### Glow
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Window glow | `window-appearance.glow` | 开关 | 未实现 | — |
+| Glow color | `window-appearance.glow-color` | 颜色 | 未实现 | — |
+| Inactive window glow color | `window-appearance.glow-color-inactive` | 文本输入 | 未实现 | — |
+| Glow size | `window-appearance.glow-range` | 滑块 | 未实现 | — |
+| Glow falloff | `window-appearance.glow-render-power` | 滑块 | 未实现 | — |
+
+#### Advanced
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Count the border as part of the window | `window-appearance.border-part-of-window` | 开关 | 未实现 | — |
+
+### Animations — `animations`
+
+窗口与工作区动画、动态模糊与果冻窗口
+
+页面状态：**未实现**；条目：24；已实现 0 / 未实现 24 / 不适用 0。
+
+原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+
+由原“颜色和主题”的高级预览整理而来，并合并“视觉效果”中的动画开关：动画总开关、调整大小与拖动动画、动态模糊、果冻窗口与单个动画设置。尚未接入，仅为预览。
+
+#### Animations
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Animations | `animations.enabled` | 开关 | 未实现 | — |
+| Animate manual window resizing | `animations.resize` | 开关 | 未实现 | — |
+| Animate window dragging | `animations.drag` | 开关 | 未实现 | — |
+| Wrap workspace animations around | `animations.workspace-wraparound` | 开关 | 未实现 | — |
+
+#### Motion blur
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Motion blur | `animations.motion-blur` | 开关 | 未实现 | — |
+| Motion blur samples | `animations.motion-blur-samples` | 滑块 | 未实现 | — |
+
+#### Wobbly windows
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Wobbly windows | `animations.wobble` | 开关 | 未实现 | — |
+| Wobble intensity | `animations.wobble-intensity` | 滑块 | 未实现 | — |
+| Stiffness | `animations.wobble-stiffness` | 滑块 | 未实现 | — |
+| Damping | `animations.wobble-damping` | 滑块 | 未实现 | — |
+| Mass | `animations.wobble-mass` | 滑块 | 未实现 | — |
+
+#### Per-animation settings
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Animation | `animations.leaf` | 文本输入 | 未实现 | — |
+| Enable this animation | `animations.leaf-enabled` | 开关 | 未实现 | — |
+| Duration | `animations.leaf-speed` | 文本输入 | 未实现 | — |
+| Style | `animations.leaf-style` | 文本输入 | 未实现 | — |
+| Curve | `animations.leaf-curve` | 文本输入 | 未实现 | — |
+| Bezier control points | `animations.leaf-bezier` | 文本输入 | 未实现 | — |
+| Spring mass | `animations.leaf-spring-mass` | 文本输入 | 未实现 | — |
+| Spring stiffness | `animations.leaf-spring-stiffness` | 文本输入 | 未实现 | — |
+| Spring damping | `animations.leaf-spring-damping` | 文本输入 | 未实现 | — |
+| Inherited from | `animations.leaf-inheritance` | 操作 | 未实现 | — |
+
+#### Advanced
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Wobble mesh density | `animations.wobble-mesh` | 滑块 | 未实现 | — |
+| Wobble rest threshold | `animations.wobble-value-epsilon` | 滑块 | 未实现 | — |
+| Wobble velocity threshold | `animations.wobble-velocity-epsilon` | 滑块 | 未实现 | — |
 
 ### Lock screen interface — `lockscreen`
 
@@ -2401,7 +2476,7 @@ Windows 参考入口：`ms-settings:easeofaccess-display`。
 
 动画、透明度与通知时长
 
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2412,8 +2487,6 @@ Windows 参考入口：`ms-settings:easeofaccess-visualeffects`。
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Always show scrollbars | `visual-effects.fe13858e` | 开关 | 未实现 | — |
-| Transparency effect | `visual-effects.3630e7d0` | 开关 | 未实现 | — |
-| Animation effects | `visual-effects.321355a5` | 开关 | 未实现 | — |
 | Notification display duration | `visual-effects.db944e6b` | 选择 | 未实现 | — |
 
 #### Windows 参考细项
@@ -2421,8 +2494,6 @@ Windows 参考入口：`ms-settings:easeofaccess-visualeffects`。
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Always show scrollbars | `visual-effects.reference.22476e4b` | 开关 | 未实现 | — |
-| Transparency effects | `visual-effects.reference.8e1825a1` | 开关 | 未实现 | — |
-| Animation effects | `visual-effects.reference.6aa5bc02` | 开关 | 未实现 | — |
 | Dismiss notifications after preferred amount of time | `visual-effects.reference.5b6b06b4` | 选择 | 未实现 | — |
 
 ### Magnifier — `magnifier`
@@ -3024,60 +3095,11 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 平铺布局、工作区、窗口组、规则与快捷键
 
-### Hyprland · Window tiling and margins — `hypr-general`
-
-合成器高级设置：general · Hyprland
-
-页面状态：**未实现**；条目：14；已实现 0 / 未实现 14 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 窗口平铺与边距
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Allow screen tearing · allow_tearing | `hypr-general.allow-tearing` | 开关 | 未实现 | — |
-| Window border width · border_size | `hypr-general.border-size` | 滑块 | 未实现 | — |
-| Drag and drop the border to extend the range · extend_border_grab_area | `hypr-general.extend-border-grab-area` | 滑块 | 未实现 | — |
-| Floating window margins · float_gaps | `hypr-general.float-gaps` | 文本输入 | 未实现 | — |
-| Gaps within the window · gaps_in | `hypr-general.gaps-in` | 文本输入 | 未实现 | — |
-| Screen margins · gaps_out | `hypr-general.gaps-out` | 文本输入 | 未实现 | — |
-| Workspace spacing · gaps_workspaces | `hypr-general.gaps-workspaces` | 滑块 | 未实现 | — |
-| Border hover adjustment cursor · hover_icon_on_border | `hypr-general.hover-icon-on-border` | 开关 | 未实现 | — |
-| Tile layout · layout | `hypr-general.layout` | 选择 | 未实现 | — |
-| Compositor interface language · locale | `hypr-general.locale` | 文本输入 | 未实现 | — |
-| Modal window blocks parent window interaction · modal_parent_blocking | `hypr-general.modal-parent-blocking` | 开关 | 未实现 | — |
-| Disable focus fallback · no_focus_fallback | `hypr-general.no-focus-fallback` | 开关 | 未实现 | — |
-| Floating resize corners · resize_corner | `hypr-general.resize-corner` | 滑块 | 未实现 | — |
-| Drag the border to resize · resize_on_border | `hypr-general.resize-on-border` | 开关 | 未实现 | — |
-
-### Hyprland · Floating window snapping — `hypr-general-snap`
-
-合成器高级设置：general.snap · Hyprland
-
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-options](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/config-options.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 浮动窗口吸附
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| enabled · enabled | `hypr-general-snap.enabled` | 开关 | 未实现 | — |
-| Border overlap · border_overlap | `hypr-general-snap.border-overlap` | 开关 | 未实现 | — |
-| Respect margins when snapping · respect_gaps | `hypr-general-snap.respect-gaps` | 开关 | 未实现 | — |
-| Monitor gap threshold · monitor_gap | `hypr-general-snap.monitor-gap` | 滑块 | 未实现 | — |
-| Window gap threshold · window_gap | `hypr-general-snap.window-gap` | 滑块 | 未实现 | — |
-
 ### Hyprland · Window group behavior — `hypr-group`
 
 合成器高级设置：group · Hyprland
 
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**未实现**；条目：14；已实现 0 / 未实现 14 / 不适用 0。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3096,11 +3118,22 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 | merge groups on drag · merge_groups_on_drag | `hypr-group.merge-groups-on-drag` | 开关 | 未实现 | — |
 | merge groups on groupbar · merge_groups_on_groupbar | `hypr-group.merge-groups-on-groupbar` | 开关 | 未实现 | — |
 
+#### Group borders
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Active group border color | `hypr-group.border-active` | 文本输入 | 未实现 | — |
+| Inactive group border color | `hypr-group.border-inactive` | 文本输入 | 未实现 | — |
+| Active locked group border color | `hypr-group.border-locked-active` | 文本输入 | 未实现 | — |
+| Inactive locked group border color | `hypr-group.border-locked-inactive` | 文本输入 | 未实现 | — |
+| Border of windows that refuse groups | `hypr-group.nogroup-border` | 文本输入 | 未实现 | — |
+| Active border of windows that refuse groups | `hypr-group.nogroup-border-active` | 文本输入 | 未实现 | — |
+
 ### Hyprland · Window group tab bar — `hypr-group-groupbar`
 
 合成器高级设置：group.groupbar · Hyprland
 
-页面状态：**未实现**；条目：31；已实现 0 / 未实现 31 / 不适用 0。
+页面状态：**未实现**；条目：35；已实现 0 / 未实现 35 / 不适用 0。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3141,6 +3174,15 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 | text color locked inactive · text_color_locked_inactive | `hypr-group-groupbar.text-color-locked-inactive` | 文本输入 | 未实现 | — |
 | text offset · text_offset | `hypr-group-groupbar.text-offset` | 滑块 | 未实现 | — |
 | text padding · text_padding | `hypr-group-groupbar.text-padding` | 滑块 | 未实现 | — |
+
+#### Tab colors
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Active tab color | `hypr-group-groupbar.col-active` | 文本输入 | 未实现 | — |
+| Inactive tab color | `hypr-group-groupbar.col-inactive` | 文本输入 | 未实现 | — |
+| Active locked tab color | `hypr-group-groupbar.col-locked-active` | 文本输入 | 未实现 | — |
+| Inactive locked tab color | `hypr-group-groupbar.col-locked-inactive` | 文本输入 | 未实现 | — |
 
 ### Hyprland · Layout global strategy — `hypr-layout`
 
@@ -3851,3 +3893,13 @@ Wayland、XDG、主题与应用环境 · Hyprland
 - Untested: a real session lock on the workstation, per-display images on physical outputs, automatic hyprpaper restart on the workstation, video across a real sign-in, the native file and color picker dialogs, and `switchwall.sh` through the wallpaper selector. Real-desktop image changes wait for the duplicate hyprpaper instance to be resolved.
 
 电池历史后端使用 SQLite 永久保存每分钟电量样本、屏幕开关和 logind 睡眠事件；历史页面展示最近 24 小时 / 7 天电量曲线与时长统计，每应用耗电保持未实现。详见 [power.md](power.md)。
+
+## Multitasking, cursor and icon themes (2026-11-09)
+
+- System › Multitasking replaces the Hyprland `hypr-general` and `hypr-general-snap` pages: layout thumbnails, a preview that follows the layout, gaps and border width while sliders move, snapping and border resizing with dependent rows hidden while their parent is off. Gaps accept one value or four sides. `general:locale` was removed (Language and Region owns language).
+- Appearance › Cursor (moved from System) and the Icons section of Colors and themes: theme galleries with real XCursor previews (Rust `xcursor` and `png` crates) and icons rendered by the GTK runner from each theme; the size slider stops at the theme's own sizes; theme folders follow the XDG icon path and `XCURSOR_PATH`; packs install from a folder or archive (bsdtar) into `$XDG_DATA_HOME/icons` and can be removed after confirmation. Windows-only pointer colour, text cursor indicator, reference rows, zoom and diagnostic cursor options were removed.
+- Architecture: the Hyprland option engine gained a CSS gap kind and per-option first-use adoption; `Resolve … system` now also updates the Settings-owned Lua file so a reload cannot bring the old value back (previously the next write reverted the adopted value and raised the conflict again). The option controller became the feature-neutral `FeatureOptionsController` in `settings/application`, shared by input, desktop and theme packs. Appearance file, environment-block and GNOME-setting writers became value-generic so cursor and icon themes reuse Light/Dark's atomic apply and rollback.
+- Automated: Rust appearance tests (discovery, precedence, hidden themes, previews, folder and archive installation, refusal cases, every apply target, rollback on compositor failure) and input tests (gaps, adoption of new options, adoption rewriting the owned file); `test/multitasking_cursor_test.dart`; all Flutter tests; `test/desktop_smoke.py` and `test/input_smoke.py` against a nested Hyprland 0.57 with isolated XDG roots, home and GNOME keyfile (layout, four-sided gaps, cursor options, cursor and icon theme selection across GNOME, GTK, XCursor default, Hyprland and fish environment, KDE through kwriteconfig6, conflict and adoption, pack install, duplicate refusal and removal).
+- Installed release on the workstation: the resident service adopted the live window, cursor and theme values on first use without writing (desktop.lua and hyprland.lua unchanged, no conflict); the Multitasking, Cursor and Colors and themes pages were inspected on DP-1, including new page glyphs, Bibata previews, icon previews of Adwaita, Breeze, Papirus and Tela, folder list and pack rows.
+- Colors and themes cleanup: the page keeps Color and Icons only. Window decoration previews moved to the new Appearance pages Window appearance and Animations (the Visual effects animation toggle merged into Animations), group and tab colours moved to the window group pages, and the Windows theme bundle (choose, save, background and sound links), the duplicate transparency toggles (Background › Window blur owns blur), the gradient editor, desktop component presets and the screen shader path were deleted. The moved controls remain previews.
+- Untested on the real desktop: selecting a different cursor or icon theme (it would replace the existing KDE icon theme `breeze-plus-dark`; the isolated smoke test covers every write), the native folder and archive pickers, and Hyprcursor-only themes (none installed). The workstation's start-up `hyprctl setcursor` in `execs.lua` overrides the saved environment at sign-in; Settings then shows a conflict rather than editing that script.

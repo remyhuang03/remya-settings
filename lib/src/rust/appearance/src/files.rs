@@ -13,7 +13,16 @@ pub(crate) struct FileChange {
 
 impl FileChange {
     pub fn prepare(path: &Path, edits: &[(&str, Option<String>)]) -> Result<Self, String> {
-        Self::prepare_text(path, |content| edit_settings(content, edits))
+        Self::prepare_group(path, "Settings", edits)
+    }
+
+    /// Edits keys of one `[group]` in a key file, keeping every other line.
+    pub fn prepare_group(
+        path: &Path,
+        group: &str,
+        edits: &[(&str, Option<String>)],
+    ) -> Result<Self, String> {
+        Self::prepare_text(path, |content| edit_group(content, group, edits))
     }
 
     pub fn prepare_text(
@@ -123,8 +132,18 @@ pub(crate) fn key_file(content: &str) -> Result<glib::KeyFile, String> {
     Ok(parsed)
 }
 
+#[cfg(test)]
 fn edit_settings(content: &str, edits: &[(&str, Option<String>)]) -> Result<String, String> {
+    edit_group(content, "Settings", edits)
+}
+
+fn edit_group(
+    content: &str,
+    group: &str,
+    edits: &[(&str, Option<String>)],
+) -> Result<String, String> {
     key_file(content)?;
+    let header = format!("[{group}]");
     let newline = if content.contains("\r\n") {
         "\r\n"
     } else {
@@ -134,16 +153,16 @@ fn edit_settings(content: &str, edits: &[(&str, Option<String>)]) -> Result<Stri
     let groups: Vec<usize> = lines
         .iter()
         .enumerate()
-        .filter_map(|(index, line)| (line.trim() == "[Settings]").then_some(index))
+        .filter_map(|(index, line)| (line.trim() == header).then_some(index))
         .collect();
     if groups.len() > 1 {
-        return Err("Duplicate [Settings] sections".into());
+        return Err(format!("Duplicate {header} sections"));
     }
     if groups.is_empty() {
         if !content.is_empty() && !content.ends_with('\n') {
             lines.push(newline.into());
         }
-        lines.push(format!("[Settings]{newline}"));
+        lines.push(format!("{header}{newline}"));
     }
     let start = groups.first().copied().unwrap_or(lines.len() - 1) + 1;
     let mut end = lines

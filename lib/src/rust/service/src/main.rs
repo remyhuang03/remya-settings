@@ -220,6 +220,13 @@ fn run() -> Result<(), String> {
                     }
                     if method == "Reload"
                         || args.first().is_some_and(|id| {
+                            id == "themes" || remya_settings_appearance::packs::is_setting(id)
+                        })
+                    {
+                        signal(&bus, "themes", &state.lock().unwrap().themes.state());
+                    }
+                    if method == "Reload"
+                        || args.first().is_some_and(|id| {
                             id == "power"
                                 || id == "battery-saver"
                                 || (id != remya_settings_power::KEEP_AWAKE

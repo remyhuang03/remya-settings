@@ -50,7 +50,7 @@ impl Environment {
                     let bytes = read_optional(path)?.unwrap_or_default();
                     let content = std::str::from_utf8(&bytes)
                         .map_err(|error| format!("{}: {error}", path.display()))?;
-                    let range = managed_range(content, lua)?;
+                    let range = managed_range(content, lua, MARKER)?;
                     if range.is_some() {
                         "Managed Qt defaults saved; inherited by new shell/session processes"
                     } else {
@@ -88,7 +88,16 @@ impl Environment {
                 continue;
             };
             let change = FileChange::prepare_text(path, |content| {
-                let updated = edit(content, lua, &self.variables, mode)?;
+                let value = match mode {
+                    SystemThemeMode::Light => "Light",
+                    SystemThemeMode::Dark => "Dark",
+                };
+                let values: Vec<_> = self
+                    .variables
+                    .iter()
+                    .map(|v| (*v, value.to_owned()))
+                    .collect();
+                let updated = edit(content, lua, MARKER, &values)?;
                 validate(&updated, lua).map_err(|error| format!("{}: {error}", path.display()))?;
                 Ok(updated)
             })?;
@@ -99,6 +108,47 @@ impl Environment {
             } else {
                 "Qt defaults saved for new fish processes; existing shells retain their environment"
             }));
+            files.push(change);
+        }
+        Ok((files, targets))
+    }
+
+    /// Saves `values` in a separate managed block named `marker` of each shell file.
+    pub fn prepare_values(
+        &self,
+        marker: &str,
+        values: &[(&str, String)],
+        purpose: &str,
+    ) -> Result<(Vec<FileChange>, Vec<ThemeTargetResult>), String> {
+        let mut files = vec![];
+        let mut targets = vec![];
+        for (name, path, lua) in self.shells() {
+            let Some(path) = path else {
+                targets.push(target(
+                    name,
+                    ThemeTargetStatus::Unavailable,
+                    if lua {
+                        "No active Lua configuration or luac syntax validator; skipped"
+                    } else {
+                        "fish is not installed; skipped"
+                    },
+                ));
+                continue;
+            };
+            let change = FileChange::prepare_text(path, |content| {
+                let updated = edit(content, lua, marker, values)?;
+                validate(&updated, lua).map_err(|error| format!("{}: {error}", path.display()))?;
+                Ok(updated)
+            })?;
+            targets.push(target(
+                name,
+                if change.changed() {
+                    ThemeTargetStatus::Applied
+                } else {
+                    ThemeTargetStatus::Unchanged
+                },
+                format!("{purpose} saved for new processes; running ones keep their environment"),
+            ));
             files.push(change);
         }
         Ok((files, targets))
@@ -165,16 +215,20 @@ fn unavailable(lua: bool) -> &'static str {
     }
 }
 
-fn markers(lua: bool) -> (String, String) {
+fn markers(lua: bool, marker: &str) -> (String, String) {
     let prefix = if lua { "--" } else { "#" };
     (
-        format!("{prefix} BEGIN {MARKER}"),
-        format!("{prefix} END {MARKER}"),
+        format!("{prefix} BEGIN {marker}"),
+        format!("{prefix} END {marker}"),
     )
 }
 
-fn managed_range(content: &str, lua: bool) -> Result<Option<std::ops::Range<usize>>, String> {
-    let (begin, end) = markers(lua);
+fn managed_range(
+    content: &str,
+    lua: bool,
+    marker: &str,
+) -> Result<Option<std::ops::Range<usize>>, String> {
+    let (begin, end) = markers(lua, marker);
     let mut offset = 0;
     let mut starts = vec![];
     let mut ends = vec![];
@@ -190,37 +244,44 @@ fn managed_range(content: &str, lua: bool) -> Result<Option<std::ops::Range<usiz
     match (starts.as_slice(), ends.as_slice()) {
         ([], []) => Ok(None),
         ([start], [end]) if start < end => Ok(Some(*start..*end)),
-        _ => Err("Duplicate or incomplete managed appearance block; configuration retained".into()),
+        _ => Err(format!(
+            "Duplicate or incomplete \"{marker}\" block; configuration retained"
+        )),
     }
 }
 
+/// Values must already be validated: they are written inside double quotes.
 fn edit(
     content: &str,
     lua: bool,
-    variables: &[&str],
-    mode: SystemThemeMode,
+    marker: &str,
+    values: &[(&str, String)],
 ) -> Result<String, String> {
-    let (begin, end) = markers(lua);
+    let (begin, end) = markers(lua, marker);
     let newline = if content.contains("\r\n") {
         "\r\n"
     } else {
         "\n"
     };
-    let value = match mode {
-        SystemThemeMode::Light => "Light",
-        SystemThemeMode::Dark => "Dark",
-    };
+    if values.iter().any(|(_, v)| {
+        v.chars()
+            .any(|c| c.is_control() || matches!(c, '"' | '\\' | '$' | '`'))
+    }) {
+        return Err(
+            "Environment values cannot contain quotes, backslashes or control characters".into(),
+        );
+    }
     let mut block = format!("{begin}{newline}");
-    for variable in variables {
+    for (variable, value) in values {
         block.push_str(&if lua {
             format!("hl.env(\"{variable}\", \"{value}\"){newline}")
         } else {
-            format!("set -gx {variable} {value}{newline}")
+            format!("set -gx {variable} \"{value}\"{newline}")
         });
     }
     block.push_str(&format!("{end}{newline}"));
     let mut updated = content.to_owned();
-    if let Some(range) = managed_range(content, lua)? {
+    if let Some(range) = managed_range(content, lua, marker)? {
         updated.replace_range(range, &block);
     } else {
         if !updated.is_empty() && !updated.ends_with('\n') {
@@ -262,23 +323,57 @@ fn validate(content: &str, lua: bool) -> Result<(), String> {
 mod tests {
     use super::*;
 
+    fn qt(
+        content: &str,
+        lua: bool,
+        variables: &[&str],
+        mode: SystemThemeMode,
+    ) -> Result<String, String> {
+        let value = if mode == SystemThemeMode::Dark {
+            "Dark"
+        } else {
+            "Light"
+        };
+        let values: Vec<_> = variables.iter().map(|v| (*v, value.to_owned())).collect();
+        edit(content, lua, MARKER, &values)
+    }
+
+    #[test]
+    fn separate_blocks_and_unsafe_values() {
+        let qt_block = qt("", true, &[MATERIAL], SystemThemeMode::Dark).unwrap();
+        let both = edit(
+            &qt_block,
+            true,
+            "Remy'a Settings cursor",
+            &[("XCURSOR_SIZE", "24".into())],
+        )
+        .unwrap();
+        assert!(both.starts_with(&qt_block) && both.contains("hl.env(\"XCURSOR_SIZE\", \"24\")"));
+        assert_eq!(
+            qt(&both, true, &[MATERIAL], SystemThemeMode::Dark).unwrap(),
+            both
+        );
+        assert!(edit("", false, MARKER, &[("A", "x\" ; rm".into())]).is_err());
+        assert!(edit("", false, MARKER, &[("A", "$(id)".into())]).is_err());
+    }
+
     #[test]
     fn managed_blocks_preserve_other_configuration_and_are_idempotent() {
         for (lua, original) in [
             (false, "# Personal\r\nset -gx OTHER keep\r\n"),
             (true, "-- Personal\nrequire(\"custom.env\")\n"),
         ] {
-            let dark = edit(original, lua, &[MATERIAL, UNIVERSAL], SystemThemeMode::Dark).unwrap();
+            let dark = qt(original, lua, &[MATERIAL, UNIVERSAL], SystemThemeMode::Dark).unwrap();
             assert!(dark.starts_with(original));
-            let light = edit(&dark, lua, &[MATERIAL, UNIVERSAL], SystemThemeMode::Light).unwrap();
+            let light = qt(&dark, lua, &[MATERIAL, UNIVERSAL], SystemThemeMode::Light).unwrap();
             assert!(light.starts_with(original));
             assert!(!light.contains("Dark"));
             assert_eq!(
-                edit(&light, lua, &[MATERIAL, UNIVERSAL], SystemThemeMode::Light).unwrap(),
+                qt(&light, lua, &[MATERIAL, UNIVERSAL], SystemThemeMode::Light).unwrap(),
                 light
             );
             assert!(
-                edit(
+                qt(
                     &(dark.clone() + &dark),
                     lua,
                     &[MATERIAL],
@@ -287,8 +382,8 @@ mod tests {
                 .is_err()
             );
             assert!(
-                edit(
-                    &format!("{}\n", markers(lua).0),
+                qt(
+                    &format!("{}\n", markers(lua, MARKER).0),
                     lua,
                     &[MATERIAL],
                     SystemThemeMode::Light
@@ -299,7 +394,7 @@ mod tests {
             let path = change.path().join("config");
             std::fs::write(&path, original).unwrap();
             let file = FileChange::prepare_text(&path, |content| {
-                edit(content, lua, &[MATERIAL], SystemThemeMode::Dark)
+                qt(content, lua, &[MATERIAL], SystemThemeMode::Dark)
             })
             .unwrap();
             file.apply().unwrap();
@@ -345,14 +440,14 @@ mod tests {
             if command_exists(command, flag) {
                 assert!(
                     validate(
-                        &edit(original, lua, &[MATERIAL], SystemThemeMode::Dark).unwrap(),
+                        &qt(original, lua, &[MATERIAL], SystemThemeMode::Dark).unwrap(),
                         lua
                     )
                     .is_ok()
                 );
                 assert!(
                     validate(
-                        &edit(broken, lua, &[MATERIAL], SystemThemeMode::Dark).unwrap(),
+                        &qt(broken, lua, &[MATERIAL], SystemThemeMode::Dark).unwrap(),
                         lua
                     )
                     .is_err()

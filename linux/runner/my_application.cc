@@ -43,6 +43,44 @@ static void application_icon(FlMethodCall* call) {
   }, call);
 }
 
+// Renders one named icon from a given installed icon theme, for the icon theme picker.
+static void theme_icon(FlMethodCall* call) {
+  FlValue* args = fl_method_call_get_args(call);
+  if (args == nullptr || fl_value_get_type(args) != FL_VALUE_TYPE_LIST || fl_value_get_length(args) != 3 ||
+      fl_value_get_type(fl_value_get_list_value(args, 0)) != FL_VALUE_TYPE_STRING ||
+      fl_value_get_type(fl_value_get_list_value(args, 1)) != FL_VALUE_TYPE_STRING ||
+      fl_value_get_type(fl_value_get_list_value(args, 2)) != FL_VALUE_TYPE_INT) {
+    fl_method_call_respond_error(call, "InvalidArgument", "Expected [theme, icon, size]", nullptr, nullptr);
+    return;
+  }
+  const gchar* theme = fl_value_get_string(fl_value_get_list_value(args, 0));
+  const gchar* name = fl_value_get_string(fl_value_get_list_value(args, 1));
+  int64_t size = fl_value_get_int(fl_value_get_list_value(args, 2));
+  if (strlen(theme) > 255 || strlen(name) > 255 || size < 8 || size > 256) {
+    fl_method_call_respond_error(call, "InvalidArgument", "Theme, icon or size out of range", nullptr, nullptr);
+    return;
+  }
+  // A private theme object: the desktop's current icon theme is left untouched.
+  static GHashTable* themes = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_object_unref);
+  auto* icons = GTK_ICON_THEME(g_hash_table_lookup(themes, theme));
+  if (icons == nullptr) {
+    icons = gtk_icon_theme_new();
+    gtk_icon_theme_set_custom_theme(icons, theme);
+    g_hash_table_insert(themes, g_strdup(theme), icons);
+  }
+  g_autoptr(GError) error = nullptr;
+  g_autoptr(GdkPixbuf) pixels = gtk_icon_theme_load_icon(
+      icons, name, static_cast<gint>(size), GTK_ICON_LOOKUP_FORCE_SIZE, &error);
+  g_autofree gchar* bytes = nullptr;
+  gsize length = 0;
+  if (pixels != nullptr && gdk_pixbuf_save_to_buffer(pixels, &bytes, &length, "png", nullptr, nullptr)) {
+    g_autoptr(FlValue) value = fl_value_new_uint8_list(reinterpret_cast<const uint8_t*>(bytes), length);
+    fl_method_call_respond_success(call, value, nullptr);
+  } else {
+    fl_method_call_respond_success(call, nullptr, nullptr);
+  }
+}
+
 // Called when first Flutter frame received.
 static void first_frame_cb(MyApplication* self, FlView* view) {
   if (!self->service_mode) gtk_widget_show(gtk_widget_get_toplevel(GTK_WIDGET(view)));
@@ -113,6 +151,8 @@ static void my_application_activate(GApplication* application) {
       [](FlMethodChannel* channel, FlMethodCall* call, gpointer data) {
         if (g_strcmp0(fl_method_call_get_name(call), "applicationIcon") == 0) {
           application_icon(call);
+        } else if (g_strcmp0(fl_method_call_get_name(call), "themeIcon") == 0) {
+          theme_icon(call);
         } else if (g_strcmp0(fl_method_call_get_name(call), "initialPage") == 0) {
           auto* self = MY_APPLICATION(data);
           const char* page = self->dart_entrypoint_arguments && self->dart_entrypoint_arguments[0] && self->dart_entrypoint_arguments[1] ? self->dart_entrypoint_arguments[1] : "home";

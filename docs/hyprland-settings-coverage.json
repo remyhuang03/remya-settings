@@ -260,17 +260,8 @@
     "background.99b01ada",
     "background.9e58290b",
     "background.56c289eb",
-    "themes.3630e7d0",
     "themes.8983f367",
     "themes.6f67371e",
-    "themes.reference.ed936eee",
-    "themes.a9039704",
-    "themes.d582c922",
-    "themes.b13d33a5",
-    "themes.ab9ff81d",
-    "cursor.cb5e32b2",
-    "themes.26420e25",
-    "themes.reference.94d5186b",
     "lockscreen.70c5d385",
     "lockscreen.18104edf",
     "lockscreen.a0216293",
@@ -438,25 +429,9 @@
     "text-size.71eba864",
     "text-size.reference.8ff6836a",
     "visual-effects.fe13858e",
-    "visual-effects.3630e7d0",
-    "visual-effects.321355a5",
     "visual-effects.db944e6b",
     "visual-effects.reference.22476e4b",
-    "visual-effects.reference.8e1825a1",
-    "visual-effects.reference.6aa5bc02",
     "visual-effects.reference.5b6b06b4",
-    "cursor.6de7c60b",
-    "cursor.86209eba",
-    "cursor.e8c2f48c",
-    "cursor.reference.8a9af3b1",
-    "cursor.reference.966d030b",
-    "cursor.bb54f6b0",
-    "cursor.5829d690",
-    "cursor.d04d1b72",
-    "cursor.60ececbf",
-    "cursor.reference.4c40f3ca",
-    "cursor.reference.b0cd3942",
-    "cursor.reference.7beee9f0",
     "magnifier.0398d9d8",
     "magnifier.21f929d8",
     "magnifier.c42bf921",
@@ -994,8 +969,6 @@
     "session"
   ],
   "addedPages": [
-    "hypr-general",
-    "hypr-general-snap",
     "hypr-group",
     "hypr-group-groupbar",
     "hypr-misc",
@@ -1024,12 +997,14 @@
     "hypr-session-services",
     "hypr-environment",
     "hypr-plugins",
-    "hypr-diagnostics"
+    "hypr-diagnostics",
+    "window-appearance",
+    "animations"
   ],
   "controls": [
     {
-      "control": "hypr-general.allow-tearing",
-      "page": "hypr-general",
+      "control": "multitasking.allow-tearing",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "allow-tearing",
       "reference": [
@@ -1039,11 +1014,13 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general.border-size",
-      "page": "hypr-general",
+      "control": "multitasking.border-size",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "border-size",
       "reference": [
@@ -1053,11 +1030,13 @@
       ],
       "nativeType": "int",
       "documentedDefault": "`1`",
-      "documentedLimits": "[0 - 20]"
+      "documentedLimits": "[0 - 20]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general.extend-border-grab-area",
-      "page": "hypr-general",
+      "control": "multitasking.border-grab-area",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "extend-border-grab-area",
       "reference": [
@@ -1067,11 +1046,13 @@
       ],
       "nativeType": "int",
       "documentedDefault": "`15`",
-      "documentedLimits": "[0 - 100]"
+      "documentedLimits": "[0 - 100]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general.float-gaps",
-      "page": "hypr-general",
+      "control": "multitasking.float-gaps",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "float-gaps",
       "reference": [
@@ -1081,11 +1062,13 @@
       ],
       "nativeType": "css_gaps",
       "documentedDefault": "`0`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general.gaps-in",
-      "page": "hypr-general",
+      "control": "multitasking.gaps-in",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "gaps-in",
       "reference": [
@@ -1095,11 +1078,13 @@
       ],
       "nativeType": "css_gaps",
       "documentedDefault": "`5`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general.gaps-out",
-      "page": "hypr-general",
+      "control": "multitasking.gaps-out",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "gaps-out",
       "reference": [
@@ -1109,11 +1094,13 @@
       ],
       "nativeType": "css_gaps",
       "documentedDefault": "`20`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general.gaps-workspaces",
-      "page": "hypr-general",
+      "control": "multitasking.gaps-workspaces",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "gaps-workspaces",
       "reference": [
@@ -1123,11 +1110,13 @@
       ],
       "nativeType": "int",
       "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 100]"
+      "documentedLimits": "[0 - 100]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general.hover-icon-on-border",
-      "page": "hypr-general",
+      "control": "multitasking.border-hover-icon",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "hover-icon-on-border",
       "reference": [
@@ -1137,11 +1126,13 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`true`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general.layout",
-      "page": "hypr-general",
+      "control": "multitasking.layout",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "layout",
       "reference": [
@@ -1151,25 +1142,13 @@
       ],
       "nativeType": "string",
       "documentedDefault": "`\"dwindle\"`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general.locale",
-      "page": "hypr-general",
-      "source": "hypr-options",
-      "key": "locale",
-      "reference": [
-        "hypr-options",
-        "general",
-        "locale"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-general.modal-parent-blocking",
-      "page": "hypr-general",
+      "control": "multitasking.modal-parent-blocking",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "modal-parent-blocking",
       "reference": [
@@ -1179,11 +1158,13 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`true`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general.no-focus-fallback",
-      "page": "hypr-general",
+      "control": "multitasking.no-focus-fallback",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "no-focus-fallback",
       "reference": [
@@ -1193,11 +1174,13 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general.resize-corner",
-      "page": "hypr-general",
+      "control": "multitasking.resize-corner",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "resize-corner",
       "reference": [
@@ -1207,11 +1190,13 @@
       ],
       "nativeType": "int",
       "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 4]"
+      "documentedLimits": "[0 - 4]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general.resize-on-border",
-      "page": "hypr-general",
+      "control": "multitasking.resize-on-border",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "resize-on-border",
       "reference": [
@@ -1221,11 +1206,13 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "themes.border-active-border",
-      "page": "themes",
+      "control": "window-appearance.active-border",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "active-border",
       "reference": [
@@ -1238,8 +1225,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.border-inactive-border",
-      "page": "themes",
+      "control": "window-appearance.inactive-border",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "inactive-border",
       "reference": [
@@ -1252,8 +1239,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.border-nogroup-border",
-      "page": "themes",
+      "control": "hypr-group.nogroup-border",
+      "page": "hypr-group",
       "source": "hypr-options",
       "key": "nogroup-border",
       "reference": [
@@ -1266,8 +1253,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.border-nogroup-border-active",
-      "page": "themes",
+      "control": "hypr-group.nogroup-border-active",
+      "page": "hypr-group",
       "source": "hypr-options",
       "key": "nogroup-border-active",
       "reference": [
@@ -1280,8 +1267,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-general-snap.enabled",
-      "page": "hypr-general-snap",
+      "control": "multitasking.snap",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -1291,11 +1278,13 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general-snap.border-overlap",
-      "page": "hypr-general-snap",
+      "control": "multitasking.snap-border-overlap",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "border-overlap",
       "reference": [
@@ -1305,11 +1294,13 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general-snap.respect-gaps",
-      "page": "hypr-general-snap",
+      "control": "multitasking.snap-respect-gaps",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "respect-gaps",
       "reference": [
@@ -1319,11 +1310,13 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general-snap.monitor-gap",
-      "page": "hypr-general-snap",
+      "control": "multitasking.snap-monitor-gap",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "monitor-gap",
       "reference": [
@@ -1333,11 +1326,13 @@
       ],
       "nativeType": "int",
       "documentedDefault": "`10`",
-      "documentedLimits": "[0 - 100]"
+      "documentedLimits": "[0 - 100]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-general-snap.window-gap",
-      "page": "hypr-general-snap",
+      "control": "multitasking.snap-window-gap",
+      "page": "multitasking",
       "source": "hypr-options",
       "key": "window-gap",
       "reference": [
@@ -1347,11 +1342,13 @@
       ],
       "nativeType": "int",
       "documentedDefault": "`10`",
-      "documentedLimits": "[0 - 100]"
+      "documentedLimits": "[0 - 100]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "themes.decoration-active-opacity",
-      "page": "themes",
+      "control": "window-appearance.active-opacity",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "active-opacity",
       "reference": [
@@ -1364,8 +1361,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "themes.decoration-border-part-of-window",
-      "page": "themes",
+      "control": "window-appearance.border-part-of-window",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "border-part-of-window",
       "reference": [
@@ -1378,8 +1375,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.decoration-dim-around",
-      "page": "themes",
+      "control": "window-appearance.dim-around",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "dim-around",
       "reference": [
@@ -1392,8 +1389,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "themes.decoration-dim-inactive",
-      "page": "themes",
+      "control": "window-appearance.dim-inactive",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "dim-inactive",
       "reference": [
@@ -1406,8 +1403,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.decoration-dim-modal",
-      "page": "themes",
+      "control": "window-appearance.dim-modal",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "dim-modal",
       "reference": [
@@ -1420,8 +1417,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.decoration-dim-special",
-      "page": "themes",
+      "control": "window-appearance.dim-special",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "dim-special",
       "reference": [
@@ -1434,8 +1431,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.decoration-dim-strength",
-      "page": "themes",
+      "control": "window-appearance.dim-strength",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "dim-strength",
       "reference": [
@@ -1448,8 +1445,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "themes.decoration-fullscreen-opacity",
-      "page": "themes",
+      "control": "window-appearance.fullscreen-opacity",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "fullscreen-opacity",
       "reference": [
@@ -1462,8 +1459,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "themes.decoration-inactive-opacity",
-      "page": "themes",
+      "control": "window-appearance.inactive-opacity",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "inactive-opacity",
       "reference": [
@@ -1476,8 +1473,8 @@
       "documentedLimits": "[0.0 - 1.0]"
     },
     {
-      "control": "themes.decoration-rounding",
-      "page": "themes",
+      "control": "window-appearance.rounding",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "rounding",
       "reference": [
@@ -1490,8 +1487,8 @@
       "documentedLimits": "[0 - 100]"
     },
     {
-      "control": "themes.decoration-rounding-power",
-      "page": "themes",
+      "control": "window-appearance.rounding-power",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "rounding-power",
       "reference": [
@@ -1502,20 +1499,6 @@
       "nativeType": "float",
       "documentedDefault": "`2.0`",
       "documentedLimits": "[1.0 - 10.0]"
-    },
-    {
-      "control": "themes.decoration-screen-shader",
-      "page": "themes",
-      "source": "hypr-options",
-      "key": "screen-shader",
-      "reference": [
-        "hypr-options",
-        "decoration",
-        "screen_shader"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
     },
     {
       "control": "background.blur-enabled",
@@ -1648,8 +1631,8 @@
       "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
     },
     {
-      "control": "themes.shadow-enabled",
-      "page": "themes",
+      "control": "window-appearance.shadow",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -1662,8 +1645,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.shadow-color",
-      "page": "themes",
+      "control": "window-appearance.shadow-color",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "color",
       "reference": [
@@ -1676,8 +1659,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.shadow-color-inactive",
-      "page": "themes",
+      "control": "window-appearance.shadow-color-inactive",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "color-inactive",
       "reference": [
@@ -1690,8 +1673,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.shadow-offset",
-      "page": "themes",
+      "control": "window-appearance.shadow-offset",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "offset",
       "reference": [
@@ -1704,8 +1687,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.shadow-range",
-      "page": "themes",
+      "control": "window-appearance.shadow-range",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "range",
       "reference": [
@@ -1718,8 +1701,8 @@
       "documentedLimits": "[0 - 100]"
     },
     {
-      "control": "themes.shadow-render-power",
-      "page": "themes",
+      "control": "window-appearance.shadow-render-power",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "render-power",
       "reference": [
@@ -1732,8 +1715,8 @@
       "documentedLimits": "[1 - 4]"
     },
     {
-      "control": "themes.shadow-scale",
-      "page": "themes",
+      "control": "window-appearance.shadow-scale",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "scale",
       "reference": [
@@ -1746,8 +1729,8 @@
       "documentedLimits": "[0.05 - 2.0]"
     },
     {
-      "control": "themes.shadow-sharp",
-      "page": "themes",
+      "control": "window-appearance.shadow-sharp",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "sharp",
       "reference": [
@@ -1760,8 +1743,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.glow-enabled",
-      "page": "themes",
+      "control": "window-appearance.glow",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -1774,8 +1757,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.glow-color",
-      "page": "themes",
+      "control": "window-appearance.glow-color",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "color",
       "reference": [
@@ -1788,8 +1771,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.glow-color-inactive",
-      "page": "themes",
+      "control": "window-appearance.glow-color-inactive",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "color-inactive",
       "reference": [
@@ -1802,8 +1785,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.glow-range",
-      "page": "themes",
+      "control": "window-appearance.glow-range",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "range",
       "reference": [
@@ -1816,8 +1799,8 @@
       "documentedLimits": "[0 - 100]"
     },
     {
-      "control": "themes.glow-render-power",
-      "page": "themes",
+      "control": "window-appearance.glow-render-power",
+      "page": "window-appearance",
       "source": "hypr-options",
       "key": "render-power",
       "reference": [
@@ -1830,8 +1813,8 @@
       "documentedLimits": "[1 - 4]"
     },
     {
-      "control": "themes.motion-blur-enabled",
-      "page": "themes",
+      "control": "animations.motion-blur",
+      "page": "animations",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -1844,8 +1827,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.motion-blur-samples",
-      "page": "themes",
+      "control": "animations.motion-blur-samples",
+      "page": "animations",
       "source": "hypr-options",
       "key": "samples",
       "reference": [
@@ -1858,8 +1841,8 @@
       "documentedLimits": "[1 - 64]"
     },
     {
-      "control": "themes.wobble-enabled",
-      "page": "themes",
+      "control": "animations.wobble",
+      "page": "animations",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -1872,8 +1855,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.wobble-mesh",
-      "page": "themes",
+      "control": "animations.wobble-mesh",
+      "page": "animations",
       "source": "hypr-options",
       "key": "mesh",
       "reference": [
@@ -1886,8 +1869,8 @@
       "documentedLimits": "[2 - 32]"
     },
     {
-      "control": "themes.wobble-stiffness",
-      "page": "themes",
+      "control": "animations.wobble-stiffness",
+      "page": "animations",
       "source": "hypr-options",
       "key": "stiffness",
       "reference": [
@@ -1900,8 +1883,8 @@
       "documentedLimits": "[0.0001 - 1000]"
     },
     {
-      "control": "themes.wobble-damping",
-      "page": "themes",
+      "control": "animations.wobble-damping",
+      "page": "animations",
       "source": "hypr-options",
       "key": "damping",
       "reference": [
@@ -1914,8 +1897,8 @@
       "documentedLimits": "[0 - 1000]"
     },
     {
-      "control": "themes.wobble-mass",
-      "page": "themes",
+      "control": "animations.wobble-mass",
+      "page": "animations",
       "source": "hypr-options",
       "key": "mass",
       "reference": [
@@ -1928,8 +1911,8 @@
       "documentedLimits": "[0.0001 - 1000]"
     },
     {
-      "control": "themes.wobble-intensity",
-      "page": "themes",
+      "control": "animations.wobble-intensity",
+      "page": "animations",
       "source": "hypr-options",
       "key": "intensity",
       "reference": [
@@ -1942,8 +1925,8 @@
       "documentedLimits": "[0 - 3]"
     },
     {
-      "control": "themes.wobble-value-epsilon",
-      "page": "themes",
+      "control": "animations.wobble-value-epsilon",
+      "page": "animations",
       "source": "hypr-options",
       "key": "value-epsilon",
       "reference": [
@@ -1956,8 +1939,8 @@
       "documentedLimits": "[0 - 100]"
     },
     {
-      "control": "themes.wobble-velocity-epsilon",
-      "page": "themes",
+      "control": "animations.wobble-velocity-epsilon",
+      "page": "animations",
       "source": "hypr-options",
       "key": "velocity-epsilon",
       "reference": [
@@ -1970,8 +1953,8 @@
       "documentedLimits": "[0 - 1000]"
     },
     {
-      "control": "themes.animation-enabled",
-      "page": "themes",
+      "control": "animations.enabled",
+      "page": "animations",
       "source": "hypr-options",
       "key": "enabled",
       "reference": [
@@ -1984,8 +1967,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.animation-workspace-wraparound",
-      "page": "themes",
+      "control": "animations.workspace-wraparound",
+      "page": "animations",
       "source": "hypr-options",
       "key": "workspace-wraparound",
       "reference": [
@@ -2320,8 +2303,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.group-border-border-active",
-      "page": "themes",
+      "control": "hypr-group.border-active",
+      "page": "hypr-group",
       "source": "hypr-options",
       "key": "border-active",
       "reference": [
@@ -2334,8 +2317,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.group-border-border-inactive",
-      "page": "themes",
+      "control": "hypr-group.border-inactive",
+      "page": "hypr-group",
       "source": "hypr-options",
       "key": "border-inactive",
       "reference": [
@@ -2348,8 +2331,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.group-border-border-locked-active",
-      "page": "themes",
+      "control": "hypr-group.border-locked-active",
+      "page": "hypr-group",
       "source": "hypr-options",
       "key": "border-locked-active",
       "reference": [
@@ -2362,8 +2345,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.group-border-border-locked-inactive",
-      "page": "themes",
+      "control": "hypr-group.border-locked-inactive",
+      "page": "hypr-group",
       "source": "hypr-options",
       "key": "border-locked-inactive",
       "reference": [
@@ -2810,8 +2793,8 @@
       "documentedLimits": "[0 - 22]"
     },
     {
-      "control": "themes.groupbar-active",
-      "page": "themes",
+      "control": "hypr-group-groupbar.col-active",
+      "page": "hypr-group-groupbar",
       "source": "hypr-options",
       "key": "active",
       "reference": [
@@ -2824,8 +2807,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.groupbar-inactive",
-      "page": "themes",
+      "control": "hypr-group-groupbar.col-inactive",
+      "page": "hypr-group-groupbar",
       "source": "hypr-options",
       "key": "inactive",
       "reference": [
@@ -2838,8 +2821,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.groupbar-locked-active",
-      "page": "themes",
+      "control": "hypr-group-groupbar.col-locked-active",
+      "page": "hypr-group-groupbar",
       "source": "hypr-options",
       "key": "locked-active",
       "reference": [
@@ -2852,8 +2835,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.groupbar-locked-inactive",
-      "page": "themes",
+      "control": "hypr-group-groupbar.col-locked-inactive",
+      "page": "hypr-group-groupbar",
       "source": "hypr-options",
       "key": "locked-inactive",
       "reference": [
@@ -2880,8 +2863,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.compositor-resize-animation",
-      "page": "themes",
+      "control": "animations.resize",
+      "page": "animations",
       "source": "hypr-options",
       "key": "animate-manual-resizes",
       "reference": [
@@ -2894,8 +2877,8 @@
       "documentedLimits": ""
     },
     {
-      "control": "themes.compositor-drag-animation",
-      "page": "themes",
+      "control": "animations.drag",
+      "page": "animations",
       "source": "hypr-options",
       "key": "animate-mouse-windowdragging",
       "reference": [
@@ -3716,20 +3699,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "cursor.default-monitor",
-      "page": "cursor",
-      "source": "hypr-options",
-      "key": "default-monitor",
-      "reference": [
-        "hypr-options",
-        "cursor",
-        "default_monitor"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`[[Empty]]`",
-      "documentedLimits": ""
-    },
-    {
       "control": "cursor.enable-hyprcursor",
       "page": "cursor",
       "source": "hypr-options",
@@ -3741,7 +3710,9 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`true`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
       "control": "cursor.hide-on-key-press",
@@ -3755,7 +3726,9 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
       "control": "cursor.hide-on-tablet",
@@ -3769,7 +3742,9 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
       "control": "cursor.hide-on-touch",
@@ -3783,21 +3758,9 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "cursor.hotspot-padding",
-      "page": "cursor",
-      "source": "hypr-options",
-      "key": "hotspot-padding",
-      "reference": [
-        "hypr-options",
-        "cursor",
-        "hotspot_padding"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 20]"
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
       "control": "cursor.inactive-timeout",
@@ -3811,52 +3774,12 @@
       ],
       "nativeType": "float",
       "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 20]"
+      "documentedLimits": "[0 - 20]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "cursor.invisible",
-      "page": "cursor",
-      "source": "hypr-options",
-      "key": "invisible",
-      "reference": [
-        "hypr-options",
-        "cursor",
-        "invisible"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "cursor.min-refresh-rate",
-      "page": "cursor",
-      "source": "hypr-options",
-      "key": "min-refresh-rate",
-      "reference": [
-        "hypr-options",
-        "cursor",
-        "min_refresh_rate"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`24`",
-      "documentedLimits": "[10 - 500]"
-    },
-    {
-      "control": "cursor.no-break-fs-vrr",
-      "page": "cursor",
-      "source": "hypr-options",
-      "key": "no-break-fs-vrr",
-      "reference": [
-        "hypr-options",
-        "cursor",
-        "no_break_fs_vrr"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "cursor.no-hardware-cursors",
+      "control": "cursor.hardware",
       "page": "cursor",
       "source": "hypr-options",
       "key": "no-hardware-cursors",
@@ -3867,7 +3790,9 @@
       ],
       "nativeType": "int",
       "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 2]"
+      "documentedLimits": "[0 - 2]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
       "control": "cursor.no-warps",
@@ -3881,7 +3806,9 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
       "control": "cursor.persistent-warps",
@@ -3895,49 +3822,9 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "cursor.sync-gsettings-theme",
-      "page": "cursor",
-      "source": "hypr-options",
-      "key": "sync-gsettings-theme",
-      "reference": [
-        "hypr-options",
-        "cursor",
-        "sync_gsettings_theme"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "cursor.use-cpu-buffer",
-      "page": "cursor",
-      "source": "hypr-options",
-      "key": "use-cpu-buffer",
-      "reference": [
-        "hypr-options",
-        "cursor",
-        "use_cpu_buffer"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "cursor.warp-back-after-non-mouse-input",
-      "page": "cursor",
-      "source": "hypr-options",
-      "key": "warp-back-after-non-mouse-input",
-      "reference": [
-        "hypr-options",
-        "cursor",
-        "warp_back_after_non_mouse_input"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
       "control": "cursor.warp-on-change-workspace",
@@ -3951,91 +3838,9 @@
       ],
       "nativeType": "int",
       "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "cursor.warp-on-monitor-change",
-      "page": "cursor",
-      "source": "hypr-options",
-      "key": "warp-on-monitor-change",
-      "reference": [
-        "hypr-options",
-        "cursor",
-        "warp_on_monitor_change"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`-1`",
-      "documentedLimits": "[-1 - 2]"
-    },
-    {
-      "control": "cursor.warp-on-toggle-special",
-      "page": "cursor",
-      "source": "hypr-options",
-      "key": "warp-on-toggle-special",
-      "reference": [
-        "hypr-options",
-        "cursor",
-        "warp_on_toggle_special"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "cursor.zoom-detached-camera",
-      "page": "cursor",
-      "source": "hypr-options",
-      "key": "zoom-detached-camera",
-      "reference": [
-        "hypr-options",
-        "cursor",
-        "zoom_detached_camera"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "cursor.zoom-disable-aa",
-      "page": "cursor",
-      "source": "hypr-options",
-      "key": "zoom-disable-aa",
-      "reference": [
-        "hypr-options",
-        "cursor",
-        "zoom_disable_aa"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "cursor.zoom-factor",
-      "page": "cursor",
-      "source": "hypr-options",
-      "key": "zoom-factor",
-      "reference": [
-        "hypr-options",
-        "cursor",
-        "zoom_factor"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": "[1 - 10]"
-    },
-    {
-      "control": "cursor.zoom-rigid",
-      "page": "cursor",
-      "source": "hypr-options",
-      "key": "zoom-rigid",
-      "reference": [
-        "hypr-options",
-        "cursor",
-        "zoom_rigid"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
+      "documentedLimits": "[0 - 2]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
       "control": "hypr-ecosystem.enforce-permissions",
@@ -8086,8 +7891,8 @@
       ]
     },
     {
-      "control": "themes.animation-editor-leaf",
-      "page": "themes",
+      "control": "animations.leaf",
+      "page": "animations",
       "source": "hypr-animation-reference",
       "key": "leaf",
       "reference": [
@@ -8096,8 +7901,8 @@
       ]
     },
     {
-      "control": "themes.animation-editor-enabled",
-      "page": "themes",
+      "control": "animations.leaf-enabled",
+      "page": "animations",
       "source": "hypr-animation-reference",
       "key": "enabled",
       "reference": [
@@ -8106,8 +7911,8 @@
       ]
     },
     {
-      "control": "themes.animation-editor-speed",
-      "page": "themes",
+      "control": "animations.leaf-speed",
+      "page": "animations",
       "source": "hypr-animation-reference",
       "key": "speed",
       "reference": [
@@ -8116,8 +7921,8 @@
       ]
     },
     {
-      "control": "themes.animation-editor-style",
-      "page": "themes",
+      "control": "animations.leaf-style",
+      "page": "animations",
       "source": "hypr-animation-reference",
       "key": "style",
       "reference": [
@@ -8126,8 +7931,8 @@
       ]
     },
     {
-      "control": "themes.animation-editor-curve",
-      "page": "themes",
+      "control": "animations.leaf-curve",
+      "page": "animations",
       "source": "hypr-animation-reference",
       "key": "curve",
       "reference": [
@@ -8136,8 +7941,8 @@
       ]
     },
     {
-      "control": "themes.animation-editor-bezier",
-      "page": "themes",
+      "control": "animations.leaf-bezier",
+      "page": "animations",
       "source": "hypr-animation-reference",
       "key": "bezier",
       "reference": [
@@ -8146,8 +7951,8 @@
       ]
     },
     {
-      "control": "themes.animation-editor-spring-mass",
-      "page": "themes",
+      "control": "animations.leaf-spring-mass",
+      "page": "animations",
       "source": "hypr-animation-reference",
       "key": "spring-mass",
       "reference": [
@@ -8156,8 +7961,8 @@
       ]
     },
     {
-      "control": "themes.animation-editor-spring-stiffness",
-      "page": "themes",
+      "control": "animations.leaf-spring-stiffness",
+      "page": "animations",
       "source": "hypr-animation-reference",
       "key": "spring-stiffness",
       "reference": [
@@ -8166,8 +7971,8 @@
       ]
     },
     {
-      "control": "themes.animation-editor-spring-damping",
-      "page": "themes",
+      "control": "animations.leaf-spring-damping",
+      "page": "animations",
       "source": "hypr-animation-reference",
       "key": "spring-damping",
       "reference": [
@@ -8176,53 +7981,13 @@
       ]
     },
     {
-      "control": "themes.animation-editor-inheritance",
-      "page": "themes",
+      "control": "animations.leaf-inheritance",
+      "page": "animations",
       "source": "hypr-animation-reference",
       "key": "inheritance",
       "reference": [
         "hypr-animation-reference",
         "inheritance"
-      ]
-    },
-    {
-      "control": "themes.gradient-stops",
-      "page": "themes",
-      "source": "hyprsettings-project",
-      "key": "stops",
-      "reference": [
-        "hyprsettings-project",
-        "stops"
-      ]
-    },
-    {
-      "control": "themes.gradient-angle",
-      "page": "themes",
-      "source": "hyprsettings-project",
-      "key": "angle",
-      "reference": [
-        "hyprsettings-project",
-        "angle"
-      ]
-    },
-    {
-      "control": "themes.gradient-active",
-      "page": "themes",
-      "source": "hyprsettings-project",
-      "key": "active",
-      "reference": [
-        "hyprsettings-project",
-        "active"
-      ]
-    },
-    {
-      "control": "themes.gradient-preview",
-      "page": "themes",
-      "source": "hyprsettings-project",
-      "key": "preview",
-      "reference": [
-        "hyprsettings-project",
-        "preview"
       ]
     },
     {
@@ -8233,7 +7998,9 @@
       "reference": [
         "hypr-cursor",
         "theme"
-      ]
+      ],
+      "availability": "available",
+      "verification": "Rust appearance packs tests; test/multitasking_cursor_test.dart; installed release check"
     },
     {
       "control": "cursor.size",
@@ -8243,37 +8010,9 @@
       "reference": [
         "hypr-cursor",
         "size"
-      ]
-    },
-    {
-      "control": "cursor.xcursor-theme",
-      "page": "cursor",
-      "source": "hypr-cursor",
-      "key": "xcursor-theme",
-      "reference": [
-        "hypr-cursor",
-        "xcursor-theme"
-      ]
-    },
-    {
-      "control": "cursor.xcursor-size",
-      "page": "cursor",
-      "source": "hypr-cursor",
-      "key": "xcursor-size",
-      "reference": [
-        "hypr-cursor",
-        "xcursor-size"
-      ]
-    },
-    {
-      "control": "cursor.gtk",
-      "page": "cursor",
-      "source": "hypr-cursor",
-      "key": "gtk",
-      "reference": [
-        "hypr-cursor",
-        "gtk"
-      ]
+      ],
+      "availability": "available",
+      "verification": "Rust appearance packs tests; test/multitasking_cursor_test.dart; installed release check"
     },
     {
       "control": "graphics.gpu-devices",
@@ -8872,76 +8611,6 @@
       "reference": [
         "hypr-ipc",
         "report"
-      ]
-    },
-    {
-      "control": "themes.desktop-component-preset",
-      "page": "themes",
-      "source": "nwg-config-project",
-      "key": "preset",
-      "reference": [
-        "nwg-config-project",
-        "preset"
-      ]
-    },
-    {
-      "control": "themes.desktop-component-panel",
-      "page": "themes",
-      "source": "nwg-config-project",
-      "key": "panel",
-      "reference": [
-        "nwg-config-project",
-        "panel"
-      ]
-    },
-    {
-      "control": "themes.desktop-component-dock",
-      "page": "themes",
-      "source": "nwg-config-project",
-      "key": "dock",
-      "reference": [
-        "nwg-config-project",
-        "dock"
-      ]
-    },
-    {
-      "control": "themes.desktop-component-drawer",
-      "page": "themes",
-      "source": "nwg-config-project",
-      "key": "drawer",
-      "reference": [
-        "nwg-config-project",
-        "drawer"
-      ]
-    },
-    {
-      "control": "themes.desktop-component-notifications",
-      "page": "themes",
-      "source": "nwg-config-project",
-      "key": "notifications",
-      "reference": [
-        "nwg-config-project",
-        "notifications"
-      ]
-    },
-    {
-      "control": "themes.desktop-component-exit-menu",
-      "page": "themes",
-      "source": "nwg-config-project",
-      "key": "exit-menu",
-      "reference": [
-        "nwg-config-project",
-        "exit-menu"
-      ]
-    },
-    {
-      "control": "themes.desktop-component-tray",
-      "page": "themes",
-      "source": "nwg-config-project",
-      "key": "tray",
-      "reference": [
-        "nwg-config-project",
-        "tray"
       ]
     },
     {

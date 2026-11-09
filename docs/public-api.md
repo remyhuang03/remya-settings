@@ -1204,7 +1204,7 @@ function, media or Print key. Writes return the full `input` state and emit
 `Resolve input system|settings` adopts the live values or reapplies the saved ones
 with readback. See [Input devices and shortcuts](input.md).
 
-## Window blur, fallback background and display wake
+## Desktop options: multitasking, cursor, blur, fallback background and display wake
 
 `Get desktop` returns the same shape as `Get input` without shortcut fields:
 `options`, `system`, `saved`, `conflict`, `conflicts`, `write_blocked` and
@@ -1225,6 +1225,40 @@ with readback. See [Input devices and shortcuts](input.md).
 | `background.fallback-color` | `"#rrggbb"`, written as opaque `rgba(rrggbbff)` (`misc:background_color`) |
 | `background.hide-logo` | boolean (`misc:disable_hyprland_logo`) |
 | `power.wake-key`, `power.wake-pointer` | boolean (`misc:key_press_enables_dpms`, `misc:mouse_move_enables_dpms`) |
+| `multitasking.layout` | `"dwindle"`, `"master"`, `"scrolling"` or `"monocle"`; reads may report a `lua:` layout |
+| `multitasking.gaps-in`, `multitasking.gaps-out`, `multitasking.float-gaps` | 0 to 500, or `[top, right, bottom, left]`; equal sides read back as one number |
+| `multitasking.border-size` | 0 to 20 |
+| `multitasking.snap`, `multitasking.snap-respect-gaps`, `multitasking.snap-border-overlap` | boolean (`general:snap:*`) |
+| `multitasking.snap-window-gap`, `multitasking.snap-monitor-gap`, `multitasking.border-grab-area`, `multitasking.gaps-workspaces` | 0 to 100 |
+| `multitasking.resize-on-border`, `multitasking.border-hover-icon`, `multitasking.modal-parent-blocking`, `multitasking.no-focus-fallback`, `multitasking.allow-tearing` | boolean (`general:*`) |
+| `multitasking.resize-corner` | 0 (nearest) to 4, clockwise from top left |
+| `cursor.hide-on-key-press`, `cursor.hide-on-touch`, `cursor.hide-on-tablet`, `cursor.no-warps`, `cursor.persistent-warps`, `cursor.enable-hyprcursor` | boolean (`cursor:*`) |
+| `cursor.inactive-timeout` | seconds from 0 (never) to 20 |
+| `cursor.warp-on-change-workspace` | 0 off, 1 on, 2 always |
+| `cursor.hardware` | `cursor:no_hardware_cursors`: 0 use, 1 do not use, 2 automatic |
+
+`Resolve desktop system` also replaces adopted values in `desktop.lua`, so a
+Hyprland reload keeps them.
+
+## Cursor and icon themes
+
+`Get themes` returns `options` and `saved`/`system` keyed by setting ID,
+`conflict`, `conflicts`, `cursor_themes` and `icon_themes` (each pack has `id`,
+`name`, `comment`, `icons`, `cursors`, `scalable`, `hidden`, `user`, `path`),
+`folders` (`path`, `icons`, `cursors`, `user`, `exists`, in search order),
+`user_folder`, `targets` of the last write and `error`.
+`Get cursor-preview:<theme>@<size>` returns `sizes` and base64 PNG `images`
+(`role`, `size`, `width`, `height`, `xhot`, `yhot`). Writes return the full state
+and emit `Changed("themes", state)`; `Resolve themes system|settings`
+reconciles. See [Cursor and icon themes](themes.md).
+
+| Set ID | Value |
+| --- | --- |
+| `cursor.theme`, `themes.icon-theme` | the `id` of a listed cursor or icon theme |
+| `cursor.size` | 8 to 256 |
+| `cursor.install`, `themes.icon-install` | absolute path of a theme folder or archive; the state adds `installed` |
+| `cursor.remove`, `themes.icon-remove` | the `id` of a theme in the user folder that is not selected |
+| `cursor.folders` | read only |
 
 ## Storage
 

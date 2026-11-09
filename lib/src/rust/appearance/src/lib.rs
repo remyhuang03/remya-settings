@@ -4,4 +4,5 @@ mod environment;
 mod files;
 #[cfg(feature = "bridge")]
 mod frb_generated;
+pub mod packs;
 mod system_theme;

@@ -2,6 +2,7 @@ use crate::notifications;
 use crate::privileged::{Request, Session};
 use gio::glib::{Variant, variant::ToVariant};
 use remya_settings_appearance::api as appearance;
+use remya_settings_appearance::packs::{self, ThemePacks};
 use remya_settings_applications as applications;
 use remya_settings_background::{
     BackgroundManager, RealDesktop, is_accent_setting, is_background_setting, manager::Paths,
@@ -260,6 +261,7 @@ pub struct State {
     pub startup: Startup<startup::RealSystemd>,
     pub input: Input<RealHypr>,
     pub desktop: Input<RealHypr>,
+    pub themes: ThemePacks,
     pub appimages: applications::appimages::AppImages,
     pub network: NetworkManager,
     pub bluetooth: remya_settings_bluetooth::Bluetooth,
@@ -324,6 +326,7 @@ impl State {
                 hypr_config_dir(),
                 config.with_file_name("desktop.toml"),
             ),
+            themes: ThemePacks::new(config.with_file_name("themes.toml")),
             bluetooth: remya_settings_bluetooth::Bluetooth::new(),
             proxy: remya_settings_network::proxy::Proxy::new(),
             cameras: remya_settings_camera::Cameras::new(
@@ -516,6 +519,7 @@ impl State {
         let _ = self.startup.refresh();
         let _ = self.input.refresh();
         let _ = self.desktop.refresh();
+        let _ = self.themes.refresh();
         // Failures stay in the manager's state for every reader.
         let _ = self.network.refresh();
         // A detection failure is retained by the manager and reported in its state.
@@ -679,7 +683,7 @@ impl State {
     pub fn configuration(&self) -> Value {
         let mut date = self.date.clone();
         date["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
-        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"startup":self.startup.state(),"input":self.input.state(),"desktop":self.desktop.state(),"network":self.network.state(),"sound":self.sound.state(),"power":self.power.state(),"cameras":self.cameras.state()})
+        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"startup":self.startup.state(),"input":self.input.state(),"desktop":self.desktop.state(),"themes":self.themes.state(),"network":self.network.state(),"sound":self.sound.state(),"power":self.power.state(),"cameras":self.cameras.state()})
     }
     pub fn controls(&self) -> Vec<&Value> {
         self.catalog["pages"]
@@ -847,7 +851,16 @@ impl State {
                     }
                     _ if input::is_desktop_setting(key) => {
                         let _ = self.desktop.refresh();
-                        Ok(json!({"id":key,"availability":"available","reason":"Uses Hyprland decoration and misc options.","value":self.desktop.setting_value(key),"error":self.desktop.state()["error"]}))
+                        Ok(json!({"id":key,"availability":"available","reason":"Uses Hyprland compositor options.","value":self.desktop.setting_value(key),"error":self.desktop.state()["error"]}))
+                    }
+                    "themes" => {
+                        let _ = self.themes.refresh();
+                        Ok(self.themes.state())
+                    }
+                    _ if key.starts_with(packs::PREVIEW) => self.themes.preview(&key[packs::PREVIEW.len()..]),
+                    _ if packs::is_setting(key) => {
+                        let _ = self.themes.refresh();
+                        Ok(json!({"id":key,"availability":"available","reason":"Uses GNOME interface settings, GTK, KDE, XCursor and Hyprland.","value":self.themes.setting_value(key),"error":self.themes.state()["error"]}))
                     }
                     _ if key.starts_with(input::LOOKUP) => self.input.lookup(&key[input::LOOKUP.len()..]),
                     _ if input::is_setting(key) => {
@@ -1197,6 +1210,9 @@ impl State {
         if input::is_desktop_setting(key) {
             return self.desktop.set(key, value);
         }
+        if packs::is_setting(key) {
+            return self.themes.set(key, value);
+        }
         if startup::IDS.contains(&key) {
             return self.startup.set(key, value);
         }
@@ -1435,6 +1451,9 @@ impl State {
         }
         if feature == "desktop" {
             return self.desktop.resolve(source);
+        }
+        if feature == "themes" {
+            return self.themes.resolve(source);
         }
         if feature == "startup" {
             return self.startup.resolve(source);

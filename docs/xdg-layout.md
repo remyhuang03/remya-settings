@@ -25,7 +25,11 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Input settings snapshot | `input.toml` beside `config.toml` (debug: repository `config/`) |
 | Input settings for Hyprland | `$XDG_CONFIG_HOME/hypr/remya-settings/input.lua`, required by a managed block at the end of `hyprland.lua` |
 | Desktop options snapshot | `desktop.toml` beside `config.toml` (debug: repository `config/`) |
-| Desktop options for Hyprland (blur, fallback background, display wake) | `$XDG_CONFIG_HOME/hypr/remya-settings/desktop.lua`, required by its own managed block at the end of `hyprland.lua` |
+| Desktop options for Hyprland (window layout, cursor behavior, blur, fallback background, display wake) | `$XDG_CONFIG_HOME/hypr/remya-settings/desktop.lua`, required by its own managed block at the end of `hyprland.lua` |
+| Cursor and icon theme snapshot | `themes.toml` beside `config.toml` (debug: repository `config/`) |
+| Cursor environment for new processes | "Remy'a Settings cursor" blocks in `$XDG_CONFIG_HOME/fish/config.fish` and `hyprland.lua` |
+| XCursor default theme | `default/index.theme` in `$XDG_DATA_HOME/icons` (or an existing one in `~/.icons`) |
+| Added cursor and icon themes | `$XDG_DATA_HOME/icons/<theme>/` |
 | Video background unit | `$XDG_CONFIG_HOME/systemd/user/top.remya.settings.video-background.service` |
 | Startup enabled-state snapshot | `startup.toml` beside `config.toml` (debug: repository `config/`) |
 | User startup entries | `$XDG_CONFIG_HOME/autostart/*.desktop` (fallback `$HOME/.config/autostart/`), written as 0644 |

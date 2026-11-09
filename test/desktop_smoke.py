@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""End-to-end desktop options check: blur, fallback background and display wake.
+"""End-to-end desktop options and theme packs check: blur, fallback background,
+display wake, window layout, cursor options, and cursor and icon themes.
 
 Uses a nested compositor, a private session bus and isolated XDG roots, so the
 user's Hyprland configuration is never touched.
@@ -35,10 +36,13 @@ def main():
     hypr.mkdir(parents=True)
     (hypr / "hyprland.lua").write_text(MAIN)
     before = {i["instance"] for i in json.loads(run("hyprctl", "-j", "instances").stdout)}
+    # Hyprland syncs its cursor theme into GSettings, so it gets the isolated keyfile too.
+    isolated = {**{k: v for k, v in os.environ.items() if k != "HYPRLAND_CONFIG"},
+                "XDG_CONFIG_HOME": str(config), "XDG_DATA_HOME": str(home / "data"),
+                "HOME": str(home), "GSETTINGS_BACKEND": "keyfile"}
     compositor = subprocess.Popen(
         ["Hyprland", "--config", str(hypr / "hyprland.lua")],
-        cwd=hypr, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-        env={**os.environ, "XDG_CONFIG_HOME": str(config)},
+        cwd=hypr, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=isolated,
     )
     bus = service = None
     try:
@@ -58,9 +62,8 @@ def main():
             return {(b["modmask"], b["key"].lower()) for b in json.loads(hyprctl("-j", "binds"))}
 
         bus = subprocess.Popen(["dbus-daemon", "--session", "--print-address", "--nofork"], stdout=subprocess.PIPE, text=True)
-        env = {**os.environ, "DBUS_SESSION_BUS_ADDRESS": bus.stdout.readline().strip(),
-               "HYPRLAND_INSTANCE_SIGNATURE": instance, "XDG_CONFIG_HOME": str(config),
-               "HOME": str(home), "GSETTINGS_BACKEND": "keyfile"}
+        env = {**isolated, "DBUS_SESSION_BUS_ADDRESS": bus.stdout.readline().strip(),
+               "HYPRLAND_INSTANCE_SIGNATURE": instance}
         service = subprocess.Popen([str(SERVICE)], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
 
         def call(method, *args, ok=True):
@@ -105,13 +108,83 @@ def main():
                     ("background.blur-enabled", "'\"yes\"'")]:
             assert "InvalidArgument" in call("Set", *bad, ok=False)
 
-        # A live change made elsewhere is a conflict; adopting it rewrites only the saved copy.
+        # A live change made elsewhere is a conflict; adopting it also updates Settings' own file.
         hyprctl("eval", "hl.config({ decoration = { blur = { passes = 2 } } })")
         assert call("Get", "desktop")["conflicts"] == ["background.blur-passes"]
         call("Set", "background.blur-xray", "true", ok=False)
         call("Resolve", "desktop", "system")
         state = call("Get", "desktop")
         assert not state["conflict"] and state["saved"]["background.blur-passes"] == 2
+        assert "passes = 2" in owned.read_text()
+
+        # Window layout and cursor options, including a gap with four different sides.
+        call("Set", "multitasking.layout", "'\"master\"'")
+        call("Set", "multitasking.gaps-in", "7")
+        call("Set", "multitasking.gaps-out", "'[10, 20, 30, 40]'")
+        call("Set", "multitasking.snap", "true")
+        call("Set", "cursor.inactive-timeout", "3.5")
+        call("Set", "cursor.warp-on-change-workspace", "2")
+        assert "gaps_out = { top = 10, right = 20, bottom = 30, left = 40 }" in owned.read_text()
+        hyprctl("reload")
+        time.sleep(1)
+        assert option("general:layout", "str") == "master"
+        assert option("cursor:inactive_timeout", "float") == 3.5
+        state = call("Get", "desktop")
+        assert state["system"]["multitasking.gaps-out"] == [10, 20, 30, 40], state["system"]
+        assert state["system"]["multitasking.gaps-in"] == 7 and not state["conflict"], state
+        for bad in [("multitasking.layout", "'\"spiral\"'"), ("multitasking.gaps-out", "'[1, 2]'"),
+                    ("cursor.warp-on-change-workspace", "3")]:
+            assert "InvalidArgument" in call("Set", *bad, ok=False)
+
+        # Cursor and icon themes: first use adopts GSettings, then every target follows.
+        # A second cursor theme in the isolated user folder, reusing installed cursor files.
+        system_cursor = next((p for p in Path("/usr/share/icons").iterdir() if (p / "cursors/default").exists()), None)
+        assert system_cursor, "the smoke test needs an installed cursor theme"
+        smoke_cursor = home / "data/icons/Smoke-Cursors"
+        smoke_cursor.mkdir(parents=True)
+        (smoke_cursor / "index.theme").write_text("[Icon Theme]\nName=Smoke Cursors\n")
+        (smoke_cursor / "cursors").symlink_to(system_cursor / "cursors")
+        themes = call("Get", "themes")
+        assert themes["error"] is None and not themes["conflict"], themes
+        cursors = [t["id"] for t in themes["cursor_themes"]
+                   if t["cursors"] and t["id"] != themes["options"]["cursor.theme"]]
+        icons = [t["id"] for t in themes["icon_themes"] if t["id"] != themes["options"]["themes.icon-theme"]]
+        assert cursors and icons, "the smoke test needs an installed cursor and icon theme"
+        # KDE keys are written only where KDE configuration exists, through kwriteconfig6.
+        kde = shutil.which("kwriteconfig6") is not None
+        if kde:
+            (config / "kdeglobals").write_text("[General]\nColorScheme=Keep\n")
+        call("Set", "cursor.theme", f"'\"{cursors[0]}\"'")
+        call("Set", "cursor.size", "32")
+        call("Set", "themes.icon-theme", f"'\"{icons[0]}\"'")
+        keyfile = (config / "glib-2.0/settings/keyfile").read_text()
+        assert f"cursor-theme='{cursors[0]}'" in keyfile and "cursor-size=32" in keyfile, keyfile
+        assert f"gtk-cursor-theme-name={cursors[0]}" in (config / "gtk-3.0/settings.ini").read_text()
+        main = (hypr / "hyprland.lua").read_text()
+        assert f'hl.env("XCURSOR_THEME", "{cursors[0]}")' in main and 'hl.env("HYPRCURSOR_SIZE", "32")' in main
+        assert f"Inherits={cursors[0]}" in (home / "data/icons/default/index.theme").read_text()
+        if kde:
+            globals_ = (config / "kdeglobals").read_text()
+            assert "ColorScheme=Keep" in globals_ and f"Theme={icons[0]}" in globals_, globals_
+            assert "cursorSize=32" in (config / "kcminputrc").read_text()
+        preview = call("Get", f"cursor-preview:{cursors[0]}@32")
+        assert preview["images"] and preview["sizes"], preview
+        assert "InvalidArgument" in call("Set", "cursor.theme", "'\"../etc\"'", ok=False)
+        # A change made outside Settings is a conflict until adopted.
+        run("gsettings", "set", "org.gnome.desktop.interface", "cursor-size", "48", env=env)
+        assert call("Get", "themes")["conflicts"] == ["cursor.size"]
+        call("Resolve", "themes", "system")
+        assert call("Get", "cursor.size")["value"] == 48
+        # A theme folder installs into the user's icon folder and can be removed again.
+        pack = home / "download/Smoke-Icons"
+        (pack / "48x48/apps").mkdir(parents=True)
+        (pack / "index.theme").write_text("[Icon Theme]\nName=Smoke Icons\nDirectories=48x48/apps\n")
+        added = call("Set", "themes.icon-install", f"'\"{pack}\"'")
+        assert added["installed"] == ["Smoke-Icons"] and (home / "data/icons/Smoke-Icons/index.theme").is_file()
+        assert "already installed" in call("Set", "themes.icon-install", f"'\"{pack}\"'", ok=False)
+        call("Set", "themes.icon-remove", "'\"Smoke-Icons\"'")
+        assert not (home / "data/icons/Smoke-Icons").exists()
+        assert "ReadOnly" in call("Set", "cursor.folders", "'\"x\"'", ok=False)
 
         # Desktop files never hold shortcuts; a hand-edited file blocks writes.
         owned.write_text(owned.read_text() + 'hl.bind("SUPER + K", hl.dsp.window.close())\n')
