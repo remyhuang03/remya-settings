@@ -1076,11 +1076,13 @@ as its set value. Settings serializes edits and atomically stores the list in
 
 ## Remy'a Bar pill layout
 
-`Get("remya-bar.layout")` returns the main bar pill layout in `value`:
+`Get("remya-bar.layout")` returns the main bar pill layout in `value`. With no
+saved layout, the Workspaces and Clock group is centered and Resources shows
+CPU, memory, and network:
 
 ```json
 {"groups":[["notifications","window","resources","media"],["workspaces","clock"],["tray"],["battery","sidebar"]],
- "workspace_count":8,"resources":["cpu","memory","gpu","network"],"window_app_name":true,"media_marquee":false}
+ "workspace_count":8,"resources":["cpu","memory","network"],"window_app_name":true,"media_marquee":false,"center":1}
 ```
 
 `groups` is the ordered list of pill groups; the bar spaces groups evenly and

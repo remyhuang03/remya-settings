@@ -402,6 +402,8 @@ def bar_layout_checks():
     assert initial == dbus('Get', setting)
     assert not config.exists()
     assert initial['value']['groups'] == [['notifications', 'window', 'resources', 'media'], ['workspaces', 'clock'], ['tray'], ['battery', 'sidebar']]
+    assert initial['value']['center'] == 1
+    assert initial['value']['resources'] == ['cpu', 'memory', 'network']
     assert initial['value']['media_marquee'] is False
     custom = {'groups': [['clock', 'media'], ['sidebar']], 'workspace_count': 5, 'resources': ['cpu'], 'window_app_name': False, 'media_marquee': True, 'center': 0}
     assert cli('set', setting, json.dumps(custom)) == dbus('Get', setting)

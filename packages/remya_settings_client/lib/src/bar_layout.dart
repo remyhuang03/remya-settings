@@ -38,6 +38,8 @@ class BarLayout {
       ['tray'],
       ['battery', 'sidebar'],
     ],
+    resources: ['cpu', 'memory', 'network'],
+    center: 1,
   );
 
   /// Ordered groups; a pill missing from every group is hidden.

@@ -43,6 +43,10 @@ class BarPillLayoutEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     final groups = layout.groups;
+    final resetLayout = layout.withGroups(
+      BarLayout.defaults.groups,
+      center: BarLayout.defaults.center,
+    );
     final hidden = layout.hidden;
     return SettingsSurface(
       child: Column(
@@ -123,11 +127,9 @@ class BarPillLayoutEditor extends StatelessWidget {
           Align(
             alignment: .centerRight,
             child: TextButton.icon(
-              onPressed:
-                  onChanged == null ||
-                      layout.withGroups(BarLayout.defaults.groups) == layout
+              onPressed: onChanged == null || resetLayout == layout
                   ? null
-                  : () => _set(layout.withGroups(BarLayout.defaults.groups)),
+                  : () => _set(resetLayout),
               icon: const Icon(Icons.restart_alt_rounded),
               label: const Text('Reset layout'),
             ),

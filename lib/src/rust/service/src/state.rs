@@ -83,7 +83,8 @@ fn default_bar_layout() -> Value {
     json!({
         "groups":[["notifications","window","resources","media"],["workspaces","clock"],["tray"],["battery","sidebar"]],
         "workspace_count":8,
-        "resources":BAR_RESOURCES,
+        "resources":["cpu","memory","network"],
+        "center":1,
         "window_app_name":true,
         "media_marquee":false,
     })

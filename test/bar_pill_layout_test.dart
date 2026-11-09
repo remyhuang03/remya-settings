@@ -47,7 +47,11 @@ void main() {
 
   test('layout JSON round-trips and reports hidden pills', () {
     expect(BarLayout.fromJson(layout.toJson()), layout);
-    expect(BarLayout.defaults.toJson().containsKey('center'), isFalse);
+    final defaults = BarLayout.defaults.toJson();
+    expect(defaults['center'], 1);
+    expect(defaults['resources'], ['cpu', 'memory', 'network']);
+    final older = {...defaults}..remove('center');
+    expect(BarLayout.fromJson(older).center, isNull);
     expect(BarLayout.fromJson(BarLayout.defaults.toJson()).hidden, isEmpty);
     expect(layout.hidden, [
       'notifications',
@@ -118,5 +122,10 @@ void main() {
           .onPressed,
       isNull,
     );
+
+    await tester.tap(find.text('Reset layout'));
+    expect(changed!.groups, BarLayout.defaults.groups);
+    expect(changed!.center, BarLayout.defaults.center);
+    expect(changed!.resources, layout.resources);
   });
 }
