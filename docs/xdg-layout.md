@@ -47,7 +47,10 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 Debug builds isolate only the Settings files listed above; hyprpaper, hyprsunset, the video
 unit, fonts and XDG default application associations remain the real desktop's.
 The default-apps snapshot uses the selected debug/release Settings config directory;
-only isolated HOME/XDG roots isolate association writes during tests. The same
+only isolated HOME/XDG roots isolate association writes during tests. Reset
+clears the `[Default Applications]` group from `mimeapps.list` and the active
+`<desktop>-mimeapps.list` files under `$XDG_CONFIG_HOME` and
+`$XDG_DATA_HOME/applications`. The same debug isolation rule
 applies to startup entries: debug mode isolates `startup.toml`, while explicit
 startup edits use the actual XDG autostart directory. Tests isolate both config
 home and config dirs. See [Startup apps](startup.md).

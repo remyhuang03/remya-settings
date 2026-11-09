@@ -642,7 +642,7 @@ rows near the viewport, because each preview loads a whole font file.
 ## Default applications
 
 See [Default apps](default-apps.md) for type groups, conflict handling, and rollback limitations.
-All operations run in the ordinary-user service with GIO; no authorization prompt is needed for reads or association writes.
+All operations run in the ordinary-user service with GIO readback. Reads and association writes require no authorization prompt.
 
 | CLI | D-Bus | Result |
 | --- | --- | --- |
@@ -654,6 +654,7 @@ All operations run in the ordinary-user service with GIO; no authorization promp
 | `set defaults.b131ac5a <json>` | `Set(id, json)` | Set explicit MIME/scheme types and save verified outcomes |
 | `set defaults.897fdfef <json>` | `Set(id, json)` | Same operation for an application's supported-type selection |
 | `set <shortcut-id> <json>` | `Set(id, json)` | Fixed group, filtered to the selected application's declared types; omit `types` |
+| `set defaults.ff4c4bec true` | `Set("defaults.ff4c4bec", "true")` | Clear active user default overrides, read back effective defaults, and save the resulting state |
 | `resolve default-apps system` | `Resolve("default-apps", "system")` | Adopt actual associations; returns default-apps state |
 | `resolve default-apps settings` | `Resolve("default-apps", "settings")` | Apply differing saved associations with readback; returns default-apps state |
 
@@ -661,7 +662,7 @@ Write JSON is `{"application":"org.example.Reader.desktop","types":["application
 Shortcut JSON is `{"application":"org.example.Browser.desktop"}`. Unknown fields, invalid or absent applications, unsupported types, conflicts, and unverifiable writes fail. Explicit selections contain 1–256 types.
 `Get("configuration")` includes `default-apps`; `Changed("default-apps", json)` reports relevant Set/Resolve/Reload outcomes, including errors. The public Dart extension exposes these operations without Flutter dependencies.
 
-Empty desktop-ID strings represent unset defaults; they are not application IDs. Failed reads carry `error` and `writable:false`; old values are retained and must not be presented as fresh detections. `defaults.ff4c4bec` remains unavailable and rejects Set.
+Empty desktop-ID strings represent unset defaults; they are not application IDs. Failed reads carry `error` and `writable:false`; old values are retained and must not be presented as fresh detections. Reset accepts only JSON `true` and is blocked by unresolved conflicts.
 
 ## Installed applications
 

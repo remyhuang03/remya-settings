@@ -77,6 +77,7 @@ Future<void> main() async {
     searchTypes: client.searchDefaultTypes,
     write: (id, app, types) =>
         client.setDefaultApplication(id, app, types: types),
+    reset: client.resetDefaultApplications,
     resolve: client.resolveDefaultApps,
   );
   final startup = StartupController(

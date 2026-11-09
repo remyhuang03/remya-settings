@@ -136,6 +136,7 @@ void main() {
         applications: (_) async => {'applications': []},
         searchTypes: (_) async => {'types': []},
         write: (_, _, _) async => throw StateError('write denied'),
+        reset: () async => snapshot,
         resolve: (_) async => snapshot,
       );
       addTearDown(defaults.dispose);

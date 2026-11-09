@@ -1,4 +1,6 @@
 //! XDG default handlers. GIO owns association lookup and writes; Settings owns reconciliation.
+mod mimeapps;
+
 use gio::prelude::*;
 use remya_settings_display::atomic_write;
 use serde::{Deserialize, Serialize};
@@ -11,7 +13,8 @@ use std::{
 
 pub const TYPE_SEARCH: &str = "defaults.b131ac5a";
 pub const APP_SEARCH: &str = "defaults.897fdfef";
-pub const IDS: [&str; 10] = [
+pub const RESET: &str = "defaults.ff4c4bec";
+pub const IDS: [&str; 11] = [
     TYPE_SEARCH,
     APP_SEARCH,
     "defaults.ccac113f",
@@ -22,6 +25,7 @@ pub const IDS: [&str; 10] = [
     "defaults.text",
     "defaults.pdf",
     "defaults.file-manager",
+    RESET,
 ];
 pub const GROUPS: [(&str, &str, &[&str]); 8] = [
     (
@@ -104,53 +108,13 @@ pub trait Desktop: Send {
     fn types(&self) -> BTreeSet<String>;
     fn default(&self, mime: &str) -> Result<String, String>;
     fn set(&self, mime: &str, application: &str) -> Result<(), String>;
+    fn reset_defaults(&self) -> Result<(), String>;
 }
 pub struct RealDesktop;
 
-// GIO's read API has no error channel. Validate readable association files before accepting unset values.
-fn check_association_files() -> Result<(), String> {
-    let dirs = xdg::BaseDirectories::new();
-    let desktops = std::env::var("XDG_CURRENT_DESKTOP")
-        .unwrap_or_default()
-        .split(':')
-        .map(str::to_ascii_lowercase)
-        .filter(|s| {
-            !s.is_empty()
-                && s.bytes()
-                    .all(|b| b.is_ascii_alphanumeric() || b"_-".contains(&b))
-        })
-        .collect::<Vec<_>>();
-    let mut roots = dirs.get_config_dirs();
-    if let Some(home) = dirs.get_config_home() {
-        roots.push(home);
-    }
-    roots.extend(
-        dirs.get_data_dirs()
-            .into_iter()
-            .map(|p| p.join("applications")),
-    );
-    if let Some(home) = dirs.get_data_home() {
-        roots.push(home.join("applications"));
-    }
-    for root in roots {
-        for filename in std::iter::once("mimeapps.list".into())
-            .chain(desktops.iter().map(|d| format!("{d}-mimeapps.list")))
-        {
-            let path = root.join(filename);
-            match fs::read_to_string(&path) {
-                Ok(text) => gio::glib::KeyFile::new()
-                    .load_from_data(&text, gio::glib::KeyFileFlags::NONE)
-                    .map_err(|e| format!("Cannot parse {}: {e}", path.display()))?,
-                Err(e) if e.kind() == std::io::ErrorKind::NotFound => (),
-                Err(e) => return Err(format!("Cannot read {}: {e}", path.display())),
-            }
-        }
-    }
-    Ok(())
-}
 impl Desktop for RealDesktop {
     fn applications(&self) -> Result<Vec<Application>, String> {
-        check_association_files()?;
+        mimeapps::check_association_files()?;
         let apps = remya_settings_applications::desktop_applications()
             .into_iter()
             .filter(|a| validate_desktop(&a.id).is_ok())
@@ -200,6 +164,9 @@ impl Desktop for RealDesktop {
             .ok_or_else(|| invalid("Application is no longer installed"))?
             .set_as_default_for_type(mime)
             .map_err(|e| e.to_string())
+    }
+    fn reset_defaults(&self) -> Result<(), String> {
+        mimeapps::reset_defaults()
     }
 }
 
@@ -402,9 +369,17 @@ impl<D: Desktop> DefaultApps<D> {
     }
     pub fn set(&mut self, id: &str, payload: &str) -> Result<Value, String> {
         let result = (|| {
-            let change: Change = serde_json::from_str(payload)
-                .map_err(|e| invalid(&format!("Expected application and types: {e}")))?;
-            validate_desktop(&change.application)?;
+            let change = if id == RESET {
+                if serde_json::from_str::<bool>(payload).ok() != Some(true) {
+                    return Err(invalid("Confirm reset with JSON true"));
+                }
+                None
+            } else {
+                let change: Change = serde_json::from_str(payload)
+                    .map_err(|e| invalid(&format!("Expected application and types: {e}")))?;
+                validate_desktop(&change.application)?;
+                Some(change)
+            };
             self.refresh()?;
             if self.conflict() {
                 return Err(
@@ -412,6 +387,15 @@ impl<D: Desktop> DefaultApps<D> {
                         .into(),
                 );
             }
+            let Some(change) = change else {
+                let reset = self.desktop.reset_defaults();
+                let readback = self.refresh();
+                reset?;
+                readback?;
+                self.persist(&self.system)?;
+                self.saved = Some(self.system.clone());
+                return Ok(());
+            };
             let app = self
                 .apps
                 .iter()
@@ -610,6 +594,10 @@ mod tests {
             if !m.wrong_readback {
                 m.values.insert(t.into(), a.into());
             }
+            Ok(())
+        }
+        fn reset_defaults(&self) -> Result<(), String> {
+            self.0.lock().unwrap().values.clear();
             Ok(())
         }
     }

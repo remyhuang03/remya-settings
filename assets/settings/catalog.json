@@ -10176,8 +10176,8 @@
       "title": "Default apps",
       "description": "File types, protocols and application defaults",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Uses verified XDG file and link associations with GIO readback and explicit conflict resolution.",
       "sources": [
         "uris"
       ],
@@ -10273,9 +10273,9 @@
               "id": "defaults.ff4c4bec",
               "title": "Reset all default apps",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Clears user-level XDG default overrides for the current desktop and saves the defaults resolved by GIO.",
+              "value": "Reset"
             }
           ]
         }

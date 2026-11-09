@@ -1,6 +1,6 @@
 # Default apps
 
-The Apps > Default apps page manages XDG file and URI associations through the ordinary-user Rust service and GIO. It requires the same GLib/GIO 2.84 minimum as the service. No new third-party dependency or privileged process is introduced.
+The Apps > Default apps page manages XDG file and URI associations through the ordinary-user Rust service, with GIO for handler lookup and selection. It requires the same GLib/GIO 2.84 minimum as the service. No new third-party dependency or privileged process is introduced.
 
 ## Controls
 
@@ -16,12 +16,13 @@ The Apps > Default apps page manages XDG file and URI associations through the o
 | Text editor | `defaults.text` | `text/plain` |
 | PDF | `defaults.pdf` | `application/pdf` |
 | File manager | `defaults.file-manager` | `inode/directory` |
+| Reset all default apps | `defaults.ff4c4bec` | Confirm clearing shared and current-desktop user default overrides |
 
 One search field matches application names and IDs locally and searches extensions, MIME types, and URI schemes through the service after a short debounce. Both result groups appear together; stale requests cannot replace a newer query.
 
 Grouped media shortcuts list registered MIME types and affect only those declared by the selected application. The picker shows the exact list before confirmation. Mixed defaults, unset defaults, unknown reads, and missing desktop IDs are explicit readouts in the left column. Changes apply on confirmation in the picker. Search and application-detail views do not write system configuration. Selected defaults use overlapping application icons for mixed associations; unset types do not contribute an icon. A single assigned application uses an unframed icon so its edge stays visible. Clicking the group or Manage opens a searchable, lazy extension/protocol list with per-MIME Change actions and Set all. Extensions sharing one MIME type (for example .jpg and .jpeg) are explicitly linked; Settings does not create custom MIME overrides to split them. Application rows and picker candidates display real application icons through the existing GTK 3 runner and current desktop icon theme. Missing icons use a generic fallback.
 
-`defaults.ff4c4bec` (Reset all default apps) remains planned and disabled. There is no whole-file deletion, invented Linux terminal role, or editing of Hyprland key-binding commands.
+Reset clears only the `[Default Applications]` group from the active user `mimeapps.list` files. It covers the generic file and the desktop-specific files selected by `XDG_CURRENT_DESKTOP` in XDG config home and XDG data home's `applications` directory. Other groups, including added and removed associations, are preserved. GIO then resolves defaults using the remaining associations and system files. A type may keep the same handler or become unset.
 
 ## Ownership, persistence, and failures
 
@@ -31,7 +32,7 @@ Grouped media shortcuts list registered MIME types and affect only those declare
 
 Conflicts preserve saved and actual values, with explicit Use system configuration and Apply saved Settings actions. Applying saved Settings fails visibly if an application was removed, ceased declaring support, or the saved value is unset. Restoring an unset value through GIO would reset other associations; choose a handler or adopt the actual system state instead.
 
-All mutations are serialized by the service. Each write checks the just-read default against the snapshot and verifies the resulting handler. Multiple types do not form a system transaction. A failed group attempts to restore previous handlers in reverse order; a previously unset handler cannot be safely restored this way, so incomplete rollback is reported with the affected types. GIO may also add the chosen handler to the association list; restoring a default does not remove those additional candidate associations. Persistence failure after a system write remains visible with the old saved values and the new system values.
+All mutations are serialized by the service. Reset requires readable configuration without unresolved conflicts. It checks the targeted files before writing, refuses read-only or symlinked files, and verifies each atomic replacement. If a later replacement or verification fails, it attempts to roll back earlier writes that still match the replacement. Reset saves the resulting GIO readback after the cache refresh. Each write checks the just-read default against the snapshot and verifies the resulting handler. Multiple types do not form a system transaction. A failed group attempts to restore previous handlers in reverse order; a previously unset handler cannot be safely restored this way, so incomplete rollback is reported with the affected types. GIO may also add the chosen handler to the association list; restoring a default does not remove those additional candidate associations. Persistence failure after a system write remains visible with the old saved values and the new system values.
 
 Applications that use internal preferences or custom openers may bypass XDG defaults. This feature cannot force those applications to obey the associations.
 
@@ -41,7 +42,7 @@ The GUI and pure Dart client use the same `Get`, `Set`, and `Resolve` operations
 
 - Rust tests cover first-use failure, no-write initialization, both conflict resolutions, invalid input, configuration failure retention, batch rollback, unset rollback limits, and incorrect readback.
 - `test/service_controllers_test.dart` covers failed-write retention and unresolved conflicts. The picker, extensions, unified search, and icons were verified during implementation; local presentation checks are not retained.
-- `python test/interface_smoke.py` uses synthetic desktop entries under isolated HOME/XDG roots to test real GIO writes/readback, external conflicts, both resolutions, extension search, browser grouping, and CLI/D-Bus parity. It also checks that removed pages cannot be opened.
+- `python test/interface_smoke.py` uses synthetic desktop entries under isolated HOME/XDG roots to test real GIO writes/readback, external conflicts, both resolutions, extension search, browser grouping, reset across user roots, preserved associations, unsafe-file refusal, and CLI/D-Bus parity. It also checks that removed pages cannot be opened.
 
 ## Primary references
 

@@ -15,6 +15,7 @@ class DefaultAppsController extends ChangeNotifier {
     required this.applications,
     required this.searchTypes,
     required this.write,
+    required this.reset,
     required this.resolve,
   });
   final Future<Map<String, dynamic>> Function() read;
@@ -22,6 +23,7 @@ class DefaultAppsController extends ChangeNotifier {
   final Future<Map<String, dynamic>> Function(String) searchTypes;
   final Future<Map<String, dynamic>> Function(String, String, List<String>)
   write;
+  final Future<Map<String, dynamic>> Function() reset;
   final Future<Map<String, dynamic>> Function(String) resolve;
   Map<String, dynamic> value = {};
   List<DefaultApplication> apps = const [];
@@ -93,6 +95,7 @@ class DefaultAppsController extends ChangeNotifier {
 
   Future<void> set(String setting, String application, List<String> types) =>
       _change(() => write(setting, application, types));
+  Future<void> resetAll() => _change(reset);
   Future<void> useSystemConfiguration() => _change(() => resolve('system'));
   Future<void> applySavedConfiguration() => _change(() => resolve('settings'));
 }

@@ -116,6 +116,32 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
     ),
   );
 
+  Future<void> _confirmReset() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reset all default apps?'),
+        content: const Text(
+          'This clears your shared default apps for files and links, along with overrides for the current desktop. '
+          'Your desktop will choose from the remaining associations.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Reset'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && mounted && widget.controller.canChange) {
+      await widget.controller.resetAll();
+    }
+  }
+
   Widget _typeRow(String type) => SettingRow(
     key: ValueKey('default-type-$type'),
     id: type,
@@ -316,15 +342,15 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
             ),
           ],
           const SizedBox(height: 24),
-          const SettingsSurface(
-            child: Row(
-              children: [
-                Icon(Icons.construction_rounded),
-                SizedBox(width: 12),
-                Expanded(
-                  child: Text('Reset all default apps: not implemented.'),
-                ),
-              ],
+          SettingsSurface(
+            padding: .zero,
+            child: SettingRow(
+              id: defaultAppsResetSettingId,
+              label: const Text('Reset all default apps'),
+              control: OutlinedButton(
+                onPressed: controller.canChange ? _confirmReset : null,
+                child: const Text('Reset'),
+              ),
             ),
           ),
         ],

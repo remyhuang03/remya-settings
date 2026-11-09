@@ -69,6 +69,7 @@
          default-applications:<query>, default-types:<query>, default-candidates:<comma-separated-types>
          read applications, MIME/scheme types and supported candidates.
          Set defaults.* accepts JSON application and types; shortcut types are fixed.
+         Set defaults.ff4c4bec accepts JSON true to clear user default overrides and save readback.
          Resolve default-apps accepts system or settings.
          installed-apps and installed-app:<id> read desktop/package inventory.
          installed-apps:<JSON query/source/sort> filters and sorts the same inventory.

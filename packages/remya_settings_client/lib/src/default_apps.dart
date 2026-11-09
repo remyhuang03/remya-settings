@@ -4,6 +4,7 @@ import 'dbus_client.dart';
 
 const defaultAppsTypeSettingId = 'defaults.b131ac5a';
 const defaultAppsSearchSettingId = 'defaults.897fdfef';
+const defaultAppsResetSettingId = 'defaults.ff4c4bec';
 const defaultAppsSettingIds = {
   defaultAppsTypeSettingId,
   defaultAppsSearchSettingId,
@@ -15,6 +16,7 @@ const defaultAppsSettingIds = {
   'defaults.text',
   'defaults.pdf',
   'defaults.file-manager',
+  defaultAppsResetSettingId,
 };
 
 extension DefaultAppsClient on SettingsClient {
@@ -34,6 +36,8 @@ extension DefaultAppsClient on SettingsClient {
     settingId,
     jsonEncode({'application': application, 'types': types}),
   ]);
+  Future<Map<String, dynamic>> resetDefaultApplications() =>
+      call('Set', [defaultAppsResetSettingId, 'true']);
   Future<Map<String, dynamic>> resolveDefaultApps(String source) =>
       call('Resolve', ['default-apps', source]);
 }

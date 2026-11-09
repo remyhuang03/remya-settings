@@ -4,6 +4,7 @@ Requires both release bundles and a running graphical session. System appearance
 writes stay inside a temporary HOME/config root and the keyfile GSettings backend.
 """
 import ast
+import configparser
 import json
 import io
 import os
@@ -51,7 +52,8 @@ def service_pid():
 def default_apps_fixtures(environment):
     applications = Path(environment['XDG_DATA_HOME']) / 'applications'
     applications.mkdir(parents=True, exist_ok=True)
-    types = 'application/x-remya-smoke;text/plain;x-scheme-handler/http;x-scheme-handler/https;'
+    types = ('application/x-remya-smoke;application/x-remya-smoke-desktop;'
+             'application/x-remya-smoke-data;text/plain;x-scheme-handler/http;x-scheme-handler/https;')
     for name in ('a', 'b'):
         (applications / f'remya-smoke-{name}.desktop').write_text(
             f'[Desktop Entry]\nType=Application\nName=Remya smoke {name}\nExec=/usr/bin/true %U\nMimeType={types}\n')
@@ -59,6 +61,20 @@ def default_apps_fixtures(environment):
     config = Path(environment['XDG_CONFIG_HOME'])
     config.mkdir(parents=True, exist_ok=True)
     (config / 'mimeapps.list').write_text('[Default Applications]\napplication/x-remya-smoke=remya-smoke-a.desktop;\n')
+    desktop = environment['XDG_CURRENT_DESKTOP'].split(':')[0].lower()
+    (config / f'{desktop}-mimeapps.list').write_text(
+        '[Default Applications]\napplication/x-remya-smoke-desktop=remya-smoke-b.desktop;\n')
+    (applications / 'mimeapps.list').write_text(
+        '[Default Applications]\napplication/x-remya-smoke-data=remya-smoke-b.desktop;\n')
+    system_data = Path(environment['HOME']) / 'defaults-policy'
+    (system_data / 'applications').mkdir(parents=True)
+    (system_data / 'applications' / 'mimeapps.list').write_text(
+        '[Default Applications]\n'
+        'application/x-remya-smoke=remya-smoke-a.desktop;\n'
+        'application/x-remya-smoke-desktop=remya-smoke-a.desktop;\n'
+        'application/x-remya-smoke-data=remya-smoke-a.desktop;\n')
+    environment['XDG_DATA_DIRS'] = f"{system_data}:{environment.get('XDG_DATA_DIRS', '/usr/local/share:/usr/share')}"
+
 
 
 def appimage_fixture(home):
@@ -155,7 +171,7 @@ def default_apps_checks():
     assert state == dbus('Get', 'default-apps')
     assert state['initialized'] and state['writable'] and not state['conflict'] and state['error'] is None
     assert state['saved'][mime] == state['system'][mime] == 'remya-smoke-a.desktop'
-    assert cli('get', 'default-types:remya-smoke')['types'] == [{'type': mime, 'application': 'remya-smoke-a.desktop'}]
+    assert {'type': mime, 'application': 'remya-smoke-a.desktop'} in cli('get', 'default-types:remya-smoke')['types']
     assert any(t['type'] == 'application/pdf' for t in cli('get', 'default-types:.pdf')['types'])
     applications = cli('get', 'default-applications:Remya smoke')['applications']
     assert {a['id'] for a in applications} == {'remya-smoke-a.desktop', 'remya-smoke-b.desktop'}
@@ -198,8 +214,59 @@ def default_apps_checks():
     assert failed['error'] and not failed['writable'] and failed['saved'] == state['saved']
     config.write_text(valid)
     assert cli('get', 'default-apps')['writable']
-    assert 'Unavailable' in cli('set', 'defaults.ff4c4bec', 'true', ok=False)
-    print('PASS: isolated XDG defaults, real GIO writes/readback, external conflicts, both resolutions, validation, browser group and CLI/D-Bus parity', flush=True)
+    reset = 'defaults.ff4c4bec'
+    assert cli('get', reset)['availability'] == 'available'
+    assert 'InvalidArgument' in cli('set', reset, 'false', ok=False)
+    overrides = cli('set', setting, request)
+    types = (mime, mime + '-desktop', mime + '-data')
+    assert all(overrides['system'][key] == 'remya-smoke-b.desktop' for key in types)
+    desktop = os.environ['XDG_CURRENT_DESKTOP'].split(':')[0].lower()
+    data = Path(os.environ['XDG_DATA_HOME']) / 'applications' / 'mimeapps.list'
+    paths = [config, config.with_name(f'{desktop}-mimeapps.list'), data]
+    before = {path: path.read_text() for path in paths}
+    policy = Path(os.environ['HOME']) / 'defaults-policy' / 'applications' / 'mimeapps.list'
+    policy_before = policy.read_bytes()
+
+    # Refuse an unsafe file before modifying any of the other reset targets.
+    target = data.with_name('linked-mimeapps.list')
+    data.rename(target)
+    data.symlink_to(target)
+    assert 'writable regular file' in cli('set', reset, 'true', ok=False)
+    assert all(path.read_text() == before[path] for path in paths)
+    data.unlink()
+    target.rename(data)
+
+    def verify_reset(state):
+        assert state['saved'] == state['system'] and not state['conflict'] and state['error'] is None
+        for key in types:
+            assert state['system'][key] == 'remya-smoke-a.desktop'
+            assert 'remya-smoke-a.desktop' in subprocess.check_output(['gio', 'mime', key], text=True).splitlines()[0]
+        for path in paths:
+            original = configparser.ConfigParser(interpolation=None, delimiters=('=',))
+            original.read_string(before[path])
+            original.remove_section('Default Applications')
+            actual = configparser.ConfigParser(interpolation=None, delimiters=('=',))
+            actual.read(path)
+            assert actual == original, path
+        assert policy.read_bytes() == policy_before
+
+    first = cli('set', reset, 'true')
+    verify_reset(first)
+    assert first == dbus('Set', reset, 'true')
+    for path, content in before.items():
+        path.write_text(content)
+    deadline = time.monotonic() + 8
+    while True:
+        current = cli('get', 'default-apps')['system']
+        if all(current[key] == 'remya-smoke-b.desktop' for key in types):
+            break
+        assert time.monotonic() < deadline
+        time.sleep(0.2)
+    assert 'Conflict' in cli('set', reset, 'true', ok=False)
+    dbus('Resolve', 'default-apps', 'system')
+    assert dbus('Set', reset, 'true') == first
+    verify_reset(first)
+    print('PASS: isolated XDG defaults, GIO readback, conflicts, reset across user roots, and CLI/D-Bus parity', flush=True)
 
 
 def installed_apps_fixture(environment):

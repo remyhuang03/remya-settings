@@ -11,7 +11,7 @@ Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 
 ## 当前概况
 
 - 设置分类：15 个；详情页面：122 个；设置条目：1384 项。
-- 已实现：323 项；未实现：1051 项；不适用：10 项。
+- 已实现：324 项；未实现：1050 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
@@ -68,7 +68,7 @@ Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 
 | [蓝牙和设备](#category-devices) | 11 | 103 | 57 | 46 | 0 |
 | [网络和 Internet](#category-network) | 8 | 63 | 63 | 0 | 0 |
 | [外观](#category-appearance) | 10 | 292 | 37 | 255 | 0 |
-| [应用](#category-apps) | 5 | 35 | 29 | 6 | 0 |
+| [应用](#category-apps) | 5 | 35 | 30 | 5 | 0 |
 | [账户](#category-accounts) | 11 | 58 | 2 | 50 | 6 |
 | [时间和语言](#category-time) | 4 | 28 | 8 | 20 | 0 |
 | [辅助功能](#category-accessibility) | 10 | 198 | 0 | 198 | 0 |
@@ -1980,9 +1980,9 @@ Windows 参考入口：`ms-settings:appsfeatures-app`。
 
 文件类型、协议与应用默认值，详见 [Default apps 实现说明](default-apps.md)。
 
-页面状态：**未实现**；条目：11；已实现 10 / 未实现 1 / 不适用 0。
+页面状态：**已实现**；条目：11；已实现 11 / 未实现 0 / 不适用 0。
 
-原因：XDG 关联由普通用户 Rust 服务通过 GIO 读取、修改并回读；首次采用系统配置，冲突支持双向解决。整体重置尚未实现。
+原因：普通用户 Rust 服务管理 XDG 关联并通过 GIO 回读。首次采用系统配置，冲突支持双向解决。重置清除用户通用和当前桌面专用的默认覆盖，并保存回读结果。
 
 Windows 参考入口：`ms-settings:defaultapps`、`ms-settings:defaultbrowsersettings`。
 
@@ -2000,7 +2000,7 @@ Windows 参考入口：`ms-settings:defaultapps`、`ms-settings:defaultbrowserse
 | Text editor | `defaults.text` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、隔离 XDG `test/interface_smoke.py` 实际读写及 CLI/D-Bus 对等验证 |
 | PDF | `defaults.pdf` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、隔离 XDG `test/interface_smoke.py` 实际读写及 CLI/D-Bus 对等验证 |
 | File manager | `defaults.file-manager` | 操作 | 已实现 | Rust 单元测试、`test/service_controllers_test.dart`、隔离 XDG `test/interface_smoke.py` 实际读写及 CLI/D-Bus 对等验证 |
-| Reset all default apps | `defaults.ff4c4bec` | 操作 | 未实现 | — |
+| Reset all default apps | `defaults.ff4c4bec` | 操作 | 已实现 | 隔离 XDG `test/interface_smoke.py` 验证系统默认回读、保留其他关联和 CLI/D-Bus 对等 |
 
 ### Startup apps — `startup`
 
