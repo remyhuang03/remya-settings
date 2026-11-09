@@ -248,8 +248,23 @@ impl<H: Hypr> Input<H> {
         };
         self.saved = match fs::read_to_string(&self.saved_path) {
             Ok(text) => {
-                let saved: Saved = toml::from_str(&text)
+                let mut saved: Saved = toml::from_str(&text)
                     .map_err(|e| format!("{}: {e}", self.saved_path.display()))?;
+                // An option added to the group after first use starts from the system value.
+                let missing: Vec<_> = self
+                    .group
+                    .options
+                    .iter()
+                    .filter(|o| !saved.options.contains_key(o.id))
+                    .collect();
+                if !missing.is_empty() {
+                    for opt in missing {
+                        saved
+                            .options
+                            .insert(opt.id.into(), self.observed.options[opt.id].clone());
+                    }
+                    self.save(&saved)?;
+                }
                 Some(saved)
             }
             Err(e) if e.kind() == std::io::ErrorKind::NotFound => match &self.observed.file {
@@ -809,6 +824,23 @@ impl<H: Hypr> Input<H> {
             match source {
                 "system" => {
                     let saved = self.system(&file);
+                    // The owned file loads last, so a stale value in it would return on reload.
+                    let mut owned = file.clone();
+                    let mut stale = false;
+                    for (id, value) in owned.options.iter_mut() {
+                        if let Some(live) = saved.options.get(id).filter(|v| !v.is_null())
+                            && !same(value, live)
+                        {
+                            *value = live.clone();
+                            stale = true;
+                        }
+                    }
+                    if stale {
+                        if let Some(reason) = &self.write_blocked {
+                            return Err(reason.clone());
+                        }
+                        self.write_files(&owned, false, &saved)?;
+                    }
                     self.save(&saved)
                 }
                 "settings" => {

@@ -14,6 +14,8 @@ pub enum Kind {
     Text(&'static [&'static str]),
     /// `#rrggbb`, written as an opaque Hyprland `rgba(rrggbbff)` string.
     Color,
+    /// A CSS-style gap: one number for every side, or `[top, right, bottom, left]`.
+    Gap(i64),
 }
 
 pub struct Opt {
@@ -52,6 +54,14 @@ impl Opt {
                 Some(v) => Ok(json!(v)),
                 None => invalid("Use a color such as #1e1e2e".into()),
             },
+            Kind::Gap(max) => {
+                match gap(value).filter(|s| s.iter().all(|v| (0..=max).contains(v))) {
+                    Some(sides) => Ok(gap_value(sides)),
+                    None => invalid(format!(
+                        "Use a whole number from 0 to {max}, or four of them for top, right, bottom and left"
+                    )),
+                }
+            }
         }
     }
 
@@ -72,7 +82,50 @@ impl Opt {
                     .filter(|c| c.len() == 8)
                     .and_then(|c| hex(&format!("#{}", &c[2..])))
             ),
+            // `descriptions` reports CSS gaps as "top right bottom left".
+            Kind::Gap(_) => {
+                let sides: Option<Vec<i64>> = current
+                    .as_str()
+                    .map(|t| t.split_whitespace().map(|v| v.parse().ok()).collect())
+                    .unwrap_or_else(|| current.as_i64().map(|v| vec![v]));
+                match sides.as_deref() {
+                    Some([all]) => json!(all),
+                    Some(&[top, right, bottom, left]) => gap_value([top, right, bottom, left]),
+                    _ => Value::Null,
+                }
+            }
         }
+    }
+}
+
+/// The four sides of a gap value, or None for any other shape.
+fn gap(value: &Value) -> Option<[i64; 4]> {
+    if let Some(all) = value.as_i64() {
+        return Some([all; 4]);
+    }
+    let sides: Vec<i64> = value
+        .as_array()?
+        .iter()
+        .map(Value::as_i64)
+        .collect::<Option<_>>()?;
+    sides.try_into().ok()
+}
+
+/// Equal sides collapse to one number, so a uniform gap compares equal however it is spelled.
+fn gap_value(sides: [i64; 4]) -> Value {
+    if sides.iter().all(|v| *v == sides[0]) {
+        json!(sides[0])
+    } else {
+        json!(sides)
+    }
+}
+
+fn gap_lua(sides: [i64; 4]) -> String {
+    let [top, right, bottom, left] = sides;
+    if sides.iter().all(|v| *v == top) {
+        top.to_string()
+    } else {
+        format!("{{ top = {top}, right = {right}, bottom = {bottom}, left = {left} }}")
     }
 }
 
@@ -256,6 +309,49 @@ opts![DESKTOP_OPTIONS:
     ("background.hide-logo", "misc:disable_hyprland_logo", Kind::Bool),
     ("power.wake-key", "misc:key_press_enables_dpms", Kind::Bool),
     ("power.wake-pointer", "misc:mouse_move_enables_dpms", Kind::Bool),
+    (
+        "multitasking.layout",
+        "general:layout",
+        Kind::Text(&["dwindle", "master", "scrolling", "monocle"])
+    ),
+    ("multitasking.gaps-in", "general:gaps_in", Kind::Gap(500)),
+    ("multitasking.gaps-out", "general:gaps_out", Kind::Gap(500)),
+    ("multitasking.border-size", "general:border_size", Kind::Int(0, 20)),
+    ("multitasking.snap", "general:snap:enabled", Kind::Bool),
+    ("multitasking.snap-window-gap", "general:snap:window_gap", Kind::Int(0, 100)),
+    ("multitasking.snap-monitor-gap", "general:snap:monitor_gap", Kind::Int(0, 100)),
+    ("multitasking.snap-respect-gaps", "general:snap:respect_gaps", Kind::Bool),
+    ("multitasking.snap-border-overlap", "general:snap:border_overlap", Kind::Bool),
+    ("multitasking.resize-on-border", "general:resize_on_border", Kind::Bool),
+    (
+        "multitasking.border-grab-area",
+        "general:extend_border_grab_area",
+        Kind::Int(0, 100)
+    ),
+    ("multitasking.border-hover-icon", "general:hover_icon_on_border", Kind::Bool),
+    ("multitasking.resize-corner", "general:resize_corner", Kind::Int(0, 4)),
+    ("multitasking.float-gaps", "general:float_gaps", Kind::Gap(500)),
+    ("multitasking.gaps-workspaces", "general:gaps_workspaces", Kind::Int(0, 100)),
+    (
+        "multitasking.modal-parent-blocking",
+        "general:modal_parent_blocking",
+        Kind::Bool
+    ),
+    ("multitasking.no-focus-fallback", "general:no_focus_fallback", Kind::Bool),
+    ("multitasking.allow-tearing", "general:allow_tearing", Kind::Bool),
+    ("cursor.hide-on-key-press", "cursor:hide_on_key_press", Kind::Bool),
+    ("cursor.inactive-timeout", "cursor:inactive_timeout", Kind::Float(0.0, 20.0)),
+    ("cursor.hide-on-touch", "cursor:hide_on_touch", Kind::Bool),
+    ("cursor.hide-on-tablet", "cursor:hide_on_tablet", Kind::Bool),
+    ("cursor.no-warps", "cursor:no_warps", Kind::Bool),
+    (
+        "cursor.warp-on-change-workspace",
+        "cursor:warp_on_change_workspace",
+        Kind::Int(0, 2)
+    ),
+    ("cursor.persistent-warps", "cursor:persistent_warps", Kind::Bool),
+    ("cursor.hardware", "cursor:no_hardware_cursors", Kind::Int(0, 2)),
+    ("cursor.enable-hyprcursor", "cursor:enable_hyprcursor", Kind::Bool),
 ];
 
 /// One Settings-owned Lua file and the options it may contain.
@@ -279,7 +375,7 @@ pub const DESKTOP: Group = Group {
     name: "desktop",
     options: DESKTOP_OPTIONS,
     shortcuts: false,
-    header: "-- Managed by Remy'a Settings. Change Background and Power & battery in Settings.",
+    header: "-- Managed by Remy'a Settings. Change Background, Cursor, Multitasking and Power & battery in Settings.",
 };
 
 impl Group {
@@ -365,6 +461,7 @@ pub fn option_line(opt: &Opt, value: &Value) -> String {
         // `parse` finds the value by rendering `null` in its place, so keep that spelling.
         (Kind::Color, Value::String(c)) => quote(&format!("rgba({}ff)", c.trim_start_matches('#'))),
         (Kind::Color, _) => quote("rgba(nullff)"),
+        (Kind::Gap(_), value) => gap(value).map(gap_lua).unwrap_or_else(|| "null".into()),
         _ => literal(value),
     };
     for key in path.iter().rev() {
@@ -442,6 +539,24 @@ fn value(text: &str, kind: Kind) -> Option<Value> {
             .filter(|(_, rest)| rest.is_empty())
             .map(|(s, _)| s.into()),
         Kind::Color => hex(&format!("#{text}")).map(Value::from),
+        Kind::Gap(_) => {
+            if let Ok(all) = text.parse::<i64>() {
+                return Some(json!(all));
+            }
+            let mut sides = vec![];
+            let mut rest = text.strip_prefix("{ ")?.strip_suffix(" }")?;
+            for (index, side) in ["top", "right", "bottom", "left"].iter().enumerate() {
+                let field = rest.strip_prefix(&format!("{side} = "))?;
+                let end = field.find(", ").unwrap_or(field.len());
+                sides.push(field[..end].parse::<i64>().ok()?);
+                rest = if index < 3 {
+                    field.get(end + 2..)?
+                } else {
+                    &field[end..]
+                };
+            }
+            rest.is_empty().then(|| json!(sides))
+        }
     }
 }
 
@@ -636,5 +751,40 @@ mod tests {
         assert_eq!(parse(&DESKTOP, &text).unwrap(), file);
         assert!(parse(&DESKTOP, "hl.bind(\"SUPER + Q\", hl.dsp.window.close())\n").is_err());
         assert!(parse(&INPUT, &text).is_err());
+    }
+
+    #[test]
+    fn gaps_accept_one_or_four_sides_and_read_back() {
+        let gaps = DESKTOP.option("multitasking.gaps-out").unwrap();
+        assert_eq!(gaps.validate(&json!([6, 6, 6, 6])).unwrap(), json!(6));
+        assert_eq!(
+            gaps.validate(&json!([4, 8, 4, 8])).unwrap(),
+            json!([4, 8, 4, 8])
+        );
+        assert!(gaps.validate(&json!([1, 2, 3])).is_err());
+        assert!(gaps.validate(&json!(-1)).is_err());
+        assert_eq!(gaps.observed(&json!("4 4 4 4")), json!(4));
+        assert_eq!(gaps.observed(&json!("4 8 4 8")), json!([4, 8, 4, 8]));
+        let file = File {
+            options: BTreeMap::from([
+                ("multitasking.gaps-in".into(), json!(5)),
+                ("multitasking.gaps-out".into(), json!([10, 20, 30, 40])),
+                ("multitasking.layout".into(), json!("master")),
+            ]),
+            ..File::default()
+        };
+        let text = render(&DESKTOP, &file);
+        assert!(text.contains("hl.config({ general = { gaps_in = 5 } })"));
+        assert!(text.contains(
+            "hl.config({ general = { gaps_out = { top = 10, right = 20, bottom = 30, left = 40 } } })"
+        ));
+        assert_eq!(parse(&DESKTOP, &text).unwrap(), file);
+        assert!(
+            parse(
+                &DESKTOP,
+                "hl.config({ general = { gaps_out = { top = 1, left = 2 } } })\n"
+            )
+            .is_err()
+        );
     }
 }

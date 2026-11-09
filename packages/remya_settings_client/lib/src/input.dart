@@ -8,7 +8,8 @@ const disableShortcutId = 'keyboard-shortcuts.disable';
 const recordShortcutId = 'keyboard-shortcuts.record';
 
 /// Settings-owned Hyprland options: `input` (mouse, touchpad and keyboard
-/// shortcuts) and `desktop` (window blur, fallback background and display wake).
+/// shortcuts) and `desktop` (window layout, cursor behavior, blur, fallback
+/// background and display wake).
 extension InputClient on SettingsClient {
   Future<Map<String, dynamic>> readHyprOptions(String feature) =>
       call('Get', [feature]);

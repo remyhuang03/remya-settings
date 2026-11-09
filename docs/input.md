@@ -14,6 +14,13 @@ blur, fallback background and display wake options live in their own
 `remya-settings/desktop.lua` and `desktop.toml` and never contain shortcuts. Live values come from one `hyprctl -j descriptions` call. Hyprland's
 own range checks are repeated in Rust; the GUI offers narrower slider ranges.
 
+The `desktop` group also holds the Multitasking page (`general:*` and
+`general:snap:*`: layout, gaps, borders, snapping and resizing) and the hiding
+and pointer-movement options of the Cursor page (`cursor:*`). Gaps are CSS-style:
+one number for every side or `[top, right, bottom, left]`, written to Lua as a
+number or a `{ top, right, bottom, left }` table. Cursor and icon themes are a
+separate feature; see [Cursor and icon themes](themes.md).
+
 A change is applied in four steps:
 
 1. `hyprctl eval 'hl.config({ … })'`, which Hyprland validates.
@@ -49,14 +56,17 @@ is never overwritten. A missing `hyprland.lua` blocks writes in the same way.
 ## Reconciliation
 
 On first use, Settings saves the live option values and the shortcuts in
-`input.lua`, and changes nothing. Every later read compares:
+`input.lua`, and changes nothing. An option added to a group later starts from
+its live value the same way. Every later read compares:
 
 - saved options with live values (floating-point values to three decimals)
 - saved custom and turned-off shortcuts with `input.lua`
 
 Each difference is listed in `conflicts`. The ID `keyboard-shortcuts` stands
 for a difference in shortcuts. While a conflict exists, writes are refused.
-`Resolve input system` adopts the live values and the file. `Resolve input
+`Resolve input system` adopts the live values and the file. It also replaces adopted values in the
+Settings-owned file, which loads last and would otherwise bring the old value back
+on the next reload. `Resolve input
 settings` writes the saved values and verifies them.
 
 ## Shortcuts

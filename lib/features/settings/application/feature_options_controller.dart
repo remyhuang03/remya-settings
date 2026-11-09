@@ -1,13 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
-/// State of one Settings-owned Hyprland option group: `input` for the Mouse,
-/// Touchpad and Keyboard shortcuts pages, `desktop` for window blur, the fallback
-/// background and display wake on the Background and Power pages.
-class HyprOptionsController extends ChangeNotifier {
-  HyprOptionsController(this.client, {this.feature = 'input'}) {
+/// State of one service feature with saved options, a system readback and
+/// conflicts: the Hyprland option groups `input` (Mouse, Touchpad, Keyboard
+/// shortcuts) and `desktop` (Multitasking, Cursor, Background, Power), and the
+/// cursor and icon theme packs (`themes`).
+class FeatureOptionsController extends ChangeNotifier {
+  FeatureOptionsController(this.client, {this.feature = 'input'}) {
     _changes = client.changes.listen((change) {
       if (change.topic == feature && !isBusy) _apply(change.value);
     }, onError: (Object error) => debugPrint('$feature changes: $error'));
@@ -48,7 +50,7 @@ class HyprOptionsController extends ChangeNotifier {
 
   Future<void> reload() async {
     try {
-      _apply(await client.readHyprOptions(feature));
+      _apply(await client.call('Get', [feature]));
     } catch (error) {
       _readFailed = true;
       errorMessage = '$error';
@@ -75,9 +77,9 @@ class HyprOptionsController extends ChangeNotifier {
   }
 
   Future<bool> set(String id, Object value) =>
-      _change(() => client.setInput(id, value));
+      _change(() => client.call('Set', [id, jsonEncode(value)]));
   Future<bool> resolve(String source) =>
-      _change(() => client.resolveHyprOptions(feature, source));
+      _change(() => client.call('Resolve', [feature, source]));
 
   @override
   void dispose() {

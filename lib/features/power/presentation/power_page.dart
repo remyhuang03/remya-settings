@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
-import '../../input/application/hypr_options_controller.dart';
+import '../../settings/application/feature_options_controller.dart';
 import '../../input/presentation/input_widgets.dart';
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_widgets.dart';
@@ -42,7 +42,7 @@ class _PowerPageState extends State<PowerPage> {
 
   /// Display wake comes from the Settings-owned Hyprland `desktop` options.
   late final _desktop = widget.page.id == 'power'
-      ? (HyprOptionsController(_client, feature: 'desktop')
+      ? (FeatureOptionsController(_client, feature: 'desktop')
           ..addListener(_rebuild)
           ..reload())
       : null;

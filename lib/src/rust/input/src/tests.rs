@@ -150,6 +150,29 @@ fn first_use_adopts_live_values_without_writing_hyprland_files() {
 }
 
 #[test]
+fn options_added_after_first_use_adopt_the_live_value() {
+    let mut s = setup();
+    s.input.refresh().unwrap();
+    let path = s._dir.path().join("input.toml");
+    let mut saved: Saved = toml::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
+    saved.options.remove("mouse.pointer-speed");
+    saved
+        .options
+        .insert("mouse.natural-scroll".into(), json!(true));
+    fs::write(&path, toml::to_string(&saved).unwrap()).unwrap();
+    s.input.refresh().unwrap();
+    let state = s.input.state();
+    assert_eq!(state["saved"]["mouse.pointer-speed"], json!(0.1));
+    // Existing saved values keep their conflict.
+    assert_eq!(state["conflicts"], json!(["mouse.natural-scroll"]));
+    assert!(
+        fs::read_to_string(&path)
+            .unwrap()
+            .contains("mouse.pointer-speed")
+    );
+}
+
+#[test]
 fn option_changes_apply_live_persist_and_survive_reload() {
     let mut s = setup();
     s.input.set("mouse.pointer-speed", "0.5").unwrap();
@@ -222,6 +245,12 @@ fn conflicts_block_writes_until_resolved_either_way() {
     let state = s.input.resolve("system").unwrap();
     assert_eq!(state["options"]["mouse.pointer-speed"], json!(-0.4));
     assert_eq!(state["conflict"], false);
+    // The adopted value also replaces the one in Settings' own file, so a reload keeps it.
+    let file = fs::read_to_string(s.hypr.join("remya-settings/input.lua")).unwrap();
+    assert!(file.contains("sensitivity = -0.4"), "{file}");
+    s.world.0.lock().unwrap().reload();
+    s.input.refresh().unwrap();
+    assert_eq!(s.input.state()["conflict"], false);
 }
 
 #[test]

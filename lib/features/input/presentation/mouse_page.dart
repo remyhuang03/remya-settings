@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
 import '../../settings/domain/settings_catalog.dart';
-import '../application/hypr_options_controller.dart';
+import '../../settings/application/feature_options_controller.dart';
 import 'input_widgets.dart';
 
 /// Mouse buttons, pointer, scrolling and focus, applied to every connected mouse.
@@ -22,7 +22,7 @@ class MousePage extends StatefulWidget {
 }
 
 class _MousePageState extends State<MousePage> {
-  late final _controller = HyprOptionsController(widget.client)..reload();
+  late final _controller = FeatureOptionsController(widget.client)..reload();
   final _dragging = <String, double>{};
 
   @override

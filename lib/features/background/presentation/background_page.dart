@@ -6,7 +6,7 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
-import '../../input/application/hypr_options_controller.dart';
+import '../../settings/application/feature_options_controller.dart';
 import '../../input/presentation/input_widgets.dart';
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_widgets.dart';
@@ -65,7 +65,8 @@ class _BackgroundPageState extends State<BackgroundPage> {
   Set<String> _selection = const {};
   late final _desktop = widget.client == null
       ? null
-      : (HyprOptionsController(widget.client!, feature: 'desktop')..reload());
+      : (FeatureOptionsController(widget.client!, feature: 'desktop')
+          ..reload());
   final _dragging = <String, double>{};
 
   BackgroundController get _controller => widget.controller;
@@ -147,7 +148,7 @@ class _BackgroundPageState extends State<BackgroundPage> {
     child: Text(title, style: Theme.of(context).textTheme.titleMedium),
   );
 
-  InputRows _rows(HyprOptionsController desktop) => InputRows(
+  InputRows _rows(FeatureOptionsController desktop) => InputRows(
     context,
     desktop,
     _dragging,
@@ -158,7 +159,7 @@ class _BackgroundPageState extends State<BackgroundPage> {
 
   bool get _blurOn => _desktop?.option('background.blur-enabled') == true;
 
-  List<Widget> _blur(HyprOptionsController desktop) {
+  List<Widget> _blur(FeatureOptionsController desktop) {
     final section = widget.page.sections[1];
     final rows = _rows(desktop);
     return [

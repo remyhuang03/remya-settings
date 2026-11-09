@@ -3,7 +3,7 @@ import 'package:remya_settings_client/settings_contract.dart';
 
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_widgets.dart';
-import '../application/hypr_options_controller.dart';
+import '../../settings/application/feature_options_controller.dart';
 import 'input_widgets.dart';
 import 'keyboard_map.dart';
 import 'shortcut_dialog.dart';
@@ -27,7 +27,7 @@ class KeyboardShortcutsPage extends StatefulWidget {
 }
 
 class _KeyboardShortcutsPageState extends State<KeyboardShortcutsPage> {
-  late final _controller = HyprOptionsController(widget.client)..reload();
+  late final _controller = FeatureOptionsController(widget.client)..reload();
   final _dragging = <String, double>{};
   final _search = TextEditingController();
   Set<String> _modifiers = {'SUPER'};

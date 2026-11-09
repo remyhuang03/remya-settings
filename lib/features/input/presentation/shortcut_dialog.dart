@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
-import '../application/hypr_options_controller.dart';
+import '../../settings/application/feature_options_controller.dart';
 import 'shortcut_model.dart';
 
 /// XKB keycodes by Flutter physical key; Hyprland resolves them in the active layout.
@@ -38,7 +38,7 @@ typedef ShortcutDraft = ({
 /// Opens the editor; [initial] edits a custom shortcut, [keys] proposes a combination.
 Future<void> showShortcutDialog(
   BuildContext context,
-  HyprOptionsController controller, {
+  FeatureOptionsController controller, {
   ShortcutDraft? initial,
   String? keys,
 }) => showDialog(
@@ -52,7 +52,7 @@ Future<void> showShortcutDialog(
 
 class _ShortcutDialog extends StatefulWidget {
   const _ShortcutDialog({required this.controller, this.initial, this.keys});
-  final HyprOptionsController controller;
+  final FeatureOptionsController controller;
   final ShortcutDraft? initial;
   final String? keys;
 
@@ -72,7 +72,7 @@ class _ShortcutDialogState extends State<_ShortcutDialog> {
   bool _recording = false;
   String? _error;
 
-  HyprOptionsController get _controller => widget.controller;
+  FeatureOptionsController get _controller => widget.controller;
   SettingsClient get _client => _controller.client;
   List<LiveShortcut> get _conflicts => [
     for (final c in _lookup?['conflicts'] as List? ?? [])

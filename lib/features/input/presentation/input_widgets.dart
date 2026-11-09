@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_content.dart';
 import '../../settings/presentation/settings_widgets.dart';
-import '../application/hypr_options_controller.dart';
+import '../../settings/application/feature_options_controller.dart';
 
 /// Service values for each catalog option, in the catalog's option order.
 const choiceValues = <String, List<Object>>{
@@ -18,6 +18,11 @@ const choiceValues = <String, List<Object>>{
   'touchpad.three-finger-drag': [0, 1, 2],
   'keyboard-shortcuts.workspace-back-and-forth': [0, 1, 2],
   'background.blur-variant': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  'multitasking.layout': ['dwindle', 'master', 'scrolling', 'monocle'],
+  'multitasking.resize-corner': [0, 1, 2, 3, 4],
+  'cursor.warp-on-change-workspace': [0, 1, 2],
+  // `no_hardware_cursors`: 2 decides automatically, 0 uses hardware cursors.
+  'cursor.hardware': [2, 0, 1],
 };
 
 /// Slider range, step and readout; the service accepts the wider Hyprland range.
@@ -88,7 +93,23 @@ final sliderShapes = <String, SliderShape>{
   'background.blur-contrast': (min: 0, max: 2, step: 0.05, text: _decimal),
   'background.blur-brightness': (min: 0, max: 2, step: 0.05, text: _decimal),
   'background.blur-vibrancy': (min: 0, max: 1, step: 0.05, text: _decimal),
+  'multitasking.gaps-in': (min: 0, max: 40, step: 1, text: _pixels),
+  'multitasking.gaps-out': (min: 0, max: 80, step: 1, text: _pixels),
+  'multitasking.border-size': (min: 0, max: 10, step: 1, text: _pixels),
+  'multitasking.snap-window-gap': (min: 0, max: 50, step: 1, text: _pixels),
+  'multitasking.snap-monitor-gap': (min: 0, max: 50, step: 1, text: _pixels),
+  'multitasking.border-grab-area': (min: 0, max: 50, step: 1, text: _pixels),
+  'multitasking.float-gaps': (min: 0, max: 80, step: 1, text: _pixels),
+  'multitasking.gaps-workspaces': (min: 0, max: 100, step: 5, text: _pixels),
+  'cursor.inactive-timeout': (
+    min: 0,
+    max: 20,
+    step: 1,
+    text: (v) => v == 0 ? 'Never' : '${v.round()} s',
+  ),
 };
+
+String _pixels(double v) => '${v.round()} px';
 
 String _decimal(double v) => v.toStringAsFixed(2);
 
@@ -101,6 +122,7 @@ String describeValue(SettingSpec setting, Object? value) {
     if (value == '') return 'Device default';
   }
   if (sliderShapes[setting.id] case final shape?) {
+    if (value is List) return _sides(value);
     return value is num ? shape.text(value.toDouble()) : '$value';
   }
   return switch (value) {
@@ -110,11 +132,15 @@ String describeValue(SettingSpec setting, Object? value) {
   };
 }
 
+/// A gap whose sides differ, in CSS order.
+String _sides(List<Object?> sides) =>
+    'Top ${sides[0]}, right ${sides[1]}, bottom ${sides[2]}, left ${sides[3]} px';
+
 /// Builds the rows of the input pages from catalog specs and the shared controller.
 class InputRows {
   InputRows(this.context, this.controller, this.dragging, this.onDrag);
   final BuildContext context;
-  final HyprOptionsController controller;
+  final FeatureOptionsController controller;
 
   /// Slider positions while a thumb is held; only the release writes, since each
   /// write rewrites the Hyprland file and reloads the compositor.
@@ -177,11 +203,15 @@ class InputRows {
               },
             );
     } else if (sliderShapes[setting.id] case final shape?) {
-      final current =
-          dragging[setting.id] ?? (value as num? ?? shape.min).toDouble();
+      // A gap with different sides shows them; moving the slider evens them out.
+      final sides = value is List ? value : null;
+      final numeric = sides == null ? value as num? : sides.first as num?;
+      final current = dragging[setting.id] ?? (numeric ?? shape.min).toDouble();
       final shown = current.clamp(shape.min, shape.max).toDouble();
-      final integer = value is int;
-      subtitle ??= shape.text(current);
+      final integer = value is int || sides != null;
+      subtitle ??= sides != null && !dragging.containsKey(setting.id)
+          ? '${_sides(sides)}. Moving the slider sets every side.'
+          : shape.text(current);
       control = SizedBox(
         width: 260,
         child: Slider(
@@ -251,11 +281,17 @@ class InputPageFrame extends StatelessWidget {
     required this.hero,
     required this.controlBuilder,
     this.isVisible,
+    this.conflictTitle,
+    this.footer = const [],
   });
   final SettingsCatalog catalog;
   final SettingsPageSpec page;
-  final HyprOptionsController controller;
+  final FeatureOptionsController controller;
   final Widget hero;
+  final String? conflictTitle;
+
+  /// Shown after the sections, such as links to related pages.
+  final List<Widget> footer;
   final Widget Function(SettingSpec) controlBuilder;
   final bool Function(SettingSpec)? isVisible;
 
@@ -280,6 +316,7 @@ class InputPageFrame extends StatelessWidget {
           InputConflictCard(
             controls: catalog.pages.expand((p) => p.controls),
             controller: controller,
+            title: conflictTitle ?? 'Input settings differ from saved Settings',
           ),
         hero,
         for (final section in page.sections)
@@ -290,6 +327,7 @@ class InputPageFrame extends StatelessWidget {
             controlBuilder: controlBuilder,
             isVisible: isVisible,
           ),
+        ...footer,
       ],
     ],
   );
@@ -304,7 +342,7 @@ class InputConflictCard extends StatelessWidget {
     this.title = 'Input settings differ from saved Settings',
   });
   final Iterable<SettingSpec> controls;
-  final HyprOptionsController controller;
+  final FeatureOptionsController controller;
   final String title;
 
   @override
