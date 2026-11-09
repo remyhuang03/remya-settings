@@ -1,8 +1,7 @@
 name: remya_settings
 description: "A Material Design 3 Expressive system settings application for Hyprland."
 publish_to: 'none'
-version: 0.1.0+2026-10-26
-
+version: 0.1.0-dev.20261109.0
 environment:
   sdk: ^3.13.7
 
