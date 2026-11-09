@@ -7,6 +7,28 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 import 'package:remya_settings/features/sound/application/sound_controller.dart';
 import 'package:remya_settings/features/sound/presentation/sound_page.dart';
+import 'package:remya_settings_client/settings_contract.dart';
+
+class _FakeDesktopClient extends SettingsClient {
+  _FakeDesktopClient(this.state);
+  Map<String, dynamic> state;
+  final calls = <List<String>>[];
+
+  @override
+  Stream<SettingsChange> get changes => const Stream.empty();
+
+  @override
+  Future<Map<String, dynamic>> call(
+    String method, [
+    List<String> args = const [],
+  ]) async {
+    calls.add([method, ...args]);
+    if (method == 'Set') {
+      (state['options'] as Map)[args[0]] = jsonDecode(args[1]);
+    }
+    return state;
+  }
+}
 
 Map<String, dynamic> state() => {
   'available': true,
@@ -200,4 +222,89 @@ void main() {
     expect(failing.errorMessage, contains('device removed'));
     expect(failing.isBusy, isFalse);
   });
+  testWidgets(
+    'compositor bell switches between default, off and custom audio files',
+    (tester) async {
+      final catalog = SettingsCatalog.fromJson(
+        jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
+            as Map<String, dynamic>,
+      );
+      final client = _FakeDesktopClient({
+        'options': {'sound.compositor-bell': 'default'},
+        'system': {'sound.compositor-bell': 'none'},
+        'saved': {'sound.compositor-bell': 'default'},
+        'conflict': false,
+        'conflicts': <String>[],
+        'write_blocked': null,
+        'error': null,
+      });
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: SoundPage(
+                controller: controller,
+                page: catalog.page('sound-volume'),
+                catalog: catalog,
+                client: client,
+                pickBellFile: () async => '/tmp/chime.ogg',
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Advanced'));
+      await tester.tap(find.text('Advanced'));
+      await tester.pumpAndSettle();
+      expect(find.text('Compositor bell sound (bell_sound)'), findsOneWidget);
+
+      await tester.ensureVisible(find.text('Off'));
+      await tester.tap(find.text('Off'));
+      await tester.pumpAndSettle();
+      expect(client.calls.last, ['Set', 'sound.compositor-bell', '"none"']);
+
+      await tester.tap(find.text('Custom'));
+      await tester.pumpAndSettle();
+      expect(client.calls.last, [
+        'Set',
+        'sound.compositor-bell',
+        '"/tmp/chime.ogg"',
+      ]);
+      expect(find.text('File: /tmp/chime.ogg'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('sound.compositor-bell-browse')),
+        findsOneWidget,
+      );
+
+      client.state = {
+        ...client.state,
+        'conflict': true,
+        'conflicts': ['sound.compositor-bell'],
+      };
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: SoundPage(
+                key: const ValueKey('sound-bell-conflict'),
+                controller: controller,
+                page: catalog.page('sound-volume'),
+                catalog: catalog,
+                client: client,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.text(
+          'Compositor bell sound (bell_sound): system Off, Settings Default',
+        ),
+        findsOneWidget,
+      );
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 }

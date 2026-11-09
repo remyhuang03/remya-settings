@@ -273,7 +273,10 @@ fn run() -> Result<(), String> {
                     {
                         signal(&bus, "updates", &state.lock().unwrap().updates.state());
                     }
-                    if args.first().is_some_and(|id| id.starts_with("fonts.")) {
+                    if args
+                        .first()
+                        .is_some_and(|id| remya_settings_fonts::IDS.contains(&id.as_str()))
+                    {
                         signal(&bus, "fonts", &serde_json::json!({}));
                     }
                 }

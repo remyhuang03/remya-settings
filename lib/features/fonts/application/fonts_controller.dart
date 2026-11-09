@@ -6,6 +6,7 @@ const fontsSearchSettingId = 'fonts.65a8477b';
 const fontsInstallSettingId = 'fonts.158ba0bb';
 const fontsDetailsSettingId = 'fonts.fc3969c7';
 const fontsUninstallSettingId = 'fonts.f869cae5';
+const fontsCompositorFamilySettingId = 'fonts.compositor-family';
 
 class FontFamily {
   const FontFamily(this.raw);

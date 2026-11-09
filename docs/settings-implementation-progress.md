@@ -10,8 +10,8 @@ Hyprland 内容包含 27 个独立页面及并入常规页面的设置项，共 
 
 ## 当前概况
 
-- 设置分类：15 个；详情页面：120 个；设置条目：1287 项。
-- 已实现：418 项；未实现：859 项；不适用：10 项。
+- 设置分类：15 个；详情页面：117 个；设置条目：1230 项。
+- 已实现：420 项；未实现：800 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值；`test/service_controllers_test.dart` 覆盖各偏好的提示。显示语言与区域格式由 Language and Region 页经 systemd-localed 管理。
@@ -66,12 +66,12 @@ Hyprland 内容包含 27 个独立页面及并入常规页面的设置项，共 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | [系统](#category-system) | 15 | 201 | 109 | 92 | 0 |
-| [声音](#category-sound) | 3 | 17 | 14 | 3 | 0 |
+| [声音](#category-sound) | 3 | 17 | 15 | 2 | 0 |
 | [电源与电池](#category-power) | 3 | 20 | 19 | 1 | 0 |
 | [通知](#category-notifications) | 4 | 19 | 12 | 7 | 0 |
 | [蓝牙和设备](#category-devices) | 11 | 103 | 57 | 46 | 0 |
 | [网络和 Internet](#category-network) | 8 | 63 | 63 | 0 | 0 |
-| [外观](#category-appearance) | 13 | 266 | 91 | 175 | 0 |
+| [外观](#category-appearance) | 10 | 209 | 92 | 117 | 0 |
 | [应用](#category-apps) | 5 | 35 | 30 | 5 | 0 |
 | [账户](#category-accounts) | 11 | 58 | 2 | 50 | 6 |
 | [时间和语言](#category-time) | 4 | 19 | 11 | 8 | 0 |
@@ -611,9 +611,9 @@ Windows 参考入口：`ms-settings:developers`。
 
 Default output and input devices, volume and mute
 
-页面状态：**未实现**；条目：7；已实现 6 / 未实现 1 / 不适用 0。
+页面状态：**已实现**；条目：7；已实现 7 / 未实现 0 / 不适用 0。
 
-原因：Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback. Additional compositor options remain unimplemented previews.
+原因：Rust reads and controls the per-user PipeWire audio server through libpulse and sets the Hyprland compositor bell, with validated writes and readback.
 
 Windows 参考入口：`ms-settings:sound`、`ms-settings:sound-defaultoutputproperties`、`ms-settings:sound-properties`、`ms-settings:sound-defaultinputproperties`。
 
@@ -637,7 +637,7 @@ Windows 参考入口：`ms-settings:sound`、`ms-settings:sound-defaultoutputpro
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Compositor bell sound (bell_sound) | `sound.compositor-bell` | 文本输入 | 未实现 | — |
+| Compositor bell sound (bell_sound) | `sound.compositor-bell` | 文本输入 | 已实现 | Rust input/desktop 测试；`test/sound_test.dart`；`test/desktop_smoke.py`（嵌套 Hyprland 0.57） |
 
 ### Volume mixer — `volume-mixer`
 
@@ -1826,132 +1826,13 @@ Windows 参考入口：`ms-settings:lockscreen`。
 | Lock label: Horizontal alignment (halign) | `lockscreen.label-halign` | 文本输入 | 未实现 | — |
 | Lock label: Vertical alignment (valign) | `lockscreen.label-valign` | 文本输入 | 未实现 | — |
 
-### Start menu — `start`
-
-布局、最近内容与文件夹参考
-
-页面状态：**未实现**；条目：22；已实现 0 / 未实现 22 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:personalization-start`。
-
-相关页面 ID：`start-folders`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Layout | `start.b0961e17` | 选择 | 未实现 | — |
-| Show recently added apps | `start.d92d56e8` | 开关 | 未实现 | — |
-| Display the most commonly used applications | `start.c8b5b887` | 开关 | 未实现 | — |
-| Show recently opened projects | `start.8c92cfee` | 开关 | 未实现 | — |
-| Show tips and recommendations | `start.468469a6` | 开关 | 未实现 | — |
-| Show account notifications | `start.13ed1ecd` | 开关 | 未实现 | — |
-| Select the Start menu folder | `start.1e3f5abe` | 操作 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Layout | `start.reference.4e607a8a` | 选择 | 未实现 | — |
-| Show recently added apps | `start.reference.9e4e7236` | 开关 | 未实现 | — |
-| Show most used apps | `start.reference.fc387ac7` | 开关 | 未实现 | — |
-| Show recommended files in Start, recent files in File Explorer, and items in Jump Lists | `start.reference.8ec7c2b7` | 开关 | 未实现 | — |
-| Show recommendations for tips, shortcuts, new apps and more | `start.reference.bfca4f8f` | 选择 | 未实现 | — |
-| Show account-related notifications | `start.reference.14d5c068` | 开关 | 未实现 | — |
-| Settings | `start.reference.abde902c` | 开关 | 未实现 | — |
-| File Explorer | `start.reference.f8412609` | 开关 | 未实现 | — |
-| Documents | `start.reference.69e50dbf` | 开关 | 未实现 | — |
-| Downloads | `start.reference.5932c066` | 开关 | 未实现 | — |
-| Music | `start.reference.85550725` | 开关 | 未实现 | — |
-| Pictures | `start.reference.db786e0a` | 开关 | 未实现 | — |
-| Videos | `start.reference.8139f929` | 开关 | 未实现 | — |
-| Network | `start.reference.6ec482d6` | 开关 | 未实现 | — |
-| Personal folder | `start.reference.543cab9d` | 开关 | 未实现 | — |
-
-### Start menu folder — `start-folders`
-
-电源按钮旁的快捷入口参考
-
-页面状态：**未实现**；条目：9；已实现 0 / 未实现 9 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:personalization-start-places`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Settings | `start-folders.7debf9cb` | 开关 | 未实现 | — |
-| File Explorer | `start-folders.9796bfb6` | 开关 | 未实现 | — |
-| Documentation | `start-folders.10691272` | 开关 | 未实现 | — |
-| Download | `start-folders.2b9d0131` | 开关 | 未实现 | — |
-| Music | `start-folders.afb3c40c` | 开关 | 未实现 | — |
-| Pictures | `start-folders.be8da62e` | 开关 | 未实现 | — |
-| Video | `start-folders.fa4e33b6` | 开关 | 未实现 | — |
-| Network | `start-folders.0cbda6b5` | 开关 | 未实现 | — |
-| Personal folder | `start-folders.08058297` | 开关 | 未实现 | — |
-
-### Taskbar — `taskbar`
-
-任务栏项目、托盘与多显示器行为
-
-页面状态：**未实现**；条目：26；已实现 0 / 未实现 26 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:taskbar`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Search | `taskbar.f0409080` | 开关 | 未实现 | — |
-| Task view | `taskbar.f048711a` | 开关 | 未实现 | — |
-| Widgets | `taskbar.f74efb4f` | 开关 | 未实现 | — |
-| System tray icon | `taskbar.2571c928` | 开关 | 未实现 | — |
-
-#### 任务栏行为
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Alignment | `taskbar.47b8b751` | 选择 | 未实现 | — |
-| Autohide | `taskbar.90482e5d` | 开关 | 未实现 | — |
-| Show badge | `taskbar.aee99fe4` | 开关 | 未实现 | — |
-| Display application flickering | `taskbar.45c83101` | 开关 | 未实现 | — |
-| Show taskbar on all monitors | `taskbar.6d30d353` | 开关 | 未实现 | — |
-| Multi-monitor application display range | `taskbar.e348754b` | 选择 | 未实现 | — |
-| Share any window | `taskbar.a4e2e2b6` | 开关 | 未实现 | — |
-| Corner display desktop | `taskbar.b5f530b6` | 开关 | 未实现 | — |
-| Merge buttons and hidden labels | `taskbar.b00ce8b3` | 选择 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Taskbar Pinned layout | `taskbar.reference.47ef6392` | 选择 | 未实现 | — |
-| Task View | `taskbar.reference.0ca8d47b` | 开关 | 未实现 | — |
-| Widgets | `taskbar.reference.2f04f30d` | 开关 | 未实现 | — |
-| Taskbar alignment | `taskbar.reference.be160a7d` | 选择 | 未实现 | — |
-| Automatically hide the taskbar | `taskbar.reference.986b8b3a` | 开关 | 未实现 | — |
-| Show badges on taskbar apps | `taskbar.reference.b10a5381` | 开关 | 未实现 | — |
-| Show flashing on taskbar apps | `taskbar.reference.3e990cfd` | 开关 | 未实现 | — |
-| Show my taskbar on all my displays | `taskbar.reference.7eab6479` | 开关 | 未实现 | — |
-| When using multiple displays show my taskbar apps on | `taskbar.reference.d7ca79fe` | 选择 | 未实现 | — |
-| Share any window from my taskbar | `taskbar.reference.e875398a` | 开关 | 未实现 | — |
-| Select the far corner of the taskbar to show the desktop | `taskbar.reference.502aa5d3` | 开关 | 未实现 | — |
-| Combine taskbar buttons and hide labels | `taskbar.reference.67cefb4c` | 选择 | 未实现 | — |
-| Combine taskbar buttons and hide labels on other taskbars | `taskbar.reference.e7e5a003` | 选择 | 未实现 | — |
-
 ### Fonts — `fonts`
 
 浏览、预览、安装与卸载字体
 
-页面状态：**未实现**；条目：5；已实现 4 / 未实现 1 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
 
-原因：Reads the fontconfig font list. Installs and removes font files only in your user font directory.
+原因：Reads the fontconfig font list, installs and removes font files in your user font directory, and sets the Hyprland compositor font.
 
 Windows 参考入口：`ms-settings:fonts`。
 
@@ -1964,11 +1845,11 @@ Windows 参考入口：`ms-settings:fonts`。
 | Font details | `fonts.fc3969c7` | 操作 | 已实现 | 见下文“Background, accent and fonts” |
 | Uninstall fonts | `fonts.f869cae5` | 操作 | 已实现 | 见下文“Background, accent and fonts” |
 
-#### Advanced: compositor previews
+#### Advanced
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Compositor font family (font_family) | `fonts.compositor-family` | 文本输入 | 未实现 | — |
+| Compositor font family (font_family) | `fonts.compositor-family` | 文本输入 | 已实现 | Rust input/desktop 测试；`test/fonts_test.dart`；`test/desktop_smoke.py`（嵌套 Hyprland 0.57） |
 
 ### Dynamic light effects — `lighting`
 
@@ -3839,3 +3720,9 @@ Wayland、XDG、主题与应用环境 · Hyprland
 - Workspace rules: `desktop.lua` accepts one more strict line shape, `hl.workspace_rule({ workspace, monitor, default, persistent, default_name })` in fixed order; `workspaces.rule-set` and `workspaces.rule-remove` validate the selector (number, `name:`, `special:`), connector name and one-line text, reload the configuration and wait for `hyprctl workspacerules` to report the change, restoring the files otherwise. Saved rules are reconciled with the file under the conflict ID `workspaces`. Rules from other files (for example a display tool's `workspaces.lua`) are shown read-only and never written. The page draws each live display at its layout position and logical size with its workspaces; selecting one edits or starts its rule. Removed instead of implemented: per-workspace gaps, borders, layout and animation fields (Multitasking and Window appearance already set them globally).
 - Automated: Rust config test (rule round trip with escaped text, refusal of other fields, reordered or foreign Lua, and rules in `input.lua`); Rust desktop test with a fake compositor (first use adopts without writing, logical size of a rotated scaled display, validation, write and reload readback, one start workspace per display, editing in place and refused rename onto a used workspace, conflict and both resolutions, removal); `test/workspaces_test.dart` (display map chips, read-only foreign rules, prefilled editor hiding unusable fields, edit with `previous`, removal); `test/desktop_smoke.py` against a nested Hyprland 0.57 with isolated XDG roots (options applied and kept after reload, persistent rule with a default name created and read back, edit dropping the old fields, invalid rules refused, removal, a rule in the user's own `hyprland.lua` left untouched).
 - Untested: the installed release on the real desktop (the workstation's `workspacerules`, monitors and workspaces were only read), `default` taking effect when a display is connected, the CLI path (it dispatches through the same service), and a rule field that another file also sets (Hyprland merges same-workspace rules, so removing it times out and is undone).
+
+## Compositor font, compositor bell and Start/Taskbar removal (2026-11-09)
+
+- Appearance › Fonts gains `fonts.compositor-family` (`misc:font_family`) in its Advanced section, and Sound › Output & input gains `sound.compositor-bell` (`misc:bell_sound`, supporting `"default"`, `"none"` and absolute `.wav`/`.ogg`/`.oga` audio files) in its Advanced section, both persisted as desktop-group options in the Settings-owned `desktop.lua` and `desktop.toml`.
+- Removed the unimplemented `start` (Start menu), `start-folders` (Start menu folder) and `taskbar` (Taskbar) second-level pages from the catalog, Windows and Hyprland coverage mappings, and progress tracker.
+- Automated: Rust `remya_settings_input` unit tests (`compositor_font_and_bell_validate_and_read_back`), `test/catalog_test.dart`, `test/fonts_test.dart`, `test/sound_test.dart`, and `test/desktop_smoke.py` against a nested Hyprland 0.57 instance with isolated XDG roots (`fonts.compositor-family` and `sound.compositor-bell` applied live, persisted to `desktop.lua`, preserved across `hyprctl reload`, switched between custom file, `"none"` and `"default"`, and invalid values rejected).

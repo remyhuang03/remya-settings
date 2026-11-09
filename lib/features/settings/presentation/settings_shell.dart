@@ -459,7 +459,13 @@ class _SettingsShellState extends State<SettingsShell> {
           'sound-devices',
         }.contains(_page?.id) &&
         widget.sound != null) {
-      content = SoundPage(controller: widget.sound!, page: _page!);
+      content = SoundPage(
+        key: ValueKey(_page!.id),
+        controller: widget.sound!,
+        page: _page!,
+        catalog: widget.catalog,
+        client: widget.client,
+      );
     } else if (NotificationsPage.pageIds.contains(_page?.id) &&
         widget.client != null) {
       content = NotificationsPage(
@@ -510,6 +516,8 @@ class _SettingsShellState extends State<SettingsShell> {
       content = FontsPage(
         page: _page!,
         controller: FontsScope.maybeOf(context)!,
+        catalog: widget.catalog,
+        client: widget.client,
       );
     } else if (const {
           'time-more',

@@ -1,6 +1,6 @@
 //! Settings-owned Hyprland options: mouse, touchpad and keyboard shortcuts (`input`)
 //! and window appearance, layout, cursor behavior, workspaces and their rules, blur,
-//! fallback background and display wake (`desktop`).
+//! fallback background, display wake, compositor font and compositor bell (`desktop`).
 //!
 //! Option values are live compositor state read through `hyprctl descriptions`.
 //! Settings persists each group's changes in `hypr/remya-settings/<group>.lua`,
@@ -990,7 +990,15 @@ impl<H: Hypr> Input<H> {
                     .group
                     .option(id)
                     .ok_or_else(|| invalid("Unknown setting"))?;
-                next.options.insert(id.into(), opt.validate(&value)?);
+                let validated = opt.validate(&value)?;
+                if id == "sound.compositor-bell"
+                    && let Some(path) = validated.as_str()
+                    && !matches!(path, "default" | "none")
+                    && !PathBuf::from(path).is_file()
+                {
+                    return Err(invalid(format!("{path} does not exist")));
+                }
+                next.options.insert(id.into(), validated);
             }
         }
         self.write(next, owned)

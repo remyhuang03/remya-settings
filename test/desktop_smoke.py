@@ -137,25 +137,42 @@ def main():
             assert "InvalidArgument" in call("Set", *bad, ok=False)
 
         # Window appearance, animations and dwindle: translucent colors, nested `col` keys and offsets.
+        bell = home / "bell.ogg"
+        bell.write_bytes(b"OggS")
         call("Set", "window-appearance.active-border", "'\"#0DB7D455\"'")
         call("Set", "window-appearance.shadow-offset", "'[2, 6]'")
         call("Set", "window-appearance.rounding", "12")
         call("Set", "window-appearance.inactive-opacity", "0.9")
         call("Set", "animations.wobble", "true")
         call("Set", "multitasking.dwindle-force-split", "2")
+        call("Set", "fonts.compositor-family", "'\"Monospace\"'")
+        call("Set", "sound.compositor-bell", f"'\"{bell}\"'")
         text = owned.read_text()
         assert 'col = { active_border = "rgba(0db7d455)" }' in text and "offset = { 2, 6 }" in text, text
+        assert 'font_family = "Monospace"' in text and f'bell_sound = "{bell}"' in text, text
         hyprctl("reload")
         time.sleep(1)
         assert option("decoration:rounding", "int") == 12
         assert option("dwindle:force_split", "int") == 2
+        assert option("misc:font_family", "str") == "Monospace"
+        assert option("misc:bell_sound", "str") == str(bell)
         state = call("Get", "desktop")
         assert state["system"]["window-appearance.active-border"] == "#0db7d455", state["system"]
         assert state["system"]["window-appearance.shadow-offset"] == [2, 6], state["system"]
+        assert state["system"]["fonts.compositor-family"] == "Monospace", state["system"]
+        assert state["system"]["sound.compositor-bell"] == str(bell), state["system"]
         assert state["system"]["animations.wobble"] is True and not state["conflict"], state
+        call("Set", "sound.compositor-bell", "'\"none\"'")
+        assert option("misc:bell_sound", "str") == "none"
+        call("Set", "sound.compositor-bell", "'\"default\"'")
+        assert option("misc:bell_sound", "str") == "default"
         for bad in [("window-appearance.active-border", "'\"#12345\"'"),
                     ("window-appearance.shadow-offset", "'[0, 500]'"),
-                    ("window-appearance.shadow-render-power", "5")]:
+                    ("window-appearance.shadow-render-power", "5"),
+                    ("fonts.compositor-family", "'\"\"'"),
+                    ("sound.compositor-bell", "'\"relative.ogg\"'"),
+                    ("sound.compositor-bell", "'\"/tmp/missing-bell.ogg\"'"),
+                    ("sound.compositor-bell", "'\"/etc/passwd\"'")]:
             assert "InvalidArgument" in call("Set", *bad, ok=False)
 
         # Workspace options and rules: rules reload, read back through workspacerules and

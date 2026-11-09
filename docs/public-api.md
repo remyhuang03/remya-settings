@@ -1302,6 +1302,8 @@ marks Settings' own), `monitors` (`name`, `x`, `y`, logical `width` and
 | `animations.enabled`, `-workspace-wraparound`, `-resize`, `-drag`, `-motion-blur`, `-wobble` | boolean (`animations:*`, `misc:animate_manual_resizes`, `misc:animate_mouse_windowdragging`, `decoration:motion_blur:enabled`, `decoration:wobble:enabled`) |
 | `animations.motion-blur-samples` | 1 to 64 |
 | `animations.wobble-intensity` | 0 to 2; `-stiffness`, `-mass`: 0.0001 to 1000; `-damping`, `-velocity-epsilon`: 0 to 1000; `-value-epsilon`: 0 to 100; `-mesh`: 2 to 32 |
+| `fonts.compositor-family` | non-empty single-line font family name up to 128 characters (`misc:font_family`) |
+| `sound.compositor-bell` | `"default"`, `"none"` (or `""`, normalized to `"none"`) or an existing absolute `.wav`, `.ogg` or `.oga` file path (`misc:bell_sound`) |
 
 `Resolve desktop system` also replaces adopted values in `desktop.lua`, so a
 Hyprland reload keeps them.

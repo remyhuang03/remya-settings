@@ -11,8 +11,8 @@ const removeWorkspaceRuleId = 'workspaces.rule-remove';
 
 /// Settings-owned Hyprland options: `input` (mouse, touchpad and keyboard
 /// shortcuts) and `desktop` (window layout, window appearance, animations,
-/// cursor behavior, workspaces and workspace rules, blur, fallback background
-/// and display wake).
+/// cursor behavior, workspaces and workspace rules, blur, fallback background,
+/// display wake, the compositor font and the compositor bell).
 extension InputClient on SettingsClient {
   Future<Map<String, dynamic>> readHyprOptions(String feature) =>
       call('Get', [feature]);

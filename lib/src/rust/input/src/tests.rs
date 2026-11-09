@@ -428,7 +428,9 @@ impl Hypr for Desk {
                     .map(|o| {
                         json!({"name": o.name, "current": match o.kind {
                             config::Kind::Bool => json!(false),
-                            config::Kind::Text(_) => json!("[[EMPTY]]"),
+                            config::Kind::Text(_)
+                            | config::Kind::FontFamily
+                            | config::Kind::BellSound => json!("[[EMPTY]]"),
                             config::Kind::Color | config::Kind::Rgba => json!("ff000000"),
                             config::Kind::Vec2(..) => json!([0, 0]),
                             _ => json!(0),

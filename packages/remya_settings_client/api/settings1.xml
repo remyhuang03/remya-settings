@@ -33,7 +33,9 @@
        Changed power reports state; see docs/power.md. -->
   <!-- Desktop options: Get desktop; Set background.blur-* (bool or number),
        background.fallback-color ("#rrggbb"), background.hide-logo, power.wake-key,
-       power.wake-pointer (bool); Set workspaces.* options, workspaces.rule-set
+       power.wake-pointer (bool), fonts.compositor-family (font family name),
+       sound.compositor-bell ("default", "none" or an absolute .wav/.ogg/.oga file);
+       Set workspaces.* options, workspaces.rule-set
        ({workspace,monitor,default,persistent,default_name,previous}) and
        workspaces.rule-remove ({workspace}); Resolve desktop system|settings; Changed desktop.
        See docs/public-api.md. -->

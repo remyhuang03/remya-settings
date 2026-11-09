@@ -242,6 +242,14 @@ String describeValue(SettingSpec setting, Object? value) {
       _ => '$value',
     };
   }
+  if (setting.id == 'sound.compositor-bell') {
+    return switch (value) {
+      'default' => 'Default',
+      'none' || '' => 'Off',
+      null => 'Unknown',
+      _ => '$value',
+    };
+  }
   if (value == null) return 'Unknown';
   // Keyboard layouts: `[{layout, variant}]`.
   if (value is List && value.every((v) => v is Map)) {

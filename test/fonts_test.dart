@@ -6,6 +6,28 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/fonts/application/fonts_controller.dart';
 import 'package:remya_settings/features/fonts/presentation/fonts_page.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
+import 'package:remya_settings_client/settings_contract.dart';
+
+class _FakeDesktopClient extends SettingsClient {
+  _FakeDesktopClient(this.state);
+  Map<String, dynamic> state;
+  final calls = <List<String>>[];
+
+  @override
+  Stream<SettingsChange> get changes => const Stream.empty();
+
+  @override
+  Future<Map<String, dynamic>> call(
+    String method, [
+    List<String> args = const [],
+  ]) async {
+    calls.add([method, ...args]);
+    if (method == 'Set') {
+      (state['options'] as Map)[args[0]] = jsonDecode(args[1]);
+    }
+    return state;
+  }
+}
 
 void main() {
   testWidgets('previews wait for idle and follow repeated scroll jumps', (
@@ -106,4 +128,94 @@ void main() {
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
   });
+
+  testWidgets(
+    'compositor font selects an installed family and shows conflicts',
+    (tester) async {
+      final controller = FontsController(
+        read: () async => {
+          'families': [
+            {'family': 'Inter'},
+            {'family': 'JetBrains Mono'},
+          ],
+        },
+        write: (_, _) async => {},
+      );
+      addTearDown(controller.dispose);
+      final client = _FakeDesktopClient({
+        'options': {'fonts.compositor-family': 'Sans'},
+        'system': {'fonts.compositor-family': 'Inter'},
+        'saved': {'fonts.compositor-family': 'Sans'},
+        'conflict': false,
+        'conflicts': <String>[],
+        'write_blocked': null,
+        'error': null,
+      });
+      final catalog = SettingsCatalog.fromJson(
+        jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
+            as Map<String, dynamic>,
+      );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: FontsPage(
+                page: catalog.page('fonts'),
+                controller: controller,
+                catalog: catalog,
+                client: client,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Advanced'));
+      await tester.tap(find.text('Advanced'));
+      await tester.pumpAndSettle();
+      expect(find.text('Compositor font family (font_family)'), findsOneWidget);
+      final dropdown = find.byKey(
+        const ValueKey('fonts.compositor-family-Sans-5'),
+      );
+      await tester.ensureVisible(dropdown);
+      await tester.tap(dropdown);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('JetBrains Mono').last);
+      await tester.pumpAndSettle();
+      expect(client.calls.last, [
+        'Set',
+        'fonts.compositor-family',
+        '"JetBrains Mono"',
+      ]);
+
+      client.state = {
+        ...client.state,
+        'conflict': true,
+        'conflicts': ['fonts.compositor-family'],
+      };
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: FontsPage(
+                key: const ValueKey('fonts-conflict'),
+                page: catalog.page('fonts'),
+                controller: controller,
+                catalog: catalog,
+                client: client,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.text(
+          'Compositor font family (font_family): system Inter, Settings Sans',
+        ),
+        findsOneWidget,
+      );
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
 }

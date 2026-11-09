@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/rendering.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_settings_client/settings_contract.dart';
 
+import '../../input/presentation/input_widgets.dart';
+import '../../settings/application/feature_options_controller.dart';
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_widgets.dart';
 import '../../settings/presentation/settings_list.dart';
@@ -28,10 +31,14 @@ class FontsPage extends StatefulWidget {
     super.key,
     required this.page,
     required this.controller,
+    this.catalog,
+    this.client,
     this.pickFiles = _pickWithDialog,
   });
   final SettingsPageSpec page;
   final FontsController controller;
+  final SettingsCatalog? catalog;
+  final SettingsClient? client;
   final FontFilePicker pickFiles;
 
   @override
@@ -40,12 +47,22 @@ class FontsPage extends StatefulWidget {
 
 class _FontsPageState extends State<FontsPage> {
   String _query = '';
+  late final _desktop = widget.client == null
+      ? null
+      : (FeatureOptionsController(widget.client!, feature: 'desktop')
+          ..reload());
 
   @override
   void initState() {
     super.initState();
     // The list is read only here and when the service reports a font change.
     widget.controller.reload();
+  }
+
+  @override
+  void dispose() {
+    _desktop?.dispose();
+    super.dispose();
   }
 
   SettingSpec _setting(String id) =>
@@ -56,86 +73,149 @@ class _FontsPageState extends State<FontsPage> {
     if (paths.isNotEmpty) await widget.controller.install(paths);
   }
 
-  @override
-  Widget build(BuildContext context) => ListenableBuilder(
-    listenable: widget.controller,
-    builder: (context, _) {
-      final controller = widget.controller;
-      final matches = controller.matching(_query).toList();
-      final indices = {
-        for (var i = 0; i < matches.length; i++)
-          ValueKey('font-${matches[i].name}'): i,
-      };
-      return Column(
-        crossAxisAlignment: .stretch,
+  Widget _compositorFontRow(
+    SettingSpec setting,
+    FeatureOptionsController? desktop,
+  ) {
+    final value = desktop?.option(fontsCompositorFamilySettingId) as String?;
+    final enabled = desktop != null && desktop.canChange;
+    final options = <String>{
+      'Sans',
+      'Serif',
+      'Monospace',
+      ?value,
+      for (final family in widget.controller.families) family.name,
+    }.where((s) => s.isNotEmpty).toList();
+    return SettingRow(
+      id: setting.id,
+      label: Column(
+        crossAxisAlignment: .start,
+        spacing: 4,
         children: [
-          if (controller.isBusy) const LinearProgressIndicator(),
-          if (controller.errorMessage case final error?)
-            Padding(
-              padding: const .only(bottom: 12),
-              child: Text(
-                error,
-                key: const ValueKey('fonts-error'),
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ),
-            ),
-          SettingsList(
-            title: controller.loaded
-                ? '${matches.length} font families'
-                : 'Reading fonts…',
-            actions: [
-              SizedBox(
-                width: 232,
-                child: TextField(
-                  key: const ValueKey('fonts-search'),
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    labelText: 'Search fonts',
-                    prefixIcon: Icon(Icons.search_rounded, size: 20),
-                  ),
-                  onChanged: (value) => setState(() => _query = value),
+          Text(setting.title, style: Theme.of(context).textTheme.bodyLarge),
+          Text(setting.reason, style: Theme.of(context).textTheme.bodySmall),
+        ],
+      ),
+      control: DropdownMenu<String>(
+        key: ValueKey('${setting.id}-$value-${options.length}'),
+        width: 260,
+        menuHeight: 320,
+        enabled: enabled,
+        initialSelection: value != null && options.contains(value)
+            ? value
+            : null,
+        hintText: value ?? 'Unknown',
+        dropdownMenuEntries: [
+          for (final family in options)
+            DropdownMenuEntry(value: family, label: family),
+        ],
+        onSelected: (next) {
+          if (next != null && next != value) {
+            desktop?.set(fontsCompositorFamilySettingId, next);
+          }
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final desktop = _desktop;
+    return ListenableBuilder(
+      listenable: Listenable.merge([widget.controller, ?desktop]),
+      builder: (context, _) {
+        final controller = widget.controller;
+        final matches = controller.matching(_query).toList();
+        final indices = {
+          for (var i = 0; i < matches.length; i++)
+            ValueKey('font-${matches[i].name}'): i,
+        };
+        return Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            if (controller.isBusy || (desktop?.isBusy ?? false))
+              const LinearProgressIndicator(),
+            if (controller.errorMessage case final error?)
+              Padding(
+                padding: const .only(bottom: 12),
+                child: Text(
+                  error,
+                  key: const ValueKey('fonts-error'),
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               ),
-              Tooltip(
-                message: _setting(fontsInstallSettingId).reason,
-                child: FilledButton.icon(
-                  key: const ValueKey('fonts-install'),
-                  onPressed: controller.isBusy ? null : _install,
-                  icon: const Icon(Icons.add_rounded),
-                  label: const Text('Install fonts'),
+            if (desktop?.errorMessage case final error?)
+              SettingsErrorCard(message: error, onRetry: desktop!.reload),
+            if (desktop != null && desktop.isLoaded) ...[
+              if (desktop.writeBlocked case final reason?)
+                SettingsErrorCard(message: reason, onRetry: desktop.reload),
+              if (desktop.hasConflict && widget.catalog != null)
+                InputConflictCard(
+                  controls: widget.catalog!.pages.expand((p) => p.controls),
+                  controller: desktop,
+                  title: 'Desktop settings differ from saved Settings',
                 ),
-              ),
             ],
-            empty: Text(
-              controller.loaded ? 'No fonts found' : 'Reading fonts…',
+            SettingsList(
+              title: controller.loaded
+                  ? '${matches.length} font families'
+                  : 'Reading fonts…',
+              actions: [
+                SizedBox(
+                  width: 232,
+                  child: TextField(
+                    key: const ValueKey('fonts-search'),
+                    decoration: const InputDecoration(
+                      isDense: true,
+                      labelText: 'Search fonts',
+                      prefixIcon: Icon(Icons.search_rounded, size: 20),
+                    ),
+                    onChanged: (value) => setState(() => _query = value),
+                  ),
+                ),
+                Tooltip(
+                  message: _setting(fontsInstallSettingId).reason,
+                  child: FilledButton.icon(
+                    key: const ValueKey('fonts-install'),
+                    onPressed: controller.isBusy ? null : _install,
+                    icon: const Icon(Icons.add_rounded),
+                    label: const Text('Install fonts'),
+                  ),
+                ),
+              ],
+              empty: Text(
+                controller.loaded ? 'No fonts found' : 'Reading fonts…',
+              ),
+              itemExtent: _rowHeight,
+              itemCount: matches.length,
+              findChildIndexCallback: (key) => indices[key],
+              itemBuilder: (context, index) => _FamilyRow(
+                key: ValueKey('font-${matches[index].name}'),
+                family: matches[index],
+                onTap: () => _showDetails(context, matches[index]),
+              ),
             ),
-            itemExtent: _rowHeight,
-            itemCount: matches.length,
-            findChildIndexCallback: (key) => indices[key],
-            itemBuilder: (context, index) => _FamilyRow(
-              key: ValueKey('font-${matches[index].name}'),
-              family: matches[index],
-              onTap: () => _showDetails(context, matches[index]),
-            ),
-          ),
-          AdvancedSection(
-            storageKey: const PageStorageKey('fonts-advanced'),
-            child: KeyedSubtree(
-              key: const PageStorageKey('fonts-advanced-body'),
-              child: Column(
-                children: [
+            AdvancedSection(
+              storageKey: const PageStorageKey('fonts-advanced'),
+              child: KeyedSubtree(
+                key: const PageStorageKey('fonts-advanced-body'),
+                child: settingsRows([
+                  _compositorFontRow(
+                    _setting(fontsCompositorFamilySettingId),
+                    desktop,
+                  ),
                   for (final setting in widget.page.controls.where(
                     (s) => s.availability != .available,
                   ))
                     SettingControlTile(setting),
-                ],
+                ]),
               ),
             ),
-          ),
-        ],
-      );
-    },
-  );
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> _showDetails(BuildContext context, FontFamily family) =>
       showDialog<void>(

@@ -25,7 +25,7 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Input settings snapshot | `input.toml` beside `config.toml` (debug: repository `config/`) |
 | Input settings for Hyprland | `$XDG_CONFIG_HOME/hypr/remya-settings/input.lua`, required by a managed block at the end of `hyprland.lua` |
 | Desktop options snapshot | `desktop.toml` beside `config.toml` (debug: repository `config/`) |
-| Desktop options for Hyprland (window layout, cursor behavior, workspace options and `hl.workspace_rule` rules, blur, fallback background, display wake) | `$XDG_CONFIG_HOME/hypr/remya-settings/desktop.lua`, required by its own managed block at the end of `hyprland.lua` |
+| Desktop options for Hyprland (window layout, cursor behavior, workspace options and `hl.workspace_rule` rules, blur, fallback background, display wake, compositor font, compositor bell) | `$XDG_CONFIG_HOME/hypr/remya-settings/desktop.lua`, required by its own managed block at the end of `hyprland.lua` |
 | Cursor and icon theme snapshot | `themes.toml` beside `config.toml` (debug: repository `config/`) |
 | Text size snapshot | `text-size.toml` beside `config.toml` (debug: repository `config/`) |
 | Display language and regional format snapshot | `language.toml` beside `config.toml` (debug: repository `config/`); the system values live in localed's `/etc/locale.conf` |

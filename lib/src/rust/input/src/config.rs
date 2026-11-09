@@ -12,6 +12,10 @@ pub enum Kind {
     Float(f64, f64),
     /// Writable strings. Reads may also report Hyprland's empty default.
     Text(&'static [&'static str]),
+    /// A one-line font family name such as `"Sans"` or `"Noto Sans"`.
+    FontFamily,
+    /// `"default"`, `"none"`, or an absolute `.wav`/`.ogg`/`.oga` file path.
+    BellSound,
     /// `#rrggbb`, written as an opaque Hyprland `rgba(rrggbbff)` string.
     Color,
     /// A CSS-style gap: one number for every side, or `[top, right, bottom, left]`.
@@ -63,6 +67,22 @@ impl Opt {
                 Some(v) => Ok(json!(v)),
                 None => invalid(format!("Use one of {}", allowed.join(", "))),
             },
+            Kind::FontFamily => match value
+                .as_str()
+                .map(str::trim)
+                .filter(|v| !v.is_empty() && plain(v, 128))
+            {
+                Some(v) => Ok(json!(v)),
+                None => invalid("Use a font family name such as Sans or Noto Sans".into()),
+            },
+            Kind::BellSound => match value.as_str().map(str::trim) {
+                Some("" | "none") => Ok(json!("none")),
+                Some("default") => Ok(json!("default")),
+                Some(v) if bell_path(v) => Ok(json!(v)),
+                _ => {
+                    invalid("Use default, none, or an absolute .wav, .ogg or .oga file path".into())
+                }
+            },
             Kind::Color => match value.as_str().and_then(hex) {
                 Some(v) => Ok(json!(v)),
                 None => invalid("Use a color such as #1e1e2e".into()),
@@ -100,7 +120,9 @@ impl Opt {
             Kind::Bool => json!(current.as_bool().or(current.as_i64().map(|v| v != 0))),
             Kind::Int(..) => json!(current.as_i64().or(current.as_f64().map(|v| v as i64))),
             Kind::Float(..) => json!(current.as_f64().map(round)),
-            Kind::Text(_) | Kind::XkbOptions => json!(text(current)),
+            Kind::Text(_) | Kind::FontFamily | Kind::BellSound | Kind::XkbOptions => {
+                json!(text(current))
+            }
             // `read_options` reports layouts as `[kb_layout, kb_variant]`.
             Kind::Layouts => {
                 crate::xkb::layouts_json(&crate::xkb::split(&text(&current[0]), &text(&current[1])))
@@ -212,6 +234,13 @@ fn hex(text: &str) -> Option<String> {
     let digits = text.strip_prefix('#')?;
     (digits.len() == 6 && digits.chars().all(|c| c.is_ascii_hexdigit()))
         .then(|| format!("#{}", digits.to_ascii_lowercase()))
+}
+
+fn bell_path(text: &str) -> bool {
+    let lower = text.to_ascii_lowercase();
+    text.starts_with('/')
+        && plain(text, 1024)
+        && (lower.ends_with(".wav") || lower.ends_with(".ogg") || lower.ends_with(".oga"))
 }
 
 /// Settings writes three decimals; finer readback differences are noise.
@@ -387,6 +416,8 @@ opts![DESKTOP_OPTIONS:
     ("background.blur-special", "decoration:blur:special", Kind::Bool),
     ("background.fallback-color", "misc:background_color", Kind::Color),
     ("background.hide-logo", "misc:disable_hyprland_logo", Kind::Bool),
+    ("fonts.compositor-family", "misc:font_family", Kind::FontFamily),
+    ("sound.compositor-bell", "misc:bell_sound", Kind::BellSound),
     ("power.wake-key", "misc:key_press_enables_dpms", Kind::Bool),
     ("power.wake-pointer", "misc:mouse_move_enables_dpms", Kind::Bool),
     ("workspaces.close-special-on-empty", "misc:close_special_on_empty", Kind::Bool),
@@ -789,6 +820,18 @@ fn value(text: &str, kind: Kind) -> Option<Value> {
         Kind::Text(_) | Kind::XkbOptions => string(text)
             .filter(|(_, rest)| rest.is_empty())
             .map(|(s, _)| s.into()),
+        Kind::FontFamily => string(text)
+            .filter(|(s, rest)| {
+                rest.is_empty() && !s.trim().is_empty() && plain(s, 128) && s == s.trim()
+            })
+            .map(|(s, _)| s.into()),
+        Kind::BellSound => string(text)
+            .filter(|(s, rest)| {
+                rest.is_empty()
+                    && (matches!(s.as_str(), "" | "none" | "default")
+                        || (bell_path(s) && s == s.trim()))
+            })
+            .map(|(s, _)| s.into()),
         Kind::Layouts => {
             let (layouts, rest) = string(text.strip_prefix("{ kb_layout = ")?)?;
             let (variants, rest) = string(rest.strip_prefix(", kb_variant = ")?)?;
@@ -1066,6 +1109,49 @@ mod tests {
         assert_eq!(parse(&DESKTOP, &text).unwrap(), file);
         assert!(parse(&DESKTOP, "hl.bind(\"SUPER + Q\", hl.dsp.window.close())\n").is_err());
         assert!(parse(&INPUT, &text).is_err());
+    }
+
+    #[test]
+    fn compositor_font_and_bell_validate_and_read_back() {
+        let font = DESKTOP.option("fonts.compositor-family").unwrap();
+        assert_eq!(
+            font.validate(&json!(" Noto Sans ")).unwrap(),
+            json!("Noto Sans")
+        );
+        assert!(font.validate(&json!("   ")).is_err());
+        assert!(font.validate(&json!("Noto\nSans")).is_err());
+        let bell = DESKTOP.option("sound.compositor-bell").unwrap();
+        assert_eq!(bell.validate(&json!("default")).unwrap(), json!("default"));
+        assert_eq!(bell.validate(&json!("")).unwrap(), json!("none"));
+        assert_eq!(
+            bell.validate(&json!(
+                "/usr/share/sounds/ocean/stereo/bell-window-system.oga"
+            ))
+            .unwrap(),
+            json!("/usr/share/sounds/ocean/stereo/bell-window-system.oga")
+        );
+        for bad in ["beep", "relative.wav", "/tmp/bell.mp3"] {
+            assert!(bell.validate(&json!(bad)).is_err(), "{bad}");
+        }
+        let file = File {
+            options: BTreeMap::from([
+                ("fonts.compositor-family".into(), json!("Noto Sans")),
+                ("sound.compositor-bell".into(), json!("/tmp/bell.ogg")),
+            ]),
+            ..File::default()
+        };
+        let text = render(&DESKTOP, &file);
+        assert!(text.contains("hl.config({ misc = { font_family = \"Noto Sans\" } })"));
+        assert!(text.contains("hl.config({ misc = { bell_sound = \"/tmp/bell.ogg\" } })"));
+        assert_eq!(parse(&DESKTOP, &text).unwrap(), file);
+        assert!(parse(&DESKTOP, "hl.config({ misc = { font_family = \"\" } })\n").is_err());
+        assert!(
+            parse(
+                &DESKTOP,
+                "hl.config({ misc = { bell_sound = \"relative.wav\" } })\n"
+            )
+            .is_err()
+        );
     }
 
     #[test]

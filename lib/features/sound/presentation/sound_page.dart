@@ -1,16 +1,42 @@
 import 'dart:async';
 
+import 'package:file_selector/file_selector.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_settings_client/settings_contract.dart';
 
+import '../../input/presentation/input_widgets.dart';
+import '../../settings/application/feature_options_controller.dart';
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_list.dart';
 import '../../settings/presentation/settings_widgets.dart';
 import '../application/sound_controller.dart';
 
+const compositorBellSettingId = 'sound.compositor-bell';
+
+const _bellTypes = XTypeGroup(
+  label: 'Audio files',
+  extensions: ['wav', 'ogg', 'oga'],
+);
+
+typedef BellFilePicker = Future<String?> Function();
+
+Future<String?> _pickBellWithDialog() async =>
+    (await openFile(acceptedTypeGroups: [_bellTypes]))?.path;
+
 class SoundPage extends StatefulWidget {
-  const SoundPage({super.key, required this.controller, required this.page});
+  const SoundPage({
+    super.key,
+    required this.controller,
+    required this.page,
+    this.catalog,
+    this.client,
+    this.pickBellFile = _pickBellWithDialog,
+  });
   final SoundController controller;
   final SettingsPageSpec page;
+  final SettingsCatalog? catalog;
+  final SettingsClient? client;
+  final BellFilePicker pickBellFile;
   @override
   State<SoundPage> createState() => _SoundPageState();
 }
@@ -19,6 +45,11 @@ class _SoundPageState extends State<SoundPage> {
   Timer? _timer;
   String _query = '';
   String _kind = 'All';
+  late final _desktop =
+      widget.page.id == 'sound-volume' && widget.client != null
+      ? (FeatureOptionsController(widget.client!, feature: 'desktop')..reload())
+      : null;
+
   SoundController get controller => widget.controller;
   @override
   void initState() {
@@ -33,6 +64,7 @@ class _SoundPageState extends State<SoundPage> {
   @override
   void dispose() {
     _timer?.cancel();
+    _desktop?.dispose();
     super.dispose();
   }
 
@@ -190,46 +222,146 @@ class _SoundPageState extends State<SoundPage> {
     );
   }
 
+  SettingSpec? _setting(String id) {
+    for (final setting in widget.page.controls) {
+      if (setting.id == id) return setting;
+    }
+    return null;
+  }
+
+  Future<void> _pickBell(FeatureOptionsController desktop) async {
+    final path = await widget.pickBellFile();
+    if (path != null && path.isNotEmpty) {
+      await desktop.set(compositorBellSettingId, path);
+    }
+  }
+
+  Widget _compositorBellRow(
+    SettingSpec setting,
+    FeatureOptionsController? desktop,
+  ) {
+    final raw = desktop?.option(compositorBellSettingId) as String?;
+    final enabled = desktop != null && desktop.canChange;
+    final mode = switch (raw) {
+      'default' => 'default',
+      'none' || '' => 'none',
+      final path? when path.isNotEmpty => 'custom',
+      _ => null,
+    };
+    final customPath = mode == 'custom' ? raw : null;
+    return SettingRow(
+      id: setting.id,
+      label: Column(
+        crossAxisAlignment: .start,
+        spacing: 4,
+        children: [
+          Text(setting.title, style: Theme.of(context).textTheme.bodyLarge),
+          Text(setting.reason, style: Theme.of(context).textTheme.bodySmall),
+          if (customPath != null)
+            Text(
+              'File: $customPath',
+              key: const ValueKey('sound.compositor-bell-path'),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+        ],
+      ),
+      control: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        crossAxisAlignment: .center,
+        children: [
+          SegmentedButton<String>(
+            key: const ValueKey('sound.compositor-bell-segments'),
+            segments: const [
+              ButtonSegment(value: 'default', label: Text('Default')),
+              ButtonSegment(value: 'none', label: Text('Off')),
+              ButtonSegment(value: 'custom', label: Text('Custom')),
+            ],
+            selected: {?mode},
+            emptySelectionAllowed: true,
+            showSelectedIcon: false,
+            onSelectionChanged: enabled
+                ? (next) {
+                    if (next.isEmpty) return;
+                    final choice = next.first;
+                    if (choice == 'custom') {
+                      _pickBell(desktop);
+                    } else if (choice != raw) {
+                      desktop.set(compositorBellSettingId, choice);
+                    }
+                  }
+                : null,
+          ),
+          if (customPath != null)
+            OutlinedButton.icon(
+              key: const ValueKey('sound.compositor-bell-browse'),
+              onPressed: enabled ? () => _pickBell(desktop) : null,
+              icon: const Icon(Icons.folder_open_rounded, size: 18),
+              label: const Text('Browse'),
+            ),
+        ],
+      ),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) => ListenableBuilder(
-    listenable: controller,
-    builder: (context, _) => Column(
-      crossAxisAlignment: .stretch,
-      children: [
-        if (controller.isBusy) const LinearProgressIndicator(),
-        if (!controller.available)
-          const SettingsSurface(
-            child: Text(
-              'Audio service unavailable. Start PipeWire, pipewire-pulse and WirePlumber.',
-            ),
-          )
-        else
-          switch (widget.page.id) {
-            'sound-volume' => Column(
-              crossAxisAlignment: .stretch,
-              children: [_direction('output'), _direction('input')],
-            ),
-            'volume-mixer' => _mixer(),
-            _ => _devices(),
-          },
-        if (widget.page.controls.any((s) => s.availability != .available))
-          AdvancedSection(
-            storageKey: PageStorageKey('${widget.page.id}-advanced'),
-            child: KeyedSubtree(
-              key: PageStorageKey('${widget.page.id}-advanced-body'),
-              child: Column(
-                children: [
-                  for (final setting in widget.page.controls.where(
-                    (s) => s.availability != .available,
-                  ))
+  Widget build(BuildContext context) {
+    final desktop = _desktop;
+    final bellSetting = _setting(compositorBellSettingId);
+    final unavailable = widget.page.controls
+        .where((s) => s.availability != .available)
+        .toList();
+    return ListenableBuilder(
+      listenable: Listenable.merge([controller, ?desktop]),
+      builder: (context, _) => Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          if (controller.isBusy || (desktop?.isBusy ?? false))
+            const LinearProgressIndicator(),
+          if (desktop?.errorMessage case final error?)
+            SettingsErrorCard(message: error, onRetry: desktop!.reload),
+          if (desktop != null && desktop.isLoaded) ...[
+            if (desktop.writeBlocked case final reason?)
+              SettingsErrorCard(message: reason, onRetry: desktop.reload),
+            if (desktop.hasConflict && widget.catalog != null)
+              InputConflictCard(
+                controls: widget.catalog!.pages.expand((p) => p.controls),
+                controller: desktop,
+                title: 'Desktop settings differ from saved Settings',
+              ),
+          ],
+          if (!controller.available)
+            const SettingsSurface(
+              child: Text(
+                'Audio service unavailable. Start PipeWire, pipewire-pulse and WirePlumber.',
+              ),
+            )
+          else
+            switch (widget.page.id) {
+              'sound-volume' => Column(
+                crossAxisAlignment: .stretch,
+                children: [_direction('output'), _direction('input')],
+              ),
+              'volume-mixer' => _mixer(),
+              _ => _devices(),
+            },
+          if (bellSetting != null || unavailable.isNotEmpty)
+            AdvancedSection(
+              storageKey: PageStorageKey('${widget.page.id}-advanced'),
+              child: KeyedSubtree(
+                key: PageStorageKey('${widget.page.id}-advanced-body'),
+                child: settingsRows([
+                  if (bellSetting != null)
+                    _compositorBellRow(bellSetting, desktop),
+                  for (final setting in unavailable)
                     SettingControlTile(setting),
-                ],
+                ]),
               ),
             ),
-          ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
 
 /// Device facts as separate labeled lines.
