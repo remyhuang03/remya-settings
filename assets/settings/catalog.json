@@ -3636,10 +3636,10 @@
               "availability": "available",
               "reason": "SQLite observations with tested range clipping and unknown-interval handling.",
               "options": [
-                "Last 24 hours",
-                "Last 7 days"
+                "24 hours",
+                "7 days"
               ],
-              "value": "Last 24 hours"
+              "value": "24 hours"
             },
             {
               "id": "battery-usage.37bfb377",

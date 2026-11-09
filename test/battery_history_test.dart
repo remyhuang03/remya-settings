@@ -53,4 +53,25 @@ void main() {
     expect(h.durations['screen-off'], 60);
     expect(h.unknown, 0);
   });
+  test('drain skips charging and gaps; plugged-in stretches merge', () {
+    Map<String, Object> b(num p, bool plugged) => {
+      'percentage': p,
+      'on_battery': !plugged,
+    };
+    final h = BatteryHistory(
+      [
+        event(1, 0, 'battery', b(80, false)),
+        event(2, 60, 'battery', b(78, false)),
+        event(3, 120, 'battery', b(79, true)),
+        event(4, 180, 'battery', b(85, true)),
+        event(5, 240, 'battery', b(84, false)),
+        event(6, 1000, 'battery', b(70, false)),
+        event(7, 1060, 'battery', b(69, false)),
+      ],
+      0,
+      1060,
+    );
+    expect(h.drained, 4);
+    expect(h.pluggedRanges, [(120, 240)]);
+  });
 }
