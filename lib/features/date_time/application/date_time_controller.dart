@@ -12,14 +12,12 @@ const manualTimeSettingId = 'date-time.6422d209';
 const automaticTimeSettingId = 'date-time.db451de3';
 const syncNowSettingId = 'date-time.098d06ec';
 const timeServerSettingId = 'date-time.7e33a213';
-const timeLocaleSettingId = 'date-time.format';
 const dateTimeSettingIds = {
   timezoneSettingId,
   manualTimeSettingId,
   automaticTimeSettingId,
   syncNowSettingId,
   timeServerSettingId,
-  timeLocaleSettingId,
 };
 
 class DateTimeController extends ChangeNotifier {
@@ -29,7 +27,6 @@ class DateTimeController extends ChangeNotifier {
   DateTimeState? state;
   List<String> timezones = const [];
   Map<String, String> timezoneLabels = const {};
-  List<String> timeLocales = const [];
   Map<String, dynamic>? _saved;
   String? get savedTimezone => _saved?['timezone'] as String?;
   String? errorMessage;
@@ -46,7 +43,6 @@ class DateTimeController extends ChangeNotifier {
     'timezone': value.timezone,
     'ntp': value.ntp,
     'time_servers': value.timeServers,
-    'time_locale': value.timeLocale,
   };
   bool get hasConflict =>
       state != null &&
@@ -66,13 +62,11 @@ class DateTimeController extends ChangeNotifier {
       'timezone': 'Time zone',
       'ntp': 'Automatic time',
       'time_servers': 'Time servers',
-      'time_locale': 'Date/time format',
     };
     String format(String key, Object? value) => switch (key) {
       'ntp' => value == true ? 'On' : 'Off',
       'time_servers' =>
         (value as List).isEmpty ? 'Automatic' : value.join(', '),
-      'time_locale' => value == '' ? 'System language default' : '$value',
       _ => '$value',
     };
     return _preferences(state!).entries
@@ -120,18 +114,11 @@ class DateTimeController extends ChangeNotifier {
     final map = TomlDocument.parse(await file.readAsString()).toMap();
     if (map['version'] != 1 ||
         map.keys.any(
-          (key) => !{
-            'version',
-            'timezone',
-            'ntp',
-            'time_servers',
-            'time_locale',
-          }.contains(key),
+          (key) =>
+              !{'version', 'timezone', 'ntp', 'time_servers'}.contains(key),
         ) ||
         !timezones.contains(map['timezone']) ||
         (map.containsKey('ntp') && map['ntp'] is! bool) ||
-        (map.containsKey('time_locale') &&
-            !timeLocales.contains(map['time_locale'])) ||
         (map.containsKey('time_servers') &&
             (map['time_servers'] is! List ||
                 (map['time_servers'] as List).any((v) => v is! String)))) {
@@ -171,9 +158,6 @@ class DateTimeController extends ChangeNotifier {
     if (!timezones.contains(observed.timezone)) {
       throw StateError('Unknown system time zone');
     }
-    if (timeLocales.isEmpty) {
-      timeLocales = List.unmodifiable(await backend.timeLocales());
-    }
     final saved = await _load(observed);
     if (!await file.exists()) await _save(saved);
     _saved = saved;
@@ -181,8 +165,7 @@ class DateTimeController extends ChangeNotifier {
   }, background: true);
   Future<void> useSystemConfiguration() => _run(() async {
     final observed = await backend.read();
-    if (!timezones.contains(observed.timezone) ||
-        !timeLocales.contains(observed.timeLocale)) {
+    if (!timezones.contains(observed.timezone)) {
       throw StateError('Unknown system date/time configuration');
     }
     await _save(_preferences(observed));
@@ -193,11 +176,6 @@ class DateTimeController extends ChangeNotifier {
     var observed = await backend.read();
     if (observed.timezone != saved['timezone']) {
       observed = await backend.setTimezone(saved['timezone'] as String);
-    }
-    if (observed.timeLocale != saved['time_locale']) {
-      observed = await backend.setTimeLocale(saved['time_locale'] as String);
-      restartSuggested = true;
-      restartDeferred = false;
     }
     final servers = (saved['time_servers'] as List).cast<String>();
     if (!_equal(observed.timeServers, servers)) {
@@ -279,21 +257,6 @@ class DateTimeController extends ChangeNotifier {
     } finally {
       _syncing = false;
     }
-  });
-  Future<DateTimeState> setTimeLocale(String locale) => _run(() async {
-    if (!timeLocales.contains(locale)) {
-      throw ArgumentError('Choose an installed locale');
-    }
-    final previous = state?.timeLocale;
-    final observed = await backend.setTimeLocale(locale);
-    if (observed.timeLocale != locale) {
-      throw StateError('LC_TIME readback does not match the request');
-    }
-    if (previous != locale) {
-      restartSuggested = true;
-      restartDeferred = false;
-    }
-    return _accept(observed, ['time_locale']);
   });
   void deferRestart() {
     restartDeferred = true;

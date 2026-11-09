@@ -37,12 +37,6 @@ Future<DateTimeState> setTimeServers({required List<String> servers}) =>
 Future<DateTimeState> syncNow() =>
     DateTimeRustLib.instance.api.crateApiSyncNow();
 
-Future<List<String>> listTimeLocales() =>
-    DateTimeRustLib.instance.api.crateApiListTimeLocales();
-
-Future<DateTimeState> setTimeLocale({required String locale}) =>
-    DateTimeRustLib.instance.api.crateApiSetTimeLocale(locale: locale);
-
 Future<void> restartSystem() =>
     DateTimeRustLib.instance.api.crateApiRestartSystem();
 
@@ -55,7 +49,6 @@ class DateTimeState {
   final List<String> timeServers;
   final String activeTimeServer;
   final String? syncError;
-  final String timeLocale;
 
   const DateTimeState({
     required this.unixMicros,
@@ -66,7 +59,6 @@ class DateTimeState {
     required this.timeServers,
     required this.activeTimeServer,
     this.syncError,
-    required this.timeLocale,
   });
 
   @override
@@ -78,8 +70,7 @@ class DateTimeState {
       ntpSynchronized.hashCode ^
       timeServers.hashCode ^
       activeTimeServer.hashCode ^
-      syncError.hashCode ^
-      timeLocale.hashCode;
+      syncError.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -93,8 +84,7 @@ class DateTimeState {
           ntpSynchronized == other.ntpSynchronized &&
           timeServers == other.timeServers &&
           activeTimeServer == other.activeTimeServer &&
-          syncError == other.syncError &&
-          timeLocale == other.timeLocale;
+          syncError == other.syncError;
 }
 
 class TimezoneOption {

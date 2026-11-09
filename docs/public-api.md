@@ -44,7 +44,7 @@ No command evaluates shell input. IDs are stable catalog IDs, not translated lab
 | `get date-time` | `Get(s key)` with `date-time` | Actual clock, local time, NTP status, time zone, saved zone, and conflict |
 | `get timezones` | `Get(s key)` with `timezones` | Finite system time zone options |
 | `get configuration` | `Get(s key)` with `configuration` | Saved/system values, conflicts, and detection errors |
-| `resolve <appearance / date-time / display / night-light / hostname / background / default-apps / startup / network / input / desktop> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
+| `resolve <appearance / date-time / language / display / night-light / hostname / background / default-apps / startup / network / input / desktop> <system / settings>` | `Resolve(ss feature, source)` | Adopt system values or apply saved values, with readback |
 | `resolve display <keep / revert>` | `Resolve(ss feature, source)` | Confirm or undo a pending display change |
 | `get background` | `Get(s key)` with `background` | Saved and system background, displays, warnings, previews, conflict, write blocker, error |
 | `get accent` | `Get(s key)` with `accent` | Accent source, `#RRGGBB` seed, sampled file, sampling error |
@@ -87,7 +87,7 @@ Available system preferences are writable through both interfaces; System inform
 | `date-time.db451de3` | `true`, `false` |
 | `date-time.098d06ec` | `sync` (automatic time must be enabled) |
 | `date-time.7e33a213` | JSON array of NTP host names/IP addresses; `[]` selects Default |
-| `date-time.format` | Installed locale from `get time-locales`; empty string inherits system language |
+| Language and Region settings | See [Language and Region](#language-and-region) |
 | `date-time.6422d209` | JSON object with `local_time` and `timezone` |
 | Display settings | See [Display](#display) |
 
@@ -245,16 +245,9 @@ The current clock is never persisted as a startup target.
 `Get("timezones")` returns `options` (stable time zone IDs) and `labels` (each ID
 mapped to its current GMT offset, including fractional offsets). Choosing a zone
 applies immediately; daylight saving time follows the zone database automatically.
-`Get("time-locales")` lists the locally installed locales and the empty-string
-system-language default. Time format changes use localed `SetLocale`, preserving
-all other locale categories. Writes send only `LC_TIME=<locale>`. Default sends
-the current exact `LANG` value: localed rejects empty locale assignments and
-simplifies overrides that equal `LANG`. Existing processes retain their environment; the
-GUI floats a notice within the main content pane with Later and a confirmed Restart now action, and a
-local hint explaining that restarting applications or signing in again suffices.
-`Restart()` uses logind `Reboot(true)`; tests intercept this request and never
-restart the workstation. `LC_ALL` or a per-user locale override can take precedence
-in other applications.
+Date and time formats are part of the regional format on the Language and
+Region page. `Restart()` uses logind `Reboot(true)` for the GUI's "Reboot to apply"
+notice; tests intercept this request and never restart the workstation.
 
 Automatic time uses timedated `SetNTP` and verified readback. The GUI hides manual
 clock controls while automatic time is enabled or being enabled. Sync now requires
@@ -283,18 +276,61 @@ remya_settings set date-time.db451de3 true
 remya_settings set date-time.098d06ec sync
 remya_settings set date-time.7e33a213 '["pool.ntp.org"]'
 remya_settings set date-time.7e33a213 '[]'
-remya_settings get time-locales
-remya_settings set date-time.format en_US.utf8
 ```
 
 Date/time results include `timezone`, `local_time`, `ntp`, `ntp_synchronized`,
 `time_servers` (the managed choice; empty means Default), `active_time_server`,
-`sync_error`, `time_locale`, `saved_timezone`, `saved`, `restart_suggested`, and
+`sync_error`, `saved_timezone`, `saved`, `restart_suggested`, and
 `conflict`. `unix_micros` is a decimal string to preserve native 64-bit values.
 Invalid input is `InvalidArgument`; system failures use `OperationFailed`.
 Startup authorization may wait for the system authentication dialog; the client deadline can expire
 first, so read actual state before retrying. The pkexec helper is bundled for
 both debug and release and needs a registered polkit authentication agent.
+
+## Language and Region
+
+`Get language` returns `options` (saved values by setting ID), `system` and
+`saved` in the same shape, `formats`, `saved_formats` and `system_formats` (each
+of `LC_TIME`, `LC_NUMERIC`, `LC_MONETARY`, `LC_PAPER` and `LC_MEASUREMENT` mapped
+to a locale, or `""` when it follows the display language), `conflict`,
+`conflicts`, `categories` and `error`. `language.format` reads `""` when every
+category follows the display language, a locale when all use it, and `null` when
+they differ. `Get locales` lists generated locales as `{options: [{id, label}]}`
+with labels from each locale's `LC_IDENTIFICATION` (plus C and POSIX); only these
+can be chosen, and generating others needs root through `/etc/locale.gen`, which
+Settings does not do. `Get format-preview:<locale>` returns `date`, `time`,
+`weekday`, `number`, `currency`, `measurement` and `paper` for a fixed sample,
+formatted by glibc with that locale.
+
+| Set ID | JSON value |
+| --- | --- |
+| `language.display` | Installed locale for `LANG` |
+| `language.format` | Installed locale for every format category, or `""` to follow the display language |
+
+Writes go through the authorized privileged helper to localed `SetLocale`, which
+receives exactly `LANG` and the five format categories (a category that follows
+the display language is sent as `LANG`'s value, which localed drops). Other locale
+variables such as `LC_CTYPE` or `LANGUAGE` are kept. Readback must match, then
+`language.toml` is saved and `Changed("language", state)` is emitted. Programs
+started after the next sign-in use the new values; the GUI says so while this
+session's environment differs. First use saves the system values without writing;
+writes are refused during a conflict; `Resolve language system|settings` adopts the
+system values or writes the saved ones with readback. `LC_ALL` or per-user locale
+files can still override these for some programs.
+
+Keyboard layouts are `input` options (see
+[Mouse, touchpad and keyboard shortcuts](#mouse-touchpad-and-keyboard-shortcuts)):
+`Get keyboard-layouts` lists xkeyboard-config layouts as
+`{layouts: [{id, label, variants: [{id, label}]}]}` from `evdev.lst`.
+
+```sh
+remya_settings get locales
+remya_settings set language.display '"de_DE.UTF-8"'
+remya_settings set language.format '""'
+remya_settings get format-preview:de_DE.UTF-8
+remya_settings set language.keyboard-layouts '[{"layout":"us","variant":""},{"layout":"de","variant":"nodeadkeys"}]'
+remya_settings set language.keyboard-options '"grp:win_space_toggle"'
+```
 
 ## Display
 
@@ -1192,6 +1228,8 @@ nullable `code`, `description`, `actions`, `locked`, `mouse` and `custom`),
 | `touchpad.swipe-invert`, `touchpad.swipe-create-new`, `touchpad.swipe-forever`, `touchpad.swipe-direction-lock` | boolean |
 | `keyboard-shortcuts.workspace-back-and-forth` | 0 to 2; `keyboard-shortcuts.scroll-delay`: 0 to 2000 ms |
 | `keyboard-shortcuts.workspace-cycles`, `keyboard-shortcuts.pass-mouse` | boolean |
+| `language.keyboard-layouts` | `[{"layout":"us","variant":""}, ...]`: one to four xkeyboard-config layouts, each with an optional variant of that layout; the first is the default. Written as `kb_layout` and `kb_variant` in one `hl.config` call |
+| `language.keyboard-options` | comma-separated xkeyboard-config options (`kb_options`), such as `"grp:win_space_toggle,caps:escape"`; `""` clears them |
 | `keyboard-shortcuts.add` | `{"keys":"SUPER + code:24","action":"command","command":"foot","description":"","replace":false,"previous":null}`; `action` is `command`, `close`, `float`, `fullscreen`, `maximize`, `pin` or `scratchpad` |
 | `keyboard-shortcuts.remove` | `{"keys":"SUPER + Return"}` (custom shortcuts only) |
 | `keyboard-shortcuts.disable` | `{"keys":"SUPER + J","disabled":true}`; `false` restores it |
@@ -1206,13 +1244,20 @@ function, media or Print key. Writes return the full `input` state and emit
 `Resolve input system|settings` adopts the live values or reapplies the saved ones
 with readback. See [Input devices and shortcuts](input.md).
 
-## Desktop options: multitasking, cursor, blur, fallback background and display wake
+## Desktop options: multitasking, window appearance, animations, workspaces, cursor, blur, fallback background and display wake
 
 `Get desktop` returns the same shape as `Get input` without shortcut fields:
-`options`, `system`, `saved`, `conflict`, `conflicts`, `write_blocked` and
-`error`. Values are persisted in the Settings-owned
+`options`, `system`, `saved`, `conflict`, `conflicts` (option IDs, plus
+`workspaces` when saved workspace rules differ from `desktop.lua`),
+`write_blocked` and `error`, and for the Workspaces page `rules` (saved),
+`system_rules` (in `desktop.lua`), `live_rules` (every live rule; `settings`
+marks Settings' own), `monitors` (`name`, `x`, `y`, logical `width` and
+`height`, `active_workspace`, `special_workspace`) and `workspaces` (`id`,
+`name`, `monitor`, `windows`, `persistent`). Values are persisted in the Settings-owned
 `hypr/remya-settings/desktop.lua`, required by its own managed block, and in
-`desktop.toml`; the file accepts no shortcuts. `Get <id>` returns
+`desktop.toml`; the file accepts no shortcuts, only option lines and
+`hl.workspace_rule` lines. Rule writes reload the configuration and wait for
+`workspacerules` to match. Rules in other files are never edited. `Get <id>` returns
 `{id, availability, reason, value, error}`. Writes apply live through
 `hyprctl eval`, read back, return the full state and emit
 `Changed("desktop", state)`. `Resolve desktop system|settings` reconciles.
@@ -1238,6 +1283,25 @@ with readback. See [Input devices and shortcuts](input.md).
 | `cursor.inactive-timeout` | seconds from 0 (never) to 20 |
 | `cursor.warp-on-change-workspace` | 0 off, 1 on, 2 always |
 | `cursor.hardware` | `cursor:no_hardware_cursors`: 0 use, 1 do not use, 2 automatic |
+| `workspaces.close-special-on-empty`, `workspaces.hide-special-on-change`, `workspaces.special-fallthrough` | boolean (`misc:close_special_on_empty`, `binds:hide_special_on_workspace_change`, `input:special_fallthrough`) |
+| `workspaces.initial-workspace-tracking` | `misc:initial_workspace_tracking`: 0 off, 1 first window, 2 every window |
+| `workspaces.center-on` | `binds:workspace_center_on`: 0 middle of the display, 1 last used window |
+| `workspaces.rule-set` | `{"workspace":"2","monitor":"DP-1","default":false,"persistent":true,"default_name":"","previous":null}`; `workspace` is 1 to 9999, `name:<text>` or `special:<text>`; `previous` names the rule being edited |
+| `workspaces.rule-remove` | `{"workspace":"2"}` (Settings rules only) |
+| `multitasking.dwindle-force-split` | `dwindle:force_split`: 0 follow the pointer, 1 left or top, 2 right or bottom |
+| `multitasking.dwindle-split-bias` | `dwindle:split_bias`: 0 directional, 1 the focused window |
+| `multitasking.dwindle-preserve-split`, `-smart-split`, `-smart-resizing`, `-permanent-direction`, `-use-active`, `-precise-move` | boolean (`dwindle:*`) |
+| `multitasking.dwindle-split-ratio` | 0.1 to 1.9; `multitasking.dwindle-split-width`: 0.1 to 3; `multitasking.dwindle-special-scale`: 0 to 1 |
+| `window-appearance.active-border`, `window-appearance.inactive-border`, `window-appearance.shadow-color`, `window-appearance.glow-color` | `"#rrggbbaa"` (`"#rrggbb"` is taken as opaque), written as `rgba(rrggbbaa)`; a multi-color gradient reads as its first color |
+| `window-appearance.rounding` | 0 to 100; `window-appearance.rounding-power`: 1 to 10 (2 is circular) |
+| `window-appearance.active-opacity`, `-inactive-opacity`, `-fullscreen-opacity`, `-dim-strength`, `-dim-special` | number from 0 to 1 |
+| `window-appearance.dim-inactive`, `-dim-modal`, `-shadow`, `-shadow-sharp`, `-glow`, `-border-part-of-window` | boolean |
+| `window-appearance.shadow-range`, `window-appearance.glow-range` | 0 to 100; `-shadow-render-power`, `-glow-render-power`: 1 to 4 |
+| `window-appearance.shadow-offset` | `[x, y]`, each -100 to 100 |
+| `window-appearance.shadow-scale` | 0.05 to 2 |
+| `animations.enabled`, `-workspace-wraparound`, `-resize`, `-drag`, `-motion-blur`, `-wobble` | boolean (`animations:*`, `misc:animate_manual_resizes`, `misc:animate_mouse_windowdragging`, `decoration:motion_blur:enabled`, `decoration:wobble:enabled`) |
+| `animations.motion-blur-samples` | 1 to 64 |
+| `animations.wobble-intensity` | 0 to 2; `-stiffness`, `-mass`: 0.0001 to 1000; `-damping`, `-velocity-epsilon`: 0 to 1000; `-value-epsilon`: 0 to 100; `-mesh`: 2 to 32 |
 
 `Resolve desktop system` also replaces adopted values in `desktop.lua`, so a
 Hyprland reload keeps them.
@@ -1261,6 +1325,22 @@ reconciles. See [Cursor and icon themes](themes.md).
 | `cursor.install`, `themes.icon-install` | absolute path of a theme folder or archive; the state adds `installed` |
 | `cursor.remove`, `themes.icon-remove` | the `id` of a theme in the user folder that is not selected |
 | `cursor.folders` | read only |
+
+## Text size
+
+`Get text-size` returns `options`, `saved` and `system` keyed by setting ID,
+`conflict`, `conflicts`, `range` (`[0.5, 3.0]`) and `error`; `Get text-size.scale`
+wraps the saved value. `Set text-size.scale <number>` writes GNOME's
+`org.gnome.desktop.interface text-scaling-factor` (0.5 to 3.0, `InvalidArgument`
+otherwise), verifies it with a fresh `gsettings get`, saves `text-size.toml` and
+emits `Changed("text-size", state)`. Writes are refused while a conflict is open;
+`Resolve text-size system|settings` reconciles. First use saves the system value
+without writing. GTK 3, GTK 4 and Flutter apps follow the key; Qt, KDE and other
+toolkits are not changed.
+
+```sh
+remya_settings set text-size.scale 1.25
+```
 
 ## Storage
 

@@ -33,8 +33,9 @@ pub enum Request {
     Servers {
         servers: Vec<String>,
     },
-    Locale {
-        locale: String,
+    /// `LANG` and the regional format categories, checked again by `write_locale`.
+    Language {
+        values: Vec<String>,
     },
     Sync {},
     Restart {},
@@ -110,7 +111,10 @@ pub fn serve() -> Result<(), String> {
                 } => clock::set_manual_time(local_time, timezone),
                 Request::Automatic { enabled } => clock::set_automatic_time(enabled),
                 Request::Servers { servers } => clock::set_time_servers(servers),
-                Request::Locale { locale } => clock::set_time_locale(locale),
+                Request::Language { values } => {
+                    return remya_settings_date_time::language::write_locale(&values)
+                        .map(|_| serde_json::Value::Null);
+                }
                 Request::Sync {} => clock::sync_now(),
                 Request::Restart {} => {
                     return clock::restart_system().map(|_| serde_json::Value::Null);

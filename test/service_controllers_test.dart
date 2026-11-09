@@ -16,7 +16,6 @@ import 'package:remya_settings_client/remya_settings_client.dart';
 class FakeService extends SettingsClient {
   final calls = <(String, List<String>)>[];
   Completer<void>? gate;
-  String locale = '';
   bool fail = false;
   bool ntp = false;
   Map<String, Object?> saved = {'timezone': 'UTC'};
@@ -30,17 +29,11 @@ class FakeService extends SettingsClient {
     if (method == 'Set') {
       await gate?.future;
       if (fail) throw StateError('Write failed');
-      if (arguments[0] == timeLocaleSettingId) locale = '';
     }
     if (arguments.firstOrNull == 'timezones') {
       return {
         'options': ['UTC'],
         'labels': {'UTC': 'UTC (GMT+00:00)'},
-      };
-    }
-    if (arguments.firstOrNull == 'time-locales') {
-      return {
-        'options': ['', 'en_US.utf8'],
       };
     }
     return {
@@ -52,11 +45,9 @@ class FakeService extends SettingsClient {
       'time_servers': <String>[],
       'active_time_server': '',
       'sync_error': null,
-      'time_locale': locale,
       'saved_timezone': 'UTC',
       'saved': saved,
       'conflict': conflict,
-      'restart_suggested': method == 'Set',
     };
   }
 }
@@ -207,33 +198,29 @@ void main() {
       );
     },
   );
-  test('GUI delegates normalized locale and conflict operations without local persistence', () async {
-    final service = FakeService();
-    final controller = ServiceDateTimeController(service);
-    addTearDown(controller.dispose);
-    addTearDown(service.close);
-    await controller.reload();
-    await controller.setTimeLocale('en_US.utf8');
-    expect(controller.state!.timeLocale, '');
-    expect(controller.restartSuggested, isTrue);
-    expect(service.calls.where((call) => call.$1 == 'Set').single.$2, [
-      timeLocaleSettingId,
-      'en_US.utf8',
-    ]);
-    await controller.useSystemConfiguration();
-    expect(service.calls.where((call) => call.$1 == 'Resolve').single.$2, [
-      'date-time',
-      'system',
-    ]);
-  });
+  test(
+    'GUI delegates writes and conflict operations without local persistence',
+    () async {
+      final service = FakeService();
+      final controller = ServiceDateTimeController(service);
+      addTearDown(controller.dispose);
+      addTearDown(service.close);
+      await controller.reload();
+      await controller.setTimezone('UTC');
+      expect(service.calls.where((call) => call.$1 == 'Set').single.$2, [
+        timezoneSettingId,
+        'UTC',
+      ]);
+      await controller.useSystemConfiguration();
+      expect(service.calls.where((call) => call.$1 == 'Resolve').single.$2, [
+        'date-time',
+        'system',
+      ]);
+    },
+  );
   test('date/time conflicts describe changed preferences rather than the unchanged timezone', () async {
     final service = FakeService()
-      ..saved = {
-        'timezone': 'UTC',
-        'ntp': false,
-        'time_servers': <String>[],
-        'time_locale': 'en_US.utf8',
-      }
+      ..saved = {'timezone': 'UTC', 'ntp': true, 'time_servers': <String>[]}
       ..conflict = true;
     final controller = ServiceDateTimeController(service);
     addTearDown(controller.dispose);
@@ -241,13 +228,12 @@ void main() {
     await controller.reload();
     expect(
       controller.conflictSummary,
-      'Date/time format\nSystem: System language default\nSettings: en_US.utf8',
+      'Automatic time\nSystem: Off\nSettings: On',
     );
     service.saved = {
       'timezone': 'Asia/Taipei',
       'ntp': true,
       'time_servers': ['time.example.org'],
-      'time_locale': '',
     };
     await controller.reload();
     expect(
@@ -262,7 +248,6 @@ void main() {
       controller.conflictSummary,
       contains('Time servers\nSystem: Automatic\nSettings: time.example.org'),
     );
-    expect(controller.conflictSummary, isNot(contains('Date/time format')));
     service.conflict = false;
     await controller.reload();
     expect(controller.conflictSummary, isEmpty);
@@ -291,7 +276,7 @@ void main() {
     addTearDown(service.close);
     await controller.reload();
     service.fail = true;
-    await expectLater(controller.setTimeLocale('en_US.utf8'), throwsStateError);
+    await expectLater(controller.setTimezone('UTC'), throwsStateError);
     service.fail = false;
     await controller.retry();
     final writes = service.calls.where((call) => call.$1 == 'Set').toList();
@@ -317,7 +302,6 @@ void main() {
             child: const Column(
               children: [
                 DateTimeSettingControl(timezoneSettingId),
-                DateTimeSettingControl(timeLocaleSettingId),
                 DateTimeSettingControl(automaticTimeSettingId),
               ],
             ),
@@ -327,9 +311,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     final zone = find.byKey(const ValueKey('timezone-combobox'));
-    final locale = find.byKey(const ValueKey('time-locale-combobox'));
     final zoneState = tester.state(zone);
-    final localeState = tester.state(locale);
     await tester.tap(zone);
     await tester.pumpAndSettle();
     final field = find.byKey(const ValueKey('timezone-search'));
@@ -341,10 +323,9 @@ void main() {
     );
     expect(tester.widget<EditableText>(editable).focusNode.hasFocus, isTrue);
     service.gate = Completer<void>();
-    final pending = controller.setTimeLocale('en_US.utf8');
+    final pending = controller.setTimeServers(['pool.ntp.org']);
     await tester.pump();
     expect(identical(tester.state(zone), zoneState), isTrue);
-    expect(identical(tester.state(locale), localeState), isTrue);
     expect(tester.widget<ButtonStyleButton>(zone).onPressed, isNull);
     expect(tester.widget<Switch>(find.byType(Switch)).onChanged, isNotNull);
     await controller.reload();
@@ -355,7 +336,6 @@ void main() {
     await pending;
     await tester.pumpAndSettle();
     expect(identical(tester.state(zone), zoneState), isTrue);
-    expect(identical(tester.state(locale), localeState), isTrue);
     expect(tester.widget<EditableText>(editable).focusNode.hasFocus, isTrue);
     expect(tester.widget<EditableText>(editable).controller.text, 'draft');
     await tester.pumpWidget(const SizedBox.shrink());

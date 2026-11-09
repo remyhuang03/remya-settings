@@ -11,7 +11,5 @@ abstract interface class DateTimeBackend {
   Future<rust.DateTimeState> setAutomaticTime(bool enabled);
   Future<rust.DateTimeState> setTimeServers(List<String> servers);
   Future<rust.DateTimeState> syncNow();
-  Future<List<String>> timeLocales();
-  Future<rust.DateTimeState> setTimeLocale(String locale);
   Future<void> restart();
 }

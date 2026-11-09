@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings_client/settings_contract.dart';
 
 import '../../settings/application/feature_options_controller.dart';
 import '../../input/presentation/input_widgets.dart';
 import '../../settings/domain/settings_catalog.dart';
+import '../../settings/presentation/color_button.dart';
 import '../../settings/presentation/settings_widgets.dart';
 import '../application/background_controller.dart';
 
@@ -221,7 +221,8 @@ class _BackgroundPageState extends State<BackgroundPage> {
       subheading('When no background is shown'),
       _Row(
         setting: _setting('background.fallback-color'),
-        control: _ColorButton(
+        control: ColorButton(
+          key: const ValueKey('background-fallback-color'),
           color: desktop.option('background.fallback-color') as String?,
           title: _setting('background.fallback-color').title,
           onChanged: desktop.canChange
@@ -642,59 +643,4 @@ class _CommitSliderState extends State<_CommitSlider> {
       ),
     );
   }
-}
-
-/// The current color as a swatch; the picker applies only a confirmed choice.
-class _ColorButton extends StatelessWidget {
-  const _ColorButton({
-    required this.color,
-    required this.title,
-    required this.onChanged,
-  });
-  final String? color;
-  final String title;
-  final ValueChanged<String>? onChanged;
-
-  static Color? _parse(String? hex) => hex == null || hex.length != 7
-      ? null
-      : Color(int.parse(hex.substring(1), radix: 16) | 0xff000000);
-
-  static String _hex(Color color) =>
-      '#${(color.toARGB32() & 0xffffff).toRadixString(16).padLeft(6, '0')}';
-
-  Future<void> _pick(BuildContext context) async {
-    var picked = _parse(color) ?? Colors.black;
-    final confirmed = await ColorPicker(
-      color: picked,
-      onColorChanged: (next) => picked = next,
-      pickersEnabled: const {
-        ColorPickerType.primary: true,
-        ColorPickerType.accent: false,
-        ColorPickerType.wheel: true,
-      },
-      enableShadesSelection: true,
-      showColorCode: true,
-      colorCodeHasColor: true,
-      heading: Text(title, style: Theme.of(context).textTheme.titleMedium),
-      subheading: const Text('Shades'),
-      wheelSubheading: const Text('Shades'),
-    ).showPickerDialog(context);
-    if (confirmed) onChanged?.call(_hex(picked));
-  }
-
-  @override
-  Widget build(BuildContext context) => FilledButton.icon(
-    key: const ValueKey('background-fallback-color'),
-    onPressed: onChanged == null ? null : () => _pick(context),
-    icon: Container(
-      width: 20,
-      height: 20,
-      decoration: BoxDecoration(
-        color: _parse(color),
-        shape: .circle,
-        border: .all(color: Theme.of(context).colorScheme.outline),
-      ),
-    ),
-    label: Text(color ?? 'Unknown'),
-  );
 }

@@ -211,7 +211,8 @@ class SettingSpec {
         (<SettingKind>{.action, .info, .text, .color}.contains(kind) &&
             value is! String) ||
         (kind == .color &&
-            !RegExp(r'^#[0-9a-fA-F]{6}$').hasMatch(value as String))) {
+            !RegExp(r'^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$')
+                .hasMatch(value as String))) {
       throw FormatException('Invalid value for setting ${json['id']}');
     }
     return SettingSpec(

@@ -73,7 +73,7 @@ class DateTimeRustLib
   String get codegenVersion => '2.13.0';
 
   @override
-  int get rustContentHash => -165909181;
+  int get rustContentHash => 633244538;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -85,8 +85,6 @@ class DateTimeRustLib
 }
 
 abstract class DateTimeRustLibApi extends BaseApi {
-  Future<List<String>> crateApiListTimeLocales();
-
   Future<List<TimezoneOption>> crateApiListTimezones();
 
   Future<DateTimeState> crateApiReadDateTime();
@@ -99,8 +97,6 @@ abstract class DateTimeRustLibApi extends BaseApi {
     required String localTime,
     required String timezone,
   });
-
-  Future<DateTimeState> crateApiSetTimeLocale({required String locale});
 
   Future<DateTimeState> crateApiSetTimeServers({required List<String> servers});
 
@@ -119,33 +115,6 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
   });
 
   @override
-  Future<List<String>> crateApiListTimeLocales() {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 1,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_list_String,
-          decodeErrorData: sse_decode_String,
-        ),
-        constMeta: kCrateApiListTimeLocalesConstMeta,
-        argValues: [],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiListTimeLocalesConstMeta =>
-      const TaskConstMeta(debugName: "list_time_locales", argNames: []);
-
-  @override
   Future<List<TimezoneOption>> crateApiListTimezones() {
     return handler.executeNormal(
       NormalTask(
@@ -154,7 +123,7 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 2,
+            funcId: 1,
             port: port_,
           );
         },
@@ -181,7 +150,7 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 3,
+            funcId: 2,
             port: port_,
           );
         },
@@ -208,7 +177,7 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 4,
+            funcId: 3,
             port: port_,
           );
         },
@@ -236,7 +205,7 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 5,
+            funcId: 4,
             port: port_,
           );
         },
@@ -270,7 +239,7 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 6,
+            funcId: 5,
             port: port_,
           );
         },
@@ -291,34 +260,6 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
   );
 
   @override
-  Future<DateTimeState> crateApiSetTimeLocale({required String locale}) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_String(locale, serializer);
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 7,
-            port: port_,
-          );
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_date_time_state,
-          decodeErrorData: sse_decode_String,
-        ),
-        constMeta: kCrateApiSetTimeLocaleConstMeta,
-        argValues: [locale],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kCrateApiSetTimeLocaleConstMeta =>
-      const TaskConstMeta(debugName: "set_time_locale", argNames: ["locale"]);
-
-  @override
   Future<DateTimeState> crateApiSetTimeServers({
     required List<String> servers,
   }) {
@@ -330,7 +271,7 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 8,
+            funcId: 6,
             port: port_,
           );
         },
@@ -358,7 +299,7 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 9,
+            funcId: 7,
             port: port_,
           );
         },
@@ -385,7 +326,7 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 10,
+            funcId: 8,
             port: port_,
           );
         },
@@ -419,8 +360,8 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
   DateTimeState dco_decode_date_time_state(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 9)
-      throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
+    if (arr.length != 8)
+      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
     return DateTimeState(
       unixMicros: dco_decode_i_64(arr[0]),
       localTime: dco_decode_String(arr[1]),
@@ -430,7 +371,6 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
       timeServers: dco_decode_list_String(arr[5]),
       activeTimeServer: dco_decode_String(arr[6]),
       syncError: dco_decode_opt_String(arr[7]),
-      timeLocale: dco_decode_String(arr[8]),
     );
   }
 
@@ -512,7 +452,6 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
     var var_timeServers = sse_decode_list_String(deserializer);
     var var_activeTimeServer = sse_decode_String(deserializer);
     var var_syncError = sse_decode_opt_String(deserializer);
-    var var_timeLocale = sse_decode_String(deserializer);
     return DateTimeState(
       unixMicros: var_unixMicros,
       localTime: var_localTime,
@@ -522,7 +461,6 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
       timeServers: var_timeServers,
       activeTimeServer: var_activeTimeServer,
       syncError: var_syncError,
-      timeLocale: var_timeLocale,
     );
   }
 
@@ -627,7 +565,6 @@ class DateTimeRustLibApiImpl extends DateTimeRustLibApiImplPlatform
     sse_encode_list_String(self.timeServers, serializer);
     sse_encode_String(self.activeTimeServer, serializer);
     sse_encode_opt_String(self.syncError, serializer);
-    sse_encode_String(self.timeLocale, serializer);
   }
 
   @protected

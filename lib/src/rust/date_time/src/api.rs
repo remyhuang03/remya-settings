@@ -8,7 +8,6 @@ pub struct DateTimeState {
     pub time_servers: Vec<String>,
     pub active_time_server: String,
     pub sync_error: Option<String>,
-    pub time_locale: String,
 }
 
 #[derive(serde::Serialize, serde::Deserialize, Clone, Debug)]
@@ -52,14 +51,6 @@ pub fn set_time_servers(servers: Vec<String>) -> Result<DateTimeState, String> {
 
 pub fn sync_now() -> Result<DateTimeState, String> {
     crate::timedate::Timedate::connect()?.sync_now()
-}
-
-pub fn list_time_locales() -> Result<Vec<String>, String> {
-    crate::services::list_locales()
-}
-
-pub fn set_time_locale(locale: String) -> Result<DateTimeState, String> {
-    crate::timedate::Timedate::connect()?.set_time_locale(&locale)
 }
 
 pub fn restart_system() -> Result<(), String> {

@@ -39,7 +39,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.13.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -165909181;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 633244538;
 
 // Section: executor
 
@@ -47,38 +47,6 @@ flutter_rust_bridge::frb_generated_default_handler!();
 
 // Section: wire_funcs
 
-fn wire__crate__api__list_time_locales_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "list_time_locales",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, String>((move || {
-                    let output_ok = crate::api::list_time_locales()?;
-                    std::result::Result::Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
 fn wire__crate__api__list_timezones_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -242,39 +210,6 @@ fn wire__crate__api__set_manual_time_impl(
         },
     )
 }
-fn wire__crate__api__set_time_locale_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "set_time_locale",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_locale = <String>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, String>((move || {
-                    let output_ok = crate::api::set_time_locale(api_locale)?;
-                    std::result::Result::Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
 fn wire__crate__api__set_time_servers_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -402,7 +337,6 @@ impl SseDecode for crate::api::DateTimeState {
         let mut var_timeServers = <Vec<String>>::sse_decode(deserializer);
         let mut var_activeTimeServer = <String>::sse_decode(deserializer);
         let mut var_syncError = <Option<String>>::sse_decode(deserializer);
-        let mut var_timeLocale = <String>::sse_decode(deserializer);
         return crate::api::DateTimeState {
             unix_micros: var_unixMicros,
             local_time: var_localTime,
@@ -412,7 +346,6 @@ impl SseDecode for crate::api::DateTimeState {
             time_servers: var_timeServers,
             active_time_server: var_activeTimeServer,
             sync_error: var_syncError,
-            time_locale: var_timeLocale,
         };
     }
 }
@@ -511,16 +444,14 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        1 => wire__crate__api__list_time_locales_impl(port, ptr, rust_vec_len, data_len),
-        2 => wire__crate__api__list_timezones_impl(port, ptr, rust_vec_len, data_len),
-        3 => wire__crate__api__read_date_time_impl(port, ptr, rust_vec_len, data_len),
-        4 => wire__crate__api__restart_system_impl(port, ptr, rust_vec_len, data_len),
-        5 => wire__crate__api__set_automatic_time_impl(port, ptr, rust_vec_len, data_len),
-        6 => wire__crate__api__set_manual_time_impl(port, ptr, rust_vec_len, data_len),
-        7 => wire__crate__api__set_time_locale_impl(port, ptr, rust_vec_len, data_len),
-        8 => wire__crate__api__set_time_servers_impl(port, ptr, rust_vec_len, data_len),
-        9 => wire__crate__api__set_timezone_impl(port, ptr, rust_vec_len, data_len),
-        10 => wire__crate__api__sync_now_impl(port, ptr, rust_vec_len, data_len),
+        1 => wire__crate__api__list_timezones_impl(port, ptr, rust_vec_len, data_len),
+        2 => wire__crate__api__read_date_time_impl(port, ptr, rust_vec_len, data_len),
+        3 => wire__crate__api__restart_system_impl(port, ptr, rust_vec_len, data_len),
+        4 => wire__crate__api__set_automatic_time_impl(port, ptr, rust_vec_len, data_len),
+        5 => wire__crate__api__set_manual_time_impl(port, ptr, rust_vec_len, data_len),
+        6 => wire__crate__api__set_time_servers_impl(port, ptr, rust_vec_len, data_len),
+        7 => wire__crate__api__set_timezone_impl(port, ptr, rust_vec_len, data_len),
+        8 => wire__crate__api__sync_now_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -551,7 +482,6 @@ impl flutter_rust_bridge::IntoDart for crate::api::DateTimeState {
             self.time_servers.into_into_dart().into_dart(),
             self.active_time_server.into_into_dart().into_dart(),
             self.sync_error.into_into_dart().into_dart(),
-            self.time_locale.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -604,7 +534,6 @@ impl SseEncode for crate::api::DateTimeState {
         <Vec<String>>::sse_encode(self.time_servers, serializer);
         <String>::sse_encode(self.active_time_server, serializer);
         <Option<String>>::sse_encode(self.sync_error, serializer);
-        <String>::sse_encode(self.time_locale, serializer);
     }
 }
 

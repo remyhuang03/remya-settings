@@ -74,7 +74,6 @@ class DateTimeSettingControl extends StatelessWidget {
 
     switch (id) {
       case timezoneSettingId:
-      case timeLocaleSettingId:
         return _DateTimeChoice(
           key: ValueKey('choice-$id'),
           id: id,
@@ -192,55 +191,7 @@ class _DateTimeChoice extends StatefulWidget {
 }
 
 class _DateTimeChoiceState extends State<_DateTimeChoice> {
-  final _text = TextEditingController();
-  String? _observed;
-  bool get _timezone => widget.id == timezoneSettingId;
-  String get _value => _timezone
-      ? widget.controller.state!.timezone
-      : widget.controller.state!.timeLocale;
-  String _label(String value) => _timezone
-      ? widget.controller.timezoneLabels[value]!
-      : value.isEmpty
-      ? 'System language default'
-      : value;
-
-  void _readValue() {
-    if (_observed == _value) return;
-    _observed = _value;
-    _text.text = _label(_value);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _readValue();
-  }
-
-  @override
-  void didUpdateWidget(covariant _DateTimeChoice oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _readValue();
-  }
-
-  @override
-  void dispose() {
-    _text.dispose();
-    super.dispose();
-  }
-
-  Future<void> _select(String? value) async {
-    if (value != null && value != _value && !widget.controller.isBusy) {
-      await _apply(
-        () => _timezone
-            ? widget.controller.setTimezone(value)
-            : widget.controller.setTimeLocale(value),
-      );
-    }
-    if (mounted) {
-      _observed = _value;
-      _text.text = _label(_value);
-    }
-  }
+  String get _value => widget.controller.state!.timezone;
 
   Future<void> _chooseTimezone() async {
     final controller = widget.controller;
@@ -249,32 +200,18 @@ class _DateTimeChoiceState extends State<_DateTimeChoice> {
       context: context,
       builder: (_) => _TimezonePicker(controller: controller),
     );
-    if (mounted && !controller.isBusy) await _select(value);
+    if (mounted && !controller.isBusy && value != null && value != _value) {
+      await _apply(() => controller.setTimezone(value));
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (_timezone) {
-      return FilledButton.icon(
-        key: const ValueKey('timezone-combobox'),
-        onPressed: widget.controller.isBusy ? null : _chooseTimezone,
-        icon: const Icon(Icons.expand_more_rounded),
-        label: Text(_label(_value)),
-      );
-    }
-    return DropdownMenu<String>(
-      key: const ValueKey('time-locale-combobox'),
-      controller: _text,
-      width: 280,
-      menuHeight: 300,
-      initialSelection: _value,
-      dropdownMenuEntries: [
-        for (final value in widget.controller.timeLocales)
-          DropdownMenuEntry(value: value, label: _label(value)),
-      ],
-      onSelected: _select,
-    );
-  }
+  Widget build(BuildContext context) => FilledButton.icon(
+    key: const ValueKey('timezone-combobox'),
+    onPressed: widget.controller.isBusy ? null : _chooseTimezone,
+    icon: const Icon(Icons.expand_more_rounded),
+    label: Text(widget.controller.timezoneLabels[_value]!),
+  );
 }
 
 class _TimezonePicker extends StatefulWidget {

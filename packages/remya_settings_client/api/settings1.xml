@@ -33,8 +33,18 @@
        Changed power reports state; see docs/power.md. -->
   <!-- Desktop options: Get desktop; Set background.blur-* (bool or number),
        background.fallback-color ("#rrggbb"), background.hide-logo, power.wake-key,
-       power.wake-pointer (bool); Resolve desktop system|settings; Changed desktop.
+       power.wake-pointer (bool); Set workspaces.* options, workspaces.rule-set
+       ({workspace,monitor,default,persistent,default_name,previous}) and
+       workspaces.rule-remove ({workspace}); Resolve desktop system|settings; Changed desktop.
        See docs/public-api.md. -->
+  <!-- Text size: Get text-size|text-size.scale; Set text-size.scale (0.5 to 3.0, the GNOME
+       text-scaling-factor); Resolve text-size system|settings; Changed text-size. -->
+  <!-- Language: Get language|language.display|language.format|locales|format-preview:<locale>;
+       Set language.display (JSON installed locale) and language.format (JSON locale, "" follows
+       the display language) through systemd-localed; Resolve language system|settings;
+       Changed language. Get keyboard-layouts lists xkeyboard-config layouts; the input options
+       language.keyboard-layouts ([{layout,variant}]) and language.keyboard-options (XKB options)
+       use Set/Resolve input. -->
   <!-- Sound: Get("sound") / Get("sound.*"), Set("sound.*", JSON); Changed("sound", state). -->
   <!-- Cameras: Get cameras/cameras.*, Set cameras.* with JSON camera/serial/value;
        Resolve cameras:<node.name> system|settings; Changed cameras. Preview frames stay GUI-local. -->

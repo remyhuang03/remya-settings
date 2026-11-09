@@ -412,12 +412,6 @@
     "date-time.6422d209",
     "date-time.098d06ec",
     "date-time.7e33a213",
-    "language.9cbb05d0",
-    "language.187780a3",
-    "language.cc725f51",
-    "language.b77c691e",
-    "language.feb9d380",
-    "language.5f7e5146",
     "speech.48cd0efa",
     "speech.2ef677a1",
     "speech.7a73e125",
@@ -425,9 +419,6 @@
     "speech.3e0d83e2",
     "speech.c47063f5",
     "speech.56f17992",
-    "text-size.a4a0d6b4",
-    "text-size.71eba864",
-    "text-size.reference.8ff6836a",
     "visual-effects.fe13858e",
     "visual-effects.db944e6b",
     "visual-effects.reference.22476e4b",
@@ -977,20 +968,16 @@
     "hypr-input-capture",
     "hypr-debug",
     "hypr-experimental",
-    "hypr-layout-dwindle",
     "hypr-layout-master",
     "hypr-layout-master-workspace",
     "hypr-layout-scrolling",
     "hypr-layout-scrolling-workspace",
-    "hypr-workspace-rule-rules",
     "hypr-window-rule-props",
     "hypr-window-rule-static-effects",
     "hypr-window-rule-dynamic-effects",
     "hypr-layer-rule-props",
     "hypr-layer-rule-effects",
-    "hypr-layout-overview",
     "hypr-layout-monocle",
-    "hypr-workspaces",
     "hypr-compositor-permissions",
     "hypr-desktop-portals",
     "hypr-config-files",
@@ -1211,6 +1198,406 @@
       "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
+      "control": "animations.drag",
+      "page": "animations",
+      "source": "hypr-options",
+      "key": "drag",
+      "reference": [
+        "hypr-options",
+        "misc",
+        "animate_mouse_windowdragging"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "animations.enabled",
+      "page": "animations",
+      "source": "hypr-options",
+      "key": "enabled",
+      "reference": [
+        "hypr-options",
+        "animations",
+        "enabled"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "animations.motion-blur",
+      "page": "animations",
+      "source": "hypr-options",
+      "key": "motion-blur",
+      "reference": [
+        "hypr-options",
+        "decoration.motion_blur",
+        "enabled"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "animations.motion-blur-samples",
+      "page": "animations",
+      "source": "hypr-options",
+      "key": "motion-blur-samples",
+      "reference": [
+        "hypr-options",
+        "decoration.motion_blur",
+        "samples"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`7`",
+      "documentedLimits": "[1 - 64]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "animations.resize",
+      "page": "animations",
+      "source": "hypr-options",
+      "key": "resize",
+      "reference": [
+        "hypr-options",
+        "misc",
+        "animate_manual_resizes"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "animations.wobble",
+      "page": "animations",
+      "source": "hypr-options",
+      "key": "wobble",
+      "reference": [
+        "hypr-options",
+        "decoration.wobble",
+        "enabled"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "animations.wobble-damping",
+      "page": "animations",
+      "source": "hypr-options",
+      "key": "wobble-damping",
+      "reference": [
+        "hypr-options",
+        "decoration.wobble",
+        "damping"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`12`",
+      "documentedLimits": "[0 - 1000]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "animations.wobble-intensity",
+      "page": "animations",
+      "source": "hypr-options",
+      "key": "wobble-intensity",
+      "reference": [
+        "hypr-options",
+        "decoration.wobble",
+        "intensity"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`0.2`",
+      "documentedLimits": "[0 - 3]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "animations.wobble-mass",
+      "page": "animations",
+      "source": "hypr-options",
+      "key": "wobble-mass",
+      "reference": [
+        "hypr-options",
+        "decoration.wobble",
+        "mass"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`1`",
+      "documentedLimits": "[0.0001 - 1000]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "animations.wobble-mesh",
+      "page": "animations",
+      "source": "hypr-options",
+      "key": "wobble-mesh",
+      "reference": [
+        "hypr-options",
+        "decoration.wobble",
+        "mesh"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`12`",
+      "documentedLimits": "[2 - 32]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "animations.wobble-stiffness",
+      "page": "animations",
+      "source": "hypr-options",
+      "key": "wobble-stiffness",
+      "reference": [
+        "hypr-options",
+        "decoration.wobble",
+        "stiffness"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`200`",
+      "documentedLimits": "[0.0001 - 1000]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "animations.wobble-value-epsilon",
+      "page": "animations",
+      "source": "hypr-options",
+      "key": "wobble-value-epsilon",
+      "reference": [
+        "hypr-options",
+        "decoration.wobble",
+        "value_epsilon"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`0.25`",
+      "documentedLimits": "[0 - 100]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "animations.wobble-velocity-epsilon",
+      "page": "animations",
+      "source": "hypr-options",
+      "key": "wobble-velocity-epsilon",
+      "reference": [
+        "hypr-options",
+        "decoration.wobble",
+        "velocity_epsilon"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`2`",
+      "documentedLimits": "[0 - 1000]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "animations.workspace-wraparound",
+      "page": "animations",
+      "source": "hypr-options",
+      "key": "workspace-wraparound",
+      "reference": [
+        "hypr-options",
+        "animations",
+        "workspace_wraparound"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "multitasking.dwindle-force-split",
+      "page": "multitasking",
+      "source": "hypr-dwindle",
+      "key": "dwindle-force-split",
+      "reference": [
+        "hypr-dwindle",
+        "dwindle",
+        "force_split"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`0`",
+      "documentedLimits": "[0 - 2]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "multitasking.dwindle-permanent-direction",
+      "page": "multitasking",
+      "source": "hypr-dwindle",
+      "key": "dwindle-permanent-direction",
+      "reference": [
+        "hypr-dwindle",
+        "dwindle",
+        "permanent_direction_override"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "multitasking.dwindle-precise-move",
+      "page": "multitasking",
+      "source": "hypr-dwindle",
+      "key": "dwindle-precise-move",
+      "reference": [
+        "hypr-dwindle",
+        "dwindle",
+        "precise_mouse_move"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "multitasking.dwindle-preserve-split",
+      "page": "multitasking",
+      "source": "hypr-dwindle",
+      "key": "dwindle-preserve-split",
+      "reference": [
+        "hypr-dwindle",
+        "dwindle",
+        "preserve_split"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "multitasking.dwindle-smart-resizing",
+      "page": "multitasking",
+      "source": "hypr-dwindle",
+      "key": "dwindle-smart-resizing",
+      "reference": [
+        "hypr-dwindle",
+        "dwindle",
+        "smart_resizing"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "multitasking.dwindle-smart-split",
+      "page": "multitasking",
+      "source": "hypr-dwindle",
+      "key": "dwindle-smart-split",
+      "reference": [
+        "hypr-dwindle",
+        "dwindle",
+        "smart_split"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "multitasking.dwindle-special-scale",
+      "page": "multitasking",
+      "source": "hypr-dwindle",
+      "key": "dwindle-special-scale",
+      "reference": [
+        "hypr-dwindle",
+        "dwindle",
+        "special_scale_factor"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`1`",
+      "documentedLimits": "[0 - 1]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "multitasking.dwindle-split-bias",
+      "page": "multitasking",
+      "source": "hypr-dwindle",
+      "key": "dwindle-split-bias",
+      "reference": [
+        "hypr-dwindle",
+        "dwindle",
+        "split_bias"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`0`",
+      "documentedLimits": "[0 - 1]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "multitasking.dwindle-split-ratio",
+      "page": "multitasking",
+      "source": "hypr-dwindle",
+      "key": "dwindle-split-ratio",
+      "reference": [
+        "hypr-dwindle",
+        "dwindle",
+        "default_split_ratio"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`1.0`",
+      "documentedLimits": "[0.1 - 1.9]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "multitasking.dwindle-split-width",
+      "page": "multitasking",
+      "source": "hypr-dwindle",
+      "key": "dwindle-split-width",
+      "reference": [
+        "hypr-dwindle",
+        "dwindle",
+        "split_width_multiplier"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`1.0`",
+      "documentedLimits": "[0.1 - 3.0]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "multitasking.dwindle-use-active",
+      "page": "multitasking",
+      "source": "hypr-dwindle",
+      "key": "dwindle-use-active",
+      "reference": [
+        "hypr-dwindle",
+        "dwindle",
+        "use_active_for_splits"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
       "control": "window-appearance.active-border",
       "page": "window-appearance",
       "source": "hypr-options",
@@ -1222,7 +1609,185 @@
       ],
       "nativeType": "gradient",
       "documentedDefault": "`0xffffffff`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.active-opacity",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "active-opacity",
+      "reference": [
+        "hypr-options",
+        "decoration",
+        "active_opacity"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`1.0`",
+      "documentedLimits": "[0.0 - 1.0]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.border-part-of-window",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "border-part-of-window",
+      "reference": [
+        "hypr-options",
+        "decoration",
+        "border_part_of_window"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.dim-inactive",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "dim-inactive",
+      "reference": [
+        "hypr-options",
+        "decoration",
+        "dim_inactive"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.dim-modal",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "dim-modal",
+      "reference": [
+        "hypr-options",
+        "decoration",
+        "dim_modal"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.dim-special",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "dim-special",
+      "reference": [
+        "hypr-options",
+        "decoration",
+        "dim_special"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`0.2 `",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.dim-strength",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "dim-strength",
+      "reference": [
+        "hypr-options",
+        "decoration",
+        "dim_strength"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`0.5`",
+      "documentedLimits": "[0.0 - 1.0]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.fullscreen-opacity",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "fullscreen-opacity",
+      "reference": [
+        "hypr-options",
+        "decoration",
+        "fullscreen_opacity"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`1.0`",
+      "documentedLimits": "[0.0 - 1.0]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.glow",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "glow",
+      "reference": [
+        "hypr-options",
+        "decoration.glow",
+        "enabled"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.glow-color",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "glow-color",
+      "reference": [
+        "hypr-options",
+        "decoration.glow",
+        "color"
+      ],
+      "nativeType": "color",
+      "documentedDefault": "`0xee1a1a1a`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.glow-range",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "glow-range",
+      "reference": [
+        "hypr-options",
+        "decoration.glow",
+        "range"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`10`",
+      "documentedLimits": "[0 - 100]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.glow-render-power",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "glow-render-power",
+      "reference": [
+        "hypr-options",
+        "decoration.glow",
+        "render_power"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`3`",
+      "documentedLimits": "[1 - 4]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
     },
     {
       "control": "window-appearance.inactive-border",
@@ -1236,7 +1801,169 @@
       ],
       "nativeType": "gradient",
       "documentedDefault": "`0xff444444`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.inactive-opacity",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "inactive-opacity",
+      "reference": [
+        "hypr-options",
+        "decoration",
+        "inactive_opacity"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`1.0`",
+      "documentedLimits": "[0.0 - 1.0]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.rounding",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "rounding",
+      "reference": [
+        "hypr-options",
+        "decoration",
+        "rounding"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`0`",
+      "documentedLimits": "[0 - 100]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.rounding-power",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "rounding-power",
+      "reference": [
+        "hypr-options",
+        "decoration",
+        "rounding_power"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`2.0`",
+      "documentedLimits": "[1.0 - 10.0]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.shadow",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "shadow",
+      "reference": [
+        "hypr-options",
+        "decoration.shadow",
+        "enabled"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.shadow-color",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "shadow-color",
+      "reference": [
+        "hypr-options",
+        "decoration.shadow",
+        "color"
+      ],
+      "nativeType": "color/gradient",
+      "documentedDefault": "`0xee1a1a1a`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.shadow-offset",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "shadow-offset",
+      "reference": [
+        "hypr-options",
+        "decoration.shadow",
+        "offset"
+      ],
+      "nativeType": "vec2",
+      "documentedDefault": "`{0, 0}`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.shadow-range",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "shadow-range",
+      "reference": [
+        "hypr-options",
+        "decoration.shadow",
+        "range"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`4`",
+      "documentedLimits": "[0 - 100]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.shadow-render-power",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "shadow-render-power",
+      "reference": [
+        "hypr-options",
+        "decoration.shadow",
+        "render_power"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`3`",
+      "documentedLimits": "[1 - 4]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.shadow-scale",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "shadow-scale",
+      "reference": [
+        "hypr-options",
+        "decoration.shadow",
+        "scale"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`1.0`",
+      "documentedLimits": "[0.05 - 2.0]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
+    },
+    {
+      "control": "window-appearance.shadow-sharp",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "shadow-sharp",
+      "reference": [
+        "hypr-options",
+        "decoration.shadow",
+        "sharp"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
     },
     {
       "control": "hypr-group.nogroup-border",
@@ -1345,160 +2072,6 @@
       "documentedLimits": "[0 - 100]",
       "availability": "available",
       "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
-    },
-    {
-      "control": "window-appearance.active-opacity",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "active-opacity",
-      "reference": [
-        "hypr-options",
-        "decoration",
-        "active_opacity"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "window-appearance.border-part-of-window",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "border-part-of-window",
-      "reference": [
-        "hypr-options",
-        "decoration",
-        "border_part_of_window"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "window-appearance.dim-around",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "dim-around",
-      "reference": [
-        "hypr-options",
-        "decoration",
-        "dim_around"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.4`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "window-appearance.dim-inactive",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "dim-inactive",
-      "reference": [
-        "hypr-options",
-        "decoration",
-        "dim_inactive"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "window-appearance.dim-modal",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "dim-modal",
-      "reference": [
-        "hypr-options",
-        "decoration",
-        "dim_modal"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "window-appearance.dim-special",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "dim-special",
-      "reference": [
-        "hypr-options",
-        "decoration",
-        "dim_special"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.2 `",
-      "documentedLimits": ""
-    },
-    {
-      "control": "window-appearance.dim-strength",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "dim-strength",
-      "reference": [
-        "hypr-options",
-        "decoration",
-        "dim_strength"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.5`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "window-appearance.fullscreen-opacity",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "fullscreen-opacity",
-      "reference": [
-        "hypr-options",
-        "decoration",
-        "fullscreen_opacity"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "window-appearance.inactive-opacity",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "inactive-opacity",
-      "reference": [
-        "hypr-options",
-        "decoration",
-        "inactive_opacity"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "window-appearance.rounding",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "rounding",
-      "reference": [
-        "hypr-options",
-        "decoration",
-        "rounding"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 100]"
-    },
-    {
-      "control": "window-appearance.rounding-power",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "rounding-power",
-      "reference": [
-        "hypr-options",
-        "decoration",
-        "rounding_power"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`2.0`",
-      "documentedLimits": "[1.0 - 10.0]"
     },
     {
       "control": "background.blur-enabled",
@@ -1631,371 +2204,7 @@
       "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
     },
     {
-      "control": "window-appearance.shadow",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "enabled",
-      "reference": [
-        "hypr-options",
-        "decoration.shadow",
-        "enabled"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "window-appearance.shadow-color",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "color",
-      "reference": [
-        "hypr-options",
-        "decoration.shadow",
-        "color"
-      ],
-      "nativeType": "color/gradient",
-      "documentedDefault": "`0xee1a1a1a`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "window-appearance.shadow-color-inactive",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "color-inactive",
-      "reference": [
-        "hypr-options",
-        "decoration.shadow",
-        "color_inactive"
-      ],
-      "nativeType": "color/gradient",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "window-appearance.shadow-offset",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "offset",
-      "reference": [
-        "hypr-options",
-        "decoration.shadow",
-        "offset"
-      ],
-      "nativeType": "vec2",
-      "documentedDefault": "`{0, 0}`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "window-appearance.shadow-range",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "range",
-      "reference": [
-        "hypr-options",
-        "decoration.shadow",
-        "range"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`4`",
-      "documentedLimits": "[0 - 100]"
-    },
-    {
-      "control": "window-appearance.shadow-render-power",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "render-power",
-      "reference": [
-        "hypr-options",
-        "decoration.shadow",
-        "render_power"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`3`",
-      "documentedLimits": "[1 - 4]"
-    },
-    {
-      "control": "window-appearance.shadow-scale",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "scale",
-      "reference": [
-        "hypr-options",
-        "decoration.shadow",
-        "scale"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": "[0.05 - 2.0]"
-    },
-    {
-      "control": "window-appearance.shadow-sharp",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "sharp",
-      "reference": [
-        "hypr-options",
-        "decoration.shadow",
-        "sharp"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "window-appearance.glow",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "enabled",
-      "reference": [
-        "hypr-options",
-        "decoration.glow",
-        "enabled"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "window-appearance.glow-color",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "color",
-      "reference": [
-        "hypr-options",
-        "decoration.glow",
-        "color"
-      ],
-      "nativeType": "color",
-      "documentedDefault": "`0xee1a1a1a`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "window-appearance.glow-color-inactive",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "color-inactive",
-      "reference": [
-        "hypr-options",
-        "decoration.glow",
-        "color_inactive"
-      ],
-      "nativeType": "color",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "window-appearance.glow-range",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "range",
-      "reference": [
-        "hypr-options",
-        "decoration.glow",
-        "range"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`10`",
-      "documentedLimits": "[0 - 100]"
-    },
-    {
-      "control": "window-appearance.glow-render-power",
-      "page": "window-appearance",
-      "source": "hypr-options",
-      "key": "render-power",
-      "reference": [
-        "hypr-options",
-        "decoration.glow",
-        "render_power"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`3`",
-      "documentedLimits": "[1 - 4]"
-    },
-    {
-      "control": "animations.motion-blur",
-      "page": "animations",
-      "source": "hypr-options",
-      "key": "enabled",
-      "reference": [
-        "hypr-options",
-        "decoration.motion_blur",
-        "enabled"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "animations.motion-blur-samples",
-      "page": "animations",
-      "source": "hypr-options",
-      "key": "samples",
-      "reference": [
-        "hypr-options",
-        "decoration.motion_blur",
-        "samples"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`7`",
-      "documentedLimits": "[1 - 64]"
-    },
-    {
-      "control": "animations.wobble",
-      "page": "animations",
-      "source": "hypr-options",
-      "key": "enabled",
-      "reference": [
-        "hypr-options",
-        "decoration.wobble",
-        "enabled"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "animations.wobble-mesh",
-      "page": "animations",
-      "source": "hypr-options",
-      "key": "mesh",
-      "reference": [
-        "hypr-options",
-        "decoration.wobble",
-        "mesh"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`12`",
-      "documentedLimits": "[2 - 32]"
-    },
-    {
-      "control": "animations.wobble-stiffness",
-      "page": "animations",
-      "source": "hypr-options",
-      "key": "stiffness",
-      "reference": [
-        "hypr-options",
-        "decoration.wobble",
-        "stiffness"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`200`",
-      "documentedLimits": "[0.0001 - 1000]"
-    },
-    {
-      "control": "animations.wobble-damping",
-      "page": "animations",
-      "source": "hypr-options",
-      "key": "damping",
-      "reference": [
-        "hypr-options",
-        "decoration.wobble",
-        "damping"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`12`",
-      "documentedLimits": "[0 - 1000]"
-    },
-    {
-      "control": "animations.wobble-mass",
-      "page": "animations",
-      "source": "hypr-options",
-      "key": "mass",
-      "reference": [
-        "hypr-options",
-        "decoration.wobble",
-        "mass"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0.0001 - 1000]"
-    },
-    {
-      "control": "animations.wobble-intensity",
-      "page": "animations",
-      "source": "hypr-options",
-      "key": "intensity",
-      "reference": [
-        "hypr-options",
-        "decoration.wobble",
-        "intensity"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.2`",
-      "documentedLimits": "[0 - 3]"
-    },
-    {
-      "control": "animations.wobble-value-epsilon",
-      "page": "animations",
-      "source": "hypr-options",
-      "key": "value-epsilon",
-      "reference": [
-        "hypr-options",
-        "decoration.wobble",
-        "value_epsilon"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.25`",
-      "documentedLimits": "[0 - 100]"
-    },
-    {
-      "control": "animations.wobble-velocity-epsilon",
-      "page": "animations",
-      "source": "hypr-options",
-      "key": "velocity-epsilon",
-      "reference": [
-        "hypr-options",
-        "decoration.wobble",
-        "velocity_epsilon"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 1000]"
-    },
-    {
-      "control": "animations.enabled",
-      "page": "animations",
-      "source": "hypr-options",
-      "key": "enabled",
-      "reference": [
-        "hypr-options",
-        "animations",
-        "enabled"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "animations.workspace-wraparound",
-      "page": "animations",
-      "source": "hypr-options",
-      "key": "workspace-wraparound",
-      "reference": [
-        "hypr-options",
-        "animations",
-        "workspace_wraparound"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "language.keyboard-kb-file",
-      "page": "language",
-      "source": "hypr-options",
-      "key": "kb-file",
-      "reference": [
-        "hypr-options",
-        "input",
-        "kb_file"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "language.keyboard-kb-layout",
+      "control": "language.keyboard-layouts",
       "page": "language",
       "source": "hypr-options",
       "key": "kb-layout",
@@ -2006,24 +2215,12 @@
       ],
       "nativeType": "string",
       "documentedDefault": "`\"us\"`",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input and xkb tests; test/language_page_test.dart; kb_layout and kb_variant written together, probed on a nested Hyprland 0.57"
     },
     {
-      "control": "language.keyboard-kb-model",
-      "page": "language",
-      "source": "hypr-options",
-      "key": "kb-model",
-      "reference": [
-        "hypr-options",
-        "input",
-        "kb_model"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "language.keyboard-kb-options",
+      "control": "language.keyboard-options",
       "page": "language",
       "source": "hypr-options",
       "key": "kb-options",
@@ -2034,35 +2231,9 @@
       ],
       "nativeType": "string",
       "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "language.keyboard-kb-rules",
-      "page": "language",
-      "source": "hypr-options",
-      "key": "kb-rules",
-      "reference": [
-        "hypr-options",
-        "input",
-        "kb_rules"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "language.keyboard-kb-variant",
-      "page": "language",
-      "source": "hypr-options",
-      "key": "kb-variant",
-      "reference": [
-        "hypr-options",
-        "input",
-        "kb_variant"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input and xkb tests; test/language_page_test.dart"
     },
     {
       "control": "accessibility-keyboard.compositor-numlock-by-default",
@@ -2863,34 +3034,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "animations.resize",
-      "page": "animations",
-      "source": "hypr-options",
-      "key": "animate-manual-resizes",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "animate_manual_resizes"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "animations.drag",
-      "page": "animations",
-      "source": "hypr-options",
-      "key": "animate-mouse-windowdragging",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "animate_mouse_windowdragging"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
       "control": "hypr-misc.anr-missed-pings",
       "page": "hypr-misc",
       "source": "hypr-options",
@@ -2929,20 +3072,6 @@
       ],
       "nativeType": "string",
       "documentedDefault": "`\"default\"`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-misc.close-special-on-empty",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "close-special-on-empty",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "close_special_on_empty"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
       "documentedLimits": ""
     },
     {
@@ -3139,20 +3268,6 @@
       "nativeType": "int",
       "documentedDefault": "`10`",
       "documentedLimits": "[1 - 3600]"
-    },
-    {
-      "control": "hypr-misc.initial-workspace-tracking",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "initial-workspace-tracking",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "initial_workspace_tracking"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`1`",
-      "documentedLimits": ""
     },
     {
       "control": "power.wake-key",
@@ -4263,160 +4378,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-layout-dwindle.force-split",
-      "page": "hypr-layout-dwindle",
-      "source": "hypr-dwindle",
-      "key": "force-split",
-      "reference": [
-        "hypr-dwindle",
-        "dwindle",
-        "force_split"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "hypr-layout-dwindle.preserve-split",
-      "page": "hypr-layout-dwindle",
-      "source": "hypr-dwindle",
-      "key": "preserve-split",
-      "reference": [
-        "hypr-dwindle",
-        "dwindle",
-        "preserve_split"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-dwindle.smart-split",
-      "page": "hypr-layout-dwindle",
-      "source": "hypr-dwindle",
-      "key": "smart-split",
-      "reference": [
-        "hypr-dwindle",
-        "dwindle",
-        "smart_split"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-dwindle.smart-resizing",
-      "page": "hypr-layout-dwindle",
-      "source": "hypr-dwindle",
-      "key": "smart-resizing",
-      "reference": [
-        "hypr-dwindle",
-        "dwindle",
-        "smart_resizing"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-dwindle.permanent-direction-override",
-      "page": "hypr-layout-dwindle",
-      "source": "hypr-dwindle",
-      "key": "permanent-direction-override",
-      "reference": [
-        "hypr-dwindle",
-        "dwindle",
-        "permanent_direction_override"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-dwindle.special-scale-factor",
-      "page": "hypr-layout-dwindle",
-      "source": "hypr-dwindle",
-      "key": "special-scale-factor",
-      "reference": [
-        "hypr-dwindle",
-        "dwindle",
-        "special_scale_factor"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0 - 1]"
-    },
-    {
-      "control": "hypr-layout-dwindle.split-width-multiplier",
-      "page": "hypr-layout-dwindle",
-      "source": "hypr-dwindle",
-      "key": "split-width-multiplier",
-      "reference": [
-        "hypr-dwindle",
-        "dwindle",
-        "split_width_multiplier"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": "[0.1 - 3.0]"
-    },
-    {
-      "control": "hypr-layout-dwindle.use-active-for-splits",
-      "page": "hypr-layout-dwindle",
-      "source": "hypr-dwindle",
-      "key": "use-active-for-splits",
-      "reference": [
-        "hypr-dwindle",
-        "dwindle",
-        "use_active_for_splits"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-dwindle.default-split-ratio",
-      "page": "hypr-layout-dwindle",
-      "source": "hypr-dwindle",
-      "key": "default-split-ratio",
-      "reference": [
-        "hypr-dwindle",
-        "dwindle",
-        "default_split_ratio"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1.0`",
-      "documentedLimits": "[0.1 - 1.9]"
-    },
-    {
-      "control": "hypr-layout-dwindle.split-bias",
-      "page": "hypr-layout-dwindle",
-      "source": "hypr-dwindle",
-      "key": "split-bias",
-      "reference": [
-        "hypr-dwindle",
-        "dwindle",
-        "split_bias"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 1]"
-    },
-    {
-      "control": "hypr-layout-dwindle.precise-mouse-move",
-      "page": "hypr-layout-dwindle",
-      "source": "hypr-dwindle",
-      "key": "precise-mouse-move",
-      "reference": [
-        "hypr-dwindle",
-        "dwindle",
-        "precise_mouse_move"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
       "control": "hypr-layout-master.allow-small-split",
       "page": "hypr-layout-master",
       "source": "hypr-master",
@@ -4749,216 +4710,6 @@
         "direction"
       ],
       "nativeType": "string",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.animation",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "animation",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "animation"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.border-size",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "border-size",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "border_size"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.decorate",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "decorate",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "decorate"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.default-name",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "default-name",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "default_name"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.float-gaps",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "float-gaps",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "float_gaps"
-      ],
-      "nativeType": "css_gaps",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.gaps-in",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "gaps-in",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "gaps_in"
-      ],
-      "nativeType": "css_gaps",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.gaps-out",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "gaps-out",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "gaps_out"
-      ],
-      "nativeType": "css_gaps",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.layout",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "layout",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "layout"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.layout-opts",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "layout-opts",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "layout_opts"
-      ],
-      "nativeType": "table",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.monitor",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "monitor",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "monitor"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.default",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "default",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "default"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.no-border",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "no-border",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "no_border"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.no-rounding",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "no-rounding",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "no_rounding"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.no-shadow",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "no-shadow",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "no_shadow"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-workspace-rule-rules.persistent",
-      "page": "hypr-workspace-rule-rules",
-      "source": "hypr-workspace-rules",
-      "key": "persistent",
-      "reference": [
-        "hypr-workspace-rules",
-        "Rules",
-        "persistent"
-      ],
-      "nativeType": "bool",
       "documentedDefault": "",
       "documentedLimits": ""
     },
@@ -7581,66 +7332,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-layout-overview.engine",
-      "page": "hypr-layout-overview",
-      "source": "hyprviz-project",
-      "key": "engine",
-      "reference": [
-        "hyprviz-project",
-        "engine"
-      ]
-    },
-    {
-      "control": "hypr-layout-overview.workspace-layout",
-      "page": "hypr-layout-overview",
-      "source": "hyprviz-project",
-      "key": "workspace-layout",
-      "reference": [
-        "hyprviz-project",
-        "workspace-layout"
-      ]
-    },
-    {
-      "control": "hypr-layout-overview.split",
-      "page": "hypr-layout-overview",
-      "source": "hyprviz-project",
-      "key": "split",
-      "reference": [
-        "hyprviz-project",
-        "split"
-      ]
-    },
-    {
-      "control": "hypr-layout-overview.swap",
-      "page": "hypr-layout-overview",
-      "source": "hyprviz-project",
-      "key": "swap",
-      "reference": [
-        "hyprviz-project",
-        "swap"
-      ]
-    },
-    {
-      "control": "hypr-layout-overview.resize",
-      "page": "hypr-layout-overview",
-      "source": "hyprviz-project",
-      "key": "resize",
-      "reference": [
-        "hyprviz-project",
-        "resize"
-      ]
-    },
-    {
-      "control": "hypr-layout-overview.pseudotile",
-      "page": "hypr-layout-overview",
-      "source": "hyprviz-project",
-      "key": "pseudotile",
-      "reference": [
-        "hyprviz-project",
-        "pseudotile"
-      ]
-    },
-    {
       "control": "hypr-layout-monocle.next",
       "page": "hypr-layout-monocle",
       "source": "hypr-monocle",
@@ -7668,86 +7359,6 @@
       "reference": [
         "hypr-monocle",
         "maximize"
-      ]
-    },
-    {
-      "control": "hypr-workspaces.selector",
-      "page": "hypr-workspaces",
-      "source": "hypr-workspace-rules",
-      "key": "selector",
-      "reference": [
-        "hypr-workspace-rules",
-        "selector"
-      ]
-    },
-    {
-      "control": "hypr-workspaces.special",
-      "page": "hypr-workspaces",
-      "source": "hypr-workspace-rules",
-      "key": "special",
-      "reference": [
-        "hypr-workspace-rules",
-        "special"
-      ]
-    },
-    {
-      "control": "hypr-workspaces.monitor",
-      "page": "hypr-workspaces",
-      "source": "hypr-workspace-rules",
-      "key": "monitor",
-      "reference": [
-        "hypr-workspace-rules",
-        "monitor"
-      ]
-    },
-    {
-      "control": "hypr-workspaces.persistent",
-      "page": "hypr-workspaces",
-      "source": "hypr-workspace-rules",
-      "key": "persistent",
-      "reference": [
-        "hypr-workspace-rules",
-        "persistent"
-      ]
-    },
-    {
-      "control": "hypr-workspaces.default",
-      "page": "hypr-workspaces",
-      "source": "hypr-workspace-rules",
-      "key": "default",
-      "reference": [
-        "hypr-workspace-rules",
-        "default"
-      ]
-    },
-    {
-      "control": "hypr-workspaces.move-window",
-      "page": "hypr-workspaces",
-      "source": "hypr-workspace-rules",
-      "key": "move-window",
-      "reference": [
-        "hypr-workspace-rules",
-        "move-window"
-      ]
-    },
-    {
-      "control": "hypr-workspaces.toggle-special",
-      "page": "hypr-workspaces",
-      "source": "hypr-workspace-rules",
-      "key": "toggle-special",
-      "reference": [
-        "hypr-workspace-rules",
-        "toggle-special"
-      ]
-    },
-    {
-      "control": "hypr-workspaces.rules",
-      "page": "hypr-workspaces",
-      "source": "hypr-workspace-rules",
-      "key": "rules",
-      "reference": [
-        "hypr-workspace-rules",
-        "rules"
       ]
     },
     {
@@ -7888,106 +7499,6 @@
       "reference": [
         "hypr-switches",
         "tablet"
-      ]
-    },
-    {
-      "control": "animations.leaf",
-      "page": "animations",
-      "source": "hypr-animation-reference",
-      "key": "leaf",
-      "reference": [
-        "hypr-animation-reference",
-        "leaf"
-      ]
-    },
-    {
-      "control": "animations.leaf-enabled",
-      "page": "animations",
-      "source": "hypr-animation-reference",
-      "key": "enabled",
-      "reference": [
-        "hypr-animation-reference",
-        "enabled"
-      ]
-    },
-    {
-      "control": "animations.leaf-speed",
-      "page": "animations",
-      "source": "hypr-animation-reference",
-      "key": "speed",
-      "reference": [
-        "hypr-animation-reference",
-        "speed"
-      ]
-    },
-    {
-      "control": "animations.leaf-style",
-      "page": "animations",
-      "source": "hypr-animation-reference",
-      "key": "style",
-      "reference": [
-        "hypr-animation-reference",
-        "style"
-      ]
-    },
-    {
-      "control": "animations.leaf-curve",
-      "page": "animations",
-      "source": "hypr-animation-reference",
-      "key": "curve",
-      "reference": [
-        "hypr-animation-reference",
-        "curve"
-      ]
-    },
-    {
-      "control": "animations.leaf-bezier",
-      "page": "animations",
-      "source": "hypr-animation-reference",
-      "key": "bezier",
-      "reference": [
-        "hypr-animation-reference",
-        "bezier"
-      ]
-    },
-    {
-      "control": "animations.leaf-spring-mass",
-      "page": "animations",
-      "source": "hypr-animation-reference",
-      "key": "spring-mass",
-      "reference": [
-        "hypr-animation-reference",
-        "spring-mass"
-      ]
-    },
-    {
-      "control": "animations.leaf-spring-stiffness",
-      "page": "animations",
-      "source": "hypr-animation-reference",
-      "key": "spring-stiffness",
-      "reference": [
-        "hypr-animation-reference",
-        "spring-stiffness"
-      ]
-    },
-    {
-      "control": "animations.leaf-spring-damping",
-      "page": "animations",
-      "source": "hypr-animation-reference",
-      "key": "spring-damping",
-      "reference": [
-        "hypr-animation-reference",
-        "spring-damping"
-      ]
-    },
-    {
-      "control": "animations.leaf-inheritance",
-      "page": "animations",
-      "source": "hypr-animation-reference",
-      "key": "inheritance",
-      "reference": [
-        "hypr-animation-reference",
-        "inheritance"
       ]
     },
     {
@@ -9188,6 +8699,86 @@
       ],
       "availability": "available",
       "verification": "Rust power idle tests; test/desktop_smoke.py (nested Hyprland 0.57); test/power_test.dart"
+    },
+    {
+      "control": "workspaces.close-special-on-empty",
+      "page": "workspaces",
+      "source": "hypr-options",
+      "key": "close-special-on-empty",
+      "reference": [
+        "hypr-options",
+        "misc",
+        "close_special_on_empty"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/workspaces_test.dart"
+    },
+    {
+      "control": "workspaces.initial-workspace-tracking",
+      "page": "workspaces",
+      "source": "hypr-options",
+      "key": "initial-workspace-tracking",
+      "reference": [
+        "hypr-options",
+        "misc",
+        "initial_workspace_tracking"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`1`",
+      "documentedLimits": "[0 - 2]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/workspaces_test.dart"
+    },
+    {
+      "control": "workspaces.hide-special-on-change",
+      "page": "workspaces",
+      "source": "hypr-options",
+      "key": "hide-special-on-change",
+      "reference": [
+        "hypr-options",
+        "binds",
+        "hide_special_on_workspace_change"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/workspaces_test.dart"
+    },
+    {
+      "control": "workspaces.center-on",
+      "page": "workspaces",
+      "source": "hypr-options",
+      "key": "center-on",
+      "reference": [
+        "hypr-options",
+        "binds",
+        "workspace_center_on"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`1`",
+      "documentedLimits": "[0 - 1]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/workspaces_test.dart"
+    },
+    {
+      "control": "workspaces.special-fallthrough",
+      "page": "workspaces",
+      "source": "hypr-options",
+      "key": "special-fallthrough",
+      "reference": [
+        "hypr-options",
+        "input",
+        "special_fallthrough"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/workspaces_test.dart"
     }
   ]
 }

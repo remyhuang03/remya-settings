@@ -34,8 +34,13 @@ import '../../input/presentation/keyboard_shortcuts_page.dart';
 import '../../input/presentation/mouse_page.dart';
 import '../../input/presentation/touchpad_page.dart';
 import '../../multitasking/presentation/multitasking_page.dart';
+import '../../workspaces/presentation/workspaces_page.dart';
+import '../../window_appearance/presentation/window_appearance_page.dart';
+import '../../animations/presentation/animations_page.dart';
 import '../../themes/presentation/cursor_page.dart';
 import '../../themes/presentation/themes_page.dart';
+import '../../text_size/presentation/text_size_page.dart';
+import '../../language/presentation/language_page.dart';
 import '../../default_apps/presentation/default_apps_page.dart';
 
 import 'package:remya_settings_client/settings_contract.dart';
@@ -627,6 +632,30 @@ class _SettingsShellState extends State<SettingsShell> {
         page: page,
         client: client,
       ),
+      'language' => LanguagePage(
+        key: key,
+        catalog: catalog,
+        page: page,
+        client: client,
+      ),
+      'workspaces' => WorkspacesPage(
+        key: key,
+        catalog: catalog,
+        page: page,
+        client: client,
+      ),
+      'window-appearance' => WindowAppearancePage(
+        key: key,
+        catalog: catalog,
+        page: page,
+        client: client,
+      ),
+      'animations' => AnimationsPage(
+        key: key,
+        catalog: catalog,
+        page: page,
+        client: client,
+      ),
       'cursor' => CursorPage(
         key: key,
         catalog: catalog,
@@ -635,6 +664,13 @@ class _SettingsShellState extends State<SettingsShell> {
         onPage: _openPage,
       ),
       'themes' => ThemesPage(
+        key: key,
+        catalog: catalog,
+        page: page,
+        client: client,
+        onPage: _openPage,
+      ),
+      'text-size' => TextSizePage(
         key: key,
         catalog: catalog,
         page: page,

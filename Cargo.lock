@@ -2019,8 +2019,11 @@ version = "0.1.0-dev.20261109.0"
 dependencies = [
  "flutter_rust_bridge",
  "gio",
+ "remya_settings_display",
  "serde",
+ "serde_json",
  "tempfile",
+ "toml 0.9.12+spec-1.1.0",
 ]
 
 [[package]]

@@ -21,6 +21,29 @@ one number for every side or `[top, right, bottom, left]`, written to Lua as a
 number or a `{ top, right, bottom, left }` table. Cursor and icon themes are a
 separate feature; see [Cursor and icon themes](themes.md).
 
+The keyboard layouts of the Language and Region page are `input` options too.
+`language.keyboard-layouts` is an ordered `[{layout, variant}]` list read from
+`input:kb_layout` and `input:kb_variant` and written as one
+`hl.config({ input = { kb_layout = "us,de", kb_variant = ",nodeadkeys" } })` line,
+so a layout and a variant meant for another layout are never compiled together
+(on a nested Hyprland 0.57 an invalid pair silently falls back to `us` while
+`descriptions` still reports the request). `language.keyboard-options` is
+`input:kb_options`; the page's layout switching shortcut replaces only its `grp:`
+entries. Layouts, variants and options are validated against xkeyboard-config's
+`/usr/share/X11/xkb/rules/evdev.lst` (`xkb.rs`), at most four layouts. Per-device
+`kb_layout` overrides in the user's configuration are not changed.
+
+The Window appearance page (`general:col.*` border colors and `decoration:*`
+corners, opacity, dimming, shadow and glow), the Animations page
+(`animations:*`, `misc:animate_*`, `decoration:motion_blur:*` and
+`decoration:wobble:*`) and the dwindle options of the Multitasking page
+(`dwindle:*`, shown only while Dwindle is the layout) are in the same group.
+Colors with transparency are `#rrggbbaa` and are written as `rgba(rrggbbaa)`;
+Hyprland reports them as `AARRGGBB` gradients, of which the first color is
+read. Option names containing a dot nest in Lua (`col.active_border` becomes
+`col = { active_border = … }`). The shadow offset is `[x, y]`, written as
+`{ x, y }`.
+
 A change is applied in four steps:
 
 1. `hyprctl eval 'hl.config({ … })'`, which Hyprland validates.
@@ -115,6 +138,44 @@ Recording ends in any of these ways:
 The Flutter recorder maps the physical key to an XKB keycode through
 `kLinuxToPhysicalKey`. The service then names the keycode in the active layout.
 
+## Workspaces
+
+The Workspaces page (System) uses the `desktop` group. Its options are
+`misc:close_special_on_empty`, `misc:initial_workspace_tracking`,
+`binds:hide_special_on_workspace_change`, `binds:workspace_center_on` and
+`input:special_fallthrough`. The back-and-forth and cycling options stay in the
+`input` group, because their lines already live in `input.lua`.
+
+Workspace rules are the one other line shape `desktop.lua` accepts, in this fixed
+field order:
+
+```lua
+hl.workspace_rule({ workspace = "1", monitor = "DP-1", default = true, persistent = true, default_name = "Web" })
+```
+
+Only `workspace` is required, and fields that are off or empty are left out. The
+selector is a number from 1 to 9999, `name:<text>` or `special:<text>`; text is
+one line of at most 64 characters. `monitor` is empty or a connector name.
+`default` needs a display and a regular workspace, and setting it clears
+`default` on other Settings rules for the same display. `default_name` applies
+to numbered workspaces only.
+
+Rules change only on a configuration reload. After a write, Settings reloads
+(unless autoreload is on) and waits up to three seconds until
+`hyprctl -j workspacerules` reports every saved rule and no longer reports the
+fields of removed or edited ones. If that does not happen, the files are
+restored. Hyprland merges rules for the same workspace, so a field that another
+file also sets cannot be removed from Settings; that write times out and is
+undone.
+
+Saved rules are compared with the rules in `desktop.lua`; a difference is the
+conflict ID `workspaces`. `Get desktop` also reports `live_rules` (every live
+rule, with `settings` marking the ones in `desktop.lua`), `monitors` (connector,
+layout position and logical size after scale and rotation, and the active and
+scratchpad workspace) and `workspaces` (`id`, `name`, `monitor`, `windows`,
+`persistent`). Rules from other files, such as a display tool's
+`workspaces.lua`, are shown read-only and never edited.
+
 ## Visualizations
 
 | Page | What it shows |
@@ -122,6 +183,7 @@ The Flutter recorder maps the physical key to an XKB keycode through
 | Mouse | The primary button and which way content moves when the wheel rolls toward you |
 | Touchpad | The right-click method (corner area or finger count), with a caption for tap mapping |
 | Keyboard shortcuts | A keyboard map. Modifier keys toggle the filter; keys with a shortcut are highlighted, and custom ones use the tertiary color. Selecting a free key offers to add a shortcut there. |
+| Workspaces | Displays at their layout positions and logical proportions, each with its open workspaces and the rule workspaces bound to it. The showing workspace is highlighted; selecting one edits its Settings rule or starts one. |
 
 Options that do not apply are hidden rather than disabled:
 

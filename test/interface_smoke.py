@@ -509,8 +509,13 @@ def session_checks():
         zone_options = cli('get', 'timezones')
         zones = zone_options['options']
         assert all('(GMT' in zone_options['labels'][zone] for zone in zones)
-        assert cli('get', 'time-locales')['options']
-        for setting in ['date-time.db451de3', 'date-time.098d06ec', 'date-time.7e33a213', 'date-time.format']:
+        locales = [o['id'] for o in cli('get', 'locales')['options']]
+        assert locales and cli('get', 'language')['options'] == dbus('Get', 'language')['options']
+        assert cli('get', 'language.display')['value'] in locales
+        assert cli('get', f'format-preview:{locales[0]}')['date']
+        assert 'InvalidArgument' in cli('set', 'language.format', '"xx_XX.nope"', ok=False)
+        assert cli('get', 'keyboard-layouts')['layouts']
+        for setting in ['date-time.db451de3', 'date-time.098d06ec', 'date-time.7e33a213', 'language.format']:
             assert cli('get', setting)['value'] == dbus('Get', setting)['value']
         assert 'InvalidArgument' in cli('set', 'date-time.7e33a213', '["https://invalid"]', ok=False)
         assert clock['timezone'] in zones and clock['saved_timezone'] == clock['timezone']

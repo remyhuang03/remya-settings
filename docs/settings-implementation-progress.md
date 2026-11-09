@@ -6,15 +6,15 @@
 
 清单覆盖现有目录中的全部设置项，包括主要中文控件和保留原名的设计参考细项（受 Windows 等桌面系统启发，作为设计参考与基准对照，而非直接照搬）；实际架构和功能已针对 Linux / Hyprland 进行了适配与差异化演进。相同概念可能存在多个展示位置。下述数量统计的是控件条目，不是去重后的独立后端功能数量。参考来源与实际实现的边界见 [调研说明](windows-settings-research.md)。
 
-Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 615 项设置与 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
+Hyprland 内容包含 27 个独立页面及并入常规页面的设置项，共 572 项设置与 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
 
 ## 当前概况
 
-- 设置分类：15 个；详情页面：123 个；设置条目：1335 项。
-- 已实现：359 项；未实现：966 项；不适用：10 项。
+- 设置分类：15 个；详情页面：120 个；设置条目：1287 项。
+- 已实现：418 项；未实现：859 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
-- 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值，日期格式差异不会再显示为时区差异；`test/service_controllers_test.dart` 覆盖日期格式与其他偏好的提示。
+- 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值；`test/service_controllers_test.dart` 覆盖各偏好的提示。显示语言与区域格式由 Language and Region 页经 systemd-localed 管理。
 
 - 声音通过 Rust libpulse 连接 PipeWire，支持输出、输入、应用音量/路由与设备清单；所有声音控制跟随系统实时状态，不持久化、不比对或恢复配置。见[声音文档](sound.md)。
 
@@ -31,6 +31,8 @@ Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 
 - 鼠标、触控板与键盘快捷键通过 Rust 读取 Hyprland 实时选项与键绑定，写入 Settings 自有的 `hypr/remya-settings/input.lua`（由 `hyprland.lua` 末尾受管块 require）并回读；冲突按系统配置同步规则处理。快捷键页不再放在窗口与工作区分类；见[输入设备与快捷键](input.md)。
 
 - 多任务（系统）与光标（外观）：窗口布局、间距、边框、吸附与边框拖动，以及光标隐藏与指针移动，写入 Settings 自有的 `hypr/remya-settings/desktop.lua`；光标主题、大小与图标主题写入 GNOME 接口设置、GTK、KDE、XCursor 默认主题、fish 与 Hyprland 环境，并支持从文件夹或归档添加、删除用户主题包；见[光标与图标主题](themes.md)。
+
+- 窗口外观、动画（外观）、Dwindle 布局选项（多任务）与工作区（系统，含工作区规则）写入 Settings 自有的 `desktop.lua`；语言和区域经 systemd-localed 设置显示语言与区域格式，键盘布局写入 `input.lua`；文字大小写入 GNOME/GTK `text-scaling-factor`。原 Hyprland 分类中的 Dwindle、布局总览与工作区预览页已并入或删除。
 
 - 显示通过 Rust 经 `hyprctl` 读取并实时应用 Hyprland 显示规则，确认后写入 `monitors.lua`，并按系统配置同步规则处理冲突；亮度为实时值（logind 背光 / `ddcutil`），不保存。
 
@@ -63,21 +65,21 @@ Hyprland 内容包含 31 个独立页面及并入常规页面的设置项，共 
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 14 | 183 | 91 | 92 | 0 |
+| [系统](#category-system) | 15 | 201 | 109 | 92 | 0 |
 | [声音](#category-sound) | 3 | 17 | 14 | 3 | 0 |
 | [电源与电池](#category-power) | 3 | 20 | 19 | 1 | 0 |
 | [通知](#category-notifications) | 4 | 19 | 12 | 7 | 0 |
 | [蓝牙和设备](#category-devices) | 11 | 103 | 57 | 46 | 0 |
 | [网络和 Internet](#category-network) | 8 | 63 | 63 | 0 | 0 |
-| [外观](#category-appearance) | 13 | 279 | 54 | 225 | 0 |
+| [外观](#category-appearance) | 13 | 266 | 91 | 175 | 0 |
 | [应用](#category-apps) | 5 | 35 | 30 | 5 | 0 |
 | [账户](#category-accounts) | 11 | 58 | 2 | 50 | 6 |
-| [时间和语言](#category-time) | 4 | 28 | 8 | 20 | 0 |
-| [辅助功能](#category-accessibility) | 10 | 194 | 0 | 194 | 0 |
+| [时间和语言](#category-time) | 4 | 19 | 11 | 8 | 0 |
+| [辅助功能](#category-accessibility) | 10 | 192 | 1 | 191 | 0 |
 | [隐私和安全性](#category-privacy) | 9 | 39 | 0 | 35 | 4 |
 | [系统更新](#category-update) | 2 | 9 | 9 | 0 | 0 |
-| [窗口与工作区](#category-hyprland) | 17 | 206 | 0 | 206 | 0 |
-| [会话与配置](#category-session) | 9 | 82 | 0 | 82 | 0 |
+| [窗口与工作区](#category-hyprland) | 13 | 166 | 0 | 166 | 0 |
+| [会话与配置](#category-session) | 9 | 80 | 0 | 80 | 0 |
 
 <a id="category-system"></a>
 
@@ -300,19 +302,28 @@ Windows 参考入口：`ms-settings:storagepolicies`、`ms-settings:storagerecom
 
 Window layout, spacing, borders, snapping and resizing
 
-页面状态：**已实现**；条目：18；已实现 18 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：29；已实现 29 / 未实现 0 / 不适用 0。
 
 原因：Uses Hyprland window options through the Settings service.
 
 Windows 参考入口：`ms-settings:multitasking`。
 
-实现与边界见 [输入设备与快捷键](input.md) 的 desktop 分组：读取 `hyprctl descriptions` 实时值，经 `hyprctl eval` 校验后写入 Settings 自有的 `hypr/remya-settings/desktop.lua` 并回读。布局缩略图选择排列方式，页首示意图随布局、间距与边框宽度（拖动中也）实时变化；吸附与边框拖动的子选项在父项关闭时自动隐藏。原 `hypr-general` 与 `hypr-general-snap` 页面并入本页，界面语言覆盖（locale）因与“语言和区域”重复而删除。
+实现与边界见 [输入设备与快捷键](input.md) 的 desktop 分组：读取 `hyprctl descriptions` 实时值，经 `hyprctl eval` 校验后写入 Settings 自有的 `hypr/remya-settings/desktop.lua` 并回读。布局缩略图选择排列方式，页首示意图随布局、间距与边框宽度（拖动中也）实时变化；吸附与边框拖动的子选项在父项关闭时自动隐藏。原 `hypr-general` 与 `hypr-general-snap` 页面并入本页，界面语言覆盖（locale）因与“语言和区域”重复而删除。Dwindle 布局选项（原 `hypr-layout-dwindle` 页面）并入本页，仅在当前布局为 Dwindle 时显示；原 `hypr-layout-overview` 页面与布局选择重复，其余操作属于快捷键，已删除。
 
 #### Window layout
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Arrange windows | `multitasking.layout` | 选择 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+
+#### Dwindle layout
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Place new windows | `multitasking.dwindle-force-split` | 选择 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Keep each split direction | `multitasking.dwindle-preserve-split` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Split toward the pointer | `multitasking.dwindle-smart-split` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| New window share | `multitasking.dwindle-split-ratio` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
 
 #### Spacing and borders
 
@@ -350,6 +361,46 @@ Windows 参考入口：`ms-settings:multitasking`。
 | Block the window behind a dialog | `multitasking.modal-parent-blocking` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
 | Keep focus when no window is in that direction | `multitasking.no-focus-fallback` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
 | Allow screen tearing for games | `multitasking.allow-tearing` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
+| Split the focused window | `multitasking.dwindle-use-active` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Resize from the nearest edge | `multitasking.dwindle-smart-resizing` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Keep a chosen split direction | `multitasking.dwindle-permanent-direction` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Split ratio goes to | `multitasking.dwindle-split-bias` | 选择 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Wide window threshold | `multitasking.dwindle-split-width` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Scratchpad window size | `multitasking.dwindle-special-scale` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Drop dragged windows where the pointer is | `multitasking.dwindle-precise-move` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+
+### Workspaces — `workspaces`
+
+Which workspaces each display starts with, which stay when empty, and how the scratchpad behaves
+
+页面状态：**已实现**；条目：7；已实现 7 / 未实现 0 / 不适用 0。
+
+原因：Uses desktop workspace options and rules through the Settings service.
+
+实现与边界见 [输入设备与快捷键](input.md) 的 desktop 分组：工作区选项与 `hl.workspace_rule` 规则（工作区、显示器、起始工作区、保留空工作区、默认名称）写入 Settings 自有的 `hypr/remya-settings/desktop.lua`，重载后等待 `hyprctl workspacerules` 回读。页首按实时显示器位置与逻辑尺寸绘制各显示器及其工作区；其他配置文件（如 `workspaces.lua`）中的规则只读显示，Settings 从不修改。原工作区预览页面并入本页，暂存区（scratchpad）相关的合成器选项也移入本页。
+
+#### Workspace rules
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Your workspace rules | `workspaces.rule-set` | 操作 | 已实现 | 见下文“Workspaces (2026-11-09)” |
+| Remove a workspace rule | `workspaces.rule-remove` | 操作 | 已实现 | 见下文“Workspaces (2026-11-09)” |
+
+#### Behavior
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Open windows on the workspace they were launched from | `workspaces.initial-workspace-tracking` | 选择 | 已实现 | 见下文“Workspaces (2026-11-09)” |
+| Hide the scratchpad when its last window closes | `workspaces.close-special-on-empty` | 开关 | 已实现 | 见下文“Workspaces (2026-11-09)” |
+| Hide the scratchpad when switching workspaces | `workspaces.hide-special-on-change` | 开关 | 已实现 | 见下文“Workspaces (2026-11-09)” |
+
+#### Advanced
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Pointer after switching to a workspace on another display | `workspaces.center-on` | 选择 | 已实现 | 见下文“Workspaces (2026-11-09)” |
+| Click through a scratchpad that has only floating windows | `workspaces.special-fallthrough` | 开关 | 已实现 | 见下文“Workspaces (2026-11-09)” |
+
 ### Project to this computer — `projection`
 
 无线显示与投影许可
@@ -1529,133 +1580,115 @@ Windows 参考入口：`ms-settings:easeofaccess-cursor`、`ms-settings:easeofac
 | Prefer scalable cursor themes | `cursor.enable-hyprcursor` | 开关 | 已实现 | 见下文“Multitasking, cursor and icon themes (2026-11-09)” |
 ### Window appearance — `window-appearance`
 
-边框颜色、圆角、不透明度、调暗与阴影
+圆角、边框颜色、透明度、调暗、阴影与发光
 
-页面状态：**未实现**；条目：26；已实现 0 / 未实现 26 / 不适用 0。
+页面状态：**已实现**；条目：23；已实现 23 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Uses Hyprland window options through the Settings service.
 
-由原“颜色和主题”的高级预览整理而来：边框颜色、圆角、不透明度、调暗、阴影与发光。尚未接入 Hyprland 选项文件，仅为预览。
-
-#### Borders
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Active window border color | `window-appearance.active-border` | 文本输入 | 未实现 | — |
-| Inactive window border color | `window-appearance.inactive-border` | 文本输入 | 未实现 | — |
+实现与边界见 [输入设备与快捷键](input.md) 的 desktop 分组：读取 `hyprctl descriptions` 实时值，经 `hyprctl eval` 校验后写入 Settings 自有的 `hypr/remya-settings/desktop.lua` 并回读。页首示意图以前后两个窗口实时呈现圆角（含曲率）、边框颜色与宽度、透明度、非焦点调暗、阴影与内发光；子选项在父项关闭时自动隐藏。非焦点阴影 / 发光颜色（未设置时的回退语义无法回读）与仅窗口规则使用的 dim_around 已删除。
 
 #### Corners
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Corner radius | `window-appearance.rounding` | 滑块 | 未实现 | — |
-| Corner curvature | `window-appearance.rounding-power` | 滑块 | 未实现 | — |
+| Corner radius | `window-appearance.rounding` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Corner shape | `window-appearance.rounding-power` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
 
-#### Opacity
+#### Borders
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Active window opacity | `window-appearance.active-opacity` | 滑块 | 未实现 | — |
-| Inactive window opacity | `window-appearance.inactive-opacity` | 滑块 | 未实现 | — |
-| Full screen window opacity | `window-appearance.fullscreen-opacity` | 滑块 | 未实现 | — |
+| Focused window border | `window-appearance.active-border` | 颜色 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Other window borders | `window-appearance.inactive-border` | 颜色 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+
+#### Transparency
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Focused window | `window-appearance.active-opacity` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Other windows | `window-appearance.inactive-opacity` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Full screen windows | `window-appearance.fullscreen-opacity` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
 
 #### Dimming
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Dim inactive windows | `window-appearance.dim-inactive` | 开关 | 未实现 | — |
-| Inactive window dimming | `window-appearance.dim-strength` | 滑块 | 未实现 | — |
-| Dim the parent of a dialog | `window-appearance.dim-modal` | 开关 | 未实现 | — |
-| Dimming around windows that request it | `window-appearance.dim-around` | 滑块 | 未实现 | — |
-| Dimming behind the special workspace | `window-appearance.dim-special` | 文本输入 | 未实现 | — |
+| Dim windows that are not focused | `window-appearance.dim-inactive` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Dimming strength | `window-appearance.dim-strength` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Dim the window behind a dialog | `window-appearance.dim-modal` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Dim the desktop behind the scratchpad | `window-appearance.dim-special` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
 
 #### Shadow
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Window shadow | `window-appearance.shadow` | 开关 | 未实现 | — |
-| Shadow color | `window-appearance.shadow-color` | 文本输入 | 未实现 | — |
-| Inactive window shadow color | `window-appearance.shadow-color-inactive` | 文本输入 | 未实现 | — |
-| Shadow size | `window-appearance.shadow-range` | 滑块 | 未实现 | — |
-| Shadow falloff | `window-appearance.shadow-render-power` | 滑块 | 未实现 | — |
-| Shadow offset | `window-appearance.shadow-offset` | 文本输入 | 未实现 | — |
-| Shadow scale | `window-appearance.shadow-scale` | 滑块 | 未实现 | — |
-| Sharp shadow | `window-appearance.shadow-sharp` | 开关 | 未实现 | — |
+| Window shadow | `window-appearance.shadow` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Shadow color | `window-appearance.shadow-color` | 颜色 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Shadow size | `window-appearance.shadow-range` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Shadow offset | `window-appearance.shadow-offset` | 文本输入 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
 
 #### Glow
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Window glow | `window-appearance.glow` | 开关 | 未实现 | — |
-| Glow color | `window-appearance.glow-color` | 颜色 | 未实现 | — |
-| Inactive window glow color | `window-appearance.glow-color-inactive` | 文本输入 | 未实现 | — |
-| Glow size | `window-appearance.glow-range` | 滑块 | 未实现 | — |
-| Glow falloff | `window-appearance.glow-render-power` | 滑块 | 未实现 | — |
+| Inner glow | `window-appearance.glow` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Glow color | `window-appearance.glow-color` | 颜色 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Glow size | `window-appearance.glow-range` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
 
 #### Advanced
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Count the border as part of the window | `window-appearance.border-part-of-window` | 开关 | 未实现 | — |
+| Shadow falloff | `window-appearance.shadow-render-power` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Shadow scale | `window-appearance.shadow-scale` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Sharp shadow edge | `window-appearance.shadow-sharp` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Glow falloff | `window-appearance.glow-render-power` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Count the border as part of the window | `window-appearance.border-part-of-window` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
 
 ### Animations — `animations`
 
 窗口与工作区动画、动态模糊与果冻窗口
 
-页面状态：**未实现**；条目：24；已实现 0 / 未实现 24 / 不适用 0。
+页面状态：**已实现**；条目：14；已实现 14 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Uses Hyprland window options through the Settings service.
 
-由原“颜色和主题”的高级预览整理而来，并合并“视觉效果”中的动画开关：动画总开关、调整大小与拖动动画、动态模糊、果冻窗口与单个动画设置。尚未接入，仅为预览。
+实现与边界同 desktop 分组（见 [输入设备与快捷键](input.md)）。单个动画树（`hl.animation` 与曲线）编辑已删除：它需要独立的动画/曲线行格式与回读，暂不纳入。动态模糊与果冻窗口的参数仅在对应开关打开时显示。
 
 #### Animations
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Animations | `animations.enabled` | 开关 | 未实现 | — |
-| Animate manual window resizing | `animations.resize` | 开关 | 未实现 | — |
-| Animate window dragging | `animations.drag` | 开关 | 未实现 | — |
-| Wrap workspace animations around | `animations.workspace-wraparound` | 开关 | 未实现 | — |
+| Animation effects | `animations.enabled` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Animate windows while resizing them | `animations.resize` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Animate windows while dragging them | `animations.drag` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Wrap around between the first and last workspace | `animations.workspace-wraparound` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
 
 #### Motion blur
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Motion blur | `animations.motion-blur` | 开关 | 未实现 | — |
-| Motion blur samples | `animations.motion-blur-samples` | 滑块 | 未实现 | — |
+| Motion blur | `animations.motion-blur` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Blur quality | `animations.motion-blur-samples` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
 
 #### Wobbly windows
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Wobbly windows | `animations.wobble` | 开关 | 未实现 | — |
-| Wobble intensity | `animations.wobble-intensity` | 滑块 | 未实现 | — |
-| Stiffness | `animations.wobble-stiffness` | 滑块 | 未实现 | — |
-| Damping | `animations.wobble-damping` | 滑块 | 未实现 | — |
-| Mass | `animations.wobble-mass` | 滑块 | 未实现 | — |
-
-#### Per-animation settings
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Animation | `animations.leaf` | 文本输入 | 未实现 | — |
-| Enable this animation | `animations.leaf-enabled` | 开关 | 未实现 | — |
-| Duration | `animations.leaf-speed` | 文本输入 | 未实现 | — |
-| Style | `animations.leaf-style` | 文本输入 | 未实现 | — |
-| Curve | `animations.leaf-curve` | 文本输入 | 未实现 | — |
-| Bezier control points | `animations.leaf-bezier` | 文本输入 | 未实现 | — |
-| Spring mass | `animations.leaf-spring-mass` | 文本输入 | 未实现 | — |
-| Spring stiffness | `animations.leaf-spring-stiffness` | 文本输入 | 未实现 | — |
-| Spring damping | `animations.leaf-spring-damping` | 文本输入 | 未实现 | — |
-| Inherited from | `animations.leaf-inheritance` | 操作 | 未实现 | — |
+| Wobbly windows | `animations.wobble` | 开关 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Wobble strength | `animations.wobble-intensity` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Stiffness | `animations.wobble-stiffness` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Damping | `animations.wobble-damping` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Mass | `animations.wobble-mass` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
 
 #### Advanced
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Wobble mesh density | `animations.wobble-mesh` | 滑块 | 未实现 | — |
-| Wobble rest threshold | `animations.wobble-value-epsilon` | 滑块 | 未实现 | — |
-| Wobble velocity threshold | `animations.wobble-velocity-epsilon` | 滑块 | 未实现 | — |
+| Wobble mesh detail | `animations.wobble-mesh` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Settle distance | `animations.wobble-value-epsilon` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
+| Settle speed | `animations.wobble-velocity-epsilon` | 滑块 | 已实现 | 见下文“Window appearance, animations and dwindle (2026-11-09)” |
 
 ### Lock screen interface — `lockscreen`
 
@@ -2348,9 +2381,9 @@ Windows 参考入口：`ms-settings:assignedaccess`。
 
 ### Date and time — `date-time`
 
-时间同步、时区与区域日期时间格式
+时间同步与时区；区域格式由 Language and Region 页负责
 
-页面状态：**未实现**；条目：7；已实现 6 / 未实现 1 / 不适用 0。
+页面状态：**未实现**；条目：6；已实现 5 / 未实现 1 / 不适用 0。
 
 原因：自动时区检测仍为预览；其他选项通过系统服务读取和修改。
 
@@ -2372,43 +2405,36 @@ Windows 参考入口：`ms-settings:dateandtime`。
 | Time zone | `date-time.fb2a23dc` | 选择 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; interface_smoke.py; resident Rust service and private-pipe authorization. |
 | Automatically set time zone | `date-time.2af5dabe` | 开关 | 未实现 | — |
 
-#### Regional format
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Date/time format | `date-time.format` | 选择 | 已实现 | Rust D-Bus regression tests; date_time_test.dart; interface_smoke.py; resident Rust service and private-pipe authorization. |
-
 ### Language and Region — `language`
 
-显示语言、首选语言与区域格式
+显示语言、区域格式与键盘布局
 
-页面状态：**未实现**；条目：12；已实现 0 / 未实现 12 / 不适用 0。
+页面状态：**已实现**；条目：4；已实现 4 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Uses systemd-localed for the language and formats, and Hyprland input options for keyboard layouts.
 
 Windows 参考入口：`ms-settings:regionlanguage`、`ms-settings:regionformatting`。
 
-#### 设置
+显示语言写入 localed `LANG`，区域格式一次写入 `LC_TIME`、`LC_NUMERIC`、`LC_MONETARY`、`LC_PAPER`、`LC_MEASUREMENT`（与显示语言相同时由 localed 去除），仅列出已生成的 locale；新程序在重新登录后使用。区域格式卡片以真实 locale 预览日期、时间、数字、货币、单位与纸张。键盘布局按顺序写入 Settings 自有 `input.lua` 的同一 `hl.config` 调用（`kb_layout` 与 `kb_variant`），切换快捷键只替换 `kb_options` 中的 `grp:` 项。旧的首选语言、国家或地区、语言选项预览，以及 `kb_file`、`kb_model`、`kb_rules` 预览已移除；Date and time 页的 `date-time.format` 合并到区域格式。见[公开接口](public-api.md#language-and-region)。
+
+#### Language
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Display language | `language.9cbb05d0` | 选择 | 未实现 | — |
-| Add preferred language | `language.187780a3` | 操作 | 未实现 | — |
-| Country or region | `language.cc725f51` | 选择 | 未实现 | — |
-| Regional format | `language.b77c691e` | 选择 | 未实现 | — |
-| Language options | `language.feb9d380` | 操作 | 未实现 | — |
-| Manage language settings | `language.5f7e5146` | 操作 | 未实现 | — |
+| Display language | `language.display` | 选择 | 已实现 | Rust language tests (fake localed: first-use adoption, conflicts and both resolutions, failure and readback retention, privileged allow-list) and localed SetLocale on an isolated D-Bus; real-locale preview tests; test/language_page_test.dart; read-only CLI/D-Bus Get against the installed locales. Real localed write and sign-in not exercised. |
 
-#### Advanced: compositor previews
+#### Region
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Keyboard: Custom XKB file (kb_file) | `language.keyboard-kb-file` | 文本输入 | 未实现 | — |
-| Keyboard: Keyboard layout (kb_layout) | `language.keyboard-kb-layout` | 文本输入 | 未实现 | — |
-| Keyboard: Keyboard model (kb_model) | `language.keyboard-kb-model` | 文本输入 | 未实现 | — |
-| Keyboard: XKB extended options (kb_options) | `language.keyboard-kb-options` | 文本输入 | 未实现 | — |
-| Keyboard: XKB rules set (kb_rules) | `language.keyboard-kb-rules` | 文本输入 | 未实现 | — |
-| Keyboard: Keyboard layout variants (kb_variant) | `language.keyboard-kb-variant` | 文本输入 | 未实现 | — |
+| Regional format | `language.format` | 选择 | 已实现 | Rust language tests (fake localed: first-use adoption, conflicts and both resolutions, failure and readback retention, privileged allow-list) and localed SetLocale on an isolated D-Bus; real-locale preview tests; test/language_page_test.dart; read-only CLI/D-Bus Get against the installed locales. Real localed write and sign-in not exercised. |
+
+#### Keyboard
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Keyboard layouts | `language.keyboard-layouts` | 操作 | 已实现 | Rust input and xkb tests (validation against evdev.lst, kb_layout and kb_variant written together, readback, reload); probed on a nested Hyprland 0.57 (single hl.config call applies both; an invalid pair falls back to us); test/language_page_test.dart. |
+| Switch layouts with | `language.keyboard-options` | 选择 | 已实现 | Rust input and xkb tests (validation against evdev.lst, kb_layout and kb_variant written together, readback, reload); probed on a nested Hyprland 0.57 (single hl.config call applies both; an invalid pair falls back to us); test/language_page_test.dart. |
 
 ### More — `time-more`
 
@@ -2451,26 +2477,21 @@ Windows 参考入口：`ms-settings:speech`。
 
 ### Text size — `text-size`
 
-调整系统文字的可读性
+Make text larger in GTK and Flutter apps
 
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+页面状态：**已实现**；条目：1；已实现 1 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Uses the GNOME interface text-scaling-factor through the Settings service.
 
 Windows 参考入口：`ms-settings:easeofaccess-display`。
+
+文字大小写入 GNOME 接口设置 `org.gnome.desktop.interface text-scaling-factor`（0.5–3.0；页面滑块 50%–300%，步进 5%），松开滑块即应用并回读；GTK 3/4 与 Flutter 应用跟随该键，Qt/KDE 等其他工具包不更改。Settings 副本保存在 `text-size.toml`，按系统配置同步规则处理首次采用与冲突。原“Apply text size”操作与 Windows 参考细项已删除。
 
 #### 设置
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Text size | `text-size.a4a0d6b4` | 滑块 | 未实现 | — |
-| Apply text size | `text-size.71eba864` | 操作 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Text Size | `text-size.reference.8ff6836a` | 选择 | 未实现 | — |
+| Text size | `text-size.scale` | 滑块 | 已实现 | 见下文“Text size (2026-11-09)” |
 
 ### Visual effects — `visual-effects`
 
@@ -3201,32 +3222,6 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 | Single window aspect ratio · single_window_aspect_ratio | `hypr-layout.single-window-aspect-ratio` | 文本输入 | 未实现 | — |
 | Single window aspect ratio tolerance · single_window_aspect_ratio_tolerance | `hypr-layout.single-window-aspect-ratio-tolerance` | 滑块 | 未实现 | — |
 
-### Dwindle layout — `hypr-layout-dwindle`
-
-布局参数与按工作区覆盖 · Hyprland
-
-页面状态：**未实现**；条目：11；已实现 0 / 未实现 11 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-dwindle](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/layouts/dwindle-layout.md)、[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### dwindle
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Force split direction · force_split | `hypr-layout-dwindle.force-split` | 滑块 | 未实现 | — |
-| Preserve split direction · preserve_split | `hypr-layout-dwindle.preserve-split` | 开关 | 未实现 | — |
-| Smart split · smart_split | `hypr-layout-dwindle.smart-split` | 开关 | 未实现 | — |
-| Smart window scaling · smart_resizing | `hypr-layout-dwindle.smart-resizing` | 开关 | 未实现 | — |
-| Continuously override the split direction · permanent_direction_override | `hypr-layout-dwindle.permanent-direction-override` | 开关 | 未实现 | — |
-| Special workspace scaling · special_scale_factor | `hypr-layout-dwindle.special-scale-factor` | 滑块 | 未实现 | — |
-| split width multiplier · split_width_multiplier | `hypr-layout-dwindle.split-width-multiplier` | 滑块 | 未实现 | — |
-| Use active window to determine splits · use_active_for_splits | `hypr-layout-dwindle.use-active-for-splits` | 开关 | 未实现 | — |
-| Default split ratio · default_split_ratio | `hypr-layout-dwindle.default-split-ratio` | 滑块 | 未实现 | — |
-| split bias · split_bias | `hypr-layout-dwindle.split-bias` | 滑块 | 未实现 | — |
-| precise mouse move · precise_mouse_move | `hypr-layout-dwindle.precise-mouse-move` | 开关 | 未实现 | — |
-
 ### Master layout — `hypr-layout-master`
 
 布局参数与按工作区覆盖 · Hyprland
@@ -3310,36 +3305,6 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Gesture direction · direction | `hypr-layout-scrolling-workspace.direction` | 文本输入 | 未实现 | — |
-
-### Workspace rules · Rule parameters — `hypr-workspace-rule-rules`
-
-按官方文档分类的组件参数 · Hyprland
-
-页面状态：**未实现**；条目：15；已实现 0 / 未实现 15 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-workspace-rules](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/rules/workspace-rules.md)。
-
-#### 规则参数
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Animation style · animation | `hypr-workspace-rule-rules.animation` | 文本输入 | 未实现 | — |
-| Window border width · border_size | `hypr-workspace-rule-rules.border-size` | 文本输入 | 未实现 | — |
-| Draw window decoration · decorate | `hypr-workspace-rule-rules.decorate` | 开关 | 未实现 | — |
-| Default workspace name · default_name | `hypr-workspace-rule-rules.default-name` | 文本输入 | 未实现 | — |
-| Floating window margins · float_gaps | `hypr-workspace-rule-rules.float-gaps` | 文本输入 | 未实现 | — |
-| Gaps within the window · gaps_in | `hypr-workspace-rule-rules.gaps-in` | 文本输入 | 未实现 | — |
-| Screen margins · gaps_out | `hypr-workspace-rule-rules.gaps-out` | 文本输入 | 未实现 | — |
-| Tile layout · layout | `hypr-workspace-rule-rules.layout` | 文本输入 | 未实现 | — |
-| Workspace layout parameters · layout_opts | `hypr-workspace-rule-rules.layout-opts` | 文本输入 | 未实现 | — |
-| Monitor matching · monitor | `hypr-workspace-rule-rules.monitor` | 文本输入 | 未实现 | — |
-| Default workspace · default | `hypr-workspace-rule-rules.default` | 开关 | 未实现 | — |
-| Disable borders · no_border | `hypr-workspace-rule-rules.no-border` | 开关 | 未实现 | — |
-| Disable corner rounding · no_rounding | `hypr-workspace-rule-rules.no-rounding` | 开关 | 未实现 | — |
-| Disable shadow · no_shadow | `hypr-workspace-rule-rules.no-shadow` | 开关 | 未实现 | — |
-| Keep an empty workspace · persistent | `hypr-workspace-rule-rules.persistent` | 开关 | 未实现 | — |
 
 ### Window rules · Matching conditions — `hypr-window-rule-props`
 
@@ -3504,29 +3469,6 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 | Space reservation priority · order | `hypr-layer-rule-effects.order` | 文本输入 | 未实现 | — |
 | Penetration effect · xray | `hypr-layer-rule-effects.xray` | 开关 | 未实现 | — |
 
-### Tile layout and layout operations — `hypr-layout-overview`
-
-布局选择与按工作区切换 · Hyprland
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-相关页面 ID：`hypr-layout-dwindle`、`hypr-layout-master`、`hypr-layout-scrolling`、`hypr-layout-monocle`、`hypr-workspaces`。
-
-参考资料：[hyprviz-project](https://github.com/timasoft/hyprviz/blob/83e4dfcde1eeae157b10c799e46fda1fae630269/src/gui.rs)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Default tile layout | `hypr-layout-overview.engine` | 选择 | 未实现 | — |
-| Specify workspace layout | `hypr-layout-overview.workspace-layout` | 文本输入 | 未实现 | — |
-| Switch split direction | `hypr-layout-overview.split` | 操作 | 未实现 | — |
-| Swap window positions | `hypr-layout-overview.swap` | 操作 | 未实现 | — |
-| Adjust window size according to layout | `hypr-layout-overview.resize` | 操作 | 未实现 | — |
-| Window pseudo-tiled | `hypr-layout-overview.pseudotile` | 开关 | 未实现 | — |
-
 ### Monocle single window layout — `hypr-layout-monocle`
 
 窗口轮换与布局全屏 · Hyprland
@@ -3545,31 +3487,6 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 | Previous window | `hypr-layout-monocle.previous` | 操作 | 未实现 | — |
 | A single window fills up the workspace | `hypr-layout-monocle.maximize` | 操作 | 未实现 | — |
 
-### Workspace and special workspace — `hypr-workspaces`
-
-命名、显示器绑定、持久化与暂存区 · Hyprland
-
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-相关页面 ID：`hypr-workspace-rule-rules`。
-
-参考资料：[hypr-workspace-rules](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/rules/workspace-rules.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Workspace number or name | `hypr-workspaces.selector` | 文本输入 | 未实现 | — |
-| Special workspace name | `hypr-workspaces.special` | 文本输入 | 未实现 | — |
-| Bind monitor | `hypr-workspaces.monitor` | 文本输入 | 未实现 | — |
-| Keep an empty workspace | `hypr-workspaces.persistent` | 开关 | 未实现 | — |
-| Monitor default workspace | `hypr-workspaces.default` | 开关 | 未实现 | — |
-| Move window to workspace | `hypr-workspaces.move-window` | 操作 | 未实现 | — |
-| Show or hide special workspaces | `hypr-workspaces.toggle-special` | 操作 | 未实现 | — |
-| Edit workspace rules | `hypr-workspaces.rules` | 操作 | 未实现 | — |
-
 <a id="category-session"></a>
 
 ## 会话与配置
@@ -3580,7 +3497,7 @@ Hyprland 会话、配置文件、启动与诊断
 
 合成器高级设置：misc · Hyprland
 
-页面状态：**未实现**；条目：22；已实现 0 / 未实现 22 / 不适用 0。
+页面状态：**未实现**；条目：20；已实现 0 / 未实现 20 / 不适用 0。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3591,7 +3508,6 @@ Hyprland 会话、配置文件、启动与诊断
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | anr missed pings · anr_missed_pings | `hypr-misc.anr-missed-pings` | 滑块 | 未实现 | — |
-| close special on empty · close_special_on_empty | `hypr-misc.close-special-on-empty` | 开关 | 未实现 | — |
 | disable autoreload · disable_autoreload | `hypr-misc.disable-autoreload` | 开关 | 未实现 | — |
 | disable hyprland guiutils check · disable_hyprland_guiutils_check | `hypr-misc.disable-hyprland-guiutils-check` | 开关 | 未实现 | — |
 | disable scale notification · disable_scale_notification | `hypr-misc.disable-scale-notification` | 开关 | 未实现 | — |
@@ -3604,7 +3520,6 @@ Hyprland 会话、配置文件、启动与诊断
 | new float force onscreen · new_float_force_onscreen | `hypr-misc.new-float-force-onscreen` | 滑块 | 未实现 | — |
 | Focus on application activation · focus_on_activate | `hypr-misc.focus-on-activate` | 开关 | 未实现 | — |
 | initial workspace token timeout · initial_workspace_token_timeout | `hypr-misc.initial-workspace-token-timeout` | 滑块 | 未实现 | — |
-| initial workspace tracking · initial_workspace_tracking | `hypr-misc.initial-workspace-tracking` | 文本输入 | 未实现 | — |
 | layers hog keyboard focus · layers_hog_keyboard_focus | `hypr-misc.layers-hog-keyboard-focus` | 开关 | 未实现 | — |
 | name vk after proc · name_vk_after_proc | `hypr-misc.name-vk-after-proc` | 开关 | 未实现 | — |
 | on focus under fullscreen · on_focus_under_fullscreen | `hypr-misc.on-focus-under-fullscreen` | 滑块 | 未实现 | — |
@@ -3903,3 +3818,24 @@ Wayland、XDG、主题与应用环境 · Hyprland
 - Installed release on the workstation: the resident service adopted the live window, cursor and theme values on first use without writing (desktop.lua and hyprland.lua unchanged, no conflict); the Multitasking, Cursor and Colors and themes pages were inspected on DP-1, including new page glyphs, Bibata previews, icon previews of Adwaita, Breeze, Papirus and Tela, folder list and pack rows.
 - Colors and themes cleanup: the page keeps Color and Icons only. Window decoration previews moved to the new Appearance pages Window appearance and Animations (the Visual effects animation toggle merged into Animations), group and tab colours moved to the window group pages, and the Windows theme bundle (choose, save, background and sound links), the duplicate transparency toggles (Background › Window blur owns blur), the gradient editor, desktop component presets and the screen shader path were deleted. The moved controls remain previews.
 - Untested on the real desktop: selecting a different cursor or icon theme (it would replace the existing KDE icon theme `breeze-plus-dark`; the isolated smoke test covers every write), the native folder and archive pickers, and Hyprcursor-only themes (none installed). The workstation's start-up `hyprctl setcursor` in `execs.lua` overrides the saved environment at sign-in; Settings then shows a conflict rather than editing that script.
+
+## Window appearance, animations and dwindle (2026-11-09)
+
+- Appearance › Window appearance and Appearance › Animations become real desktop-group options in the Settings-owned `desktop.lua`; System › Multitasking gains the dwindle layout options, shown only while Dwindle is the layout. The planned `hypr-layout-dwindle` and `hypr-layout-overview` pages were deleted (the overview duplicated the layout chooser; its other rows were shortcut actions).
+- Option engine: a translucent color kind (`#rrggbbaa`, written as `rgba(rrggbbaa)`, read from Hyprland's `AARRGGBB` gradient report using its first color), a two-number offset kind, and nested Lua keys for dotted option names (`col.active_border`). The background page's color button became the shared `ColorButton` with an opacity slider for translucent colors.
+- Removed instead of implemented: inactive shadow and glow colors (Hyprland reports a value even when unset, so the fallback cannot be read back), `dim_around` (only window rules use it) and the per-animation tree editor (it needs its own `hl.animation`/`hl.curve` line shapes).
+- Automated: Rust config tests (round trip of translucent colors, nested keys and offsets, gradient readback, validation); `test/window_appearance_test.dart` (preview, dependent rows hidden, offset write, dwindle rows only for Dwindle); `test/desktop_smoke.py` against a nested Hyprland 0.57 with isolated XDG roots (border color, shadow offset, rounding, opacity, wobble and dwindle force split applied live, written to `desktop.lua`, kept after reload, read back without conflict, invalid values refused).
+
+## Text size (2026-11-09)
+
+- Accessibility › Text size writes GNOME's `org.gnome.desktop.interface text-scaling-factor` through the Rust appearance crate (`text_size.rs`), reusing the GNOME-setting apply, fresh `gsettings get` readback and rollback of Light/Dark; the service exposes `Get/Set text-size.scale`, `Resolve text-size` and `Changed("text-size")`. The slider covers GNOME's accepted 50%–300% in 5% steps, applies on release, and a sample paragraph follows the thumb. The old Apply action and the Windows reference row were removed.
+- Where it applies: the Flutter 3.47.8 Linux engine library contains `changed::text-scaling-factor` and portal `SettingChanged` handling for this key, so Settings and other Flutter apps follow it live; GTK 3 and GTK 4 read the same key. Qt, KDE and other toolkits are not changed.
+- Automated: Rust appearance test (first-use adoption without writing, write, range rejection, conflict retention and refused writes, both resolutions, failed detection leaving the configuration uninitialized); `test/text_size_test.dart` (sample follows the slider, 5% step rounding, conflict summary and disabled slider); `test/desktop_smoke.py` against a nested Hyprland with isolated XDG roots and the GSettings keyfile backend (first use, D-Bus write and keyfile readback, invalid value, external change conflict, refused write, both resolutions).
+- Untested: the installed release on the real desktop (the workstation's GSettings were only read, value 1.0), live update of open GTK windows, and the CLI path, which dispatches through the same service.
+
+## Workspaces (2026-11-09)
+
+- System › Workspaces (after Multitasking) replaces the planned workspace and workspace-rule preview pages: two scratchpad options and window launch tracking move in from the compositor behavior preview, joined by scratchpad hiding on workspace change, pointer placement and scratchpad click-through, all desktop-group options in the Settings-owned `desktop.lua`. Workspace back-and-forth and cycling stay on Keyboard shortcuts in the input group.
+- Workspace rules: `desktop.lua` accepts one more strict line shape, `hl.workspace_rule({ workspace, monitor, default, persistent, default_name })` in fixed order; `workspaces.rule-set` and `workspaces.rule-remove` validate the selector (number, `name:`, `special:`), connector name and one-line text, reload the configuration and wait for `hyprctl workspacerules` to report the change, restoring the files otherwise. Saved rules are reconciled with the file under the conflict ID `workspaces`. Rules from other files (for example a display tool's `workspaces.lua`) are shown read-only and never written. The page draws each live display at its layout position and logical size with its workspaces; selecting one edits or starts its rule. Removed instead of implemented: per-workspace gaps, borders, layout and animation fields (Multitasking and Window appearance already set them globally).
+- Automated: Rust config test (rule round trip with escaped text, refusal of other fields, reordered or foreign Lua, and rules in `input.lua`); Rust desktop test with a fake compositor (first use adopts without writing, logical size of a rotated scaled display, validation, write and reload readback, one start workspace per display, editing in place and refused rename onto a used workspace, conflict and both resolutions, removal); `test/workspaces_test.dart` (display map chips, read-only foreign rules, prefilled editor hiding unusable fields, edit with `previous`, removal); `test/desktop_smoke.py` against a nested Hyprland 0.57 with isolated XDG roots (options applied and kept after reload, persistent rule with a default name created and read back, edit dropping the old fields, invalid rules refused, removal, a rule in the user's own `hyprland.lua` left untouched).
+- Untested: the installed release on the real desktop (the workstation's `workspacerules`, monitors and workspaces were only read), `default` taking effect when a display is connected, the CLI path (it dispatches through the same service), and a rule field that another file also sets (Hyprland merges same-workspace rules, so removing it times out and is undone).

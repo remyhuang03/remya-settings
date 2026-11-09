@@ -1740,15 +1740,6 @@
     {
       "area": "Vision",
       "path": [
-        "Text Size"
-      ],
-      "page": "text-size",
-      "coverage": "control",
-      "control": "text-size.reference.8ff6836a"
-    },
-    {
-      "area": "Vision",
-      "path": [
         "Visual effects"
       ],
       "page": "visual-effects",

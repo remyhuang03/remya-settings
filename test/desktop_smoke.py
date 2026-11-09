@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """End-to-end desktop options and theme packs check: blur, fallback background,
-display wake, window layout, cursor options, and cursor and icon themes.
+display wake, window layout, cursor options, cursor and icon themes, and text size.
 
 Uses a nested compositor, a private session bus and isolated XDG roots, so the
 user's Hyprland configuration is never touched.
@@ -136,6 +136,68 @@ def main():
                     ("cursor.warp-on-change-workspace", "3")]:
             assert "InvalidArgument" in call("Set", *bad, ok=False)
 
+        # Window appearance, animations and dwindle: translucent colors, nested `col` keys and offsets.
+        call("Set", "window-appearance.active-border", "'\"#0DB7D455\"'")
+        call("Set", "window-appearance.shadow-offset", "'[2, 6]'")
+        call("Set", "window-appearance.rounding", "12")
+        call("Set", "window-appearance.inactive-opacity", "0.9")
+        call("Set", "animations.wobble", "true")
+        call("Set", "multitasking.dwindle-force-split", "2")
+        text = owned.read_text()
+        assert 'col = { active_border = "rgba(0db7d455)" }' in text and "offset = { 2, 6 }" in text, text
+        hyprctl("reload")
+        time.sleep(1)
+        assert option("decoration:rounding", "int") == 12
+        assert option("dwindle:force_split", "int") == 2
+        state = call("Get", "desktop")
+        assert state["system"]["window-appearance.active-border"] == "#0db7d455", state["system"]
+        assert state["system"]["window-appearance.shadow-offset"] == [2, 6], state["system"]
+        assert state["system"]["animations.wobble"] is True and not state["conflict"], state
+        for bad in [("window-appearance.active-border", "'\"#12345\"'"),
+                    ("window-appearance.shadow-offset", "'[0, 500]'"),
+                    ("window-appearance.shadow-render-power", "5")]:
+            assert "InvalidArgument" in call("Set", *bad, ok=False)
+
+        # Workspace options and rules: rules reload, read back through workspacerules and
+        # leave rules from the user's other files alone.
+        def rules():
+            return {r["workspaceString"]: r for r in json.loads(hyprctl("-j", "workspacerules"))}
+
+        with (hypr / "hyprland.lua").open("a") as main_file:
+            main_file.write('hl.workspace_rule({ workspace = "7", persistent = true })\n')
+        hyprctl("reload")
+        time.sleep(1)
+        main = (hypr / "hyprland.lua").read_text()
+        state = call("Get", "desktop")
+        display = state["monitors"][0]["name"]
+        assert state["monitors"][0]["width"] > 0 and not state["conflict"], state
+        assert {"workspace": "7", "monitor": "", "default": False, "persistent": True,
+                "default_name": "", "settings": False} in state["live_rules"], state["live_rules"]
+        call("Set", "workspaces.close-special-on-empty", "false")
+        call("Set", "workspaces.initial-workspace-tracking", "2")
+        rule = json.dumps({"workspace": "3", "monitor": display, "persistent": True, "default_name": "Mail"})
+        state = call("Set", "workspaces.rule-set", f"'{rule}'")
+        assert rules()["3"]["persistent"] is True and rules()["3"]["defaultName"] == "Mail", rules()
+        assert any(w["id"] == 3 and w["persistent"] for w in state["workspaces"]), state["workspaces"]
+        assert f'hl.workspace_rule({{ workspace = "3", monitor = "{display}", persistent = true, default_name = "Mail" }})' \
+            in owned.read_text()
+        edited = json.dumps({"workspace": "name:mail", "persistent": True, "previous": "3"})
+        call("Set", "workspaces.rule-set", f"'{edited}'")
+        assert "defaultName" not in rules().get("3", {}) and rules()["name:mail"]["persistent"] is True, rules()
+        hyprctl("reload")
+        time.sleep(1)
+        assert option("misc:close_special_on_empty", "bool") is False
+        assert option("misc:initial_workspace_tracking", "int") == 2
+        state = call("Get", "desktop")
+        assert not state["conflict"] and state["rules"] == [{"workspace": "name:mail", "persistent": True}], state
+        for bad in ['{"workspace": "mail"}', '{"workspace": "1", "default": true}',
+                    '{"workspace": "1", "monitor": "DP 1"}', '{"workspace": "1", "gaps_in": 5}']:
+            assert "InvalidArgument" in call("Set", "workspaces.rule-set", f"'{bad}'", ok=False)
+        call("Set", "workspaces.rule-remove", "'{\"workspace\": \"name:mail\"}'")
+        assert "name:mail" not in rules() and rules()["7"]["persistent"] is True, rules()
+        assert "workspace_rule" not in owned.read_text()
+        assert (hypr / "hyprland.lua").read_text() == main, "Settings changed the user's own rule"
+
         # Cursor and icon themes: first use adopts GSettings, then every target follows.
         # A second cursor theme in the isolated user folder, reusing installed cursor files.
         system_cursor = next((p for p in Path("/usr/share/icons").iterdir() if (p / "cursors/default").exists()), None)
@@ -185,6 +247,24 @@ def main():
         call("Set", "themes.icon-remove", "'\"Smoke-Icons\"'")
         assert not (home / "data/icons/Smoke-Icons").exists()
         assert "ReadOnly" in call("Set", "cursor.folders", "'\"x\"'", ok=False)
+
+        # Text size: first use adopts GSettings without writing, then writes the factor.
+        keyfile = config / "glib-2.0/settings/keyfile"
+        text = call("Get", "text-size")
+        assert text["error"] is None and not text["conflict"] and text["options"]["text-size.scale"] == 1.0, text
+        assert "text-scaling-factor" not in keyfile.read_text()
+        call("Set", "text-size.scale", "1.25")
+        assert "text-scaling-factor=1.25" in keyfile.read_text()
+        assert run("gsettings", "get", "org.gnome.desktop.interface", "text-scaling-factor", env=env).stdout.strip() == "1.25"
+        assert "InvalidArgument" in call("Set", "text-size.scale", "3.5", ok=False)
+        run("gsettings", "set", "org.gnome.desktop.interface", "text-scaling-factor", "2.0", env=env)
+        assert call("Get", "text-size")["conflicts"] == ["text-size.scale"]
+        assert "conflict" in call("Set", "text-size.scale", "1.5", ok=False)
+        call("Resolve", "text-size", "settings")
+        assert call("Get", "text-size.scale")["value"] == 1.25
+        run("gsettings", "set", "org.gnome.desktop.interface", "text-scaling-factor", "1.5", env=env)
+        call("Resolve", "text-size", "system")
+        assert "text_scaling_factor = 1.5" in (config / "remya/settings/text-size.toml").read_text()
 
         # Desktop files never hold shortcuts; a hand-edited file blocks writes.
         owned.write_text(owned.read_text() + 'hl.bind("SUPER + K", hl.dsp.window.close())\n')

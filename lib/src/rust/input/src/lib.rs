@@ -1,5 +1,6 @@
 //! Settings-owned Hyprland options: mouse, touchpad and keyboard shortcuts (`input`)
-//! and window blur, fallback background and display wake (`desktop`).
+//! and window appearance, layout, cursor behavior, workspaces and their rules, blur,
+//! fallback background and display wake (`desktop`).
 //!
 //! Option values are live compositor state read through `hyprctl descriptions`.
 //! Settings persists each group's changes in `hypr/remya-settings/<group>.lua`,
@@ -7,9 +8,10 @@
 //! for reconciliation.
 pub mod config;
 pub mod keys;
+pub mod xkb;
 
 pub use config::{DESKTOP, INPUT};
-use config::{File, Group, Shortcut};
+use config::{File, Group, Shortcut, WorkspaceRule};
 use keys::{Keys, Layout};
 use remya_settings_display::{Hyprctl, atomic_write, run_bytes};
 use serde::{Deserialize, Serialize};
@@ -29,13 +31,15 @@ pub const RECORD: &str = "keyboard-shortcuts.record";
 pub const LIST: &str = "keyboard-shortcuts.list";
 pub const LOOKUP: &str = "keyboard-shortcuts.lookup:";
 const RECORD_SUBMAP: &str = "remya-settings-record";
+pub const RULE_SET: &str = "workspaces.rule-set";
+pub const RULE_REMOVE: &str = "workspaces.rule-remove";
 
 pub fn is_setting(id: &str) -> bool {
     INPUT.option(id).is_some() || [ADD, REMOVE, DISABLE, RECORD, LIST].contains(&id)
 }
 
 pub fn is_desktop_setting(id: &str) -> bool {
-    DESKTOP.option(id).is_some()
+    DESKTOP.option(id).is_some() || [RULE_SET, RULE_REMOVE].contains(&id)
 }
 
 fn invalid(message: impl std::fmt::Display) -> String {
@@ -78,6 +82,8 @@ pub struct Saved {
     pub disabled: Vec<String>,
     #[serde(default)]
     pub shortcuts: Vec<Shortcut>,
+    #[serde(default)]
+    pub rules: Vec<WorkspaceRule>,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -87,6 +93,9 @@ struct Observed {
     binds: Vec<Value>,
     devices: Value,
     layout: Layout,
+    workspace_rules: Vec<Value>,
+    monitors: Vec<Value>,
+    workspaces: Vec<Value>,
     file: Option<File>,
 }
 
@@ -168,6 +177,133 @@ fn action_label(dispatcher: &str) -> String {
     .to_owned()
 }
 
+/// A display's name, layout position and logical size, which is what the desktop uses.
+fn monitor(m: &Value) -> Value {
+    let scale = m["scale"].as_f64().filter(|s| *s > 0.0).unwrap_or(1.0);
+    let (w, h) = (
+        m["width"].as_f64().unwrap_or(0.0),
+        m["height"].as_f64().unwrap_or(0.0),
+    );
+    // Odd transforms rotate the output by 90 or 270 degrees.
+    let (w, h) = if m["transform"].as_i64().unwrap_or(0) % 2 == 1 {
+        (h, w)
+    } else {
+        (w, h)
+    };
+    json!({
+        "name": m["name"], "description": m["description"],
+        "x": m["x"], "y": m["y"],
+        "width": (w / scale).round(), "height": (h / scale).round(),
+        "active_workspace": m["activeWorkspace"]["name"],
+        "special_workspace": m["specialWorkspace"]["name"],
+    })
+}
+
+/// A live `workspacerules` entry, keyed like `WorkspaceRule`.
+fn rule_value(e: &Value, key: &str) -> Value {
+    e[match key {
+        "workspace" => "workspaceString",
+        "default_name" => "defaultName",
+        other => other,
+    }]
+    .clone()
+}
+
+/// True when Hyprland reports every saved rule and dropped the fields of removed ones.
+///
+/// shortcut: Hyprland merges rules for the same workspace, so a field removed here that
+/// another file sets the same way never disappears and the write times out and is undone.
+fn rules_match(next: &[WorkspaceRule], before: &[WorkspaceRule], live: &[Value]) -> bool {
+    let entry = |w: &str| live.iter().find(|e| e["workspaceString"] == w);
+    let has = |e: Option<&Value>, key: &str, v: Value| e.is_some_and(|e| rule_value(e, key) == v);
+    let present = next.iter().all(|r| {
+        let e = entry(&r.workspace);
+        e.is_some()
+            && (r.monitor.is_empty() || has(e, "monitor", json!(r.monitor)))
+            && (!r.default || has(e, "default", json!(true)))
+            && (!r.persistent || has(e, "persistent", json!(true)))
+            && (r.default_name.is_empty() || has(e, "default_name", json!(r.default_name)))
+    });
+    let gone = before.iter().filter(|b| !next.contains(b)).all(|b| {
+        let n = next.iter().find(|r| r.workspace == b.workspace);
+        let e = entry(&b.workspace);
+        (b.monitor.is_empty()
+            || n.is_some_and(|n| !n.monitor.is_empty())
+            || !has(e, "monitor", json!(b.monitor)))
+            && (!b.default || n.is_some_and(|n| n.default) || !has(e, "default", json!(true)))
+            && (!b.persistent
+                || n.is_some_and(|n| n.persistent)
+                || !has(e, "persistent", json!(true)))
+            && (b.default_name.is_empty()
+                || n.is_some_and(|n| !n.default_name.is_empty())
+                || !has(e, "default_name", json!(b.default_name)))
+    });
+    present && gone
+}
+
+/// A checked rule and the workspace of the rule it replaces.
+fn validate_rule(request: &Value) -> Result<(WorkspaceRule, Option<String>), String> {
+    #[derive(Deserialize)]
+    #[serde(deny_unknown_fields)]
+    struct Request {
+        workspace: String,
+        #[serde(default)]
+        monitor: String,
+        #[serde(default)]
+        default: bool,
+        #[serde(default)]
+        persistent: bool,
+        #[serde(default)]
+        default_name: String,
+        #[serde(default)]
+        previous: Option<String>,
+    }
+    let r: Request = serde_json::from_value(request.clone()).map_err(|_| {
+        invalid("Expected workspace, monitor, default, persistent, default_name and previous")
+    })?;
+    let workspace = selector(&r.workspace)
+        .ok_or_else(|| invalid("Use a workspace number, name:<name> or special:<name>"))?;
+    let monitor = r.monitor.trim();
+    if monitor.len() > 64
+        || !monitor
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || "-_.".contains(c))
+    {
+        return Err(invalid("Use a display connector name such as DP-1"));
+    }
+    if r.default && (monitor.is_empty() || workspace.starts_with("special:")) {
+        return Err(invalid(
+            "A display can start with a regular workspace only, and needs a display chosen",
+        ));
+    }
+    let default_name = r.default_name.trim();
+    if !config::plain(default_name, 64) || (!default_name.is_empty() && workspace.contains(':')) {
+        return Err(invalid("Only a numbered workspace takes a one-line name"));
+    }
+    Ok((
+        WorkspaceRule {
+            workspace,
+            monitor: monitor.to_owned(),
+            default: r.default,
+            persistent: r.persistent,
+            default_name: default_name.to_owned(),
+        },
+        r.previous,
+    ))
+}
+
+/// A workspace selector Settings writes: a number, `name:<text>` or `special:<text>`.
+fn selector(text: &str) -> Option<String> {
+    let text = text.trim();
+    if text.parse::<u32>().is_ok_and(|n| (1..=9999).contains(&n)) {
+        return Some(text.trim_start_matches('0').to_owned());
+    }
+    let (kind, name) = text.split_once(':')?;
+    let name = name.trim();
+    (["name", "special"].contains(&kind) && !name.is_empty() && config::plain(name, 64))
+        .then(|| format!("{kind}:{name}"))
+}
+
 impl<H: Hypr> Input<H> {
     pub fn new(group: &'static Group, hypr: H, hypr_dir: PathBuf, saved_path: PathBuf) -> Self {
         Self {
@@ -212,6 +348,10 @@ impl<H: Hypr> Input<H> {
         for opt in self.group.options {
             let value = current(opt.name)
                 .ok_or_else(|| format!("Hyprland does not report {}", opt.name))?;
+            let value = match opt.kind {
+                config::Kind::Layouts => json!([value, current("input:kb_variant")]),
+                _ => value,
+            };
             options.insert(opt.id.to_owned(), opt.observed(&value));
         }
         let autoreload = current("misc:disable_autoreload").is_some_and(|v| v != true);
@@ -232,6 +372,16 @@ impl<H: Hypr> Input<H> {
                 .unwrap_or_default();
             self.observed.devices = self.hypr.json("devices")?;
             self.observed.layout = layout(&self.observed.devices);
+        }
+        if self.group.rules {
+            let list = |what| {
+                self.hypr
+                    .json(what)
+                    .map(|v| v.as_array().cloned().unwrap_or_default())
+            };
+            self.observed.workspace_rules = list("workspacerules")?;
+            self.observed.monitors = list("monitors")?;
+            self.observed.workspaces = list("workspaces")?;
         }
         if !self.main_path().exists() {
             self.write_blocked = Some(format!(
@@ -292,6 +442,7 @@ impl<H: Hypr> Input<H> {
             options: self.observed.options.clone(),
             disabled: file.disabled.clone(),
             shortcuts: file.shortcuts.clone(),
+            rules: file.rules.clone(),
         }
     }
 
@@ -318,6 +469,9 @@ impl<H: Hypr> Input<H> {
             .collect();
         if saved.disabled != file.disabled || saved.shortcuts != file.shortcuts {
             ids.push("keyboard-shortcuts".into());
+        }
+        if saved.rules != file.rules {
+            ids.push("workspaces".into());
         }
         ids
     }
@@ -381,6 +535,26 @@ impl<H: Hypr> Input<H> {
         groups.into_iter().map(|(_, _, entry)| entry).collect()
     }
 
+    /// Every live workspace rule; `settings` marks the ones Settings wrote.
+    fn live_rules(&self) -> Vec<Value> {
+        let saved = self.saved.as_ref().map(|s| &s.rules[..]).unwrap_or(&[]);
+        self.observed
+            .workspace_rules
+            .iter()
+            .map(|e| {
+                let workspace = rule_value(e, "workspace");
+                json!({
+                    "workspace": workspace,
+                    "monitor": rule_value(e, "monitor").as_str().unwrap_or_default(),
+                    "default": rule_value(e, "default") == true,
+                    "persistent": rule_value(e, "persistent") == true,
+                    "default_name": rule_value(e, "default_name").as_str().unwrap_or_default(),
+                    "settings": saved.iter().any(|r| workspace == r.workspace.as_str()),
+                })
+            })
+            .collect()
+    }
+
     pub fn state(&self) -> Value {
         let keys = self.keys();
         let keys = keys.as_ref();
@@ -430,6 +604,14 @@ impl<H: Hypr> Input<H> {
             "mice": names(false),
             "touchpads": names(true),
             "recording": self.recording,
+            "rules": saved.map(|s| &s.rules),
+            "system_rules": self.observed.file.as_ref().map(|f| &f.rules),
+            "live_rules": self.live_rules(),
+            "monitors": self.observed.monitors.iter().map(monitor).collect::<Vec<_>>(),
+            "workspaces": self.observed.workspaces.iter().map(|w| json!({
+                "id": w["id"], "name": w["name"], "monitor": w["monitor"],
+                "windows": w["windows"], "persistent": w["ispersistent"],
+            })).collect::<Vec<_>>(),
             "write_blocked": self.write_blocked,
             "error": self.error,
         })
@@ -515,9 +697,14 @@ impl<H: Hypr> Input<H> {
                 .options
                 .insert(opt.id.into(), next.options[opt.id].clone());
         }
-        let binds_changed = owned.disabled != next.disabled || owned.shortcuts != next.shortcuts;
+        // Binds and rules load only through a configuration reload.
+        let reload = (owned.disabled != next.disabled
+            || owned.shortcuts != next.shortcuts
+            || owned.rules != next.rules)
+            .then(|| owned.rules.clone());
         owned.disabled = next.disabled.clone();
         owned.shortcuts = next.shortcuts.clone();
+        owned.rules = next.rules.clone();
         let result = (|| {
             let (options, _) = self.read_options()?;
             for opt in &changed {
@@ -525,7 +712,7 @@ impl<H: Hypr> Input<H> {
                     return Err(format!("Hyprland did not apply {}", opt.name));
                 }
             }
-            self.write_files(&owned, binds_changed, &next)
+            self.write_files(&owned, reload.as_deref(), &next)
         })();
         if let Err(message) = result {
             // Leave the compositor as it was; the files were restored by `write_files`.
@@ -539,7 +726,13 @@ impl<H: Hypr> Input<H> {
         Ok(())
     }
 
-    fn write_files(&self, owned: &File, binds_changed: bool, next: &Saved) -> Result<(), String> {
+    /// `reload` holds the rules the file had before, when binds or rules changed.
+    fn write_files(
+        &self,
+        owned: &File,
+        reload: Option<&[WorkspaceRule]>,
+        next: &Saved,
+    ) -> Result<(), String> {
         let main = fs::read_to_string(self.main_path())
             .map_err(|e| format!("{}: {e}", self.main_path().display()))?;
         let block = config::with_block(self.group, &main)?;
@@ -556,14 +749,20 @@ impl<H: Hypr> Input<H> {
             if let Some(main) = &block {
                 atomic_write(&self.main_path(), main.as_bytes())?;
             }
-            if binds_changed {
+            if let Some(before) = reload {
                 if !self.observed.autoreload {
                     self.hypr.request(&["reload"])?;
                 }
+                let list = |what| {
+                    self.hypr
+                        .json(what)
+                        .map(|v| v.as_array().cloned().unwrap_or_default())
+                };
                 self.wait(|| {
-                    let binds = self.hypr.json("binds")?;
-                    let binds = binds.as_array().cloned().unwrap_or_default();
-                    Ok(self.binds_match(next, &binds).then_some(()))
+                    let binds = !self.group.shortcuts || self.binds_match(next, &list("binds")?);
+                    let rules = !self.group.rules
+                        || rules_match(&next.rules, before, &list("workspacerules")?);
+                    Ok((binds && rules).then_some(()))
                 })?;
             }
             Ok(())
@@ -691,8 +890,39 @@ impl<H: Hypr> Input<H> {
         }
         let (mut next, owned) = self.current()?;
         match id {
-            _ if !self.group.shortcuts && self.group.option(id).is_none() => {
+            ADD | REMOVE | DISABLE if !self.group.shortcuts => {
                 return Err(invalid("Unknown setting"));
+            }
+            RULE_SET if self.group.rules => {
+                let (rule, previous) = validate_rule(&value)?;
+                let edited = previous.as_deref().unwrap_or(&rule.workspace);
+                if edited != rule.workspace
+                    && next.rules.iter().any(|r| r.workspace == rule.workspace)
+                {
+                    return Err(invalid(format!(
+                        "Workspace {} already has a rule",
+                        rule.workspace
+                    )));
+                }
+                let at = next.rules.iter().position(|r| r.workspace == edited);
+                next.rules.retain(|r| r.workspace != edited);
+                // A display starts with one workspace, so the newest choice wins.
+                if rule.default {
+                    for other in next.rules.iter_mut().filter(|r| r.monitor == rule.monitor) {
+                        other.default = false;
+                    }
+                }
+                next.rules.insert(at.unwrap_or(next.rules.len()), rule);
+            }
+            RULE_REMOVE if self.group.rules => {
+                let workspace = value["workspace"]
+                    .as_str()
+                    .ok_or_else(|| invalid("Expected {\"workspace\":...}"))?;
+                let before = next.rules.len();
+                next.rules.retain(|r| r.workspace != workspace);
+                if before == next.rules.len() {
+                    return Err(invalid("Settings has no rule for that workspace"));
+                }
             }
             ADD => {
                 let (shortcut, replace) = self.validate_shortcut(&value)?;
@@ -839,7 +1069,7 @@ impl<H: Hypr> Input<H> {
                         if let Some(reason) = &self.write_blocked {
                             return Err(reason.clone());
                         }
-                        self.write_files(&owned, false, &saved)?;
+                        self.write_files(&owned, None, &saved)?;
                     }
                     self.save(&saved)
                 }

@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../settings/domain/settings_catalog.dart';
+import '../../settings/presentation/color_button.dart';
 import '../../settings/presentation/settings_content.dart';
 import '../../settings/presentation/settings_widgets.dart';
 import '../../settings/application/feature_options_controller.dart';
@@ -21,6 +22,10 @@ const choiceValues = <String, List<Object>>{
   'multitasking.layout': ['dwindle', 'master', 'scrolling', 'monocle'],
   'multitasking.resize-corner': [0, 1, 2, 3, 4],
   'cursor.warp-on-change-workspace': [0, 1, 2],
+  'workspaces.initial-workspace-tracking': [0, 1, 2],
+  'workspaces.center-on': [0, 1],
+  'multitasking.dwindle-force-split': [0, 1, 2],
+  'multitasking.dwindle-split-bias': [0, 1],
   // `no_hardware_cursors`: 2 decides automatically, 0 uses hardware cursors.
   'cursor.hardware': [2, 0, 1],
 };
@@ -101,11 +106,124 @@ final sliderShapes = <String, SliderShape>{
   'multitasking.border-grab-area': (min: 0, max: 50, step: 1, text: _pixels),
   'multitasking.float-gaps': (min: 0, max: 80, step: 1, text: _pixels),
   'multitasking.gaps-workspaces': (min: 0, max: 100, step: 5, text: _pixels),
+  'multitasking.dwindle-split-ratio': (
+    min: 0.1,
+    max: 1.9,
+    step: 0.05,
+    text: (v) => '${(v * 50).round()}% for the new window',
+  ),
+  'multitasking.dwindle-split-width': (
+    min: 0.1,
+    max: 3,
+    step: 0.1,
+    text: (v) => '${v.toStringAsFixed(1)}×',
+  ),
+  'multitasking.dwindle-special-scale': (
+    min: 0.2,
+    max: 1,
+    step: 0.05,
+    text: _percent,
+  ),
+  'window-appearance.rounding': (min: 0, max: 30, step: 1, text: _pixels),
+  'window-appearance.rounding-power': (
+    min: 1,
+    max: 6,
+    step: 0.1,
+    text: (v) => switch (v) {
+      < 1.5 => 'Cut ${v.toStringAsFixed(1)}',
+      < 2.5 => 'Round ${v.toStringAsFixed(1)}',
+      _ => 'Squircle ${v.toStringAsFixed(1)}',
+    },
+  ),
+  'window-appearance.active-opacity': (
+    min: 0.2,
+    max: 1,
+    step: 0.01,
+    text: _percent,
+  ),
+  'window-appearance.inactive-opacity': (
+    min: 0.2,
+    max: 1,
+    step: 0.01,
+    text: _percent,
+  ),
+  'window-appearance.fullscreen-opacity': (
+    min: 0.2,
+    max: 1,
+    step: 0.01,
+    text: _percent,
+  ),
+  'window-appearance.dim-strength': (
+    min: 0,
+    max: 1,
+    step: 0.01,
+    text: _percent,
+  ),
+  'window-appearance.dim-special': (min: 0, max: 1, step: 0.01, text: _percent),
+  'window-appearance.shadow-range': (min: 0, max: 100, step: 1, text: _pixels),
+  'window-appearance.shadow-render-power': (
+    min: 1,
+    max: 4,
+    step: 1,
+    text: (v) => '${v.round()}',
+  ),
+  'window-appearance.shadow-scale': (
+    min: 0.05,
+    max: 2,
+    step: 0.05,
+    text: _percent,
+  ),
+  'window-appearance.glow-range': (min: 0, max: 100, step: 1, text: _pixels),
+  'window-appearance.glow-render-power': (
+    min: 1,
+    max: 4,
+    step: 1,
+    text: (v) => '${v.round()}',
+  ),
+  'animations.motion-blur-samples': (
+    min: 1,
+    max: 32,
+    step: 1,
+    text: (v) => '${v.round()} samples',
+  ),
+  'animations.wobble-intensity': (min: 0, max: 2, step: 0.05, text: _decimal),
+  'animations.wobble-stiffness': (
+    min: 20,
+    max: 1000,
+    step: 10,
+    text: (v) => '${v.round()}',
+  ),
+  'animations.wobble-damping': (min: 0, max: 50, step: 0.5, text: _decimal),
+  'animations.wobble-mass': (min: 0.1, max: 5, step: 0.1, text: _decimal),
+  'animations.wobble-mesh': (
+    min: 2,
+    max: 32,
+    step: 1,
+    text: (v) => '${v.round()} points per edge',
+  ),
+  'animations.wobble-value-epsilon': (
+    min: 0,
+    max: 5,
+    step: 0.05,
+    text: (v) => '${v.toStringAsFixed(2)} px',
+  ),
+  'animations.wobble-velocity-epsilon': (
+    min: 0,
+    max: 20,
+    step: 0.5,
+    text: (v) => '${v.toStringAsFixed(1)} px/s',
+  ),
   'cursor.inactive-timeout': (
     min: 0,
     max: 20,
     step: 1,
     text: (v) => v == 0 ? 'Never' : '${v.round()} s',
+  ),
+  'text-size.scale': (
+    min: 0.5,
+    max: 3,
+    step: 0.05,
+    text: (v) => '${(v * 100).round()}%',
   ),
 };
 
@@ -113,9 +231,29 @@ String _pixels(double v) => '${v.round()} px';
 
 String _decimal(double v) => v.toStringAsFixed(2);
 
+String _percent(double v) => '${(v * 100).round()}%';
+
 /// Readable text of a stored value, for rows and the conflict summary.
 String describeValue(SettingSpec setting, Object? value) {
+  if (setting.id == 'language.format') {
+    return switch (value) {
+      '' => 'Same as display language',
+      null => 'Custom for each category',
+      _ => '$value',
+    };
+  }
   if (value == null) return 'Unknown';
+  // Keyboard layouts: `[{layout, variant}]`.
+  if (value is List && value.every((v) => v is Map)) {
+    return value
+        .cast<Map>()
+        .map(
+          (v) => v['variant'] == ''
+              ? v['layout']
+              : '${v['layout']} (${v['variant']})',
+        )
+        .join(', ');
+  }
   if (choiceValues[setting.id] case final values?) {
     final index = values.indexOf(value);
     if (index >= 0) return setting.options[index];
@@ -234,6 +372,13 @@ class InputRows {
                 }
               : null,
         ),
+      );
+    } else if (setting.kind == .color) {
+      control = ColorButton(
+        key: ValueKey('${setting.id}-color'),
+        color: value as String?,
+        title: setting.title,
+        onChanged: enabled ? (hex) => controller.set(setting.id, hex) : null,
       );
     } else {
       control = Switch(
@@ -357,6 +502,8 @@ class InputConflictCard extends StatelessWidget {
       for (final id in ids)
         if (id == 'keyboard-shortcuts')
           'Custom and turned-off shortcuts differ from input.lua'
+        else if (id == 'workspaces')
+          'Workspace rules differ from desktop.lua'
         else if (specs[id] case final spec?)
           '${spec.title}: system ${describeValue(spec, system[id])}, '
               'Settings ${describeValue(spec, saved[id])}',

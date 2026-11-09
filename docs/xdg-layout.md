@@ -25,8 +25,10 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Input settings snapshot | `input.toml` beside `config.toml` (debug: repository `config/`) |
 | Input settings for Hyprland | `$XDG_CONFIG_HOME/hypr/remya-settings/input.lua`, required by a managed block at the end of `hyprland.lua` |
 | Desktop options snapshot | `desktop.toml` beside `config.toml` (debug: repository `config/`) |
-| Desktop options for Hyprland (window layout, cursor behavior, blur, fallback background, display wake) | `$XDG_CONFIG_HOME/hypr/remya-settings/desktop.lua`, required by its own managed block at the end of `hyprland.lua` |
+| Desktop options for Hyprland (window layout, cursor behavior, workspace options and `hl.workspace_rule` rules, blur, fallback background, display wake) | `$XDG_CONFIG_HOME/hypr/remya-settings/desktop.lua`, required by its own managed block at the end of `hyprland.lua` |
 | Cursor and icon theme snapshot | `themes.toml` beside `config.toml` (debug: repository `config/`) |
+| Text size snapshot | `text-size.toml` beside `config.toml` (debug: repository `config/`) |
+| Display language and regional format snapshot | `language.toml` beside `config.toml` (debug: repository `config/`); the system values live in localed's `/etc/locale.conf` |
 | Cursor environment for new processes | "Remy'a Settings cursor" blocks in `$XDG_CONFIG_HOME/fish/config.fish` and `hyprland.lua` |
 | XCursor default theme | `default/index.theme` in `$XDG_DATA_HOME/icons` (or an existing one in `~/.icons`) |
 | Added cursor and icon themes | `$XDG_DATA_HOME/icons/<theme>/` |
@@ -114,7 +116,7 @@ already load `monitors.lua`. Input settings append one managed `require` block i
 `date-time.toml` lives beside `config.toml` (debug: repository
 `config/date-time.toml`; profile/release: `$XDG_CONFIG_HOME/remya/settings/date-time.toml`,
 with the existing absolute HOME fallback). It contains `version = 1` and the
-saved `timezone`, `ntp`, `time_servers`, and `time_locale` preferences. Older timezone-only version-1 files adopt missing fields from validated actual system state. It uses the same atomic writer and permissions policy
+saved `timezone`, `ntp`, and `time_servers` preferences. Older timezone-only version-1 files adopt missing fields from validated actual system state. It uses the same atomic writer and permissions policy
 as appearance preferences. Missing state adopts the actual system time zone;
 malformed/unknown values are retained and reported rather than overwritten.
 There is no stored clock timestamp, unused cache directory, or private Bar parser.

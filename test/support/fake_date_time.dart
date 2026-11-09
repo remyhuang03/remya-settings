@@ -4,7 +4,6 @@ class FakeDateTimeBackend implements DateTimeBackend {
   String timezone = 'Asia/Taipei';
   bool ntp = true;
   List<String> servers = [];
-  String timeLocale = '';
   int syncs = 0;
   int restarts = 0;
   int reads = 0;
@@ -27,7 +26,6 @@ class FakeDateTimeBackend implements DateTimeBackend {
       timeServers: servers,
       activeTimeServer: servers.firstOrNull ?? 'pool.ntp.org',
       syncError: null,
-      timeLocale: timeLocale,
     );
   }
 
@@ -63,21 +61,6 @@ class FakeDateTimeBackend implements DateTimeBackend {
   Future<DateTimeState> syncNow() async {
     if (error != null) throw error!;
     syncs++;
-    return read();
-  }
-
-  @override
-  Future<List<String>> timeLocales() async => [
-    '',
-    'C',
-    'en_US.utf8',
-    'zh_CN.utf8',
-  ];
-  @override
-  Future<DateTimeState> setTimeLocale(String value) async {
-    if (error != null) throw error!;
-    writes++;
-    timeLocale = value;
     return read();
   }
 

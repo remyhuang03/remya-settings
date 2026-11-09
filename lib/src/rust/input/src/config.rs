@@ -16,6 +16,15 @@ pub enum Kind {
     Color,
     /// A CSS-style gap: one number for every side, or `[top, right, bottom, left]`.
     Gap(i64),
+    /// `#rrggbbaa`, written as a Hyprland `rgba(rrggbbaa)` string.
+    Rgba,
+    /// `[x, y]` whole numbers, each within the range.
+    Vec2(i64, i64),
+    /// `[{"layout", "variant"}]` from xkeyboard-config, written together as
+    /// `kb_layout` and `kb_variant` so no mismatched pair is ever compiled.
+    Layouts,
+    /// Comma-separated xkeyboard-config options.
+    XkbOptions,
 }
 
 pub struct Opt {
@@ -26,9 +35,13 @@ pub struct Opt {
 }
 
 impl Opt {
-    /// Lua tables use underscores where some legacy option names use hyphens.
+    /// Lua tables use underscores where some legacy option names use hyphens, and
+    /// nest `col.active_border` as `col = { active_border = ... }`.
     pub fn path(&self) -> Vec<String> {
-        self.name.split(':').map(|p| p.replace('-', "_")).collect()
+        self.name
+            .split([':', '.'])
+            .map(|p| p.replace('-', "_"))
+            .collect()
     }
 
     pub fn validate(&self, value: &Value) -> Result<Value, String> {
@@ -62,6 +75,22 @@ impl Opt {
                     )),
                 }
             }
+            Kind::Rgba => match value.as_str().and_then(hex_alpha) {
+                Some(v) => Ok(json!(v)),
+                None => invalid("Use a color such as #1e1e2eff".into()),
+            },
+            Kind::Vec2(min, max) => {
+                match pair(value).filter(|p| p.iter().all(|v| (min..=max).contains(v))) {
+                    Some(p) => Ok(json!(p)),
+                    None => invalid(format!("Use two whole numbers from {min} to {max}")),
+                }
+            }
+            Kind::Layouts => crate::xkb::Rules::load()?
+                .layouts_value(value)
+                .or_else(invalid),
+            Kind::XkbOptions => crate::xkb::Rules::load()?
+                .options_value(value)
+                .or_else(invalid),
         }
     }
 
@@ -71,10 +100,11 @@ impl Opt {
             Kind::Bool => json!(current.as_bool().or(current.as_i64().map(|v| v != 0))),
             Kind::Int(..) => json!(current.as_i64().or(current.as_f64().map(|v| v as i64))),
             Kind::Float(..) => json!(current.as_f64().map(round)),
-            Kind::Text(_) => match current.as_str() {
-                Some("[[EMPTY]]") | None => json!(""),
-                Some(text) => json!(text),
-            },
+            Kind::Text(_) | Kind::XkbOptions => json!(text(current)),
+            // `read_options` reports layouts as `[kb_layout, kb_variant]`.
+            Kind::Layouts => {
+                crate::xkb::layouts_json(&crate::xkb::split(&text(&current[0]), &text(&current[1])))
+            }
             // Hyprland reports colors as AARRGGBB; Settings only writes opaque ones.
             Kind::Color => json!(
                 current
@@ -94,8 +124,56 @@ impl Opt {
                     _ => Value::Null,
                 }
             }
+            // Gradients are reported as "AARRGGBB[ AARRGGBB...] <angle>deg".
+            // shortcut: a multi-color gradient reads as its first color; add a gradient kind if one is ever edited here.
+            Kind::Rgba => json!(
+                current
+                    .as_str()
+                    .and_then(|c| c.split_whitespace().next())
+                    .filter(|c| c.len() == 8)
+                    .and_then(|c| hex_alpha(&format!("#{}{}", &c[2..], &c[..2])))
+            ),
+            Kind::Vec2(..) => json!(current.as_array().and_then(|a| {
+                let items: Vec<i64> = a
+                    .iter()
+                    .map(|v| v.as_f64().map(|f| f.round() as i64))
+                    .collect::<Option<_>>()?;
+                <[i64; 2]>::try_from(items).ok()
+            })),
         }
     }
+}
+
+/// A `descriptions` string; Hyprland reports an empty one as `[[EMPTY]]`.
+fn text(current: &Value) -> String {
+    match current.as_str() {
+        Some("[[EMPTY]]") | None => String::new(),
+        Some(text) => text.to_owned(),
+    }
+}
+
+/// `[x, y]` whole numbers, or None for any other shape.
+fn pair(value: &Value) -> Option<[i64; 2]> {
+    let items: Vec<i64> = value
+        .as_array()?
+        .iter()
+        .map(Value::as_i64)
+        .collect::<Option<_>>()?;
+    items.try_into().ok()
+}
+
+/// Lowercase `#rrggbbaa`; `#rrggbb` is taken as opaque.
+fn hex_alpha(text: &str) -> Option<String> {
+    let digits = text.strip_prefix('#')?;
+    let digits = match digits.len() {
+        6 => format!("{digits}ff"),
+        8 => digits.to_owned(),
+        _ => return None,
+    };
+    digits
+        .chars()
+        .all(|c| c.is_ascii_hexdigit())
+        .then(|| format!("#{}", digits.to_ascii_lowercase()))
 }
 
 /// The four sides of a gap value, or None for any other shape.
@@ -291,6 +369,8 @@ opts![INPUT_OPTIONS:
         "binds:pass_mouse_when_bound",
         Kind::Bool
     ),
+    ("language.keyboard-layouts", "input:kb_layout", Kind::Layouts),
+    ("language.keyboard-options", "input:kb_options", Kind::XkbOptions),
 ];
 
 opts![DESKTOP_OPTIONS:
@@ -309,6 +389,19 @@ opts![DESKTOP_OPTIONS:
     ("background.hide-logo", "misc:disable_hyprland_logo", Kind::Bool),
     ("power.wake-key", "misc:key_press_enables_dpms", Kind::Bool),
     ("power.wake-pointer", "misc:mouse_move_enables_dpms", Kind::Bool),
+    ("workspaces.close-special-on-empty", "misc:close_special_on_empty", Kind::Bool),
+    (
+        "workspaces.hide-special-on-change",
+        "binds:hide_special_on_workspace_change",
+        Kind::Bool
+    ),
+    (
+        "workspaces.initial-workspace-tracking",
+        "misc:initial_workspace_tracking",
+        Kind::Int(0, 2)
+    ),
+    ("workspaces.center-on", "binds:workspace_center_on", Kind::Int(0, 1)),
+    ("workspaces.special-fallthrough", "input:special_fallthrough", Kind::Bool),
     (
         "multitasking.layout",
         "general:layout",
@@ -352,6 +445,82 @@ opts![DESKTOP_OPTIONS:
     ("cursor.persistent-warps", "cursor:persistent_warps", Kind::Bool),
     ("cursor.hardware", "cursor:no_hardware_cursors", Kind::Int(0, 2)),
     ("cursor.enable-hyprcursor", "cursor:enable_hyprcursor", Kind::Bool),
+    ("multitasking.dwindle-force-split", "dwindle:force_split", Kind::Int(0, 2)),
+    ("multitasking.dwindle-preserve-split", "dwindle:preserve_split", Kind::Bool),
+    ("multitasking.dwindle-smart-split", "dwindle:smart_split", Kind::Bool),
+    ("multitasking.dwindle-smart-resizing", "dwindle:smart_resizing", Kind::Bool),
+    (
+        "multitasking.dwindle-permanent-direction",
+        "dwindle:permanent_direction_override",
+        Kind::Bool
+    ),
+    (
+        "multitasking.dwindle-special-scale",
+        "dwindle:special_scale_factor",
+        Kind::Float(0.0, 1.0)
+    ),
+    (
+        "multitasking.dwindle-split-width",
+        "dwindle:split_width_multiplier",
+        Kind::Float(0.1, 3.0)
+    ),
+    ("multitasking.dwindle-use-active", "dwindle:use_active_for_splits", Kind::Bool),
+    (
+        "multitasking.dwindle-split-ratio",
+        "dwindle:default_split_ratio",
+        Kind::Float(0.1, 1.9)
+    ),
+    ("multitasking.dwindle-split-bias", "dwindle:split_bias", Kind::Int(0, 1)),
+    ("multitasking.dwindle-precise-move", "dwindle:precise_mouse_move", Kind::Bool),
+    ("window-appearance.active-border", "general:col.active_border", Kind::Rgba),
+    ("window-appearance.inactive-border", "general:col.inactive_border", Kind::Rgba),
+    ("window-appearance.rounding", "decoration:rounding", Kind::Int(0, 100)),
+    ("window-appearance.rounding-power", "decoration:rounding_power", Kind::Float(1.0, 10.0)),
+    ("window-appearance.active-opacity", "decoration:active_opacity", Kind::Float(0.0, 1.0)),
+    ("window-appearance.inactive-opacity", "decoration:inactive_opacity", Kind::Float(0.0, 1.0)),
+    (
+        "window-appearance.fullscreen-opacity",
+        "decoration:fullscreen_opacity",
+        Kind::Float(0.0, 1.0)
+    ),
+    ("window-appearance.dim-inactive", "decoration:dim_inactive", Kind::Bool),
+    ("window-appearance.dim-strength", "decoration:dim_strength", Kind::Float(0.0, 1.0)),
+    ("window-appearance.dim-modal", "decoration:dim_modal", Kind::Bool),
+    ("window-appearance.dim-special", "decoration:dim_special", Kind::Float(0.0, 1.0)),
+    ("window-appearance.shadow", "decoration:shadow:enabled", Kind::Bool),
+    ("window-appearance.shadow-color", "decoration:shadow:color", Kind::Rgba),
+    ("window-appearance.shadow-range", "decoration:shadow:range", Kind::Int(0, 100)),
+    ("window-appearance.shadow-render-power", "decoration:shadow:render_power", Kind::Int(1, 4)),
+    ("window-appearance.shadow-offset", "decoration:shadow:offset", Kind::Vec2(-100, 100)),
+    ("window-appearance.shadow-scale", "decoration:shadow:scale", Kind::Float(0.05, 2.0)),
+    ("window-appearance.shadow-sharp", "decoration:shadow:sharp", Kind::Bool),
+    ("window-appearance.glow", "decoration:glow:enabled", Kind::Bool),
+    ("window-appearance.glow-color", "decoration:glow:color", Kind::Rgba),
+    ("window-appearance.glow-range", "decoration:glow:range", Kind::Int(0, 100)),
+    ("window-appearance.glow-render-power", "decoration:glow:render_power", Kind::Int(1, 4)),
+    (
+        "window-appearance.border-part-of-window",
+        "decoration:border_part_of_window",
+        Kind::Bool
+    ),
+    ("animations.enabled", "animations:enabled", Kind::Bool),
+    ("animations.workspace-wraparound", "animations:workspace_wraparound", Kind::Bool),
+    ("animations.resize", "misc:animate_manual_resizes", Kind::Bool),
+    ("animations.drag", "misc:animate_mouse_windowdragging", Kind::Bool),
+    ("animations.motion-blur", "decoration:motion_blur:enabled", Kind::Bool),
+    ("animations.motion-blur-samples", "decoration:motion_blur:samples", Kind::Int(1, 64)),
+    ("animations.wobble", "decoration:wobble:enabled", Kind::Bool),
+    ("animations.wobble-intensity", "decoration:wobble:intensity", Kind::Float(0.0, 2.0)),
+    ("animations.wobble-stiffness", "decoration:wobble:stiffness", Kind::Float(0.0001, 1000.0)),
+    ("animations.wobble-damping", "decoration:wobble:damping", Kind::Float(0.0, 1000.0)),
+    ("animations.wobble-mass", "decoration:wobble:mass", Kind::Float(0.0001, 1000.0)),
+    ("animations.wobble-mesh", "decoration:wobble:mesh", Kind::Int(2, 32)),
+    ("animations.wobble-value-epsilon", "decoration:wobble:value_epsilon", Kind::Float(0.0, 100.0)),
+    (
+        "animations.wobble-velocity-epsilon",
+        "decoration:wobble:velocity_epsilon",
+        Kind::Float(0.0, 1000.0)
+    ),
 ];
 
 /// One Settings-owned Lua file and the options it may contain.
@@ -361,6 +530,8 @@ pub struct Group {
     pub options: &'static [Opt],
     /// Whether the file also holds `hl.bind`/`hl.unbind` shortcuts.
     pub shortcuts: bool,
+    /// Whether the file also holds `hl.workspace_rule` workspace rules.
+    pub rules: bool,
     pub header: &'static str,
 }
 
@@ -368,14 +539,16 @@ pub const INPUT: Group = Group {
     name: "input",
     options: INPUT_OPTIONS,
     shortcuts: true,
-    header: "-- Managed by Remy'a Settings. Change Mouse, Touchpad and Keyboard shortcuts in Settings.",
+    rules: false,
+    header: "-- Managed by Remy'a Settings. Change Mouse, Touchpad, Keyboard shortcuts and keyboard layouts in Settings.",
 };
 
 pub const DESKTOP: Group = Group {
     name: "desktop",
     options: DESKTOP_OPTIONS,
     shortcuts: false,
-    header: "-- Managed by Remy'a Settings. Change Background, Cursor, Multitasking and Power & battery in Settings.",
+    rules: true,
+    header: "-- Managed by Remy'a Settings. Change Background, Cursor, Window appearance, Animations, Multitasking, Workspaces and Power & battery in Settings.",
 };
 
 impl Group {
@@ -432,11 +605,28 @@ pub struct Shortcut {
     pub description: String,
 }
 
+/// One `hl.workspace_rule`: the subset of `HL.WorkspaceRuleSpec` Settings edits.
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct WorkspaceRule {
+    /// A number, `name:<text>` or `special:<text>`.
+    pub workspace: String,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub monitor: String,
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub default: bool,
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub persistent: bool,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub default_name: String,
+}
+
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct File {
     pub options: BTreeMap<String, Value>,
     pub disabled: Vec<String>,
     pub shortcuts: Vec<Shortcut>,
+    pub rules: Vec<WorkspaceRule>,
 }
 
 pub fn quote(text: &str) -> String {
@@ -456,12 +646,29 @@ pub fn literal(value: &Value) -> String {
 }
 
 pub fn option_line(opt: &Opt, value: &Value) -> String {
+    if opt.kind == Kind::Layouts {
+        let text = crate::xkb::join(value)
+            .map(|(layouts, variants)| {
+                format!(
+                    "{{ kb_layout = {}, kb_variant = {} }}",
+                    quote(&layouts),
+                    quote(&variants)
+                )
+            })
+            .unwrap_or_else(|| "null".into());
+        return format!("hl.config({{ input = {text} }})");
+    }
     let path = opt.path();
     let mut text = match (opt.kind, value) {
         // `parse` finds the value by rendering `null` in its place, so keep that spelling.
         (Kind::Color, Value::String(c)) => quote(&format!("rgba({}ff)", c.trim_start_matches('#'))),
         (Kind::Color, _) => quote("rgba(nullff)"),
         (Kind::Gap(_), value) => gap(value).map(gap_lua).unwrap_or_else(|| "null".into()),
+        (Kind::Rgba, Value::String(c)) => quote(&format!("rgba({})", c.trim_start_matches('#'))),
+        (Kind::Rgba, _) => quote("rgba(null)"),
+        (Kind::Vec2(..), value) => pair(value)
+            .map(|[x, y]| format!("{{ {x}, {y} }}"))
+            .unwrap_or_else(|| "null".into()),
         _ => literal(value),
     };
     for key in path.iter().rev() {
@@ -509,7 +716,51 @@ pub fn render(group: &Group, file: &File) -> String {
         text += &bind_line(shortcut);
         text.push('\n');
     }
+    for rule in &file.rules {
+        text += &rule_line(rule);
+        text.push('\n');
+    }
     text
+}
+
+pub fn rule_line(rule: &WorkspaceRule) -> String {
+    let mut fields = vec![format!("workspace = {}", quote(&rule.workspace))];
+    if !rule.monitor.is_empty() {
+        fields.push(format!("monitor = {}", quote(&rule.monitor)));
+    }
+    if rule.default {
+        fields.push("default = true".into());
+    }
+    if rule.persistent {
+        fields.push("persistent = true".into());
+    }
+    if !rule.default_name.is_empty() {
+        fields.push(format!("default_name = {}", quote(&rule.default_name)));
+    }
+    format!("hl.workspace_rule({{ {} }})", fields.join(", "))
+}
+
+/// Reads a line in exactly the shape `rule_line` renders.
+fn workspace_rule(line: &str) -> Option<WorkspaceRule> {
+    let rest = line.strip_prefix("hl.workspace_rule({ workspace = ")?;
+    let (workspace, mut rest) = string(rest)?;
+    let mut rule = WorkspaceRule {
+        workspace,
+        ..WorkspaceRule::default()
+    };
+    if let Some(field) = rest.strip_prefix(", monitor = ") {
+        (rule.monitor, rest) = string(field)?;
+    }
+    if let Some(field) = rest.strip_prefix(", default = true") {
+        (rule.default, rest) = (true, field);
+    }
+    if let Some(field) = rest.strip_prefix(", persistent = true") {
+        (rule.persistent, rest) = (true, field);
+    }
+    if let Some(field) = rest.strip_prefix(", default_name = ") {
+        (rule.default_name, rest) = string(field)?;
+    }
+    (rest == " })").then_some(rule)
 }
 
 /// Reads one double-quoted Lua string at the start of `text`.
@@ -535,10 +786,27 @@ fn value(text: &str, kind: Kind) -> Option<Value> {
         Kind::Bool => text.parse::<bool>().ok().map(Value::from),
         Kind::Int(..) => text.parse::<i64>().ok().map(Value::from),
         Kind::Float(..) => text.parse::<f64>().ok().map(Value::from),
-        Kind::Text(_) => string(text)
+        Kind::Text(_) | Kind::XkbOptions => string(text)
             .filter(|(_, rest)| rest.is_empty())
             .map(|(s, _)| s.into()),
+        Kind::Layouts => {
+            let (layouts, rest) = string(text.strip_prefix("{ kb_layout = ")?)?;
+            let (variants, rest) = string(rest.strip_prefix(", kb_variant = ")?)?;
+            (rest == " }")
+                .then(|| crate::xkb::layouts_json(&crate::xkb::split(&layouts, &variants)))
+        }
         Kind::Color => hex(&format!("#{text}")).map(Value::from),
+        Kind::Rgba => (text.len() == 8)
+            .then(|| hex_alpha(&format!("#{text}")))
+            .flatten()
+            .map(Value::from),
+        Kind::Vec2(..) => {
+            let (x, y) = text
+                .strip_prefix("{ ")?
+                .strip_suffix(" }")?
+                .split_once(", ")?;
+            Some(json!([x.parse::<i64>().ok()?, y.parse::<i64>().ok()?]))
+        }
         Kind::Gap(_) => {
             if let Ok(all) = text.parse::<i64>() {
                 return Some(json!(all));
@@ -608,6 +876,13 @@ pub fn parse(group: &Group, text: &str) -> Result<File, String> {
         }
         if line.starts_with("hl.bind(") {
             file.shortcuts.push(bind(line).ok_or_else(refuse)?);
+            continue;
+        }
+        if line.starts_with("hl.workspace_rule(") {
+            if !group.rules {
+                return Err(refuse());
+            }
+            file.rules.push(workspace_rule(line).ok_or_else(refuse)?);
             continue;
         }
         let parsed = group.options.iter().find_map(|opt| {
@@ -681,6 +956,44 @@ mod tests {
                     ..Shortcut::default()
                 },
             ],
+            rules: vec![],
+        }
+    }
+
+    #[test]
+    fn workspace_rules_read_back_and_stay_in_the_desktop_file() {
+        let file = File {
+            options: BTreeMap::from([("workspaces.center-on".into(), json!(0))]),
+            rules: vec![
+                WorkspaceRule {
+                    workspace: "1".into(),
+                    monitor: "DP-1".into(),
+                    default: true,
+                    persistent: true,
+                    default_name: "Web \"main\"".into(),
+                },
+                WorkspaceRule {
+                    workspace: "special:notes".into(),
+                    ..WorkspaceRule::default()
+                },
+            ],
+            ..File::default()
+        };
+        let text = render(&DESKTOP, &file);
+        assert!(text.contains(
+            "hl.workspace_rule({ workspace = \"1\", monitor = \"DP-1\", default = true, persistent = true, default_name = \"Web \\\"main\\\"\" })"
+        ));
+        assert!(text.contains("hl.workspace_rule({ workspace = \"special:notes\" })"));
+        assert_eq!(parse(&DESKTOP, &text).unwrap(), file);
+        assert!(parse(&INPUT, &text).is_err());
+        for foreign in [
+            "hl.workspace_rule({ workspace = \"1\", gaps_in = 5 })\n",
+            "hl.workspace_rule({ persistent = true, workspace = \"1\" })\n",
+            "hl.workspace_rule({ workspace = \"1\", persistent = false })\n",
+            "hl.workspace_rule({ workspace = \"1\" }) os.exit()\n",
+            "hl.workspace_rule({ workspace = \"1\" .. x })\n",
+        ] {
+            assert!(parse(&DESKTOP, foreign).is_err(), "{foreign}");
         }
     }
 
@@ -700,7 +1013,9 @@ mod tests {
             "hl.config({ input = { sensitivity = 0.2 } }) os.exit()\n",
             "hl.bind(\"SUPER + K\", function() end)\n",
             "hl.bind(\"SUPER + K\", hl.dsp.exec_cmd(\"a\" .. \"b\"))\n",
+            // Layouts are written only together with their variants.
             "hl.config({ input = { kb_layout = \"de\" } })\n",
+            "hl.config({ input = { kb_file = \"/tmp/x\" } })\n",
         ] {
             assert!(parse(&INPUT, text).is_err(), "{text}");
         }
@@ -751,6 +1066,41 @@ mod tests {
         assert_eq!(parse(&DESKTOP, &text).unwrap(), file);
         assert!(parse(&DESKTOP, "hl.bind(\"SUPER + Q\", hl.dsp.window.close())\n").is_err());
         assert!(parse(&INPUT, &text).is_err());
+    }
+
+    #[test]
+    fn translucent_colors_and_offsets_read_back() {
+        let border = DESKTOP.option("window-appearance.active-border").unwrap();
+        assert_eq!(border.path(), ["general", "col", "active_border"]);
+        assert_eq!(
+            border.validate(&json!("#0DB7D4")).unwrap(),
+            json!("#0db7d4ff")
+        );
+        assert!(border.validate(&json!("#0db7d4f")).is_err());
+        // Hyprland reports AARRGGBB gradients; the first color is used.
+        assert_eq!(border.observed(&json!("77938e9d 0deg")), json!("#938e9d77"));
+        assert_eq!(
+            border.observed(&json!("ff00ff00 ff0000ff 45deg")),
+            json!("#00ff00ff")
+        );
+        let offset = DESKTOP.option("window-appearance.shadow-offset").unwrap();
+        assert_eq!(offset.observed(&json!([0.0, 4.0])), json!([0, 4]));
+        assert!(offset.validate(&json!([0, 400])).is_err());
+        let file = File {
+            options: BTreeMap::from([
+                ("window-appearance.active-border".into(), json!("#938e9d77")),
+                ("window-appearance.shadow-offset".into(), json!([-2, 4])),
+            ]),
+            ..File::default()
+        };
+        let text = render(&DESKTOP, &file);
+        assert!(
+            text.contains(
+                "hl.config({ general = { col = { active_border = \"rgba(938e9d77)\" } } })"
+            )
+        );
+        assert!(text.contains("hl.config({ decoration = { shadow = { offset = { -2, 4 } } } })"));
+        assert_eq!(parse(&DESKTOP, &text).unwrap(), file);
     }
 
     #[test]

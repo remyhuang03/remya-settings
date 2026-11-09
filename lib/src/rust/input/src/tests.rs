@@ -26,6 +26,17 @@ fn option_from_line(line: &str) -> Option<(&'static config::Opt, Value)> {
 }
 
 impl World {
+    /// Stores a value the way `descriptions` reports it; layouts are two options.
+    fn store(&mut self, opt: &config::Opt, value: Value) {
+        if opt.kind == config::Kind::Layouts {
+            let (layouts, variants) = xkb::join(&value).unwrap();
+            self.options.insert("input:kb_layout", json!(layouts));
+            self.options.insert("input:kb_variant", json!(variants));
+        } else {
+            self.options.insert(opt.name, value);
+        }
+    }
+
     fn reload(&mut self) {
         self.reloads += 1;
         self.binds = self.base_binds.clone();
@@ -33,7 +44,7 @@ impl World {
             config::parse(&INPUT, &fs::read_to_string(&self.file).unwrap_or_default()).unwrap();
         for (id, value) in file.options {
             let opt = config::option(&id).unwrap();
-            self.options.insert(opt.name, value);
+            self.store(opt, value);
         }
         for keys in file.disabled {
             let (m, k) = keys::parse_combo(&keys).unwrap();
@@ -56,10 +67,12 @@ impl Hypr for Fake {
                     .iter()
                     .map(|o| json!({"name": o.name, "current": w.options.get(o.name).cloned().unwrap_or(match o.kind {
                         config::Kind::Bool => json!(false),
-                        config::Kind::Text(_) => json!("[[EMPTY]]"),
+                        config::Kind::Text(_) | config::Kind::XkbOptions => json!("[[EMPTY]]"),
+                        config::Kind::Layouts => json!("us"),
                         _ => json!(0),
                     })}))
                     .collect();
+                all.push(json!({"name": "input:kb_variant", "current": w.options.get("input:kb_variant").cloned().unwrap_or(json!("[[EMPTY]]"))}));
                 all.push(json!({"name": "misc:disable_autoreload", "current": true}));
                 Value::from(all).to_string()
             }
@@ -84,6 +97,10 @@ impl Hypr for Fake {
                 }
                 if let Some((opt, value)) = option_from_line(code) {
                     w.options.insert(opt.name, value);
+                } else if let Ok(file) = config::parse(&INPUT, code) {
+                    for (id, value) in file.options {
+                        w.store(config::option(&id).unwrap(), value);
+                    }
                 } else if code.contains("hl.define_submap") {
                 } else if let Some(rest) = code.strip_prefix("hl.dispatch(hl.dsp.submap(\"") {
                     let name = rest.split('"').next().unwrap();
@@ -195,6 +212,60 @@ fn option_changes_apply_live_persist_and_survive_reload() {
     let state = s.input.set("mouse.natural-scroll", "true").unwrap();
     assert_eq!(state["system"]["mouse.pointer-speed"], json!(0.5));
     assert_eq!(state["conflict"], false);
+}
+
+#[test]
+fn keyboard_layouts_and_variants_change_together() {
+    let mut s = setup();
+    let layouts =
+        json!([{"layout": "us", "variant": ""}, {"layout": "de", "variant": "nodeadkeys"}]);
+    let state = s
+        .input
+        .set("language.keyboard-layouts", &layouts.to_string())
+        .unwrap();
+    assert_eq!(state["system"]["language.keyboard-layouts"], layouts);
+    let file = fs::read_to_string(s.hypr.join("remya-settings/input.lua")).unwrap();
+    assert!(file.contains(
+        "hl.config({ input = { kb_layout = \"us,de\", kb_variant = \",nodeadkeys\" } })"
+    ));
+    assert_eq!(
+        s.world.0.lock().unwrap().options["input:kb_variant"],
+        ",nodeadkeys"
+    );
+    let state = s
+        .input
+        .set(
+            "language.keyboard-options",
+            "\"grp:alt_shift_toggle,caps:escape\"",
+        )
+        .unwrap();
+    assert_eq!(
+        state["options"]["language.keyboard-options"],
+        "grp:alt_shift_toggle,caps:escape"
+    );
+    s.world.0.lock().unwrap().reload();
+    s.input.refresh().unwrap();
+    assert_eq!(s.input.state()["conflict"], false);
+    for bad in [
+        json!([{"layout": "us", "variant": "nodeadkeys"}]),
+        json!([{"layout": "no-such-layout"}]),
+        json!([]),
+    ] {
+        let error = s
+            .input
+            .set("language.keyboard-layouts", &bad.to_string())
+            .unwrap_err();
+        assert!(error.starts_with("InvalidArgument:"), "{error}");
+    }
+    assert!(
+        s.input
+            .set("language.keyboard-options", "\"grp:nope\"")
+            .is_err()
+    );
+    assert_eq!(
+        s.input.state()["options"]["language.keyboard-layouts"],
+        layouts
+    );
 }
 
 #[test]
@@ -340,4 +411,183 @@ fn recording_enters_and_leaves_an_empty_submap() {
     assert!(s.input.is_recording());
     s.input.stop_recording().unwrap();
     assert_eq!(s.world.0.lock().unwrap().submap, "");
+}
+
+/// A compositor for the desktop group whose workspace rules follow a reload of `desktop.lua`.
+#[derive(Clone, Default)]
+struct Desk(Arc<Mutex<(PathBuf, Vec<Value>, u32)>>);
+
+impl Hypr for Desk {
+    fn request(&self, args: &[&str]) -> Result<String, String> {
+        let mut w = self.0.lock().unwrap();
+        Ok(match args {
+            ["-j", "descriptions"] => {
+                let mut all: Vec<Value> = DESKTOP
+                    .options
+                    .iter()
+                    .map(|o| {
+                        json!({"name": o.name, "current": match o.kind {
+                            config::Kind::Bool => json!(false),
+                            config::Kind::Text(_) => json!("[[EMPTY]]"),
+                            config::Kind::Color | config::Kind::Rgba => json!("ff000000"),
+                            config::Kind::Vec2(..) => json!([0, 0]),
+                            _ => json!(0),
+                        }})
+                    })
+                    .collect();
+                all.push(json!({"name": "misc:disable_autoreload", "current": true}));
+                Value::from(all).to_string()
+            }
+            ["-j", "workspacerules"] => Value::from(w.1.clone()).to_string(),
+            ["-j", "monitors"] => json!([{"name": "DP-1", "description": "Wide", "x": 0, "y": 0,
+                "width": 3840, "height": 2160, "scale": 2.0, "transform": 1,
+                "activeWorkspace": {"name": "1"}, "specialWorkspace": {"name": ""}}])
+            .to_string(),
+            ["-j", "workspaces"] => json!([{"id": 1, "name": "1", "monitor": "DP-1",
+                "windows": 2, "ispersistent": false}])
+            .to_string(),
+            ["reload"] => {
+                w.2 += 1;
+                let file =
+                    config::parse(&DESKTOP, &fs::read_to_string(&w.0).unwrap_or_default()).unwrap();
+                // Hyprland reports only the fields a rule sets, under camelCase names.
+                w.1 = file
+                    .rules
+                    .iter()
+                    .map(|r| {
+                        let mut e = json!({"workspaceString": r.workspace, "enabled": true});
+                        if !r.monitor.is_empty() {
+                            e["monitor"] = json!(r.monitor);
+                        }
+                        if r.default {
+                            e["default"] = json!(true);
+                        }
+                        if r.persistent {
+                            e["persistent"] = json!(true);
+                        }
+                        if !r.default_name.is_empty() {
+                            e["defaultName"] = json!(r.default_name);
+                        }
+                        e
+                    })
+                    .collect();
+                "ok".into()
+            }
+            other => return Err(format!("unexpected {other:?}")),
+        })
+    }
+}
+
+#[test]
+fn workspace_rules_are_validated_written_reloaded_and_reconciled() {
+    let dir = tempfile::tempdir().unwrap();
+    let hypr = dir.path().join("hypr");
+    fs::create_dir_all(&hypr).unwrap();
+    fs::write(hypr.join("hyprland.lua"), "hl.config({})\n").unwrap();
+    let owned = hypr.join("remya-settings/desktop.lua");
+    let world = Desk::default();
+    world.0.lock().unwrap().0 = owned.clone();
+    // A rule from another file is shown but never claimed by Settings.
+    world.0.lock().unwrap().1 = vec![json!({"workspaceString": "9", "persistent": true})];
+    let mut desk = Input::new(
+        &DESKTOP,
+        world.clone(),
+        hypr.clone(),
+        dir.path().join("desktop.toml"),
+    );
+    desk.refresh().unwrap();
+    let state = desk.state();
+    assert_eq!(state["rules"], json!([]));
+    assert_eq!(state["live_rules"][0]["settings"], false);
+    // A portrait 4K display at scale 2 is 1080 by 1920 desktop pixels.
+    assert_eq!(state["monitors"][0]["width"], json!(1080.0));
+    assert_eq!(state["monitors"][0]["height"], json!(1920.0));
+    assert_eq!(state["workspaces"][0]["windows"], 2);
+    assert!(!owned.exists());
+
+    let set = |desk: &mut Input<Desk>, rule: Value| desk.set(RULE_SET, &rule.to_string());
+    for bad in [
+        json!({"workspace": "web"}),
+        json!({"workspace": "name:"}),
+        json!({"workspace": "0"}),
+        json!({"workspace": "1", "monitor": "DP 1"}),
+        json!({"workspace": "1", "default": true}),
+        json!({"workspace": "special:x", "monitor": "DP-1", "default": true}),
+        json!({"workspace": "name:chat", "default_name": "Chat"}),
+        json!({"workspace": "1", "gaps_in": 4}),
+    ] {
+        let error = set(&mut desk, bad.clone()).unwrap_err();
+        assert!(error.starts_with("InvalidArgument:"), "{bad}: {error}");
+    }
+    assert!(!owned.exists());
+
+    let state = set(
+        &mut desk,
+        json!({"workspace": "2", "monitor": "DP-1", "persistent": true, "default": true}),
+    )
+    .unwrap();
+    assert_eq!(state["rules"][0]["workspace"], "2");
+    assert_eq!(state["live_rules"][0]["settings"], true);
+    assert!(fs::read_to_string(&owned).unwrap().contains(
+        "hl.workspace_rule({ workspace = \"2\", monitor = \"DP-1\", default = true, persistent = true })"
+    ));
+    // A second default on the same display takes over; renaming onto a used workspace is refused.
+    set(
+        &mut desk,
+        json!({"workspace": "name:chat", "persistent": true}),
+    )
+    .unwrap();
+    let state = set(
+        &mut desk,
+        json!({"workspace": "3", "monitor": "DP-1", "default": true}),
+    )
+    .unwrap();
+    assert_eq!(state["rules"][0]["default"], json!(null));
+    assert_eq!(state["rules"][2]["default"], true);
+    let error = set(&mut desk, json!({"workspace": "3", "previous": "2"})).unwrap_err();
+    assert!(error.starts_with("InvalidArgument:"), "{error}");
+    // Editing keeps the rule's place and drops removed fields once Hyprland reports them gone.
+    let state = set(
+        &mut desk,
+        json!({"workspace": "4", "default_name": "Web", "previous": "2"}),
+    )
+    .unwrap();
+    assert_eq!(
+        state["rules"][0],
+        json!({"workspace": "4", "default_name": "Web"})
+    );
+    assert!(
+        !fs::read_to_string(&owned)
+            .unwrap()
+            .contains("workspace = \"2\"")
+    );
+
+    // A hand change in Settings' own file is a conflict until one side is chosen.
+    let text = fs::read_to_string(&owned).unwrap();
+    fs::write(&owned, text.replace("\"Web\"", "\"Mail\"")).unwrap();
+    desk.refresh().unwrap();
+    assert_eq!(desk.state()["conflicts"], json!(["workspaces"]));
+    assert!(set(&mut desk, json!({"workspace": "5"})).is_err());
+    let state = desk.resolve("settings").unwrap();
+    assert_eq!(state["conflict"], false);
+    assert!(fs::read_to_string(&owned).unwrap().contains("\"Web\""));
+    fs::write(
+        &owned,
+        fs::read_to_string(&owned)
+            .unwrap()
+            .replace("\"Web\"", "\"Mail\""),
+    )
+    .unwrap();
+    let state = desk.resolve("system").unwrap();
+    assert_eq!(state["rules"][0]["default_name"], "Mail");
+
+    let state = desk
+        .set(RULE_REMOVE, &json!({"workspace": "name:chat"}).to_string())
+        .unwrap();
+    assert_eq!(state["rules"].as_array().unwrap().len(), 2);
+    assert!(
+        desk.set(RULE_REMOVE, &json!({"workspace": "name:chat"}).to_string())
+            .is_err()
+    );
+    assert!(world.0.lock().unwrap().2 >= 5);
 }

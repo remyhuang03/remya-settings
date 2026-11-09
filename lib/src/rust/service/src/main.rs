@@ -213,6 +213,14 @@ fn run() -> Result<(), String> {
                     }
                     if method == "Reload"
                         || args.first().is_some_and(|id| {
+                            id == remya_settings_date_time::language::FEATURE
+                                || remya_settings_date_time::language::is_setting(id)
+                        })
+                    {
+                        signal(&bus, "language", &state.lock().unwrap().language.state());
+                    }
+                    if method == "Reload"
+                        || args.first().is_some_and(|id| {
                             id == "desktop" || remya_settings_input::is_desktop_setting(id)
                         })
                     {
@@ -224,6 +232,14 @@ fn run() -> Result<(), String> {
                         })
                     {
                         signal(&bus, "themes", &state.lock().unwrap().themes.state());
+                    }
+                    if method == "Reload"
+                        || args.first().is_some_and(|id| {
+                            id == "text-size"
+                                || remya_settings_appearance::text_size::is_setting(id)
+                        })
+                    {
+                        signal(&bus, "text-size", &state.lock().unwrap().text_size.state());
                     }
                     if method == "Reload"
                         || args.first().is_some_and(|id| {

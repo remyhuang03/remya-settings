@@ -171,7 +171,6 @@ DateTimeState _clock(Map<String, dynamic> map) => DateTimeState(
   timeServers: (map['time_servers'] as List).cast<String>(),
   activeTimeServer: map['active_time_server'] as String,
   syncError: map['sync_error'] as String?,
-  timeLocale: map['time_locale'] as String,
 );
 
 class ServiceDateTimeBackend implements DateTimeBackend {
@@ -205,13 +204,6 @@ class ServiceDateTimeBackend implements DateTimeBackend {
       set(timeServerSettingId, jsonEncode(servers));
   @override
   Future<DateTimeState> syncNow() => set(syncNowSettingId, 'sync');
-  @override
-  Future<List<String>> timeLocales() async =>
-      ((await client.call('Get', ['time-locales']))['options'] as List)
-          .cast<String>();
-  @override
-  Future<DateTimeState> setTimeLocale(String value) =>
-      set(timeLocaleSettingId, value);
   @override
   Future<void> restart() async {
     await client.call('Restart');
@@ -263,7 +255,6 @@ class ServiceDateTimeController extends DateTimeController {
         final zones = await backend.timezones();
         timezones = zones.map((z) => z.id).toList();
         timezoneLabels = {for (final z in zones) z.id: z.label};
-        timeLocales = await backend.timeLocales();
       }
       _update(await client.call('Get', ['date-time']));
     } catch (error) {
@@ -316,9 +307,6 @@ class ServiceDateTimeController extends DateTimeController {
       _change(timeServerSettingId, jsonEncode(servers));
   @override
   Future<DateTimeState> syncNow() => _change(syncNowSettingId, 'sync');
-  @override
-  Future<DateTimeState> setTimeLocale(String locale) =>
-      _change(timeLocaleSettingId, locale);
   @override
   Future<DateTimeState> setManualTime(String localTime, String timezone) =>
       _change(

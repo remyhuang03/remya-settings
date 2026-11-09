@@ -91,6 +91,9 @@ class _MultitaskingPageState extends State<MultitaskingPage> {
             _controller.option('multitasking.snap') == true,
           'multitasking.border-grab-area' || 'multitasking.border-hover-icon' =>
             _controller.option('multitasking.resize-on-border') == true,
+          // Dwindle options mean nothing to the other layouts.
+          _ when setting.id.startsWith('multitasking.dwindle-') =>
+            layout == 'dwindle',
           _ => true,
         },
         controlBuilder: (setting) => switch (setting.id) {
@@ -119,6 +122,38 @@ class _MultitaskingPageState extends State<MultitaskingPage> {
           'multitasking.modal-parent-blocking' => rows.build(
             setting,
             subtitle: 'The window that opened a dialog waits until it closes',
+          ),
+          'multitasking.dwindle-preserve-split' => rows.build(
+            setting,
+            subtitle:
+                'A split stays horizontal or vertical when windows close '
+                'or the area changes shape',
+          ),
+          'multitasking.dwindle-smart-split' => rows.build(
+            setting,
+            subtitle:
+                'The new window opens on the side of the focused window '
+                'nearest the pointer',
+          ),
+          'multitasking.dwindle-use-active' => rows.build(
+            setting,
+            subtitle: 'Otherwise the window under the pointer is split',
+          ),
+          'multitasking.dwindle-smart-resizing' => rows.build(
+            setting,
+            subtitle:
+                'Resizing with the mouse moves the edge nearest the pointer',
+          ),
+          'multitasking.dwindle-permanent-direction' => rows.build(
+            setting,
+            subtitle:
+                'A direction chosen with a shortcut applies to every new '
+                'window until changed',
+          ),
+          'multitasking.dwindle-split-width' => rows.build(
+            setting,
+            subtitle:
+                'Windows wider than this times their height split side by side',
           ),
           _ => rows.build(setting),
         },

@@ -6,3 +6,4 @@ mod files;
 mod frb_generated;
 pub mod packs;
 mod system_theme;
+pub mod text_size;

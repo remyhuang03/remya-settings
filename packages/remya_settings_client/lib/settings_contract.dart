@@ -30,3 +30,5 @@ export 'src/bar_layout.dart';
 export 'src/startup.dart';
 export 'src/storage.dart';
 export 'src/theme_packs.dart';
+export 'src/text_size.dart';
+export 'src/language.dart';

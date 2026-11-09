@@ -3,11 +3,13 @@ use crate::privileged::{Request, Session};
 use gio::glib::{Variant, variant::ToVariant};
 use remya_settings_appearance::api as appearance;
 use remya_settings_appearance::packs::{self, ThemePacks};
+use remya_settings_appearance::text_size::{self, TextSize};
 use remya_settings_applications as applications;
 use remya_settings_background::{
     BackgroundManager, RealDesktop, is_accent_setting, is_background_setting, manager::Paths,
 };
 use remya_settings_date_time::api as clock;
+use remya_settings_date_time::language::{self, Language};
 use remya_settings_default_apps::{self as default_apps, DefaultApps};
 use remya_settings_display::{
     DisplayManager, Hyprctl, NightLight, RealSunset, atomic_write, is_display_setting,
@@ -51,7 +53,6 @@ pub const MANUAL: &str = "date-time.6422d209";
 pub const AUTO: &str = "date-time.db451de3";
 pub const SYNC: &str = "date-time.098d06ec";
 pub const SERVERS: &str = "date-time.7e33a213";
-pub const LOCALE: &str = "date-time.format";
 const STYLES: &[&str] = &[
     "tonal_spot",
     "fidelity",
@@ -133,7 +134,7 @@ fn validate_bar_layout(value: Value) -> Result<Value, String> {
     serde_json::to_value(layout).map_err(|e| e.to_string())
 }
 fn prefs(state: &clock::DateTimeState) -> Value {
-    json!({"timezone":state.timezone,"ntp":state.ntp,"time_servers":state.time_servers,"time_locale":state.time_locale})
+    json!({"timezone":state.timezone,"ntp":state.ntp,"time_servers":state.time_servers})
 }
 fn write(path: &std::path::Path, value: &Value) -> Result<(), String> {
     atomic_write(
@@ -263,6 +264,8 @@ pub struct State {
     pub input: Input<RealHypr>,
     pub desktop: Input<RealHypr>,
     pub themes: ThemePacks,
+    pub text_size: TextSize,
+    pub language: Language<language::RealSystem>,
     pub appimages: applications::appimages::AppImages,
     pub network: NetworkManager,
     pub bluetooth: remya_settings_bluetooth::Bluetooth,
@@ -328,6 +331,8 @@ impl State {
                 config.with_file_name("desktop.toml"),
             ),
             themes: ThemePacks::new(config.with_file_name("themes.toml")),
+            text_size: TextSize::new(config.with_file_name("text-size.toml")),
+            language: Language::new(language::RealSystem, config.with_file_name("language.toml")),
             bluetooth: remya_settings_bluetooth::Bluetooth::new(),
             proxy: remya_settings_network::proxy::Proxy::new(),
             cameras: remya_settings_camera::Cameras::new(
@@ -521,6 +526,8 @@ impl State {
         let _ = self.input.refresh();
         let _ = self.desktop.refresh();
         let _ = self.themes.refresh();
+        let _ = self.text_size.refresh();
+        let _ = self.language.refresh();
         // Failures stay in the manager's state for every reader.
         let _ = self.network.refresh();
         // A detection failure is retained by the manager and reported in its state.
@@ -559,10 +566,11 @@ impl State {
         if let Some(value) = loaded.as_ref() {
             if value["version"] != 1
                 || !value.is_object()
-                || value.as_object().unwrap().keys().any(|k| {
-                    !["version", "timezone", "ntp", "time_servers", "time_locale"]
-                        .contains(&k.as_str())
-                })
+                || value
+                    .as_object()
+                    .unwrap()
+                    .keys()
+                    .any(|k| !["version", "timezone", "ntp", "time_servers"].contains(&k.as_str()))
             {
                 return Err("Invalid date/time configuration".into());
             }
@@ -578,9 +586,6 @@ impl State {
             || saved["time_servers"]
                 .as_array()
                 .is_none_or(|v| v.iter().any(|s| s.as_str().is_none()))
-            || !clock::list_time_locales()?
-                .iter()
-                .any(|l| Some(l.as_str()) == saved["time_locale"].as_str())
         {
             return Err("Invalid saved date/time preferences".into());
         }
@@ -684,7 +689,7 @@ impl State {
     pub fn configuration(&self) -> Value {
         let mut date = self.date.clone();
         date["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
-        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"startup":self.startup.state(),"input":self.input.state(),"desktop":self.desktop.state(),"themes":self.themes.state(),"network":self.network.state(),"sound":self.sound.state(),"power":self.power.state(),"cameras":self.cameras.state()})
+        json!({"appearance":{"saved":self.theme["theme"]["theme_mode"],"system":self.system["mode"],"conflict":self.theme["theme"]["theme_mode"]!=self.system["mode"],"error":self.theme_error},"date-time":date,"display":self.display.state(),"night-light":self.night_light.state(),"hostname":self.hostname_state(),"background":self.background.state(),"default-apps":self.default_apps.state(),"startup":self.startup.state(),"input":self.input.state(),"language":self.language.state(),"desktop":self.desktop.state(),"themes":self.themes.state(),"text-size":self.text_size.state(),"network":self.network.state(),"sound":self.sound.state(),"power":self.power.state(),"cameras":self.cameras.state()})
     }
     pub fn controls(&self) -> Vec<&Value> {
         self.catalog["pages"]
@@ -725,7 +730,7 @@ impl State {
                         self.refresh();
                         Ok(self.configuration())
                     }
-                    "date-time" | ZONE | MANUAL | AUTO | SYNC | SERVERS | LOCALE => {
+                    "date-time" | ZONE | MANUAL | AUTO | SYNC | SERVERS => {
                         self.refresh_date()?;
                         let mut v = self.date.clone();
                         v["error"] = json!(self.date_error.as_ref().or(self.auth_error.as_ref()));
@@ -737,8 +742,7 @@ impl State {
                                 MANUAL => v["local_time"].clone(),
                                 AUTO => v["ntp"].clone(),
                                 SYNC => v["ntp_synchronized"].clone(),
-                                SERVERS => v["time_servers"].clone(),
-                                _ => v["time_locale"].clone(),
+                                _ => v["time_servers"].clone(),
                             };
                         }
                         Ok(v)
@@ -857,6 +861,27 @@ impl State {
                     "themes" => {
                         let _ = self.themes.refresh();
                         Ok(self.themes.state())
+                    }
+                    text_size::FEATURE => {
+                        let _ = self.text_size.refresh();
+                        Ok(self.text_size.state())
+                    }
+                    language::FEATURE => {
+                        let _ = self.language.refresh();
+                        Ok(self.language.state())
+                    }
+                    _ if language::is_setting(key) => {
+                        let _ = self.language.refresh();
+                        Ok(json!({"id":key,"availability":"available","reason":"Uses systemd-localed.","value":self.language.setting_value(key),"error":self.language.state()["error"]}))
+                    }
+                    language::LOCALES => self.language.locales(),
+                    _ if key.starts_with(language::PREVIEW) => {
+                        language::preview(&key[language::PREVIEW.len()..])
+                    }
+                    "keyboard-layouts" => Ok(input::xkb::Rules::load()?.catalog()),
+                    _ if text_size::is_setting(key) => {
+                        let _ = self.text_size.refresh();
+                        Ok(json!({"id":key,"availability":"available","reason":"Uses the GNOME interface text-scaling-factor.","value":self.text_size.setting_value(),"error":self.text_size.state()["error"]}))
                     }
                     _ if key.starts_with(packs::PREVIEW) => self.themes.preview(&key[packs::PREVIEW.len()..]),
                     _ if packs::is_setting(key) => {
@@ -989,7 +1014,6 @@ impl State {
                             json!({"options":zones.iter().map(|z|&z.id).collect::<Vec<_>>(),"labels":zones.iter().map(|z|(z.id.clone(),json!(z.label))).collect::<serde_json::Map<_,_>>()}),
                         )
                     }
-                    "time-locales" => Ok(json!({"options":clock::list_time_locales()?})),
                     "system-information" => {
                         let _ = self.hostname.refresh();
                         let mut value = remya_settings_system_information::read();
@@ -1214,6 +1238,14 @@ impl State {
         if packs::is_setting(key) {
             return self.themes.set(key, value);
         }
+        if text_size::is_setting(key) {
+            return self.text_size.set(value);
+        }
+        if language::is_setting(key) {
+            let values = self.language.plan(key, value)?;
+            let written = self.request(Request::Language { values }).map(|_| ());
+            return self.language.finish(written);
+        }
         if startup::IDS.contains(&key) {
             return self.startup.set(key, value);
         }
@@ -1401,17 +1433,6 @@ impl State {
                 }
                 (Request::Servers { servers }, vec!["time_servers"])
             }
-            LOCALE => {
-                if !clock::list_time_locales()?.iter().any(|l| l == value) {
-                    return Err(invalid("Choose an installed locale"));
-                }
-                (
-                    Request::Locale {
-                        locale: value.into(),
-                    },
-                    vec!["time_locale"],
-                )
-            }
             MANUAL => {
                 #[derive(serde::Deserialize)]
                 #[serde(deny_unknown_fields)]
@@ -1432,9 +1453,6 @@ impl State {
             _ => return Err(invalid("Unknown setting")),
         };
         let state = self.privileged(request)?;
-        if key == LOCALE {
-            self.restart_suggested = true;
-        }
         self.save_date(state, &keys)
     }
     fn resolve(&mut self, feature: &str, source: &str) -> Result<Value, String> {
@@ -1455,6 +1473,18 @@ impl State {
         }
         if feature == "themes" {
             return self.themes.resolve(source);
+        }
+        if feature == text_size::FEATURE {
+            return self.text_size.resolve(source);
+        }
+        if feature == language::FEATURE {
+            return match self.language.resolve(source)? {
+                Some(values) => {
+                    let written = self.request(Request::Language { values }).map(|_| ());
+                    self.language.finish(written)
+                }
+                None => Ok(self.language.state()),
+            };
         }
         if feature == "startup" {
             return self.startup.resolve(source);
@@ -1517,11 +1547,10 @@ impl State {
                 self.refresh_date()?;
                 if source == "system" {
                     let state = clock::read_date_time()?;
-                    self.save_date(state, &["timezone", "ntp", "time_servers", "time_locale"])?;
+                    self.save_date(state, &["timezone", "ntp", "time_servers"])?;
                 } else {
                     let saved = self.saved.clone();
                     self.set(ZONE, saved["timezone"].as_str().unwrap())?;
-                    self.set(LOCALE, saved["time_locale"].as_str().unwrap())?;
                     if self.date["time_servers"] != saved["time_servers"] {
                         self.set(AUTO, "true")?;
                         self.set(SERVERS, &saved["time_servers"].to_string())?;

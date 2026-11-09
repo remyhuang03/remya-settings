@@ -65,11 +65,6 @@ impl Timedate {
             Ok(active) => (active, None),
             Err(error) => (String::new(), Some(error)),
         };
-        let time_locale = self
-            .locale_values()?
-            .into_iter()
-            .find_map(|value| value.strip_prefix("LC_TIME=").map(str::to_owned))
-            .unwrap_or_default();
         Ok(DateTimeState {
             unix_micros,
             local_time: local
@@ -82,7 +77,6 @@ impl Timedate {
             time_servers,
             active_time_server,
             sync_error,
-            time_locale,
         })
     }
 
@@ -263,7 +257,6 @@ mod tests {
             locales: Vec<String>,
             packets: u64,
             deny_settings: bool,
-            ignore_locale: bool,
             rebooted: bool,
         }
         let mut daemon = Daemon(
@@ -366,13 +359,11 @@ mod tests {
                                 "SetLocale" => {
                                     let (values, interactive) = args.get::<(Vec<String>, bool)>().unwrap();
                                     assert!(interactive);
-                                    assert_eq!(values.len(), 1);
-                                    assert!(values[0].starts_with("LC_TIME="));
                                     if values.iter().any(|value| value.ends_with('=')) {
                                         invocation.return_dbus_error("org.freedesktop.DBus.Error.InvalidArgs", "Empty locale is invalid");
                                         return;
                                     }
-                                    if !state.ignore_locale {
+                                    {
                                         for value in values {
                                             let (key, content) = value.split_once('=').unwrap();
                                             state.locales.retain(|old| old.split_once('=').unwrap().0 != key);
@@ -380,7 +371,7 @@ mod tests {
                                             state.locales.push(value);
                                         }
                                         let lang = state.locales.iter().find_map(|v| v.strip_prefix("LANG=")).unwrap_or("C").to_owned();
-                                        state.locales.retain(|v| v.strip_prefix("LC_TIME=").is_none_or(|locale| locale != lang));
+                                        state.locales.retain(|v| v.starts_with("LANG=") || v.split_once('=').unwrap().1 != lang);
                                     }
                                 }
                                 "Reboot" => { assert!(args.get::<(bool,)>().unwrap().0); state.rebooted = true; }
@@ -427,50 +418,30 @@ mod tests {
         client.write_servers(&["pool.ntp.org".into()]).unwrap();
         assert!(client.sync_now().unwrap().ntp_synchronized);
         assert!(client.write_servers(&["https://bad".into()]).is_err());
-        let locale = crate::services::list_locales()
-            .unwrap()
-            .into_iter()
-            .find(|v| !v.is_empty())
+        let assign = |lang: &str, time: &str| {
+            let mut values = vec![format!("LANG={lang}")];
+            values.extend(crate::language::CATEGORIES.map(|c| format!("{c}={time}")));
+            values
+        };
+        client.set_locale(&assign("en_US.UTF-8", "C")).unwrap();
+        assert!(state.lock().unwrap().locales.contains(&"LC_TIME=C".into()));
+        // A category sent as LANG's value follows LANG; unrelated variables stay.
+        state.lock().unwrap().locales.push("LC_CTYPE=C".into());
+        client
+            .set_locale(&assign("en_US.UTF-8", "en_US.UTF-8"))
             .unwrap();
-        assert_eq!(client.set_time_locale(&locale).unwrap().time_locale, locale);
-        assert!(
-            state
-                .lock()
-                .unwrap()
-                .locales
-                .contains(&"LANG=en_US.UTF-8".into())
+        assert_eq!(
+            client.locale_values().unwrap(),
+            ["LC_CTYPE=C", "LANG=en_US.UTF-8"]
         );
-        assert!(
-            state
-                .lock()
-                .unwrap()
-                .locales
-                .contains(&"LC_NUMERIC=C".into())
-        );
-        if crate::services::list_locales()
-            .unwrap()
-            .contains(&"en_US.utf8".into())
-        {
-            assert_eq!(
-                client.set_time_locale("en_US.utf8").unwrap().time_locale,
-                "en_US.utf8"
-            );
-            client.set_time_locale(&locale).unwrap();
-        }
-        for option in crate::services::list_locales().unwrap() {
-            client.set_time_locale(&option).unwrap();
-            assert!(client.set_time_locale("").unwrap().time_locale.is_empty());
-            let locales = &state.lock().unwrap().locales;
-            assert!(locales.contains(&"LANG=en_US.UTF-8".into()));
-            assert!(locales.contains(&"LC_NUMERIC=C".into()));
-        }
-        client.set_time_locale(&locale).unwrap();
-        state.lock().unwrap().ignore_locale = true;
-        assert!(client.set_time_locale("").unwrap_err().contains("readback"));
-        state.lock().unwrap().ignore_locale = false;
         state.lock().unwrap().deny_settings = true;
         assert!(client.write_servers(&[]).unwrap_err().contains("denied"));
-        assert!(client.set_time_locale("").unwrap_err().contains("denied"));
+        assert!(
+            client
+                .set_locale(&assign("C", "C"))
+                .unwrap_err()
+                .contains("denied")
+        );
         state.lock().unwrap().deny_settings = false;
         client
             .service_call(

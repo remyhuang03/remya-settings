@@ -96,7 +96,7 @@ void main() {
     );
   });
 
-  test('automatic time, persistent server choices and LC_TIME reconcile independently', () async {
+  test('automatic time and persistent server choices reconcile', () async {
     await controller.reload();
     await controller.setAutomaticTime(false);
     expect(controller.hideManualTime, isFalse);
@@ -108,16 +108,10 @@ void main() {
     expect(backend.syncs, 1);
     await controller.setTimeServers([]);
     expect(backend.servers, isEmpty);
-    await controller.setTimeLocale('zh_CN.utf8');
-    expect(controller.restartSuggested, isTrue);
-    controller.deferRestart();
-    expect(controller.restartDeferred, isTrue);
-    backend.timeLocale = 'C';
     backend.servers = ['time.example.org'];
     await controller.reload();
     expect(controller.hasConflict, isTrue);
     await controller.applySavedConfiguration();
-    expect(backend.timeLocale, 'zh_CN.utf8');
     expect(backend.servers, isEmpty);
     expect(controller.hasConflict, isFalse);
     for (final servers in [
@@ -131,10 +125,6 @@ void main() {
         throwsArgumentError,
       );
     }
-    await expectLater(
-      controller.setTimeLocale('not-installed'),
-      throwsArgumentError,
-    );
     final before = controller.file.readAsStringSync();
     backend.error = StateError('Authorization canceled');
     await expectLater(

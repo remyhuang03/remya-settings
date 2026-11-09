@@ -600,6 +600,7 @@ pub(crate) mod tests {
 <key name="cursor-theme" type="s"><default>'Adwaita'</default></key>
 <key name="cursor-size" type="i"><default>24</default></key>
 <key name="icon-theme" type="s"><default>'Adwaita'</default></key>
+<key name="text-scaling-factor" type="d"><default>1.0</default><range min="0.5" max="3.0"/></key>
 </schema></schemalist>"#).unwrap();
         assert!(
             Command::new("glib-compile-schemas")

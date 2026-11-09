@@ -99,21 +99,8 @@ impl Timedate {
             .ok_or_else(|| "Invalid system locale".into())
     }
 
-    pub(crate) fn set_time_locale(
-        &self,
-        locale: &str,
-    ) -> Result<crate::api::DateTimeState, String> {
-        if !list_locales()?.iter().any(|value| value == locale) {
-            return Err("Choose an installed locale".into());
-        }
-        let current = self.locale_values()?;
-        let language = current
-            .iter()
-            .find_map(|v| v.strip_prefix("LANG="))
-            .unwrap_or("C");
-        // localed rejects empty assignments and removes overrides equal to LANG.
-        let requested = if locale.is_empty() { language } else { locale };
-        let values = vec![format!("LC_TIME={requested}")];
+    /// Callers pass only validated `KEY=locale` assignments.
+    pub(crate) fn set_locale(&self, values: &[String]) -> Result<(), String> {
         self.service_call(
             LOCALE,
             LOCALE_PATH,
@@ -121,22 +108,7 @@ impl Timedate {
             "SetLocale",
             (values, true).to_variant(),
         )?;
-        let state = self.read()?;
-        let values = self.locale_values()?;
-        let language = values
-            .iter()
-            .find_map(|v| v.strip_prefix("LANG="))
-            .unwrap_or("C");
-        let actual = if state.time_locale.is_empty() {
-            language
-        } else {
-            &state.time_locale
-        };
-        let requested = if locale.is_empty() { language } else { locale };
-        if normalize_locale(actual) != normalize_locale(requested) {
-            return Err("LC_TIME readback does not match the request".into());
-        }
-        Ok(state)
+        Ok(())
     }
 
     pub(crate) fn sync_now(&self) -> Result<crate::api::DateTimeState, String> {
