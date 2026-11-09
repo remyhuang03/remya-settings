@@ -19478,7 +19478,7 @@
               "title": "Pill layout",
               "type": "action",
               "availability": "available",
-              "reason": "Arrange, group, show or hide bar pills and set their options.",
+              "reason": "Arrange, group, show or hide bar pills and set their options, including the media title marquee.",
               "value": "Edit"
             }
           ]

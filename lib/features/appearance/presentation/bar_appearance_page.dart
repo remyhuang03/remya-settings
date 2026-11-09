@@ -158,6 +158,7 @@ class _PillOptions extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     final hidden = layout.hidden;
+    const marqueeTitle = 'Enable marquee (experimental, performance degrade)';
     Widget label(String pill, String option) => Row(
       spacing: 16,
       children: [
@@ -239,6 +240,20 @@ class _PillOptions extends StatelessWidget {
                         ),
                 ),
             ],
+          ),
+        ),
+      if (!hidden.contains('media'))
+        SettingRow(
+          id: '$barLayoutSettingId-media',
+          label: label('media', marqueeTitle),
+          control: Semantics(
+            label: marqueeTitle,
+            child: Switch(
+              value: layout.mediaMarquee,
+              onChanged: onLayout == null
+                  ? null
+                  : (value) => onLayout!(layout.copyWith(mediaMarquee: value)),
+            ),
           ),
         ),
       if (!hidden.contains('window'))

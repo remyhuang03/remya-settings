@@ -7,7 +7,7 @@
   <!-- Get remya-bar.folded-apps returns IDs. Set accepts a JSON object with id and folded. -->
   <!-- Get remya-bar.sidebar-layout returns the visible tile IDs in order.
        Set accepts {expected,tiles}; Changed uses the same ID. -->
-  <!-- Get remya-bar.layout returns {groups,workspace_count,resources,window_app_name,center?}.
+  <!-- Get remya-bar.layout returns {groups,workspace_count,resources,window_app_name,media_marquee,center?}.
        Set replaces it with the same JSON object; Changed uses the same ID. -->
   <!-- Airplane: Get airplane returns live derived radio state; Get/Set
        airplane.enabled and airplane.wifi accept boolean strings. Set airplane.enabled

@@ -1079,7 +1079,7 @@ as its set value. Settings serializes edits and atomically stores the list in
 
 ```json
 {"groups":[["notifications","window","resources","media"],["workspaces","clock"],["tray"],["battery","sidebar"]],
- "workspace_count":8,"resources":["cpu","memory","gpu","network"],"window_app_name":true}
+ "workspace_count":8,"resources":["cpu","memory","gpu","network"],"window_app_name":true,"media_marquee":false}
 ```
 
 `groups` is the ordered list of pill groups; the bar spaces groups evenly and
@@ -1090,6 +1090,9 @@ must stay visible because it is the bar's route to quick settings.
 `workspace_count` (1 to 10) sets the workspace slots per group of numbered
 workspaces. `resources` is a non-empty unique subset of `cpu`, `memory`, `gpu`
 and `network`. `window_app_name` shows the app ID above the window title.
+`media_marquee` is a boolean that enables continuous scrolling for long media
+titles. It defaults to false, including saved layouts that omit the field.
+It has an effect only while the media pill is visible.
 Optional `center` is the index of one group centered on the bar; groups before
 and after it are spaced evenly within their own side. It is omitted when no
 group is centered and must refer to an existing group.

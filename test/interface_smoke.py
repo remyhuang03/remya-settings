@@ -335,12 +335,15 @@ def bar_layout_checks():
     assert initial == dbus('Get', setting)
     assert not config.exists()
     assert initial['value']['groups'] == [['notifications', 'window', 'resources', 'media'], ['workspaces', 'clock'], ['tray'], ['battery', 'sidebar']]
-    custom = {'groups': [['clock'], ['sidebar']], 'workspace_count': 5, 'resources': ['cpu'], 'window_app_name': False, 'center': 0}
+    assert initial['value']['media_marquee'] is False
+    custom = {'groups': [['clock', 'media'], ['sidebar']], 'workspace_count': 5, 'resources': ['cpu'], 'window_app_name': False, 'media_marquee': True, 'center': 0}
     assert cli('set', setting, json.dumps(custom)) == dbus('Get', setting)
     assert cli('get', setting)['value'] == custom
-    for invalid in ({**custom, 'groups': [['clock']]}, {**custom, 'workspace_count': 11}, {**custom, 'resources': []}, {**custom, 'center': 2}):
+    for invalid in ({**custom, 'groups': [['clock']]}, {**custom, 'workspace_count': 11}, {**custom, 'resources': []}, {**custom, 'media_marquee': 'true'}, {**custom, 'center': 2}):
         assert 'InvalidArgument' in cli('set', setting, json.dumps(invalid), ok=False)
     assert dbus('Set', setting, json.dumps(initial['value'])) == cli('get', setting)
+    config.write_text(config.read_text().replace('media_marquee = false\n', ''))
+    assert cli('get', setting) == initial == dbus('Get', setting)
     config.write_text('groups = false\n')
     cli('get', setting, ok=False)
     cli('set', setting, json.dumps(custom), ok=False)

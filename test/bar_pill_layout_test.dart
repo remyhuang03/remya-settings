@@ -59,6 +59,17 @@ void main() {
     expect(() => BarLayout.fromJson({'groups': []}), throwsFormatException);
   });
 
+  test('media marquee defaults off and survives layout edits', () {
+    final older = layout.toJson()..remove('media_marquee');
+    expect(BarLayout.fromJson(older).mediaMarquee, isFalse);
+    expect(
+      () => BarLayout.fromJson({...older, 'media_marquee': 'true'}),
+      throwsFormatException,
+    );
+    final enabled = layout.copyWith(mediaMarquee: true).movePill('media', 0);
+    expect(BarLayout.fromJson(enabled.toJson()).mediaMarquee, isTrue);
+  });
+
   testWidgets('editor drags pills into new groups and edits groups', (
     tester,
   ) async {

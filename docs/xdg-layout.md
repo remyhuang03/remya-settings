@@ -13,7 +13,7 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Bar touch keyboard preview | `remya-bar-keyboard.toml` beside the selected Settings configuration |
 | Notification preferences (used by the bar) | `notifications.toml` beside the selected Settings configuration |
 | Bar sidebar tile layout | `remya-bar-sidebar.toml` beside the selected Settings configuration |
-| Bar pill layout and options | `remya-bar-layout.toml` beside the selected Settings configuration |
+| Bar pill layout and options, including the media marquee | `remya-bar-layout.toml` beside the selected Settings configuration |
 | Bar folded tray apps | `remya-bar-tray.toml` beside the selected Settings configuration |
 | Config fallback | `$HOME/.config/remya/settings/config.toml` |
 | Background, accent settings | `background.toml` and `accent.toml` beside `config.toml` |

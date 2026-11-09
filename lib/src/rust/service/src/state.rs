@@ -84,6 +84,7 @@ fn default_bar_layout() -> Value {
         "workspace_count":8,
         "resources":BAR_RESOURCES,
         "window_app_name":true,
+        "media_marquee":false,
     })
 }
 
@@ -95,6 +96,8 @@ fn validate_bar_layout(value: Value) -> Result<Value, String> {
         workspace_count: u8,
         resources: Vec<String>,
         window_app_name: bool,
+        #[serde(default)]
+        media_marquee: bool,
         // TOML has no null: a missing center means no centered group.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         center: Option<usize>,
@@ -1605,6 +1608,12 @@ mod tests {
     fn bar_layout_validates_pills_options_and_requires_the_sidebar() {
         let valid = default_bar_layout();
         assert_eq!(validate_bar_layout(valid.clone()).unwrap(), valid);
+        let mut saved_without_marquee = valid.clone();
+        saved_without_marquee
+            .as_object_mut()
+            .unwrap()
+            .remove("media_marquee");
+        assert_eq!(validate_bar_layout(saved_without_marquee).unwrap(), valid);
         let with = |key: &str, value: Value| {
             let mut layout = valid.clone();
             layout[key] = value;
@@ -1621,13 +1630,15 @@ mod tests {
             with("resources", json!(["cpu", "cpu"])),
             with("resources", json!(["disk"])),
             with("window_app_name", json!("yes")),
+            with("media_marquee", json!("yes")),
+            with("media_marquee", Value::Null),
             with("unknown", json!(true)),
             with("center", json!(4)),
             with("center", json!(-1)),
         ] {
             assert!(validate_bar_layout(layout).is_err());
         }
-        let custom = json!({"groups":[["sidebar"],["clock","workspaces"]],"workspace_count":5,"resources":["network","cpu"],"window_app_name":false,"center":1});
+        let custom = json!({"groups":[["sidebar"],["clock","workspaces"]],"workspace_count":5,"resources":["network","cpu"],"window_app_name":false,"media_marquee":true,"center":1});
         assert_eq!(validate_bar_layout(custom.clone()).unwrap(), custom);
     }
     #[test]

@@ -27,6 +27,7 @@ class BarLayout {
     this.workspaceCount = 8,
     this.resources = barResourceIds,
     this.windowAppName = true,
+    this.mediaMarquee = false,
     this.center,
   });
 
@@ -44,6 +45,7 @@ class BarLayout {
   final int workspaceCount;
   final List<String> resources;
   final bool windowAppName;
+  final bool mediaMarquee;
 
   /// Index of the group centered on the bar, or null. Groups before and after
   /// it are spaced evenly within their own side.
@@ -57,12 +59,15 @@ class BarLayout {
           'resources': final List resources,
           'window_app_name': final bool windowAppName,
         }
-        when json['center'] is int?) {
+        when json['center'] is int? &&
+            (!json.containsKey('media_marquee') ||
+                json['media_marquee'] is bool)) {
       return BarLayout(
         groups: [for (final group in groups) List<String>.from(group as List)],
         workspaceCount: workspaceCount,
         resources: List<String>.from(resources),
         windowAppName: windowAppName,
+        mediaMarquee: json['media_marquee'] as bool? ?? false,
         center: json['center'] as int?,
       );
     }
@@ -74,6 +79,7 @@ class BarLayout {
     'workspace_count': workspaceCount,
     'resources': resources,
     'window_app_name': windowAppName,
+    'media_marquee': mediaMarquee,
     'center': ?center,
   };
 
@@ -86,11 +92,13 @@ class BarLayout {
     int? workspaceCount,
     List<String>? resources,
     bool? windowAppName,
+    bool? mediaMarquee,
   }) => BarLayout(
     groups: groups,
     workspaceCount: workspaceCount ?? this.workspaceCount,
     resources: resources ?? this.resources,
     windowAppName: windowAppName ?? this.windowAppName,
+    mediaMarquee: mediaMarquee ?? this.mediaMarquee,
     center: center,
   );
 
@@ -100,6 +108,7 @@ class BarLayout {
     workspaceCount: workspaceCount,
     resources: resources,
     windowAppName: windowAppName,
+    mediaMarquee: mediaMarquee,
     center: center,
   );
 
