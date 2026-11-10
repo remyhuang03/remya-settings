@@ -337,18 +337,29 @@ impl<S: System> Language<S> {
 /// Runs in the privileged process: only `LANG` and the format categories, each an
 /// installed locale, reach localed.
 pub fn write_locale(values: &[String]) -> Result<(), String> {
-    let installed = installed()?;
+    let checked = checked_assignments(values, &installed()?)?;
+    crate::timedate::Timedate::connect()?.set_locale(&checked)
+}
+
+/// The assignments rebuilt from installed spellings, never the caller's text, so
+/// localed receives exactly what was checked.
+fn checked_assignments(
+    values: &[String],
+    installed: &[(String, String)],
+) -> Result<Vec<String>, String> {
     if values.len() != CATEGORIES.len() + 1 {
         return Err("Expected LANG and every format category".into());
     }
+    let mut checked = Vec::with_capacity(values.len());
     for (value, key) in values.iter().zip(std::iter::once("LANG").chain(CATEGORIES)) {
         let locale = value
             .strip_prefix(key)
             .and_then(|v| v.strip_prefix('='))
             .ok_or("Unexpected locale assignment")?;
-        installed_id(locale, &installed).ok_or("Choose an installed locale")?;
+        let id = installed_id(locale, installed).ok_or("Choose an installed locale")?;
+        checked.push(format!("{key}={id}"));
     }
-    crate::timedate::Timedate::connect()?.set_locale(values)
+    Ok(checked)
 }
 
 /// Generated locales with names from their `LC_IDENTIFICATION`, plus C and POSIX.
@@ -741,6 +752,18 @@ mod tests {
         ] {
             assert!(write_locale(&values).is_err());
         }
+    }
+
+    #[test]
+    fn privileged_writes_send_the_installed_spelling() {
+        let installed = vec![("en_US.UTF-8".to_owned(), String::new())];
+        let values: Vec<String> = std::iter::once("LANG")
+            .chain(CATEGORIES)
+            .map(|key| format!("{key}=EN_us.utf-8"))
+            .collect();
+        let checked = checked_assignments(&values, &installed).unwrap();
+        assert_eq!(checked[0], "LANG=en_US.UTF-8");
+        assert!(checked.iter().all(|v| v.ends_with("=en_US.UTF-8")));
     }
 
     #[test]
