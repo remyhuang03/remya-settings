@@ -1942,7 +1942,7 @@ checksum = "d6f6ff9a378485b298a5286656da665ba74413d36db0979633275d2e708145d4"
 
 [[package]]
 name = "remya_settings_appearance"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "base64",
  "flutter_rust_bridge",
@@ -1958,7 +1958,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_applications"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "backhand",
  "gio",
@@ -1972,7 +1972,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_background"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "material-colors",
  "remya_settings_display",
@@ -1986,7 +1986,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_bluetooth"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "gio",
  "serde",
@@ -1995,7 +1995,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_camera"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "flutter_rust_bridge",
  "gstreamer",
@@ -2011,11 +2011,11 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_core"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 
 [[package]]
 name = "remya_settings_date_time"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "flutter_rust_bridge",
  "gio",
@@ -2028,7 +2028,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_default_apps"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "gio",
  "remya_settings_applications",
@@ -2042,7 +2042,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_display"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "gio",
  "serde",
@@ -2053,7 +2053,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_fonts"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "remya_settings_display",
  "serde_json",
@@ -2063,7 +2063,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_input"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "remya_settings_display",
  "serde",
@@ -2075,7 +2075,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_network"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "gio",
  "remya_settings_bluetooth",
@@ -2088,7 +2088,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_power"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "gio",
  "remya_settings_display",
@@ -2099,7 +2099,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_service"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "gio",
  "remya_settings_appearance",
@@ -2129,7 +2129,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_sound"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "libpulse-binding",
  "serde",
@@ -2139,7 +2139,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_startup"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "gio",
  "remya_settings_applications",
@@ -2153,7 +2153,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_storage"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "gio",
  "jwalk",
@@ -2168,7 +2168,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_system_information"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "gdk-pixbuf",
  "gio",
@@ -2182,7 +2182,7 @@ dependencies = [
 
 [[package]]
 name = "remya_settings_updates"
-version = "0.1.0-dev.20261109.0"
+version = "0.1.0-dev.20261111.0"
 dependencies = [
  "libc",
  "serde",

@@ -334,8 +334,8 @@ pub fn cursor_preview(roots: &Roots, theme: &str, size: u32) -> Result<Value, St
         let Some(file) = cursor_file(roots, theme, names, 0) else {
             continue;
         };
-        let Some(all) = read_small(&file, 16 * 1024 * 1024)
-            .and_then(|b| xcursor::parser::parse_xcursor(&b))
+        let Some(all) =
+            read_small(&file, 16 * 1024 * 1024).and_then(|b| xcursor::parser::parse_xcursor(&b))
         else {
             continue;
         };
