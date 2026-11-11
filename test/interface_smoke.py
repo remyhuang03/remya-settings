@@ -401,7 +401,7 @@ def bar_layout_checks():
     initial = cli('get', setting)
     assert initial == dbus('Get', setting)
     assert not config.exists()
-    assert initial['value']['groups'] == [['notifications', 'window', 'resources', 'media'], ['workspaces', 'clock'], ['tray'], ['battery', 'sidebar']]
+    assert initial['value']['groups'] == [['notifications', 'window', 'resources', 'media'], ['workspaces', 'clock'], ['tray'], ['ai-usage', 'battery', 'sidebar']]
     assert initial['value']['center'] == 1
     assert initial['value']['resources'] == ['cpu', 'memory', 'network']
     assert initial['value']['media_marquee'] is False

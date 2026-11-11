@@ -1872,6 +1872,12 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 | Light color | `lighting.bf0bca1e` | 颜色 | 未实现 | — |
 | Match with accent colors | `lighting.869e06ec` | 开关 | 未实现 | — |
 
+### AI Providers — `ai-providers`
+
+| 设置项 | ID | 类型 | 状态 | 说明 |
+| --- | --- | --- | --- | --- |
+| Provider tracking | `ai-providers.tracking` | 信息 | 已实现 | 默认追踪全部来源，逐项开关与 CodexBar 配置同步 |
+
 ### Remy'a Bar — `remya-bar`
 
 | 设置项 | 控件 ID | 类型 | 状态 | 实现依据 |

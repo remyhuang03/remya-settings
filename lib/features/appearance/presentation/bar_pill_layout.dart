@@ -11,6 +11,7 @@ const barPillNames = {
   'workspaces': 'Workspaces',
   'clock': 'Clock',
   'tray': 'App tray',
+  'ai-usage': 'AI Usage',
   'battery': 'Battery',
   'sidebar': 'Quick settings',
 };
@@ -662,6 +663,7 @@ class BarPillSample extends StatelessWidget {
         ])
           Icon(icon, color: colors.onSurfaceVariant),
       ]),
+      'ai-usage' => pill([const Icon(Icons.auto_awesome_rounded)]),
       'battery' => pill([const Icon(Icons.battery_std_rounded)]),
       'notifications' => pill([const Icon(Icons.notifications_rounded)]),
       _ => pill([

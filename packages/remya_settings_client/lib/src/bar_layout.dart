@@ -13,6 +13,7 @@ const barPillIds = [
   'workspaces',
   'clock',
   'tray',
+  'ai-usage',
   'battery',
   'sidebar',
 ];
@@ -36,7 +37,7 @@ class BarLayout {
       ['notifications', 'window', 'resources', 'media'],
       ['workspaces', 'clock'],
       ['tray'],
-      ['battery', 'sidebar'],
+      ['ai-usage', 'battery', 'sidebar'],
     ],
     resources: ['cpu', 'memory', 'network'],
     center: 1,

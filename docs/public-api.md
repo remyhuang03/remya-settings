@@ -1117,13 +1117,13 @@ saved layout, the Workspaces and Clock group is centered and Resources shows
 CPU, memory, and network:
 
 ```json
-{"groups":[["notifications","window","resources","media"],["workspaces","clock"],["tray"],["battery","sidebar"]],
+{"groups":[["notifications","window","resources","media"],["workspaces","clock"],["tray"],["ai-usage","battery","sidebar"]],
  "workspace_count":8,"resources":["cpu","memory","network"],"window_app_name":true,"media_marquee":false,"center":1}
 ```
 
 `groups` is the ordered list of pill groups; the bar spaces groups evenly and
 places pills 8 pixels apart inside a group. Pill IDs are `notifications`, `window`, `resources`,
-`media`, `workspaces`, `clock`, `tray`, `battery` and `sidebar`. A pill absent
+`media`, `workspaces`, `clock`, `tray`, `ai-usage`, `battery` and `sidebar`. A pill absent
 from every group is hidden. Groups must be non-empty, IDs unique, and `sidebar`
 must stay visible because it is the bar's route to quick settings.
 `workspace_count` (1 to 10) sets the workspace slots per group of numbered
@@ -1396,3 +1396,18 @@ Pure Dart callers use `readAirplane`, `setAirplaneEnabled` and
 persisted or restored at startup; Off enables all radios rather than restoring
 the previous mix. Partial failures report errors and retain successful shutdowns.
 See [network behavior and verification](network.md#airplane-mode).
+
+## AI provider tracking
+
+`Get("ai-providers.tracking")` returns `value.automatic` and
+`value.providers`. Each provider has `id`, `name`, `enabled` and
+`editable` fields. With no CodexBar config file, tracking defaults to all
+providers. The first explicit edit writes that default and the requested
+exception into CodexBar's configuration. Existing CodexBar configuration
+supplies the current switches.
+
+`Set("ai-providers.tracking", JSON)` accepts a provider ID and boolean in
+`{"id":"claude","enabled":false}`. It returns the refreshed state and emits
+`Changed("ai-providers.tracking", state)`. The Settings CLI uses the same
+dispatcher. The optional `codexbar-cli` package supplies the provider catalog
+and writes changes to existing CodexBar configurations.

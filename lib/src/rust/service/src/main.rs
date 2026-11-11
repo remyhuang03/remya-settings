@@ -1,3 +1,4 @@
+mod ai_providers;
 mod events;
 mod notifications;
 mod privileged;
@@ -131,6 +132,7 @@ fn run() -> Result<(), String> {
                                 state::BAR_FOLDED_APPS,
                                 state::BAR_SIDEBAR,
                                 state::BAR_LAYOUT,
+                                ai_providers::ID,
                                 remya_settings_power::KEEP_AWAKE,
                             ]
                             .contains(&args[0].as_str())

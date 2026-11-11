@@ -315,6 +315,12 @@
   ],
   "categories": [
     {
+      "id": "ai-providers",
+      "title": "AI Providers",
+      "description": "Track AI provider usage in Remy'a Bar",
+      "icon": "auto_awesome"
+    },
+    {
       "id": "system",
       "title": "System",
       "description": "Display, storage and system information",
@@ -406,6 +412,33 @@
     }
   ],
   "pages": [
+    {
+      "id": "ai-providers",
+      "category": "ai-providers",
+      "title": "AI Providers",
+      "description": "Choose which providers Remy'a Bar tracks. Changes are saved in CodexBar.",
+      "preview": "none",
+      "availability": "available",
+      "reason": "Manage CodexBar provider tracking.",
+      "children": [],
+      "sources": ["app-appearance"],
+      "windowsUris": [],
+      "sections": [
+        {
+          "title": "Tracking",
+          "controls": [
+            {
+              "id": "ai-providers.tracking",
+              "title": "Provider tracking",
+              "type": "info",
+              "availability": "available",
+              "reason": "Provider switches are shared with CodexBar.",
+              "value": "CodexBar"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "display",
       "category": "system",

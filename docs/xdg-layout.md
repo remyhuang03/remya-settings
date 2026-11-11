@@ -214,3 +214,7 @@ See [Storage](storage.md) for deletion boundaries.
 Airplane mode creates no Settings files. Its value is derived from live
 NetworkManager Wi-Fi/WWAN and BlueZ adapter power; no airplane state is restored
 at startup. Radio persistence belongs to NetworkManager and BlueZ.
+
+AI provider tracking uses CodexBar's own configuration. Settings respects
+`CODEXBAR_CONFIG`, the CodexBar location under `XDG_CONFIG_HOME` and the
+standard and legacy home paths. Reading the provider list does not create a file.

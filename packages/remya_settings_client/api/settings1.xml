@@ -9,6 +9,7 @@
        Set accepts {expected,tiles}; Changed uses the same ID. -->
   <!-- Get remya-bar.layout returns {groups,workspace_count,resources,window_app_name,media_marquee,center?}.
        Set replaces it with the same JSON object; Changed uses the same ID. -->
+  <!-- Get ai-providers.tracking reads CodexBar provider switches. Set accepts {id,enabled}. -->
   <!-- Airplane: Get airplane returns live derived radio state; Get/Set
        airplane.enabled and airplane.wifi accept boolean strings. Set airplane.enabled
        disables/enables NM Wi-Fi/WWAN and all BlueZ adapters with readback.

@@ -75,6 +75,7 @@ const BAR_PILLS: &[&str] = &[
     "workspaces",
     "clock",
     "tray",
+    "ai-usage",
     "battery",
     "sidebar",
 ];
@@ -82,7 +83,7 @@ const BAR_RESOURCES: &[&str] = &["cpu", "memory", "gpu", "network"];
 
 fn default_bar_layout() -> Value {
     json!({
-        "groups":[["notifications","window","resources","media"],["workspaces","clock"],["tray"],["battery","sidebar"]],
+        "groups":[["notifications","window","resources","media"],["workspaces","clock"],["tray"],["ai-usage","battery","sidebar"]],
         "workspace_count":8,
         "resources":["cpu","memory","network"],
         "center":1,
@@ -712,6 +713,7 @@ impl State {
                     BAR_FOLDED_APPS => self.read_bar_folded_apps(),
                     BAR_SIDEBAR => self.sidebar_layout(None),
                     BAR_LAYOUT => self.bar_layout(None),
+                    crate::ai_providers::ID => crate::ai_providers::tracking(None),
                     "theme" => {
                         self.refresh_theme()?;
                         Ok(self.theme.clone())
@@ -1186,6 +1188,9 @@ impl State {
         }
         if key == BAR_SIDEBAR {
             return self.sidebar_layout(Some(value));
+        }
+        if key == crate::ai_providers::ID {
+            return crate::ai_providers::tracking(Some(value));
         }
         if key == BAR_LAYOUT {
             return self.bar_layout(Some(value));

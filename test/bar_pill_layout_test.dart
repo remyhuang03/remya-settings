@@ -49,6 +49,7 @@ void main() {
     expect(BarLayout.fromJson(layout.toJson()), layout);
     final defaults = BarLayout.defaults.toJson();
     expect(defaults['center'], 1);
+    expect(BarLayout.defaults.groups.last, ['ai-usage', 'battery', 'sidebar']);
     expect(defaults['resources'], ['cpu', 'memory', 'network']);
     final older = {...defaults}..remove('center');
     expect(BarLayout.fromJson(older).center, isNull);
@@ -58,6 +59,7 @@ void main() {
       'media',
       'workspaces',
       'tray',
+      'ai-usage',
       'battery',
     ]);
     expect(() => BarLayout.fromJson({'groups': []}), throwsFormatException);

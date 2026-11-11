@@ -17,6 +17,7 @@ IconData categoryIcon(String icon) => switch (icon) {
   'volume' => Icons.volume_up_outlined,
   'wifi' => Icons.wifi_outlined,
   'palette' => Icons.palette_outlined,
+  'auto_awesome' => Icons.auto_awesome_rounded,
   'apps' => Icons.apps_rounded,
   'person' => Icons.person_outline_rounded,
   'language' => Icons.language_rounded,

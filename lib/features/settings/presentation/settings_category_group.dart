@@ -18,7 +18,7 @@ enum SettingsCategoryGroup {
   ),
   system(
     'Device & system',
-    ['system', 'power', 'apps', 'update'],
+    ['system', 'power', 'apps', 'ai-providers', 'update'],
     Color(0xffbdebbd),
     Color(0xff1b4624),
   ),
