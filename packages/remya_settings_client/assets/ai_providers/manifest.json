@@ -1,0 +1,337 @@
+{
+  "alibaba": {
+    "color": "#FF6003",
+    "icon": "alibaba.svg",
+    "modelsDev": "alibaba"
+  },
+  "alibabatokenplan": {
+    "color": "#FF6003",
+    "icon": "alibabatokenplan.svg",
+    "modelsDev": "alibaba-token-plan"
+  },
+  "amp": {
+    "color": "#F34E3F",
+    "icon": "amp.svg",
+    "modelsDev": null
+  },
+  "antigravity": {
+    "color": "#FFE432",
+    "icon": "antigravity.svg",
+    "modelsDev": null
+  },
+  "atlascloud": {
+    "color": null,
+    "icon": "atlascloud.svg",
+    "modelsDev": null
+  },
+  "azureopenai": {
+    "color": "#0078D4",
+    "icon": "azureopenai.svg",
+    "modelsDev": "azure"
+  },
+  "bedrock": {
+    "color": "#6350FB",
+    "icon": "bedrock.svg",
+    "modelsDev": "amazon-bedrock"
+  },
+  "chutes": {
+    "color": null,
+    "icon": "chutes.svg",
+    "modelsDev": "chutes"
+  },
+  "claude": {
+    "color": "#D97757",
+    "icon": "claude.svg",
+    "modelsDev": "anthropic"
+  },
+  "claudeplatform": {
+    "color": "#D97757",
+    "icon": "claudeplatform.svg",
+    "modelsDev": "anthropic"
+  },
+  "clinepass": {
+    "color": null,
+    "icon": "clinepass.svg",
+    "modelsDev": "cline-pass"
+  },
+  "codex": {
+    "color": "#B1A7FF",
+    "icon": "codex.svg",
+    "modelsDev": "openai"
+  },
+  "commandcode": {
+    "color": null,
+    "icon": "commandcode.svg",
+    "modelsDev": "commandcode"
+  },
+  "copilot": {
+    "color": null,
+    "icon": "copilot.svg",
+    "modelsDev": "github-copilot"
+  },
+  "cursor": {
+    "color": null,
+    "icon": "cursor.svg",
+    "modelsDev": null
+  },
+  "deepinfra": {
+    "color": "#2A3275",
+    "icon": "deepinfra.svg",
+    "modelsDev": "deepinfra"
+  },
+  "deepseek": {
+    "color": "#4D6BFE",
+    "icon": "deepseek.svg",
+    "modelsDev": "deepseek"
+  },
+  "devin": {
+    "color": "#3969CA",
+    "icon": "devin.svg",
+    "modelsDev": null
+  },
+  "doubao": {
+    "color": "#1E37FC",
+    "icon": "doubao.svg",
+    "modelsDev": null
+  },
+  "elevenlabs": {
+    "color": null,
+    "icon": "elevenlabs.svg",
+    "modelsDev": null
+  },
+  "exa": {
+    "color": "#1F40ED",
+    "icon": "exa.svg",
+    "modelsDev": null
+  },
+  "fal": {
+    "color": "#EC0648",
+    "icon": "fal.svg",
+    "modelsDev": null
+  },
+  "fireworks": {
+    "color": "#5019C5",
+    "icon": "fireworks.svg",
+    "modelsDev": "fireworks-ai"
+  },
+  "flora": {
+    "color": null,
+    "icon": "flora.svg",
+    "modelsDev": null
+  },
+  "gemini": {
+    "color": "#3186FF",
+    "icon": "gemini.svg",
+    "modelsDev": "google"
+  },
+  "grok": {
+    "color": null,
+    "icon": "grok.svg",
+    "modelsDev": "xai"
+  },
+  "groq": {
+    "color": null,
+    "icon": "groq.svg",
+    "modelsDev": "groq"
+  },
+  "huggingface": {
+    "color": "#FF9D0B",
+    "icon": "huggingface.svg",
+    "modelsDev": "huggingface"
+  },
+  "ibmbob": {
+    "color": null,
+    "icon": "ibmbob.svg",
+    "modelsDev": null
+  },
+  "kilo": {
+    "color": null,
+    "icon": "kilo.svg",
+    "modelsDev": "kilo"
+  },
+  "kimi": {
+    "color": "#1783FF",
+    "icon": "kimi.svg",
+    "modelsDev": "kimi-code-plan-global"
+  },
+  "kiro": {
+    "color": "#9046FF",
+    "icon": "kiro.svg",
+    "modelsDev": null
+  },
+  "longcat": {
+    "color": "#29E154",
+    "icon": "longcat.svg",
+    "modelsDev": "longcat"
+  },
+  "manus": {
+    "color": null,
+    "icon": "manus.svg",
+    "modelsDev": null
+  },
+  "mimo": {
+    "color": null,
+    "icon": "mimo.svg",
+    "modelsDev": "xiaomi"
+  },
+  "minimax": {
+    "color": "#E2167E",
+    "icon": "minimax.svg",
+    "modelsDev": "minimax"
+  },
+  "mistral": {
+    "color": "#FFAF00",
+    "icon": "mistral.svg",
+    "modelsDev": "mistral"
+  },
+  "moonshot": {
+    "color": null,
+    "icon": "moonshot.svg",
+    "modelsDev": "moonshotai"
+  },
+  "notion": {
+    "color": null,
+    "icon": "notion.svg",
+    "modelsDev": null
+  },
+  "nous": {
+    "color": null,
+    "icon": "nous.svg",
+    "modelsDev": null
+  },
+  "ollama": {
+    "color": null,
+    "icon": "ollama.svg",
+    "modelsDev": null
+  },
+  "openai": {
+    "color": null,
+    "icon": "openai.svg",
+    "modelsDev": "openai"
+  },
+  "opencode": {
+    "color": null,
+    "icon": "opencode.svg",
+    "modelsDev": "opencode"
+  },
+  "opencodego": {
+    "color": null,
+    "icon": "opencodego.svg",
+    "modelsDev": "opencode-go"
+  },
+  "openrouter": {
+    "color": "#C8FF00",
+    "icon": "openrouter.svg",
+    "modelsDev": "openrouter"
+  },
+  "perplexity": {
+    "color": "#22B8CD",
+    "icon": "perplexity.svg",
+    "modelsDev": "perplexity"
+  },
+  "poe": {
+    "color": "#46A6F7",
+    "icon": "poe.svg",
+    "modelsDev": "poe"
+  },
+  "qoder": {
+    "color": "#2ADB5C",
+    "icon": "qoder.svg",
+    "modelsDev": null
+  },
+  "qwencloud": {
+    "color": "#082DFF",
+    "icon": "qwencloud.svg",
+    "modelsDev": null
+  },
+  "replicate": {
+    "color": null,
+    "icon": "replicate.svg",
+    "modelsDev": null
+  },
+  "sakana": {
+    "color": "#E10600",
+    "icon": "sakana.svg",
+    "modelsDev": "sakana"
+  },
+  "siliconflow": {
+    "color": "#6E29F6",
+    "icon": "siliconflow.svg",
+    "modelsDev": "siliconflow"
+  },
+  "stepfun": {
+    "color": "#01A9FF",
+    "icon": "stepfun.svg",
+    "modelsDev": "stepfun"
+  },
+  "sub2api": {
+    "color": "#67EDB1",
+    "icon": "sub2api.svg",
+    "modelsDev": null
+  },
+  "tavily": {
+    "color": "#8FBCFA",
+    "icon": "tavily.svg",
+    "modelsDev": null
+  },
+  "traecn": {
+    "color": "#32F08C",
+    "icon": "traecn.svg",
+    "modelsDev": null
+  },
+  "tripo": {
+    "color": "#F6D85A",
+    "icon": "tripo.svg",
+    "modelsDev": null
+  },
+  "typesafe": {
+    "color": null,
+    "icon": "typesafe.svg",
+    "modelsDev": null
+  },
+  "v0": {
+    "color": null,
+    "icon": "v0.svg",
+    "modelsDev": null
+  },
+  "venice": {
+    "color": "#E05A2D",
+    "icon": "venice.svg",
+    "modelsDev": "venice"
+  },
+  "vercel": {
+    "color": null,
+    "icon": "vercel.svg",
+    "modelsDev": "vercel"
+  },
+  "vertexai": {
+    "color": "#4285F4",
+    "icon": "vertexai.svg",
+    "modelsDev": "google-vertex"
+  },
+  "windsurf": {
+    "color": null,
+    "icon": "windsurf.svg",
+    "modelsDev": null
+  },
+  "workbuddy": {
+    "color": "#FFE355",
+    "icon": "workbuddy.svg",
+    "modelsDev": null
+  },
+  "xai": {
+    "color": null,
+    "icon": "xai.svg",
+    "modelsDev": "xai"
+  },
+  "zai": {
+    "color": null,
+    "icon": "zai.svg",
+    "modelsDev": "zai"
+  },
+  "zenmux": {
+    "color": null,
+    "icon": "zenmux.svg",
+    "modelsDev": "zenmux"
+  }
+}
