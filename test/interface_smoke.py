@@ -466,6 +466,53 @@ def keyboard_preview_checks():
     assert config.read_text() == 'preview = "invalid"\n'
     config.unlink()
 
+FAKE_CODEXBAR = r'''#!/usr/bin/env python3
+import json, sys
+args = sys.argv[1:]
+auth = lambda key, cookie: {'supportsConfigAPIKey': key, 'supportsConfigCookieHeader': cookie, 'environmentVariables': [], 'sourceModes': ['auto', 'api']}
+if args == ['--version']:
+    print('CodexBar 0.84.0')
+elif args[:2] == ['config', 'providers']:
+    print(json.dumps([{'provider': 'claude', 'displayName': 'Claude', 'enabled': True, 'defaultEnabled': True, 'authentication': auth(False, True)},
+                      {'provider': 'cursor', 'displayName': 'Cursor', 'enabled': True, 'defaultEnabled': False, 'authentication': auth(False, True)}]))
+elif args[:1] == ['usage']:
+    print(json.dumps([{'provider': 'claude', 'source': 'oauth', 'usage': {'identity': {'loginMethod': 'Claude Pro', 'accountEmail': 'smoke@example.com'},
+                       'primary': {'usedPercent': 40, 'windowMinutes': 300, 'resetsAt': '2026-01-01T00:00:00Z'}}},
+                      {'provider': 'cursor', 'source': 'auto', 'error': {'kind': 'provider', 'code': 1, 'message': 'No Cursor session found.'}}]))
+    sys.exit(1)
+else:
+    sys.exit(2)
+'''
+
+
+def ai_checks():
+    """The fake CodexBar on PATH has no config file, so nothing outside the isolated root is read or written."""
+    config = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/remya-ai.toml'
+    initial = cli('get', 'ai.providers')
+    assert initial == dbus('Get', 'ai.providers')
+    value = initial['value']
+    assert value['codexbar'] == {'available': True, 'version': '0.84.0'}
+    assert [(p['id'], p['status'], p['plan']) for p in value['providers']] == [('claude', 'ready', 'Claude Pro')]
+    assert value['providers'][0]['windows'] == [{'slot': 'primary', 'label': '5h', 'windowMinutes': 300, 'usedPercent': 40.0, 'resetsAt': '2026-01-01T00:00:00Z'}]
+    assert 'cursor' in [row['id'] for row in value['catalog']]
+    assert 'mail' not in json.dumps(initial).lower()
+    assert value['bar'] == {'pinned': [], 'lowPercent': 20}
+    assert cli('get', 'ai.bar') == dbus('Get', 'ai.bar') == {'id': 'ai.bar', 'availability': 'available', 'value': value['bar']}
+    assert not config.exists()
+    changed = cli('set', 'ai.bar', json.dumps({'pinned': ['claude'], 'lowPercent': 15}))
+    assert changed == dbus('Get', 'ai.providers')
+    assert changed['value']['bar'] == {'pinned': ['claude'], 'lowPercent': 15}
+    saved = config.read_text()
+    assert 'pinned = ["claude"]' in saved and 'low_percent = 15' in saved, saved
+    for invalid in ({'pinned': ['cursor']}, {'pinned': ['claude', 'claude']}, {'pinned': ['a', 'b', 'c', 'd']}, {'lowPercent': 0}, {'lowPercent': 101}, {}, {'unknown': 1}):
+        assert 'InvalidArgument' in cli('set', 'ai.bar', json.dumps(invalid), ok=False)
+    assert config.read_text() == saved
+    assert dbus('Set', 'ai.bar', json.dumps(json.dumps({'pinned': [], 'lowPercent': 20})))['value']['bar'] == value['bar']
+    assert cli('get', 'ai.bar')['value'] == value['bar']
+    assert 'InvalidArgument' in cli('get', 'ai.provider/unknown', ok=False)
+    config.unlink()
+    print('PASS: AI providers CLI and D-Bus parity, e-mail stripping, ai.bar round trip, validation and persistence')
+
 
 def session_checks():
     pid = None
@@ -493,6 +540,7 @@ def session_checks():
         notification_checks()
         bar_tray_checks()
         bar_layout_checks()
+        ai_checks()
         sidebar_layout_checks()
         default_apps_checks()
         startup_checks()
@@ -843,6 +891,11 @@ def main():
         default_apps_fixtures(environment)
         installed_apps_fixture(environment)
         appimage_fixture(home)
+        fake_bin = home / 'fake-bin'
+        fake_bin.mkdir()
+        (fake_bin / 'codexbar').write_text(FAKE_CODEXBAR)
+        (fake_bin / 'codexbar').chmod(0o755)
+        environment['PATH'] = f"{fake_bin}:{environment['PATH']}"
         subprocess.run(['dbus-run-session', '--', sys.executable, str(Path(__file__).resolve()), '--session'],
                        env=environment, check=True, timeout=1200)
 

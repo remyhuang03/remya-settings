@@ -1,4 +1,5 @@
-import '../../ai_providers/presentation/ai_providers_page.dart';
+import '../../ai/presentation/ai_providers_page.dart';
+import '../../ai/presentation/ai_usage_page.dart';
 import '../../storage/application/storage_controller.dart';
 import '../../storage/presentation/storage_page.dart';
 import '../../storage/presentation/cleanup_page.dart';
@@ -480,6 +481,8 @@ class _SettingsShellState extends State<SettingsShell> {
       content = page;
     } else if (_page?.id == 'ai-providers' && widget.client != null) {
       content = AiProvidersPage(client: widget.client!);
+    } else if (_page?.id == 'ai-usage' && widget.client != null) {
+      content = AiUsagePage(client: widget.client!);
     } else if (_page?.id == 'remya-bar' && widget.client != null) {
       content = BarAppearancePage(client: widget.client!, page: _page!);
     } else if (_page?.id == 'battery-usage' && widget.client != null) {

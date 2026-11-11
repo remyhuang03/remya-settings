@@ -315,9 +315,9 @@
   ],
   "categories": [
     {
-      "id": "ai-providers",
-      "title": "AI Providers",
-      "description": "Track AI provider usage in Remy'a Bar",
+      "id": "ai",
+      "title": "AI",
+      "description": "AI providers, API endpoints and usage tracking",
       "icon": "auto_awesome"
     },
     {
@@ -414,26 +414,53 @@
   "pages": [
     {
       "id": "ai-providers",
-      "category": "ai-providers",
-      "title": "AI Providers",
-      "description": "Choose which providers Remy'a Bar tracks. Changes are saved in CodexBar.",
+      "category": "ai",
+      "title": "Providers",
+      "description": "AI providers found on this device and imported API endpoints",
       "preview": "none",
       "availability": "available",
-      "reason": "Manage CodexBar provider tracking.",
+      "reason": "Providers are detected through CodexBar and described by models.dev.",
       "children": [],
       "sources": ["app-appearance"],
       "windowsUris": [],
       "sections": [
         {
-          "title": "Tracking",
+          "title": "Providers",
           "controls": [
             {
-              "id": "ai-providers.tracking",
-              "title": "Provider tracking",
+              "id": "ai.providers",
+              "title": "AI providers",
               "type": "info",
               "availability": "available",
-              "reason": "Provider switches are shared with CodexBar.",
+              "reason": "Tracking and credentials are shared with CodexBar.",
               "value": "CodexBar"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai-usage",
+      "category": "ai",
+      "title": "Usage",
+      "description": "Providers shown in the Remy'a Bar quota pill and low-quota alerts",
+      "preview": "none",
+      "availability": "available",
+      "reason": "Remy'a Bar reads these preferences from Settings.",
+      "children": [],
+      "sources": ["app-appearance"],
+      "windowsUris": [],
+      "sections": [
+        {
+          "title": "Remy'a Bar",
+          "controls": [
+            {
+              "id": "ai.bar",
+              "title": "Quota pill",
+              "type": "info",
+              "availability": "available",
+              "reason": "Remy'a Bar shows up to three pinned providers.",
+              "value": "Remy'a Bar"
             }
           ]
         }

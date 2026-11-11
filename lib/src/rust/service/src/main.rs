@@ -1,4 +1,4 @@
-mod ai_providers;
+mod ai;
 mod events;
 mod notifications;
 mod privileged;
@@ -132,7 +132,6 @@ fn run() -> Result<(), String> {
                                 state::BAR_FOLDED_APPS,
                                 state::BAR_SIDEBAR,
                                 state::BAR_LAYOUT,
-                                ai_providers::ID,
                                 remya_settings_power::KEEP_AWAKE,
                             ]
                             .contains(&args[0].as_str())
@@ -145,6 +144,12 @@ fn run() -> Result<(), String> {
                                 .contains(&args[0].as_str()))
                         {
                             signal(&bus, &args[0], &value);
+                        }
+                        if method == "Set" && ai::SET_IDS.contains(&args[0].as_str()) {
+                            signal(&bus, &args[0], &value);
+                            if args[0] != ai::PROVIDERS {
+                                signal(&bus, ai::PROVIDERS, &value);
+                            }
                         }
                     }
                     Err(error) => {

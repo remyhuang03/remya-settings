@@ -282,6 +282,7 @@ pub struct State {
     auth_attempted: bool,
     pub restart_suggested: bool,
     pub navigation: String,
+    ai: crate::ai::Ai,
 }
 impl State {
     pub fn new(config: PathBuf) -> Self {
@@ -363,6 +364,7 @@ impl State {
             auth_attempted: false,
             restart_suggested: false,
             navigation: "home".into(),
+            ai: crate::ai::Ai::new(config.with_file_name("remya-ai.toml")),
             config,
         }
     }
@@ -713,7 +715,7 @@ impl State {
                     BAR_FOLDED_APPS => self.read_bar_folded_apps(),
                     BAR_SIDEBAR => self.sidebar_layout(None),
                     BAR_LAYOUT => self.bar_layout(None),
-                    crate::ai_providers::ID => crate::ai_providers::tracking(None),
+                    key if crate::ai::Ai::is_get(key) => self.ai.get(key),
                     "theme" => {
                         self.refresh_theme()?;
                         Ok(self.theme.clone())
@@ -1189,8 +1191,8 @@ impl State {
         if key == BAR_SIDEBAR {
             return self.sidebar_layout(Some(value));
         }
-        if key == crate::ai_providers::ID {
-            return crate::ai_providers::tracking(Some(value));
+        if crate::ai::SET_IDS.contains(&key) {
+            return self.ai.set(key, value);
         }
         if key == BAR_LAYOUT {
             return self.bar_layout(Some(value));

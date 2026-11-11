@@ -1876,7 +1876,13 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 
 | 设置项 | ID | 类型 | 状态 | 说明 |
 | --- | --- | --- | --- | --- |
-| Provider tracking | `ai-providers.tracking` | 信息 | 已实现 | 默认追踪全部来源，逐项开关与 CodexBar 配置同步 |
+| AI providers | `ai.providers` | 信息 | 已实现 | 服务通过 CodexBar 用量探测（内存缓存 5 分钟）列出可见来源与可添加目录，追踪开关、数据来源与凭据（`ai.credential`，仅经 stdin 传递）写入 CodexBar 配置并回读；自定义端点（`ai.custom`）存于 `remya-ai.toml`，API 密钥存于 Secret Service；models.dev 元数据缓存 24 小时；去除账户邮箱；Rust 单元测试覆盖状态分类、邮箱剥离、校验、TOML 往返与缓存选择，接口冒烟测试覆盖 CLI/D-Bus Get 对等 |
+
+### AI Usage — `ai-usage`
+
+| 设置项 | ID | 类型 | 状态 | 说明 |
+| --- | --- | --- | --- | --- |
+| Bar quota pill | `ai.bar` | 信息 | 已实现 | 最多固定 3 个当前可见来源、低额度阈值 1–100 %，原子写入 `remya-ai.toml`；CLI/D-Bus Set 往返冒烟测试 |
 
 ### Remy'a Bar — `remya-bar`
 

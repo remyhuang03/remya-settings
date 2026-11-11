@@ -14,6 +14,7 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Notification preferences (used by the bar) | `notifications.toml` beside the selected Settings configuration |
 | Bar sidebar tile layout | `remya-bar-sidebar.toml` beside the selected Settings configuration |
 | Bar pill layout and options, including the media marquee | `remya-bar-layout.toml` beside the selected Settings configuration |
+| AI Bar pins, low quota percent and custom endpoints | `remya-ai.toml` beside the selected Settings configuration |
 | Bar folded tray apps | `remya-bar-tray.toml` beside the selected Settings configuration |
 | Config fallback | `$HOME/.config/remya/settings/config.toml` |
 | Background, accent settings | `background.toml` and `accent.toml` beside `config.toml` |
@@ -215,6 +216,15 @@ Airplane mode creates no Settings files. Its value is derived from live
 NetworkManager Wi-Fi/WWAN and BlueZ adapter power; no airplane state is restored
 at startup. Radio persistence belongs to NetworkManager and BlueZ.
 
-AI provider tracking uses CodexBar's own configuration. Settings respects
-`CODEXBAR_CONFIG`, the CodexBar location under `XDG_CONFIG_HOME` and the
-standard and legacy home paths. Reading the provider list does not create a file.
+AI provider switches, sources and CodexBar credentials use CodexBar's own
+configuration. Settings respects `CODEXBAR_CONFIG`, the CodexBar location under
+`XDG_CONFIG_HOME` and the standard and legacy home paths. Reading providers does
+not create a file. `remya-ai.toml`, beside the Settings configuration
+(`config/remya-ai.toml` in debug builds), holds `[bar]` `pinned` and
+`low_percent` and `[[custom]]` endpoints (`id`, `name`, `base_url`, optional
+`models_dev`); it is created on the first AI Set and written atomically. The
+models.dev catalog is cached at `XDG_CACHE_HOME/remya/settings/models-dev.json`
+(HOME/.cache fallback; relative XDG values are ignored) and refreshed after
+24 hours. Custom endpoint API keys live only in the Secret Service with the
+attributes `application=top.remya.settings` and `ai-provider=<id>`, never in
+TOML.
