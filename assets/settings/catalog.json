@@ -315,6 +315,12 @@
   ],
   "categories": [
     {
+      "id": "ai",
+      "title": "AI",
+      "description": "AI providers, API endpoints and usage tracking",
+      "icon": "auto_awesome"
+    },
+    {
       "id": "system",
       "title": "System",
       "description": "Display, storage and system information",
@@ -406,6 +412,60 @@
     }
   ],
   "pages": [
+    {
+      "id": "ai-providers",
+      "category": "ai",
+      "title": "Providers",
+      "description": "AI providers found on this device and imported API endpoints",
+      "preview": "none",
+      "availability": "available",
+      "reason": "Providers are detected through CodexBar and described by models.dev.",
+      "children": [],
+      "sources": ["app-appearance"],
+      "windowsUris": [],
+      "sections": [
+        {
+          "title": "Providers",
+          "controls": [
+            {
+              "id": "ai.providers",
+              "title": "AI providers",
+              "type": "info",
+              "availability": "available",
+              "reason": "Tracking and credentials are shared with CodexBar.",
+              "value": "CodexBar"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai-usage",
+      "category": "ai",
+      "title": "Usage",
+      "description": "Providers shown in the Remy'a Bar quota pill and low-quota alerts",
+      "preview": "none",
+      "availability": "available",
+      "reason": "Remy'a Bar reads these preferences from Settings.",
+      "children": [],
+      "sources": ["app-appearance"],
+      "windowsUris": [],
+      "sections": [
+        {
+          "title": "Remy'a Bar",
+          "controls": [
+            {
+              "id": "ai.bar",
+              "title": "Quota pill",
+              "type": "info",
+              "availability": "available",
+              "reason": "Remy'a Bar shows up to three pinned providers.",
+              "value": "Remy'a Bar"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "display",
       "category": "system",

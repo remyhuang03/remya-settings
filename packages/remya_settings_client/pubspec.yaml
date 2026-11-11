@@ -8,5 +8,10 @@ dependencies:
   flutter:
     sdk: flutter
   material_ui: ^1.5.0
+  material_color_utilities: ^0.13.0
   toml: ^0.18.0
   dbus: ^0.8.0
+flutter:
+  assets:
+    - assets/ai_providers/
+    - assets/licenses/lobe-icons.txt

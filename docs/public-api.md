@@ -1117,13 +1117,13 @@ saved layout, the Workspaces and Clock group is centered and Resources shows
 CPU, memory, and network:
 
 ```json
-{"groups":[["notifications","window","resources","media"],["workspaces","clock"],["tray"],["battery","sidebar"]],
- "workspace_count":8,"resources":["cpu","memory","network"],"window_app_name":true,"media_marquee":false,"center":1}
+{"groups":[["notifications","window","resources"],["workspaces","clock"],["tray"],["ai-usage","battery","sidebar"]],
+ "workspace_count":8,"resources":["cpu","memory","network"],"window_app_name":false,"media_marquee":false,"center":1}
 ```
 
 `groups` is the ordered list of pill groups; the bar spaces groups evenly and
 places pills 8 pixels apart inside a group. Pill IDs are `notifications`, `window`, `resources`,
-`media`, `workspaces`, `clock`, `tray`, `battery` and `sidebar`. A pill absent
+`media`, `workspaces`, `clock`, `tray`, `ai-usage`, `battery` and `sidebar`. A pill absent
 from every group is hidden. Groups must be non-empty, IDs unique, and `sidebar`
 must stay visible because it is the bar's route to quick settings.
 `workspace_count` (1 to 10) sets the workspace slots per group of numbered
@@ -1396,3 +1396,115 @@ Pure Dart callers use `readAirplane`, `setAirplaneEnabled` and
 persisted or restored at startup; Off enables all radios rather than restoring
 the previous mix. Partial failures report errors and retain successful shutdowns.
 See [network behavior and verification](network.md#airplane-mode).
+
+## AI providers
+
+The optional `codexbar-cli` package supplies CodexBar provider usage, switches
+and credentials; models.dev describes providers and models. Settings keeps Bar
+quota preferences and custom OpenAI-compatible endpoints in `remya-ai.toml`
+and custom API keys in the Secret Service (see [XDG layout](xdg-layout.md)).
+CLI `get`/`set` and D-Bus `Get`/`Set` share one dispatcher. Pure Dart callers
+use `readAi`, `readAiProvider`, `setAiProvider`, `setAiBar`, `setAiCredential`,
+`addAiCustomProvider` and `removeAiCustomProvider` from `src/ai.dart`.
+
+### Get `ai.providers`
+
+```json
+{"id":"ai.providers","availability":"available","value":{
+  "codexbar":{"available":true,"version":"0.84.0"},
+  "updatedAt":"2026-11-11T05:39:35Z",
+  "providers":[{"id":"claude","name":"Claude","kind":"codexbar","status":"ready",
+    "enabled":true,"source":"oauth","plan":"Claude Pro",
+    "sourceModes":["api","auto","cli","oauth","web"],
+    "credential":{"apiKey":true,"cookie":true,"configured":false},
+    "envVars":["ANTHROPIC_ADMIN_KEY"],"error":null,"baseUrl":null,"modelsDev":"anthropic",
+    "windows":[{"slot":"primary","label":"Session","windowMinutes":300,
+      "usedPercent":22.0,"resetsAt":"2026-11-11T09:20:00Z"}]}],
+  "catalog":[
+    {"id":"openrouter","name":"OpenRouter","kind":"codexbar",
+     "credential":{"apiKey":true,"cookie":false},"sourceModes":["api","auto"]},
+    {"id":"models.dev:groq","name":"Groq","kind":"models-dev",
+     "baseUrl":"https://api.groq.com/openai/v1","modelsDev":"groq"}],
+  "bar":{"pinned":["claude","codex"],"lowPercent":20}}}
+```
+
+- `updatedAt` is the UTC time of the usage probe
+  `codexbar usage --provider all --format json`. The probe is cached in memory
+  for 5 minutes and dropped by every successful `ai.providers`,
+  `ai.credential` and `ai.custom` Set. `ai.bar` changes no CodexBar state and
+  keeps the cache.
+- `status` is `ready` when the probe returned usage. A provider with a
+  credential in `codexbar config dump` (API key, cookie header or token
+  accounts) is visible as `error` (with the probe's `error` message) when the
+  probe failed, or `needs-setup` when the probe returned no row. Custom
+  endpoints are always visible with `status: "custom"` and `kind: "custom"`.
+- Other CodexBar providers are listed in `catalog`, except probe failures of
+  `kind: "runtime"` for providers that accept neither an API key nor a cookie
+  (macOS-only sources and similar), which are omitted.
+- The models.dev part of `catalog` contains providers with an `api` base URL
+  that do not correspond to a CodexBar provider, either by the same id or by
+  the alias table (claude=anthropic, codex=openai, gemini and
+  antigravity=google, moonshot=moonshotai, xai and grok=xai,
+  vertexai=google-vertex).
+- `windows` lists the probe's `primary`, `secondary` and `tertiary` rate
+  windows that report `usedPercent`. `label` is CodexBar's
+  `rateWindowLabels[slot]`, else `5h`-style hours, `Day` or `Week` derived
+  from `windowMinutes`, else null. It is empty without usage.
+- `enabled` is true for every provider while CodexBar has no configuration
+  file (default tracking of all providers).
+- Every key ending in `email` (such as `accountEmail`) is removed at any
+  depth. Secrets never appear in replies.
+- Without the `codexbar` executable, `codexbar.available` is false,
+  `providers` holds only custom endpoints and `catalog` only models.dev rows.
+
+### Get `ai.bar`
+
+Returns `{"id":"ai.bar","value":{"pinned":[...],"lowPercent":20}}` from
+`remya-ai.toml` without running CodexBar. Defaults are no pins and 20 %.
+
+### Get `ai.provider/<id>`
+
+`<id>` is any `providers` or `catalog` id. The value is
+`{provider, usage, modelsDev}`: `provider` is the row above, `usage` is the
+sanitized CodexBar probe row or null, and `modelsDev` is
+`{status, provider, models}`. `status` is `fresh`, `stale` (a cached copy
+served after a failed refresh) or `unavailable` (no cache and no network).
+`provider` is `{id,name,doc,api,env,npm}` or null and `models` lists
+`{id,name,context,output,input_cost,output_cost,reasoning,tool_call,release_date}`,
+newest first. `https://models.dev/api.json` is fetched with a 10 s timeout
+when the cache is older than 24 hours. Unknown ids fail with `InvalidArgument`.
+
+### Set operations
+
+Each successful Set returns the fresh `ai.providers` Get reply and emits
+`Changed` for its own id and for `ai.providers`. Invalid payloads fail with
+`InvalidArgument`; CodexBar, Secret Service or readback failures fail with
+`Unavailable` and leave the previous state.
+
+- `ai.providers` `{"id":"claude","enabled"?:bool,"source"?:"auto"|"web"|"cli"|"oauth"|"api"}`
+  accepts CodexBar ids only and at least one field. `source` must be one of the
+  provider's `sourceModes` (`codexbar config set-source`; `auto` clears the
+  override). While CodexBar has no configuration file, the first write
+  validates and creates it without clobbering, with every other provider
+  enabled. `enabled` and `source` are verified by readback.
+- `ai.bar` `{"pinned"?:[ids],"lowPercent"?:int}` accepts at most 3 unique
+  ids that are currently visible providers and a percent in 1..=100. The file
+  is written atomically; an invalid existing file is refused, not replaced.
+- `ai.credential` `{"id":...,"apiKey"?:str,"cookie"?:str,"clear"?:true}` takes
+  exactly one action. Secrets must be non-empty, at most 16 KiB and free of
+  control characters. CodexBar providers use
+  `codexbar config set-api-key|set-cookie --provider <id> --stdin` (only when
+  the provider supports that credential) or `config clear-credential`, with
+  readback through the redacted `config dump`. Custom endpoints accept only an
+  API key, stored with `secret-tool store` or removed with `secret-tool clear`.
+  Secrets are passed only on stdin, never as arguments.
+- `ai.custom` `{"add":{"name","baseUrl","modelsDev"?,"apiKey"?}}` or
+  `{"remove":"custom-<slug>"}`. The id is `custom-<slug>` generated from the
+  name (ASCII letters and digits, other runs become `-`) and must be unique.
+  `baseUrl` must be `https`, or `http` only on `localhost` or a loopback IP,
+  without user information. `modelsDev` is an optional models.dev provider id.
+  Remove also clears the stored API key and unpins the id.
+
+CLI examples: `remya_settings get ai.providers`,
+`remya_settings get ai.provider/claude`,
+`remya_settings set ai.bar '{"pinned":["claude"],"lowPercent":15}'`.

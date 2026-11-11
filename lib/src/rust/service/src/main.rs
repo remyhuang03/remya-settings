@@ -1,3 +1,4 @@
+mod ai;
 mod events;
 mod notifications;
 mod privileged;
@@ -143,6 +144,12 @@ fn run() -> Result<(), String> {
                                 .contains(&args[0].as_str()))
                         {
                             signal(&bus, &args[0], &value);
+                        }
+                        if method == "Set" && ai::SET_IDS.contains(&args[0].as_str()) {
+                            signal(&bus, &args[0], &value);
+                            if args[0] != ai::PROVIDERS {
+                                signal(&bus, ai::PROVIDERS, &value);
+                            }
                         }
                     }
                     Err(error) => {

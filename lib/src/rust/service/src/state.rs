@@ -75,6 +75,7 @@ const BAR_PILLS: &[&str] = &[
     "workspaces",
     "clock",
     "tray",
+    "ai-usage",
     "battery",
     "sidebar",
 ];
@@ -82,11 +83,11 @@ const BAR_RESOURCES: &[&str] = &["cpu", "memory", "gpu", "network"];
 
 fn default_bar_layout() -> Value {
     json!({
-        "groups":[["notifications","window","resources","media"],["workspaces","clock"],["tray"],["battery","sidebar"]],
+        "groups":[["notifications","window","resources"],["workspaces","clock"],["tray"],["ai-usage","battery","sidebar"]],
         "workspace_count":8,
         "resources":["cpu","memory","network"],
         "center":1,
-        "window_app_name":true,
+        "window_app_name":false,
         "media_marquee":false,
     })
 }
@@ -281,6 +282,7 @@ pub struct State {
     auth_attempted: bool,
     pub restart_suggested: bool,
     pub navigation: String,
+    ai: crate::ai::Ai,
 }
 impl State {
     pub fn new(config: PathBuf) -> Self {
@@ -362,6 +364,7 @@ impl State {
             auth_attempted: false,
             restart_suggested: false,
             navigation: "home".into(),
+            ai: crate::ai::Ai::new(config.with_file_name("remya-ai.toml")),
             config,
         }
     }
@@ -712,6 +715,7 @@ impl State {
                     BAR_FOLDED_APPS => self.read_bar_folded_apps(),
                     BAR_SIDEBAR => self.sidebar_layout(None),
                     BAR_LAYOUT => self.bar_layout(None),
+                    key if crate::ai::Ai::is_get(key) => self.ai.get(key),
                     "theme" => {
                         self.refresh_theme()?;
                         Ok(self.theme.clone())
@@ -1186,6 +1190,9 @@ impl State {
         }
         if key == BAR_SIDEBAR {
             return self.sidebar_layout(Some(value));
+        }
+        if crate::ai::SET_IDS.contains(&key) {
+            return self.ai.set(key, value);
         }
         if key == BAR_LAYOUT {
             return self.bar_layout(Some(value));
