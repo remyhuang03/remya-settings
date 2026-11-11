@@ -1117,8 +1117,8 @@ saved layout, the Workspaces and Clock group is centered and Resources shows
 CPU, memory, and network:
 
 ```json
-{"groups":[["notifications","window","resources","media"],["workspaces","clock"],["tray"],["ai-usage","battery","sidebar"]],
- "workspace_count":8,"resources":["cpu","memory","network"],"window_app_name":true,"media_marquee":false,"center":1}
+{"groups":[["notifications","window","resources"],["workspaces","clock"],["tray"],["ai-usage","battery","sidebar"]],
+ "workspace_count":8,"resources":["cpu","memory","network"],"window_app_name":false,"media_marquee":false,"center":1}
 ```
 
 `groups` is the ordered list of pill groups; the bar spaces groups evenly and

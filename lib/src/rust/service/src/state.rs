@@ -83,11 +83,11 @@ const BAR_RESOURCES: &[&str] = &["cpu", "memory", "gpu", "network"];
 
 fn default_bar_layout() -> Value {
     json!({
-        "groups":[["notifications","window","resources","media"],["workspaces","clock"],["tray"],["ai-usage","battery","sidebar"]],
+        "groups":[["notifications","window","resources"],["workspaces","clock"],["tray"],["ai-usage","battery","sidebar"]],
         "workspace_count":8,
         "resources":["cpu","memory","network"],
         "center":1,
-        "window_app_name":true,
+        "window_app_name":false,
         "media_marquee":false,
     })
 }

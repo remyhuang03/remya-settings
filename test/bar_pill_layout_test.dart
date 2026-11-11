@@ -53,7 +53,8 @@ void main() {
     expect(defaults['resources'], ['cpu', 'memory', 'network']);
     final older = {...defaults}..remove('center');
     expect(BarLayout.fromJson(older).center, isNull);
-    expect(BarLayout.fromJson(BarLayout.defaults.toJson()).hidden, isEmpty);
+    expect(BarLayout.fromJson(BarLayout.defaults.toJson()).hidden, ['media']);
+    expect(BarLayout.defaults.windowAppName, isFalse);
     expect(layout.hidden, [
       'notifications',
       'media',

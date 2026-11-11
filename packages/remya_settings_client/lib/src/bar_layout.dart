@@ -27,14 +27,14 @@ class BarLayout {
     required this.groups,
     this.workspaceCount = 8,
     this.resources = barResourceIds,
-    this.windowAppName = true,
+    this.windowAppName = false,
     this.mediaMarquee = false,
     this.center,
   });
 
   static const defaults = BarLayout(
     groups: [
-      ['notifications', 'window', 'resources', 'media'],
+      ['notifications', 'window', 'resources'],
       ['workspaces', 'clock'],
       ['tray'],
       ['ai-usage', 'battery', 'sidebar'],
