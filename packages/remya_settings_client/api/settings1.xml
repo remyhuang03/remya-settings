@@ -4,6 +4,10 @@
   <!-- Notifications: Get notifications reads all preferences; Get/Set notifications.*,
        quiet-schedule.* and priority-notifications.* per docs/public-api.md#notifications.
        Changed uses the written ID. -->
+  <!-- Launcher clipboard: Get clipboard returns {enabled,maxItems,retentionDays}.
+       Get/Set clipboard.history-enabled (bool), clipboard.max-items (1-5000),
+       clipboard.retention-days (1-365). Set clipboard.clear-history with true
+       clears Launcher history. Changed uses the written ID. -->
   <!-- Get remya-bar.folded-apps returns IDs. Set accepts a JSON object with id and folded. -->
   <!-- Get remya-bar.sidebar-layout returns the visible tile IDs in order.
        Set accepts {expected,tiles}; Changed uses the same ID. -->

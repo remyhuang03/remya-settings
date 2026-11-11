@@ -24,6 +24,7 @@ export 'src/power.dart';
 export 'src/input.dart';
 export 'src/bar_clock.dart';
 export 'src/notifications.dart';
+export 'src/clipboard.dart';
 export 'src/bar_tray.dart';
 export 'src/sidebar.dart';
 export 'src/bar_layout.dart';

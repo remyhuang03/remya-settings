@@ -1,4 +1,5 @@
 mod ai;
+mod clipboard;
 mod events;
 mod notifications;
 mod privileged;
@@ -136,6 +137,7 @@ fn run() -> Result<(), String> {
                             ]
                             .contains(&args[0].as_str())
                                 || notifications::IDS.contains(&args[0].as_str())
+                                || clipboard::IDS.contains(&args[0].as_str())
                                 || remya_settings_network::proxy::IDS.contains(&args[0].as_str())
                                 || [
                                     remya_settings_network::airplane::ENABLED,

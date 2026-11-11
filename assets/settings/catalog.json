@@ -2291,10 +2291,10 @@
       "id": "clipboard",
       "category": "system",
       "title": "Clipboard",
-      "description": "History, synchronization and clearing",
+      "description": "Remya Launcher clipboard history and retention",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Read and manage clipboard history policy through Remya Launcher.",
       "sources": [
         "uris"
       ],
@@ -2303,43 +2303,45 @@
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Remya Launcher history",
           "controls": [
             {
-              "id": "clipboard.1e42405e",
-              "title": "Clipboard History",
+              "id": "clipboard.history-enabled",
+              "title": "Clipboard history",
               "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "availability": "available",
+              "reason": "Record new items in Remya Launcher. Turning this off keeps the existing history.",
               "value": false
             },
             {
-              "id": "clipboard.71367ff3",
-              "title": "Sync across devices",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
+              "id": "clipboard.max-items",
+              "title": "Maximum history items",
+              "type": "text",
+              "availability": "available",
+              "reason": "A lower limit immediately removes the oldest unpinned items above the limit.",
+              "value": "",
+              "min": 1,
+              "max": 5000,
+              "unit": "items"
             },
             {
-              "id": "clipboard.3cc9cef1",
-              "title": "Synchronization method",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Automatic synchronization",
-                "Manual synchronization"
-              ],
-              "value": "Automatic synchronization"
+              "id": "clipboard.retention-days",
+              "title": "Retention period",
+              "type": "text",
+              "availability": "available",
+              "reason": "A shorter period immediately removes unpinned items older than the new limit.",
+              "value": "",
+              "min": 1,
+              "max": 365,
+              "unit": "days"
             },
             {
-              "id": "clipboard.5593d4e3",
-              "title": "Clear clipboard data",
+              "id": "clipboard.clear-history",
+              "title": "Clear clipboard history",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Clear"
+              "availability": "available",
+              "reason": "Remove every saved item, including pinned items, from Remya Launcher.",
+              "value": "Clear history"
             }
           ]
         }

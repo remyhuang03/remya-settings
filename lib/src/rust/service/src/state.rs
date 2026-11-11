@@ -1,5 +1,5 @@
-use crate::notifications;
 use crate::privileged::{Request, Session};
+use crate::{clipboard, notifications};
 use gio::glib::{Variant, variant::ToVariant};
 use remya_settings_appearance::api as appearance;
 use remya_settings_appearance::packs::{self, ThemePacks};
@@ -709,6 +709,9 @@ impl State {
                 let key = args[0].as_str();
                 match key {
                     BAR_CLOCK_SECONDS | BAR_KEY_PREVIEW => self.bar_bool_preference(key, None),
+                    key if key == clipboard::ALL || clipboard::IDS.contains(&key) => {
+                        clipboard::get(key)
+                    }
                     key if notifications::is_setting(key) => {
                         notifications::get(&self.config, key)
                     }
@@ -1207,6 +1210,9 @@ impl State {
             .ok_or_else(|| invalid("Unknown setting"))?;
         if control["availability"] != "available" {
             return Err(format!("Unavailable:{}", control["reason"]));
+        }
+        if clipboard::IDS.contains(&key) {
+            return clipboard::set(key, value);
         }
         if let Some(page) = linked_page(key) {
             if value != "open" {

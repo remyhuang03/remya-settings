@@ -1055,6 +1055,27 @@ The ordinary-user service stores `clock_seconds` as a boolean in
 reported and protected from overwrites. This preference controls the clock
 capsule across outputs and has no system counterpart.
 
+## Launcher Clipboard
+
+`Get("clipboard")` (CLI `get clipboard`) returns a setting whose `value`
+contains `enabled`, `maxItems` and `retentionDays`. Remya Launcher owns
+and applies the policy immediately. Settings connects to the Launcher service
+over its private user socket and returns `Unavailable` if it cannot connect.
+
+| ID | Value accepted by `Set(id, value)` |
+| --- | --- |
+| `clipboard.history-enabled` | `true` or `false`. Pausing capture keeps saved items. |
+| `clipboard.max-items` | Whole items, 1 to 5000. Default 500. |
+| `clipboard.retention-days` | Whole days, 1 to 365. Default 30. |
+| `clipboard.clear-history` | `true` to confirm clearing all Launcher history, including pinned entries. |
+
+Each ID is available to `Get(id)` and the CLI `get` and `set` commands.
+Successful writes emit `Changed` with the written ID. Reads and writes of
+individual settings return the effective scalar in `value`. For
+`clipboard.clear-history`, `value` is `null`. Reducing either history limit
+immediately prunes affected unpinned entries. The pure Dart `ClipboardClient`
+extension provides typed access.
+
 ## Notifications
 
 These preferences belong to the desktop notification service (Remy'a Bar) and
