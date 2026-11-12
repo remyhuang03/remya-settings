@@ -8,11 +8,16 @@ const disableShortcutId = 'keyboard-shortcuts.disable';
 const recordShortcutId = 'keyboard-shortcuts.record';
 const setWorkspaceRuleId = 'workspaces.rule-set';
 const removeWorkspaceRuleId = 'workspaces.rule-remove';
+const setWindowRuleId = 'window-rules.set';
+const removeWindowRuleId = 'window-rules.remove';
+const setEnvironmentVariableId = 'environment.set';
+const removeEnvironmentVariableId = 'environment.remove';
 
 /// Settings-owned Hyprland options: `input` (mouse, touchpad and keyboard
 /// shortcuts) and `desktop` (window layout, window appearance, animations,
-/// cursor behavior, workspaces and workspace rules, blur, fallback background,
-/// display wake, the compositor font and the compositor bell).
+/// cursor behavior, workspaces and workspace rules, window rules, session
+/// environment variables, blur, fallback background, display wake, the
+/// compositor font and the compositor bell).
 extension InputClient on SettingsClient {
   Future<Map<String, dynamic>> readHyprOptions(String feature) =>
       call('Get', [feature]);

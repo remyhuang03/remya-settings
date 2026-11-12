@@ -340,18 +340,6 @@
       "title": "Phone Link"
     },
     {
-      "uri": "ms-settings:privacy",
-      "page": "general-privacy",
-      "sourceCategory": "Privacy",
-      "title": "General"
-    },
-    {
-      "uri": "ms-settings:privacy-general",
-      "page": "general-privacy",
-      "sourceCategory": "Privacy",
-      "title": "General"
-    },
-    {
       "uri": "ms-settings:privacy-speech",
       "page": "online-speech",
       "sourceCategory": "Privacy",
@@ -590,12 +578,6 @@
       "page": "security-key",
       "sourceCategory": "Update and security",
       "title": "Launch Security Key Enrollment"
-    },
-    {
-      "uri": "ms-settings:windowsdefender",
-      "page": "security",
-      "sourceCategory": "Update and security",
-      "title": "Windows Security"
     },
     {
       "uri": "ms-settings:windowsupdate",
@@ -851,16 +833,6 @@
       ],
       "page": "printers",
       "coverage": "section"
-    },
-    {
-      "area": "Bluetooth & devices",
-      "path": [
-        "Printers & Scanners",
-        "Let Windows manage my default printer"
-      ],
-      "page": "printers",
-      "coverage": "control",
-      "control": "printers.reference.c1c02196"
     },
     {
       "area": "Bluetooth & devices",

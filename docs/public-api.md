@@ -1245,6 +1245,31 @@ Only user autostart files and `startup.toml` are written; system files and gener
 units are untouched. Changes apply on the next UWSM sign-in. Runtime observation
 failures do not block configuration. See [Startup apps](startup.md) for generator
 semantics, validation, status mapping and verification boundaries.
+## Printers
+
+`Get printers` reads CUPS through `lpstat` (C locale) and returns
+`{printers:[{name, description, location, uri, state, reason, accepting, default, jobs:[{id, user, size}]}], default, error}`.
+`state` is `idle`, `printing` or `stopped`; `reason` is the CUPS state message;
+`default` is the current user's default (`lpstat -d`, which honours
+`~/.cups/lpoptions`); `size` is in bytes. An unreachable scheduler is reported in
+`error` with an empty list. `Get printers.<operation>` returns
+`{id, availability, reason, value:<printers state>}`. Reads never request authorization.
+
+| Set ID | JSON value | Effect and readback |
+| --- | --- | --- |
+| `printers.default` | `{"name":"HP_Smart_Tank_510_series"}` | `lpoptions -d` for this user; waits for `lpstat -d` |
+| `printers.test-page` | `{"name":"..."}` | `lp -d <name> /usr/share/cups/data/testprint`; requires a CUPS request ID |
+| `printers.pause` | `{"name":"...","paused":true}` | `cupsdisable` / `cupsenable`; waits for the printer state |
+| `printers.cancel-job` | `{"id":"<printer>-<number>"}` | `cancel`; waits for the job to leave the queue |
+| `printers.remove` | `{"name":"..."}` | `lpadmin -x`; waits for the printer to disappear |
+
+Names and job IDs must appear in a fresh listing, otherwise `InvalidArgument`.
+Administrative operations use the user's CUPS rights (members of CUPS's
+`SystemGroup` need no password); a CUPS refusal is returned unchanged as
+`OperationFailed`. Printers are live CUPS state: Settings saves nothing, so there is
+no `Resolve printers`. Changed topic `printers` follows each Set with the new state.
+See [Printers](printers.md).
+
 ## Mouse, touchpad and keyboard shortcuts
 
 `Get input` returns `options` (saved values by catalog ID), `system` (live
@@ -1299,8 +1324,12 @@ marks Settings' own), `monitors` (`name`, `x`, `y`, logical `width` and
 `height`, `active_workspace`, `special_workspace`) and `workspaces` (`id`,
 `name`, `monitor`, `windows`, `persistent`). Values are persisted in the Settings-owned
 `hypr/remya-settings/desktop.lua`, required by its own managed block, and in
-`desktop.toml`; the file accepts no shortcuts, only option lines and
-`hl.workspace_rule` lines. Rule writes reload the configuration and wait for
+`desktop.toml`; the file accepts no shortcuts, only option lines,
+`hl.workspace_rule`, `hl.env` and `hl.window_rule` lines (see input.md). The
+state also reports `window_rules` (saved), `system_window_rules`, `windows`
+(open windows, one per app class: `class`, `title`), `env` (saved),
+`system_env` and `reserved_env`; the conflict IDs are `window-rules` and
+`environment`. Rule writes reload the configuration and wait for
 `workspacerules` to match. Rules in other files are never edited. `Get <id>` returns
 `{id, availability, reason, value, error}`. Writes apply live through
 `hyprctl eval`, read back, return the full state and emit
@@ -1332,6 +1361,10 @@ marks Settings' own), `monitors` (`name`, `x`, `y`, logical `width` and
 | `workspaces.center-on` | `binds:workspace_center_on`: 0 middle of the display, 1 last used window |
 | `workspaces.rule-set` | `{"workspace":"2","monitor":"DP-1","default":false,"persistent":true,"default_name":"","previous":null}`; `workspace` is 1 to 9999, `name:<text>` or `special:<text>`; `previous` names the rule being edited |
 | `workspaces.rule-remove` | `{"workspace":"2"}` (Settings rules only) |
+| `window-rules.set` | `{"class":"org.gnome.Nautilus","title":"","float":true,"center":true,"size":[60,50],"workspace":"3","silent":false,"pin":false,"maximize":false,"fullscreen":false,"no_initial_focus":false,"opacity":90,"no_blur":false,"no_shadow":false,"keep_aspect_ratio":false,"idle_inhibit":"","previous":{"class":"…","title":"…"}}`; omitted fields are off; `size` and `opacity` are percent or null; `previous` names the rule being edited |
+| `window-rules.remove` | `{"class":"org.gnome.Nautilus","title":""}` |
+| `environment.set` | `{"name":"GDK_BACKEND","value":"wayland,x11","previous":null}`; `previous` names the variable being renamed |
+| `environment.remove` | `{"name":"GDK_BACKEND"}` |
 | `multitasking.dwindle-force-split` | `dwindle:force_split`: 0 follow the pointer, 1 left or top, 2 right or bottom |
 | `multitasking.dwindle-split-bias` | `dwindle:split_bias`: 0 directional, 1 the focused window |
 | `multitasking.dwindle-preserve-split`, `-smart-split`, `-smart-resizing`, `-permanent-direction`, `-use-active`, `-precise-move` | boolean (`dwindle:*`) |

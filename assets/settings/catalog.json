@@ -311,6 +311,11 @@
       "id": "icon-theme-spec",
       "title": "freedesktop Icon Theme Specification",
       "url": "https://specifications.freedesktop.org/icon-theme-spec/latest/"
+    },
+    {
+      "id": "cups",
+      "title": "CUPS command-line printing and options",
+      "url": "https://www.cups.org/doc/options.html"
     }
   ],
   "categories": [
@@ -389,7 +394,7 @@
     {
       "id": "privacy",
       "title": "Privacy & security",
-      "description": "Security, compositor permissions and desktop portals",
+      "description": "Compositor permissions, device encryption and search indexing",
       "icon": "shield"
     },
     {
@@ -421,7 +426,9 @@
       "availability": "available",
       "reason": "Providers are detected through CodexBar and described by models.dev.",
       "children": [],
-      "sources": ["app-appearance"],
+      "sources": [
+        "app-appearance"
+      ],
       "windowsUris": [],
       "sections": [
         {
@@ -448,7 +455,9 @@
       "availability": "available",
       "reason": "Remy'a Bar reads these preferences from Settings.",
       "children": [],
-      "sources": ["app-appearance"],
+      "sources": [
+        "app-appearance"
+      ],
       "windowsUris": [],
       "sections": [
         {
@@ -2150,6 +2159,44 @@
               "availability": "available",
               "reason": "Uses desktop workspace options and rules through the Settings service.",
               "value": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "environment-variables",
+      "category": "system",
+      "title": "Environment variables",
+      "description": "Session variables for apps the desktop starts, such as Wayland preferences for toolkits",
+      "preview": "none",
+      "availability": "available",
+      "reason": "Writes session variables to the Settings-owned desktop configuration and reloads it.",
+      "sources": [
+        "hypr-environment",
+        "hyprland-lua-environment"
+      ],
+      "windowsUris": [],
+      "children": [],
+      "sections": [
+        {
+          "title": "Variables",
+          "controls": [
+            {
+              "id": "environment.set",
+              "title": "Your environment variables",
+              "type": "action",
+              "availability": "available",
+              "reason": "Writes session variables to the Settings-owned desktop configuration and reloads it.",
+              "value": ""
+            },
+            {
+              "id": "environment.remove",
+              "title": "Remove an environment variable",
+              "type": "action",
+              "availability": "available",
+              "reason": "Writes session variables to the Settings-owned desktop configuration and reloads it.",
+              "value": ""
             }
           ]
         }
@@ -4249,78 +4296,61 @@
     {
       "id": "printers",
       "category": "devices",
-      "title": "Printers and Scanners",
-      "description": "Add devices, default printers and queues",
+      "title": "Printers",
+      "description": "Installed printers, the default printer and print queues",
       "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "availability": "available",
+      "reason": "Uses CUPS through its command-line tools.",
       "sources": [
-        "uris"
+        "uris",
+        "cups"
       ],
       "windowsUris": [
         "ms-settings:printers"
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Printers",
           "controls": [
             {
-              "id": "printers.9a92f276",
-              "title": "Add a printer or scanner",
+              "id": "printers.default",
+              "title": "Default printer",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Add device"
+              "availability": "available",
+              "reason": "Sets your own default printer with lpoptions; other users keep theirs.",
+              "value": ""
             },
             {
-              "id": "printers.29e59f94",
-              "title": "Automatically manage default printers",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "printers.7d2ec3e1",
-              "title": "Download drivers over a metered connection",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "printers.98323162",
-              "title": "Print queue",
+              "id": "printers.test-page",
+              "title": "Print a test page",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
+              "availability": "available",
+              "reason": "Uses CUPS through its command-line tools.",
+              "value": ""
             },
             {
-              "id": "printers.1b618ab5",
-              "title": "Printing preferences",
+              "id": "printers.pause",
+              "title": "Pause or resume a printer",
               "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
+              "availability": "available",
+              "reason": "Uses cupsenable and cupsdisable; CUPS may require administrator rights.",
+              "value": ""
+            },
             {
-              "id": "printers.reference.c1c02196",
-              "title": "Let Windows manage my default printer",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Printers & Scanners",
-                "Let Windows manage my default printer"
-              ],
-              "value": false
+              "id": "printers.cancel-job",
+              "title": "Cancel a print job",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses CUPS through its command-line tools.",
+              "value": ""
+            },
+            {
+              "id": "printers.remove",
+              "title": "Remove a printer",
+              "type": "action",
+              "availability": "available",
+              "reason": "Uses lpadmin; CUPS may require administrator rights.",
+              "value": ""
             }
           ]
         }
@@ -9121,6 +9151,43 @@
       "children": []
     },
     {
+      "id": "window-rules",
+      "category": "apps",
+      "title": "Window rules",
+      "description": "How chosen apps' windows open and look: floating, size, workspace, opacity and more",
+      "preview": "none",
+      "availability": "available",
+      "reason": "Writes window rules to the Settings-owned desktop configuration; Hyprland checks each rule first.",
+      "sources": [
+        "hypr-window-rules"
+      ],
+      "windowsUris": [],
+      "children": [],
+      "sections": [
+        {
+          "title": "Window rules",
+          "controls": [
+            {
+              "id": "window-rules.set",
+              "title": "Your window rules",
+              "type": "action",
+              "availability": "available",
+              "reason": "Writes window rules to the Settings-owned desktop configuration; Hyprland checks each rule first.",
+              "value": ""
+            },
+            {
+              "id": "window-rules.remove",
+              "title": "Remove a window rule",
+              "type": "action",
+              "availability": "available",
+              "reason": "Writes window rules to the Settings-owned desktop configuration; Hyprland checks each rule first.",
+              "value": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "your-info",
       "category": "accounts",
       "title": "Account information",
@@ -12543,134 +12610,6 @@
       "children": []
     },
     {
-      "id": "security",
-      "category": "privacy",
-      "title": "System security",
-      "description": "Safety overview and protected areas",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris",
-        "hypr-polkit"
-      ],
-      "windowsUris": [
-        "ms-settings:windowsdefender"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "security.f4700677",
-              "title": "Security status",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Not read"
-            },
-            {
-              "id": "security.111b451f",
-              "title": "Virus and Threat Protection",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "security.4fb1be9f",
-              "title": "Account Protection",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "security.7934d1e5",
-              "title": "Firewall and Network Protection",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "security.3e8cd48e",
-              "title": "Application and browser controls",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "security.b23021fa",
-              "title": "Equipment security",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            },
-            {
-              "id": "security.dcf23926",
-              "title": "Equipment performance and operating condition",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        },
-        {
-          "title": "Advanced",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "security.authorization-agent",
-              "title": "Authorization agent: Authorized agent selection",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional authorization agent setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Not selected",
-              "options": [
-                "Not selected",
-                "hyprpolkitagent",
-                "Other agents"
-              ],
-              "referencePath": [
-                "hypr-polkit",
-                "agent"
-              ]
-            },
-            {
-              "id": "security.authorization-autostart",
-              "title": "Authorization agent: Start authorization agent on login",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional authorization agent setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-polkit",
-                "autostart"
-              ]
-            },
-            {
-              "id": "security.authorization-status",
-              "title": "Authorization agent: Authorized agent status",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional authorization agent setting is only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Not read",
-              "referencePath": [
-                "hypr-polkit",
-                "status"
-              ]
-            }
-          ],
-          "description": "Planned compositor options from Hyprland Authorized Agent."
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "encryption",
       "category": "privacy",
       "title": "Device encryption",
@@ -12750,46 +12689,6 @@
               "availability": "unsupported",
               "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
               "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "general-privacy",
-      "category": "privacy",
-      "title": "General privacy",
-      "description": "Website language preferences and personalized offers",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:privacy",
-        "ms-settings:privacy-general"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "general-privacy.688b695e",
-              "title": "Website access language list",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "general-privacy.87512f3b",
-              "title": "Personalized offers",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
             }
           ]
         }
@@ -15154,1070 +15053,6 @@
       "children": []
     },
     {
-      "id": "hypr-window-rule-props",
-      "category": "hyprland",
-      "title": "Window rules · Matching conditions",
-      "description": "Component parameters classified by official documents · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-window-rules"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Matching conditions",
-          "controls": [
-            {
-              "id": "hypr-window-rule-props.class",
-              "title": "Window application class matching · class",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "class"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.content",
-              "title": "Content type · content",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "content"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.focus",
-              "title": "Focus state matching · focus",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "focus"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.fullscreen",
-              "title": "fullscreen · fullscreen",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "fullscreen"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.fullscreen-state-client",
-              "title": "Client full screen state · fullscreen_state_client",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "fullscreen_state_client"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.fullscreen-state-internal",
-              "title": "Synth full screen state · fullscreen_state_internal",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "fullscreen_state_internal"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.float",
-              "title": "Floating window · float",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "float"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.group",
-              "title": "Window grouping · group",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "group"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.initial-class",
-              "title": "Initial application class matching · initial_class",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "initial_class"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.initial-title",
-              "title": "Initial window title matching · initial_title",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "initial_title"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.modal",
-              "title": "Modal window matching · modal",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "modal"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.pin",
-              "title": "Pin across workspaces · pin",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "pin"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.tag",
-              "title": "Window tag · tag",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "tag"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.title",
-              "title": "Window title matching · title",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "title"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.workspace",
-              "title": "Workspace selector · workspace",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "workspace"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.xdg-tag",
-              "title": "XDG window tag · xdg_tag",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "xdg_tag"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-props.xwayland",
-              "title": "XWayland window matching · xwayland",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Props",
-                "xwayland"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-window-rule-static-effects",
-      "category": "hyprland",
-      "title": "Window rules · Static effects",
-      "description": "Component parameters classified by official documents · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-window-rules"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Static effects",
-          "controls": [
-            {
-              "id": "hypr-window-rule-static-effects.center",
-              "title": "Center the floating window · center",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "center"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.content",
-              "title": "Content type · content",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "content"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.float",
-              "title": "Floating window · float",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "float"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.fullscreen",
-              "title": "fullscreen · fullscreen",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "fullscreen"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.fullscreen-state",
-              "title": "fullscreen state · fullscreen_state",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "fullscreen_state"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.group",
-              "title": "Window grouping · group",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "group"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.maximize",
-              "title": "maximize · maximize",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "maximize"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.monitor",
-              "title": "Monitor matching · monitor",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "monitor"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.move",
-              "title": "Floating window coordinates · move",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "move"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.no-close-for",
-              "title": "no close for · no_close_for",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "no_close_for"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.no-initial-focus",
-              "title": "Disable initial focus · no_initial_focus",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "no_initial_focus"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.pin",
-              "title": "Pin across workspaces · pin",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "pin"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.pseudo",
-              "title": "Pseudo tiling mode · pseudo",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "pseudo"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.scrolling-width",
-              "title": "scrolling width · scrolling_width",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "scrolling_width"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.size",
-              "title": "Window or control size · size",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "size"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.suppress-event",
-              "title": "Suppress window events · suppress_event",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "suppress_event"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.tile",
-              "title": "Force tiling · tile",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "tile"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-static-effects.workspace",
-              "title": "Workspace selector · workspace",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Static effects",
-                "workspace"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-window-rule-dynamic-effects",
-      "category": "hyprland",
-      "title": "Window rules · Dynamic effects",
-      "description": "Component parameters classified by official documents · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-window-rules"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Dynamic effects",
-          "controls": [
-            {
-              "id": "hypr-window-rule-dynamic-effects.allows-input",
-              "title": "allows input · allows_input",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "allows_input"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.animation",
-              "title": "Animation style · animation",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "animation"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.border-color",
-              "title": "Window border gradient overlay · border_color",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "border_color"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.border-size",
-              "title": "Window border width · border_size",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "border_size"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.confine-pointer",
-              "title": "Limit pointers to windows · confine_pointer",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "confine_pointer"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.dim-around",
-              "title": "Darkening degree of surrounding area · dim_around",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "dim_around"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.decorate",
-              "title": "Draw window decoration · decorate",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "decorate"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.focus-on-activate",
-              "title": "Focus on application activation · focus_on_activate",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "focus_on_activate"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.idle-inhibit",
-              "title": "Inhibit idle mode · idle_inhibit",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "idle_inhibit"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.immediate",
-              "title": "Immediate rendering allows tearing · immediate",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "immediate"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.keep-aspect-ratio",
-              "title": "Keep aspect ratio when resizing · keep_aspect_ratio",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "keep_aspect_ratio"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.max-size",
-              "title": "Maximum window size · max_size",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "max_size"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.min-size",
-              "title": "Minimum window size · min_size",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "min_size"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.nearest-neighbor",
-              "title": "nearest neighbor · nearest_neighbor",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "nearest_neighbor"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.no-anim",
-              "title": "Disable animation · no_anim",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "no_anim"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.no-auto-hdr",
-              "title": "no auto hdr · no_auto_hdr",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "no_auto_hdr"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.no-blur",
-              "title": "no blur · no_blur",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "no_blur"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.no-dim",
-              "title": "no dim · no_dim",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "no_dim"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.no-focus",
-              "title": "no focus · no_focus",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "no_focus"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.no-follow-mouse",
-              "title": "no follow mouse · no_follow_mouse",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "no_follow_mouse"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.no-glow",
-              "title": "no glow · no_glow",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "no_glow"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.no-max-size",
-              "title": "no max size · no_max_size",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "no_max_size"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.no-screen-share",
-              "title": "Disable screen share capture · no_screen_share",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "no_screen_share"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.no-shadow",
-              "title": "Disable shadow · no_shadow",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "no_shadow"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.no-shortcuts-inhibit",
-              "title": "no shortcuts inhibit · no_shortcuts_inhibit",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "no_shortcuts_inhibit"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.no-vrr",
-              "title": "no vrr · no_vrr",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "no_vrr"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.no-wobble",
-              "title": "no wobble · no_wobble",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "no_wobble"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.no-xdg-drags",
-              "title": "no xdg drags · no_xdg_drags",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "no_xdg_drags"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.opacity",
-              "title": "Transparency overlay · opacity",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "opacity"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.opaque",
-              "title": "opaque · opaque",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "opaque"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.force-rgbx",
-              "title": "force rgbx · force_rgbx",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "force_rgbx"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.persistent-size",
-              "title": "persistent size · persistent_size",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "persistent_size"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.render-unfocused",
-              "title": "render unfocused · render_unfocused",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "render_unfocused"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.rounding",
-              "title": "Corner radius · rounding",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "rounding"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.rounding-power",
-              "title": "Rounding curvature · rounding_power",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "rounding_power"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.scroll-mouse",
-              "title": "scroll mouse · scroll_mouse",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "scroll_mouse"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.scroll-touchpad",
-              "title": "scroll touchpad · scroll_touchpad",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "scroll_touchpad"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.stay-focused",
-              "title": "stay focused · stay_focused",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "stay_focused"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.sync-fullscreen",
-              "title": "sync fullscreen · sync_fullscreen",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "sync_fullscreen"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.tag",
-              "title": "Window tag · tag",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "tag"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.tonemap",
-              "title": "tonemap · tonemap",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "tonemap"
-              ]
-            },
-            {
-              "id": "hypr-window-rule-dynamic-effects.xray",
-              "title": "Penetration effect · xray",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-window-rules",
-                "Dynamic effects",
-                "xray"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
       "id": "hypr-layer-rule-props",
       "category": "hyprland",
       "title": "Layer rules · Matching conditions",
@@ -16566,107 +15401,8 @@
         }
       ],
       "children": [
-        "hypr-desktop-portals",
         "hypr-input-capture"
       ]
-    },
-    {
-      "id": "hypr-desktop-portals",
-      "category": "privacy",
-      "title": "Desktop Portal and Screen Sharing",
-      "description": "Window capture, global shortcut keys and file selection provider · Optional components xdg-desktop-portal-hyprland and file selection portal",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; the optional components xdg-desktop-portal-hyprland and the file selection portal settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-portal"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "hypr-desktop-portals.backend",
-              "title": "XDPH Services and Providers",
-              "type": "info",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional components xdg-desktop-portal-hyprland and the file selection portal settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Not read",
-              "referencePath": [
-                "hypr-portal",
-                "backend"
-              ]
-            },
-            {
-              "id": "hypr-desktop-portals.sharing",
-              "title": "Screen and window sharing selector",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional components xdg-desktop-portal-hyprland and the file selection portal settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-portal",
-                "sharing"
-              ]
-            },
-            {
-              "id": "hypr-desktop-portals.shortcuts",
-              "title": "Apply global shortcut key authorization",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional components xdg-desktop-portal-hyprland and the file selection portal settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-portal",
-                "shortcuts"
-              ]
-            },
-            {
-              "id": "hypr-desktop-portals.picker",
-              "title": "File selection portal provider",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional components xdg-desktop-portal-hyprland and the file selection portal settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Not selected",
-              "options": [
-                "Not selected",
-                "GTK portal",
-                "Other portals"
-              ],
-              "referencePath": [
-                "hypr-portal",
-                "picker"
-              ]
-            },
-            {
-              "id": "hypr-desktop-portals.restore",
-              "title": "Sharing session recovery token",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional components xdg-desktop-portal-hyprland and the file selection portal settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": false,
-              "referencePath": [
-                "hypr-portal",
-                "restore"
-              ]
-            },
-            {
-              "id": "hypr-desktop-portals.diagnostics",
-              "title": "Portal service diagnostics",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; the optional components xdg-desktop-portal-hyprland and the file selection portal settings are only for interface preview. The component installation, version and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-portal",
-                "diagnostics"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
     },
     {
       "id": "hypr-config-files",
@@ -16789,7 +15525,6 @@
         }
       ],
       "children": [
-        "hypr-environment",
         "hypr-diagnostics"
       ]
     },
@@ -16872,104 +15607,6 @@
               "referencePath": [
                 "hypr-systemd",
                 "logs"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hypr-environment",
-      "category": "session",
-      "title": "Session environment variables",
-      "description": "Wayland, XDG, themes and application environments · Hyprland",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-      "sources": [
-        "hypr-environment"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "hypr-environment.name",
-              "title": "Variable name",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-environment",
-                "name"
-              ]
-            },
-            {
-              "id": "hypr-environment.value",
-              "title": "Variable values",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-environment",
-                "value"
-              ]
-            },
-            {
-              "id": "hypr-environment.scope",
-              "title": "Variable scope",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Current session",
-              "options": [
-                "Current session",
-                "Start the environment",
-                "Application coverage"
-              ],
-              "referencePath": [
-                "hypr-environment",
-                "scope"
-              ]
-            },
-            {
-              "id": "hypr-environment.toolkit",
-              "title": "GTK / Qt / SDL / Electron platform selection",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-environment",
-                "toolkit"
-              ]
-            },
-            {
-              "id": "hypr-environment.xdg",
-              "title": "XDG desktop logo",
-              "type": "text",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "",
-              "referencePath": [
-                "hypr-environment",
-                "xdg"
-              ]
-            },
-            {
-              "id": "hypr-environment.add",
-              "title": "Add environment variables",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; Hyprland settings are only for interface preview, component installation, versions and available interfaces need to be verified in the future, and the current system will not be read or modified.",
-              "value": "Configuration",
-              "referencePath": [
-                "hypr-environment",
-                "add"
               ]
             }
           ]
