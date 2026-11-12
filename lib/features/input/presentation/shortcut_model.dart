@@ -44,6 +44,8 @@ const shortcutActions = {
   'maximize': 'Maximize',
   'pin': 'Pin window',
   'scratchpad': 'Show or hide the scratchpad',
+  'group': 'Group or ungroup windows',
+  'group-next': 'Next tab in group',
 };
 
 /// A key combination drawn as keycaps.

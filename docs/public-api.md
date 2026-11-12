@@ -505,7 +505,7 @@ errors are available in Details and restart notices use a primary action.
 ## System information
 
 `Get("system-information")` returns `api_version: 1` and `values`, keyed by the
-16 stable `about.*` information IDs. Each field contains a string `value` and
+18 stable `about.*` information IDs. Each field contains a string `value` and
 null `error`, or null `value` and a diagnostic `error`. `Get(<information ID>)`
 returns the same field with ID, availability, and reason. `Set` rejects these
 fields with `ReadOnly`. The pure Dart client exposes `readSystemInformation()`
@@ -1299,7 +1299,7 @@ nullable `code`, `description`, `actions`, `locked`, `mouse` and `custom`),
 | `keyboard-shortcuts.workspace-cycles`, `keyboard-shortcuts.pass-mouse` | boolean |
 | `language.keyboard-layouts` | `[{"layout":"us","variant":""}, ...]`: one to four xkeyboard-config layouts, each with an optional variant of that layout; the first is the default. Written as `kb_layout` and `kb_variant` in one `hl.config` call |
 | `language.keyboard-options` | comma-separated xkeyboard-config options (`kb_options`), such as `"grp:win_space_toggle,caps:escape"`; `""` clears them |
-| `keyboard-shortcuts.add` | `{"keys":"SUPER + code:24","action":"command","command":"foot","description":"","replace":false,"previous":null}`; `action` is `command`, `close`, `float`, `fullscreen`, `maximize`, `pin` or `scratchpad` |
+| `keyboard-shortcuts.add` | `{"keys":"SUPER + code:24","action":"command","command":"foot","description":"","replace":false,"previous":null}`; `action` is `command`, `close`, `float`, `fullscreen`, `maximize`, `pin`, `scratchpad`, `group` or `group-next` |
 | `keyboard-shortcuts.remove` | `{"keys":"SUPER + Return"}` (custom shortcuts only) |
 | `keyboard-shortcuts.disable` | `{"keys":"SUPER + J","disabled":true}`; `false` restores it |
 | `keyboard-shortcuts.record` | `true` enters the pass-through recording submap, `false` leaves it |
@@ -1350,8 +1350,17 @@ state also reports `window_rules` (saved), `system_window_rules`, `windows`
 | `multitasking.border-size` | 0 to 20 |
 | `multitasking.snap`, `multitasking.snap-respect-gaps`, `multitasking.snap-border-overlap` | boolean (`general:snap:*`) |
 | `multitasking.snap-window-gap`, `multitasking.snap-monitor-gap`, `multitasking.border-grab-area`, `multitasking.gaps-workspaces` | 0 to 100 |
-| `multitasking.resize-on-border`, `multitasking.border-hover-icon`, `multitasking.modal-parent-blocking`, `multitasking.no-focus-fallback`, `multitasking.allow-tearing` | boolean (`general:*`) |
+| `multitasking.resize-on-border`, `multitasking.border-hover-icon`, `multitasking.modal-parent-blocking`, `multitasking.no-focus-fallback` | boolean (`general:*`) |
 | `multitasking.resize-corner` | 0 (nearest) to 4, clockwise from top left |
+| `multitasking.groupbar`, `-groupbar-titles`, `-group-auto`, `-group-insert-after-current`, `-group-focus-removed`, `-group-merge-on-drag`, `-group-on-move` | boolean (`group:groupbar:enabled`, `group:groupbar:render_titles`, `group:auto_group`, `group:insert_after_current`, `group:focus_removed_window`, `group:merge_groups_on_drag`, `group:group_on_movetoworkspace`) |
+| `multitasking.groupbar-height` | 1 to 64; `multitasking.groupbar-font-size`: 2 to 64 |
+| `multitasking.group-drag-into` | `group:drag_into_group`: 0 never, 1 anywhere on the group, 2 only onto the tabs |
+| `multitasking.focus-on-activate`, `multitasking.anr-dialog` | boolean (`misc:focus_on_activate`, `misc:enable_anr_dialog`); `multitasking.anr-missed-pings`: 1 to 20 |
+| `multitasking.focus-under-fullscreen` | `misc:on_focus_under_fullscreen`: 0 keep the full-screen window, 1 the new window takes over, 2 leave full screen |
+| `multitasking.exit-retains-fullscreen` | `misc:exit_window_retains_fullscreen`: 0 off, 1 always, 2 only within a group, 3 only outside a group |
+| `graphics.allow-tearing`, `graphics.xwayland-zero-scaling` | boolean (`general:allow_tearing`, `xwayland:force_zero_scaling`) |
+| `graphics.direct-scanout` | `render:direct_scanout`: 0 off, 1 on, 2 games only |
+| `graphics.auto-hdr` | `render:cm_auto_hdr`: 0 off, 1 HDR, 2 HDR from display data |
 | `cursor.hide-on-key-press`, `cursor.hide-on-touch`, `cursor.hide-on-tablet`, `cursor.no-warps`, `cursor.persistent-warps`, `cursor.enable-hyprcursor` | boolean (`cursor:*`) |
 | `cursor.inactive-timeout` | seconds from 0 (never) to 20 |
 | `cursor.warp-on-change-workspace` | 0 off, 1 on, 2 always |
@@ -1369,7 +1378,14 @@ state also reports `window_rules` (saved), `system_window_rules`, `windows`
 | `multitasking.dwindle-split-bias` | `dwindle:split_bias`: 0 directional, 1 the focused window |
 | `multitasking.dwindle-preserve-split`, `-smart-split`, `-smart-resizing`, `-permanent-direction`, `-use-active`, `-precise-move` | boolean (`dwindle:*`) |
 | `multitasking.dwindle-split-ratio` | 0.1 to 1.9; `multitasking.dwindle-split-width`: 0.1 to 3; `multitasking.dwindle-special-scale`: 0 to 1 |
-| `window-appearance.active-border`, `window-appearance.inactive-border`, `window-appearance.shadow-color`, `window-appearance.glow-color` | `"#rrggbbaa"` (`"#rrggbb"` is taken as opaque), written as `rgba(rrggbbaa)`; a multi-color gradient reads as its first color |
+| `multitasking.master-orientation` | `master:orientation`: `"left"`, `"right"`, `"top"`, `"bottom"` or `"center"` |
+| `multitasking.master-new-status` | `master:new_status`: `"slave"`, `"master"` or `"inherit"` |
+| `multitasking.master-mfact` | `master:mfact`, 0 to 1; `multitasking.master-center-min-stack`: `master:slave_count_for_center_master`, 0 to 10 |
+| `multitasking.master-new-on-top`, `-keep-position`, `-focus-on-close`, `-smart-resizing`, `-drop-at-cursor` | boolean (`master:new_on_top`, `always_keep_position`, `focus_master_on_close`, `smart_resizing`, `drop_at_cursor`) |
+| `multitasking.scrolling-direction` | `scrolling:direction`: `"right"`, `"left"`, `"down"` or `"up"` |
+| `multitasking.scrolling-column-width` | `scrolling:column_width`, 0.1 to 1; `multitasking.scrolling-focus-fit`: `scrolling:focus_fit_method`, 0 center, 1 fit |
+| `multitasking.scrolling-fullscreen-one-column`, `-wrap-focus` | boolean (`scrolling:fullscreen_on_one_column`, `wrap_focus`) |
+| `window-appearance.active-border`, `window-appearance.inactive-border`, `window-appearance.group-active-border`, `window-appearance.group-inactive-border`, `window-appearance.shadow-color`, `window-appearance.glow-color` | `"#rrggbbaa"` (`"#rrggbb"` is taken as opaque), written as `rgba(rrggbbaa)`; a multi-color gradient reads as its first color |
 | `window-appearance.rounding` | 0 to 100; `window-appearance.rounding-power`: 1 to 10 (2 is circular) |
 | `window-appearance.active-opacity`, `-inactive-opacity`, `-fullscreen-opacity`, `-dim-strength`, `-dim-special` | number from 0 to 1 |
 | `window-appearance.dim-inactive`, `-dim-modal`, `-shadow`, `-shadow-sharp`, `-glow`, `-border-part-of-window` | boolean |

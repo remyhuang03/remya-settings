@@ -268,10 +268,7 @@ void main() {
     int count(String label) => int.parse(
       tester.widget<Text>(find.byKey(ValueKey('coverage-$label'))).data!,
     );
-    expect(
-      count('Supported') + count('Not yet done'),
-      count('Total'),
-    );
+    expect(count('Supported') + count('Not yet done'), count('Total'));
     expect(count('Total'), controls.length);
     expect(find.byKey(const ValueKey('coverage-progress')), findsOneWidget);
   });

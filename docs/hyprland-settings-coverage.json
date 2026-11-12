@@ -34,10 +34,7 @@
     "clipboard",
     "presence",
     "about",
-    "advanced",
-    "file-explorer",
     "bluetooth",
-    "device-list",
     "printers",
     "cameras",
     "mouse",
@@ -108,17 +105,10 @@
     "night-light.50840111",
     "night-light.e8868af6",
     "night-light.a0bb9f49",
-    "graphics.66507566",
-    "graphics.c76f798a",
-    "graphics.4ee2d0bc",
-    "graphics.f6aaf67c",
-    "graphics.232eb7f3",
-    "graphics.49ad9ee9",
     "sound.output-device",
     "sound.output-volume",
     "sound.input-device",
     "sound.input-volume",
-    "notifications.reference.c7fafa9e",
     "focus.9eac723a",
     "focus.e9d3186d",
     "focus.72877c30",
@@ -160,59 +150,14 @@
     "about.96af9884",
     "about.d0a7f225",
     "about.0f142010",
-    "advanced.16ab0c5a",
-    "advanced.da8193cc",
-    "advanced.cb620100",
-    "advanced.216f8db4",
-    "advanced.809d3128",
-    "advanced.d2ec4f10",
-    "advanced.d68b8048",
-    "advanced.001394d6",
-    "advanced.daee0454",
-    "advanced.80afb07b",
-    "advanced.reference.96b6fa8d",
-    "advanced.reference.f09f62a2",
-    "advanced.reference.d6ad9b0f",
-    "advanced.reference.4c7d62c7",
-    "file-explorer.aae5a85e",
-    "file-explorer.548c9a49",
-    "file-explorer.a484d4f3",
-    "file-explorer.e0952b14",
-    "file-explorer.7a72391c",
-    "file-explorer.32a40852",
-    "file-explorer.e2ebcb73",
-    "file-explorer.726b6ec5",
-    "file-explorer.de1fb32c",
-    "file-explorer.b3551149",
-    "file-explorer.reference.afe7ff09",
-    "file-explorer.reference.7ec40057",
-    "file-explorer.reference.d37f9e0c",
-    "file-explorer.reference.13fc4541",
-    "file-explorer.reference.b49d9a75",
-    "file-explorer.reference.67cc9b59",
-    "file-explorer.reference.485b9758",
-    "file-explorer.reference.163ce553",
-    "file-explorer.reference.f24ca65a",
-    "file-explorer.reference.ed11d482",
-    "device-list.1d30ae60",
-    "device-list.c4c19ef3",
-    "device-list.eabd0e62",
-    "device-list.9064c223",
     "touch.5cfa5330",
     "touch.de9f8969",
-    "touch.reference.b3eb626b",
-    "touch.reference.4283e4ac",
     "autoplay.aef48ac6",
     "autoplay.cf7a8268",
     "autoplay.16fc14e6",
-    "autoplay.reference.60b8b8bf",
-    "autoplay.reference.ea178ab2",
-    "autoplay.reference.9dce54e3",
     "usb.ef54bf0f",
     "usb.4b9d110f",
     "usb.cbd35db8",
-    "usb.reference.efa5ab97",
-    "usb.reference.d575fa71",
     "mobile.56e3e122",
     "mobile.1ec69bd1",
     "mobile.8031425b",
@@ -244,9 +189,6 @@
     "lockscreen.a0216293",
     "lockscreen.827be04c",
     "lockscreen.74460c63",
-    "lockscreen.reference.3ada0526",
-    "lockscreen.reference.252498b5",
-    "lockscreen.reference.6437619e",
     "fonts.65a8477b",
     "fonts.158ba0bb",
     "fonts.fc3969c7",
@@ -314,12 +256,6 @@
     "backup.5d5065a9",
     "backup.3f79292e",
     "backup.1b959d02",
-    "backup.reference.04edcf6f",
-    "backup.reference.52e80604",
-    "backup.reference.33a8643d",
-    "backup.reference.60ff3096",
-    "backup.reference.b695b07e",
-    "backup.reference.802b32da",
     "kiosk.279497bb",
     "kiosk.864aff36",
     "kiosk.9ec480c1",
@@ -338,8 +274,6 @@
     "speech.56f17992",
     "visual-effects.fe13858e",
     "visual-effects.db944e6b",
-    "visual-effects.reference.22476e4b",
-    "visual-effects.reference.5b6b06b4",
     "magnifier.0398d9d8",
     "magnifier.21f929d8",
     "magnifier.c42bf921",
@@ -355,27 +289,9 @@
     "magnifier.f7ddef87",
     "magnifier.edc4f6f3",
     "magnifier.af7b8808",
-    "magnifier.reference.54348147",
-    "magnifier.reference.0a370c37",
-    "magnifier.reference.05c8bf1b",
-    "magnifier.reference.027b1d5b",
-    "magnifier.reference.f46dfa93",
-    "magnifier.reference.353f0bce",
-    "magnifier.reference.3b4676ec",
-    "magnifier.reference.709e0120",
-    "magnifier.reference.38c4b18b",
-    "magnifier.reference.7dec5770",
-    "magnifier.reference.16d01cce",
-    "magnifier.reference.3b25fbba",
-    "magnifier.reference.54f55938",
-    "magnifier.reference.16440b75",
-    "magnifier.reference.164500de",
     "color-filters.e71f8ff5",
     "color-filters.1242069d",
     "color-filters.c95fb3d5",
-    "color-filters.reference.93c3c16a",
-    "color-filters.reference.d1a1684b",
-    "color-filters.reference.3a55c85c",
     "contrast.e848ddd4",
     "contrast.4a2d8a28",
     "contrast.07f568da",
@@ -384,14 +300,6 @@
     "contrast.450ad5bc",
     "contrast.e0124b6b",
     "contrast.88185761",
-    "contrast.reference.08c75109",
-    "contrast.reference.2f32f7fc",
-    "contrast.reference.4ef5eef9",
-    "contrast.reference.01e89338",
-    "contrast.reference.15794103",
-    "contrast.reference.d200a697",
-    "contrast.reference.ea31e5bf",
-    "contrast.reference.3fb30d73",
     "narrator.7de905aa",
     "narrator.21f929d8",
     "narrator.c42bf921",
@@ -427,48 +335,13 @@
     "narrator.e1afa623",
     "narrator.46d9f44c",
     "narrator.7f4b6188",
-    "narrator.reference.eda89fb6",
-    "narrator.reference.385fc6f8",
-    "narrator.reference.257eaf83",
-    "narrator.reference.5d68306a",
-    "narrator.reference.292ae141",
-    "narrator.reference.10c29e0c",
-    "narrator.reference.36f3b8e5",
-    "narrator.reference.05dc20b9",
-    "narrator.reference.db00112d",
-    "narrator.reference.8b69d44f",
-    "narrator.reference.104339a2",
-    "narrator.reference.57fc18dc",
-    "narrator.reference.4f442eb5",
-    "narrator.reference.cbb531ac",
-    "narrator.reference.29167366",
-    "narrator.reference.a3b181a7",
-    "narrator.reference.203122a4",
-    "narrator.reference.4af62bdf",
-    "narrator.reference.90a5b7a3",
-    "narrator.reference.d8b45f58",
-    "narrator.reference.912b4b1e",
-    "narrator.reference.7c37961a",
-    "narrator.reference.4c9af18e",
-    "narrator.reference.d4ef110b",
-    "narrator.reference.e8183e12",
-    "narrator.reference.27190ac0",
-    "narrator.reference.e91a6959",
-    "narrator.reference.bf4148da",
-    "narrator.reference.e90861de",
-    "narrator.reference.14f46908",
     "accessibility-audio.1a90a9eb",
     "accessibility-audio.49a25e92",
-    "accessibility-audio.reference.0d993fdd",
-    "accessibility-audio.reference.380697ec",
     "captions.ac8a8db0",
     "captions.ddbbae5a",
     "captions.d31e8823",
     "captions.41085f11",
     "captions.9fe387bc",
-    "captions.reference.b233720a",
-    "captions.reference.07051098",
-    "captions.reference.0472a68c",
     "accessibility-keyboard.68b234ce",
     "accessibility-keyboard.841c4322",
     "accessibility-keyboard.715c940f",
@@ -492,35 +365,12 @@
     "accessibility-keyboard.791e84ff",
     "accessibility-keyboard.cc8561a8",
     "accessibility-keyboard.8654a9c6",
-    "accessibility-keyboard.reference.1766f98b",
-    "accessibility-keyboard.reference.cb1dbaf2",
-    "accessibility-keyboard.reference.c06b6443",
-    "accessibility-keyboard.reference.59e11b79",
-    "accessibility-keyboard.reference.8fdb2ef9",
-    "accessibility-keyboard.reference.61d353a2",
-    "accessibility-keyboard.reference.e15cf0d4",
-    "accessibility-keyboard.reference.78978487",
-    "accessibility-keyboard.reference.4440fbf5",
-    "accessibility-keyboard.reference.bf8c6dd7",
-    "accessibility-keyboard.reference.28c292fb",
-    "accessibility-keyboard.reference.bb32e872",
-    "accessibility-keyboard.reference.dd8bff2c",
-    "accessibility-keyboard.reference.fa916f67",
-    "accessibility-keyboard.reference.8754adfd",
-    "accessibility-keyboard.reference.4a5a5e4c",
-    "accessibility-keyboard.reference.6f3d637b",
     "mouse-keys.af8ff2e3",
     "mouse-keys.2625b861",
     "mouse-keys.21f5aea4",
     "mouse-keys.28c033e9",
     "mouse-keys.7754307e",
     "mouse-keys.06700d63",
-    "mouse-keys.reference.da0c9570",
-    "mouse-keys.reference.bdf1cbf2",
-    "mouse-keys.reference.f113b78d",
-    "mouse-keys.reference.4f1675d1",
-    "mouse-keys.reference.fe021cfe",
-    "mouse-keys.reference.df0cfb8c",
     "encryption.47011073",
     "encryption.850ab6af",
     "encryption.45dd31ac",
@@ -624,14 +474,6 @@
       "path": "content/configuring/core/rules/window-rules.md"
     },
     {
-      "id": "hypr-layer-rules",
-      "title": "Hyprland 图层规则",
-      "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/rules/layer-rules.md",
-      "repository": "hyprwm/hyprland-wiki",
-      "revision": "026b282bdde916bb7ce77689857f40cf1e829e82",
-      "path": "content/configuring/core/rules/layer-rules.md"
-    },
-    {
       "id": "hypr-workspace-rules",
       "title": "Hyprland 工作区规则",
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/rules/workspace-rules.md",
@@ -664,22 +506,6 @@
       "path": "content/configuring/core/binds/submaps.md"
     },
     {
-      "id": "hypr-devices",
-      "title": "Hyprland 每设备配置",
-      "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/devices.md",
-      "repository": "hyprwm/hyprland-wiki",
-      "revision": "026b282bdde916bb7ce77689857f40cf1e829e82",
-      "path": "content/configuring/core/devices.md"
-    },
-    {
-      "id": "hypr-switches",
-      "title": "Hyprland 硬件开关绑定",
-      "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/binds/switches.md",
-      "repository": "hyprwm/hyprland-wiki",
-      "revision": "026b282bdde916bb7ce77689857f40cf1e829e82",
-      "path": "content/configuring/core/binds/switches.md"
-    },
-    {
       "id": "hypr-animation-reference",
       "title": "Hyprland 动画和曲线",
       "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/animations.md",
@@ -694,46 +520,6 @@
       "repository": "hyprwm/hyprland-wiki",
       "revision": "026b282bdde916bb7ce77689857f40cf1e829e82",
       "path": "content/configuring/core/environment-variables.md"
-    },
-    {
-      "id": "hypr-permissions",
-      "title": "Hyprland 权限",
-      "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/advanced-configuration/permissions.md",
-      "repository": "hyprwm/hyprland-wiki",
-      "revision": "026b282bdde916bb7ce77689857f40cf1e829e82",
-      "path": "content/configuring/core/advanced-configuration/permissions.md"
-    },
-    {
-      "id": "hypr-ipc",
-      "title": "Hyprland IPC",
-      "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/ipc/_index.md",
-      "repository": "hyprwm/hyprland-wiki",
-      "revision": "026b282bdde916bb7ce77689857f40cf1e829e82",
-      "path": "content/ipc/_index.md"
-    },
-    {
-      "id": "hypr-gpu-reference",
-      "title": "Hyprland 多 GPU",
-      "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/extra/multi-gpu.md",
-      "repository": "hyprwm/hyprland-wiki",
-      "revision": "026b282bdde916bb7ce77689857f40cf1e829e82",
-      "path": "content/configuring/extra/multi-gpu.md"
-    },
-    {
-      "id": "hypr-plugins",
-      "title": "Hyprland 插件管理",
-      "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hyprland-plugins/using-plugins.md",
-      "repository": "hyprwm/hyprland-wiki",
-      "revision": "026b282bdde916bb7ce77689857f40cf1e829e82",
-      "path": "content/hyprland-plugins/using-plugins.md"
-    },
-    {
-      "id": "hypr-systemd",
-      "title": "Hyprland UWSM / systemd 会话",
-      "url": "https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/extra/systemd.md",
-      "repository": "hyprwm/hyprland-wiki",
-      "revision": "026b282bdde916bb7ce77689857f40cf1e829e82",
-      "path": "content/configuring/extra/systemd.md"
     },
     {
       "id": "hypr-idle",
@@ -856,38 +642,16 @@
       "path": "README.md"
     }
   ],
-  "addedCategories": [
-    "hyprland",
-    "session"
-  ],
+  "addedCategories": [],
   "addedPages": [
-    "hypr-group",
-    "hypr-group-groupbar",
-    "hypr-misc",
-    "hypr-layout",
-    "hypr-ecosystem",
     "hypr-input-capture",
-    "hypr-debug",
-    "hypr-experimental",
-    "hypr-layout-master",
-    "hypr-layout-master-workspace",
-    "hypr-layout-scrolling",
-    "hypr-layout-scrolling-workspace",
-    "hypr-layer-rule-props",
-    "hypr-layer-rule-effects",
-    "hypr-layout-monocle",
-    "hypr-compositor-permissions",
-    "hypr-config-files",
-    "hypr-session-services",
-    "hypr-plugins",
-    "hypr-diagnostics",
     "window-appearance",
     "animations"
   ],
   "controls": [
     {
-      "control": "multitasking.allow-tearing",
-      "page": "multitasking",
+      "control": "graphics.allow-tearing",
+      "page": "graphics",
       "source": "hypr-options",
       "key": "allow-tearing",
       "reference": [
@@ -1862,34 +1626,6 @@
       "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_appearance_test.dart"
     },
     {
-      "control": "hypr-group.nogroup-border",
-      "page": "hypr-group",
-      "source": "hypr-options",
-      "key": "nogroup-border",
-      "reference": [
-        "hypr-options",
-        "general.col",
-        "nogroup_border"
-      ],
-      "nativeType": "gradient",
-      "documentedDefault": "`0xffffaaff`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group.nogroup-border-active",
-      "page": "hypr-group",
-      "source": "hypr-options",
-      "key": "nogroup-border-active",
-      "reference": [
-        "hypr-options",
-        "general.col",
-        "nogroup_border_active"
-      ],
-      "nativeType": "gradient",
-      "documentedDefault": "`0xffff00ff`",
-      "documentedLimits": ""
-    },
-    {
       "control": "multitasking.snap",
       "page": "multitasking",
       "source": "hypr-options",
@@ -2258,664 +1994,6 @@
       "documentedLimits": "[0 - 2]"
     },
     {
-      "control": "hypr-group.auto-group",
-      "page": "hypr-group",
-      "source": "hypr-options",
-      "key": "auto-group",
-      "reference": [
-        "hypr-options",
-        "group",
-        "auto_group"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group.drag-into-group",
-      "page": "hypr-group",
-      "source": "hypr-options",
-      "key": "drag-into-group",
-      "reference": [
-        "hypr-options",
-        "group",
-        "drag_into_group"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "hypr-group.focus-removed-window",
-      "page": "hypr-group",
-      "source": "hypr-options",
-      "key": "focus-removed-window",
-      "reference": [
-        "hypr-options",
-        "group",
-        "focus_removed_window"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group.group-on-movetoworkspace",
-      "page": "hypr-group",
-      "source": "hypr-options",
-      "key": "group-on-movetoworkspace",
-      "reference": [
-        "hypr-options",
-        "group",
-        "group_on_movetoworkspace"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group.insert-after-current",
-      "page": "hypr-group",
-      "source": "hypr-options",
-      "key": "insert-after-current",
-      "reference": [
-        "hypr-options",
-        "group",
-        "insert_after_current"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group.merge-floated-into-tiled-on-groupbar",
-      "page": "hypr-group",
-      "source": "hypr-options",
-      "key": "merge-floated-into-tiled-on-groupbar",
-      "reference": [
-        "hypr-options",
-        "group",
-        "merge_floated_into_tiled_on_groupbar"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group.merge-groups-on-drag",
-      "page": "hypr-group",
-      "source": "hypr-options",
-      "key": "merge-groups-on-drag",
-      "reference": [
-        "hypr-options",
-        "group",
-        "merge_groups_on_drag"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group.merge-groups-on-groupbar",
-      "page": "hypr-group",
-      "source": "hypr-options",
-      "key": "merge-groups-on-groupbar",
-      "reference": [
-        "hypr-options",
-        "group",
-        "merge_groups_on_groupbar"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group.border-active",
-      "page": "hypr-group",
-      "source": "hypr-options",
-      "key": "border-active",
-      "reference": [
-        "hypr-options",
-        "group.col",
-        "border_active"
-      ],
-      "nativeType": "gradient",
-      "documentedDefault": "`0x66ffff00`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group.border-inactive",
-      "page": "hypr-group",
-      "source": "hypr-options",
-      "key": "border-inactive",
-      "reference": [
-        "hypr-options",
-        "group.col",
-        "border_inactive"
-      ],
-      "nativeType": "gradient",
-      "documentedDefault": "`0x66777700`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group.border-locked-active",
-      "page": "hypr-group",
-      "source": "hypr-options",
-      "key": "border-locked-active",
-      "reference": [
-        "hypr-options",
-        "group.col",
-        "border_locked_active"
-      ],
-      "nativeType": "gradient",
-      "documentedDefault": "`0x66ff5500`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group.border-locked-inactive",
-      "page": "hypr-group",
-      "source": "hypr-options",
-      "key": "border-locked-inactive",
-      "reference": [
-        "hypr-options",
-        "group.col",
-        "border_locked_inactive"
-      ],
-      "nativeType": "gradient",
-      "documentedDefault": "`0x66775500`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.enabled",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "enabled",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "enabled"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.blur",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "blur",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "blur"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.disable-when-only",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "disable-when-only",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "disable_when_only"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.font-family",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "font-family",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "font_family"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.font-size",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "font-size",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "font_size"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`8`",
-      "documentedLimits": "[2 - 64]"
-    },
-    {
-      "control": "hypr-group-groupbar.font-weight-active",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "font-weight-active",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "font_weight_active"
-      ],
-      "nativeType": "font_weight",
-      "documentedDefault": "`\"normal\"`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.font-weight-inactive",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "font-weight-inactive",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "font_weight_inactive"
-      ],
-      "nativeType": "font_weight",
-      "documentedDefault": "`\"normal\"`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.gaps-in",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "gaps-in",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "gaps_in"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 20]"
-    },
-    {
-      "control": "hypr-group-groupbar.gaps-out",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "gaps-out",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "gaps_out"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 20]"
-    },
-    {
-      "control": "hypr-group-groupbar.gradients",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "gradients",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "gradients"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.gradient-round-only-edges",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "gradient-round-only-edges",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "gradient_round_only_edges"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.gradient-rounding",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "gradient-rounding",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "gradient_rounding"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 100]"
-    },
-    {
-      "control": "hypr-group-groupbar.gradient-rounding-power",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "gradient-rounding-power",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "gradient_rounding_power"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`2.0`",
-      "documentedLimits": "[1.0 - 10.0]"
-    },
-    {
-      "control": "hypr-group-groupbar.height",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "height",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "height"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`14`",
-      "documentedLimits": "[0 - 64]"
-    },
-    {
-      "control": "hypr-group-groupbar.indicator-gap",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "indicator-gap",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "indicator_gap"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 64]"
-    },
-    {
-      "control": "hypr-group-groupbar.indicator-height",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "indicator-height",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "indicator_height"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`3`",
-      "documentedLimits": "[0 - 64]"
-    },
-    {
-      "control": "hypr-group-groupbar.keep-upper-gap",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "keep-upper-gap",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "keep_upper_gap"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.middle-click-close",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "middle-click-close",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "middle_click_close"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.priority",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "priority",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "priority"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`3`",
-      "documentedLimits": "[0 - 6]"
-    },
-    {
-      "control": "hypr-group-groupbar.render-titles",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "render-titles",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "render_titles"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.round-only-edges",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "round-only-edges",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "round_only_edges"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.rounding",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "rounding",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "rounding"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0 - 40]"
-    },
-    {
-      "control": "hypr-group-groupbar.rounding-power",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "rounding-power",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "rounding_power"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`2.0`",
-      "documentedLimits": "[1.0 - 10.0]"
-    },
-    {
-      "control": "hypr-group-groupbar.scrolling",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "scrolling",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "scrolling"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.stacked",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "stacked",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "stacked"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.text-color",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "text-color",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "text_color"
-      ],
-      "nativeType": "color",
-      "documentedDefault": "`0xffffffff`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.text-color-inactive",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "text-color-inactive",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "text_color_inactive"
-      ],
-      "nativeType": "color",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.text-color-locked-active",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "text-color-locked-active",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "text_color_locked_active"
-      ],
-      "nativeType": "color",
-      "documentedDefault": "[[Empty]\\",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.text-color-locked-inactive",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "text-color-locked-inactive",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "text_color_locked_inactive"
-      ],
-      "nativeType": "color",
-      "documentedDefault": "[[Empty]\\",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.text-offset",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "text-offset",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "text_offset"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[-20 - 20]"
-    },
-    {
-      "control": "hypr-group-groupbar.text-padding",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "text-padding",
-      "reference": [
-        "hypr-options",
-        "group.groupbar",
-        "text_padding"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 22]"
-    },
-    {
-      "control": "hypr-group-groupbar.col-active",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "active",
-      "reference": [
-        "hypr-options",
-        "group.groupbar.col",
-        "active"
-      ],
-      "nativeType": "gradient",
-      "documentedDefault": "`0x66ffff00`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.col-inactive",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "inactive",
-      "reference": [
-        "hypr-options",
-        "group.groupbar.col",
-        "inactive"
-      ],
-      "nativeType": "gradient",
-      "documentedDefault": "`0x66777700`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.col-locked-active",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "locked-active",
-      "reference": [
-        "hypr-options",
-        "group.groupbar.col",
-        "locked_active"
-      ],
-      "nativeType": "gradient",
-      "documentedDefault": "`0x66ff5500`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-group-groupbar.col-locked-inactive",
-      "page": "hypr-group-groupbar",
-      "source": "hypr-options",
-      "key": "locked-inactive",
-      "reference": [
-        "hypr-options",
-        "group.groupbar.col",
-        "locked_inactive"
-      ],
-      "nativeType": "gradient",
-      "documentedDefault": "`0x66775500`",
-      "documentedLimits": ""
-    },
-    {
       "control": "lockscreen.compositor-restore",
       "page": "lockscreen",
       "source": "hypr-options",
@@ -2928,20 +2006,6 @@
       "nativeType": "bool",
       "documentedDefault": "`false`",
       "documentedLimits": ""
-    },
-    {
-      "control": "hypr-misc.anr-missed-pings",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "anr-missed-pings",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "anr_missed_pings"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`5`",
-      "documentedLimits": "[1 - 20]"
     },
     {
       "control": "background.fallback-color",
@@ -2973,34 +2037,6 @@
       "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/sound_test.dart"
     },
     {
-      "control": "hypr-misc.disable-autoreload",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "disable-autoreload",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "disable_autoreload"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-misc.disable-hyprland-guiutils-check",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "disable-hyprland-guiutils-check",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "disable_hyprland_guiutils_check"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
       "control": "background.hide-logo",
       "page": "background",
       "source": "hypr-options",
@@ -3012,132 +2048,6 @@
       ],
       "availability": "available",
       "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/background_test.dart"
-    },
-    {
-      "control": "hypr-misc.disable-scale-notification",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "disable-scale-notification",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "disable_scale_notification"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-misc.disable-watchdog-warning",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "disable-watchdog-warning",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "disable_watchdog_warning"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-misc.disable-xdg-env-checks",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "disable-xdg-env-checks",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "disable_xdg_env_checks"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-misc.enable-anr-dialog",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "enable-anr-dialog",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "enable_anr_dialog"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-misc.enable-swallow",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "enable-swallow",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "enable_swallow"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-misc.exit-window-retains-fullscreen",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "exit-window-retains-fullscreen",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "exit_window_retains_fullscreen"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 3]"
-    },
-    {
-      "control": "hypr-misc.float-force-onscreen",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "float-force-onscreen",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "float_force_onscreen"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "hypr-misc.new-float-force-onscreen",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "new-float-force-onscreen",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "new_float_force_onscreen"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "hypr-misc.focus-on-activate",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "focus-on-activate",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "focus_on_activate"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
     },
     {
       "control": "fonts.compositor-family",
@@ -3156,20 +2066,6 @@
       "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/fonts_test.dart"
     },
     {
-      "control": "hypr-misc.initial-workspace-token-timeout",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "initial-workspace-token-timeout",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "initial_workspace_token_timeout"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`10`",
-      "documentedLimits": "[1 - 3600]"
-    },
-    {
       "control": "power.wake-key",
       "page": "power",
       "source": "hypr-options",
@@ -3181,20 +2077,6 @@
       ],
       "availability": "available",
       "verification": "Rust power idle tests; test/desktop_smoke.py (nested Hyprland 0.57); test/power_test.dart"
-    },
-    {
-      "control": "hypr-misc.layers-hog-keyboard-focus",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "layers-hog-keyboard-focus",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "layers_hog_keyboard_focus"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
     },
     {
       "control": "lockscreen.compositor-dead-delay",
@@ -3224,62 +2106,6 @@
       "verification": "Rust power idle tests; test/desktop_smoke.py (nested Hyprland 0.57); test/power_test.dart"
     },
     {
-      "control": "hypr-misc.name-vk-after-proc",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "name-vk-after-proc",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "name_vk_after_proc"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-misc.on-focus-under-fullscreen",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "on-focus-under-fullscreen",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "on_focus_under_fullscreen"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "graphics.compositor-unfocused-fps",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "render-unfocused-fps",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "render_unfocused_fps"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`15`",
-      "documentedLimits": "[1 - 120]"
-    },
-    {
-      "control": "hypr-misc.screencopy-force-8b",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "screencopy-force-8b",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "screencopy_force_8b"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
       "control": "lockscreen.compositor-blur",
       "page": "lockscreen",
       "source": "hypr-options",
@@ -3302,412 +2128,6 @@
         "hypr-options",
         "misc",
         "session_lock_xray"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-misc.size-limits-tiled",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "size-limits-tiled",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "size_limits_tiled"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-misc.swallow-exception-regex",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "swallow-exception-regex",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "swallow_exception_regex"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-misc.swallow-regex",
-      "page": "hypr-misc",
-      "source": "hypr-options",
-      "key": "swallow-regex",
-      "reference": [
-        "hypr-options",
-        "misc",
-        "swallow_regex"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "[[Empty]]",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout.single-window-aspect-ratio",
-      "page": "hypr-layout",
-      "source": "hypr-options",
-      "key": "single-window-aspect-ratio",
-      "reference": [
-        "hypr-options",
-        "layout",
-        "single_window_aspect_ratio"
-      ],
-      "nativeType": "vec2",
-      "documentedDefault": "`{0, 0}`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout.single-window-aspect-ratio-tolerance",
-      "page": "hypr-layout",
-      "source": "hypr-options",
-      "key": "single-window-aspect-ratio-tolerance",
-      "reference": [
-        "hypr-options",
-        "layout",
-        "single_window_aspect_ratio_tolerance"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.1`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "graphics.xwayland-enabled",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "enabled",
-      "reference": [
-        "hypr-options",
-        "xwayland",
-        "enabled"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.xwayland-create-abstract-socket",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "create-abstract-socket",
-      "reference": [
-        "hypr-options",
-        "xwayland",
-        "create_abstract_socket"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.xwayland-force-zero-scaling",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "force-zero-scaling",
-      "reference": [
-        "hypr-options",
-        "xwayland",
-        "force_zero_scaling"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.xwayland-use-nearest-neighbor",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "use-nearest-neighbor",
-      "reference": [
-        "hypr-options",
-        "xwayland",
-        "use_nearest_neighbor"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.opengl-nvidia-anti-flicker",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "nvidia-anti-flicker",
-      "reference": [
-        "hypr-options",
-        "opengl",
-        "nvidia_anti_flicker"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.render-async-commit",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "async-commit",
-      "reference": [
-        "hypr-options",
-        "render",
-        "async_commit"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.render-cm-auto-hdr",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "cm-auto-hdr",
-      "reference": [
-        "hypr-options",
-        "render",
-        "cm_auto_hdr"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "graphics.render-cm-enabled",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "cm-enabled",
-      "reference": [
-        "hypr-options",
-        "render",
-        "cm_enabled"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.render-cm-sdr-eotf",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "cm-sdr-eotf",
-      "reference": [
-        "hypr-options",
-        "render",
-        "cm_sdr_eotf"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`\"default\"`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.render-ctm-animation",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "ctm-animation",
-      "reference": [
-        "hypr-options",
-        "render",
-        "ctm_animation"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "graphics.render-commit-timing-enabled",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "commit-timing-enabled",
-      "reference": [
-        "hypr-options",
-        "render",
-        "commit_timing_enabled"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.render-direct-scanout",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "direct-scanout",
-      "reference": [
-        "hypr-options",
-        "render",
-        "direct_scanout"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "graphics.render-expand-undersized-textures",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "expand-undersized-textures",
-      "reference": [
-        "hypr-options",
-        "render",
-        "expand_undersized_textures"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.render-fp16-sdr-tf",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "fp16-sdr-tf",
-      "reference": [
-        "hypr-options",
-        "render",
-        "fp16_sdr_tf"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 1]"
-    },
-    {
-      "control": "graphics.render-icc-vcgt-enabled",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "icc-vcgt-enabled",
-      "reference": [
-        "hypr-options",
-        "render",
-        "icc_vcgt_enabled"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.render-keep-unmodified-copy",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "keep-unmodified-copy",
-      "reference": [
-        "hypr-options",
-        "render",
-        "keep_unmodified_copy"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "graphics.render-new-render-scheduling",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "new-render-scheduling",
-      "reference": [
-        "hypr-options",
-        "render",
-        "new_render_scheduling"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.render-not-shown-fifo-lock",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "not-shown-fifo-lock",
-      "reference": [
-        "hypr-options",
-        "render",
-        "not_shown_fifo_lock"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "graphics.render-non-shader-cm",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "non-shader-cm",
-      "reference": [
-        "hypr-options",
-        "render",
-        "non_shader_cm"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 3]"
-    },
-    {
-      "control": "graphics.render-non-shader-cm-interop",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "non-shader-cm-interop",
-      "reference": [
-        "hypr-options",
-        "render",
-        "non_shader_cm_interop"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "graphics.render-send-content-type",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "send-content-type",
-      "reference": [
-        "hypr-options",
-        "render",
-        "send_content_type"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.render-use-fp16",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "use-fp16",
-      "reference": [
-        "hypr-options",
-        "render",
-        "use_fp16"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "graphics.render-use-shader-blur-blend",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "use-shader-blur-blend",
-      "reference": [
-        "hypr-options",
-        "render",
-        "use_shader_blur_blend"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.render-xp-mode",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "xp-mode",
-      "reference": [
-        "hypr-options",
-        "render",
-        "xp_mode"
       ],
       "nativeType": "bool",
       "documentedDefault": "`false`",
@@ -3858,76 +2278,6 @@
       "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/multitasking_cursor_test.dart"
     },
     {
-      "control": "hypr-ecosystem.enforce-permissions",
-      "page": "hypr-ecosystem",
-      "source": "hypr-options",
-      "key": "enforce-permissions",
-      "reference": [
-        "hypr-options",
-        "ecosystem",
-        "enforce_permissions"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-ecosystem.no-donation-nag",
-      "page": "hypr-ecosystem",
-      "source": "hypr-options",
-      "key": "no-donation-nag",
-      "reference": [
-        "hypr-options",
-        "ecosystem",
-        "no_donation_nag"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-ecosystem.no-update-news",
-      "page": "hypr-ecosystem",
-      "source": "hypr-options",
-      "key": "no-update-news",
-      "reference": [
-        "hypr-options",
-        "ecosystem",
-        "no_update_news"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "graphics.compatibility-prefer-hdr",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "prefer-hdr",
-      "reference": [
-        "hypr-options",
-        "quirks",
-        "prefer_hdr"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 1]"
-    },
-    {
-      "control": "graphics.compatibility-skip-non-kms-dmabuf-formats",
-      "page": "graphics",
-      "source": "hypr-options",
-      "key": "skip-non-kms-dmabuf-formats",
-      "reference": [
-        "hypr-options",
-        "quirks",
-        "skip_non_kms_dmabuf_formats"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
       "control": "hypr-input-capture.capture-modifiers",
       "page": "hypr-input-capture",
       "source": "hypr-options",
@@ -3953,818 +2303,6 @@
       ],
       "nativeType": "bool",
       "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.colored-stdout-logs",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "colored-stdout-logs",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "colored_stdout_logs"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.damage-blink",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "damage-blink",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "damage_blink"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.damage-tracking",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "damage-tracking",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "damage_tracking"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 2]"
-    },
-    {
-      "control": "hypr-debug.disable-logs",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "disable-logs",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "disable_logs"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.disable-scale-checks",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "disable-scale-checks",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "disable_scale_checks"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.disable-time",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "disable-time",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "disable_time"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.ds-handle-same-buffer",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "ds-handle-same-buffer",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "ds_handle_same_buffer"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.ds-handle-same-buffer-fifo",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "ds-handle-same-buffer-fifo",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "ds_handle_same_buffer_fifo"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.enable-stdout-logs",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "enable-stdout-logs",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "enable_stdout_logs"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.error-limit",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "error-limit",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "error_limit"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`5`",
-      "documentedLimits": "[0 - 20]"
-    },
-    {
-      "control": "hypr-debug.error-position",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "error-position",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "error_position"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 1]"
-    },
-    {
-      "control": "hypr-debug.fifo-pending-workaround",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "fifo-pending-workaround",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "fifo_pending_workaround"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.full-cm-proto",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "full-cm-proto",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "full_cm_proto"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.gl-debugging",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "gl-debugging",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "gl_debugging"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.invalidate-buffers",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "invalidate-buffers",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "invalidate_buffers"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0 - 1]"
-    },
-    {
-      "control": "hypr-debug.log-damage",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "log-damage",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "log_damage"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.manual-crash",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "manual-crash",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "manual_crash"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`0`",
-      "documentedLimits": "[0 - 1]"
-    },
-    {
-      "control": "hypr-debug.overlay",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "overlay",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "overlay"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.pass",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "pass",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "pass"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.render-solitary-wo-damage",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "render-solitary-wo-damage",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "render_solitary_wo_damage"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.suppress-errors",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "suppress-errors",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "suppress_errors"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-debug.vfr",
-      "page": "hypr-debug",
-      "source": "hypr-options",
-      "key": "vfr",
-      "reference": [
-        "hypr-options",
-        "debug",
-        "vfr"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-experimental.wp-cm-1-2",
-      "page": "hypr-experimental",
-      "source": "hypr-options",
-      "key": "wp-cm-1-2",
-      "reference": [
-        "hypr-options",
-        "experimental",
-        "wp_cm_1_2"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-master.allow-small-split",
-      "page": "hypr-layout-master",
-      "source": "hypr-master",
-      "key": "allow-small-split",
-      "reference": [
-        "hypr-master",
-        "master",
-        "allow_small_split"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-master.special-scale-factor",
-      "page": "hypr-layout-master",
-      "source": "hypr-master",
-      "key": "special-scale-factor",
-      "reference": [
-        "hypr-master",
-        "master",
-        "special_scale_factor"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0 - 1]"
-    },
-    {
-      "control": "hypr-layout-master.mfact",
-      "page": "hypr-layout-master",
-      "source": "hypr-master",
-      "key": "mfact",
-      "reference": [
-        "hypr-master",
-        "master",
-        "mfact"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.55`",
-      "documentedLimits": "[0 - 1]"
-    },
-    {
-      "control": "hypr-layout-master.new-status",
-      "page": "hypr-layout-master",
-      "source": "hypr-master",
-      "key": "new-status",
-      "reference": [
-        "hypr-master",
-        "master",
-        "new_status"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`\"slave\"`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-master.new-on-top",
-      "page": "hypr-layout-master",
-      "source": "hypr-master",
-      "key": "new-on-top",
-      "reference": [
-        "hypr-master",
-        "master",
-        "new_on_top"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-master.new-on-active",
-      "page": "hypr-layout-master",
-      "source": "hypr-master",
-      "key": "new-on-active",
-      "reference": [
-        "hypr-master",
-        "master",
-        "new_on_active"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`\"none\"`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-master.orientation",
-      "page": "hypr-layout-master",
-      "source": "hypr-master",
-      "key": "orientation",
-      "reference": [
-        "hypr-master",
-        "master",
-        "orientation"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`\"left\"`",
-      "documentedLimits": "`\"left\"`, `\"right\"`, `\"top\"`, `\"bottom\"`, `\"center\"`"
-    },
-    {
-      "control": "hypr-layout-master.slave-count-for-center-master",
-      "page": "hypr-layout-master",
-      "source": "hypr-master",
-      "key": "slave-count-for-center-master",
-      "reference": [
-        "hypr-master",
-        "master",
-        "slave_count_for_center_master"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`2`",
-      "documentedLimits": "[0 - 10]"
-    },
-    {
-      "control": "hypr-layout-master.center-master-fallback",
-      "page": "hypr-layout-master",
-      "source": "hypr-master",
-      "key": "center-master-fallback",
-      "reference": [
-        "hypr-master",
-        "master",
-        "center_master_fallback"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`\"left\"`",
-      "documentedLimits": "`\"left\"`, `\"right\"`, `\"top\"`, `\"bottom\"`"
-    },
-    {
-      "control": "hypr-layout-master.smart-resizing",
-      "page": "hypr-layout-master",
-      "source": "hypr-master",
-      "key": "smart-resizing",
-      "reference": [
-        "hypr-master",
-        "master",
-        "smart_resizing"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-master.drop-at-cursor",
-      "page": "hypr-layout-master",
-      "source": "hypr-master",
-      "key": "drop-at-cursor",
-      "reference": [
-        "hypr-master",
-        "master",
-        "drop_at_cursor"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-master.always-keep-position",
-      "page": "hypr-layout-master",
-      "source": "hypr-master",
-      "key": "always-keep-position",
-      "reference": [
-        "hypr-master",
-        "master",
-        "always_keep_position"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-master.focus-master-on-close",
-      "page": "hypr-layout-master",
-      "source": "hypr-master",
-      "key": "focus-master-on-close",
-      "reference": [
-        "hypr-master",
-        "master",
-        "focus_master_on_close"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`false`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-master-workspace.orientation-o",
-      "page": "hypr-layout-master-workspace",
-      "source": "hypr-master",
-      "key": "orientation-o",
-      "reference": [
-        "hypr-master",
-        "Workspace Rules",
-        "orientation = [o]"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-scrolling.fullscreen-on-one-column",
-      "page": "hypr-layout-scrolling",
-      "source": "hypr-scrolling",
-      "key": "fullscreen-on-one-column",
-      "reference": [
-        "hypr-scrolling",
-        "scrolling",
-        "fullscreen_on_one_column"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-scrolling.column-width",
-      "page": "hypr-layout-scrolling",
-      "source": "hypr-scrolling",
-      "key": "column-width",
-      "reference": [
-        "hypr-scrolling",
-        "scrolling",
-        "column_width"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.5`",
-      "documentedLimits": "[0.1 - 1.0]"
-    },
-    {
-      "control": "hypr-layout-scrolling.focus-fit-method",
-      "page": "hypr-layout-scrolling",
-      "source": "hypr-scrolling",
-      "key": "focus-fit-method",
-      "reference": [
-        "hypr-scrolling",
-        "scrolling",
-        "focus_fit_method"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "`1`",
-      "documentedLimits": "[0 - 1]"
-    },
-    {
-      "control": "hypr-layout-scrolling.follow-focus",
-      "page": "hypr-layout-scrolling",
-      "source": "hypr-scrolling",
-      "key": "follow-focus",
-      "reference": [
-        "hypr-scrolling",
-        "scrolling",
-        "follow_focus"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-scrolling.follow-min-visible",
-      "page": "hypr-layout-scrolling",
-      "source": "hypr-scrolling",
-      "key": "follow-min-visible",
-      "reference": [
-        "hypr-scrolling",
-        "scrolling",
-        "follow_min_visible"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "`0.4`",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "hypr-layout-scrolling.explicit-column-widths",
-      "page": "hypr-layout-scrolling",
-      "source": "hypr-scrolling",
-      "key": "explicit-column-widths",
-      "reference": [
-        "hypr-scrolling",
-        "scrolling",
-        "explicit_column_widths"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`\"0.333, 0.5, 0.667, 1.0\"`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-scrolling.wrap-focus",
-      "page": "hypr-layout-scrolling",
-      "source": "hypr-scrolling",
-      "key": "wrap-focus",
-      "reference": [
-        "hypr-scrolling",
-        "scrolling",
-        "wrap_focus"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-scrolling.wrap-swapcol",
-      "page": "hypr-layout-scrolling",
-      "source": "hypr-scrolling",
-      "key": "wrap-swapcol",
-      "reference": [
-        "hypr-scrolling",
-        "scrolling",
-        "wrap_swapcol"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "`true`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-scrolling.direction",
-      "page": "hypr-layout-scrolling",
-      "source": "hypr-scrolling",
-      "key": "direction",
-      "reference": [
-        "hypr-scrolling",
-        "scrolling",
-        "direction"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "`\"right\"`",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layout-scrolling-workspace.direction",
-      "page": "hypr-layout-scrolling-workspace",
-      "source": "hypr-scrolling",
-      "key": "direction",
-      "reference": [
-        "hypr-scrolling",
-        "Workspace rules",
-        "direction"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layer-rule-props.namespace",
-      "page": "hypr-layer-rule-props",
-      "source": "hypr-layer-rules",
-      "key": "namespace",
-      "reference": [
-        "hypr-layer-rules",
-        "Props",
-        "namespace"
-      ],
-      "nativeType": "[RegEx]",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layer-rule-effects.above-lock",
-      "page": "hypr-layer-rule-effects",
-      "source": "hypr-layer-rules",
-      "key": "above-lock",
-      "reference": [
-        "hypr-layer-rules",
-        "Effects",
-        "above_lock"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layer-rule-effects.animation",
-      "page": "hypr-layer-rule-effects",
-      "source": "hypr-layer-rules",
-      "key": "animation",
-      "reference": [
-        "hypr-layer-rules",
-        "Effects",
-        "animation"
-      ],
-      "nativeType": "string",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layer-rule-effects.blur",
-      "page": "hypr-layer-rule-effects",
-      "source": "hypr-layer-rules",
-      "key": "blur",
-      "reference": [
-        "hypr-layer-rules",
-        "Effects",
-        "blur"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layer-rule-effects.blur-popups",
-      "page": "hypr-layer-rule-effects",
-      "source": "hypr-layer-rules",
-      "key": "blur-popups",
-      "reference": [
-        "hypr-layer-rules",
-        "Effects",
-        "blur_popups"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layer-rule-effects.dim-around",
-      "page": "hypr-layer-rule-effects",
-      "source": "hypr-layer-rules",
-      "key": "dim-around",
-      "reference": [
-        "hypr-layer-rules",
-        "Effects",
-        "dim_around"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layer-rule-effects.ignore-alpha",
-      "page": "hypr-layer-rule-effects",
-      "source": "hypr-layer-rules",
-      "key": "ignore-alpha",
-      "reference": [
-        "hypr-layer-rules",
-        "Effects",
-        "ignore_alpha"
-      ],
-      "nativeType": "float",
-      "documentedDefault": "",
-      "documentedLimits": "[0.0 - 1.0]"
-    },
-    {
-      "control": "hypr-layer-rule-effects.no-anim",
-      "page": "hypr-layer-rule-effects",
-      "source": "hypr-layer-rules",
-      "key": "no-anim",
-      "reference": [
-        "hypr-layer-rules",
-        "Effects",
-        "no_anim"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layer-rule-effects.no-screen-share",
-      "page": "hypr-layer-rule-effects",
-      "source": "hypr-layer-rules",
-      "key": "no-screen-share",
-      "reference": [
-        "hypr-layer-rules",
-        "Effects",
-        "no_screen_share"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layer-rule-effects.order",
-      "page": "hypr-layer-rule-effects",
-      "source": "hypr-layer-rules",
-      "key": "order",
-      "reference": [
-        "hypr-layer-rules",
-        "Effects",
-        "order"
-      ],
-      "nativeType": "int",
-      "documentedDefault": "",
-      "documentedLimits": ""
-    },
-    {
-      "control": "hypr-layer-rule-effects.xray",
-      "page": "hypr-layer-rule-effects",
-      "source": "hypr-layer-rules",
-      "key": "xray",
-      "reference": [
-        "hypr-layer-rules",
-        "Effects",
-        "xray"
-      ],
-      "nativeType": "bool",
-      "documentedDefault": "",
       "documentedLimits": ""
     },
     {
@@ -6154,176 +3692,6 @@
       "documentedLimits": ""
     },
     {
-      "control": "hypr-layout-monocle.next",
-      "page": "hypr-layout-monocle",
-      "source": "hypr-monocle",
-      "key": "next",
-      "reference": [
-        "hypr-monocle",
-        "next"
-      ]
-    },
-    {
-      "control": "hypr-layout-monocle.previous",
-      "page": "hypr-layout-monocle",
-      "source": "hypr-monocle",
-      "key": "previous",
-      "reference": [
-        "hypr-monocle",
-        "previous"
-      ]
-    },
-    {
-      "control": "hypr-layout-monocle.maximize",
-      "page": "hypr-layout-monocle",
-      "source": "hypr-monocle",
-      "key": "maximize",
-      "reference": [
-        "hypr-monocle",
-        "maximize"
-      ]
-    },
-    {
-      "control": "device-list.input-device",
-      "page": "device-list",
-      "source": "hypr-devices",
-      "key": "device",
-      "reference": [
-        "hypr-devices",
-        "device"
-      ]
-    },
-    {
-      "control": "device-list.input-enabled",
-      "page": "device-list",
-      "source": "hypr-devices",
-      "key": "enabled",
-      "reference": [
-        "hypr-devices",
-        "enabled"
-      ]
-    },
-    {
-      "control": "device-list.input-keybinds",
-      "page": "device-list",
-      "source": "hypr-devices",
-      "key": "keybinds",
-      "reference": [
-        "hypr-devices",
-        "keybinds"
-      ]
-    },
-    {
-      "control": "device-list.input-tags",
-      "page": "device-list",
-      "source": "hypr-devices",
-      "key": "tags",
-      "reference": [
-        "hypr-devices",
-        "tags"
-      ]
-    },
-    {
-      "control": "device-list.input-keyboard",
-      "page": "device-list",
-      "source": "hypr-devices",
-      "key": "keyboard",
-      "reference": [
-        "hypr-devices",
-        "keyboard"
-      ]
-    },
-    {
-      "control": "device-list.input-sensitivity",
-      "page": "device-list",
-      "source": "hypr-devices",
-      "key": "sensitivity",
-      "reference": [
-        "hypr-devices",
-        "sensitivity"
-      ]
-    },
-    {
-      "control": "device-list.input-output",
-      "page": "device-list",
-      "source": "hypr-devices",
-      "key": "output",
-      "reference": [
-        "hypr-devices",
-        "output"
-      ]
-    },
-    {
-      "control": "device-list.input-inherit",
-      "page": "device-list",
-      "source": "hypr-devices",
-      "key": "inherit",
-      "reference": [
-        "hypr-devices",
-        "inherit"
-      ]
-    },
-    {
-      "control": "device-list.switch-device",
-      "page": "device-list",
-      "source": "hypr-switches",
-      "key": "device",
-      "reference": [
-        "hypr-switches",
-        "device"
-      ]
-    },
-    {
-      "control": "device-list.switch-switch",
-      "page": "device-list",
-      "source": "hypr-switches",
-      "key": "switch",
-      "reference": [
-        "hypr-switches",
-        "switch"
-      ]
-    },
-    {
-      "control": "device-list.switch-state",
-      "page": "device-list",
-      "source": "hypr-switches",
-      "key": "state",
-      "reference": [
-        "hypr-switches",
-        "state"
-      ]
-    },
-    {
-      "control": "device-list.switch-callback",
-      "page": "device-list",
-      "source": "hypr-switches",
-      "key": "callback",
-      "reference": [
-        "hypr-switches",
-        "callback"
-      ]
-    },
-    {
-      "control": "device-list.switch-lid",
-      "page": "device-list",
-      "source": "hypr-switches",
-      "key": "lid",
-      "reference": [
-        "hypr-switches",
-        "lid"
-      ]
-    },
-    {
-      "control": "device-list.switch-tablet",
-      "page": "device-list",
-      "source": "hypr-switches",
-      "key": "tablet",
-      "reference": [
-        "hypr-switches",
-        "tablet"
-      ]
-    },
-    {
       "control": "cursor.theme",
       "page": "cursor",
       "source": "hypr-cursor",
@@ -6346,196 +3714,6 @@
       ],
       "availability": "available",
       "verification": "Rust appearance packs tests; test/multitasking_cursor_test.dart; installed release check"
-    },
-    {
-      "control": "graphics.gpu-devices",
-      "page": "graphics",
-      "source": "hypr-gpu-reference",
-      "key": "devices",
-      "reference": [
-        "hypr-gpu-reference",
-        "devices"
-      ]
-    },
-    {
-      "control": "graphics.gpu-render-device",
-      "page": "graphics",
-      "source": "hypr-gpu-reference",
-      "key": "render-device",
-      "reference": [
-        "hypr-gpu-reference",
-        "render-device"
-      ]
-    },
-    {
-      "control": "graphics.gpu-vendor",
-      "page": "graphics",
-      "source": "hypr-gpu-reference",
-      "key": "vendor",
-      "reference": [
-        "hypr-gpu-reference",
-        "vendor"
-      ]
-    },
-    {
-      "control": "graphics.gpu-mapping",
-      "page": "graphics",
-      "source": "hypr-gpu-reference",
-      "key": "mapping",
-      "reference": [
-        "hypr-gpu-reference",
-        "mapping"
-      ]
-    },
-    {
-      "control": "graphics.gpu-variables",
-      "page": "graphics",
-      "source": "hypr-gpu-reference",
-      "key": "variables",
-      "reference": [
-        "hypr-gpu-reference",
-        "variables"
-      ]
-    },
-    {
-      "control": "hypr-compositor-permissions.enforce",
-      "page": "hypr-compositor-permissions",
-      "source": "hypr-permissions",
-      "key": "enforce",
-      "reference": [
-        "hypr-permissions",
-        "enforce"
-      ]
-    },
-    {
-      "control": "hypr-compositor-permissions.binary",
-      "page": "hypr-compositor-permissions",
-      "source": "hypr-permissions",
-      "key": "binary",
-      "reference": [
-        "hypr-permissions",
-        "binary"
-      ]
-    },
-    {
-      "control": "hypr-compositor-permissions.type",
-      "page": "hypr-compositor-permissions",
-      "source": "hypr-permissions",
-      "key": "type",
-      "reference": [
-        "hypr-permissions",
-        "type"
-      ]
-    },
-    {
-      "control": "hypr-compositor-permissions.policy",
-      "page": "hypr-compositor-permissions",
-      "source": "hypr-permissions",
-      "key": "policy",
-      "reference": [
-        "hypr-permissions",
-        "policy"
-      ]
-    },
-    {
-      "control": "hypr-compositor-permissions.restart",
-      "page": "hypr-compositor-permissions",
-      "source": "hypr-permissions",
-      "key": "restart",
-      "reference": [
-        "hypr-permissions",
-        "restart"
-      ]
-    },
-    {
-      "control": "hypr-compositor-permissions.add",
-      "page": "hypr-compositor-permissions",
-      "source": "hypr-permissions",
-      "key": "add",
-      "reference": [
-        "hypr-permissions",
-        "add"
-      ]
-    },
-    {
-      "control": "hypr-config-files.entry",
-      "page": "hypr-config-files",
-      "source": "hyprsettings-project",
-      "key": "entry",
-      "reference": [
-        "hyprsettings-project",
-        "entry"
-      ]
-    },
-    {
-      "control": "hypr-config-files.format",
-      "page": "hypr-config-files",
-      "source": "hyprsettings-project",
-      "key": "format",
-      "reference": [
-        "hyprsettings-project",
-        "format"
-      ]
-    },
-    {
-      "control": "hypr-config-files.includes",
-      "page": "hypr-config-files",
-      "source": "hyprsettings-project",
-      "key": "includes",
-      "reference": [
-        "hyprsettings-project",
-        "includes"
-      ]
-    },
-    {
-      "control": "hypr-config-files.precedence",
-      "page": "hypr-config-files",
-      "source": "hyprsettings-project",
-      "key": "precedence",
-      "reference": [
-        "hyprsettings-project",
-        "precedence"
-      ]
-    },
-    {
-      "control": "hypr-config-files.comments",
-      "page": "hypr-config-files",
-      "source": "hyprsettings-project",
-      "key": "comments",
-      "reference": [
-        "hyprsettings-project",
-        "comments"
-      ]
-    },
-    {
-      "control": "hypr-config-files.diff",
-      "page": "hypr-config-files",
-      "source": "hyprsettings-project",
-      "key": "diff",
-      "reference": [
-        "hyprsettings-project",
-        "diff"
-      ]
-    },
-    {
-      "control": "hypr-config-files.validation",
-      "page": "hypr-config-files",
-      "source": "hyprsettings-project",
-      "key": "validation",
-      "reference": [
-        "hyprsettings-project",
-        "validation"
-      ]
-    },
-    {
-      "control": "hypr-config-files.reload",
-      "page": "hypr-config-files",
-      "source": "hyprsettings-project",
-      "key": "reload",
-      "reference": [
-        "hyprsettings-project",
-        "reload"
-      ]
     },
     {
       "control": "backup.configuration-scope",
@@ -6595,206 +3773,6 @@
       "reference": [
         "nwg-config-project",
         "preview"
-      ]
-    },
-    {
-      "control": "hypr-session-services.manager",
-      "page": "hypr-session-services",
-      "source": "hypr-systemd",
-      "key": "manager",
-      "reference": [
-        "hypr-systemd",
-        "manager"
-      ]
-    },
-    {
-      "control": "hypr-session-services.environment",
-      "page": "hypr-session-services",
-      "source": "hypr-systemd",
-      "key": "environment",
-      "reference": [
-        "hypr-systemd",
-        "environment"
-      ]
-    },
-    {
-      "control": "hypr-session-services.services",
-      "page": "hypr-session-services",
-      "source": "hypr-systemd",
-      "key": "services",
-      "reference": [
-        "hypr-systemd",
-        "services"
-      ]
-    },
-    {
-      "control": "hypr-session-services.targets",
-      "page": "hypr-session-services",
-      "source": "hypr-systemd",
-      "key": "targets",
-      "reference": [
-        "hypr-systemd",
-        "targets"
-      ]
-    },
-    {
-      "control": "hypr-session-services.logs",
-      "page": "hypr-session-services",
-      "source": "hypr-systemd",
-      "key": "logs",
-      "reference": [
-        "hypr-systemd",
-        "logs"
-      ]
-    },
-    {
-      "control": "hypr-plugins.repository",
-      "page": "hypr-plugins",
-      "source": "hypr-plugins",
-      "key": "repository",
-      "reference": [
-        "hypr-plugins",
-        "repository"
-      ]
-    },
-    {
-      "control": "hypr-plugins.list",
-      "page": "hypr-plugins",
-      "source": "hypr-plugins",
-      "key": "list",
-      "reference": [
-        "hypr-plugins",
-        "list"
-      ]
-    },
-    {
-      "control": "hypr-plugins.enable",
-      "page": "hypr-plugins",
-      "source": "hypr-plugins",
-      "key": "enable",
-      "reference": [
-        "hypr-plugins",
-        "enable"
-      ]
-    },
-    {
-      "control": "hypr-plugins.update",
-      "page": "hypr-plugins",
-      "source": "hypr-plugins",
-      "key": "update",
-      "reference": [
-        "hypr-plugins",
-        "update"
-      ]
-    },
-    {
-      "control": "hypr-plugins.reload",
-      "page": "hypr-plugins",
-      "source": "hypr-plugins",
-      "key": "reload",
-      "reference": [
-        "hypr-plugins",
-        "reload"
-      ]
-    },
-    {
-      "control": "hypr-plugins.compatibility",
-      "page": "hypr-plugins",
-      "source": "hypr-plugins",
-      "key": "compatibility",
-      "reference": [
-        "hypr-plugins",
-        "compatibility"
-      ]
-    },
-    {
-      "control": "hypr-plugins.permissions",
-      "page": "hypr-plugins",
-      "source": "hypr-plugins",
-      "key": "permissions",
-      "reference": [
-        "hypr-plugins",
-        "permissions"
-      ]
-    },
-    {
-      "control": "hypr-diagnostics.version",
-      "page": "hypr-diagnostics",
-      "source": "hypr-ipc",
-      "key": "version",
-      "reference": [
-        "hypr-ipc",
-        "version"
-      ]
-    },
-    {
-      "control": "hypr-diagnostics.errors",
-      "page": "hypr-diagnostics",
-      "source": "hypr-ipc",
-      "key": "errors",
-      "reference": [
-        "hypr-ipc",
-        "errors"
-      ]
-    },
-    {
-      "control": "hypr-diagnostics.clients",
-      "page": "hypr-diagnostics",
-      "source": "hypr-ipc",
-      "key": "clients",
-      "reference": [
-        "hypr-ipc",
-        "clients"
-      ]
-    },
-    {
-      "control": "hypr-diagnostics.layers",
-      "page": "hypr-diagnostics",
-      "source": "hypr-ipc",
-      "key": "layers",
-      "reference": [
-        "hypr-ipc",
-        "layers"
-      ]
-    },
-    {
-      "control": "hypr-diagnostics.monitors",
-      "page": "hypr-diagnostics",
-      "source": "hypr-ipc",
-      "key": "monitors",
-      "reference": [
-        "hypr-ipc",
-        "monitors"
-      ]
-    },
-    {
-      "control": "hypr-diagnostics.devices",
-      "page": "hypr-diagnostics",
-      "source": "hypr-ipc",
-      "key": "devices",
-      "reference": [
-        "hypr-ipc",
-        "devices"
-      ]
-    },
-    {
-      "control": "hypr-diagnostics.events",
-      "page": "hypr-diagnostics",
-      "source": "hypr-ipc",
-      "key": "events",
-      "reference": [
-        "hypr-ipc",
-        "events"
-      ]
-    },
-    {
-      "control": "hypr-diagnostics.report",
-      "page": "hypr-diagnostics",
-      "source": "hypr-ipc",
-      "key": "report",
-      "reference": [
-        "hypr-ipc",
-        "report"
       ]
     },
     {
@@ -7512,6 +4490,550 @@
       "documentedLimits": "",
       "availability": "available",
       "verification": "Rust input window/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57); test/window_rules_environment_test.dart"
+    },
+    {
+      "control": "graphics.direct-scanout",
+      "page": "graphics",
+      "source": "hypr-options",
+      "key": "direct-scanout",
+      "reference": [
+        "hypr-options",
+        "render",
+        "direct_scanout"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`0`",
+      "documentedLimits": "[0 - 2]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "graphics.auto-hdr",
+      "page": "graphics",
+      "source": "hypr-options",
+      "key": "auto-hdr",
+      "reference": [
+        "hypr-options",
+        "render",
+        "cm_auto_hdr"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`1`",
+      "documentedLimits": "[0 - 2]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "graphics.xwayland-zero-scaling",
+      "page": "graphics",
+      "source": "hypr-options",
+      "key": "xwayland-zero-scaling",
+      "reference": [
+        "hypr-options",
+        "xwayland",
+        "force_zero_scaling"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.groupbar",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "groupbar",
+      "reference": [
+        "hypr-options",
+        "group",
+        "groupbar:enabled"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.groupbar-titles",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "groupbar-titles",
+      "reference": [
+        "hypr-options",
+        "group",
+        "groupbar:render_titles"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.group-auto",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "group-auto",
+      "reference": [
+        "hypr-options",
+        "group",
+        "auto_group"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.group-insert-after-current",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "group-insert-after-current",
+      "reference": [
+        "hypr-options",
+        "group",
+        "insert_after_current"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.group-drag-into",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "group-drag-into",
+      "reference": [
+        "hypr-options",
+        "group",
+        "drag_into_group"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`1`",
+      "documentedLimits": "[0 - 2]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.focus-on-activate",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "focus-on-activate",
+      "reference": [
+        "hypr-options",
+        "misc",
+        "focus_on_activate"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.focus-under-fullscreen",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "focus-under-fullscreen",
+      "reference": [
+        "hypr-options",
+        "misc",
+        "on_focus_under_fullscreen"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`2`",
+      "documentedLimits": "[0 - 2]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.exit-retains-fullscreen",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "exit-retains-fullscreen",
+      "reference": [
+        "hypr-options",
+        "misc",
+        "exit_window_retains_fullscreen"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`0`",
+      "documentedLimits": "[0 - 3]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.anr-dialog",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "anr-dialog",
+      "reference": [
+        "hypr-options",
+        "misc",
+        "enable_anr_dialog"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.groupbar-height",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "groupbar-height",
+      "reference": [
+        "hypr-options",
+        "group",
+        "groupbar:height"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`14`",
+      "documentedLimits": "[1 - 64]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.groupbar-font-size",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "groupbar-font-size",
+      "reference": [
+        "hypr-options",
+        "group",
+        "groupbar:font_size"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`8`",
+      "documentedLimits": "[2 - 64]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.group-focus-removed",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "group-focus-removed",
+      "reference": [
+        "hypr-options",
+        "group",
+        "focus_removed_window"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.group-merge-on-drag",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "group-merge-on-drag",
+      "reference": [
+        "hypr-options",
+        "group",
+        "merge_groups_on_drag"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.group-on-move",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "group-on-move",
+      "reference": [
+        "hypr-options",
+        "group",
+        "group_on_movetoworkspace"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.anr-missed-pings",
+      "page": "multitasking",
+      "source": "hypr-options",
+      "key": "anr-missed-pings",
+      "reference": [
+        "hypr-options",
+        "misc",
+        "anr_missed_pings"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`5`",
+      "documentedLimits": "[1 - 20]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "window-appearance.group-active-border",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "group-active-border",
+      "reference": [
+        "hypr-options",
+        "group",
+        "col.border_active"
+      ],
+      "nativeType": "gradient",
+      "documentedDefault": "`66ffff00 0deg`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "window-appearance.group-inactive-border",
+      "page": "window-appearance",
+      "source": "hypr-options",
+      "key": "group-inactive-border",
+      "reference": [
+        "hypr-options",
+        "group",
+        "col.border_inactive"
+      ],
+      "nativeType": "gradient",
+      "documentedDefault": "`66777700 0deg`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.master-orientation",
+      "page": "multitasking",
+      "source": "hypr-master",
+      "key": "master-orientation",
+      "reference": [
+        "hypr-master",
+        "master",
+        "orientation"
+      ],
+      "nativeType": "string",
+      "documentedDefault": "`left`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.master-center-min-stack",
+      "page": "multitasking",
+      "source": "hypr-master",
+      "key": "master-center-min-stack",
+      "reference": [
+        "hypr-master",
+        "master",
+        "slave_count_for_center_master"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`2`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.master-mfact",
+      "page": "multitasking",
+      "source": "hypr-master",
+      "key": "master-mfact",
+      "reference": [
+        "hypr-master",
+        "master",
+        "mfact"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`0.55`",
+      "documentedLimits": "[0.0 - 1.0]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.master-new-status",
+      "page": "multitasking",
+      "source": "hypr-master",
+      "key": "master-new-status",
+      "reference": [
+        "hypr-master",
+        "master",
+        "new_status"
+      ],
+      "nativeType": "string",
+      "documentedDefault": "`slave`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.master-new-on-top",
+      "page": "multitasking",
+      "source": "hypr-master",
+      "key": "master-new-on-top",
+      "reference": [
+        "hypr-master",
+        "master",
+        "new_on_top"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.master-keep-position",
+      "page": "multitasking",
+      "source": "hypr-master",
+      "key": "master-keep-position",
+      "reference": [
+        "hypr-master",
+        "master",
+        "always_keep_position"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.master-focus-on-close",
+      "page": "multitasking",
+      "source": "hypr-master",
+      "key": "master-focus-on-close",
+      "reference": [
+        "hypr-master",
+        "master",
+        "focus_master_on_close"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`false`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.master-smart-resizing",
+      "page": "multitasking",
+      "source": "hypr-master",
+      "key": "master-smart-resizing",
+      "reference": [
+        "hypr-master",
+        "master",
+        "smart_resizing"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.master-drop-at-cursor",
+      "page": "multitasking",
+      "source": "hypr-master",
+      "key": "master-drop-at-cursor",
+      "reference": [
+        "hypr-master",
+        "master",
+        "drop_at_cursor"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.scrolling-direction",
+      "page": "multitasking",
+      "source": "hypr-scrolling",
+      "key": "scrolling-direction",
+      "reference": [
+        "hypr-scrolling",
+        "scrolling",
+        "direction"
+      ],
+      "nativeType": "string",
+      "documentedDefault": "`right`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.scrolling-column-width",
+      "page": "multitasking",
+      "source": "hypr-scrolling",
+      "key": "scrolling-column-width",
+      "reference": [
+        "hypr-scrolling",
+        "scrolling",
+        "column_width"
+      ],
+      "nativeType": "float",
+      "documentedDefault": "`0.5`",
+      "documentedLimits": "[0.1 - 1.0]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.scrolling-focus-fit",
+      "page": "multitasking",
+      "source": "hypr-scrolling",
+      "key": "scrolling-focus-fit",
+      "reference": [
+        "hypr-scrolling",
+        "scrolling",
+        "focus_fit_method"
+      ],
+      "nativeType": "int",
+      "documentedDefault": "`1`",
+      "documentedLimits": "[0 - 1]",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.scrolling-fullscreen-one-column",
+      "page": "multitasking",
+      "source": "hypr-scrolling",
+      "key": "scrolling-fullscreen-one-column",
+      "reference": [
+        "hypr-scrolling",
+        "scrolling",
+        "fullscreen_on_one_column"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
+    },
+    {
+      "control": "multitasking.scrolling-wrap-focus",
+      "page": "multitasking",
+      "source": "hypr-scrolling",
+      "key": "scrolling-wrap-focus",
+      "reference": [
+        "hypr-scrolling",
+        "scrolling",
+        "wrap_focus"
+      ],
+      "nativeType": "bool",
+      "documentedDefault": "`true`",
+      "documentedLimits": "",
+      "availability": "available",
+      "verification": "Rust input/desktop tests; test/desktop_smoke.py (nested Hyprland 0.57)"
     }
   ]
 }

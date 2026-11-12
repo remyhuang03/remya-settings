@@ -274,20 +274,11 @@ class SettingsSectionCard extends StatelessWidget {
     );
     if (section.collapsed) {
       final bodyKey = PageStorageKey('body-${section.controls.first.id}');
-      final tileKey = PageStorageKey('reference-${section.controls.first.id}');
+      final tileKey = PageStorageKey('advanced-${section.controls.first.id}');
       // Keep expansion and nested scroll positions in separate storage slots.
-      final body = KeyedSubtree(key: bodyKey, child: controls);
-      if (section.title == 'Advanced') {
-        return AdvancedSection(storageKey: tileKey, child: body);
-      }
       return AdvancedSection(
         storageKey: tileKey,
-        title: section.title,
-        subtitle:
-            section.description ??
-            'Reference options that are not implemented yet',
-        icon: Icons.library_books_outlined,
-        child: body,
+        child: KeyedSubtree(key: bodyKey, child: controls),
       );
     }
     return Column(

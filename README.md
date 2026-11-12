@@ -18,7 +18,7 @@ A global system settings application for **Hyprland on Linux**, built with **Flu
 > **Early Development & Preview Only — Not Ready for Daily Use**
 >
 > - **Under Active Development**: This software is in an early, experimental stage of development and has **not** reached a usable production state.
-> - **Majority of Features Unavailable**: Out of 1,128 controls across 104 catalog pages, **689 controls are unimplemented UI-only previews** (`planned`). 439 controls currently have backend integrations.
+> - **Many Features Unavailable**: Out of 802 controls across 82 catalog pages, **326 controls are unimplemented UI-only previews** (`planned`). 476 controls currently have backend integrations.
 > - **Implemented Features Are Unstable**: Even the implemented integrations are unstable, subject to breaking changes, and may have incomplete hardware verification boundaries.
 > - **For Preview & Evaluation Only**: This repository is currently intended strictly for design preview and development reference. Use at your own risk on real systems.
 
@@ -38,10 +38,10 @@ A global system settings application for **Hyprland on Linux**, built with **Flu
 
 Browse Home, category pages, and About; search settings locally, follow related pages, and inspect third-party licenses.
 
-- **Current Catalog**: 16 categories, 104 pages, 1,128 controls (439 available, 689 planned previews).
+- **Current Catalog**: 14 categories, 82 pages, 802 controls (476 available, 326 planned previews).
 - **Desktop Reference & Inspiration**: Draws reference from applicable desktop settings benchmarks (including Windows 11 reference taxonomies), retaining relevant pages, controls, URI names, and hierarchy structures as design inspiration while departing where native Linux and Hyprland workflows differ. Removed Windows-only features are excluded from coverage records. See [research, sources, and limitations](docs/windows-settings-research.md).
 - **Hyprland Extensions**: Retains controls based on official configuration documentation and ecosystem tools, merging related previews into ordinary pages’ Advanced sections. See [Hyprland sources and version limits](docs/hyprland-settings-research.md).
-- **Availability & Tracking**: Every setting declares availability (`available` or `planned`). Unavailable controls remain disabled while allowing navigation to preview pages; contextually inapplicable options are hidden automatically. See the [implementation progress checklist](docs/settings-implementation-progress.md).
+- **Availability & Tracking**: Every setting declares availability (`available` or `planned`). Unavailable controls remain disabled while allowing navigation to preview pages; contextually inapplicable options are hidden automatically. The catalog's `availability` and `reason` fields are the tracker; verification evidence lives in each feature document.
 
 ## Architecture & Resident Service
 

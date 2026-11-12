@@ -463,7 +463,33 @@ opts![DESKTOP_OPTIONS:
         Kind::Bool
     ),
     ("multitasking.no-focus-fallback", "general:no_focus_fallback", Kind::Bool),
-    ("multitasking.allow-tearing", "general:allow_tearing", Kind::Bool),
+    ("multitasking.group-auto", "group:auto_group", Kind::Bool),
+    ("multitasking.group-insert-after-current", "group:insert_after_current", Kind::Bool),
+    ("multitasking.group-focus-removed", "group:focus_removed_window", Kind::Bool),
+    ("multitasking.group-drag-into", "group:drag_into_group", Kind::Int(0, 2)),
+    ("multitasking.group-merge-on-drag", "group:merge_groups_on_drag", Kind::Bool),
+    ("multitasking.group-on-move", "group:group_on_movetoworkspace", Kind::Bool),
+    ("multitasking.groupbar", "group:groupbar:enabled", Kind::Bool),
+    ("multitasking.groupbar-titles", "group:groupbar:render_titles", Kind::Bool),
+    ("multitasking.groupbar-height", "group:groupbar:height", Kind::Int(1, 64)),
+    ("multitasking.groupbar-font-size", "group:groupbar:font_size", Kind::Int(2, 64)),
+    ("multitasking.focus-on-activate", "misc:focus_on_activate", Kind::Bool),
+    (
+        "multitasking.focus-under-fullscreen",
+        "misc:on_focus_under_fullscreen",
+        Kind::Int(0, 2)
+    ),
+    (
+        "multitasking.exit-retains-fullscreen",
+        "misc:exit_window_retains_fullscreen",
+        Kind::Int(0, 3)
+    ),
+    ("multitasking.anr-dialog", "misc:enable_anr_dialog", Kind::Bool),
+    ("multitasking.anr-missed-pings", "misc:anr_missed_pings", Kind::Int(1, 20)),
+    ("graphics.allow-tearing", "general:allow_tearing", Kind::Bool),
+    ("graphics.direct-scanout", "render:direct_scanout", Kind::Int(0, 2)),
+    ("graphics.auto-hdr", "render:cm_auto_hdr", Kind::Int(0, 2)),
+    ("graphics.xwayland-zero-scaling", "xwayland:force_zero_scaling", Kind::Bool),
     ("cursor.hide-on-key-press", "cursor:hide_on_key_press", Kind::Bool),
     ("cursor.inactive-timeout", "cursor:inactive_timeout", Kind::Float(0.0, 20.0)),
     ("cursor.hide-on-touch", "cursor:hide_on_touch", Kind::Bool),
@@ -504,6 +530,40 @@ opts![DESKTOP_OPTIONS:
     ),
     ("multitasking.dwindle-split-bias", "dwindle:split_bias", Kind::Int(0, 1)),
     ("multitasking.dwindle-precise-move", "dwindle:precise_mouse_move", Kind::Bool),
+    ("multitasking.master-mfact", "master:mfact", Kind::Float(0.0, 1.0)),
+    (
+        "multitasking.master-orientation",
+        "master:orientation",
+        Kind::Text(&["left", "right", "top", "bottom", "center"])
+    ),
+    (
+        "multitasking.master-new-status",
+        "master:new_status",
+        Kind::Text(&["master", "slave", "inherit"])
+    ),
+    ("multitasking.master-new-on-top", "master:new_on_top", Kind::Bool),
+    (
+        "multitasking.master-center-min-stack",
+        "master:slave_count_for_center_master",
+        Kind::Int(0, 10)
+    ),
+    ("multitasking.master-keep-position", "master:always_keep_position", Kind::Bool),
+    ("multitasking.master-focus-on-close", "master:focus_master_on_close", Kind::Bool),
+    ("multitasking.master-smart-resizing", "master:smart_resizing", Kind::Bool),
+    ("multitasking.master-drop-at-cursor", "master:drop_at_cursor", Kind::Bool),
+    ("multitasking.scrolling-column-width", "scrolling:column_width", Kind::Float(0.1, 1.0)),
+    (
+        "multitasking.scrolling-direction",
+        "scrolling:direction",
+        Kind::Text(&["right", "left", "down", "up"])
+    ),
+    (
+        "multitasking.scrolling-fullscreen-one-column",
+        "scrolling:fullscreen_on_one_column",
+        Kind::Bool
+    ),
+    ("multitasking.scrolling-focus-fit", "scrolling:focus_fit_method", Kind::Int(0, 1)),
+    ("multitasking.scrolling-wrap-focus", "scrolling:wrap_focus", Kind::Bool),
     ("window-appearance.active-border", "general:col.active_border", Kind::Rgba),
     ("window-appearance.inactive-border", "general:col.inactive_border", Kind::Rgba),
     ("window-appearance.rounding", "decoration:rounding", Kind::Int(0, 100)),
@@ -530,6 +590,8 @@ opts![DESKTOP_OPTIONS:
     ("window-appearance.glow-color", "decoration:glow:color", Kind::Rgba),
     ("window-appearance.glow-range", "decoration:glow:range", Kind::Int(0, 100)),
     ("window-appearance.glow-render-power", "decoration:glow:render_power", Kind::Int(1, 4)),
+    ("window-appearance.group-active-border", "group:col.border_active", Kind::Rgba),
+    ("window-appearance.group-inactive-border", "group:col.border_inactive", Kind::Rgba),
     (
         "window-appearance.border-part-of-window",
         "decoration:border_part_of_window",
@@ -580,7 +642,7 @@ pub const DESKTOP: Group = Group {
     options: DESKTOP_OPTIONS,
     shortcuts: false,
     rules: true,
-    header: "-- Managed by Remy'a Settings. Change Background, Cursor, Window appearance, Animations, Multitasking, Workspaces, Window rules, Environment variables and Power & battery in Settings.",
+    header: "-- Managed by Remy'a Settings. Change Background, Cursor, Window appearance, Animations, Multitasking, Graphics, Workspaces, Window rules, Environment variables and Power & battery in Settings.",
 };
 
 impl Group {
@@ -624,6 +686,8 @@ pub const ACTIONS: &[(&str, &str)] = &[
     ),
     ("pin", "hl.dsp.window.pin()"),
     ("scratchpad", "hl.dsp.workspace.toggle_special(\"special\")"),
+    ("group", "hl.dsp.group.toggle()"),
+    ("group-next", "hl.dsp.group.next()"),
 ];
 
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]

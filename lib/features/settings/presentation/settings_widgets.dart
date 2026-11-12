@@ -47,7 +47,7 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
         Icons.keyboard_alt_outlined,
       'projection' => Icons.desktop_windows_outlined,
       'night-light' => Icons.nightlight_outlined,
-      'graphics' || 'hypr-multi-gpu' => Icons.memory_rounded,
+      'graphics' => Icons.memory_rounded,
       'volume-mixer' => Icons.tune_rounded,
       'sound-volume' => Icons.volume_up_outlined,
       'sound-devices' => Icons.speaker_outlined,

@@ -37,6 +37,7 @@ import '../../startup/presentation/startup_page.dart';
 import '../../input/presentation/keyboard_shortcuts_page.dart';
 import '../../input/presentation/mouse_page.dart';
 import '../../input/presentation/touchpad_page.dart';
+import '../../graphics/presentation/graphics_page.dart';
 import '../../multitasking/presentation/multitasking_page.dart';
 import '../../environment/presentation/environment_page.dart';
 import '../../workspaces/presentation/workspaces_page.dart';
@@ -649,6 +650,12 @@ class _SettingsShellState extends State<SettingsShell> {
         client: client,
       ),
       'multitasking' => MultitaskingPage(
+        key: key,
+        catalog: catalog,
+        page: page,
+        client: client,
+      ),
+      'graphics' => GraphicsPage(
         key: key,
         catalog: catalog,
         page: page,

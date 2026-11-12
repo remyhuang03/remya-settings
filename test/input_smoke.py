@@ -112,6 +112,15 @@ def main():
         call("Set", "keyboard-shortcuts.disable", json.dumps({"keys": "SUPER + J", "disabled": False}))
         assert (64, "j") in binds()
         call("Set", "keyboard-shortcuts.remove", json.dumps({"keys": "SUPER + q"}))
+        # Window group actions compile and read back as labelled shortcuts.
+        for keys, action in [("SUPER + G", "group"), ("SUPER + TAB", "group-next")]:
+            state = call("Set", "keyboard-shortcuts.add", json.dumps({**add, "keys": keys, "action": action, "command": ""}))
+            assert any(s["action"] == action for s in state["custom"]), state["custom"]
+        labels = {e["keys"]: e["actions"] for e in call("Get", "input")["shortcuts"]}
+        assert labels["SUPER + g"] == ["Group or ungroup windows"], labels
+        assert labels["SUPER + Tab"] == ["Switch tab in group"], labels
+        for keys in ["SUPER + g", "SUPER + Tab"]:
+            call("Set", "keyboard-shortcuts.remove", json.dumps({"keys": keys}))
 
         # Recording suspends compositor shortcuts in a pass-through submap.
         call("Set", "keyboard-shortcuts.record", "true")

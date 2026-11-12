@@ -4,7 +4,7 @@ pub mod hostname;
 use serde_json::{Value, json};
 use sysinfo::{CpuRefreshKind, MemoryRefreshKind, Motherboard, Product, RefreshKind, System};
 
-pub const IDS: [&str; 16] = [
+pub const IDS: [&str; 18] = [
     "about.4433eb13",
     "about.b4366749",
     "about.d014ab77",
@@ -21,7 +21,45 @@ pub const IDS: [&str; 16] = [
     "about.cpu-cores",
     "about.cpu-threads",
     "about.kernel-version",
+    "about.desktop-version",
+    "about.desktop-config-errors",
 ];
+
+/// `hyprctl -j <what>` from the running compositor.
+fn hyprctl(what: &str) -> Result<Value, String> {
+    let out = std::process::Command::new("hyprctl")
+        .args(["-j", what])
+        .output()
+        .map_err(|e| format!("hyprctl unavailable: {e}"))?;
+    if !out.status.success() {
+        return Err("The desktop compositor is not running".into());
+    }
+    serde_json::from_slice(&out.stdout).map_err(|e| format!("hyprctl {what}: {e}"))
+}
+
+fn desktop_version(version: &Value) -> Result<String, String> {
+    version["version"]
+        .as_str()
+        .map(|v| format!("Hyprland {v}"))
+        .ok_or_else(|| "Compositor version unavailable".into())
+}
+
+/// Hyprland reports no errors as `[""]`.
+fn config_errors(errors: &Value) -> Result<String, String> {
+    let lines: Vec<&str> = errors
+        .as_array()
+        .ok_or("Configuration errors unavailable")?
+        .iter()
+        .filter_map(Value::as_str)
+        .map(str::trim)
+        .filter(|l| !l.is_empty())
+        .collect();
+    Ok(if lines.is_empty() {
+        "No errors found".into()
+    } else {
+        lines.join("\n")
+    })
+}
 
 fn firmware_date(raw: &str) -> Result<String, String> {
     if raw.len() != 10
@@ -123,6 +161,8 @@ pub fn read() -> Value {
         IDS[13]:field(System::physical_core_count().map(|n|n.to_string()).map_err(|e|e.to_string())),
         IDS[14]:field(system.as_ref().map(|s|s.cpus().len().to_string()).map_err(Clone::clone)),
         IDS[15]:field(System::kernel_version().map_err(|e|e.to_string())),
+        IDS[16]:field(hyprctl("version").and_then(|v|desktop_version(&v))),
+        IDS[17]:field(hyprctl("configerrors").and_then(|v|config_errors(&v))),
     }})
 }
 
@@ -146,6 +186,13 @@ mod tests {
         }
         assert_eq!(field(Ok(" HP ".into()))["value"], "HP");
         assert_eq!(field(Err("denied".into()))["error"], "denied");
+        assert_eq!(config_errors(&json!([""])).unwrap(), "No errors found");
+        assert_eq!(config_errors(&json!(["a", " b "])).unwrap(), "a\nb");
+        assert!(config_errors(&json!({})).is_err());
+        assert_eq!(
+            desktop_version(&json!({"version":"0.57.2"})).unwrap(),
+            "Hyprland 0.57.2"
+        );
         let state = read();
         assert_eq!(state["values"].as_object().unwrap().len(), IDS.len());
         for id in IDS {
