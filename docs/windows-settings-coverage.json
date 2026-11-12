@@ -34,12 +34,6 @@
       "title": "Sync your settings"
     },
     {
-      "uri": "ms-settings:signinoptions-launchfaceenrollment",
-      "page": "hello-face",
-      "sourceCategory": "Accounts",
-      "title": "Windows Hello setup"
-    },
-    {
       "uri": "ms-settings:signinoptions-launchfingerprintenrollment",
       "page": "hello-fingerprint",
       "sourceCategory": "Accounts",
@@ -143,61 +137,61 @@
     },
     {
       "uri": "ms-settings:easeofaccess-audio",
-      "page": "accessibility-audio",
+      "page": "accessibility-hearing",
       "sourceCategory": "Ease of access",
       "title": "Audio"
     },
     {
       "uri": "ms-settings:easeofaccess-closedcaptioning",
-      "page": "captions",
+      "page": "accessibility-hearing",
       "sourceCategory": "Ease of access",
       "title": "Closed captions"
     },
     {
       "uri": "ms-settings:easeofaccess-colorfilter",
-      "page": "color-filters",
+      "page": "accessibility-vision",
       "sourceCategory": "Ease of access",
       "title": "Color filters"
     },
     {
       "uri": "ms-settings:easeofaccess-colorfilter-adaptivecolorlink",
-      "page": "color-filters",
+      "page": "accessibility-vision",
       "sourceCategory": "Ease of access",
       "title": "Color filters"
     },
     {
       "uri": "ms-settings:easeofaccess-colorfilter-bluelightlink",
-      "page": "color-filters",
+      "page": "accessibility-vision",
       "sourceCategory": "Ease of access",
       "title": "Color filters"
     },
     {
       "uri": "ms-settings:easeofaccess-display",
-      "page": "text-size",
+      "page": "accessibility-vision",
       "sourceCategory": "Ease of access",
       "title": "Display"
     },
     {
       "uri": "ms-settings:easeofaccess-highcontrast",
-      "page": "contrast",
+      "page": "accessibility-vision",
       "sourceCategory": "Ease of access",
       "title": "High contrast"
     },
     {
       "uri": "ms-settings:easeofaccess-keyboard",
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "sourceCategory": "Ease of access",
       "title": "Keyboard"
     },
     {
       "uri": "ms-settings:easeofaccess-magnifier",
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "sourceCategory": "Ease of access",
       "title": "Magnifier"
     },
     {
       "uri": "ms-settings:easeofaccess-mouse",
-      "page": "mouse-keys",
+      "page": "accessibility-interaction",
       "sourceCategory": "Ease of access",
       "title": "Mouse"
     },
@@ -215,7 +209,7 @@
     },
     {
       "uri": "ms-settings:easeofaccess-visualeffects",
-      "page": "visual-effects",
+      "page": "accessibility-vision",
       "sourceCategory": "Ease of access",
       "title": "Visual Effects"
     },
@@ -338,12 +332,6 @@
       "page": "mobile",
       "sourceCategory": "Phone",
       "title": "Phone Link"
-    },
-    {
-      "uri": "ms-settings:privacy-speech",
-      "page": "online-speech",
-      "sourceCategory": "Privacy",
-      "title": "Speech"
     },
     {
       "uri": "ms-settings:search",
@@ -560,12 +548,6 @@
       "page": "speech",
       "sourceCategory": "Time and language",
       "title": "Speech"
-    },
-    {
-      "uri": "ms-settings:findmydevice",
-      "page": "find-device",
-      "sourceCategory": "Update and security",
-      "title": "Find My Device"
     },
     {
       "uri": "ms-settings:developers",
@@ -1329,7 +1311,7 @@
       "path": [
         "Text Size"
       ],
-      "page": "text-size",
+      "page": "accessibility-vision",
       "coverage": "section"
     },
     {
@@ -1337,7 +1319,7 @@
       "path": [
         "Visual effects"
       ],
-      "page": "visual-effects",
+      "page": "accessibility-vision",
       "coverage": "section"
     },
     {
@@ -1346,7 +1328,7 @@
         "Visual effects",
         "Always show scrollbars"
       ],
-      "page": "visual-effects",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "visual-effects.reference.22476e4b"
     },
@@ -1376,7 +1358,7 @@
         "Visual effects",
         "Dismiss notifications after preferred amount of time"
       ],
-      "page": "visual-effects",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "visual-effects.reference.5b6b06b4"
     },
@@ -1405,7 +1387,7 @@
       "path": [
         "Magnifier"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "section"
     },
     {
@@ -1414,7 +1396,7 @@
         "Magnifier",
         "Magnifier (toggle)"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "section"
     },
     {
@@ -1424,7 +1406,7 @@
         "Magnifier (toggle)",
         "Start Magnifier before sign-in"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.54348147"
     },
@@ -1435,7 +1417,7 @@
         "Magnifier (toggle)",
         "Start Magnifier after sign-in"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.0a370c37"
     },
@@ -1445,7 +1427,7 @@
         "Magnifier",
         "Zoom level"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.05c8bf1b"
     },
@@ -1455,7 +1437,7 @@
         "Magnifier",
         "Zoom increment"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.027b1d5b"
     },
@@ -1465,7 +1447,7 @@
         "Magnifier",
         "View"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "section"
     },
     {
@@ -1475,7 +1457,7 @@
         "View",
         "View preference"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.f46dfa93"
     },
@@ -1486,7 +1468,7 @@
         "View",
         "Have Magnifier follow my (when selected Docked and Full Screen View)"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "section"
     },
     {
@@ -1497,7 +1479,7 @@
         "Have Magnifier follow my (when selected Docked and Full Screen View)",
         "Mouse pointer"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.353f0bce"
     },
@@ -1509,7 +1491,7 @@
         "Have Magnifier follow my (when selected Docked and Full Screen View)",
         "Keyboard focus"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.3b4676ec"
     },
@@ -1521,7 +1503,7 @@
         "Have Magnifier follow my (when selected Docked and Full Screen View)",
         "Text cursor"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.709e0120"
     },
@@ -1533,7 +1515,7 @@
         "Have Magnifier follow my (when selected Docked and Full Screen View)",
         "Narrator cursor"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.38c4b18b"
     },
@@ -1544,7 +1526,7 @@
         "View",
         "Change lens size (when selected Lens View)"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "section"
     },
     {
@@ -1555,7 +1537,7 @@
         "Change lens size (when selected Lens View)",
         "Height / Width sliders"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.7dec5770"
     },
@@ -1566,7 +1548,7 @@
         "View",
         "Keep the mouse pointer location (when selected Full Screen View)"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.16d01cce"
     },
@@ -1577,7 +1559,7 @@
         "View",
         "Keep the text cursor location (when selected Full Screen View)"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.3b25fbba"
     },
@@ -1588,7 +1570,7 @@
         "View",
         "Invert Colors"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.54f55938"
     },
@@ -1599,7 +1581,7 @@
         "View",
         "Smooth edges of images and text"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.16440b75"
     },
@@ -1610,7 +1592,7 @@
         "View",
         "Reading shortcut"
       ],
-      "page": "magnifier",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "magnifier.reference.164500de"
     },
@@ -1619,7 +1601,7 @@
       "path": [
         "Color filters"
       ],
-      "page": "color-filters",
+      "page": "accessibility-vision",
       "coverage": "section"
     },
     {
@@ -1627,7 +1609,7 @@
       "path": [
         "Color filters"
       ],
-      "page": "color-filters",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "color-filters.reference.93c3c16a"
     },
@@ -1637,7 +1619,7 @@
         "Color filters",
         "Preferred color filter selection"
       ],
-      "page": "color-filters",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "color-filters.reference.d1a1684b"
     },
@@ -1647,7 +1629,7 @@
         "Color filters",
         "Keyboard shortcut for color filters"
       ],
-      "page": "color-filters",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "color-filters.reference.3a55c85c"
     },
@@ -1656,7 +1638,7 @@
       "path": [
         "Contrast themes"
       ],
-      "page": "contrast",
+      "page": "accessibility-vision",
       "coverage": "section"
     },
     {
@@ -1665,7 +1647,7 @@
         "Contrast themes",
         "Contrast Themes"
       ],
-      "page": "contrast",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "contrast.reference.08c75109"
     },
@@ -1675,7 +1657,7 @@
         "Contrast themes",
         "Choose a theme"
       ],
-      "page": "contrast",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "contrast.reference.2f32f7fc"
     },
@@ -1685,7 +1667,7 @@
         "Contrast themes",
         "Text"
       ],
-      "page": "contrast",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "contrast.reference.4ef5eef9"
     },
@@ -1695,7 +1677,7 @@
         "Contrast themes",
         "Hyperlinks"
       ],
-      "page": "contrast",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "contrast.reference.01e89338"
     },
@@ -1705,7 +1687,7 @@
         "Contrast themes",
         "Disabled Text"
       ],
-      "page": "contrast",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "contrast.reference.15794103"
     },
@@ -1715,7 +1697,7 @@
         "Contrast themes",
         "Selected Text"
       ],
-      "page": "contrast",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "contrast.reference.d200a697"
     },
@@ -1725,7 +1707,7 @@
         "Contrast themes",
         "Button Text"
       ],
-      "page": "contrast",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "contrast.reference.ea31e5bf"
     },
@@ -1735,7 +1717,7 @@
         "Contrast themes",
         "Background"
       ],
-      "page": "contrast",
+      "page": "accessibility-vision",
       "coverage": "control",
       "control": "contrast.reference.3fb30d73"
     },
@@ -2136,7 +2118,7 @@
       "path": [
         "Audio"
       ],
-      "page": "accessibility-audio",
+      "page": "accessibility-hearing",
       "coverage": "section"
     },
     {
@@ -2145,7 +2127,7 @@
         "Audio",
         "Mono Audio"
       ],
-      "page": "accessibility-audio",
+      "page": "accessibility-hearing",
       "coverage": "control",
       "control": "accessibility-audio.reference.0d993fdd"
     },
@@ -2155,7 +2137,7 @@
         "Audio",
         "Flash my screen during audio notifications"
       ],
-      "page": "accessibility-audio",
+      "page": "accessibility-hearing",
       "coverage": "control",
       "control": "accessibility-audio.reference.380697ec"
     },
@@ -2164,7 +2146,7 @@
       "path": [
         "Captions"
       ],
-      "page": "captions",
+      "page": "accessibility-hearing",
       "coverage": "section"
     },
     {
@@ -2173,7 +2155,7 @@
         "Captions",
         "Live Captions"
       ],
-      "page": "captions",
+      "page": "accessibility-hearing",
       "coverage": "section"
     },
     {
@@ -2183,7 +2165,7 @@
         "Live Captions",
         "Filter Profanity"
       ],
-      "page": "captions",
+      "page": "accessibility-hearing",
       "coverage": "control",
       "control": "captions.reference.b233720a"
     },
@@ -2194,7 +2176,7 @@
         "Live Captions",
         "Position"
       ],
-      "page": "captions",
+      "page": "accessibility-hearing",
       "coverage": "control",
       "control": "captions.reference.07051098"
     },
@@ -2204,7 +2186,7 @@
         "Captions",
         "Caption Style"
       ],
-      "page": "captions",
+      "page": "accessibility-hearing",
       "coverage": "control",
       "control": "captions.reference.0472a68c"
     },
@@ -2213,7 +2195,7 @@
       "path": [
         "Keyboard"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "section"
     },
     {
@@ -2222,7 +2204,7 @@
         "Keyboard",
         "Sticky keys (main toggle)"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "section"
     },
     {
@@ -2232,7 +2214,7 @@
         "Sticky keys (main toggle)",
         "Keyboard shortcut for Sticky keys"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.1766f98b"
     },
@@ -2243,7 +2225,7 @@
         "Sticky keys (main toggle)",
         "Show the sticky keys icon on the taskbar"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.cb1dbaf2"
     },
@@ -2254,7 +2236,7 @@
         "Sticky keys (main toggle)",
         "Lock shortcut keys when pressed twice in a row"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.c06b6443"
     },
@@ -2265,7 +2247,7 @@
         "Sticky keys (main toggle)",
         "Turn off Sticky keys when two keys are pressed at the same time"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "section"
     },
     {
@@ -2276,7 +2258,7 @@
         "Turn off Sticky keys when two keys are pressed at the same time",
         "Play a sound when shortcut keys are pressed and released"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.59e11b79"
     },
@@ -2286,7 +2268,7 @@
         "Keyboard",
         "Filter keys (main toggle)"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.8fdb2ef9"
     },
@@ -2296,7 +2278,7 @@
         "Keyboard",
         "Keyboard shortcut for Filter keys"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.61d353a2"
     },
@@ -2306,7 +2288,7 @@
         "Keyboard",
         "Show the Filter keys icon on the taskbar"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.e15cf0d4"
     },
@@ -2316,7 +2298,7 @@
         "Keyboard",
         "Beep when keys are pressed"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.78978487"
     },
@@ -2326,7 +2308,7 @@
         "Keyboard",
         "Ignore quick keystrokes"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "section"
     },
     {
@@ -2336,7 +2318,7 @@
         "Ignore quick keystrokes",
         "Wait before accepting a keystroke"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.4440fbf5"
     },
@@ -2346,7 +2328,7 @@
         "Keyboard",
         "Ignore unintended keystrokes (bounce keys)"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "section"
     },
     {
@@ -2356,7 +2338,7 @@
         "Ignore unintended keystrokes (bounce keys)",
         "Wait before accepting repeated keystrokes"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.bf8c6dd7"
     },
@@ -2366,7 +2348,7 @@
         "Keyboard",
         "Ignore repeated keystrokes (repeat keys)"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "section"
     },
     {
@@ -2376,7 +2358,7 @@
         "Ignore repeated keystrokes (repeat keys)",
         "Wait before accepting the first repeated keystroke"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.28c292fb"
     },
@@ -2387,7 +2369,7 @@
         "Ignore repeated keystrokes (repeat keys)",
         "Wait before accepting subsequent repeated keystrokes"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.bb32e872"
     },
@@ -2397,7 +2379,7 @@
         "Keyboard",
         "Toggle keys"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.dd8bff2c"
     },
@@ -2407,7 +2389,7 @@
         "Keyboard",
         "Notification preferences"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "section"
     },
     {
@@ -2417,7 +2399,7 @@
         "Notification preferences",
         "Notify me when I turn on Sticky, Filter, or Toggle keys from the keyboard"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.fa916f67"
     },
@@ -2428,7 +2410,7 @@
         "Notification preferences",
         "Play a sound when I turn Sticky, Filter, or Toggle keys on or off from the keyboard"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.8754adfd"
     },
@@ -2438,7 +2420,7 @@
         "Keyboard",
         "Underline acess keys"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.4a5a5e4c"
     },
@@ -2448,7 +2430,7 @@
         "Keyboard",
         "Use the print screen to open screen capture"
       ],
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "accessibility-keyboard.reference.6f3d637b"
     },
@@ -2457,7 +2439,7 @@
       "path": [
         "Mouse"
       ],
-      "page": "mouse-keys",
+      "page": "accessibility-interaction",
       "coverage": "section"
     },
     {
@@ -2466,7 +2448,7 @@
         "Mouse",
         "Mouse keys"
       ],
-      "page": "mouse-keys",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "mouse-keys.reference.da0c9570"
     },
@@ -2476,7 +2458,7 @@
         "Mouse",
         "Mouse keys (main toggle)"
       ],
-      "page": "mouse-keys",
+      "page": "accessibility-interaction",
       "coverage": "section"
     },
     {
@@ -2486,7 +2468,7 @@
         "Mouse keys (main toggle)",
         "Only use mouse keys when Num lock is on"
       ],
-      "page": "mouse-keys",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "mouse-keys.reference.bdf1cbf2"
     },
@@ -2497,7 +2479,7 @@
         "Mouse keys (main toggle)",
         "Show the mouse keys icon on the taskbar"
       ],
-      "page": "mouse-keys",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "mouse-keys.reference.f113b78d"
     },
@@ -2508,7 +2490,7 @@
         "Mouse keys (main toggle)",
         "Hold the Ctrl key to speed up and the Shift key to slow down"
       ],
-      "page": "mouse-keys",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "mouse-keys.reference.4f1675d1"
     },
@@ -2519,7 +2501,7 @@
         "Mouse keys (main toggle)",
         "Mouse keys speed"
       ],
-      "page": "mouse-keys",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "mouse-keys.reference.fe021cfe"
     },
@@ -2530,7 +2512,7 @@
         "Mouse keys (main toggle)",
         "Mouse keys acceleration"
       ],
-      "page": "mouse-keys",
+      "page": "accessibility-interaction",
       "coverage": "control",
       "control": "mouse-keys.reference.df0cfb8c"
     },

@@ -75,7 +75,9 @@ class _TextSizePageState extends State<TextSizePage> {
                 section,
                 onPageRow: (_) {},
                 pageRows: const {},
-                controlBuilder: (setting) => _row(setting, scale),
+                controlBuilder: (setting) => setting.id == textScaleId
+                    ? _row(setting, scale)
+                    : SettingControlTile(setting),
               ),
             if (widget.page.children.isNotEmpty) ...[
               const SettingsSectionTitle('Related settings'),

@@ -41,7 +41,7 @@ Map<String, dynamic> _state(double saved, [double? system]) => {
 
 Widget _page(SettingsClient client) => TextSizePage(
   catalog: catalog,
-  page: catalog.page('text-size'),
+  page: catalog.page('accessibility-vision'),
   client: client,
   onPage: (_) {},
 );

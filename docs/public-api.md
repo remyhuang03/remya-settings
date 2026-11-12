@@ -94,7 +94,7 @@ Available system preferences are writable through both interfaces; System inform
 | Display settings | See [Display](#display) |
 
 The remaining catalog controls remain queryable disabled previews. Calling `Set`
-on a planned or unsupported control returns `Unavailable`; it never simulates a
+on a planned control returns `Unavailable`; it never simulates a
 successful system change. Future available controls must add their operation to
 the common dispatcher and parity tests as part of implementing the GUI control.
 
@@ -993,7 +993,7 @@ boundaries.
 
 ## System updates
 
-`Get("updates")` returns `api_version`, `revision`, `available`, `reason`, `missing` (required tool paths that are absent), `updater` (`installed`, `missing` or `outdated`), `install_command`, `aur` (whether yay exists), `all`, `retry`, `busy`, `phase` (`idle`, `checking`, `upgrading`, `retrying`, `completed`, `failed`), `kind` (`check`, `upgrade`, `scheduled`), `attempt`, `retry_at`, `checked_at`, `held`, `packages` (`name`, `installed`, `available`, `source` = `repository` or `AUR`, `held`), `eligible` (an unheld repository update exists), `output` and `error`, plus `schedule` (`enabled`, `active_start`, `active_end`, `last_run_day`, `notice`, `error`, `editable`). `Get("updates")` re-reads the installed root updater. Per-setting Get adds `id` and `availability` (`available`, or `unsupported` when required tools are missing).
+`Get("updates")` returns `api_version`, `revision`, `available`, `reason`, `missing` (required tool paths that are absent), `updater` (`installed`, `missing` or `outdated`), `install_command`, `aur` (whether yay exists), `all`, `retry`, `busy`, `phase` (`idle`, `checking`, `upgrading`, `retrying`, `completed`, `failed`), `kind` (`check`, `upgrade`, `scheduled`), `attempt`, `retry_at`, `checked_at`, `held`, `packages` (`name`, `installed`, `available`, `source` = `repository` or `AUR`, `held`), `eligible` (an unheld repository update exists), `output` and `error`, plus `schedule` (`enabled`, `active_start`, `active_end`, `last_run_day`, `notice`, `error`, `editable`). `Get("updates")` re-reads the installed root updater. Per-setting Get adds `id` and `availability` (`available`, or `planned` when required tools are missing).
 
 | CLI | D-Bus | Result |
 | --- | --- | --- |
@@ -1435,7 +1435,7 @@ Each drive reports `id`, `model`, `vendor`, `size`, `removable`, `media_removabl
 | `storage.label` | `{"volume":"<reported object path>","label":"Data"}` |
 | `storage.open` | `{"path":"<reported folder>"}` |
 
-`storage.usage` and `storage.volumes` are read-only. Get of any Storage/Cleanup setting returns `{api_version,id,availability,reason,value,options,writable,error}`. Missing host tools are `unsupported` per ID. Mutations return the current page state; `busy:true` means the worker has accepted the request. Watch Changed and check `busy`/`error` for completion, including asynchronous failures. `Changed storage` and `Changed cleanup` carry full states. Invalid payloads and unreported paths reject `InvalidArgument:`; unsafe system-volume operations are rejected, never simulated. See [storage behavior and accuracy](storage.md).
+`storage.usage` and `storage.volumes` are read-only. Get of any Storage/Cleanup setting returns `{api_version,id,availability,reason,value,options,writable,error}`. Missing host tools are `planned` per ID. Mutations return the current page state; `busy:true` means the worker has accepted the request. Watch Changed and check `busy`/`error` for completion, including asynchronous failures. `Changed storage` and `Changed cleanup` carry full states. Invalid payloads and unreported paths reject `InvalidArgument:`; unsafe system-volume operations are rejected, never simulated. See [storage behavior and accuracy](storage.md).
 
 ## Cleanup
 

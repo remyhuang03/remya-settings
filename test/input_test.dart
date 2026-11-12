@@ -269,7 +269,7 @@ void main() {
       tester.widget<Text>(find.byKey(ValueKey('coverage-$label'))).data!,
     );
     expect(
-      count('Supported') + count('Not yet done') + count('Unsupported'),
+      count('Supported') + count('Not yet done'),
       count('Total'),
     );
     expect(count('Total'), controls.length);
