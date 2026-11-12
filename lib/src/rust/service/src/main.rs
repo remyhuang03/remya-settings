@@ -2,6 +2,7 @@ mod ai;
 mod clipboard;
 mod events;
 mod notifications;
+mod osd;
 mod privileged;
 mod state;
 use gio::glib::{self, variant::ToVariant};
@@ -134,9 +135,11 @@ fn run() -> Result<(), String> {
                                 state::BAR_SIDEBAR,
                                 state::BAR_LAYOUT,
                                 remya_settings_power::KEEP_AWAKE,
+                                remya_settings_display::night_light::GAMMA,
                             ]
                             .contains(&args[0].as_str())
                                 || notifications::IDS.contains(&args[0].as_str())
+                                || osd::IDS.contains(&args[0].as_str())
                                 || clipboard::IDS.contains(&args[0].as_str())
                                 || remya_settings_network::proxy::IDS.contains(&args[0].as_str())
                                 || [
@@ -146,6 +149,12 @@ fn run() -> Result<(), String> {
                                 .contains(&args[0].as_str()))
                         {
                             signal(&bus, &args[0], &value);
+                        }
+                        if method == "Set"
+                            && (args[0] == remya_settings_display::manager::BRIGHTNESS
+                                || args[0].starts_with("display-brightness:"))
+                        {
+                            signal(&bus, "display-brightness", &value);
                         }
                         if method == "Set" && ai::SET_IDS.contains(&args[0].as_str()) {
                             signal(&bus, &args[0], &value);
@@ -345,6 +354,10 @@ fn run() -> Result<(), String> {
     let poll_bus = bus.clone();
     let mut ticks = 0u32;
     events::watch(state.clone(), bus.clone());
+    events::watch_sound(state.clone(), bus.clone());
+    if let Err(error) = events::watch_backlight(state.clone(), bus.clone()) {
+        eprintln!("Backlight events unavailable: {error}");
+    }
     let _network_subscriptions = events::watch_network(state.clone(), bus.clone());
     let _power_sleep = events::watch_power_sleep(state.clone());
     let power_state = state.clone();

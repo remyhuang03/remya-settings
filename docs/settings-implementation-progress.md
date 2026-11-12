@@ -10,8 +10,8 @@ Hyprland 内容包含 27 个独立页面及并入常规页面的设置项，共 
 
 ## 当前概况
 
-- 设置分类：16 个；详情页面：119 个；设置条目：1232 项。
-- 已实现：426 项；未实现：796 项；不适用：10 项。
+- 设置分类：16 个；详情页面：119 个；设置条目：1235 项。
+- 已实现：429 项；未实现：796 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值；`test/service_controllers_test.dart` 覆盖各偏好的提示。显示语言与区域格式由 Language and Region 页经 systemd-localed 管理。
@@ -72,7 +72,7 @@ Hyprland 内容包含 27 个独立页面及并入常规页面的设置项，共 
 | [通知](#category-notifications) | 4 | 19 | 12 | 7 | 0 |
 | [蓝牙和设备](#category-devices) | 11 | 103 | 57 | 46 | 0 |
 | [网络和 Internet](#category-network) | 8 | 63 | 63 | 0 | 0 |
-| [外观](#category-appearance) | 10 | 209 | 92 | 117 | 0 |
+| [外观](#category-appearance) | 10 | 212 | 95 | 117 | 0 |
 | [应用](#category-apps) | 5 | 35 | 30 | 5 | 0 |
 | [账户](#category-accounts) | 11 | 58 | 2 | 50 | 6 |
 | [时间和语言](#category-time) | 4 | 19 | 11 | 8 | 0 |
@@ -1895,6 +1895,9 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 | Show seconds | `remya-bar.clock-seconds` | 开关 | 已实现 | Settings 服务持久化，CLI/D-Bus 对等测试，安装版开关联动三个 Hyprland 输出 |
 | Folded apps | `remya-bar.folded-apps` | 操作 | 已实现 | Settings 持久化托盘折叠状态，支持从设置页恢复固定。 |
 | Show touch key previews | `remya-bar.keyboard-preview` | 开关 | 已实现 | Settings persists the preference and exposes it through CLI and D-Bus. |
+| Volume step size | `remya-bar.volume-step` | 滑块 | 已实现 | Settings 服务校验 1–25% 并原子持久化到 `remya-bar-osd.toml`，CLI/D-Bus 对等测试，Bar OSD 快捷键步进实时消费 |
+| Brightness step size | `remya-bar.brightness-step` | 滑块 | 已实现 | Settings 服务校验 1–25% 并原子持久化到 `remya-bar-osd.toml`，CLI/D-Bus 对等测试，Bar OSD 亮度/Gamma 步进实时消费 |
+| Minimum gamma | `remya-bar.gamma-min` | 滑块 | 已实现 | Settings 服务校验 10–90% 并原子持久化到 `remya-bar-osd.toml`，CLI/D-Bus 对等测试，Bar OSD Gamma 下限实时消费 |
 
 ### More — `appearance-more`
 

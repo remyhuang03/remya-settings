@@ -72,6 +72,11 @@ class SettingsClient {
         ),
       );
 
+  /// Whether a Settings service owner appeared or disappeared on the session bus.
+  Stream<bool> get serviceAvailableChanges => _bus.nameOwnerChanged
+      .where((event) => event.name == settingsBusName)
+      .map((event) => event.newOwner != null);
+
   Stream<SettingsChange> watch() async* {
     final pending = StreamController<SettingsChange>();
     final subscription = changes.listen(pending.add, onError: pending.addError);

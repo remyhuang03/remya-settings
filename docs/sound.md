@@ -18,9 +18,11 @@ The target is current Arch Linux with PipeWire, pipewire-pulse and WirePlumber.
 The binding uses PulseAudio 15+ APIs. There is no shell command backend, privileged
 helper or system configuration file editor for audio. Each request uses a bounded
 native connection, without autospawning a server. Missing or unresponsive audio
-services report an error; device state is never invented. Runtime changes and
-30-second service refresh emit the existing `Changed("sound", state)`
-signal; an open Sound page also refreshes its live inventory every two seconds.
+services report an error; device state is never invented. One blocking PulseAudio
+subscription in the Settings service watches playback sinks and server defaults.
+It combines nearby events into one read and publishes changed snapshots through
+`Changed("sound", state)`. The existing 30-second service refresh and open Sound
+page's two-second refresh also cover other inventory changes.
 
 [PulseAudio client API](https://www.freedesktop.org/software/pulseaudio/doxygen/)
 and [libpulse-binding](https://docs.rs/libpulse-binding/2.30.1/libpulse_binding/)

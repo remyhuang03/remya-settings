@@ -15,6 +15,7 @@ pub const TEMPERATURE: &str = "night-light.temperature";
 pub const SCHEDULE: &str = "night-light.7e6239c9";
 pub const START: &str = "night-light.e8868af6";
 pub const END: &str = "night-light.a0bb9f49";
+pub const GAMMA: &str = "display-gamma";
 const UNIT: &str = "hyprsunset.service";
 const MIN_KELVIN: u32 = 1000;
 const MAX_KELVIN: u32 = 6500;
@@ -325,6 +326,12 @@ impl<S: Sunset> NightLight<S> {
     pub fn state(&self) -> Value {
         let system = self.system.as_ref().map(|c| &c.prefs);
         let shown = self.saved.as_ref().or(system);
+        let gamma = self
+            .live
+            .as_ref()
+            .and_then(|live| live.gamma.trim().parse::<f64>().ok())
+            .map(|value| (value.round() as u32).clamp(1, 100))
+            .unwrap_or(100);
         json!({
             "saved": self.saved,
             "system": system,
@@ -334,12 +341,49 @@ impl<S: Sunset> NightLight<S> {
             "enabled": self.live.as_ref().is_some_and(|live| live.enabled),
             "temperature": shown.map(|p| p.temperature),
             "live_temperature": self.live.as_ref().map(|live| live.temperature),
+            "gamma": gamma,
             "schedule": shown.is_some_and(|p| p.start.is_some()),
             "start": shown.and_then(|p| p.start.as_ref()),
             "end": shown.and_then(|p| p.end.as_ref()),
             "write_blocked": self.write_blocked,
             "error": self.error,
         })
+    }
+
+    pub fn gamma_state(&self) -> Value {
+        match self.sunset.request(&["gamma"]) {
+            Ok(raw) => {
+                let gamma = raw
+                    .trim()
+                    .parse::<f64>()
+                    .ok()
+                    .map(|value| (value.round() as u32).clamp(1, 100))
+                    .unwrap_or(100);
+                json!({"gamma": gamma, "running": true})
+            }
+            Err(_) => json!({"gamma": 100, "running": false}),
+        }
+    }
+
+    pub fn set_gamma(&mut self, value: &str) -> Result<Value, String> {
+        let percent: u32 = value
+            .parse()
+            .ok()
+            .filter(|v| (10..=100).contains(v))
+            .ok_or_else(|| invalid("Gamma must be 10 to 100"))?;
+        if self.sunset.request(&["identity", "get"]).is_err() {
+            if percent == 100 {
+                return Ok(json!({"gamma": 100, "running": false}));
+            }
+            self.sunset.restart()?;
+        }
+        self.command(&["gamma", &percent.to_string()])?;
+        self.live = self.read_live().ok();
+        let state = self.gamma_state();
+        if state["gamma"] != json!(percent) {
+            return Err("hyprsunset did not apply the requested gamma".into());
+        }
+        Ok(state)
     }
 
     pub fn setting_value(&self, key: &str) -> Value {
@@ -786,5 +830,35 @@ mod tests {
         assert_eq!(night.state()["enabled"], false);
         let state = night.set(TEMPERATURE, "3000").unwrap();
         assert_eq!(state["running"], true);
+    }
+
+    #[test]
+    fn gamma_reads_live_state_validates_range_and_starts_hyprsunset_when_dimming() {
+        let (_root, fake, mut night) = manager(Some(WARM));
+        night.refresh().unwrap();
+        assert_eq!(night.gamma_state(), json!({"gamma": 100, "running": true}));
+        assert_eq!(
+            night.set_gamma("75").unwrap(),
+            json!({"gamma": 75, "running": true})
+        );
+        assert_eq!(night.state()["gamma"], 75);
+        for bad in ["9", "101", "dim"] {
+            assert!(
+                night
+                    .set_gamma(bad)
+                    .unwrap_err()
+                    .starts_with("InvalidArgument:")
+            );
+        }
+        fake.0.lock().unwrap().down = true;
+        assert_eq!(night.gamma_state(), json!({"gamma": 100, "running": false}));
+        assert_eq!(
+            night.set_gamma("100").unwrap(),
+            json!({"gamma": 100, "running": false})
+        );
+        assert_eq!(
+            night.set_gamma("60").unwrap(),
+            json!({"gamma": 60, "running": true})
+        );
     }
 }

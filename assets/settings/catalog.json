@@ -17309,6 +17309,44 @@
               "value": true
             }
           ]
+        },
+        {
+          "title": "On-screen display",
+          "controls": [
+            {
+              "id": "remya-bar.volume-step",
+              "title": "Volume step size",
+              "type": "slider",
+              "availability": "available",
+              "reason": "Percentage changed by each volume shortcut step.",
+              "min": 1,
+              "max": 25,
+              "unit": "%",
+              "value": 5
+            },
+            {
+              "id": "remya-bar.brightness-step",
+              "title": "Brightness step size",
+              "type": "slider",
+              "availability": "available",
+              "reason": "Percentage changed by each brightness or gamma shortcut step.",
+              "min": 1,
+              "max": 25,
+              "unit": "%",
+              "value": 5
+            },
+            {
+              "id": "remya-bar.gamma-min",
+              "title": "Minimum gamma",
+              "type": "slider",
+              "availability": "available",
+              "reason": "Lowest software gamma level reached after hardware brightness hits its minimum.",
+              "min": 10,
+              "max": 90,
+              "unit": "%",
+              "value": 10
+            }
+          ]
         }
       ],
       "children": []

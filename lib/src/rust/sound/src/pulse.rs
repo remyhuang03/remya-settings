@@ -2,7 +2,7 @@ use super::{Backend, Device, DevicePrefs, Direction, Snapshot, Stream};
 use libpulse_binding as pulse;
 use pulse::{
     callbacks::ListResult,
-    context::{Context, FlagSet, State},
+    context::{Context, FlagSet, State, subscribe::InterestMaskSet},
     mainloop::standard::{IterateResult, Mainloop},
     operation::Operation,
     volume::{ChannelVolumes, Volume},
@@ -84,6 +84,36 @@ impl Connection {
         }
     }
 }
+
+/// One blocking subscription for the service, independent of inventory reads.
+pub fn watch_default_output(notify: impl Fn() + Clone + 'static) {
+    loop {
+        let _ = watch_connection(notify.clone());
+        thread::sleep(Duration::from_secs(5));
+    }
+}
+
+fn watch_connection(notify: impl Fn() + Clone + 'static) -> Result<(), String> {
+    let mut connection = Connection::new()?;
+    let changed = notify.clone();
+    connection
+        .context
+        .set_subscribe_callback(Some(Box::new(move |_, _, _| changed())));
+    let result = Rc::new(Cell::new(false));
+    let operation = connection.context.subscribe(
+        InterestMaskSet::SINK | InterestMaskSet::SERVER,
+        callback(&result),
+    );
+    connection.success(operation, result)?;
+    notify();
+    while connection.context.get_state() == State::Ready {
+        if !matches!(connection.mainloop.iterate(true), IterateResult::Success(_)) {
+            break;
+        }
+    }
+    Ok(())
+}
+
 fn volumes(prefs: &DevicePrefs) -> Result<ChannelVolumes, String> {
     if prefs.channels.is_empty()
         || prefs.channels.len() > 32

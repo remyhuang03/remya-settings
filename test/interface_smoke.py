@@ -467,6 +467,27 @@ def keyboard_preview_checks():
     assert config.read_text() == 'preview = "invalid"\n'
     config.unlink()
 
+
+def bar_osd_checks():
+    config = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/remya-bar-osd.toml'
+    assert not config.exists()
+    initial = {'id': 'remya-bar.osd', 'availability': 'available', 'value': {'volume_step': 5, 'brightness_step': 5, 'gamma_min': 10}}
+    assert cli('get', 'remya-bar.osd') == dbus('Get', 'remya-bar.osd') == initial
+    for setting, expected in [('remya-bar.volume-step', 5), ('remya-bar.brightness-step', 5), ('remya-bar.gamma-min', 10)]:
+        assert cli('get', setting) == dbus('Get', setting) == {'id': setting, 'availability': 'available', 'value': expected}
+    assert cli('set', 'remya-bar.volume-step', '10') == dbus('Get', 'remya-bar.volume-step') == {'id': 'remya-bar.volume-step', 'availability': 'available', 'value': 10}
+    assert dbus('Set', 'remya-bar.brightness-step', '8') == cli('get', 'remya-bar.brightness-step') == {'id': 'remya-bar.brightness-step', 'availability': 'available', 'value': 8}
+    assert cli('set', 'remya-bar.gamma-min', '25') == dbus('Get', 'remya-bar.gamma-min') == {'id': 'remya-bar.gamma-min', 'availability': 'available', 'value': 25}
+    assert cli('get', 'remya-bar.osd')['value'] == {'volume_step': 10, 'brightness_step': 8, 'gamma_min': 25}
+    for setting, bad in [('remya-bar.volume-step', '0'), ('remya-bar.volume-step', '26'), ('remya-bar.brightness-step', '0'), ('remya-bar.gamma-min', '9'), ('remya-bar.gamma-min', '91')]:
+        assert 'InvalidArgument' in cli('set', setting, bad, ok=False)
+    config.write_text('volume_step = "invalid"\n')
+    cli('get', 'remya-bar.osd', ok=False)
+    cli('set', 'remya-bar.volume-step', '5', ok=False)
+    assert config.read_text() == 'volume_step = "invalid"\n'
+    config.unlink()
+    print('PASS: Bar OSD preferences CLI and D-Bus parity, validation and persistence')
+
 FAKE_CODEXBAR = r'''#!/usr/bin/env python3
 import json, sys
 args = sys.argv[1:]
@@ -538,6 +559,7 @@ def session_checks():
         assert initial == dbus('Get', 'theme')
         bar_clock_checks()
         keyboard_preview_checks()
+        bar_osd_checks()
         notification_checks()
         bar_tray_checks()
         bar_layout_checks()
