@@ -441,6 +441,29 @@ impl Hypr for Desk {
                 Value::from(all).to_string()
             }
             ["-j", "workspacerules"] => Value::from(w.1.clone()).to_string(),
+            ["-j", "clients"] => json!([
+                {"class": "org.gnome.Nautilus", "title": "Home", "mapped": true},
+                {"class": "org.gnome.Nautilus", "title": "Downloads", "mapped": true},
+                {"class": "", "title": "popup"},
+            ])
+            .to_string(),
+            ["-j", "configerrors"] => {
+                let text = fs::read_to_string(&w.0).unwrap_or_default();
+                // Stands in for Hyprland refusing a value it cannot load.
+                json!([if text.contains("REJECT") {
+                    "remya-settings/desktop.lua:3: bad"
+                } else {
+                    ""
+                }])
+                .to_string()
+            }
+            ["eval", code] if code.starts_with("hl.window_rule({ enabled = false, ") => {
+                if code.contains("Bogus") {
+                    "error: unknown field".into()
+                } else {
+                    "ok".into()
+                }
+            }
             ["-j", "monitors"] => json!([{"name": "DP-1", "description": "Wide", "x": 0, "y": 0,
                 "width": 3840, "height": 2160, "scale": 2.0, "transform": 1,
                 "activeWorkspace": {"name": "1"}, "specialWorkspace": {"name": ""}}])
@@ -592,4 +615,132 @@ fn workspace_rules_are_validated_written_reloaded_and_reconciled() {
             .is_err()
     );
     assert!(world.0.lock().unwrap().2 >= 5);
+}
+
+#[test]
+fn window_rules_and_environment_are_checked_written_and_reconciled() {
+    let dir = tempfile::tempdir().unwrap();
+    let hypr = dir.path().join("hypr");
+    fs::create_dir_all(&hypr).unwrap();
+    fs::write(hypr.join("hyprland.lua"), "hl.config({})\n").unwrap();
+    let owned = hypr.join("remya-settings/desktop.lua");
+    let world = Desk::default();
+    world.0.lock().unwrap().0 = owned.clone();
+    let mut desk = Input::new(
+        &DESKTOP,
+        world.clone(),
+        hypr.clone(),
+        dir.path().join("desktop.toml"),
+    );
+    desk.refresh().unwrap();
+    let state = desk.state();
+    assert_eq!(state["window_rules"], json!([]));
+    assert_eq!(
+        state["windows"],
+        json!([{"class": "org.gnome.Nautilus", "title": "Home"}])
+    );
+
+    let set = |desk: &mut Input<Desk>, id, v: Value| desk.set(id, &v.to_string());
+    let rule = json!({"class": "org.gnome.Nautilus", "float": true, "size": [60, 50], "workspace": "3", "silent": true});
+    let state = set(&mut desk, WINDOW_RULE_SET, rule.clone()).unwrap();
+    assert_eq!(state["window_rules"][0], rule);
+    let text = fs::read_to_string(&owned).unwrap();
+    assert!(text.contains(r#"hl.window_rule({ match = { class = "^(org\\.gnome\\.Nautilus)$" }, float = true, size = { "(monitor_w*0.6)", "(monitor_h*0.5)" }, workspace = "3 silent" })"#), "{text}");
+    let reloads = world.0.lock().unwrap().2;
+    // Duplicates, unknown fields and Hyprland's own refusal leave the file as it was.
+    assert!(
+        set(
+            &mut desk,
+            WINDOW_RULE_SET,
+            json!({"class": "org.gnome.Nautilus", "pin": true, "previous": {"class": "foot"}})
+        )
+        .is_err()
+    );
+    assert!(
+        set(
+            &mut desk,
+            WINDOW_RULE_SET,
+            json!({"class": "a", "no_anim": true})
+        )
+        .unwrap_err()
+        .starts_with("InvalidArgument:")
+    );
+    assert!(
+        set(
+            &mut desk,
+            WINDOW_RULE_SET,
+            json!({"class": "Bogus", "pin": true})
+        )
+        .unwrap_err()
+        .contains("unknown field")
+    );
+    assert_eq!(fs::read_to_string(&owned).unwrap(), text);
+    // Editing in place by the previous match.
+    let state = set(
+        &mut desk,
+        WINDOW_RULE_SET,
+        json!({"title": "Save As", "float": true, "center": true,
+        "previous": {"class": "org.gnome.Nautilus"}}),
+    )
+    .unwrap();
+    assert_eq!(
+        state["window_rules"],
+        json!([{"title": "Save As", "float": true, "center": true}])
+    );
+
+    let state = set(
+        &mut desk,
+        ENV_SET,
+        json!({"name": "GDK_BACKEND", "value": "wayland,x11"}),
+    )
+    .unwrap();
+    assert_eq!(
+        state["env"],
+        json!([{"name": "GDK_BACKEND", "value": "wayland,x11"}])
+    );
+    assert!(world.0.lock().unwrap().2 > reloads);
+    assert!(
+        set(
+            &mut desk,
+            ENV_SET,
+            json!({"name": "XCURSOR_SIZE", "value": "24"})
+        )
+        .is_err()
+    );
+    let before = fs::read_to_string(&owned).unwrap();
+    let error = set(
+        &mut desk,
+        ENV_SET,
+        json!({"name": "SDL_VIDEODRIVER", "value": "REJECT"}),
+    )
+    .unwrap_err();
+    assert!(error.contains("rejected"), "{error}");
+    assert_eq!(fs::read_to_string(&owned).unwrap(), before);
+    assert_eq!(desk.state()["env"].as_array().unwrap().len(), 1);
+    let state = set(
+        &mut desk,
+        ENV_SET,
+        json!({"name": "GDK_BACKEND", "value": "wayland", "previous": "GDK_BACKEND"}),
+    )
+    .unwrap();
+    assert_eq!(state["env"][0]["value"], "wayland");
+
+    // A hand edit is a conflict on its own ID until resolved.
+    fs::write(
+        &owned,
+        fs::read_to_string(&owned)
+            .unwrap()
+            .replace("\"wayland\"", "\"x11\""),
+    )
+    .unwrap();
+    desk.refresh().unwrap();
+    assert_eq!(desk.state()["conflicts"], json!(["environment"]));
+    let state = desk.resolve("system").unwrap();
+    assert_eq!(state["env"][0]["value"], "x11");
+
+    let state = set(&mut desk, ENV_REMOVE, json!({"name": "GDK_BACKEND"})).unwrap();
+    assert_eq!(state["env"], json!([]));
+    let state = set(&mut desk, WINDOW_RULE_REMOVE, json!({"title": "Save As"})).unwrap();
+    assert_eq!(state["window_rules"], json!([]));
+    assert!(set(&mut desk, WINDOW_RULE_REMOVE, json!({"title": "Save As"})).is_err());
 }

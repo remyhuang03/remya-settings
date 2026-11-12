@@ -1,6 +1,7 @@
 //! The Settings-owned `remya-settings/<group>.lua` files and their one-line `require`
 //! blocks in `hyprland.lua`. Only the exact shapes rendered here are accepted, so a
 //! file that has been edited into something else is never overwritten.
+use crate::window::{self, EnvVar, WindowRule};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -561,7 +562,7 @@ pub struct Group {
     pub options: &'static [Opt],
     /// Whether the file also holds `hl.bind`/`hl.unbind` shortcuts.
     pub shortcuts: bool,
-    /// Whether the file also holds `hl.workspace_rule` workspace rules.
+    /// Whether the file also holds workspace rules, window rules and environment variables.
     pub rules: bool,
     pub header: &'static str,
 }
@@ -579,7 +580,7 @@ pub const DESKTOP: Group = Group {
     options: DESKTOP_OPTIONS,
     shortcuts: false,
     rules: true,
-    header: "-- Managed by Remy'a Settings. Change Background, Cursor, Window appearance, Animations, Multitasking, Workspaces and Power & battery in Settings.",
+    header: "-- Managed by Remy'a Settings. Change Background, Cursor, Window appearance, Animations, Multitasking, Workspaces, Window rules, Environment variables and Power & battery in Settings.",
 };
 
 impl Group {
@@ -658,6 +659,8 @@ pub struct File {
     pub disabled: Vec<String>,
     pub shortcuts: Vec<Shortcut>,
     pub rules: Vec<WorkspaceRule>,
+    pub env: Vec<EnvVar>,
+    pub window_rules: Vec<WindowRule>,
 }
 
 pub fn quote(text: &str) -> String {
@@ -751,6 +754,14 @@ pub fn render(group: &Group, file: &File) -> String {
         text += &rule_line(rule);
         text.push('\n');
     }
+    for var in &file.env {
+        text += &window::env_line(var);
+        text.push('\n');
+    }
+    for rule in &file.window_rules {
+        text += &window::rule_line(rule);
+        text.push('\n');
+    }
     text
 }
 
@@ -795,7 +806,7 @@ fn workspace_rule(line: &str) -> Option<WorkspaceRule> {
 }
 
 /// Reads one double-quoted Lua string at the start of `text`.
-fn string(text: &str) -> Option<(String, &str)> {
+pub(crate) fn string(text: &str) -> Option<(String, &str)> {
     let mut chars = text.strip_prefix('"')?.char_indices();
     let mut out = String::new();
     while let Some((at, c)) = chars.next() {
@@ -928,6 +939,17 @@ pub fn parse(group: &Group, text: &str) -> Result<File, String> {
             file.rules.push(workspace_rule(line).ok_or_else(refuse)?);
             continue;
         }
+        if line.starts_with("hl.env(") || line.starts_with("hl.window_rule(") {
+            if !group.rules {
+                return Err(refuse());
+            }
+            match (window::parse_env(line), window::parse_rule(line)) {
+                (Some(var), _) => file.env.push(var),
+                (_, Some(rule)) => file.window_rules.push(rule),
+                _ => return Err(refuse()),
+            }
+            continue;
+        }
         let parsed = group.options.iter().find_map(|opt| {
             let empty = option_line(opt, &Value::Null);
             let (prefix, suffix) = empty.split_once("null")?;
@@ -999,7 +1021,7 @@ mod tests {
                     ..Shortcut::default()
                 },
             ],
-            rules: vec![],
+            ..File::default()
         }
     }
 

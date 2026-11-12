@@ -1,6 +1,7 @@
 import '../../ai/presentation/ai_providers_page.dart';
 import '../../ai/presentation/ai_usage_page.dart';
 import '../../clipboard/presentation/clipboard_page.dart';
+import '../../printers/presentation/printers_page.dart';
 import '../../storage/application/storage_controller.dart';
 import '../../storage/presentation/storage_page.dart';
 import '../../storage/presentation/cleanup_page.dart';
@@ -37,7 +38,9 @@ import '../../input/presentation/keyboard_shortcuts_page.dart';
 import '../../input/presentation/mouse_page.dart';
 import '../../input/presentation/touchpad_page.dart';
 import '../../multitasking/presentation/multitasking_page.dart';
+import '../../environment/presentation/environment_page.dart';
 import '../../workspaces/presentation/workspaces_page.dart';
+import '../../window_rules/presentation/window_rules_page.dart';
 import '../../window_appearance/presentation/window_appearance_page.dart';
 import '../../animations/presentation/animations_page.dart';
 import '../../themes/presentation/cursor_page.dart';
@@ -471,6 +474,8 @@ class _SettingsShellState extends State<SettingsShell> {
       );
     } else if (_page?.id == 'clipboard') {
       content = ClipboardPage(client: widget.client, page: _page!);
+    } else if (_page?.id == 'printers' && widget.client != null) {
+      content = PrintersPage(client: widget.client!, page: _page!);
     } else if (NotificationsPage.pageIds.contains(_page?.id) &&
         widget.client != null) {
       content = NotificationsPage(
@@ -656,6 +661,18 @@ class _SettingsShellState extends State<SettingsShell> {
         client: client,
       ),
       'workspaces' => WorkspacesPage(
+        key: key,
+        catalog: catalog,
+        page: page,
+        client: client,
+      ),
+      'window-rules' => WindowRulesPage(
+        key: key,
+        catalog: catalog,
+        page: page,
+        client: client,
+      ),
+      'environment-variables' => EnvironmentPage(
         key: key,
         catalog: catalog,
         page: page,

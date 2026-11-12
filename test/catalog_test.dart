@@ -381,7 +381,7 @@ void main() {
     expect(catalog.search('lock screen').map((p) => p.id), contains('power'));
     expect(
       catalog.search('window rules').map((p) => p.id),
-      contains('hypr-window-rule-props'),
+      contains('window-rules'),
     );
   });
 

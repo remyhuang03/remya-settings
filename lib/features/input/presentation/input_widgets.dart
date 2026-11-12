@@ -512,6 +512,10 @@ class InputConflictCard extends StatelessWidget {
           'Custom and turned-off shortcuts differ from input.lua'
         else if (id == 'workspaces')
           'Workspace rules differ from desktop.lua'
+        else if (id == 'window-rules')
+          'Window rules differ from desktop.lua'
+        else if (id == 'environment')
+          'Environment variables differ from desktop.lua'
         else if (specs[id] case final spec?)
           '${spec.title}: system ${describeValue(spec, system[id])}, '
               'Settings ${describeValue(spec, saved[id])}',

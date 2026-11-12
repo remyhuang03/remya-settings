@@ -6,12 +6,12 @@
 
 清单覆盖现有目录中的全部设置项，包括主要中文控件和保留原名的设计参考细项（受 Windows 等桌面系统启发，作为设计参考与基准对照，而非直接照搬）；实际架构和功能已针对 Linux / Hyprland 进行了适配与差异化演进。相同概念可能存在多个展示位置。下述数量统计的是控件条目，不是去重后的独立后端功能数量。参考来源与实际实现的边界见 [调研说明](windows-settings-research.md)。
 
-Hyprland 内容包含 27 个独立页面及并入常规页面的设置项，共 572 项设置与 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
+Hyprland 内容包含 22 个独立页面及并入常规页面的设置项，共 484 项设置与 2 个分类。来源与版本边界见 [Hyprland 补充调研](hyprland-settings-research.md)。
 
 ## 当前概况
 
-- 设置分类：16 个；详情页面：119 个；设置条目：1235 项。
-- 已实现：429 项；未实现：796 项；不适用：10 项。
+- 设置分类：16 个；详情页面：114 个；设置条目：1138 项。
+- 已实现：439 项；未实现：689 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值；`test/service_controllers_test.dart` 覆盖各偏好的提示。显示语言与区域格式由 Language and Region 页经 systemd-localed 管理。
@@ -401,6 +401,23 @@ Which workspaces each display starts with, which stay when empty, and how the sc
 | --- | --- | --- | --- | --- |
 | Pointer after switching to a workspace on another display | `workspaces.center-on` | 选择 | 已实现 | 见下文“Workspaces (2026-11-09)” |
 | Click through a scratchpad that has only floating windows | `workspaces.special-fallthrough` | 开关 | 已实现 | 见下文“Workspaces (2026-11-09)” |
+
+### Environment variables — `environment-variables`
+
+Session variables for apps the desktop starts, such as Wayland preferences for toolkits
+
+页面状态：**已实现**；条目：2；已实现 2 / 未实现 0 / 不适用 0。
+
+原因：Writes session variables to the Settings-owned desktop configuration and reloads it.
+
+`hl.env` 变量写入 Settings 自有的 `hypr/remya-settings/desktop.lua`，显式重载并检查 `hyprctl configerrors`；光标、Qt Quick 深浅色等由其他页面负责的变量与会话关键变量被拒绝。替代原 `hypr-environment` 预览页。
+
+#### Variables
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Your environment variables | `environment.set` | 操作 | 已实现 | 见下文“Window rules, environment variables and printers (2026-11-12)” |
+| Remove an environment variable | `environment.remove` | 操作 | 已实现 | 见下文“Window rules, environment variables and printers (2026-11-12)” |
 
 ### Project to this computer — `projection`
 
@@ -946,31 +963,25 @@ Windows 参考入口：`ms-settings:connecteddevices`。
 | Hardware switch: Notebook closing action | `device-list.switch-lid` | 文本输入 | 未实现 | — |
 | Hardware switch: Tablet mode switching action | `device-list.switch-tablet` | 文本输入 | 未实现 | — |
 
-### Printers and Scanners — `printers`
+### Printers — `printers`
 
-添加设备、默认打印机与队列
+Installed printers, the default printer and print queues
 
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：Uses CUPS through its command-line tools.
 
-Windows 参考入口：`ms-settings:printers`。
+通过 CUPS 命令行工具（`LC_ALL=C` 的 `lpstat`、`lpoptions`、`lp`、`cancel`、`cupsenable`/`cupsdisable`、`lpadmin -x`）读取和管理已安装打印机；打印机与队列跟随 CUPS 实时状态，不保存、不比对。见[打印机文档](printers.md)。添加打印机、打印首选项与扫描仪未实现，Windows 专属的自动管理默认打印机与按流量下载驱动已删除。
 
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Add a printer or scanner | `printers.9a92f276` | 操作 | 未实现 | — |
-| Automatically manage default printers | `printers.29e59f94` | 开关 | 未实现 | — |
-| Download drivers over a metered connection | `printers.7d2ec3e1` | 开关 | 未实现 | — |
-| Print queue | `printers.98323162` | 操作 | 未实现 | — |
-| Printing preferences | `printers.1b618ab5` | 操作 | 未实现 | — |
-
-#### Windows 参考细项
+#### Printers
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Let Windows manage my default printer | `printers.reference.c1c02196` | 开关 | 未实现 | — |
+| Default printer | `printers.default` | 操作 | 已实现 | 见下文“Window rules, environment variables and printers (2026-11-12)” |
+| Print a test page | `printers.test-page` | 操作 | 已实现 | 见下文“Window rules, environment variables and printers (2026-11-12)” |
+| Pause or resume a printer | `printers.pause` | 操作 | 已实现 | 见下文“Window rules, environment variables and printers (2026-11-12)” |
+| Cancel a print job | `printers.cancel-job` | 操作 | 已实现 | 见下文“Window rules, environment variables and printers (2026-11-12)” |
+| Remove a printer | `printers.remove` | 操作 | 已实现 | 见下文“Window rules, environment variables and printers (2026-11-12)” |
 
 ### Camera — `cameras`
 
@@ -2038,6 +2049,23 @@ Implementation and boundaries: [Startup apps](startup.md). Verification uses tem
 
 <a id="category-accounts"></a>
 
+### Window rules — `window-rules`
+
+How chosen apps' windows open and look: floating, size, workspace, opacity and more
+
+页面状态：**已实现**；条目：2；已实现 2 / 未实现 0 / 不适用 0。
+
+原因：Writes window rules to the Settings-owned desktop configuration; Hyprland checks each rule first.
+
+`hl.window_rule` 规则（应用类名精确匹配、标题包含文本；浮动、居中、尺寸、工作区、所有工作区显示、最大化/全屏、不抢焦点、不透明度、无模糊、无阴影、保持比例、防止息屏）写入 Settings 自有的 `desktop.lua`；写入前以禁用状态交给 Hyprland 校验，重载后检查 `hyprctl configerrors`。替代原三个窗口规则预览页。
+
+#### Window rules
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Your window rules | `window-rules.set` | 操作 | 已实现 | 见下文“Window rules, environment variables and printers (2026-11-12)” |
+| Remove a window rule | `window-rules.remove` | 操作 | 已实现 | 见下文“Window rules, environment variables and printers (2026-11-12)” |
+
 ## 账户
 
 个人信息与登录
@@ -2785,36 +2813,6 @@ Windows 参考入口：`ms-settings:easeofaccess-mouse`。
 
 设备安全与应用权限
 
-### System security — `security`
-
-安全概览与保护区域
-
-页面状态：**未实现**；条目：10；已实现 0 / 未实现 10 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:windowsdefender`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Security status | `security.f4700677` | 信息展示 | 未实现 | — |
-| Virus and Threat Protection | `security.111b451f` | 操作 | 未实现 | — |
-| Account Protection | `security.4fb1be9f` | 操作 | 未实现 | — |
-| Firewall and Network Protection | `security.7934d1e5` | 操作 | 未实现 | — |
-| Application and browser controls | `security.3e8cd48e` | 操作 | 未实现 | — |
-| Equipment security | `security.b23021fa` | 操作 | 未实现 | — |
-| Equipment performance and operating condition | `security.dcf23926` | 操作 | 未实现 | — |
-
-#### Advanced: compositor previews
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Authorization agent: Authorized agent selection | `security.authorization-agent` | 选择 | 未实现 | — |
-| Authorization agent: Start authorization agent on login | `security.authorization-autostart` | 开关 | 未实现 | — |
-| Authorization agent: Authorized agent status | `security.authorization-status` | 信息展示 | 未实现 | — |
-
 ### Device encryption — `encryption`
 
 设备加密与恢复密钥
@@ -2849,23 +2847,6 @@ Windows 参考入口：`ms-settings:findmydevice`。
 | --- | --- | --- | --- | --- |
 | Find my device | `find-device.9436d046` | 开关 | 不适用 | — |
 | View associated devices | `find-device.a33ef3cc` | 操作 | 不适用 | — |
-
-### General privacy — `general-privacy`
-
-推荐内容、广告与应用跟踪
-
-页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:privacy`、`ms-settings:privacy-general`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Website access language list | `general-privacy.688b695e` | 开关 | 未实现 | — |
-| Personalized offers | `general-privacy.87512f3b` | 开关 | 未实现 | — |
 
 ### Online speech recognition — `online-speech`
 
@@ -2930,7 +2911,7 @@ Windows 参考入口：`ms-settings:search`、`ms-settings:search-moredetails`�
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
-相关页面 ID：`hypr-desktop-portals`、`hypr-input-capture`。
+相关页面 ID：`hypr-input-capture`。
 
 参考资料：[hypr-permissions](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/advanced-configuration/permissions.md)。
 
@@ -2944,29 +2925,6 @@ Windows 参考入口：`ms-settings:search`、`ms-settings:search-moredetails`�
 | Authorization strategy | `hypr-compositor-permissions.policy` | 选择 | 未实现 | — |
 | Permission rules restart to take effect | `hypr-compositor-permissions.restart` | 信息展示 | 未实现 | — |
 | Add new permission rules | `hypr-compositor-permissions.add` | 操作 | 未实现 | — |
-
-### Desktop Portal and Screen Sharing — `hypr-desktop-portals`
-
-窗口捕获、全局快捷键和文件选择提供者 · 可选组件 xdg-desktop-portal-hyprland 及文件选择门户
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；可选组件 xdg-desktop-portal-hyprland 及文件选择门户 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-portal](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/hypr-ecosystem/user/xdg-desktop-portal-hyprland.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| XDPH Services and Providers | `hypr-desktop-portals.backend` | 信息展示 | 未实现 | — |
-| Screen and window sharing selector | `hypr-desktop-portals.sharing` | 操作 | 未实现 | — |
-| Apply global shortcut key authorization | `hypr-desktop-portals.shortcuts` | 操作 | 未实现 | — |
-| File selection portal provider | `hypr-desktop-portals.picker` | 选择 | 未实现 | — |
-| Sharing session recovery token | `hypr-desktop-portals.restore` | 开关 | 未实现 | — |
-| Portal service diagnostics | `hypr-desktop-portals.diagnostics` | 操作 | 未实现 | — |
-
-<a id="category-update"></a>
 
 ## 系统更新
 
@@ -3206,128 +3164,6 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 | --- | --- | --- | --- | --- |
 | Gesture direction · direction | `hypr-layout-scrolling-workspace.direction` | 文本输入 | 未实现 | — |
 
-### Window rules · Matching conditions — `hypr-window-rule-props`
-
-按官方文档分类的组件参数 · Hyprland
-
-页面状态：**未实现**；条目：17；已实现 0 / 未实现 17 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-window-rules](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/rules/window-rules.md)。
-
-#### 匹配条件
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Window application class matching · class | `hypr-window-rule-props.class` | 文本输入 | 未实现 | — |
-| Content type · content | `hypr-window-rule-props.content` | 文本输入 | 未实现 | — |
-| Focus state matching · focus | `hypr-window-rule-props.focus` | 开关 | 未实现 | — |
-| fullscreen · fullscreen | `hypr-window-rule-props.fullscreen` | 开关 | 未实现 | — |
-| Client full screen state · fullscreen_state_client | `hypr-window-rule-props.fullscreen-state-client` | 文本输入 | 未实现 | — |
-| Synth full screen state · fullscreen_state_internal | `hypr-window-rule-props.fullscreen-state-internal` | 文本输入 | 未实现 | — |
-| Floating window · float | `hypr-window-rule-props.float` | 开关 | 未实现 | — |
-| Window grouping · group | `hypr-window-rule-props.group` | 开关 | 未实现 | — |
-| Initial application class matching · initial_class | `hypr-window-rule-props.initial-class` | 文本输入 | 未实现 | — |
-| Initial window title matching · initial_title | `hypr-window-rule-props.initial-title` | 文本输入 | 未实现 | — |
-| Modal window matching · modal | `hypr-window-rule-props.modal` | 开关 | 未实现 | — |
-| Pin across workspaces · pin | `hypr-window-rule-props.pin` | 开关 | 未实现 | — |
-| Window tag · tag | `hypr-window-rule-props.tag` | 文本输入 | 未实现 | — |
-| Window title matching · title | `hypr-window-rule-props.title` | 文本输入 | 未实现 | — |
-| Workspace selector · workspace | `hypr-window-rule-props.workspace` | 文本输入 | 未实现 | — |
-| XDG window tag · xdg_tag | `hypr-window-rule-props.xdg-tag` | 文本输入 | 未实现 | — |
-| XWayland window matching · xwayland | `hypr-window-rule-props.xwayland` | 开关 | 未实现 | — |
-
-### Window rules · Static effects — `hypr-window-rule-static-effects`
-
-按官方文档分类的组件参数 · Hyprland
-
-页面状态：**未实现**；条目：18；已实现 0 / 未实现 18 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-window-rules](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/rules/window-rules.md)。
-
-#### 静态效果
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Center the floating window · center | `hypr-window-rule-static-effects.center` | 开关 | 未实现 | — |
-| Content type · content | `hypr-window-rule-static-effects.content` | 文本输入 | 未实现 | — |
-| Floating window · float | `hypr-window-rule-static-effects.float` | 开关 | 未实现 | — |
-| fullscreen · fullscreen | `hypr-window-rule-static-effects.fullscreen` | 开关 | 未实现 | — |
-| fullscreen state · fullscreen_state | `hypr-window-rule-static-effects.fullscreen-state` | 文本输入 | 未实现 | — |
-| Window grouping · group | `hypr-window-rule-static-effects.group` | 文本输入 | 未实现 | — |
-| maximize · maximize | `hypr-window-rule-static-effects.maximize` | 开关 | 未实现 | — |
-| Monitor matching · monitor | `hypr-window-rule-static-effects.monitor` | 文本输入 | 未实现 | — |
-| Floating window coordinates · move | `hypr-window-rule-static-effects.move` | 文本输入 | 未实现 | — |
-| no close for · no_close_for | `hypr-window-rule-static-effects.no-close-for` | 文本输入 | 未实现 | — |
-| Disable initial focus · no_initial_focus | `hypr-window-rule-static-effects.no-initial-focus` | 开关 | 未实现 | — |
-| Pin across workspaces · pin | `hypr-window-rule-static-effects.pin` | 开关 | 未实现 | — |
-| Pseudo tiling mode · pseudo | `hypr-window-rule-static-effects.pseudo` | 开关 | 未实现 | — |
-| scrolling width · scrolling_width | `hypr-window-rule-static-effects.scrolling-width` | 文本输入 | 未实现 | — |
-| Window or control size · size | `hypr-window-rule-static-effects.size` | 文本输入 | 未实现 | — |
-| Suppress window events · suppress_event | `hypr-window-rule-static-effects.suppress-event` | 文本输入 | 未实现 | — |
-| Force tiling · tile | `hypr-window-rule-static-effects.tile` | 开关 | 未实现 | — |
-| Workspace selector · workspace | `hypr-window-rule-static-effects.workspace` | 文本输入 | 未实现 | — |
-
-### Window rules · Dynamic effects — `hypr-window-rule-dynamic-effects`
-
-按官方文档分类的组件参数 · Hyprland
-
-页面状态：**未实现**；条目：42；已实现 0 / 未实现 42 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-window-rules](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/rules/window-rules.md)。
-
-#### 动态效果
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| allows input · allows_input | `hypr-window-rule-dynamic-effects.allows-input` | 开关 | 未实现 | — |
-| Animation style · animation | `hypr-window-rule-dynamic-effects.animation` | 文本输入 | 未实现 | — |
-| Window border gradient overlay · border_color | `hypr-window-rule-dynamic-effects.border-color` | 文本输入 | 未实现 | — |
-| Window border width · border_size | `hypr-window-rule-dynamic-effects.border-size` | 文本输入 | 未实现 | — |
-| Limit pointers to windows · confine_pointer | `hypr-window-rule-dynamic-effects.confine-pointer` | 开关 | 未实现 | — |
-| Darkening degree of surrounding area · dim_around | `hypr-window-rule-dynamic-effects.dim-around` | 开关 | 未实现 | — |
-| Draw window decoration · decorate | `hypr-window-rule-dynamic-effects.decorate` | 开关 | 未实现 | — |
-| Focus on application activation · focus_on_activate | `hypr-window-rule-dynamic-effects.focus-on-activate` | 开关 | 未实现 | — |
-| Inhibit idle mode · idle_inhibit | `hypr-window-rule-dynamic-effects.idle-inhibit` | 文本输入 | 未实现 | — |
-| Immediate rendering allows tearing · immediate | `hypr-window-rule-dynamic-effects.immediate` | 开关 | 未实现 | — |
-| Keep aspect ratio when resizing · keep_aspect_ratio | `hypr-window-rule-dynamic-effects.keep-aspect-ratio` | 开关 | 未实现 | — |
-| Maximum window size · max_size | `hypr-window-rule-dynamic-effects.max-size` | 文本输入 | 未实现 | — |
-| Minimum window size · min_size | `hypr-window-rule-dynamic-effects.min-size` | 文本输入 | 未实现 | — |
-| nearest neighbor · nearest_neighbor | `hypr-window-rule-dynamic-effects.nearest-neighbor` | 开关 | 未实现 | — |
-| Disable animation · no_anim | `hypr-window-rule-dynamic-effects.no-anim` | 开关 | 未实现 | — |
-| no auto hdr · no_auto_hdr | `hypr-window-rule-dynamic-effects.no-auto-hdr` | 开关 | 未实现 | — |
-| no blur · no_blur | `hypr-window-rule-dynamic-effects.no-blur` | 开关 | 未实现 | — |
-| no dim · no_dim | `hypr-window-rule-dynamic-effects.no-dim` | 开关 | 未实现 | — |
-| no focus · no_focus | `hypr-window-rule-dynamic-effects.no-focus` | 开关 | 未实现 | — |
-| no follow mouse · no_follow_mouse | `hypr-window-rule-dynamic-effects.no-follow-mouse` | 开关 | 未实现 | — |
-| no glow · no_glow | `hypr-window-rule-dynamic-effects.no-glow` | 开关 | 未实现 | — |
-| no max size · no_max_size | `hypr-window-rule-dynamic-effects.no-max-size` | 开关 | 未实现 | — |
-| Disable screen share capture · no_screen_share | `hypr-window-rule-dynamic-effects.no-screen-share` | 开关 | 未实现 | — |
-| Disable shadow · no_shadow | `hypr-window-rule-dynamic-effects.no-shadow` | 开关 | 未实现 | — |
-| no shortcuts inhibit · no_shortcuts_inhibit | `hypr-window-rule-dynamic-effects.no-shortcuts-inhibit` | 开关 | 未实现 | — |
-| no vrr · no_vrr | `hypr-window-rule-dynamic-effects.no-vrr` | 开关 | 未实现 | — |
-| no wobble · no_wobble | `hypr-window-rule-dynamic-effects.no-wobble` | 开关 | 未实现 | — |
-| no xdg drags · no_xdg_drags | `hypr-window-rule-dynamic-effects.no-xdg-drags` | 开关 | 未实现 | — |
-| Transparency overlay · opacity | `hypr-window-rule-dynamic-effects.opacity` | 文本输入 | 未实现 | — |
-| opaque · opaque | `hypr-window-rule-dynamic-effects.opaque` | 开关 | 未实现 | — |
-| force rgbx · force_rgbx | `hypr-window-rule-dynamic-effects.force-rgbx` | 开关 | 未实现 | — |
-| persistent size · persistent_size | `hypr-window-rule-dynamic-effects.persistent-size` | 开关 | 未实现 | — |
-| render unfocused · render_unfocused | `hypr-window-rule-dynamic-effects.render-unfocused` | 开关 | 未实现 | — |
-| Corner radius · rounding | `hypr-window-rule-dynamic-effects.rounding` | 文本输入 | 未实现 | — |
-| Rounding curvature · rounding_power | `hypr-window-rule-dynamic-effects.rounding-power` | 文本输入 | 未实现 | — |
-| scroll mouse · scroll_mouse | `hypr-window-rule-dynamic-effects.scroll-mouse` | 文本输入 | 未实现 | — |
-| scroll touchpad · scroll_touchpad | `hypr-window-rule-dynamic-effects.scroll-touchpad` | 文本输入 | 未实现 | — |
-| stay focused · stay_focused | `hypr-window-rule-dynamic-effects.stay-focused` | 开关 | 未实现 | — |
-| sync fullscreen · sync_fullscreen | `hypr-window-rule-dynamic-effects.sync-fullscreen` | 开关 | 未实现 | — |
-| Window tag · tag | `hypr-window-rule-dynamic-effects.tag` | 文本输入 | 未实现 | — |
-| tonemap · tonemap | `hypr-window-rule-dynamic-effects.tonemap` | 文本输入 | 未实现 | — |
-| Penetration effect · xray | `hypr-window-rule-dynamic-effects.xray` | 开关 | 未实现 | — |
-
 ### Layer rules · Matching conditions — `hypr-layer-rule-props`
 
 按官方文档分类的组件参数 · Hyprland
@@ -3542,27 +3378,6 @@ Lua / legacy 配置、包含关系与注释保留 · Hyprland
 | Graphics session target | `hypr-session-services.targets` | 信息展示 | 未实现 | — |
 | Session service log | `hypr-session-services.logs` | 操作 | 未实现 | — |
 
-### Session environment variables — `hypr-environment`
-
-Wayland、XDG、主题与应用环境 · Hyprland
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
-
-参考资料：[hypr-environment](https://github.com/hyprwm/hyprland-wiki/blob/026b282bdde916bb7ce77689857f40cf1e829e82/content/configuring/core/environment-variables.md)。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Variable name | `hypr-environment.name` | 文本输入 | 未实现 | — |
-| Variable values | `hypr-environment.value` | 文本输入 | 未实现 | — |
-| Variable scope | `hypr-environment.scope` | 选择 | 未实现 | — |
-| GTK / Qt / SDL / Electron platform selection | `hypr-environment.toolkit` | 文本输入 | 未实现 | — |
-| XDG desktop logo | `hypr-environment.xdg` | 文本输入 | 未实现 | — |
-| Add environment variables | `hypr-environment.add` | 操作 | 未实现 | — |
-
 ### Hyprland plugin — `hypr-plugins`
 
 插件来源、加载状态与版本兼容 · Hyprland
@@ -3745,3 +3560,13 @@ Wayland、XDG、主题与应用环境 · Hyprland
 - Appearance › Fonts gains `fonts.compositor-family` (`misc:font_family`) in its Advanced section, and Sound › Output & input gains `sound.compositor-bell` (`misc:bell_sound`, supporting `"default"`, `"none"` and absolute `.wav`/`.ogg`/`.oga` audio files) in its Advanced section, both persisted as desktop-group options in the Settings-owned `desktop.lua` and `desktop.toml`.
 - Removed the unimplemented `start` (Start menu), `start-folders` (Start menu folder) and `taskbar` (Taskbar) second-level pages from the catalog, Windows and Hyprland coverage mappings, and progress tracker.
 - Automated: Rust `remya_settings_input` unit tests (`compositor_font_and_bell_validate_and_read_back`), `test/catalog_test.dart`, `test/fonts_test.dart`, `test/sound_test.dart`, and `test/desktop_smoke.py` against a nested Hyprland 0.57 instance with isolated XDG roots (`fonts.compositor-family` and `sound.compositor-bell` applied live, persisted to `desktop.lua`, preserved across `hyprctl reload`, switched between custom file, `"none"` and `"default"`, and invalid values rejected).
+
+## Window rules, environment variables and printers (2026-11-12)
+
+- Decisions: Apps › Window rules replaces the three `hypr-window-rule-*` previews with one page; System › Environment variables replaces `hypr-environment`; Bluetooth & devices › Printers becomes a CUPS page. Deleted instead of implemented: Desktop Portal and Screen Sharing (`hypr-desktop-portals`; xdg-desktop-portal-hyprland already offers its own share picker and restore token), System security (`security`; firewall support was dropped and the rest only mirrored Windows Security) and General privacy (`general-privacy`; Windows-only). Clipboard was already implemented and is unchanged.
+- Window rules: one strict `hl.window_rule` line shape in `desktop.lua` with literal (regex-escaped) class and title text, keyed by class and title; each new or edited rule is first evaluated by Hyprland with `enabled = false`, so unknown fields and wrong types are refused before any file changes; the write then reloads explicitly and fails, restoring the files, if `hyprctl configerrors` names a Settings file. Saved rules are reconciled under the conflict ID `window-rules`. The editor offers open windows by app class and previews placement, size and opacity on a display outline; dependent fields (center, size, pin, background opening) are hidden while their parent is off. Rules in the user's other files are not shown.
+- Environment variables: `hl.env` lines in `desktop.lua`, reconciled under `environment`; names owned by Cursor and Light/Dark, or required by the session (`PATH`, `WAYLAND_DISPLAY`, `HYPRLAND_INSTANCE_SIGNATURE` and others), are refused. Hyprland sets new values on reload for apps it starts afterwards; a removed variable disappears only after signing in again, as the page says.
+- Printers: Rust crate `lib/src/rust/printers` over the CUPS tools with a fake for tests; default printer (per-user `lpoptions`), test page, pause and resume, job cancel and printer removal, each validated against a fresh listing and read back. Printers and queues are live CUPS state and are not saved or reconciled.
+- Automated: Rust `remya_settings_input` tests (window rule and variable round trip, literal escaping, foreign and reordered lines refused, validation, probe refusal, configerrors rollback, edit in place, conflict and resolution, removal); `remya_settings_printers` tests; `test/printers_test.dart`; `test/window_rules_environment_test.dart`; `test/catalog_test.dart`.
+- Real desktop (Hyprland 0.57.2): the rendered rule lines were accepted by `hyprctl eval` with `enabled = false`, and unknown fields and wrong types were refused. CUPS 2.4.20 with a USB HP Smart Tank 510: listing, setting the default printer (then restored) and pausing and resuming worked without a password for this user.
+

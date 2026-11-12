@@ -18,6 +18,7 @@ use remya_settings_display::{
 use remya_settings_fonts::{self as fonts, FontManager, RealFontconfig};
 use remya_settings_input::{self as input, Input, RealHypr};
 use remya_settings_network::{NetworkManager, is_network_setting};
+use remya_settings_printers::{self as printers, Printers, RealCups};
 use remya_settings_sound::{self as sound, Sound, pulse::RealPulse};
 use remya_settings_startup::{self as startup, Startup};
 use remya_settings_system_information::account::{self, AccountInformation};
@@ -276,6 +277,7 @@ pub struct State {
     pub power: remya_settings_power::Power,
     pub updates: Updates,
     pub storage: remya_settings_storage::Storage,
+    pub printers: Printers<RealCups>,
     pub auth_error: Option<String>,
     privileged: Option<Arc<Mutex<Session>>>,
     gui: Option<Child>,
@@ -351,6 +353,7 @@ impl State {
             storage: remya_settings_storage::Storage::real(config.with_file_name("cleanup.toml"))
                 .expect("absolute HOME"),
             network: NetworkManager::real(config.with_file_name("network.toml")),
+            printers: Printers::new(RealCups),
             appimages: applications::appimages::AppImages::real(
                 config.with_file_name("appimages.toml"),
             )
@@ -966,6 +969,8 @@ impl State {
                     "account-information" => self.account.read(),
                     _ if account::IDS.contains(&key) => self.account.read_setting(key),
                     "storage" | "cleanup" => Ok(self.storage.read(key)),
+                    "printers" => Ok(self.printers.state()),
+                    _ if printers::IDS.contains(&key) => Ok(self.printers.setting_value(key)),
                     _ if remya_settings_storage::is_setting(key) => Ok(self.storage.read_setting(key)),
                     "updates" => {
                         self.updates.refresh();
@@ -1226,6 +1231,9 @@ impl State {
         }
         if clipboard::IDS.contains(&key) {
             return clipboard::set(key, value);
+        }
+        if printers::IDS.contains(&key) {
+            return self.printers.set(key, value);
         }
         if let Some(page) = linked_page(key) {
             if value != "open" {

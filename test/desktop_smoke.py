@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """End-to-end desktop options and theme packs check: blur, fallback background,
-display wake, window layout, cursor options, cursor and icon themes, and text size.
+display wake, window layout, workspace and window rules, session variables,
+cursor options, cursor and icon themes, and text size.
 
 Uses a nested compositor, a private session bus and isolated XDG roots, so the
 user's Hyprland configuration is never touched.
@@ -214,6 +215,38 @@ def main():
         assert "name:mail" not in rules() and rules()["7"]["persistent"] is True, rules()
         assert "workspace_rule" not in owned.read_text()
         assert (hypr / "hyprland.lua").read_text() == main, "Settings changed the user's own rule"
+
+        # Window rules and session variables: Hyprland checks each rule, a new window
+        # follows it after the reload, and apps the compositor starts see the variable.
+        rule = json.dumps({"class": "remya.smoke", "float": True, "center": True, "size": [50, 40]})
+        state = call("Set", "window-rules.set", f"'{rule}'")
+        assert state["window_rules"] == [json.loads(rule)] and not state["conflict"], state
+        assert 'hl.window_rule({ match = { class = "^(remya\\\\.smoke)$" }, float = true, center = true' \
+            in owned.read_text(), owned.read_text()
+        for bad in ['{"class": "a"}', '{"class": "a", "no_anim": true}', '{"class": "a", "center": true}']:
+            assert "InvalidArgument" in call("Set", "window-rules.set", f"'{bad}'", ok=False)
+        call("Set", "environment.set", "'{\"name\": \"REMYA_SMOKE\", \"value\": \"a b;c\"}'")
+        assert 'hl.env("REMYA_SMOKE", "a b;c")' in owned.read_text()
+        assert "InvalidArgument" in call("Set", "environment.set", "'{\"name\": \"PATH\", \"value\": \"/x\"}'", ok=False)
+        seen = home / "env.txt"
+        hyprctl("eval", f'hl.dispatch(hl.dsp.exec_cmd("sh -c \'printf %s \\"$REMYA_SMOKE\\" > {seen}\'"))')
+        hyprctl("eval", 'hl.dispatch(hl.dsp.exec_cmd("kitty --class remya.smoke -o confirm_os_window_close=0 sleep 30"))')
+        window = None
+        for _ in range(100):
+            time.sleep(0.1)
+            window = next((c for c in json.loads(hyprctl("-j", "clients")) if c["class"] == "remya.smoke"), None)
+            if window and seen.exists():
+                break
+        assert seen.read_text() == "a b;c", seen.read_text() if seen.exists() else "no file"
+        monitor = json.loads(hyprctl("-j", "monitors"))[0]
+        assert window and window["floating"], window
+        assert abs(window["size"][0] - monitor["width"] / monitor["scale"] * 0.5) <= 2, (window, monitor)
+        listed = call("Get", "desktop")["windows"]
+        assert any(w["class"] == "remya.smoke" for w in listed), listed
+        hyprctl("eval", f'hl.dispatch(hl.dsp.window.close({{ window = "address:{window["address"]}" }}))')
+        call("Set", "window-rules.remove", "'{\"class\": \"remya.smoke\"}'")
+        call("Set", "environment.remove", "'{\"name\": \"REMYA_SMOKE\"}'")
+        assert "window_rule" not in owned.read_text() and "hl.env" not in owned.read_text()
 
         # Cursor and icon themes: first use adopts GSettings, then every target follows.
         # A second cursor theme in the isolated user folder, reusing installed cursor files.
