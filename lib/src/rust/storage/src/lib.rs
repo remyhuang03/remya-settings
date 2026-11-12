@@ -221,7 +221,7 @@ impl Storage {
         } else {
             None
         };
-        json!({"api_version":1,"id":id,"availability":if missing.is_some() {"unsupported"} else {"available"},"reason":missing.unwrap_or_else(||"Verified Rust storage integration; operations use live readback".into()),"value":value,"options":options,"writable":!i.busy && !["storage.usage","storage.volumes"].contains(&id) && (!id.starts_with("cleanup.auto") || i.config_error.is_none()),"error":i.config_error})
+        json!({"api_version":1,"id":id,"availability":if missing.is_some() {"planned"} else {"available"},"reason":missing.unwrap_or_else(||"Verified Rust storage integration; operations use live readback".into()),"value":value,"options":options,"writable":!i.busy && !["storage.usage","storage.volumes"].contains(&id) && (!id.starts_with("cleanup.auto") || i.config_error.is_none()),"error":i.config_error})
     }
     fn launch(
         &self,

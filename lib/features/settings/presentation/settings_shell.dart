@@ -704,7 +704,7 @@ class _SettingsShellState extends State<SettingsShell> {
         client: client,
         onPage: _openPage,
       ),
-      'text-size' => TextSizePage(
+      'accessibility-vision' => TextSizePage(
         key: key,
         catalog: catalog,
         page: page,

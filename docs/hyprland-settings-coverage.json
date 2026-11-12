@@ -67,7 +67,6 @@
     "your-info",
     "signin",
     "dynamic-lock",
-    "hello-face",
     "hello-fingerprint",
     "security-key",
     "backup",
@@ -75,25 +74,16 @@
     "date-time",
     "language",
     "speech",
-    "text-size",
-    "visual-effects",
-    "magnifier",
-    "color-filters",
-    "contrast",
     "narrator",
-    "accessibility-audio",
-    "captions",
-    "accessibility-keyboard",
-    "mouse-keys",
     "encryption",
-    "find-device",
-    "online-speech",
     "search-index",
     "updates",
     "passkeys",
     "passkeys-advanced",
-    "cloud-storage",
-    "active-hours"
+    "active-hours",
+    "accessibility-vision",
+    "accessibility-hearing",
+    "accessibility-interaction"
   ],
   "baselineControls": [
     "display.5d419889",
@@ -310,9 +300,6 @@
     "dynamic-lock.62b4ddbf",
     "dynamic-lock.fd140857",
     "dynamic-lock.222005b0",
-    "hello-face.f9b4646d",
-    "hello-face.83f9098f",
-    "hello-face.df6cef60",
     "hello-fingerprint.3e0d66e1",
     "hello-fingerprint.b640fea8",
     "hello-fingerprint.e8f4c9a5",
@@ -537,10 +524,6 @@
     "encryption.47011073",
     "encryption.850ab6af",
     "encryption.45dd31ac",
-    "find-device.9436d046",
-    "find-device.a33ef3cc",
-    "online-speech.0a66701f",
-    "online-speech.20caf0a6",
     "search-index.acf33b0f",
     "search-index.5fc76958",
     "search-index.cd42d36e",
@@ -554,9 +537,6 @@
     "passkeys-advanced.71fe6bdc",
     "passkeys-advanced.973ee8b8",
     "passkeys-advanced.786de3b4",
-    "cloud-storage.718afb24",
-    "cloud-storage.1cc744fa",
-    "cloud-storage.9d773e3a",
     "bluetooth.enabled",
     "bluetooth.adapter",
     "bluetooth.scan",
@@ -2153,7 +2133,7 @@
     },
     {
       "control": "accessibility-keyboard.compositor-numlock-by-default",
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "source": "hypr-options",
       "key": "numlock-by-default",
       "reference": [
@@ -2167,7 +2147,7 @@
     },
     {
       "control": "accessibility-keyboard.compositor-repeat-delay",
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "source": "hypr-options",
       "key": "repeat-delay",
       "reference": [
@@ -2181,7 +2161,7 @@
     },
     {
       "control": "accessibility-keyboard.compositor-repeat-rate",
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "source": "hypr-options",
       "key": "repeat-rate",
       "reference": [
@@ -2195,7 +2175,7 @@
     },
     {
       "control": "accessibility-keyboard.compositor-resolve-binds-by-sym",
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "source": "hypr-options",
       "key": "resolve-binds-by-sym",
       "reference": [
@@ -2251,7 +2231,7 @@
     },
     {
       "control": "accessibility-keyboard.virtual-release-pressed-on-close",
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "source": "hypr-options",
       "key": "release-pressed-on-close",
       "reference": [
@@ -2265,7 +2245,7 @@
     },
     {
       "control": "accessibility-keyboard.virtual-share-states",
-      "page": "accessibility-keyboard",
+      "page": "accessibility-interaction",
       "source": "hypr-options",
       "key": "share-states",
       "reference": [

@@ -60,7 +60,6 @@ Availability always has a readable label and an icon:
 | --- | --- | --- |
 | `available` | 已实现 | A real integration has been implemented and verified |
 | `planned` | 未实现 | Visible preview; system integration is absent |
-| `unsupported` | 不适用 | Platform-exclusive, legacy, or inapplicable reference |
 
 No system setting is currently `available`. The renderer deliberately keeps operation controls disabled. Adding an integration requires real read/write bindings, error handling, validation and tests, then updating the control state and availability together. Changing a status string alone must never enable a simulated setting. About labels implemented navigation/license UI separately from system functionality.
 

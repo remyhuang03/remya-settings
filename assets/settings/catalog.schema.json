@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/remyhuang03/remya-settings/catalog.schema.json",
   "title": "Remy'a Settings UI catalog",
-  "description": "Settings catalog with explicit availability and reasons. Available controls use verified Rust system integrations or implemented application preferences; planned and unsupported controls remain previews.",
+  "description": "Settings catalog with explicit availability and reasons. Available controls use verified Rust system integrations or implemented application preferences; planned controls remain previews.",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -69,8 +69,7 @@
         "availability": {
           "enum": [
             "available",
-            "planned",
-            "unsupported"
+            "planned"
           ]
         },
         "reason": {
@@ -310,8 +309,7 @@
         "availability": {
           "enum": [
             "available",
-            "planned",
-            "unsupported"
+            "planned"
           ]
         },
         "reason": {

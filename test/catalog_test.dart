@@ -411,7 +411,7 @@ void main() {
       final tracker = File('docs/settings-implementation-progress.md')
           .readAsStringSync();
       final rows = RegExp(
-        r'^\| .*? \| `([^`]+)` \| .*? \| (已实现|未实现|不适用) \| .*? \|$',
+        r'^\| .*? \| `([^`]+)` \| .*? \| (已实现|未实现) \| .*? \|$',
         multiLine: true,
       ).allMatches(tracker).toList();
       final controls = catalog.pages.expand((p) => p.controls).toList();
@@ -422,7 +422,6 @@ void main() {
         expect(statuses[control.id], switch (control.availability) {
           .available => '已实现',
           .planned => '未实现',
-          .unsupported => '不适用',
         }, reason: control.id);
       }
       final headings = RegExp(

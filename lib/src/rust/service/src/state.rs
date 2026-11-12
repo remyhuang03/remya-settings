@@ -980,7 +980,7 @@ impl State {
                         let mut value = self.updates.state();
                         value["id"] = json!(key);
                         // Missing tools are a host limit; a missing root updater is reported by `available`/`reason`.
-                        value["availability"] = json!(if value["missing"].as_array().is_some_and(Vec::is_empty) { "available" } else { "unsupported" });
+                        value["availability"] = json!(if value["missing"].as_array().is_some_and(Vec::is_empty) { "available" } else { "planned" });
                         Ok(value)
                     }
                     "cameras" => {

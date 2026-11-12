@@ -4,11 +4,7 @@ import 'package:flutter/services.dart';
 
 enum SettingAvailability {
   available('Available', 'A working, verified system integration'),
-  planned('Planned', 'UI preview only; system integration is not implemented'),
-  unsupported(
-    'Unsupported',
-    'Windows-specific, legacy, or inapplicable to this platform',
-  );
+  planned('Planned', 'UI preview only; system integration is not implemented');
 
   const SettingAvailability(this.label, this.description);
   final String label;

@@ -10,8 +10,8 @@ Hyprland 内容包含 22 个独立页面及并入常规页面的设置项，共 
 
 ## 当前概况
 
-- 设置分类：16 个；详情页面：114 个；设置条目：1138 项。
-- 已实现：439 项；未实现：689 项；不适用：10 项。
+- 设置分类：16 个；详情页面：104 个；设置条目：1128 项。
+- 已实现：439 项；未实现：689 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值；`test/service_controllers_test.dart` 覆盖各偏好的提示。显示语言与区域格式由 Language and Region 页经 systemd-localed 管理。
@@ -43,7 +43,7 @@ Hyprland 内容包含 22 个独立页面及并入常规页面的设置项，共 
 - [x] 各分类的 More 统一放在二级选项末尾，其余选项保持目录顺序。
 - [x] 按页面、设置名称和参考 URI 进行本地搜索。
 - [x] 相关页面跳转、Alt+Left 键盘历史导航及参考细项展开。
-- [x] 已实现 / 未实现 / 不适用的文字、图标和控件禁用状态。
+- [x] 已实现 / 未实现状态的文字、图标和控件禁用状态。
 - [x] 应用图标、About、版本和仓库信息。
 - [x] 项目许可证及第三方许可查看。
 - [x] 应用来源、版本、大小使用 Material 标签；已接管 AppImage 单独分类，更新进度围绕图标显示，速度自适应单位；验证：`test/application_lists_test.dart`、applications crate 测试。
@@ -55,32 +55,31 @@ Hyprland 内容包含 22 个独立页面及并入常规页面的设置项，共 
 | --- | --- | --- |
 | 未实现 | 仅有界面，尚未接入对应系统能力 | 实现真实读取 / 修改或明确的只读查询，完成错误处理和相关验证后再更新 |
 | 已实现 | 已接入可用的真实系统功能，并有验证依据 | 在“跟踪 / 验证”中记录提交、问题单、测试或实机验证记录 |
-| 不适用 | 仅为参考基准专属、旧版或当前平台没有确定对应能力 | 保留条目作为设计参考；确认 Linux 替代方案后，记录决策并改为未实现 |
 
 实现一个小项时，同步更新本表与目录中的 `availability` / `reason`，并更新页面汇总状态；不能只修改徽标或让示例控件响应。部分完成的页面应保持未实现，逐项记录已接入能力。开发阶段 ID 可以变动，变动时同步本表。新增或删除控件时也同步清单与分类统计；已删除的页面和控件不保留记录。
 
-同一后端能力服务多个展示条目时，逐个登记所覆盖的 ID，并链接同一实现与验证依据。本项目以现代桌面设置（如 Windows 11）为启发和参考基准，但并非直接照搬，且已结合 Linux 与 Hyprland 实际需求进行深度适配与差异化调整。`不适用` 仅代表该参考项不适用于当前平台，不代表承诺实现 Windows 专有服务；是否纳入 Hyprland 的产品范围需要另作决定。参考区域的选项和范围仍需在接入时核实。
+同一后端能力服务多个展示条目时，逐个登记所覆盖的 ID，并链接同一实现与验证依据。本项目以现代桌面设置（如 Windows 11）为启发和参考基准，但并非直接照搬，且已结合 Linux 与 Hyprland 实际需求进行深度适配与差异化调整。参考区域的选项和范围仍需在接入时核实。
 
 ## 分类索引与统计
 
-| 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| [AI](#category-ai) | 2 | 2 | 2 | 0 | 0 |
-| [系统](#category-system) | 15 | 201 | 113 | 88 | 0 |
-| [声音](#category-sound) | 3 | 17 | 15 | 2 | 0 |
-| [电源与电池](#category-power) | 3 | 20 | 19 | 1 | 0 |
-| [通知](#category-notifications) | 4 | 19 | 12 | 7 | 0 |
-| [蓝牙和设备](#category-devices) | 11 | 103 | 57 | 46 | 0 |
-| [网络和 Internet](#category-network) | 8 | 63 | 63 | 0 | 0 |
-| [外观](#category-appearance) | 10 | 212 | 95 | 117 | 0 |
-| [应用](#category-apps) | 5 | 35 | 30 | 5 | 0 |
-| [账户](#category-accounts) | 11 | 58 | 2 | 50 | 6 |
-| [时间和语言](#category-time) | 4 | 19 | 11 | 8 | 0 |
-| [辅助功能](#category-accessibility) | 10 | 192 | 1 | 191 | 0 |
-| [隐私和安全性](#category-privacy) | 9 | 39 | 0 | 35 | 4 |
-| [系统更新](#category-update) | 2 | 9 | 9 | 0 | 0 |
-| [窗口与工作区](#category-hyprland) | 13 | 166 | 0 | 166 | 0 |
-| [会话与配置](#category-session) | 9 | 80 | 0 | 80 | 0 |
+| 分类 | 页面 | 条目 | 已实现 | 未实现 |
+| --- | ---: | ---: | ---: | ---: |
+| [AI](#category-ai) | 2 | 2 | 2 | 0 |
+| [系统](#category-system) | 15 | 201 | 113 | 88 |
+| [声音](#category-sound) | 3 | 17 | 15 | 2 |
+| [电源与电池](#category-power) | 3 | 20 | 19 | 1 |
+| [通知](#category-notifications) | 4 | 19 | 12 | 7 |
+| [蓝牙和设备](#category-devices) | 11 | 103 | 57 | 46 |
+| [网络和 Internet](#category-network) | 8 | 63 | 63 | 0 |
+| [外观](#category-appearance) | 10 | 212 | 95 | 117 |
+| [应用](#category-apps) | 5 | 35 | 30 | 5 |
+| [账户](#category-accounts) | 9 | 52 | 2 | 50 |
+| [时间和语言](#category-time) | 4 | 19 | 11 | 8 |
+| [辅助功能](#category-accessibility) | 4 | 192 | 1 | 191 |
+| [隐私和安全性](#category-privacy) | 7 | 35 | 0 | 35 |
+| [系统更新](#category-update) | 2 | 9 | 9 | 0 |
+| [窗口与工作区](#category-hyprland) | 13 | 166 | 0 | 166 |
+| [会话与配置](#category-session) | 9 | 80 | 0 | 80 |
 
 <a id="category-system"></a>
 
@@ -92,7 +91,7 @@ Hyprland 内容包含 22 个独立页面及并入常规页面的设置项，共 
 
 排列、亮度、颜色、缩放、分辨率与刷新率
 
-页面状态：**未实现**；条目：31；已实现 30 / 未实现 1 / 不适用 0。
+页面状态：**未实现**；条目：31；已实现 30 / 未实现 1。
 
 原因：显示设置通过 Hyprland 实现；夜间模式与 Graphics 页面尚未实现。
 
@@ -162,7 +161,7 @@ Display 交互：Position 使用 X/Y 输入；刷新操作移动到排列框右�
 
 暖色显示与时间安排
 
-页面状态：**未实现**；条目：6；已实现 5 / 未实现 1 / 不适用 0。
+页面状态：**未实现**；条目：6；已实现 5 / 未实现 1。
 
 原因：开关、色温和固定时段通过 hyprsunset 实现；Sunset to sunrise 尚未实现。
 
@@ -183,7 +182,7 @@ Windows 参考入口：`ms-settings:nightlight`。
 
 默认图形选项与每应用 GPU 偏好
 
-页面状态：**未实现**；条目：38；已实现 0 / 未实现 38 / 不适用 0。
+页面状态：**未实现**；条目：38；已实现 0 / 未实现 38。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -241,9 +240,9 @@ Windows 参考入口：`ms-settings:display-advancedgraphics`、`ms-settings:dis
 
 Space usage, disks and volumes
 
-页面状态：**已实现**；条目：7；已实现 7 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：7；已实现 7 / 未实现 0。
 
-原因：Rust 提供实时扫描、UDisks2 与经过校验的清理操作；自动清理属于应用偏好，不覆盖系统配置。缺少主机工具时逐项报告不适用。
+原因：Rust 提供实时扫描、UDisks2 与经过校验的清理操作；自动清理属于应用偏好，不覆盖系统配置。缺少主机工具时报告未实现。
 
 Windows 参考入口：`ms-settings:storagesense`、`ms-settings:disksandvolumes`。
 
@@ -270,9 +269,9 @@ Windows 参考入口：`ms-settings:storagesense`、`ms-settings:disksandvolumes
 
 Free up space and clean up automatically
 
-页面状态：**已实现**；条目：11；已实现 11 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：11；已实现 11 / 未实现 0。
 
-原因：Rust 提供实时扫描、UDisks2 与经过校验的清理操作；自动清理属于应用偏好，不覆盖系统配置。缺少主机工具时逐项报告不适用。
+原因：Rust 提供实时扫描、UDisks2 与经过校验的清理操作；自动清理属于应用偏好，不覆盖系统配置。缺少主机工具时报告未实现。
 
 Windows 参考入口：`ms-settings:storagepolicies`、`ms-settings:storagerecommendations`。
 
@@ -303,7 +302,7 @@ Windows 参考入口：`ms-settings:storagepolicies`、`ms-settings:storagerecom
 
 Window layout, spacing, borders, snapping and resizing
 
-页面状态：**已实现**；条目：29；已实现 29 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：29；已实现 29 / 未实现 0。
 
 原因：Uses Hyprland window options through the Settings service.
 
@@ -374,7 +373,7 @@ Windows 参考入口：`ms-settings:multitasking`。
 
 Which workspaces each display starts with, which stay when empty, and how the scratchpad behaves
 
-页面状态：**已实现**；条目：7；已实现 7 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：7；已实现 7 / 未实现 0。
 
 原因：Uses desktop workspace options and rules through the Settings service.
 
@@ -406,7 +405,7 @@ Which workspaces each display starts with, which stay when empty, and how the sc
 
 Session variables for apps the desktop starts, such as Wayland preferences for toolkits
 
-页面状态：**已实现**；条目：2；已实现 2 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：2；已实现 2 / 未实现 0。
 
 原因：Writes session variables to the Settings-owned desktop configuration and reloads it.
 
@@ -423,7 +422,7 @@ Session variables for apps the desktop starts, such as Wayland preferences for t
 
 无线显示与投影许可
 
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -443,7 +442,7 @@ Windows 参考入口：`ms-settings:project`。
 
 远程访问与允许的用户
 
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -462,7 +461,7 @@ Windows 参考入口：`ms-settings:remotedesktop`。
 
 Remya Launcher 的历史记录、保留上限与清除
 
-页面状态：**已实现**；条目：4；已实现 4 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：4；已实现 4 / 未实现 0。
 
 原因：通过 Launcher 服务读取与更新专用策略，改动即时生效。独立的第三方剪贴板管理器与跨设备同步不在本页的范围内。
 
@@ -481,7 +480,7 @@ Windows 参考入口：`ms-settings:clipboard`。
 
 离开锁定与接近唤醒
 
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -501,7 +500,7 @@ Windows 参考入口：`ms-settings:presence`。
 
 设备规格、系统版本与相关信息
 
-页面状态：**已实现**；条目：17；已实现 17 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：17；已实现 17 / 未实现 0。
 
 原因：Rust sysinfo 0.40.1 只读设备与系统信息；重命名经 Rust、私有授权进程与 systemd-hostnamed 完成，保存静态名并处理冲突。Device identifier 与 Advanced system settings 已按用户要求删除。硬件读取结果不持久化；主机名仅保存静态配置，运行名称只读。
 
@@ -535,7 +534,7 @@ Windows reference settings 已按要求删除；其 Rename this PC 来源覆盖�
 
 开发工具、终端与文件管理器参考
 
-页面状态：**未实现**；条目：14；已实现 0 / 未实现 14 / 不适用 0。
+页面状态：**未实现**；条目：14；已实现 0 / 未实现 14。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -571,7 +570,7 @@ Windows 参考入口：`ms-settings:developers`。
 
 文件显示与版本控制参考
 
-页面状态：**未实现**；条目：20；已实现 0 / 未实现 20 / 不适用 0。
+页面状态：**未实现**；条目：20；已实现 0 / 未实现 20。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -609,7 +608,7 @@ Windows 参考入口：`ms-settings:developers`。
 
 打开实际已安装的外部设置应用。未安装的入口自动隐藏。
 
-页面状态：**已实现**；条目：3；已实现 3 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：3；已实现 3 / 未实现 0。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
@@ -629,7 +628,7 @@ Windows 参考入口：`ms-settings:developers`。
 
 Default output and input devices, volume and mute
 
-页面状态：**已实现**；条目：7；已实现 7 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：7；已实现 7 / 未实现 0。
 
 原因：Rust reads and controls the per-user PipeWire audio server through libpulse and sets the Hyprland compositor bell, with validated writes and readback.
 
@@ -661,7 +660,7 @@ Windows 参考入口：`ms-settings:sound`、`ms-settings:sound-defaultoutputpro
 
 Playback and recording application volumes and routing
 
-页面状态：**已实现**；条目：4；已实现 4 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：4；已实现 4 / 未实现 0。
 
 原因：Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback.
 
@@ -680,7 +679,7 @@ Windows 参考入口：`ms-settings:apps-volume`。
 
 Connected physical and virtual audio devices
 
-页面状态：**未实现**；条目：6；已实现 4 / 未实现 2 / 不适用 0。
+页面状态：**未实现**；条目：6；已实现 4 / 未实现 2。
 
 原因：Rust reads and controls the per-user PipeWire audio server through libpulse, with validated writes and readback. Additional compositor options remain unimplemented previews.
 
@@ -712,7 +711,7 @@ Windows 参考入口：`ms-settings:sound-devices`。
 
 能耗、屏幕超时与电池
 
-页面状态：**已实现**；条目：10；已实现 10 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：10；已实现 10 / 未实现 0。
 
 原因：电源模式、hypridle 超时与锁定、显示唤醒均通过 Rust 接入真实系统。
 
@@ -744,7 +743,7 @@ Windows 参考入口：`ms-settings:powersleep`。
 
 节能策略与自动启用和关闭阈值
 
-页面状态：**已实现**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 5 / 未实现 0。
 
 原因：基础功能通过 Rust 接入真实系统，其余高级项保持预览。
 
@@ -764,7 +763,7 @@ Windows 参考入口：`ms-settings:batterysaver`、`ms-settings:batterysaver-se
 
 电量历史与每应用耗电
 
-页面状态：**已实现**；条目：5；已实现 4 / 未实现 1 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 4 / 未实现 1。
 
 原因：SQLite 电量曲线、屏幕与睡眠时长已接入；每应用耗电保持预览。
 
@@ -790,7 +789,7 @@ Windows 参考入口：`ms-settings:batterysaver-usagedetails`。
 
 声音、免打扰与弹窗
 
-页面状态：**已实现**；条目：6；已实现 5 / 未实现 1 / 不适用 0。
+页面状态：**已实现**；条目：6；已实现 5 / 未实现 1。
 
 原因：Applies to the notifications shown by Remy'a Bar, the desktop notification service.
 
@@ -825,7 +824,7 @@ Windows 参考入口：`ms-settings:notifications`。
 
 专注时段与减少干扰
 
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -846,7 +845,7 @@ Windows 参考入口：`ms-settings:quiethours`。
 
 计划与全屏条件
 
-页面状态：**已实现**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 5 / 未实现 0。
 
 原因：Turns on Do Not Disturb automatically for Remy'a Bar notifications.
 
@@ -869,7 +868,7 @@ Windows 参考入口：`ms-settings:quiethours`。
 
 穿透免打扰的来电与应用
 
-页面状态：**已实现**；条目：2；已实现 2 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：2；已实现 2 / 未实现 0。
 
 原因：Priority notifications still pop up and play sounds while Do Not Disturb is on.
 
@@ -890,7 +889,7 @@ Windows 参考入口：`ms-settings:quiethours`。
 
 蓝牙适配器、配对与设备连接
 
-页面状态：**已实现**；条目：12；已实现 12 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：12；已实现 12 / 未实现 0。
 
 原因：Rust/GIO 通过系统 BlueZ 实现。写操作与配对由隔离 BlueZ 验证；真实硬件仅验证读取与扫描，不切断现有键鼠或删除配对。
 
@@ -929,7 +928,7 @@ Windows 参考入口：`ms-settings:bluetooth`。
 
 连接设备与设备属性
 
-页面状态：**未实现**；条目：18；已实现 0 / 未实现 18 / 不适用 0。
+页面状态：**未实现**；条目：18；已实现 0 / 未实现 18。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -967,7 +966,7 @@ Windows 参考入口：`ms-settings:connecteddevices`。
 
 Installed printers, the default printer and print queues
 
-页面状态：**已实现**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 5 / 未实现 0。
 
 原因：Uses CUPS through its command-line tools.
 
@@ -987,7 +986,7 @@ Installed printers, the default printer and print queues
 
 PipeWire 摄像头清单与图像调节，实时预览由 GUI 本地 Rust 后端提供。
 
-页面状态：**已实现**；条目：6；已实现 6 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：6；已实现 6 / 未实现 0。
 
 原因：通过 PipeWire 原生接口读取能力、验证写入与回读，并保存真实配置和处理冲突。
 
@@ -1006,7 +1005,7 @@ Windows 参考入口：`ms-settings:camera`。
 
 Buttons, pointer speed, scrolling and focus
 
-页面状态：**已实现**；条目：12；已实现 12 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：12；已实现 12 / 未实现 0。
 
 原因：Uses Hyprland input options through the Settings service.
 
@@ -1055,7 +1054,7 @@ Windows 参考入口：`ms-settings:mousetouchpad`。
 
 Taps, clicks, scrolling and swipe gestures
 
-页面状态：**已实现**；条目：18；已实现 18 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：18；已实现 18 / 未实现 0。
 
 原因：Uses Hyprland input options through the Settings service.
 
@@ -1110,7 +1109,7 @@ Windows 参考入口：`ms-settings:devices-touchpad`。
 
 Key combinations for windows, workspaces, apps and commands
 
-页面状态：**已实现**；条目：9；已实现 9 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：9；已实现 9 / 未实现 0。
 
 原因：Uses Hyprland key bindings through the Settings service.
 
@@ -1139,7 +1138,7 @@ Key combinations for windows, workspaces, apps and commands
 
 触摸手势与唤醒
 
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+页面状态：**未实现**；条目：7；已实现 0 / 未实现 7。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1171,7 +1170,7 @@ Windows 参考入口：`ms-settings:devices-touch`。
 
 可移动介质与存储卡默认行为
 
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1197,7 +1196,7 @@ Windows 参考入口：`ms-settings:autoplay`。
 
 连接问题、充电与节能
 
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1222,7 +1221,7 @@ Windows 参考入口：`ms-settings:usb`。
 
 手机连接与跨设备体验
 
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1249,7 +1248,7 @@ Wi-Fi、以太网、VPN 与代理
 
 Internet connection, live traffic and adapters
 
-页面状态：**已实现**；条目：15；已实现 15 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：15；已实现 15 / 未实现 0。
 
 通过 NetworkManager 读取连接、实时流量、累计用量与适配器；连接路径图显示本机、路由器与 Internet 各段状态。Advanced 中的连接性检查写入 NM `ConnectivityCheckEnabled` 并参与配置冲突比对。
 
@@ -1289,7 +1288,7 @@ Windows 参考入口：`ms-settings:network-status`、`ms-settings:network-advan
 
 无线网络与当前连接
 
-页面状态：**已实现**；条目：8；已实现 8 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：8；已实现 8 / 未实现 0。
 
 原因：已通过 NetworkManager 实现。
 
@@ -1327,7 +1326,7 @@ Windows 参考入口：`ms-settings:network-wifi`。
 
 Saved networks and connection preferences
 
-页面状态：**已实现**；条目：15；已实现 15 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：15；已实现 15 / 未实现 0。
 
 已保存 Wi-Fi 的偏好均通过 NM 配置文件 `Update` 写入并读回。随机硬件地址写入 `assigned-mac-address`；连接优先级写入 `autoconnect-priority`（低 -10 / 普通 0 / 高 10），二者在 iwd 后端时自动隐藏。IP 与 DNS 编辑与以太网共用对话框。
 
@@ -1367,7 +1366,7 @@ Windows 参考入口：`ms-settings:network-wifisettings`。
 
 Wired connections, addressing and DNS
 
-页面状态：**已实现**；条目：7；已实现 7 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：7；已实现 7 / 未实现 0。
 
 每个物理有线适配器显示状态、连接按钮与连接详情；其绑定的配置文件可修改自动连接、按流量计费、IP 分配与 DNS 分配。已连接时以 `Device.Reapply` 立即生效。原 Windows 网络配置文件（公用 / 专用）条目已移除。
 
@@ -1389,7 +1388,7 @@ Windows 参考入口：`ms-settings:network-ethernet`。
 
 WireGuard and VPN plugin connections
 
-页面状态：**已实现**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 5 / 未实现 0。
 
 列出 NM 的 VPN 插件与 WireGuard 配置文件，开关连接；通过 `nmcli connection import` 复用 NetworkManager 自带的 WireGuard 与 VPN 插件导入器，导入后关闭自动连接并保持断开。由 Tailscale 等其他程序管理的隧道只读显示。手工创建表单与 Windows 漫游 / 计费条目已移除。
 
@@ -1409,7 +1408,7 @@ Windows 参考入口：`ms-settings:network-vpn`。
 
 Share this device's internet connection over Wi-Fi
 
-页面状态：**已实现**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 5 / 未实现 0。
 
 以 NM 接入点配置文件（`mode=ap`、`ipv4.method=shared`、WPA2 CCMP）共享当前连接，适配器需支持 AP；频段按适配器能力限制。开关状态为实时状态，不保存或启动恢复；名称与频段作为配置文件偏好参与冲突比对。密码只写入 NM。无对应后端的共享来源、共享方式、空闲自动关闭条目已移除。
 
@@ -1427,7 +1426,7 @@ Windows 参考入口：`ms-settings:network-mobilehotspot`。
 
 ### Airplane mode — `airplane`
 
-页面状态：**已实现**；条目：2；已实现 2 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：2；已实现 2 / 未实现 0。
 
 通过 NetworkManager 的 WirelessEnabled / WwanEnabled 与所有 BlueZ Adapter1.Powered 控制无线电；状态实时派生，不保存或在启动时恢复。关闭飞行模式会启用这些无线电；硬件阻止、授权失败和部分失败均报告错误，并保留真实读回状态。有线网络不受影响。
 
@@ -1442,7 +1441,7 @@ Windows 参考入口：`ms-settings:network-airplanemode`、`ms-settings:proximi
 
 Desktop proxy for apps that follow system settings
 
-页面状态：**已实现**；条目：6；已实现 6 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：6；已实现 6 / 未实现 0。
 
 读写 GSettings `org.gnome.system.proxy`（GIO、libproxy、Chromium、Firefox 使用）。代理工具会频繁切换，因此实时跟随系统状态，不保存或比对（已在 AGENTS.md 记录）。模式为关闭 / 自动检测（WPAD）/ 设置脚本 / 手动；手动包含 HTTP、HTTPS、SOCKS 与例外主机。
 
@@ -1469,7 +1468,7 @@ Windows 参考入口：`ms-settings:network-proxy`。
 
 桌面背景：图片（hyprpaper）或视频（mpvpaper），以及窗口模糊
 
-页面状态：**已实现**；条目：21；已实现 21 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：21；已实现 21 / 未实现 0。
 
 原因：图片和视频背景、窗口模糊、备用背景色与 Hyprland 标志均已实现。
 
@@ -1515,7 +1514,7 @@ Windows 参考入口：`ms-settings:personalization-background`。
 
 深浅色、强调色、Material 调色板与主题
 
-页面状态：**已实现**；条目：7；已实现 7 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：7；已实现 7 / 未实现 0。
 
 原因：Light/Dark, accent color, Material palette and icon themes use the Settings service and the app configuration.
 
@@ -1544,7 +1543,7 @@ Windows 参考入口：`ms-settings:personalization-colors`、`ms-settings:color
 
 Cursor theme, size, hiding and pointer movement
 
-页面状态：**已实现**；条目：14；已实现 14 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：14；已实现 14 / 未实现 0。
 
 原因：Uses GNOME interface settings, GTK, KDE, XCursor and Hyprland through the Settings service.
 
@@ -1594,7 +1593,7 @@ Windows 参考入口：`ms-settings:easeofaccess-cursor`、`ms-settings:easeofac
 
 圆角、边框颜色、透明度、调暗、阴影与发光
 
-页面状态：**已实现**；条目：23；已实现 23 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：23；已实现 23 / 未实现 0。
 
 原因：Uses Hyprland window options through the Settings service.
 
@@ -1662,7 +1661,7 @@ Windows 参考入口：`ms-settings:easeofaccess-cursor`、`ms-settings:easeofac
 
 窗口与工作区动画、动态模糊与果冻窗口
 
-页面状态：**已实现**；条目：14；已实现 14 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：14；已实现 14 / 未实现 0。
 
 原因：Uses Hyprland window options through the Settings service.
 
@@ -1706,7 +1705,7 @@ Windows 参考入口：`ms-settings:easeofaccess-cursor`、`ms-settings:easeofac
 
 锁屏背景、状态与登录画面
 
-页面状态：**未实现**；条目：111；已实现 0 / 未实现 111 / 不适用 0。
+页面状态：**未实现**；条目：111；已实现 0 / 未实现 111。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1842,7 +1841,7 @@ Windows 参考入口：`ms-settings:lockscreen`。
 
 浏览、预览、安装与卸载字体
 
-页面状态：**已实现**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 5 / 未实现 0。
 
 原因：Reads the fontconfig font list, installs and removes font files in your user font directory, and sets the Hyprland compositor font.
 
@@ -1867,7 +1866,7 @@ Windows 参考入口：`ms-settings:fonts`。
 
 兼容设备的灯光与效果
 
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1915,7 +1914,7 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 
 打开实际已安装的外部设置应用。未安装的入口自动隐藏。
 
-页面状态：**已实现**；条目：4；已实现 4 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：4；已实现 4 / 未实现 0。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
@@ -1934,7 +1933,7 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 
 应用目录、真实包信息、搜索排序与包管理器卸载
 
-页面状态：**已实现**；条目：5；已实现 5 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：5；已实现 5 / 未实现 0。
 
 原因：Rust 读取 GIO 应用目录与 ALPM/Flatpak 元数据；详情显示真实版本、大小与安装日期；卸载交由包管理器并回读确认。
 
@@ -1956,7 +1955,7 @@ Windows 参考入口：`ms-settings:appsfeatures`。
 
 AppImage 集中目录、安装、更新源与实时更新进度
 
-页面状态：**已实现**；条目：10；已实现 10 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：10；已实现 10 / 未实现 0。
 
 原因：Rust 服务管理 `~/AppImages`；用 `appimage` crate 读取元数据（不执行镜像），用 `zsync-rs` 增量更新，校验后才替换文件。
 
@@ -1979,7 +1978,7 @@ AppImage 集中目录、安装、更新源与实时更新进度
 
 应用详情与维护
 
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -1999,7 +1998,7 @@ Windows 参考入口：`ms-settings:appsfeatures-app`。
 
 文件类型、协议与应用默认值，详见 [Default apps 实现说明](default-apps.md)。
 
-页面状态：**已实现**；条目：11；已实现 11 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：11；已实现 11 / 未实现 0。
 
 原因：普通用户 Rust 服务管理 XDG 关联并通过 GIO 回读。首次采用系统配置，冲突支持双向解决。重置清除用户通用和当前桌面专用的默认覆盖，并保存回读结果。
 
@@ -2025,7 +2024,7 @@ Windows 参考入口：`ms-settings:defaultapps`、`ms-settings:defaultbrowserse
 
 Apps and commands that start when you sign in
 
-页面状态：**已实现**；条目：4；已实现 4 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：4；已实现 4 / 未实现 0。
 
 原因：Uses XDG autostart entries started by UWSM. Changes apply at the next sign-in.
 
@@ -2053,7 +2052,7 @@ Implementation and boundaries: [Startup apps](startup.md). Verification uses tem
 
 How chosen apps' windows open and look: floating, size, workspace, opacity and more
 
-页面状态：**已实现**；条目：2；已实现 2 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：2；已实现 2 / 未实现 0。
 
 原因：Writes window rules to the Settings-owned desktop configuration; Hyprland checks each rule first.
 
@@ -2074,7 +2073,7 @@ How chosen apps' windows open and look: floating, size, workspace, opacity and m
 
 头像与身份信息
 
-页面状态：**未实现**；条目：4；已实现 2 / 未实现 2 / 不适用 0。
+页面状态：**未实现**；条目：4；已实现 2 / 未实现 2。
 
 原因：用户名和 Settings 自有头像已实现；账户管理与登录仍为禁用预览。
 
@@ -2093,13 +2092,13 @@ Windows 参考入口：`ms-settings:yourinfo`。
 
 验证方式、自动锁定与登录要求
 
-页面状态：**未实现**；条目：9；已实现 0 / 未实现 9 / 不适用 0。
+页面状态：**未实现**；条目：9；已实现 0 / 未实现 9。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
 Windows 参考入口：`ms-settings:signinoptions`。
 
-相关页面 ID：`dynamic-lock`、`hello-face`、`hello-fingerprint`、`security-key`。
+相关页面 ID：`dynamic-lock`、`hello-fingerprint`、`security-key`。
 
 #### 设置
 
@@ -2119,7 +2118,7 @@ Windows 参考入口：`ms-settings:signinoptions`。
 
 蓝牙离开自动锁定
 
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2133,29 +2132,11 @@ Windows 参考入口：`ms-settings:signinoptions-dynamiclock`。
 | Pair your phone | `dynamic-lock.fd140857` | 操作 | 未实现 | — |
 | Paired device | `dynamic-lock.222005b0` | 信息展示 | 未实现 | — |
 
-### Facial recognition — `hello-face`
-
-生物识别注册流程参考（参考 Windows Hello 设计）
-
-页面状态：**不适用**；条目：3；已实现 0 / 未实现 0 / 不适用 3。
-
-原因：仅为参考来源系统专属或旧版特性，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:signinoptions-launchfaceenrollment`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Set up facial recognition | `hello-face.f9b4646d` | 操作 | 不适用 | — |
-| Improve recognition | `hello-face.83f9098f` | 操作 | 不适用 | — |
-| Remove facial recognition | `hello-face.df6cef60` | 操作 | 不适用 | — |
-
 ### Fingerprint recognition — `hello-fingerprint`
 
 生物识别注册参考
 
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2173,7 +2154,7 @@ Windows 参考入口：`ms-settings:signinoptions-launchfingerprintenrollment`�
 
 密钥注册、PIN 与重置
 
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2191,7 +2172,7 @@ Windows 参考入口：`ms-settings:signinoptions-launchsecuritykeyenrollment`�
 
 应用、偏好与同步参考
 
-页面状态：**未实现**；条目：20；已实现 0 / 未实现 20 / 不适用 0。
+页面状态：**未实现**；条目：20；已实现 0 / 未实现 20。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2236,7 +2217,7 @@ Windows 参考入口：`ms-settings:sync`、`ms-settings:backup`。
 
 专用会话与单应用限制
 
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2254,7 +2235,7 @@ Windows 参考入口：`ms-settings:assignedaccess`。
 
 设备上的凭据与提供程序
 
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+页面状态：**未实现**；条目：4；已实现 0 / 未实现 4。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2273,7 +2254,7 @@ Windows 参考入口：`ms-settings:assignedaccess`。
 
 本地保存与第三方密钥服务
 
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2285,22 +2266,6 @@ Windows 参考入口：`ms-settings:assignedaccess`。
 | Third-party pass key providers | `passkeys-advanced.973ee8b8` | 开关 | 未实现 | — |
 | Configure Key Service | `passkeys-advanced.786de3b4` | 操作 | 未实现 | — |
 
-### Cloud storage — `cloud-storage`
-
-首页云存储卡片参考（受现代桌面系统常见云存储卡片启发）
-
-页面状态：**不适用**；条目：3；已实现 0 / 未实现 0 / 不适用 3。
-
-原因：仅为参考来源系统专属或旧版特性，尚无 Hyprland 对应实现。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Cloud storage usage | `cloud-storage.718afb24` | 信息展示 | 不适用 | — |
-| Manage cloud storage | `cloud-storage.1cc744fa` | 操作 | 不适用 | — |
-| Upgrade cloud storage | `cloud-storage.9d773e3a` | 操作 | 不适用 | — |
-
 <a id="category-time"></a>
 
 ## 时间和语言
@@ -2311,7 +2276,7 @@ Windows 参考入口：`ms-settings:assignedaccess`。
 
 时间同步与时区；区域格式由 Language and Region 页负责
 
-页面状态：**未实现**；条目：6；已实现 5 / 未实现 1 / 不适用 0。
+页面状态：**未实现**；条目：6；已实现 5 / 未实现 1。
 
 原因：自动时区检测仍为预览；其他选项通过系统服务读取和修改。
 
@@ -2337,7 +2302,7 @@ Windows 参考入口：`ms-settings:dateandtime`。
 
 显示语言、区域格式与键盘布局
 
-页面状态：**已实现**；条目：4；已实现 4 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：4；已实现 4 / 未实现 0。
 
 原因：Uses systemd-localed for the language and formats, and Hyprland input options for keyboard layouts.
 
@@ -2368,7 +2333,7 @@ Windows 参考入口：`ms-settings:regionlanguage`、`ms-settings:regionformatt
 
 打开实际已安装的输入法配置工具；不接管或修改外部输入法配置。未安装的入口自动隐藏。
 
-页面状态：**已实现**；条目：2；已实现 2 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：2；已实现 2 / 未实现 0。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
@@ -2379,7 +2344,7 @@ Windows 参考入口：`ms-settings:regionlanguage`、`ms-settings:regionformatt
 
 识别语言、声音与麦克风
 
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+页面状态：**未实现**；条目：7；已实现 0 / 未实现 7。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2403,59 +2368,32 @@ Windows 参考入口：`ms-settings:speech`。
 
 视觉、听觉与交互
 
-### Text size — `text-size`
+### Vision — `accessibility-vision`
 
-Make text larger in GTK and Flutter apps
+文本大小、视觉效果、放大镜、颜色筛选器与对比度主题
 
-页面状态：**已实现**；条目：1；已实现 1 / 未实现 0 / 不适用 0。
+页面状态：**未实现**；条目：57；已实现 1 / 未实现 56。
 
-原因：Uses the GNOME interface text-scaling-factor through the Settings service.
+原因：Uses the GNOME interface text-scaling-factor through the Settings service; other vision controls remain unimplemented previews.
 
-Windows 参考入口：`ms-settings:easeofaccess-display`。
+Windows 参考入口：`ms-settings:easeofaccess-display`、`ms-settings:easeofaccess-visualeffects`、`ms-settings:easeofaccess-magnifier`、`ms-settings:easeofaccess-colorfilter`、`ms-settings:easeofaccess-colorfilter-adaptivecolorlink`、`ms-settings:easeofaccess-colorfilter-bluelightlink`、`ms-settings:easeofaccess-highcontrast`。
 
-文字大小写入 GNOME 接口设置 `org.gnome.desktop.interface text-scaling-factor`（0.5–3.0；页面滑块 50%–300%，步进 5%），松开滑块即应用并回读；GTK 3/4 与 Flutter 应用跟随该键，Qt/KDE 等其他工具包不更改。Settings 副本保存在 `text-size.toml`，按系统配置同步规则处理首次采用与冲突。原“Apply text size”操作与 Windows 参考细项已删除。
+文字大小写入 GNOME 接口设置 `org.gnome.desktop.interface text-scaling-factor`（0.5–3.0；页面滑块 50%–300%，步进 5%），松开滑块即应用并回读；GTK 3/4 与 Flutter 应用跟随该键，Qt/KDE 等其他工具包不更改。Settings 副本保存在 `text-size.toml`，按系统配置同步规则处理首次采用与冲突。原“Apply text size”操作与 Windows 参考细项已删除。视觉效果、放大镜、颜色筛选器与对比度主题目前作为设计预览展示。
 
-#### 设置
+#### 文本大小
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Text size | `text-size.scale` | 滑块 | 已实现 | 见下文“Text size (2026-11-09)” |
 
-### Visual effects — `visual-effects`
-
-动画、透明度与通知时长
-
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:easeofaccess-visualeffects`。
-
-#### 设置
+#### 视觉效果
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Always show scrollbars | `visual-effects.fe13858e` | 开关 | 未实现 | — |
 | Notification display duration | `visual-effects.db944e6b` | 选择 | 未实现 | — |
 
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Always show scrollbars | `visual-effects.reference.22476e4b` | 开关 | 未实现 | — |
-| Dismiss notifications after preferred amount of time | `visual-effects.reference.5b6b06b4` | 选择 | 未实现 | — |
-
-### Magnifier — `magnifier`
-
-缩放、视图与跟随行为
-
-页面状态：**未实现**；条目：30；已实现 0 / 未实现 30 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:easeofaccess-magnifier`。
-
-#### 设置
+#### 放大镜
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
@@ -2475,10 +2413,33 @@ Windows 参考入口：`ms-settings:easeofaccess-magnifier`。
 | Smooth images and text | `magnifier.edc4f6f3` | 开关 | 未实现 | — |
 | Read aloud shortcut keys | `magnifier.af7b8808` | 文本输入 | 未实现 | — |
 
-#### Windows 参考细项
+#### 颜色筛选器
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
+| Color filter | `color-filters.e71f8ff5` | 开关 | 未实现 | — |
+| Filter | `color-filters.1242069d` | 选择 | 未实现 | — |
+| Filter keyboard shortcuts | `color-filters.c95fb3d5` | 开关 | 未实现 | — |
+
+#### 对比度主题
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Topic | `contrast.e848ddd4` | 选择 | 未实现 | — |
+| Background color | `contrast.4a2d8a28` | 颜色 | 未实现 | — |
+| Text color | `contrast.07f568da` | 颜色 | 未实现 | — |
+| Hyperlink color | `contrast.58aecbd7` | 颜色 | 未实现 | — |
+| Disable text color | `contrast.9d947f02` | 颜色 | 未实现 | — |
+| Select text color | `contrast.450ad5bc` | 颜色 | 未实现 | — |
+| Button text color | `contrast.e0124b6b` | 颜色 | 未实现 | — |
+| Apply a contrast theme | `contrast.88185761` | 操作 | 未实现 | — |
+
+#### Windows 参考设置
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Always show scrollbars | `visual-effects.reference.22476e4b` | 开关 | 未实现 | — |
+| Dismiss notifications after preferred amount of time | `visual-effects.reference.5b6b06b4` | 选择 | 未实现 | — |
 | Start Magnifier before sign-in | `magnifier.reference.54348147` | 开关 | 未实现 | — |
 | Start Magnifier after sign-in | `magnifier.reference.0a370c37` | 开关 | 未实现 | — |
 | Zoom level | `magnifier.reference.05c8bf1b` | 滑块 | 未实现 | — |
@@ -2494,60 +2455,9 @@ Windows 参考入口：`ms-settings:easeofaccess-magnifier`。
 | Invert Colors | `magnifier.reference.54f55938` | 选择 | 未实现 | — |
 | Smooth edges of images and text | `magnifier.reference.16440b75` | 开关 | 未实现 | — |
 | Reading shortcut | `magnifier.reference.164500de` | 选择 | 未实现 | — |
-
-### Color filters — `color-filters`
-
-色觉辅助与快捷键
-
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:easeofaccess-colorfilter`、`ms-settings:easeofaccess-colorfilter-adaptivecolorlink`、`ms-settings:easeofaccess-colorfilter-bluelightlink`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Color filter | `color-filters.e71f8ff5` | 开关 | 未实现 | — |
-| Filter | `color-filters.1242069d` | 选择 | 未实现 | — |
-| Filter keyboard shortcuts | `color-filters.c95fb3d5` | 开关 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
 | Color filters | `color-filters.reference.93c3c16a` | 选择 | 未实现 | — |
 | Preferred color filter selection | `color-filters.reference.d1a1684b` | 选择 | 未实现 | — |
 | Keyboard shortcut for color filters | `color-filters.reference.3a55c85c` | 选择 | 未实现 | — |
-
-### Contrast themes — `contrast`
-
-高对比度主题和自定义色彩
-
-页面状态：**未实现**；条目：16；已实现 0 / 未实现 16 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:easeofaccess-highcontrast`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Topic | `contrast.e848ddd4` | 选择 | 未实现 | — |
-| Background color | `contrast.4a2d8a28` | 颜色 | 未实现 | — |
-| Text color | `contrast.07f568da` | 颜色 | 未实现 | — |
-| Hyperlink color | `contrast.58aecbd7` | 颜色 | 未实现 | — |
-| Disable text color | `contrast.9d947f02` | 颜色 | 未实现 | — |
-| Select text color | `contrast.450ad5bc` | 颜色 | 未实现 | — |
-| Button text color | `contrast.e0124b6b` | 颜色 | 未实现 | — |
-| Apply a contrast theme | `contrast.88185761` | 操作 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
 | Contrast Themes | `contrast.reference.08c75109` | 选择 | 未实现 | — |
 | Choose a theme | `contrast.reference.2f32f7fc` | 选择 | 未实现 | — |
 | Text | `contrast.reference.4ef5eef9` | 开关 | 未实现 | — |
@@ -2561,7 +2471,7 @@ Windows 参考入口：`ms-settings:easeofaccess-highcontrast`。
 
 语音、详细程度与光标
 
-页面状态：**未实现**；条目：65；已实现 0 / 未实现 65 / 不适用 0。
+页面状态：**未实现**；条目：65；已实现 0 / 未实现 65。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2642,41 +2552,24 @@ Windows 参考入口：`ms-settings:easeofaccess-narrator`、`ms-settings:easeof
 | Sync the Narrator cursor and system focus | `narrator.reference.e90861de` | 开关 | 未实现 | — |
 | Enable Narrator Extensions | `narrator.reference.14f46908` | 开关 | 未实现 | — |
 
-### Audio assistance — `accessibility-audio`
+### Hearing — `accessibility-hearing`
 
-单声道与声音视觉提示
+音频辅助与实时字幕
 
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+页面状态：**未实现**；条目：12；已实现 0 / 未实现 12。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
-Windows 参考入口：`ms-settings:easeofaccess-audio`。
+Windows 参考入口：`ms-settings:easeofaccess-audio`、`ms-settings:easeofaccess-closedcaptioning`。
 
-#### 设置
+#### 音频辅助
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
 | Mono audio | `accessibility-audio.1a90a9eb` | 开关 | 未实现 | — |
 | Audio notification flashing | `accessibility-audio.49a25e92` | 选择 | 未实现 | — |
 
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Mono Audio | `accessibility-audio.reference.0d993fdd` | 开关 | 未实现 | — |
-| Flash my screen during audio notifications | `accessibility-audio.reference.380697ec` | 开关 | 未实现 | — |
-
-### Captions — `captions`
-
-实时字幕、位置与外观
-
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:easeofaccess-closedcaptioning`。
-
-#### 设置
+#### 字幕
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
@@ -2686,25 +2579,27 @@ Windows 参考入口：`ms-settings:easeofaccess-closedcaptioning`。
 | Subtitle style | `captions.41085f11` | 选择 | 未实现 | — |
 | Edit subtitle style | `captions.9fe387bc` | 操作 | 未实现 | — |
 
-#### Windows 参考细项
+#### Windows 参考设置
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
+| Mono Audio | `accessibility-audio.reference.0d993fdd` | 开关 | 未实现 | — |
+| Flash my screen during audio notifications | `accessibility-audio.reference.380697ec` | 开关 | 未实现 | — |
 | Filter Profanity | `captions.reference.b233720a` | 开关 | 未实现 | — |
 | Position | `captions.reference.07051098` | 选择 | 未实现 | — |
 | Caption Style | `captions.reference.0472a68c` | 选择 | 未实现 | — |
 
-### Keyboard assistance — `accessibility-keyboard`
+### Interaction — `accessibility-interaction`
 
-粘滞键、筛选键与屏幕键盘
+键盘辅助、鼠标键与输入控制
 
-页面状态：**未实现**；条目：46；已实现 0 / 未实现 46 / 不适用 0。
+页面状态：**未实现**；条目：58；已实现 0 / 未实现 58。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
-Windows 参考入口：`ms-settings:easeofaccess-keyboard`。
+Windows 参考入口：`ms-settings:easeofaccess-keyboard`、`ms-settings:easeofaccess-mouse`。
 
-#### 设置
+#### 粘滞键
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
@@ -2731,7 +2626,7 @@ Windows 参考入口：`ms-settings:easeofaccess-keyboard`。
 | First repeat wait | `accessibility-keyboard.676ac6a7` | 选择 | 未实现 | — |
 | Subsequent repeated waiting | `accessibility-keyboard.a0212e71` | 选择 | 未实现 | — |
 
-#### 其他
+#### 其他键盘选项
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
@@ -2742,7 +2637,18 @@ Windows 参考入口：`ms-settings:easeofaccess-keyboard`。
 | Print Screen opens the screenshot | `accessibility-keyboard.cc8561a8` | 开关 | 未实现 | — |
 | On-screen keyboard | `accessibility-keyboard.8654a9c6` | 开关 | 未实现 | — |
 
-#### Windows 参考细项
+#### 鼠标键
+
+| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
+| --- | --- | --- | --- | --- |
+| Mouse keys | `mouse-keys.af8ff2e3` | 开关 | 未实现 | — |
+| Only used when Num Lock is on | `mouse-keys.2625b861` | 开关 | 未实现 | — |
+| Show mouse button icon | `mouse-keys.21f5aea4` | 开关 | 未实现 | — |
+| Ctrl accelerates and Shift decelerates | `mouse-keys.28c033e9` | 开关 | 未实现 | — |
+| Mouse key speed | `mouse-keys.7754307e` | 滑块 | 未实现 | — |
+| Mouse key acceleration | `mouse-keys.06700d63` | 滑块 | 未实现 | — |
+
+#### Windows 参考设置
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
@@ -2763,8 +2669,14 @@ Windows 参考入口：`ms-settings:easeofaccess-keyboard`。
 | Play a sound when I turn Sticky, Filter, or Toggle keys on or off from the keyboard | `accessibility-keyboard.reference.8754adfd` | 开关 | 未实现 | — |
 | Underline acess keys | `accessibility-keyboard.reference.4a5a5e4c` | 开关 | 未实现 | — |
 | Use the print screen to open screen capture | `accessibility-keyboard.reference.6f3d637b` | 开关 | 未实现 | — |
+| Mouse keys | `mouse-keys.reference.da0c9570` | 开关 | 未实现 | — |
+| Only use mouse keys when Num lock is on | `mouse-keys.reference.bdf1cbf2` | 开关 | 未实现 | — |
+| Show the mouse keys icon on the taskbar | `mouse-keys.reference.f113b78d` | 开关 | 未实现 | — |
+| Hold the Ctrl key to speed up and the Shift key to slow down | `mouse-keys.reference.4f1675d1` | 滑块 | 未实现 | — |
+| Mouse keys speed | `mouse-keys.reference.fe021cfe` | 滑块 | 未实现 | — |
+| Mouse keys acceleration | `mouse-keys.reference.df0cfb8c` | 滑块 | 未实现 | — |
 
-#### Advanced: compositor previews
+#### Advanced（默认折叠）
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
@@ -2774,38 +2686,6 @@ Windows 参考入口：`ms-settings:easeofaccess-keyboard`。
 | Keyboard: Resolve shortcut keys according to the current layout (resolve_binds_by_sym) | `accessibility-keyboard.compositor-resolve-binds-by-sym` | 开关 | 未实现 | — |
 | Virtual keyboard: release pressed on close (release_pressed_on_close) | `accessibility-keyboard.virtual-release-pressed-on-close` | 开关 | 未实现 | — |
 | Virtual keyboard: share states (share_states) | `accessibility-keyboard.virtual-share-states` | 滑块 | 未实现 | — |
-
-### Mouse keys — `mouse-keys`
-
-使用数字键盘移动指针
-
-页面状态：**未实现**；条目：12；已实现 0 / 未实现 12 / 不适用 0。
-
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
-
-Windows 参考入口：`ms-settings:easeofaccess-mouse`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Mouse keys | `mouse-keys.af8ff2e3` | 开关 | 未实现 | — |
-| Only used when Num Lock is on | `mouse-keys.2625b861` | 开关 | 未实现 | — |
-| Show mouse button icon | `mouse-keys.21f5aea4` | 开关 | 未实现 | — |
-| Ctrl accelerates and Shift decelerates | `mouse-keys.28c033e9` | 开关 | 未实现 | — |
-| Mouse key speed | `mouse-keys.7754307e` | 滑块 | 未实现 | — |
-| Mouse key acceleration | `mouse-keys.06700d63` | 滑块 | 未实现 | — |
-
-#### Windows 参考细项
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Mouse keys | `mouse-keys.reference.da0c9570` | 开关 | 未实现 | — |
-| Only use mouse keys when Num lock is on | `mouse-keys.reference.bdf1cbf2` | 开关 | 未实现 | — |
-| Show the mouse keys icon on the taskbar | `mouse-keys.reference.f113b78d` | 开关 | 未实现 | — |
-| Hold the Ctrl key to speed up and the Shift key to slow down | `mouse-keys.reference.4f1675d1` | 滑块 | 未实现 | — |
-| Mouse keys speed | `mouse-keys.reference.fe021cfe` | 滑块 | 未实现 | — |
-| Mouse keys acceleration | `mouse-keys.reference.df0cfb8c` | 滑块 | 未实现 | — |
 
 <a id="category-privacy"></a>
 
@@ -2817,7 +2697,7 @@ Windows 参考入口：`ms-settings:easeofaccess-mouse`。
 
 设备加密与恢复密钥
 
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2831,45 +2711,11 @@ Windows 参考入口：`ms-settings:deviceencryption`。
 | Back up the recovery key | `encryption.850ab6af` | 操作 | 未实现 | — |
 | Encryption status | `encryption.45dd31ac` | 信息展示 | 未实现 | — |
 
-### Find my device — `find-device`
-
-设备位置与远程查找参考
-
-页面状态：**不适用**；条目：2；已实现 0 / 未实现 0 / 不适用 2。
-
-原因：仅为参考来源系统专属或旧版特性，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:findmydevice`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Find my device | `find-device.9436d046` | 开关 | 不适用 | — |
-| View associated devices | `find-device.a33ef3cc` | 操作 | 不适用 | — |
-
-### Online speech recognition — `online-speech`
-
-云端语音处理参考
-
-页面状态：**不适用**；条目：2；已实现 0 / 未实现 0 / 不适用 2。
-
-原因：仅为参考来源系统专属或旧版特性，尚无 Hyprland 对应实现。
-
-Windows 参考入口：`ms-settings:privacy-speech`。
-
-#### 设置
-
-| 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
-| --- | --- | --- | --- | --- |
-| Online speech recognition | `online-speech.0a66701f` | 开关 | 不适用 | — |
-| Manage voice data in the cloud | `online-speech.20caf0a6` | 操作 | 不适用 | — |
-
 ### Search and indexing — `search-index`
 
 索引范围、排除目录与诊断
 
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6。
 
 原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
 
@@ -2890,7 +2736,7 @@ Windows 参考入口：`ms-settings:search`、`ms-settings:search-moredetails`�
 
 合成器高级设置：input-capture · Hyprland
 
-页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
+页面状态：**未实现**；条目：2；已实现 0 / 未实现 2。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -2907,7 +2753,7 @@ Windows 参考入口：`ms-settings:search`、`ms-settings:search-moredetails`�
 
 截图、插件、键盘、光标位置与输入捕获 · Hyprland
 
-页面状态：**未实现**；条目：6；已实现 0 / 未实现 6 / 不适用 0。
+页面状态：**未实现**；条目：6；已实现 0 / 未实现 6。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -2934,7 +2780,7 @@ Windows 参考入口：`ms-settings:search`、`ms-settings:search-moredetails`�
 
 仓库更新检查与升级、AUR 更新列表、会话级保留包与重试选项、在非活动时间运行的自动更新。
 
-页面状态：**已实现**；条目：7；已实现 7 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：7；已实现 7 / 未实现 0。
 
 原因：旧草稿通过 yay `--sudo` 桥接反向解析 pacman 参数，实机报 ` -> invalid option 'nosudoloop'` 后被暂停。重新设计后仓库升级只走固定 root 更新器（`upgrade [--include-held]`），由 `tool/install_system_updater.py` 安装的 polkit 规则免密授权；AUR 只列出不安装；常驻服务由 systemd 用户单元随会话启动并负责自动更新，自动更新在 Active hours 之外运行。
 
@@ -2957,7 +2803,7 @@ Windows 参考入口：`ms-settings:windowsupdate`、`ms-settings:windowsupdate-
 
 自动更新等待的活动时段，保存在 `updates.json`；可跨午夜，开始与结束不能相同。不执行 Windows 重启行为。
 
-页面状态：**已实现**；条目：2；已实现 2 / 未实现 0 / 不适用 0。
+页面状态：**已实现**；条目：2；已实现 2 / 未实现 0。
 
 原因：Rust 常驻服务保存并按活动时段调度自动更新。Windows 的按活动自动调整（Adjust active hours）在 Linux 无对应数据来源，已移除。
 
@@ -2978,7 +2824,7 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 合成器高级设置：group · Hyprland
 
-页面状态：**未实现**；条目：14；已实现 0 / 未实现 14 / 不适用 0。
+页面状态：**未实现**；条目：14；已实现 0 / 未实现 14。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3012,7 +2858,7 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 合成器高级设置：group.groupbar · Hyprland
 
-页面状态：**未实现**；条目：35；已实现 0 / 未实现 35 / 不适用 0。
+页面状态：**未实现**；条目：35；已实现 0 / 未实现 35。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3067,7 +2913,7 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 合成器高级设置：layout · Hyprland
 
-页面状态：**未实现**；条目：2；已实现 0 / 未实现 2 / 不适用 0。
+页面状态：**未实现**；条目：2；已实现 0 / 未实现 2。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3084,7 +2930,7 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 布局参数与按工作区覆盖 · Hyprland
 
-页面状态：**未实现**；条目：13；已实现 0 / 未实现 13 / 不适用 0。
+页面状态：**未实现**；条目：13；已实现 0 / 未实现 13。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3112,7 +2958,7 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 布局参数与按工作区覆盖 · Hyprland
 
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3128,7 +2974,7 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 布局参数与按工作区覆盖 · Hyprland
 
-页面状态：**未实现**；条目：9；已实现 0 / 未实现 9 / 不适用 0。
+页面状态：**未实现**；条目：9；已实现 0 / 未实现 9。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3152,7 +2998,7 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 布局参数与按工作区覆盖 · Hyprland
 
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3168,7 +3014,7 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 按官方文档分类的组件参数 · Hyprland
 
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3184,7 +3030,7 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 按官方文档分类的组件参数 · Hyprland
 
-页面状态：**未实现**；条目：10；已实现 0 / 未实现 10 / 不适用 0。
+页面状态：**未实现**；条目：10；已实现 0 / 未实现 10。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3209,7 +3055,7 @@ Windows 参考入口：`ms-settings:windowsupdate-activehours`。
 
 窗口轮换与布局全屏 · Hyprland
 
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3233,7 +3079,7 @@ Hyprland 会话、配置文件、启动与诊断
 
 合成器高级设置：misc · Hyprland
 
-页面状态：**未实现**；条目：20；已实现 0 / 未实现 20 / 不适用 0。
+页面状态：**未实现**；条目：20；已实现 0 / 未实现 20。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3268,7 +3114,7 @@ Hyprland 会话、配置文件、启动与诊断
 
 合成器高级设置：ecosystem · Hyprland
 
-页面状态：**未实现**；条目：3；已实现 0 / 未实现 3 / 不适用 0。
+页面状态：**未实现**；条目：3；已实现 0 / 未实现 3。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3286,7 +3132,7 @@ Hyprland 会话、配置文件、启动与诊断
 
 合成器高级设置：debug · Hyprland
 
-页面状态：**未实现**；条目：22；已实现 0 / 未实现 22 / 不适用 0。
+页面状态：**未实现**；条目：22；已实现 0 / 未实现 22。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3323,7 +3169,7 @@ Hyprland 会话、配置文件、启动与诊断
 
 合成器高级设置：experimental · Hyprland
 
-页面状态：**未实现**；条目：1；已实现 0 / 未实现 1 / 不适用 0。
+页面状态：**未实现**；条目：1；已实现 0 / 未实现 1。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3339,7 +3185,7 @@ Hyprland 会话、配置文件、启动与诊断
 
 Lua / legacy 配置、包含关系与注释保留 · Hyprland
 
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**未实现**；条目：8；已实现 0 / 未实现 8。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3362,7 +3208,7 @@ Lua / legacy 配置、包含关系与注释保留 · Hyprland
 
 会话启动方式和用户服务生命周期 · 可选组件 UWSM / systemd 用户会话
 
-页面状态：**未实现**；条目：5；已实现 0 / 未实现 5 / 不适用 0。
+页面状态：**未实现**；条目：5；已实现 0 / 未实现 5。
 
 原因：尚未实现；可选组件 UWSM / systemd 用户会话 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3382,7 +3228,7 @@ Lua / legacy 配置、包含关系与注释保留 · Hyprland
 
 插件来源、加载状态与版本兼容 · Hyprland
 
-页面状态：**未实现**；条目：7；已实现 0 / 未实现 7 / 不适用 0。
+页面状态：**未实现**；条目：7；已实现 0 / 未实现 7。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 
@@ -3404,7 +3250,7 @@ Lua / legacy 配置、包含关系与注释保留 · Hyprland
 
 版本、配置错误、窗口和设备诊断 · Hyprland
 
-页面状态：**未实现**；条目：8；已实现 0 / 未实现 8 / 不适用 0。
+页面状态：**未实现**；条目：8；已实现 0 / 未实现 8。
 
 原因：尚未实现；Hyprland 设置仅供界面预览，需在未来验证组件安装、版本与可用接口，不会读取或修改当前系统。
 

@@ -39,10 +39,10 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'about' => Icons.info_outline_rounded,
       'language' => Icons.translate_rounded,
       'typing' || 'text-input' => Icons.edit_note_rounded,
-      'keyboard' || 'accessibility-keyboard' => Icons.keyboard_outlined,
+      'keyboard' => Icons.keyboard_outlined,
       'time-more' || 'system-more' || 'appearance-more' => Icons.add_rounded,
       'keyboard-shortcuts' => Icons.keyboard_command_key_rounded,
-      'speech' || 'online-speech' => Icons.record_voice_over_outlined,
+      'speech' => Icons.record_voice_over_outlined,
       final id when id.startsWith('regionlanguage-') =>
         Icons.keyboard_alt_outlined,
       'projection' => Icons.desktop_windows_outlined,
@@ -59,7 +59,10 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'themes' => Icons.palette_outlined,
       'background' => Icons.wallpaper_outlined,
       'fonts' => Icons.text_fields_rounded,
-      'text-size' => Icons.format_size_rounded,
+      'accessibility-vision' => Icons.visibility_outlined,
+      'narrator' => Icons.record_voice_over_outlined,
+      'accessibility-hearing' => Icons.hearing_outlined,
+      'accessibility-interaction' => Icons.touch_app_outlined,
       'bluetooth' => Icons.bluetooth_rounded,
       'printers' => Icons.print_outlined,
       'cameras' => Icons.camera_alt_outlined,
@@ -121,11 +124,6 @@ class AvailabilityBadge extends StatelessWidget {
         Icons.construction_rounded,
         colors.onSecondaryContainer,
         colors.secondaryContainer,
-      ),
-      .unsupported => (
-        Icons.block_rounded,
-        colors.onSurfaceVariant,
-        colors.surfaceContainerHighest,
       ),
     };
     return Tooltip(

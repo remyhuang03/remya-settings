@@ -9341,7 +9341,6 @@
       ],
       "children": [
         "dynamic-lock",
-        "hello-face",
         "hello-fingerprint",
         "security-key"
       ]
@@ -9387,53 +9386,6 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": "Not read"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "hello-face",
-      "category": "accounts",
-      "title": "Facial recognition",
-      "description": "Windows Hello registration process reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:signinoptions-launchfaceenrollment"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "hello-face.f9b4646d",
-              "title": "Set up facial recognition",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Start"
-            },
-            {
-              "id": "hello-face.83f9098f",
-              "title": "Improve recognition",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "hello-face.df6cef60",
-              "title": "Remove facial recognition",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
             }
           ]
         }
@@ -10122,23 +10074,32 @@
       "children": []
     },
     {
-      "id": "text-size",
+      "id": "accessibility-vision",
       "category": "accessibility",
-      "title": "Text size",
-      "description": "Make text larger in GTK and Flutter apps",
+      "title": "Vision",
+      "description": "Text size, visual effects, magnifier, color filters and contrast themes",
       "preview": "none",
-      "availability": "available",
-      "reason": "Uses the GNOME interface text-scaling-factor through the Settings service.",
+      "availability": "planned",
+      "reason": "GNOME text scaling factor is implemented in Rust through flutter_rust_bridge; operations use live gsettings readback. Other vision controls remain unimplemented previews.",
+      "children": [
+        "fonts"
+      ],
       "sources": [
-        "gnome-appearance",
-        "uris"
+        "app-appearance",
+        "hypr-options"
       ],
       "windowsUris": [
-        "ms-settings:easeofaccess-display"
+        "ms-settings:easeofaccess-display",
+        "ms-settings:easeofaccess-visualeffects",
+        "ms-settings:easeofaccess-magnifier",
+        "ms-settings:easeofaccess-colorfilter",
+        "ms-settings:easeofaccess-colorfilter-adaptivecolorlink",
+        "ms-settings:easeofaccess-colorfilter-bluelightlink",
+        "ms-settings:easeofaccess-highcontrast"
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Text size",
           "controls": [
             {
               "id": "text-size.scale",
@@ -10156,29 +10117,9 @@
               ]
             }
           ]
-        }
-      ],
-      "children": [
-        "fonts"
-      ]
-    },
-    {
-      "id": "visual-effects",
-      "category": "accessibility",
-      "title": "Visual effects",
-      "description": "Scrollbars and notification duration",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:easeofaccess-visualeffects"
-      ],
-      "sections": [
+        },
         {
-          "title": "Settings",
+          "title": "Visual effects",
           "controls": [
             {
               "id": "visual-effects.fe13858e",
@@ -10206,58 +10147,7 @@
           ]
         },
         {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "visual-effects.reference.22476e4b",
-              "title": "Always show scrollbars",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Visual effects",
-                "Always show scrollbars"
-              ],
-              "value": false
-            },
-            {
-              "id": "visual-effects.reference.5b6b06b4",
-              "title": "Dismiss notifications after preferred amount of time",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Visual effects",
-                "Dismiss notifications after preferred amount of time"
-              ],
-              "value": "Not configured",
-              "options": [
-                "Not configured"
-              ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "magnifier",
-      "category": "accessibility",
-      "title": "Magnifier",
-      "description": "Zoom, view and follow behavior",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:easeofaccess-magnifier"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
+          "title": "Magnifier",
           "controls": [
             {
               "id": "magnifier.0398d9d8",
@@ -10401,9 +10291,148 @@
           ]
         },
         {
+          "title": "Color filters",
+          "controls": [
+            {
+              "id": "color-filters.e71f8ff5",
+              "title": "Color filter",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "color-filters.1242069d",
+              "title": "Filter",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "options": [
+                "Red-green color blindness",
+                "Blue-yellow blindness",
+                "Grayscale",
+                "Reversal",
+                "Grayscale inversion"
+              ],
+              "value": "Red-green color blindness"
+            },
+            {
+              "id": "color-filters.c95fb3d5",
+              "title": "Filter keyboard shortcuts",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            }
+          ]
+        },
+        {
+          "title": "Contrast themes",
+          "controls": [
+            {
+              "id": "contrast.e848ddd4",
+              "title": "Topic",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "options": [
+                "None",
+                "Aquatic",
+                "Desert",
+                "Dusk",
+                "night sky"
+              ],
+              "value": "None"
+            },
+            {
+              "id": "contrast.4a2d8a28",
+              "title": "Background color",
+              "type": "color",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "#6750A4"
+            },
+            {
+              "id": "contrast.07f568da",
+              "title": "Text color",
+              "type": "color",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "#6750A4"
+            },
+            {
+              "id": "contrast.58aecbd7",
+              "title": "Hyperlink color",
+              "type": "color",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "#6750A4"
+            },
+            {
+              "id": "contrast.9d947f02",
+              "title": "Disable text color",
+              "type": "color",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "#6750A4"
+            },
+            {
+              "id": "contrast.450ad5bc",
+              "title": "Select text color",
+              "type": "color",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "#6750A4"
+            },
+            {
+              "id": "contrast.e0124b6b",
+              "title": "Button text color",
+              "type": "color",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "#6750A4"
+            },
+            {
+              "id": "contrast.88185761",
+              "title": "Apply a contrast theme",
+              "type": "action",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": "Apps"
+            }
+          ]
+        },
+        {
           "title": "Windows reference settings",
           "collapsed": true,
           "controls": [
+            {
+              "id": "visual-effects.reference.22476e4b",
+              "title": "Always show scrollbars",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Visual effects",
+                "Always show scrollbars"
+              ],
+              "value": false
+            },
+            {
+              "id": "visual-effects.reference.5b6b06b4",
+              "title": "Dismiss notifications after preferred amount of time",
+              "type": "choice",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Visual effects",
+                "Dismiss notifications after preferred amount of time"
+              ],
+              "value": "Not configured",
+              "options": [
+                "Not configured"
+              ]
+            },
             {
               "id": "magnifier.reference.54348147",
               "title": "Start Magnifier before sign-in",
@@ -10619,69 +10648,7 @@
               "options": [
                 "Not configured"
               ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "color-filters",
-      "category": "accessibility",
-      "title": "Color filters",
-      "description": "Color vision assistance and shortcut keys",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:easeofaccess-colorfilter",
-        "ms-settings:easeofaccess-colorfilter-adaptivecolorlink",
-        "ms-settings:easeofaccess-colorfilter-bluelightlink"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "color-filters.e71f8ff5",
-              "title": "Color filter",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
             },
-            {
-              "id": "color-filters.1242069d",
-              "title": "Filter",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "Red-green color blindness",
-                "Blue-yellow blindness",
-                "Grayscale",
-                "Reversal",
-                "Grayscale inversion"
-              ],
-              "value": "Red-green color blindness"
-            },
-            {
-              "id": "color-filters.c95fb3d5",
-              "title": "Filter keyboard shortcuts",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
             {
               "id": "color-filters.reference.93c3c16a",
               "title": "Color filters",
@@ -10726,107 +10693,7 @@
               "options": [
                 "Not configured"
               ]
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "contrast",
-      "category": "accessibility",
-      "title": "Contrast themes",
-      "description": "High contrast themes and custom colors",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:easeofaccess-highcontrast"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "contrast.e848ddd4",
-              "title": "Topic",
-              "type": "choice",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "options": [
-                "None",
-                "Aquatic",
-                "Desert",
-                "Dusk",
-                "night sky"
-              ],
-              "value": "None"
             },
-            {
-              "id": "contrast.4a2d8a28",
-              "title": "Background color",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "#6750A4"
-            },
-            {
-              "id": "contrast.07f568da",
-              "title": "Text color",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "#6750A4"
-            },
-            {
-              "id": "contrast.58aecbd7",
-              "title": "Hyperlink color",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "#6750A4"
-            },
-            {
-              "id": "contrast.9d947f02",
-              "title": "Disable text color",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "#6750A4"
-            },
-            {
-              "id": "contrast.450ad5bc",
-              "title": "Select text color",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "#6750A4"
-            },
-            {
-              "id": "contrast.e0124b6b",
-              "title": "Button text color",
-              "type": "color",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "#6750A4"
-            },
-            {
-              "id": "contrast.88185761",
-              "title": "Apply a contrast theme",
-              "type": "action",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Apps"
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
             {
               "id": "contrast.reference.08c75109",
               "title": "Contrast Themes",
@@ -10931,8 +10798,7 @@
             }
           ]
         }
-      ],
-      "children": []
+      ]
     },
     {
       "id": "narrator",
@@ -11676,22 +11542,24 @@
       "children": []
     },
     {
-      "id": "accessibility-audio",
+      "id": "accessibility-hearing",
       "category": "accessibility",
-      "title": "Audio assistance",
-      "description": "Mono vs. Sound Visual Cues",
+      "title": "Hearing",
+      "description": "Audio assistance and captions",
       "preview": "none",
       "availability": "planned",
       "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "children": [],
       "sources": [
-        "uris"
+        "app-appearance"
       ],
       "windowsUris": [
-        "ms-settings:easeofaccess-audio"
+        "ms-settings:easeofaccess-audio",
+        "ms-settings:easeofaccess-closedcaptioning"
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Audio assistance",
           "controls": [
             {
               "id": "accessibility-audio.1a90a9eb",
@@ -11718,55 +11586,7 @@
           ]
         },
         {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "accessibility-audio.reference.0d993fdd",
-              "title": "Mono Audio",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Audio",
-                "Mono Audio"
-              ],
-              "value": false
-            },
-            {
-              "id": "accessibility-audio.reference.380697ec",
-              "title": "Flash my screen during audio notifications",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Audio",
-                "Flash my screen during audio notifications"
-              ],
-              "value": false
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "captions",
-      "category": "accessibility",
-      "title": "Captions",
-      "description": "Live subtitles, position and appearance",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:easeofaccess-closedcaptioning"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
+          "title": "Captions",
           "controls": [
             {
               "id": "captions.ac8a8db0",
@@ -11826,6 +11646,30 @@
           "collapsed": true,
           "controls": [
             {
+              "id": "accessibility-audio.reference.0d993fdd",
+              "title": "Mono Audio",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Audio",
+                "Mono Audio"
+              ],
+              "value": false
+            },
+            {
+              "id": "accessibility-audio.reference.380697ec",
+              "title": "Flash my screen during audio notifications",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Audio",
+                "Flash my screen during audio notifications"
+              ],
+              "value": false
+            },
+            {
               "id": "captions.reference.b233720a",
               "title": "Filter Profanity",
               "type": "toggle",
@@ -11871,28 +11715,28 @@
             }
           ]
         }
-      ],
-      "children": []
+      ]
     },
     {
-      "id": "accessibility-keyboard",
+      "id": "accessibility-interaction",
       "category": "accessibility",
-      "title": "Keyboard assistance",
-      "description": "Sticky keys, filter keys, and on-screen keyboard",
+      "title": "Interaction",
+      "description": "Keyboard assistance, mouse keys and input shortcuts",
       "preview": "none",
       "availability": "planned",
       "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+      "children": [],
       "sources": [
-        "uris",
-        "hypr-options",
-        "hyprviz-project"
+        "app-appearance",
+        "hypr-options"
       ],
       "windowsUris": [
-        "ms-settings:easeofaccess-keyboard"
+        "ms-settings:easeofaccess-keyboard",
+        "ms-settings:easeofaccess-mouse"
       ],
       "sections": [
         {
-          "title": "Settings",
+          "title": "Sticky keys",
           "controls": [
             {
               "id": "accessibility-keyboard.68b234ce",
@@ -12058,7 +11902,7 @@
           ]
         },
         {
-          "title": "Others",
+          "title": "Other keyboard options",
           "controls": [
             {
               "id": "accessibility-keyboard.9667278b",
@@ -12107,6 +11951,65 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": false
+            }
+          ]
+        },
+        {
+          "title": "Mouse keys",
+          "controls": [
+            {
+              "id": "mouse-keys.af8ff2e3",
+              "title": "Mouse keys",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "mouse-keys.2625b861",
+              "title": "Only used when Num Lock is on",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "mouse-keys.21f5aea4",
+              "title": "Show mouse button icon",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "mouse-keys.28c033e9",
+              "title": "Ctrl accelerates and Shift decelerates",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": false
+            },
+            {
+              "id": "mouse-keys.7754307e",
+              "title": "Mouse key speed",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": 50,
+              "min": 0,
+              "max": 100,
+              "unit": "%"
+            },
+            {
+              "id": "mouse-keys.06700d63",
+              "title": "Mouse key acceleration",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "value": 50,
+              "min": 0,
+              "max": 100,
+              "unit": "%"
             }
           ]
         },
@@ -12340,6 +12243,92 @@
                 "Use the print screen to open screen capture"
               ],
               "value": false
+            },
+            {
+              "id": "mouse-keys.reference.da0c9570",
+              "title": "Mouse keys",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Mouse",
+                "Mouse keys"
+              ],
+              "value": false
+            },
+            {
+              "id": "mouse-keys.reference.bdf1cbf2",
+              "title": "Only use mouse keys when Num lock is on",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Mouse",
+                "Mouse keys (main toggle)",
+                "Only use mouse keys when Num lock is on"
+              ],
+              "value": false
+            },
+            {
+              "id": "mouse-keys.reference.f113b78d",
+              "title": "Show the mouse keys icon on the taskbar",
+              "type": "toggle",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Mouse",
+                "Mouse keys (main toggle)",
+                "Show the mouse keys icon on the taskbar"
+              ],
+              "value": false
+            },
+            {
+              "id": "mouse-keys.reference.4f1675d1",
+              "title": "Hold the Ctrl key to speed up and the Shift key to slow down",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Mouse",
+                "Mouse keys (main toggle)",
+                "Hold the Ctrl key to speed up and the Shift key to slow down"
+              ],
+              "value": 50,
+              "min": 0,
+              "max": 100,
+              "unit": "%"
+            },
+            {
+              "id": "mouse-keys.reference.fe021cfe",
+              "title": "Mouse keys speed",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Mouse",
+                "Mouse keys (main toggle)",
+                "Mouse keys speed"
+              ],
+              "value": 50,
+              "min": 0,
+              "max": 100,
+              "unit": "%"
+            },
+            {
+              "id": "mouse-keys.reference.df0cfb8c",
+              "title": "Mouse keys acceleration",
+              "type": "slider",
+              "availability": "planned",
+              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
+              "referencePath": [
+                "Mouse",
+                "Mouse keys (main toggle)",
+                "Mouse keys acceleration"
+              ],
+              "value": 50,
+              "min": 0,
+              "max": 100,
+              "unit": "%"
             }
           ]
         },
@@ -12437,177 +12426,7 @@
           ],
           "description": "Planned compositor options from Hyprland configuration options, HyprViz page organization."
         }
-      ],
-      "children": []
-    },
-    {
-      "id": "mouse-keys",
-      "category": "accessibility",
-      "title": "Mouse keys",
-      "description": "Use the numeric keypad to move the pointer",
-      "preview": "none",
-      "availability": "planned",
-      "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:easeofaccess-mouse"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "mouse-keys.af8ff2e3",
-              "title": "Mouse keys",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "mouse-keys.2625b861",
-              "title": "Only used when Num Lock is on",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "mouse-keys.21f5aea4",
-              "title": "Show mouse button icon",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "mouse-keys.28c033e9",
-              "title": "Ctrl accelerates and Shift decelerates",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": false
-            },
-            {
-              "id": "mouse-keys.7754307e",
-              "title": "Mouse key speed",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "mouse-keys.06700d63",
-              "title": "Mouse key acceleration",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            }
-          ]
-        },
-        {
-          "title": "Windows reference settings",
-          "collapsed": true,
-          "controls": [
-            {
-              "id": "mouse-keys.reference.da0c9570",
-              "title": "Mouse keys",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Mouse",
-                "Mouse keys"
-              ],
-              "value": false
-            },
-            {
-              "id": "mouse-keys.reference.bdf1cbf2",
-              "title": "Only use mouse keys when Num lock is on",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Mouse",
-                "Mouse keys (main toggle)",
-                "Only use mouse keys when Num lock is on"
-              ],
-              "value": false
-            },
-            {
-              "id": "mouse-keys.reference.f113b78d",
-              "title": "Show the mouse keys icon on the taskbar",
-              "type": "toggle",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Mouse",
-                "Mouse keys (main toggle)",
-                "Show the mouse keys icon on the taskbar"
-              ],
-              "value": false
-            },
-            {
-              "id": "mouse-keys.reference.4f1675d1",
-              "title": "Hold the Ctrl key to speed up and the Shift key to slow down",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Mouse",
-                "Mouse keys (main toggle)",
-                "Hold the Ctrl key to speed up and the Shift key to slow down"
-              ],
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "mouse-keys.reference.fe021cfe",
-              "title": "Mouse keys speed",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Mouse",
-                "Mouse keys (main toggle)",
-                "Mouse keys speed"
-              ],
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            },
-            {
-              "id": "mouse-keys.reference.df0cfb8c",
-              "title": "Mouse keys acceleration",
-              "type": "slider",
-              "availability": "planned",
-              "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "referencePath": [
-                "Mouse",
-                "Mouse keys (main toggle)",
-                "Mouse keys acceleration"
-              ],
-              "value": 50,
-              "min": 0,
-              "max": 100,
-              "unit": "%"
-            }
-          ]
-        }
-      ],
-      "children": []
+      ]
     },
     {
       "id": "encryption",
@@ -12650,84 +12469,6 @@
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
               "value": "Not read"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "find-device",
-      "category": "privacy",
-      "title": "Find my device",
-      "description": "Device location and remote search reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:findmydevice"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "find-device.9436d046",
-              "title": "Find my device",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "find-device.a33ef3cc",
-              "title": "View associated devices",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "online-speech",
-      "category": "privacy",
-      "title": "Online speech recognition",
-      "description": "Cloud speech processing reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "uris"
-      ],
-      "windowsUris": [
-        "ms-settings:privacy-speech"
-      ],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "online-speech.0a66701f",
-              "title": "Online speech recognition",
-              "type": "toggle",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": false
-            },
-            {
-              "id": "online-speech.20caf0a6",
-              "title": "Manage voice data in the cloud",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
             }
           ]
         }
@@ -13024,51 +12765,6 @@
               "type": "action",
               "availability": "planned",
               "reason": "Not yet implemented; only the interface is displayed here, and system settings will not be read or changed.",
-              "value": "Configuration"
-            }
-          ]
-        }
-      ],
-      "children": []
-    },
-    {
-      "id": "cloud-storage",
-      "category": "accounts",
-      "title": "Cloud storage",
-      "description": "Windows homepage cloud storage card reference",
-      "preview": "none",
-      "availability": "unsupported",
-      "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-      "sources": [
-        "navigation"
-      ],
-      "windowsUris": [],
-      "sections": [
-        {
-          "title": "Settings",
-          "controls": [
-            {
-              "id": "cloud-storage.718afb24",
-              "title": "Cloud storage usage",
-              "type": "info",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Example: 0 GB / 5 GB"
-            },
-            {
-              "id": "cloud-storage.1cc744fa",
-              "title": "Manage cloud storage",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
-              "value": "Configuration"
-            },
-            {
-              "id": "cloud-storage.9d773e3a",
-              "title": "Upgrade cloud storage",
-              "type": "action",
-              "availability": "unsupported",
-              "reason": "Windows exclusive or old version reference, there is no corresponding implementation of Hyprland.",
               "value": "Configuration"
             }
           ]
