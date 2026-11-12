@@ -191,6 +191,8 @@ fn action_label(dispatcher: &str) -> String {
         "fullscreen" | "fullscreen_state" => "Fullscreen",
         "layout" => "Layout action",
         "pin" => "Pin window",
+        "toggle" => "Group or ungroup windows",
+        "next" | "prev" | "active" => "Switch tab in group",
         "submap" => "Switch shortcut mode",
         _ if name.starts_with("function:") => "Script",
         other => other,

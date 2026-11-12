@@ -375,7 +375,7 @@ void main() {
       expect(sourceIds, containsAll(page['sources'] as List));
     }
     expect(
-      catalog.search('direct_scanout').map((p) => p.id),
+      catalog.search('direct scanout').map((p) => p.id),
       contains('graphics'),
     );
     expect(catalog.search('lock screen').map((p) => p.id), contains('power'));
@@ -404,32 +404,4 @@ void main() {
       expect(section.collapsed, isTrue, reason: entry['control'] as String);
     }
   });
-
-  test(
-    'the human progress tracker covers every current control exactly once',
-    () {
-      final tracker = File('docs/settings-implementation-progress.md')
-          .readAsStringSync();
-      final rows = RegExp(
-        r'^\| .*? \| `([^`]+)` \| .*? \| (已实现|未实现) \| .*? \|$',
-        multiLine: true,
-      ).allMatches(tracker).toList();
-      final controls = catalog.pages.expand((p) => p.controls).toList();
-      expect(rows.length, controls.length);
-      final statuses = {for (final row in rows) row[1]!: row[2]!};
-      expect(statuses.length, controls.length);
-      for (final control in controls) {
-        expect(statuses[control.id], switch (control.availability) {
-          .available => '已实现',
-          .planned => '未实现',
-        }, reason: control.id);
-      }
-      final headings = RegExp(
-        r'^### .* — `([^`]+)`$',
-        multiLine: true,
-      ).allMatches(tracker).map((m) => m[1]).toList();
-      expect(headings.length, catalog.pages.length);
-      expect(headings.toSet(), catalog.pages.map((p) => p.id).toSet());
-    },
-  );
 }

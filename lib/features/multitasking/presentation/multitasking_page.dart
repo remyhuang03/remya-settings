@@ -6,6 +6,7 @@ import '../../settings/application/feature_options_controller.dart';
 import '../../settings/domain/settings_catalog.dart';
 
 const _layoutId = 'multitasking.layout';
+const _orientationId = 'multitasking.master-orientation';
 
 /// Window layout, spacing, borders, snapping and resizing for every workspace.
 class MultitaskingPage extends StatefulWidget {
@@ -78,6 +79,15 @@ class _MultitaskingPageState extends State<MultitaskingPage> {
                   gapsOut: _number('multitasking.gaps-out'),
                   border: _number('multitasking.border-size'),
                   colors: Theme.of(context).colorScheme,
+                  orientation:
+                      '${_controller.option(_orientationId) ?? 'left'}',
+                  share: switch (layout) {
+                    'master' => _controller.option('multitasking.master-mfact'),
+                    'scrolling' => _controller.option(
+                      'multitasking.scrolling-column-width',
+                    ),
+                    _ => null,
+                  } as num?,
                 ),
               ),
             ),
@@ -91,9 +101,22 @@ class _MultitaskingPageState extends State<MultitaskingPage> {
             _controller.option('multitasking.snap') == true,
           'multitasking.border-grab-area' || 'multitasking.border-hover-icon' =>
             _controller.option('multitasking.resize-on-border') == true,
-          // Dwindle options mean nothing to the other layouts.
+          'multitasking.groupbar-titles' ||
+          'multitasking.groupbar-height' ||
+          'multitasking.groupbar-font-size' =>
+            _controller.option('multitasking.groupbar') == true,
+          'multitasking.anr-missed-pings' =>
+            _controller.option('multitasking.anr-dialog') == true,
+          'multitasking.master-center-min-stack' =>
+            layout == 'master' &&
+                _controller.option(_orientationId) == 'center',
+          // Each layout's options mean nothing to the other layouts.
           _ when setting.id.startsWith('multitasking.dwindle-') =>
             layout == 'dwindle',
+          _ when setting.id.startsWith('multitasking.master-') =>
+            layout == 'master',
+          _ when setting.id.startsWith('multitasking.scrolling-') =>
+            layout == 'scrolling',
           _ => true,
         },
         controlBuilder: (setting) => switch (setting.id) {
@@ -113,11 +136,25 @@ class _MultitaskingPageState extends State<MultitaskingPage> {
                 'Moving focus toward an empty side does nothing instead of '
                 'choosing the nearest window',
           ),
-          'multitasking.allow-tearing' => rows.build(
+          'multitasking.groupbar' => rows.build(
             setting,
             subtitle:
-                'Lets games that ask for it skip vertical sync for lower '
-                'latency',
+                'Windows grouped with a shortcut share one place and switch '
+                'like tabs',
+          ),
+          'multitasking.group-auto' => rows.build(
+            setting,
+            subtitle: 'Otherwise new windows open beside the group',
+          ),
+          'multitasking.focus-on-activate' => rows.build(
+            setting,
+            subtitle:
+                'Such as a browser opening a link clicked in another app; '
+                'otherwise the window is only marked as wanting attention',
+          ),
+          'multitasking.anr-dialog' => rows.build(
+            setting,
+            subtitle: 'Asks whether to wait or close the app',
           ),
           'multitasking.modal-parent-blocking' => rows.build(
             setting,
@@ -149,6 +186,28 @@ class _MultitaskingPageState extends State<MultitaskingPage> {
             subtitle:
                 'A direction chosen with a shortcut applies to every new '
                 'window until changed',
+          ),
+          'multitasking.master-center-min-stack' => rows.build(
+            setting,
+            subtitle: 'With fewer, the main window stays on the left',
+          ),
+          'multitasking.master-new-on-top' => rows.build(
+            setting,
+            subtitle: 'Otherwise they are added to the bottom',
+          ),
+          'multitasking.master-smart-resizing' => rows.build(
+            setting,
+            subtitle:
+                'Resizing with the mouse moves the edge nearest the pointer',
+          ),
+          'multitasking.scrolling-fullscreen-one-column' => rows.build(
+            setting,
+            subtitle: 'Applies while a workspace has only one column',
+          ),
+          'multitasking.scrolling-wrap-focus' => rows.build(
+            setting,
+            subtitle:
+                'Moving focus past the last column goes back to the first',
           ),
           'multitasking.dwindle-split-width' => rows.build(
             setting,
@@ -292,6 +351,8 @@ class LayoutPainter extends CustomPainter {
     required this.border,
     required this.colors,
     this.scale,
+    this.orientation = 'left',
+    this.share,
   });
   final String layout;
   final double gapsIn;
@@ -300,25 +361,19 @@ class LayoutPainter extends CustomPainter {
   final ColorScheme colors;
   final double? scale;
 
+  /// Where Master places its main window.
+  final String orientation;
+
+  /// Master's main window share or Scrolling's column width, both of the screen.
+  final num? share;
+
   List<Rect> _windows(Rect area, double gap) {
     final half = gap / 2;
     switch (layout) {
       case 'master':
-        // One large window beside a stack of the others.
-        final split = area.left + area.width * 0.58;
-        final third = (area.height - 2 * gap) / 3;
-        return [
-          Rect.fromLTRB(area.left, area.top, split - half, area.bottom),
-          for (var i = 0; i < 3; i++)
-            Rect.fromLTWH(
-              split + half,
-              area.top + i * (third + gap),
-              area.right - split - half,
-              third,
-            ),
-        ];
+        return _master(area, gap);
       case 'scrolling':
-        final width = area.width * 0.62;
+        final width = area.width * (share ?? 0.62).toDouble();
         return [
           Rect.fromLTWH(area.left, area.top, width, area.height),
           Rect.fromLTWH(area.left + width + gap, area.top, width, area.height),
@@ -342,6 +397,45 @@ class LayoutPainter extends CustomPainter {
           Rect.fromLTRB(quarter + half, middle + half, area.right, area.bottom),
         ];
     }
+  }
+
+  /// One large window beside a stack of three, turned to [orientation].
+  List<Rect> _master(Rect area, double gap) {
+    final half = gap / 2;
+    final ratio = (share ?? 0.58).toDouble();
+    if (orientation == 'center') {
+      // The stack alternates sides: one window left, two right.
+      final main = area.width * ratio;
+      final left = area.left + (area.width - main) / 2;
+      final right = left + main;
+      final row = (area.height - gap) / 2;
+      return [
+        Rect.fromLTRB(left + half, area.top, right - half, area.bottom),
+        Rect.fromLTRB(area.left, area.top, left - half, area.bottom),
+        Rect.fromLTRB(right + half, area.top, area.right, area.top + row),
+        Rect.fromLTRB(right + half, area.bottom - row, area.right, area.bottom),
+      ];
+    }
+    final vertical = orientation == 'top' || orientation == 'bottom';
+    final flip = orientation == 'right' || orientation == 'bottom';
+    // Lay out as if the main window were on the left, then turn and mirror.
+    final w = vertical ? area.height : area.width;
+    final h = vertical ? area.width : area.height;
+    final split = w * ratio;
+    final third = (h - 2 * gap) / 3;
+    final rects = [
+      Rect.fromLTRB(0, 0, split - half, h),
+      for (var i = 0; i < 3; i++)
+        Rect.fromLTWH(split + half, i * (third + gap), w - split - half, third),
+    ];
+    return [
+      for (var r in rects)
+        () {
+          if (flip) r = Rect.fromLTRB(w - r.right, r.top, w - r.left, r.bottom);
+          if (vertical) r = Rect.fromLTRB(r.top, r.left, r.bottom, r.right);
+          return r.shift(area.topLeft);
+        }(),
+    ];
   }
 
   @override
@@ -397,5 +491,7 @@ class LayoutPainter extends CustomPainter {
       old.gapsIn != gapsIn ||
       old.gapsOut != gapsOut ||
       old.border != border ||
+      old.orientation != orientation ||
+      old.share != share ||
       old.colors != colors;
 }

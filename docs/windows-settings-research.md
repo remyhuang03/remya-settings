@@ -4,15 +4,15 @@ Research date: 2026-10-26. Target product: a global settings application for **H
 
 Remy'a Settings draws design inspiration and comparative benchmarks from modern desktop settings patterns such as Windows 11 Settings, rather than directly copying or attempting 1:1 emulation. Because the application targets Linux and Hyprland, its categories, actual controls, workflows, and backend implementations have diverged significantly to fit native Linux services (PipeWire, NetworkManager, pacman/Flatpak/AppImage, Fontconfig, systemd-timedated) and Wayland compositor rules.
 
-This document records the initial desktop reference catalog researched for baseline comparative analysis (188 pages and 1,251 controls); `advanced-display` later moved into a collapsed section of `display`, which also took over its `ms-settings:display-advanced` entry. The later additive Hyprland catalog extension is documented separately in [Hyprland research](hyprland-settings-research.md); the progress checklist tracks the combined catalog.
+This document records the initial desktop reference catalog researched for baseline comparative analysis (188 pages and 1,251 controls); `advanced-display` later moved into a collapsed section of `display`, which also took over its `ms-settings:display-advanced` entry. The later additive Hyprland catalog extension is documented separately in [Hyprland research](hyprland-settings-research.md).
 
 ## Evidence and limits
 
 Microsoft publishes a [Settings navigation guide](https://support.microsoft.com/en-us/windows/experience/exploring-windows-settings), a [page URI reference](https://learn.microsoft.com/en-us/windows/apps/develop/launch/launch-settings), and a [Windows 11 backup settings catalog](https://learn.microsoft.com/en-us/windows/configuration/windows-backup/catalog?pivots=windows-11). These are complementary inventories, not a published internal schema for every Windows Settings control. Availability varies by OS release, edition, hardware, installed applications, organization policy, account, and staged feature rollout.
 
-The retained coverage includes **112 URI entries** from the reference tables. Query parameters selecting individual apps, cameras, or audio endpoints belong to the same page; aliases are recorded on their target page. Remaining Windows-only entries are clearly unavailable reference previews. A URI that redirects to another view is not evidence of an independent current Windows 11 page.
+The retained coverage includes **96 URI entries** from the reference tables. Query parameters selecting individual apps, cameras, or audio endpoints belong to the same page; aliases are recorded on their target page. Remaining Windows-only entries are clearly unavailable reference previews. A URI that redirects to another view is not evidence of an independent current Windows 11 page.
 
-The retained backup coverage contains **299 hierarchy entries**, including **222 leaf entries** represented by individually identified controls in collapsible "Windows reference settings" sections; the other entries identify groups. Original English names are retained there for traceability. This catalog includes some File Explorer settings, which are treated as reference content rather than additional Settings categories. Backup checkmarks describe Windows backup coverage, not implementation status in this application.
+The retained backup coverage contains **31 hierarchy entries**: 20 leaf entries that an ordinary control represents, 8 entries that identify their groups and 3 recorded removals. The collapsible "Windows reference settings" sections that listed the remaining Windows leaf entries under their original English names were removed; Windows-only backup items are not previewed. Backup checkmarks describe Windows backup coverage, not implementation status in this application.
 
 There are **188 detail pages**, **1,251 reference controls**, **10 settings categories**, and a separate Home and About view. All controls are authored UI previews. Control types, ranges, sample values, grouping, and option lists are this project's initial model, not Microsoft's internal types, actual hardware capabilities, live defaults, or a guarantee of an exact match to every Windows build. In particular, source-only reference fields whose choices are not documented use an explicit "未配置" option. Future implementation must verify real platform contracts and replace illustrative ranges and choices before enabling them.
 
@@ -42,7 +42,7 @@ The shell draws inspiration from modern desktop settings patterns for category n
 
 Material Design 3 Expressive supplies colors, rounded surfaces, emphasis, buttons, switches, sliders, menus, typography, focus, and interaction feedback. Fluent visual assets and Windows window chrome are not copied. Display, theme, sound, network, power, storage, devices, and update pages include purpose-specific preview regions rather than a single generic empty template.
 
-Search matches category/page labels, descriptions, control names, and Windows reference URI names locally. Navigation, search, back, reference-section expansion, About, and license viewing are functioning UI interactions. They do not invoke system operations.
+Search matches category/page labels, descriptions, control names, and Windows reference URI names locally. Navigation, search, back, Advanced section expansion, About, and license viewing are functioning UI interactions. They do not invoke system operations.
 
 ## Schema and availability
 

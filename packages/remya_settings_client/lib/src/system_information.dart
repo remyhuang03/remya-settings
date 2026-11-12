@@ -18,6 +18,8 @@ const systemInformationSettingIds = {
   'about.cpu-cores',
   'about.cpu-threads',
   'about.kernel-version',
+  'about.desktop-version',
+  'about.desktop-config-errors',
 };
 
 typedef SystemInformationReader = Future<Map<String, dynamic>> Function();

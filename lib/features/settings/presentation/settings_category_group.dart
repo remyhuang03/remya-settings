@@ -33,12 +33,6 @@ enum SettingsCategoryGroup {
     ['time', 'accessibility'],
     Color(0xffffdda6),
     Color(0xff593b08),
-  ),
-  desktop(
-    'Hyprland',
-    ['hyprland', 'session'],
-    Color(0xffdfccff),
-    Color(0xff402769),
   );
 
   const SettingsCategoryGroup(

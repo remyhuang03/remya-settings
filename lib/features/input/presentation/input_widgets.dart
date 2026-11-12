@@ -26,6 +26,21 @@ const choiceValues = <String, List<Object>>{
   'workspaces.center-on': [0, 1],
   'multitasking.dwindle-force-split': [0, 1, 2],
   'multitasking.dwindle-split-bias': [0, 1],
+  'multitasking.group-drag-into': [0, 1, 2],
+  'multitasking.focus-under-fullscreen': [0, 1, 2],
+  'multitasking.exit-retains-fullscreen': [0, 1, 2, 3],
+  'multitasking.master-orientation': [
+    'left',
+    'right',
+    'top',
+    'bottom',
+    'center',
+  ],
+  'multitasking.master-new-status': ['slave', 'master', 'inherit'],
+  'multitasking.scrolling-direction': ['right', 'left', 'down', 'up'],
+  'multitasking.scrolling-focus-fit': [0, 1],
+  'graphics.direct-scanout': [0, 1, 2],
+  'graphics.auto-hdr': [0, 1, 2],
   // `no_hardware_cursors`: 2 decides automatically, 0 uses hardware cursors.
   'cursor.hardware': [2, 0, 1],
 };
@@ -106,6 +121,19 @@ final sliderShapes = <String, SliderShape>{
   'multitasking.border-grab-area': (min: 0, max: 50, step: 1, text: _pixels),
   'multitasking.float-gaps': (min: 0, max: 80, step: 1, text: _pixels),
   'multitasking.gaps-workspaces': (min: 0, max: 100, step: 5, text: _pixels),
+  'multitasking.groupbar-height': (min: 8, max: 40, step: 1, text: _pixels),
+  'multitasking.groupbar-font-size': (
+    min: 6,
+    max: 24,
+    step: 1,
+    text: (v) => '${v.round()} pt',
+  ),
+  'multitasking.anr-missed-pings': (
+    min: 1,
+    max: 20,
+    step: 1,
+    text: (v) => '${v.round()}',
+  ),
   'multitasking.dwindle-split-ratio': (
     min: 0.1,
     max: 1.9,
@@ -120,6 +148,22 @@ final sliderShapes = <String, SliderShape>{
   ),
   'multitasking.dwindle-special-scale': (
     min: 0.2,
+    max: 1,
+    step: 0.05,
+    text: _percent,
+  ),
+  'multitasking.master-mfact': (min: 0.1, max: 0.9, step: 0.05, text: _percent),
+  'multitasking.master-center-min-stack': (
+    min: 0,
+    max: 10,
+    step: 1,
+    text: (v) => switch (v.round()) {
+      1 => '1 window',
+      final n => '$n windows',
+    },
+  ),
+  'multitasking.scrolling-column-width': (
+    min: 0.1,
     max: 1,
     step: 0.05,
     text: _percent,

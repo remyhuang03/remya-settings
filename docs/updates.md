@@ -51,4 +51,4 @@ Security boundary: any process running as that user can start the fixed reposito
 
 ## Verification boundaries
 
-See `docs/settings-implementation-progress.md` for recorded evidence. Verified on 2026-11-04 with the installed build: a real check, and a real held-respecting `pacman -Syu` through pkexec and systemd-run that ignored all 26 held packages and had nothing else to install. Untested: an upgrade that actually installs packages, logging out during a transaction, retry after a real mirror failure, and the polkit rule in isolation (this workstation already allows pkexec without a password through another rule).
+Verified on 2026-11-04 with the installed build: a real check, and a real held-respecting `pacman -Syu` through pkexec and systemd-run that ignored all 26 held packages and had nothing else to install. Untested: an upgrade that actually installs packages, logging out during a transaction, retry after a real mirror failure, and the polkit rule in isolation (this workstation already allows pkexec without a password through another rule).

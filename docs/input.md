@@ -37,8 +37,9 @@ entries. Layouts, variants and options are validated against xkeyboard-config's
 The Window appearance page (`general:col.*` border colors and `decoration:*`
 corners, opacity, dimming, shadow and glow), the Animations page
 (`animations:*`, `misc:animate_*`, `decoration:motion_blur:*` and
-`decoration:wobble:*`) and the dwindle options of the Multitasking page
-(`dwindle:*`, shown only while Dwindle is the layout) are in the same group.
+`decoration:wobble:*`) and the layout options of the Multitasking page
+(`dwindle:*`, `master:*` and `scrolling:*`, each shown only while its layout is
+chosen) are in the same group.
 Colors with transparency are `#rrggbbaa` and are written as `rgba(rrggbbaa)`;
 Hyprland reports them as `AARRGGBB` gradients, of which the first color is
 read. Option names containing a dot nest in Lua (`col.active_border` becomes
@@ -70,8 +71,9 @@ removes a block it added, and reverts the live values.
 
 - `hl.config` statements
 - `hl.unbind` of a combination
-- `hl.bind` with `hl.dsp.exec_cmd` or one of six fixed window actions: close,
-  float, fullscreen, maximize, pin and scratchpad
+- `hl.bind` with `hl.dsp.exec_cmd` or one of eight fixed actions: close,
+  float, fullscreen, maximize, pin, scratchpad, group (toggle a window group)
+  and group-next (next tab in the group)
 
 The reader parses the file and renders it again. When the result differs from
 the file, it refuses to write and reports `write_blocked`, so a hand-edited file
@@ -244,3 +246,12 @@ Verification:
 - `test/input_test.dart`
 - `test/input_smoke.py`, which runs the service against a nested Hyprland with
   isolated XDG roots
+- `test/desktop_smoke.py`, the same for the desktop group: Multitasking
+  (including window groups, focus and full screen, and the Dwindle, Master and
+  Scrolling layouts), Graphics, Window appearance, Animations, Workspaces and
+  the System information compositor readouts. Each option is written, kept
+  after `hyprctl reload`, read back without a conflict, and out-of-range values
+  are refused.
+
+Not tested on hardware: direct scanout and automatic HDR switching with a real
+game or HDR content.

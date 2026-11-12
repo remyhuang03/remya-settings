@@ -176,6 +176,37 @@ def main():
                     ("sound.compositor-bell", "'\"/etc/passwd\"'")]:
             assert "InvalidArgument" in call("Set", *bad, ok=False)
 
+        # Window groups, focus and graphics options, including nested group colors.
+        for setting, value in [("multitasking.groupbar-height", "20"), ("multitasking.group-drag-into", "2"),
+                               ("multitasking.focus-under-fullscreen", "1"),
+                               ("multitasking.exit-retains-fullscreen", "3"), ("multitasking.anr-dialog", "false"),
+                               ("graphics.allow-tearing", "true"),
+                               ("graphics.direct-scanout", "2"), ("graphics.auto-hdr", "0"),
+                               ("graphics.xwayland-zero-scaling", "true"),
+                               ("multitasking.master-orientation", "'\"center\"'"),
+                               ("multitasking.master-mfact", "0.6"), ("multitasking.master-new-status", "'\"master\"'"),
+                               ("multitasking.scrolling-direction", "'\"down\"'"),
+                               ("multitasking.scrolling-column-width", "0.75"), ("multitasking.scrolling-focus-fit", "0"),
+                               ("window-appearance.group-active-border", "'\"#11223344\"'")]:
+            call("Set", setting, value)
+        hyprctl("reload")
+        time.sleep(1)
+        assert option("group:groupbar:height", "int") == 20
+        assert option("render:direct_scanout", "int") == 2 and option("general:allow_tearing", "bool") is True
+        assert option("misc:exit_window_retains_fullscreen", "int") == 3
+        assert option("master:orientation", "str") == "center" and option("master:new_status", "str") == "master"
+        assert abs(option("master:mfact", "float") - 0.6) < 1e-6 and option("scrolling:focus_fit_method", "int") == 0
+        assert option("scrolling:direction", "str") == "down"
+        state = call("Get", "desktop")
+        assert state["system"]["window-appearance.group-active-border"] == "#11223344", state["system"]
+        assert state["system"]["graphics.xwayland-zero-scaling"] is True and not state["conflict"], state
+        for bad in [("graphics.direct-scanout", "3"), ("multitasking.groupbar-height", "0"),
+                    ("multitasking.master-orientation", "'\"middle\"'"), ("multitasking.scrolling-column-width", "0")]:
+            assert "InvalidArgument" in call("Set", *bad, ok=False)
+        about = call("Get", "system-information")["values"]
+        assert about["about.desktop-version"]["value"].startswith("Hyprland "), about
+        assert about["about.desktop-config-errors"]["value"] == "No errors found", about
+
         # Workspace options and rules: rules reload, read back through workspacerules and
         # leave rules from the user's other files alone.
         def rules():
