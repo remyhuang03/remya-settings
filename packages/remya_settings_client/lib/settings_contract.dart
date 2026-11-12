@@ -35,3 +35,4 @@ export 'src/theme_packs.dart';
 export 'src/text_size.dart';
 export 'src/language.dart';
 export 'src/ai.dart';
+export 'src/printers.dart';

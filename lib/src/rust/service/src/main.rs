@@ -156,6 +156,11 @@ fn run() -> Result<(), String> {
                         {
                             signal(&bus, "display-brightness", &value);
                         }
+                        if method == "Set"
+                            && remya_settings_printers::IDS.contains(&args[0].as_str())
+                        {
+                            signal(&bus, "printers", &value);
+                        }
                         if method == "Set" && ai::SET_IDS.contains(&args[0].as_str()) {
                             signal(&bus, &args[0], &value);
                             if args[0] != ai::PROVIDERS {

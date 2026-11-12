@@ -2125,6 +2125,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "remya_settings_printers"
+version = "0.1.0-dev.20261111.0"
+dependencies = [
+ "remya_settings_display",
+ "serde_json",
+]
+
+[[package]]
 name = "remya_settings_service"
 version = "0.1.0-dev.20261111.0"
 dependencies = [
@@ -2141,6 +2149,7 @@ dependencies = [
  "remya_settings_input",
  "remya_settings_network",
  "remya_settings_power",
+ "remya_settings_printers",
  "remya_settings_sound",
  "remya_settings_startup",
  "remya_settings_storage",

@@ -38,4 +38,5 @@ remya_settings_power = { path = "../power" }
 remya_settings_startup = { path = "../startup" }
 remya_settings_storage = { path = "../storage" }
 remya_settings_input = { path = "../input" }
+remya_settings_printers = { path = "../printers" }
 udev = "0.9.3"
