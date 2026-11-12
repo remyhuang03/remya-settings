@@ -667,6 +667,58 @@ impl<C: Compositor> DisplayManager<C> {
         json!({"outputs": values})
     }
 
+    pub fn output_brightness(&mut self, output: &str) -> Result<Value, String> {
+        if self.outputs.is_empty() {
+            self.read_outputs()?;
+        }
+        self.monitor(output)?;
+        let names = self
+            .outputs
+            .iter()
+            .map(|m| m.name.clone())
+            .collect::<Vec<_>>();
+        serde_json::to_value(self.brightness.read(output, &names)).map_err(|e| e.to_string())
+    }
+
+    /// Kernel events must not wake or probe external DDC/CI displays.
+    pub fn backlight_state(&self) -> Value {
+        let names = self
+            .outputs
+            .iter()
+            .map(|m| m.name.clone())
+            .collect::<Vec<_>>();
+        let outputs = self
+            .outputs
+            .iter()
+            .filter(|m| !m.disabled)
+            .filter_map(|m| BrightnessBackend::read_backlight(&m.name, &names))
+            .collect::<Vec<_>>();
+        json!({"outputs": outputs})
+    }
+
+    pub fn set_output_brightness(&mut self, output: &str, value: &str) -> Result<Value, String> {
+        let percent = value
+            .parse::<u32>()
+            .ok()
+            .filter(|p| *p <= 100)
+            .ok_or_else(|| invalid("Brightness must be 0 to 100"))?;
+        if self.outputs.is_empty() {
+            self.read_outputs()?;
+        }
+        self.monitor(output)?;
+        let names = self
+            .outputs
+            .iter()
+            .map(|m| m.name.clone())
+            .collect::<Vec<_>>();
+        let actual = self.brightness.set(output, &names, percent)?;
+        Ok(json!({
+            "output": output,
+            "percent": actual,
+            "outputs": [{"output": output, "percent": actual}],
+        }))
+    }
+
     /// The value one setting reports for each connected output.
     pub fn setting_value(&self, id: &str) -> Value {
         let mut values = serde_json::Map::new();

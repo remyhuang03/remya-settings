@@ -189,6 +189,25 @@ impl BrightnessBackend {
         self.read_from(Path::new("/sys/class/backlight"), output, outputs)
     }
 
+    pub(crate) fn read_backlight(output: &str, outputs: &[String]) -> Option<Brightness> {
+        Self::read_backlight_from(Path::new("/sys/class/backlight"), output, outputs)
+    }
+
+    fn read_backlight_from(root: &Path, output: &str, outputs: &[String]) -> Option<Brightness> {
+        let list = backlights(root);
+        let device = backlight_for(&list, output, outputs)?;
+        let (percent, reason) = match read_backlight(root, &device.name) {
+            Ok((value, max)) => (Some(percent(value, max)), String::new()),
+            Err(error) => (None, error),
+        };
+        Some(Brightness {
+            output: output.to_owned(),
+            percent,
+            backend: Some("backlight"),
+            reason,
+        })
+    }
+
     fn read_from(&mut self, root: &Path, output: &str, outputs: &[String]) -> Brightness {
         let result = |percent, backend, reason: String| Brightness {
             output: output.to_owned(),
@@ -196,14 +215,8 @@ impl BrightnessBackend {
             backend,
             reason,
         };
-        let list = backlights(root);
-        if let Some(device) = backlight_for(&list, output, outputs) {
-            return match read_backlight(root, &device.name) {
-                Ok((value, max)) => {
-                    result(Some(percent(value, max)), Some("backlight"), String::new())
-                }
-                Err(error) => result(None, None, error),
-            };
+        if let Some(backlight) = Self::read_backlight_from(root, output, outputs) {
+            return backlight;
         }
         if is_internal(output) {
             return result(

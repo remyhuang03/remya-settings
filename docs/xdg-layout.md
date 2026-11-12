@@ -11,7 +11,9 @@ Remya Bar uses `top.remya.bar` and executable `remya_bar`.
 | Installed/shared Settings preferences | `$XDG_CONFIG_HOME/remya/settings/config.toml` |
 | Bar clock preference | `remya-bar.toml` beside the selected Settings configuration |
 | Bar touch keyboard preview | `remya-bar-keyboard.toml` beside the selected Settings configuration |
+| Bar on-screen display preferences | `remya-bar-osd.toml` beside the selected Settings configuration |
 | Notification preferences (used by the bar) | `notifications.toml` beside the selected Settings configuration |
+| Launcher clipboard policy and history | Managed by Remya Launcher through `$XDG_RUNTIME_DIR/remya-launcher/clipboard.sock`. Settings stores no separate copy. |
 | Bar sidebar tile layout | `remya-bar-sidebar.toml` beside the selected Settings configuration |
 | Bar pill layout and options, including the media marquee | `remya-bar-layout.toml` beside the selected Settings configuration |
 | AI Bar pins, low quota percent and custom endpoints | `remya-ai.toml` beside the selected Settings configuration |

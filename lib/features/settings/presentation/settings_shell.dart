@@ -1,5 +1,6 @@
 import '../../ai/presentation/ai_providers_page.dart';
 import '../../ai/presentation/ai_usage_page.dart';
+import '../../clipboard/presentation/clipboard_page.dart';
 import '../../storage/application/storage_controller.dart';
 import '../../storage/presentation/storage_page.dart';
 import '../../storage/presentation/cleanup_page.dart';
@@ -468,6 +469,8 @@ class _SettingsShellState extends State<SettingsShell> {
         catalog: widget.catalog,
         client: widget.client,
       );
+    } else if (_page?.id == 'clipboard') {
+      content = ClipboardPage(client: widget.client, page: _page!);
     } else if (NotificationsPage.pageIds.contains(_page?.id) &&
         widget.client != null) {
       content = NotificationsPage(

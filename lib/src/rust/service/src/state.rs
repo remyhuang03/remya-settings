@@ -1,5 +1,5 @@
-use crate::notifications;
 use crate::privileged::{Request, Session};
+use crate::{clipboard, notifications, osd};
 use gio::glib::{Variant, variant::ToVariant};
 use remya_settings_appearance::api as appearance;
 use remya_settings_appearance::packs::{self, ThemePacks};
@@ -709,9 +709,13 @@ impl State {
                 let key = args[0].as_str();
                 match key {
                     BAR_CLOCK_SECONDS | BAR_KEY_PREVIEW => self.bar_bool_preference(key, None),
+                    key if key == clipboard::ALL || clipboard::IDS.contains(&key) => {
+                        clipboard::get(key)
+                    }
                     key if notifications::is_setting(key) => {
                         notifications::get(&self.config, key)
                     }
+                    key if osd::is_setting(key) => osd::get(&self.config, key),
                     BAR_FOLDED_APPS => self.read_bar_folded_apps(),
                     BAR_SIDEBAR => self.sidebar_layout(None),
                     BAR_LAYOUT => self.bar_layout(None),
@@ -758,6 +762,12 @@ impl State {
                     "display-brightness" => {
                         self.display.refresh()?;
                         Ok(self.display.brightness_state())
+                    }
+                    _ if key.starts_with("display-brightness:") => {
+                        self.display.output_brightness(&key[19..])
+                    }
+                    remya_settings_display::night_light::GAMMA => {
+                        Ok(self.night_light.gamma_state())
                     }
                     _ if is_display_setting(key) => {
                         let _ = self.display.refresh();
@@ -1197,6 +1207,12 @@ impl State {
         if key == BAR_LAYOUT {
             return self.bar_layout(Some(value));
         }
+        if key == remya_settings_display::night_light::GAMMA {
+            return self.night_light.set_gamma(value);
+        }
+        if let Some(output) = key.strip_prefix("display-brightness:") {
+            return self.display.set_output_brightness(output, value);
+        }
         if remya_settings_power::is_setting(key) {
             return self.power.set(key, value);
         }
@@ -1207,6 +1223,9 @@ impl State {
             .ok_or_else(|| invalid("Unknown setting"))?;
         if control["availability"] != "available" {
             return Err(format!("Unavailable:{}", control["reason"]));
+        }
+        if clipboard::IDS.contains(&key) {
+            return clipboard::set(key, value);
         }
         if let Some(page) = linked_page(key) {
             if value != "open" {
@@ -1397,6 +1416,9 @@ impl State {
         }
         if notifications::IDS.contains(&key) {
             return notifications::set(&self.config, key, value);
+        }
+        if osd::IDS.contains(&key) {
+            return osd::set(&self.config, key, value);
         }
         if matches!(key, BAR_CLOCK_SECONDS | BAR_KEY_PREVIEW) {
             return self.bar_bool_preference(key, Some(value));

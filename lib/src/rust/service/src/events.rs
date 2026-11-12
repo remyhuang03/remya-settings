@@ -3,12 +3,68 @@ use crate::{signal, state::State};
 use remya_settings_display::Hyprctl;
 use std::{
     io::{BufRead, BufReader},
+    os::fd::AsRawFd,
     os::unix::net::UnixStream,
     path::PathBuf,
     sync::{Arc, Mutex, mpsc},
     thread,
     time::Duration,
 };
+
+fn watch_changes(
+    bus: gio::DBusConnection,
+    topic: &'static str,
+    mut read: impl FnMut() -> serde_json::Value + Send + 'static,
+) -> mpsc::SyncSender<()> {
+    let (sender, receiver) = mpsc::sync_channel(1);
+    thread::spawn(move || {
+        let mut last = None;
+        while receiver.recv().is_ok() {
+            thread::sleep(Duration::from_millis(40));
+            let _ = receiver.try_recv();
+            let value = read();
+            if last.as_ref() != Some(&value) {
+                signal(&bus, topic, &value);
+                last = Some(value);
+            }
+        }
+    });
+    sender
+}
+
+pub fn watch_sound(state: Arc<Mutex<State>>, bus: gio::DBusConnection) {
+    let sender = watch_changes(bus, "sound", move || {
+        let mut state = state.lock().unwrap();
+        let _ = state.sound.refresh();
+        state.sound.state()
+    });
+    thread::spawn(move || {
+        remya_settings_sound::pulse::watch_default_output(move || {
+            let _ = sender.try_send(());
+        });
+    });
+}
+
+pub fn watch_backlight(state: Arc<Mutex<State>>, bus: gio::DBusConnection) -> std::io::Result<()> {
+    use gio::glib::{self, ControlFlow, IOCondition};
+
+    let monitor = udev::MonitorBuilder::new()?
+        .match_subsystem("backlight")?
+        .listen()?;
+    let sender = watch_changes(bus, "display-brightness", move || {
+        state.lock().unwrap().display.backlight_state()
+    });
+    glib::source::unix_fd_add_local(monitor.as_raw_fd(), IOCondition::IN, move |_, condition| {
+        if condition.intersects(IOCondition::ERR | IOCondition::HUP | IOCondition::NVAL) {
+            return ControlFlow::Break;
+        }
+        if monitor.iter().next().is_some() {
+            let _ = sender.try_send(());
+        }
+        ControlFlow::Continue
+    });
+    Ok(())
+}
 
 fn is_output_event(line: &str) -> bool {
     ["monitoradded", "monitorremoved", "configreloaded"]

@@ -10,8 +10,8 @@ Hyprland 内容包含 27 个独立页面及并入常规页面的设置项，共 
 
 ## 当前概况
 
-- 设置分类：15 个；详情页面：117 个；设置条目：1230 项。
-- 已实现：420 项；未实现：800 项；不适用：10 项。
+- 设置分类：16 个；详情页面：119 个；设置条目：1235 项。
+- 已实现：429 项；未实现：796 项；不适用：10 项。
 - Material Design 组的 Light/Dark 控件通过 Rust 读取、修改已安装 GNOME/GTK 的明确深浅色设置，并将 Qt Quick 官方主题环境变量保存到 fish 与 Hyprland Lua 配置。本应用遵循选定的 Material 外观；其余不可用控件仍为界面示例，不扫描设备或持久化预览值。
 
 - 日期时间通过 Rust / system D-Bus 连接 systemd-timedated；时区只允许系统 ListTimezones 返回的有限集合。首次启动采用系统配置，冲突在顶部由用户选择同步方向；墙上时间不保存为启动恢复值。冲突提示仅列出实际变化的字段及双方值；`test/service_controllers_test.dart` 覆盖各偏好的提示。显示语言与区域格式由 Language and Region 页经 systemd-localed 管理。
@@ -65,13 +65,14 @@ Hyprland 内容包含 27 个独立页面及并入常规页面的设置项，共 
 
 | 分类 | 页面 | 条目 | 已实现 | 未实现 | 不适用 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [系统](#category-system) | 15 | 201 | 109 | 92 | 0 |
+| [AI](#category-ai) | 2 | 2 | 2 | 0 | 0 |
+| [系统](#category-system) | 15 | 201 | 113 | 88 | 0 |
 | [声音](#category-sound) | 3 | 17 | 15 | 2 | 0 |
 | [电源与电池](#category-power) | 3 | 20 | 19 | 1 | 0 |
 | [通知](#category-notifications) | 4 | 19 | 12 | 7 | 0 |
 | [蓝牙和设备](#category-devices) | 11 | 103 | 57 | 46 | 0 |
 | [网络和 Internet](#category-network) | 8 | 63 | 63 | 0 | 0 |
-| [外观](#category-appearance) | 10 | 209 | 92 | 117 | 0 |
+| [外观](#category-appearance) | 10 | 212 | 95 | 117 | 0 |
 | [应用](#category-apps) | 5 | 35 | 30 | 5 | 0 |
 | [账户](#category-accounts) | 11 | 58 | 2 | 50 | 6 |
 | [时间和语言](#category-time) | 4 | 19 | 11 | 8 | 0 |
@@ -442,11 +443,11 @@ Windows 参考入口：`ms-settings:remotedesktop`。
 
 ### Clipboard — `clipboard`
 
-历史记录、同步与清除
+Remya Launcher 的历史记录、保留上限与清除
 
-页面状态：**未实现**；条目：4；已实现 0 / 未实现 4 / 不适用 0。
+页面状态：**已实现**；条目：4；已实现 4 / 未实现 0 / 不适用 0。
 
-原因：尚未实现；这里只展示界面，不会读取或更改系统设置。
+原因：通过 Launcher 服务读取与更新专用策略，改动即时生效。独立的第三方剪贴板管理器与跨设备同步不在本页的范围内。
 
 Windows 参考入口：`ms-settings:clipboard`。
 
@@ -454,10 +455,10 @@ Windows 参考入口：`ms-settings:clipboard`。
 
 | 功能小项 | 稳定 ID | 控件 | 状态 | 跟踪 / 验证 |
 | --- | --- | --- | --- | --- |
-| Clipboard History | `clipboard.1e42405e` | 开关 | 未实现 | — |
-| Sync across devices | `clipboard.71367ff3` | 开关 | 未实现 | — |
-| Synchronization method | `clipboard.3cc9cef1` | 选择 | 未实现 | — |
-| Clear clipboard data | `clipboard.5593d4e3` | 操作 | 未实现 | — |
+| Clipboard history | `clipboard.history-enabled` | 开关 | 已实现 | `test/clipboard_page_test.dart`、`test/clipboard_smoke.py` |
+| Maximum history items | `clipboard.max-items` | 文本输入 | 已实现 | `test/clipboard_page_test.dart`、`test/clipboard_smoke.py` |
+| Retention period | `clipboard.retention-days` | 文本输入 | 已实现 | `test/clipboard_smoke.py` |
+| Clear clipboard history | `clipboard.clear-history` | 操作 | 已实现 | `test/clipboard_page_test.dart`、`test/clipboard_smoke.py` |
 
 ### Presence sensing — `presence`
 
@@ -1872,6 +1873,8 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 | Light color | `lighting.bf0bca1e` | 颜色 | 未实现 | — |
 | Match with accent colors | `lighting.869e06ec` | 开关 | 未实现 | — |
 
+<a id="category-ai"></a>
+
 ### AI Providers — `ai-providers`
 
 | 设置项 | ID | 类型 | 状态 | 说明 |
@@ -1892,6 +1895,10 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 | Show seconds | `remya-bar.clock-seconds` | 开关 | 已实现 | Settings 服务持久化，CLI/D-Bus 对等测试，安装版开关联动三个 Hyprland 输出 |
 | Folded apps | `remya-bar.folded-apps` | 操作 | 已实现 | Settings 持久化托盘折叠状态，支持从设置页恢复固定。 |
 | Show touch key previews | `remya-bar.keyboard-preview` | 开关 | 已实现 | Settings persists the preference and exposes it through CLI and D-Bus. |
+| Volume step size | `remya-bar.volume-step` | 滑块 | 已实现 | Settings 服务校验 1–25% 并原子持久化到 `remya-bar-osd.toml`，CLI/D-Bus 对等测试，Bar OSD 快捷键步进实时消费 |
+| Maximum volume | `remya-bar.volume-max` | 滑块 | 已实现 | Settings 服务校验 100–150% 并原子持久化到 `remya-bar-osd.toml`，CLI/D-Bus 对等测试，Bar OSD 快捷键与侧栏输出音量滑块实时消费 |
+| Brightness step size | `remya-bar.brightness-step` | 滑块 | 已实现 | Settings 服务校验 1–25% 并原子持久化到 `remya-bar-osd.toml`，CLI/D-Bus 对等测试，Bar OSD 亮度/Gamma 步进实时消费 |
+| Minimum gamma | `remya-bar.gamma-min` | 滑块 | 已实现 | Settings 服务校验 10–90% 并原子持久化到 `remya-bar-osd.toml`，CLI/D-Bus 对等测试，Bar OSD Gamma 下限实时消费 |
 
 ### More — `appearance-more`
 

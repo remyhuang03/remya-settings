@@ -54,7 +54,9 @@ No command evaluates shell input. IDs are stable catalog IDs, not translated lab
 | `get system` | `Get(s key)` with `system` | Fresh system mode and target readback |
 | `get display` | `Get(s key)` with `display` | Outputs, modes, saved and actual values, conflicts, pending change, write blocker |
 | `get night-light` | `Get(s key)` with `night-light` | Saved and system preferences, live state, conflict, write blocker, error |
+| `get display-gamma` | `Get(s key)` with `display-gamma` | Live hyprsunset gamma percentage (`10`–`100`), or why it is unavailable |
 | `get display-brightness` | `Get(s key)` with `display-brightness` | Hardware brightness per active output, or why it is unavailable |
+| `get display-brightness:<output>` | `Get(s key)` with `display-brightness:<output>` | Hardware brightness for one active output |
 | `get catalog` | `Get(s key)` with `catalog` | Sources, categories, and page summaries |
 | `get page:<id>` | `Get(s key)` with `page:<id>` | Complete page, sections, and control metadata |
 | `get <setting-id>` | `Get(s key)` | ID, availability, reason, and current value where implemented |
@@ -1055,6 +1057,27 @@ The ordinary-user service stores `clock_seconds` as a boolean in
 reported and protected from overwrites. This preference controls the clock
 capsule across outputs and has no system counterpart.
 
+## Launcher Clipboard
+
+`Get("clipboard")` (CLI `get clipboard`) returns a setting whose `value`
+contains `enabled`, `maxItems` and `retentionDays`. Remya Launcher owns
+and applies the policy immediately. Settings connects to the Launcher service
+over its private user socket and returns `Unavailable` if it cannot connect.
+
+| ID | Value accepted by `Set(id, value)` |
+| --- | --- |
+| `clipboard.history-enabled` | `true` or `false`. Pausing capture keeps saved items. |
+| `clipboard.max-items` | Whole items, 1 to 5000. Default 500. |
+| `clipboard.retention-days` | Whole days, 1 to 365. Default 30. |
+| `clipboard.clear-history` | `true` to confirm clearing all Launcher history, including pinned entries. |
+
+Each ID is available to `Get(id)` and the CLI `get` and `set` commands.
+Successful writes emit `Changed` with the written ID. Reads and writes of
+individual settings return the effective scalar in `value`. For
+`clipboard.clear-history`, `value` is `null`. Reducing either history limit
+immediately prunes affected unpinned entries. The pure Dart `ClipboardClient`
+extension provides typed access.
+
 ## Notifications
 
 These preferences belong to the desktop notification service (Remy'a Bar) and
@@ -1164,6 +1187,27 @@ tile ID is shown as Keep awake.
 to `true`. `Set("remya-bar.keyboard-preview", "true" | "false")` controls
 touch key previews and emits `Changed` with the same ID. Both operations
 also work through the CLI and the public `SidebarClient` extension.
+
+## Remya Bar on-screen display
+
+`Get("remya-bar.osd")` returns all four OSD preferences in `value`:
+`{"volume_step":5,"volume_max":150,"brightness_step":5,"gamma_min":10}`. Each
+individual setting (`remya-bar.volume-step`, `remya-bar.volume-max`,
+`remya-bar.brightness-step`, `remya-bar.gamma-min`) is also readable with
+`Get(id)` and writable with `Set(id, value)` (whole percentages: `1` to `25`
+for steps, `100` to `150` for `volume-max`, `10` to `90` for `gamma-min`),
+returning
+the effective integer in `value` and emitting `Changed` with the written ID.
+Missing configuration uses defaults without writing `remya-bar-osd.toml`;
+malformed files are reported and protected from overwrites. The pure Dart
+`BarOsdClient` extension provides typed access through `BarOsdPreferences`.
+
+`Changed("display-brightness", {"outputs":[…]})` also reports kernel backlight
+changes made outside Settings. Each included output has the same fields as
+`Get("display-brightness:<output>")`; the signal lists only outputs backed by
+kernel backlight devices. External DDC/CI brightness is read on demand. A
+single-output Settings write still returns and publishes its verified output and
+percentage without repeating backend discovery.
 
 ## Startup apps
 

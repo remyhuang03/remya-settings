@@ -4,11 +4,20 @@
   <!-- Notifications: Get notifications reads all preferences; Get/Set notifications.*,
        quiet-schedule.* and priority-notifications.* per docs/public-api.md#notifications.
        Changed uses the written ID. -->
+  <!-- Launcher clipboard: Get clipboard returns {enabled,maxItems,retentionDays}.
+       Get/Set clipboard.history-enabled (bool), clipboard.max-items (1-5000),
+       clipboard.retention-days (1-365). Set clipboard.clear-history with true
+       clears Launcher history. Changed uses the written ID. -->
   <!-- Get remya-bar.folded-apps returns IDs. Set accepts a JSON object with id and folded. -->
   <!-- Get remya-bar.sidebar-layout returns the visible tile IDs in order.
        Set accepts {expected,tiles}; Changed uses the same ID. -->
   <!-- Get remya-bar.layout returns {groups,workspace_count,resources,window_app_name,media_marquee,center?}.
        Set replaces it with the same JSON object; Changed uses the same ID. -->
+  <!-- OSD: Get remya-bar.osd returns {volume_step,brightness_step,gamma_min}.
+       Get/Set remya-bar.volume-step (1-25), remya-bar.brightness-step (1-25) and
+       remya-bar.gamma-min (10-90) read/write integer percentages; Changed uses the written ID.
+       Get/Set display-gamma reads/writes live hyprsunset gamma (10-100); Changed uses display-gamma.
+       Get/Set display-brightness:<output> reads/writes a single output's hardware brightness. -->
   <!-- AI: Get ai.providers returns {codexbar,updatedAt,providers,catalog,bar}; Get ai.bar
        returns {pinned,lowPercent}; Get ai.provider/<id> returns {provider,usage,modelsDev}.
        Set ai.providers {id,enabled?,source?}, ai.bar {pinned?,lowPercent?},

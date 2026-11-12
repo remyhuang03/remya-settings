@@ -25,6 +25,7 @@ class _BarAppearancePageState extends State<BarAppearancePage> {
   bool? _showSeconds;
   bool? _keyboardPreview;
   BarLayout? _layout;
+  BarOsdPreferences? _osd;
   bool _busy = true;
   String? _error;
   late final StreamSubscription<SettingsChange> _changes;
@@ -33,7 +34,8 @@ class _BarAppearancePageState extends State<BarAppearancePage> {
   void initState() {
     super.initState();
     _changes = widget.client.changes.listen((change) {
-      if (change.topic == barLayoutSettingId) {
+      if (change.topic == barLayoutSettingId ||
+          barOsdSettingIds.contains(change.topic)) {
         unawaited(_load());
       } else if (change.value['value'] case final bool enabled
           when change.topic == barKeyboardPreviewSettingId) {
@@ -62,16 +64,18 @@ class _BarAppearancePageState extends State<BarAppearancePage> {
   }
 
   Future<void> _load() => _run(() async {
-    final (seconds, layout, preview) = await (
+    final (seconds, layout, preview, osd) = await (
       widget.client.readBarClockSeconds(),
       widget.client.readBarLayout(),
       widget.client.readBarKeyboardPreview(),
+      widget.client.readBarOsdPreferences(),
     ).wait;
     if (mounted) {
       setState(() {
         _showSeconds = seconds;
         _layout = layout;
         _keyboardPreview = preview;
+        _osd = osd;
       });
     }
   });
@@ -90,6 +94,26 @@ class _BarAppearancePageState extends State<BarAppearancePage> {
   Future<void> _setLayout(BarLayout layout) => _run(() async {
     final value = await widget.client.setBarLayout(layout);
     if (mounted) setState(() => _layout = value);
+  });
+
+  Future<void> _setVolumeStep(int step) => _run(() async {
+    final value = await widget.client.setBarVolumeStep(step);
+    if (mounted) setState(() => _osd = _osd?.copyWith(volumeStep: value));
+  });
+
+  Future<void> _setVolumeMax(int max) => _run(() async {
+    final value = await widget.client.setBarVolumeMax(max);
+    if (mounted) setState(() => _osd = _osd?.copyWith(volumeMax: value));
+  });
+
+  Future<void> _setBrightnessStep(int step) => _run(() async {
+    final value = await widget.client.setBarBrightnessStep(step);
+    if (mounted) setState(() => _osd = _osd?.copyWith(brightnessStep: value));
+  });
+
+  Future<void> _setGammaMin(int min) => _run(() async {
+    final value = await widget.client.setBarGammaMin(min);
+    if (mounted) setState(() => _osd = _osd?.copyWith(gammaMin: value));
   });
 
   @override
@@ -122,18 +146,143 @@ class _BarAppearancePageState extends State<BarAppearancePage> {
         _FoldedTrayApps(client: widget.client),
         if (_keyboardPreview case final preview?) ...[
           SettingsSectionTitle(sections[3].title),
-          SettingRow(
-            id: barKeyboardPreviewSettingId,
-            label: Text(sections[3].controls.single.title),
-            control: Switch(
-              value: preview,
-              onChanged: _busy ? null : _setKeyboardPreview,
+          SettingsSurface(
+            padding: .zero,
+            child: SettingRow(
+              id: barKeyboardPreviewSettingId,
+              label: Text(sections[3].controls.single.title),
+              control: Switch(
+                value: preview,
+                onChanged: _busy ? null : _setKeyboardPreview,
+              ),
             ),
           ),
         ],
+        if (_osd case final osd? when sections.length > 4)
+          _OsdOptions(
+            section: sections[4],
+            osd: osd,
+            onVolumeStep: _busy ? null : _setVolumeStep,
+            onVolumeMax: _busy ? null : _setVolumeMax,
+            onBrightnessStep: _busy ? null : _setBrightnessStep,
+            onGammaMin: _busy ? null : _setGammaMin,
+          ),
       ],
     );
   }
+}
+
+class _OsdOptions extends StatelessWidget {
+  const _OsdOptions({
+    required this.section,
+    required this.osd,
+    required this.onVolumeStep,
+    required this.onVolumeMax,
+    required this.onBrightnessStep,
+    required this.onGammaMin,
+  });
+
+  final SettingsSection section;
+  final BarOsdPreferences osd;
+  final ValueChanged<int>? onVolumeStep;
+  final ValueChanged<int>? onVolumeMax;
+  final ValueChanged<int>? onBrightnessStep;
+  final ValueChanged<int>? onGammaMin;
+
+  Widget _sliderRow(
+    BuildContext context,
+    SettingSpec spec, {
+    required int value,
+    required int min,
+    required int max,
+    required ValueChanged<int>? onChanged,
+  }) {
+    final text = Theme.of(context).textTheme;
+    return SettingRow(
+      id: spec.id,
+      label: Column(
+        crossAxisAlignment: .start,
+        children: [
+          Text(spec.title, style: text.bodyLarge),
+          Text(spec.reason, style: text.bodySmall),
+        ],
+      ),
+      control: SizedBox(
+        width: 240,
+        child: Row(
+          children: [
+            Expanded(
+              child: Slider(
+                key: ValueKey('${spec.id}-slider'),
+                value: value.clamp(min, max).toDouble(),
+                min: min.toDouble(),
+                max: max.toDouble(),
+                divisions: max - min,
+                label: '$value%',
+                onChanged: onChanged == null
+                    ? null
+                    : (next) => onChanged(next.round()),
+              ),
+            ),
+            SizedBox(
+              width: 44,
+              child: Text(
+                '$value%',
+                key: ValueKey('${spec.id}-value'),
+                textAlign: .end,
+                style: text.labelLarge,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: .stretch,
+    children: [
+      SettingsSectionTitle(section.title),
+      SettingsSurface(
+        padding: .zero,
+        child: settingsRows([
+          _sliderRow(
+            context,
+            section.controls[0],
+            value: osd.volumeStep,
+            min: 1,
+            max: 25,
+            onChanged: onVolumeStep,
+          ),
+          _sliderRow(
+            context,
+            section.controls[1],
+            value: osd.volumeMax,
+            min: 100,
+            max: 150,
+            onChanged: onVolumeMax,
+          ),
+          _sliderRow(
+            context,
+            section.controls[2],
+            value: osd.brightnessStep,
+            min: 1,
+            max: 25,
+            onChanged: onBrightnessStep,
+          ),
+          _sliderRow(
+            context,
+            section.controls[3],
+            value: osd.gammaMin,
+            min: 10,
+            max: 90,
+            onChanged: onGammaMin,
+          ),
+        ]),
+      ),
+    ],
+  );
 }
 
 /// Options of visible pills; options of hidden pills are omitted.

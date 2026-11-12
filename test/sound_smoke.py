@@ -97,6 +97,27 @@ def check(profile, cli):
         run('pactl', 'set-source-volume', 'remya_api_b.monitor', '31%')
         run('pactl', 'set-default-sink', 'remya_api_a')
         run('pactl', 'set-default-source', 'remya_api_a.monitor')
+
+        def external_signal():
+            # Read without moving the monitor process's shared file offset.
+            log = os.pread(signals.fileno(), os.fstat(signals.fileno()).st_size, 0).decode()
+            for line in log.splitlines():
+                _, _, body = line.partition('Changed ')
+                if not body.startswith("('sound',"):
+                    continue
+                try:
+                    snapshot = json.loads(ast.literal_eval(body)[1])['system']
+                except (ValueError, SyntaxError):
+                    continue  # The monitor may still be writing the last line.
+                if not snapshot or snapshot['default_output'] != 'remya_api_a':
+                    continue
+                device = next(d for d in snapshot['devices'] if d['name'] == 'remya_api_b')
+                prefs = device['preferences']
+                if not prefs['muted'] and abs(max(prefs['channels']) * 100 / 65536 - 27) < 0.01:
+                    return True
+            return False
+
+        wait(external_signal)
         live = command('get', 'sound')
         assert live == dbus('Get', 'sound') and live['error'] is None, live
         assert live['system']['default_output'] == 'remya_api_a'

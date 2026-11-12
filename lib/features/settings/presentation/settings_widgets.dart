@@ -33,6 +33,7 @@ IconData categoryIcon(String icon) => switch (icon) {
 IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
     switch (page.id) {
       'storage' => Icons.storage_outlined,
+      'clipboard' => Icons.content_paste_outlined,
       'cleanup' => Icons.cleaning_services_outlined,
       'date-time' => Icons.schedule_rounded,
       'about' => Icons.info_outline_rounded,
