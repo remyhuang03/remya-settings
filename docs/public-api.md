@@ -1190,11 +1190,13 @@ also work through the CLI and the public `SidebarClient` extension.
 
 ## Remya Bar on-screen display
 
-`Get("remya-bar.osd")` returns all three OSD preferences in `value`:
-`{"volume_step":5,"brightness_step":5,"gamma_min":10}`. Each individual setting
-(`remya-bar.volume-step`, `remya-bar.brightness-step`, `remya-bar.gamma-min`)
-is also readable with `Get(id)` and writable with `Set(id, value)` (whole
-percentages: `1` to `25` for steps, `10` to `90` for `gamma-min`), returning
+`Get("remya-bar.osd")` returns all four OSD preferences in `value`:
+`{"volume_step":5,"volume_max":150,"brightness_step":5,"gamma_min":10}`. Each
+individual setting (`remya-bar.volume-step`, `remya-bar.volume-max`,
+`remya-bar.brightness-step`, `remya-bar.gamma-min`) is also readable with
+`Get(id)` and writable with `Set(id, value)` (whole percentages: `1` to `25`
+for steps, `100` to `150` for `volume-max`, `10` to `90` for `gamma-min`),
+returning
 the effective integer in `value` and emitting `Changed` with the written ID.
 Missing configuration uses defaults without writing `remya-bar-osd.toml`;
 malformed files are reported and protected from overwrites. The pure Dart

@@ -6,18 +6,20 @@ use serde_json::{Value, json};
 use std::path::{Path, PathBuf};
 
 pub const VOLUME_STEP: &str = "remya-bar.volume-step";
+pub const VOLUME_MAX: &str = "remya-bar.volume-max";
 pub const BRIGHTNESS_STEP: &str = "remya-bar.brightness-step";
 pub const GAMMA_MIN: &str = "remya-bar.gamma-min";
 /// Reads every OSD preference at once.
 pub const ALL: &str = "remya-bar.osd";
 
 /// Writable IDs; each write emits `Changed` with its ID.
-pub const IDS: &[&str] = &[VOLUME_STEP, BRIGHTNESS_STEP, GAMMA_MIN];
+pub const IDS: &[&str] = &[VOLUME_STEP, VOLUME_MAX, BRIGHTNESS_STEP, GAMMA_MIN];
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(default, deny_unknown_fields)]
 struct Preferences {
     volume_step: u8,
+    volume_max: u8,
     brightness_step: u8,
     gamma_min: u8,
 }
@@ -26,6 +28,7 @@ impl Default for Preferences {
     fn default() -> Self {
         Self {
             volume_step: 5,
+            volume_max: 150,
             brightness_step: 5,
             gamma_min: 10,
         }
@@ -35,6 +38,7 @@ impl Default for Preferences {
 impl Preferences {
     fn valid(&self) -> bool {
         (1..=25).contains(&self.volume_step)
+            && (100..=150).contains(&self.volume_max)
             && (1..=25).contains(&self.brightness_step)
             && (10..=90).contains(&self.gamma_min)
     }
@@ -70,6 +74,7 @@ pub fn get(config: &Path, id: &str) -> Result<Value, String> {
     let value = match id {
         ALL => all,
         VOLUME_STEP => all["volume_step"].clone(),
+        VOLUME_MAX => all["volume_max"].clone(),
         BRIGHTNESS_STEP => all["brightness_step"].clone(),
         GAMMA_MIN => all["gamma_min"].clone(),
         _ => return Err(invalid("Unknown setting")),
@@ -90,6 +95,7 @@ pub fn set(config: &Path, id: &str, value: &str) -> Result<Value, String> {
     };
     match id {
         VOLUME_STEP => preferences.volume_step = percent(1, 25)?,
+        VOLUME_MAX => preferences.volume_max = percent(100, 150)?,
         BRIGHTNESS_STEP => preferences.brightness_step = percent(1, 25)?,
         GAMMA_MIN => preferences.gamma_min = percent(10, 90)?,
         _ => return Err(invalid("Unknown setting")),
@@ -109,10 +115,12 @@ mod tests {
         let config = root.path().join("config.toml");
         let value = |id| get(&config, id).unwrap()["value"].clone();
         assert_eq!(value(VOLUME_STEP), json!(5));
+        assert_eq!(value(VOLUME_MAX), json!(150));
         assert_eq!(value(BRIGHTNESS_STEP), json!(5));
         assert_eq!(value(GAMMA_MIN), json!(10));
         for (id, request) in [
             (VOLUME_STEP, "2"),
+            (VOLUME_MAX, "120"),
             (BRIGHTNESS_STEP, "10"),
             (GAMMA_MIN, "20"),
         ] {
@@ -120,12 +128,14 @@ mod tests {
         }
         assert_eq!(
             value(ALL),
-            json!({"volume_step": 2, "brightness_step": 10, "gamma_min": 20})
+            json!({"volume_step": 2, "volume_max": 120, "brightness_step": 10, "gamma_min": 20})
         );
         for (id, request) in [
             (VOLUME_STEP, "0"),
             (VOLUME_STEP, "26"),
             (VOLUME_STEP, "five"),
+            (VOLUME_MAX, "99"),
+            (VOLUME_MAX, "151"),
             (BRIGHTNESS_STEP, "0"),
             (BRIGHTNESS_STEP, "30"),
             (GAMMA_MIN, "9"),
@@ -140,6 +150,9 @@ mod tests {
             );
         }
         assert_eq!(value(VOLUME_STEP), json!(2));
+        // Files written before volume_max existed keep loading.
+        std::fs::write(path(&config), "volume_step = 3\n").unwrap();
+        assert_eq!(value(VOLUME_MAX), json!(150));
         std::fs::write(path(&config), "volume_step = 0\n").unwrap();
         assert!(get(&config, VOLUME_STEP).is_err());
         assert!(set(&config, VOLUME_STEP, "5").is_err());

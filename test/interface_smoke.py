@@ -471,15 +471,16 @@ def keyboard_preview_checks():
 def bar_osd_checks():
     config = Path(os.environ['XDG_CONFIG_HOME']) / 'remya/settings/remya-bar-osd.toml'
     assert not config.exists()
-    initial = {'id': 'remya-bar.osd', 'availability': 'available', 'value': {'volume_step': 5, 'brightness_step': 5, 'gamma_min': 10}}
+    initial = {'id': 'remya-bar.osd', 'availability': 'available', 'value': {'volume_step': 5, 'volume_max': 150, 'brightness_step': 5, 'gamma_min': 10}}
     assert cli('get', 'remya-bar.osd') == dbus('Get', 'remya-bar.osd') == initial
-    for setting, expected in [('remya-bar.volume-step', 5), ('remya-bar.brightness-step', 5), ('remya-bar.gamma-min', 10)]:
+    for setting, expected in [('remya-bar.volume-step', 5), ('remya-bar.volume-max', 150), ('remya-bar.brightness-step', 5), ('remya-bar.gamma-min', 10)]:
         assert cli('get', setting) == dbus('Get', setting) == {'id': setting, 'availability': 'available', 'value': expected}
     assert cli('set', 'remya-bar.volume-step', '10') == dbus('Get', 'remya-bar.volume-step') == {'id': 'remya-bar.volume-step', 'availability': 'available', 'value': 10}
+    assert dbus('Set', 'remya-bar.volume-max', '120') == cli('get', 'remya-bar.volume-max') == {'id': 'remya-bar.volume-max', 'availability': 'available', 'value': 120}
     assert dbus('Set', 'remya-bar.brightness-step', '8') == cli('get', 'remya-bar.brightness-step') == {'id': 'remya-bar.brightness-step', 'availability': 'available', 'value': 8}
     assert cli('set', 'remya-bar.gamma-min', '25') == dbus('Get', 'remya-bar.gamma-min') == {'id': 'remya-bar.gamma-min', 'availability': 'available', 'value': 25}
-    assert cli('get', 'remya-bar.osd')['value'] == {'volume_step': 10, 'brightness_step': 8, 'gamma_min': 25}
-    for setting, bad in [('remya-bar.volume-step', '0'), ('remya-bar.volume-step', '26'), ('remya-bar.brightness-step', '0'), ('remya-bar.gamma-min', '9'), ('remya-bar.gamma-min', '91')]:
+    assert cli('get', 'remya-bar.osd')['value'] == {'volume_step': 10, 'volume_max': 120, 'brightness_step': 8, 'gamma_min': 25}
+    for setting, bad in [('remya-bar.volume-step', '0'), ('remya-bar.volume-step', '26'), ('remya-bar.volume-max', '99'), ('remya-bar.volume-max', '151'), ('remya-bar.brightness-step', '0'), ('remya-bar.gamma-min', '9'), ('remya-bar.gamma-min', '91')]:
         assert 'InvalidArgument' in cli('set', setting, bad, ok=False)
     config.write_text('volume_step = "invalid"\n')
     cli('get', 'remya-bar.osd', ok=False)

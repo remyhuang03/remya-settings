@@ -4,6 +4,7 @@ import 'dbus_client.dart';
 
 const barOsdSettingId = 'remya-bar.osd';
 const barVolumeStepSettingId = 'remya-bar.volume-step';
+const barVolumeMaxSettingId = 'remya-bar.volume-max';
 const barBrightnessStepSettingId = 'remya-bar.brightness-step';
 const barGammaMinSettingId = 'remya-bar.gamma-min';
 const displayGammaSettingId = 'display-gamma';
@@ -11,6 +12,7 @@ const displayGammaSettingId = 'display-gamma';
 /// Writable OSD preference IDs; `Changed` uses the written ID as its topic.
 const barOsdSettingIds = {
   barVolumeStepSettingId,
+  barVolumeMaxSettingId,
   barBrightnessStepSettingId,
   barGammaMinSettingId,
 };
@@ -19,22 +21,28 @@ const barOsdSettingIds = {
 class BarOsdPreferences {
   const BarOsdPreferences({
     this.volumeStep = 5,
+    this.volumeMax = 150,
     this.brightnessStep = 5,
     this.gammaMin = 10,
   });
 
   final int volumeStep;
+
+  /// Highest output volume percentage reachable from the bar (100–150).
+  final int volumeMax;
   final int brightnessStep;
   final int gammaMin;
 
   factory BarOsdPreferences.fromJson(Object? json) {
     if (json case {
       'volume_step': final int volumeStep,
+      'volume_max': final int volumeMax,
       'brightness_step': final int brightnessStep,
       'gamma_min': final int gammaMin,
     }) {
       return BarOsdPreferences(
         volumeStep: volumeStep,
+        volumeMax: volumeMax,
         brightnessStep: brightnessStep,
         gammaMin: gammaMin,
       );
@@ -44,16 +52,19 @@ class BarOsdPreferences {
 
   Map<String, Object> toJson() => {
     'volume_step': volumeStep,
+    'volume_max': volumeMax,
     'brightness_step': brightnessStep,
     'gamma_min': gammaMin,
   };
 
   BarOsdPreferences copyWith({
     int? volumeStep,
+    int? volumeMax,
     int? brightnessStep,
     int? gammaMin,
   }) => BarOsdPreferences(
     volumeStep: volumeStep ?? this.volumeStep,
+    volumeMax: volumeMax ?? this.volumeMax,
     brightnessStep: brightnessStep ?? this.brightnessStep,
     gammaMin: gammaMin ?? this.gammaMin,
   );
@@ -74,6 +85,9 @@ extension BarOsdClient on SettingsClient {
 
   Future<int> setBarVolumeStep(int step) async =>
       (await call('Set', [barVolumeStepSettingId, '$step']))['value'] as int;
+
+  Future<int> setBarVolumeMax(int max) async =>
+      (await call('Set', [barVolumeMaxSettingId, '$max']))['value'] as int;
 
   Future<int> setBarBrightnessStep(int step) async =>
       (await call('Set', [barBrightnessStepSettingId, '$step']))['value']

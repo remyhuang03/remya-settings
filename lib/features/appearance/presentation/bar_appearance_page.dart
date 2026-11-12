@@ -101,6 +101,11 @@ class _BarAppearancePageState extends State<BarAppearancePage> {
     if (mounted) setState(() => _osd = _osd?.copyWith(volumeStep: value));
   });
 
+  Future<void> _setVolumeMax(int max) => _run(() async {
+    final value = await widget.client.setBarVolumeMax(max);
+    if (mounted) setState(() => _osd = _osd?.copyWith(volumeMax: value));
+  });
+
   Future<void> _setBrightnessStep(int step) => _run(() async {
     final value = await widget.client.setBarBrightnessStep(step);
     if (mounted) setState(() => _osd = _osd?.copyWith(brightnessStep: value));
@@ -158,6 +163,7 @@ class _BarAppearancePageState extends State<BarAppearancePage> {
             section: sections[4],
             osd: osd,
             onVolumeStep: _busy ? null : _setVolumeStep,
+            onVolumeMax: _busy ? null : _setVolumeMax,
             onBrightnessStep: _busy ? null : _setBrightnessStep,
             onGammaMin: _busy ? null : _setGammaMin,
           ),
@@ -171,6 +177,7 @@ class _OsdOptions extends StatelessWidget {
     required this.section,
     required this.osd,
     required this.onVolumeStep,
+    required this.onVolumeMax,
     required this.onBrightnessStep,
     required this.onGammaMin,
   });
@@ -178,6 +185,7 @@ class _OsdOptions extends StatelessWidget {
   final SettingsSection section;
   final BarOsdPreferences osd;
   final ValueChanged<int>? onVolumeStep;
+  final ValueChanged<int>? onVolumeMax;
   final ValueChanged<int>? onBrightnessStep;
   final ValueChanged<int>? onGammaMin;
 
@@ -250,6 +258,14 @@ class _OsdOptions extends StatelessWidget {
           _sliderRow(
             context,
             section.controls[1],
+            value: osd.volumeMax,
+            min: 100,
+            max: 150,
+            onChanged: onVolumeMax,
+          ),
+          _sliderRow(
+            context,
+            section.controls[2],
             value: osd.brightnessStep,
             min: 1,
             max: 25,
@@ -257,7 +273,7 @@ class _OsdOptions extends StatelessWidget {
           ),
           _sliderRow(
             context,
-            section.controls[2],
+            section.controls[3],
             value: osd.gammaMin,
             min: 10,
             max: 90,

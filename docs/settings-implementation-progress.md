@@ -1896,6 +1896,7 @@ Windows 参考入口：`ms-settings:personalization-lighting`。
 | Folded apps | `remya-bar.folded-apps` | 操作 | 已实现 | Settings 持久化托盘折叠状态，支持从设置页恢复固定。 |
 | Show touch key previews | `remya-bar.keyboard-preview` | 开关 | 已实现 | Settings persists the preference and exposes it through CLI and D-Bus. |
 | Volume step size | `remya-bar.volume-step` | 滑块 | 已实现 | Settings 服务校验 1–25% 并原子持久化到 `remya-bar-osd.toml`，CLI/D-Bus 对等测试，Bar OSD 快捷键步进实时消费 |
+| Maximum volume | `remya-bar.volume-max` | 滑块 | 已实现 | Settings 服务校验 100–150% 并原子持久化到 `remya-bar-osd.toml`，CLI/D-Bus 对等测试，Bar OSD 快捷键与侧栏输出音量滑块实时消费 |
 | Brightness step size | `remya-bar.brightness-step` | 滑块 | 已实现 | Settings 服务校验 1–25% 并原子持久化到 `remya-bar-osd.toml`，CLI/D-Bus 对等测试，Bar OSD 亮度/Gamma 步进实时消费 |
 | Minimum gamma | `remya-bar.gamma-min` | 滑块 | 已实现 | Settings 服务校验 10–90% 并原子持久化到 `remya-bar-osd.toml`，CLI/D-Bus 对等测试，Bar OSD Gamma 下限实时消费 |
 

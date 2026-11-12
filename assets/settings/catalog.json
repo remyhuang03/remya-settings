@@ -17325,6 +17325,17 @@
               "value": 5
             },
             {
+              "id": "remya-bar.volume-max",
+              "title": "Maximum volume",
+              "type": "slider",
+              "availability": "available",
+              "reason": "Highest output volume reachable from the bar. Above 100% boosts and may distort.",
+              "min": 100,
+              "max": 150,
+              "unit": "%",
+              "value": 150
+            },
+            {
               "id": "remya-bar.brightness-step",
               "title": "Brightness step size",
               "type": "slider",
