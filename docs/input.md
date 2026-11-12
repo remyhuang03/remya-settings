@@ -139,6 +139,40 @@ Recording ends in any of these ways:
 The Flutter recorder maps the physical key to an XKB keycode through
 `kLinuxToPhysicalKey`. The service then names the keycode in the active layout.
 
+## Window rules and environment variables
+
+Apps › Window rules and System › Environment variables also use the `desktop`
+group. `desktop.lua` accepts these two more line shapes, after the workspace
+rules and in this fixed field order:
+
+```lua
+hl.env("GDK_BACKEND", "wayland,x11")
+hl.window_rule({ match = { class = "^(org\\.gnome\\.Nautilus)$", title = ".*(Save As).*" }, float = true, center = true, size = { "(monitor_w*0.6)", "(monitor_h*0.5)" }, workspace = "3 silent", pin = true, maximize = true, no_initial_focus = true, opacity = 0.9, no_blur = true, no_shadow = true, keep_aspect_ratio = true, idle_inhibit = "fullscreen" })
+```
+
+A rule matches an exact app class, text its title contains, or both; Settings
+writes both as literal text, escaping RE2 characters, and reads back only that
+shape. Rules are keyed by class and title. Center, size and pin need `float`;
+size is 10% to 100% of the display; opacity is 10% to 100%; `silent` needs a
+workspace; maximized and full screen exclude each other; `idle_inhibit` is
+`focus`, `fullscreen` or `always`. Before a write, Hyprland evaluates the rule
+with `enabled = false`, which refuses unknown fields and wrong types without the
+rule taking effect.
+
+Variable names are letters, digits and underscores, not starting with a digit.
+Names that Cursor and Light/Dark write (`XCURSOR_*`, `HYPRCURSOR_*`,
+`QT_QUICK_CONTROLS_*_THEME`) and session variables (`PATH`, `HOME`,
+`WAYLAND_DISPLAY`, `XDG_RUNTIME_DIR`, `HYPRLAND_INSTANCE_SIGNATURE` and others,
+listed in `reserved_env`) are refused. Values are one line.
+
+A change to either reloads the configuration explicitly, even with autoreload
+on, and then fails, restoring the files, when `hyprctl -j configerrors` names a
+Settings-owned file. Hyprland sets variables on reload for apps it starts
+afterwards; it does not unset a removed one, so that takes effect after signing
+in again. Saved lists are compared with `desktop.lua` under the conflict IDs
+`window-rules` and `environment`. Rules and variables in other files are not
+read or changed.
+
 ## Workspaces
 
 The Workspaces page (System) uses the `desktop` group. Its options are

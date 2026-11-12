@@ -1,6 +1,7 @@
 //! Settings-owned Hyprland options: mouse, touchpad and keyboard shortcuts (`input`)
-//! and window appearance, layout, cursor behavior, workspaces and their rules, blur,
-//! fallback background, display wake, compositor font and compositor bell (`desktop`).
+//! and window appearance, layout, cursor behavior, workspaces and their rules, window
+//! rules, session environment variables, blur, fallback background, display wake,
+//! compositor font and compositor bell (`desktop`).
 //!
 //! Option values are live compositor state read through `hyprctl descriptions`.
 //! Settings persists each group's changes in `hypr/remya-settings/<group>.lua`,
@@ -8,6 +9,7 @@
 //! for reconciliation.
 pub mod config;
 pub mod keys;
+pub mod window;
 pub mod xkb;
 
 pub use config::{DESKTOP, INPUT};
@@ -23,6 +25,7 @@ use std::{
     thread,
     time::{Duration, Instant},
 };
+use window::{EnvVar, WindowRule};
 
 pub const ADD: &str = "keyboard-shortcuts.add";
 pub const REMOVE: &str = "keyboard-shortcuts.remove";
@@ -33,13 +36,26 @@ pub const LOOKUP: &str = "keyboard-shortcuts.lookup:";
 const RECORD_SUBMAP: &str = "remya-settings-record";
 pub const RULE_SET: &str = "workspaces.rule-set";
 pub const RULE_REMOVE: &str = "workspaces.rule-remove";
+pub const WINDOW_RULE_SET: &str = "window-rules.set";
+pub const WINDOW_RULE_REMOVE: &str = "window-rules.remove";
+pub const ENV_SET: &str = "environment.set";
+pub const ENV_REMOVE: &str = "environment.remove";
 
 pub fn is_setting(id: &str) -> bool {
     INPUT.option(id).is_some() || [ADD, REMOVE, DISABLE, RECORD, LIST].contains(&id)
 }
 
 pub fn is_desktop_setting(id: &str) -> bool {
-    DESKTOP.option(id).is_some() || [RULE_SET, RULE_REMOVE].contains(&id)
+    DESKTOP.option(id).is_some()
+        || [
+            RULE_SET,
+            RULE_REMOVE,
+            WINDOW_RULE_SET,
+            WINDOW_RULE_REMOVE,
+            ENV_SET,
+            ENV_REMOVE,
+        ]
+        .contains(&id)
 }
 
 fn invalid(message: impl std::fmt::Display) -> String {
@@ -84,6 +100,10 @@ pub struct Saved {
     pub shortcuts: Vec<Shortcut>,
     #[serde(default)]
     pub rules: Vec<WorkspaceRule>,
+    #[serde(default)]
+    pub env: Vec<EnvVar>,
+    #[serde(default)]
+    pub window_rules: Vec<WindowRule>,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -96,6 +116,7 @@ struct Observed {
     workspace_rules: Vec<Value>,
     monitors: Vec<Value>,
     workspaces: Vec<Value>,
+    clients: Vec<Value>,
     file: Option<File>,
 }
 
@@ -382,6 +403,7 @@ impl<H: Hypr> Input<H> {
             self.observed.workspace_rules = list("workspacerules")?;
             self.observed.monitors = list("monitors")?;
             self.observed.workspaces = list("workspaces")?;
+            self.observed.clients = list("clients")?;
         }
         if !self.main_path().exists() {
             self.write_blocked = Some(format!(
@@ -443,6 +465,8 @@ impl<H: Hypr> Input<H> {
             disabled: file.disabled.clone(),
             shortcuts: file.shortcuts.clone(),
             rules: file.rules.clone(),
+            env: file.env.clone(),
+            window_rules: file.window_rules.clone(),
         }
     }
 
@@ -472,6 +496,12 @@ impl<H: Hypr> Input<H> {
         }
         if saved.rules != file.rules {
             ids.push("workspaces".into());
+        }
+        if saved.window_rules != file.window_rules {
+            ids.push("window-rules".into());
+        }
+        if saved.env != file.env {
+            ids.push("environment".into());
         }
         ids
     }
@@ -612,9 +642,30 @@ impl<H: Hypr> Input<H> {
                 "id": w["id"], "name": w["name"], "monitor": w["monitor"],
                 "windows": w["windows"], "persistent": w["ispersistent"],
             })).collect::<Vec<_>>(),
+            "window_rules": saved.map(|s| &s.window_rules),
+            "system_window_rules": self.observed.file.as_ref().map(|f| &f.window_rules),
+            "windows": self.windows(),
+            "env": saved.map(|s| &s.env),
+            "system_env": self.observed.file.as_ref().map(|f| &f.env),
+            "reserved_env": window::RESERVED,
             "write_blocked": self.write_blocked,
             "error": self.error,
         })
+    }
+
+    /// Open windows, one per app class, for choosing what a window rule matches.
+    fn windows(&self) -> Vec<Value> {
+        let mut seen = std::collections::BTreeSet::new();
+        self.observed
+            .clients
+            .iter()
+            .filter(|c| c["mapped"] != false)
+            .filter_map(|c| {
+                let class = c["class"].as_str().filter(|c| !c.is_empty())?;
+                seen.insert(class.to_owned())
+                    .then(|| json!({"class": class, "title": c["title"]}))
+            })
+            .collect()
     }
 
     pub fn setting_value(&self, id: &str) -> Value {
@@ -698,13 +749,17 @@ impl<H: Hypr> Input<H> {
                 .insert(opt.id.into(), next.options[opt.id].clone());
         }
         // Binds and rules load only through a configuration reload.
+        let explicit = owned.env != next.env || owned.window_rules != next.window_rules;
         let reload = (owned.disabled != next.disabled
             || owned.shortcuts != next.shortcuts
-            || owned.rules != next.rules)
+            || owned.rules != next.rules
+            || explicit)
             .then(|| owned.rules.clone());
         owned.disabled = next.disabled.clone();
         owned.shortcuts = next.shortcuts.clone();
         owned.rules = next.rules.clone();
+        owned.env = next.env.clone();
+        owned.window_rules = next.window_rules.clone();
         let result = (|| {
             let (options, _) = self.read_options()?;
             for opt in &changed {
@@ -712,7 +767,7 @@ impl<H: Hypr> Input<H> {
                     return Err(format!("Hyprland did not apply {}", opt.name));
                 }
             }
-            self.write_files(&owned, reload.as_deref(), &next)
+            self.write_files(&owned, reload.as_deref(), &next, explicit)
         })();
         if let Err(message) = result {
             // Leave the compositor as it was; the files were restored by `write_files`.
@@ -727,11 +782,14 @@ impl<H: Hypr> Input<H> {
     }
 
     /// `reload` holds the rules the file had before, when binds or rules changed.
+    /// `explicit` reloads even with autoreload on, so configuration errors from
+    /// window rules and environment lines are reported before the write is kept.
     fn write_files(
         &self,
         owned: &File,
         reload: Option<&[WorkspaceRule]>,
         next: &Saved,
+        explicit: bool,
     ) -> Result<(), String> {
         let main = fs::read_to_string(self.main_path())
             .map_err(|e| format!("{}: {e}", self.main_path().display()))?;
@@ -750,7 +808,7 @@ impl<H: Hypr> Input<H> {
                 atomic_write(&self.main_path(), main.as_bytes())?;
             }
             if let Some(before) = reload {
-                if !self.observed.autoreload {
+                if !self.observed.autoreload || explicit {
                     self.hypr.request(&["reload"])?;
                 }
                 let list = |what| {
@@ -764,6 +822,9 @@ impl<H: Hypr> Input<H> {
                         || rules_match(&next.rules, before, &list("workspacerules")?);
                     Ok((binds && rules).then_some(()))
                 })?;
+                if explicit {
+                    self.config_errors()?;
+                }
             }
             Ok(())
         })();
@@ -778,6 +839,24 @@ impl<H: Hypr> Input<H> {
             return Err(message);
         }
         Ok(())
+    }
+
+    /// Fails when Hyprland reports an error in a Settings-owned file.
+    /// shortcut: matched by file name in the message; check the line numbers if Hyprland
+    /// ever reports errors for Settings files without naming them.
+    fn config_errors(&self) -> Result<(), String> {
+        let errors = self.hypr.json("configerrors")?;
+        let own: Vec<&str> = errors
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(Value::as_str)
+            .filter(|e| e.contains("remya-settings"))
+            .collect();
+        match own.is_empty() {
+            true => Ok(()),
+            false => Err(format!("Hyprland rejected the change: {}", own.join("; "))),
+        }
     }
 
     fn validate_shortcut(&self, request: &Value) -> Result<(Shortcut, bool), String> {
@@ -913,6 +992,67 @@ impl<H: Hypr> Input<H> {
                     }
                 }
                 next.rules.insert(at.unwrap_or(next.rules.len()), rule);
+            }
+            WINDOW_RULE_SET if self.group.rules => {
+                let (rule, previous) = window::request::<WindowRule>(
+                    &value,
+                    "class, title, the rule's effects and previous",
+                )?;
+                let rule = rule.validate(selector)?;
+                let edited = match &previous {
+                    Some(p) => (
+                        p["class"].as_str().unwrap_or_default().to_owned(),
+                        p["title"].as_str().unwrap_or_default().to_owned(),
+                    ),
+                    None => (rule.class.clone(), rule.title.clone()),
+                };
+                let is_edited = |r: &WindowRule| r.key() == (edited.0.as_str(), edited.1.as_str());
+                if !is_edited(&rule) && next.window_rules.iter().any(|r| r.key() == rule.key()) {
+                    return Err(invalid("A rule for that app and title already exists"));
+                }
+                // Hyprland checks every field; the probe is off and gone after the reload.
+                self.hypr.eval(&window::probe_line(&rule))?;
+                let at = next.window_rules.iter().position(is_edited);
+                next.window_rules.retain(|r| !is_edited(r));
+                next.window_rules
+                    .insert(at.unwrap_or(next.window_rules.len()), rule);
+            }
+            WINDOW_RULE_REMOVE if self.group.rules => {
+                let key = (
+                    value["class"].as_str().unwrap_or_default(),
+                    value["title"].as_str().unwrap_or_default(),
+                );
+                let before = next.window_rules.len();
+                next.window_rules.retain(|r| r.key() != key);
+                if before == next.window_rules.len() {
+                    return Err(invalid("Settings has no rule for that app and title"));
+                }
+            }
+            ENV_SET if self.group.rules => {
+                let (var, previous) =
+                    window::request::<EnvVar>(&value, "name, value and previous")?;
+                let var = var.validate()?;
+                let edited = previous
+                    .as_ref()
+                    .and_then(Value::as_str)
+                    .unwrap_or(&var.name)
+                    .to_owned();
+                if edited != var.name && next.env.iter().any(|v| v.name == var.name) {
+                    return Err(invalid(format!("{} is already set", var.name)));
+                }
+                let at = next.env.iter().position(|v| v.name == edited);
+                next.env.retain(|v| v.name != edited);
+                next.env.insert(at.unwrap_or(next.env.len()), var);
+            }
+            ENV_REMOVE if self.group.rules => {
+                let name = value["name"]
+                    .as_str()
+                    .ok_or_else(|| invalid("Expected {\"name\":...}"))?;
+                let before = next.env.len();
+                next.env.retain(|v| v.name != name);
+                if before == next.env.len() {
+                    return Err(invalid("Settings does not set that variable"));
+                }
             }
             RULE_REMOVE if self.group.rules => {
                 let workspace = value["workspace"]
@@ -1077,7 +1217,7 @@ impl<H: Hypr> Input<H> {
                         if let Some(reason) = &self.write_blocked {
                             return Err(reason.clone());
                         }
-                        self.write_files(&owned, None, &saved)?;
+                        self.write_files(&owned, None, &saved, false)?;
                     }
                     self.save(&saved)
                 }
