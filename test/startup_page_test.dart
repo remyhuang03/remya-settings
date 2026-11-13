@@ -1,6 +1,7 @@
+import 'support/catalog.dart';
+
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -8,7 +9,7 @@ import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 import 'package:remya_settings/features/settings/presentation/settings_shell.dart';
 import 'package:remya_settings/features/startup/application/startup_controller.dart';
 import 'package:remya_settings/features/startup/presentation/startup_page.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
 Map<String, dynamic> _entry(
   String id, {
@@ -317,10 +318,7 @@ void main() {
       service.state['entries'] = [
         for (var i = 0; i < 12; i++) _entry('App $i'),
       ];
-      final catalog = SettingsCatalog.fromJson(
-        jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
-            as Map<String, dynamic>,
-      );
+      final catalog = SettingsCatalog.fromJson(readCatalog());
       await tester.pumpWidget(
         MaterialApp(
           home: StartupScope(

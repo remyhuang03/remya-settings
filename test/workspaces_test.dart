@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/workspaces/presentation/workspaces_page.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
 import 'input_test.dart' show catalog, pump;
 

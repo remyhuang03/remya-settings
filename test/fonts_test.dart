@@ -1,12 +1,13 @@
+import 'support/catalog.dart';
+
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/fonts/application/fonts_controller.dart';
 import 'package:remya_settings/features/fonts/presentation/fonts_page.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
 class _FakeDesktopClient extends SettingsClient {
   _FakeDesktopClient(this.state);
@@ -42,10 +43,7 @@ void main() {
       write: (_, _) async => {},
     );
     addTearDown(controller.dispose);
-    final catalog = SettingsCatalog.fromJson(
-      jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
-          as Map<String, dynamic>,
-    );
+    final catalog = SettingsCatalog.fromJson(readCatalog());
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -151,10 +149,7 @@ void main() {
         'write_blocked': null,
         'error': null,
       });
-      final catalog = SettingsCatalog.fromJson(
-        jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
-            as Map<String, dynamic>,
-      );
+      final catalog = SettingsCatalog.fromJson(readCatalog());
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(

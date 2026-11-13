@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/app.dart';
 import 'package:remya_settings/features/appearance/domain/app_preferences.dart';
 import 'package:remya_settings/features/integration/service_controllers.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart' hide AppPreferences;
 
 void main() {
   testWidgets('the first frame uses the loaded mode, palette and accent', (
@@ -30,7 +30,9 @@ void main() {
     expect(preferences.preferences.seedColor, const Color(0xFF123456));
 
     // Match startup: complete the service read before mounting the application.
-    await tester.pumpWidget(RemyaSettingsApp(preferences: preferences));
+    await tester.pumpWidget(
+      RemyaSettingsApp(preferences: preferences, client: service),
+    );
     final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
     expect(app.themeMode, ThemeMode.dark);
     const expected = AppPreferences(
@@ -47,6 +49,8 @@ void main() {
 }
 
 class _AppearanceService extends SettingsClient {
+  @override
+  Stream<SettingsChange> get changes => const Stream.empty();
   final theme = Completer<Map<String, dynamic>>();
 
   @override
@@ -54,6 +58,12 @@ class _AppearanceService extends SettingsClient {
     String method, [
     List<String> arguments = const [],
   ]) async => switch (arguments.single) {
+    'catalog' => {
+      'version': 1,
+      'sources': <Object>[],
+      'pages': <Object>[],
+      'categories': <Object>[],
+    },
     'accent' => {'source': 'custom', 'color': '#123456'},
     'theme' => theme.future,
     'system' => {'mode': 'dark', 'targets': <Object>[]},

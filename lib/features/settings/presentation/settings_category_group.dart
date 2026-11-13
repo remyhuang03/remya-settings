@@ -12,13 +12,13 @@ enum SettingsCategoryGroup {
   ),
   personalization(
     'Personalization',
-    ['sound', 'notifications', 'appearance'],
+    ['sound', 'appearance'],
     Color(0xffffc4df),
     Color(0xff5b173d),
   ),
   system(
     'Device & system',
-    ['system', 'power', 'apps', 'ai', 'update'],
+    ['system', 'power', 'apps', 'remya-apps', 'ai', 'update'],
     Color(0xffbdebbd),
     Color(0xff1b4624),
   ),
@@ -47,7 +47,9 @@ enum SettingsCategoryGroup {
   final Color foreground;
 
   List<SettingsCategory> categories(SettingsCatalog catalog) => [
-    for (final id in ids) catalog.category(id),
+    for (final id in ids)
+      if (catalog.categories.any((category) => category.id == id))
+        catalog.category(id),
   ];
 }
 

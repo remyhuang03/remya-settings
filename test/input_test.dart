@@ -1,5 +1,6 @@
+import 'support/catalog.dart';
+
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -8,12 +9,9 @@ import 'package:remya_settings/features/input/presentation/keyboard_shortcuts_pa
 import 'package:remya_settings/features/input/presentation/mouse_page.dart';
 import 'package:remya_settings/features/input/presentation/touchpad_page.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
-final catalog = SettingsCatalog.fromJson(
-  jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
-      as Map<String, dynamic>,
-);
+final catalog = SettingsCatalog.fromJson(readCatalog());
 
 Map<String, dynamic> inputState({
   Map<String, Object?> options = const {},

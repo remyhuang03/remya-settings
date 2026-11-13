@@ -84,40 +84,9 @@ else()
   set(RUST_PROFILE "release")
   set(RUST_PROFILE_ARGS "--release")
 endif()
-set(RUST_APPEARANCE_LIBRARY "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/libremya_settings_appearance.so")
-add_custom_target(rust_appearance ALL
-  COMMAND "${CARGO_EXECUTABLE}" build --locked --package remya_settings_appearance ${RUST_PROFILE_ARGS}
-  WORKING_DIRECTORY "${RUST_WORKSPACE_DIR}"
-  BYPRODUCTS "${RUST_APPEARANCE_LIBRARY}"
-  COMMENT "Building Rust appearance backend")
-add_dependencies(${BINARY_NAME} rust_appearance)
-
-set(RUST_DATE_TIME_LIBRARY "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/libremya_settings_date_time.so")
-add_custom_target(rust_date_time ALL
-  COMMAND "${CARGO_EXECUTABLE}" build --locked --package remya_settings_date_time ${RUST_PROFILE_ARGS}
-  WORKING_DIRECTORY "${RUST_WORKSPACE_DIR}"
-  BYPRODUCTS "${RUST_DATE_TIME_LIBRARY}"
-  COMMENT "Building Rust date_time backend")
-add_dependencies(${BINARY_NAME} rust_date_time)
-
-add_custom_target(rust_service ALL
-  COMMAND "${CARGO_EXECUTABLE}" build --locked --package remya_settings_service --package remya_settings_updates ${RUST_PROFILE_ARGS}
-  WORKING_DIRECTORY "${RUST_WORKSPACE_DIR}"
-  COMMENT "Building resident Settings service")
-add_dependencies(${BINARY_NAME} rust_service)
-
-set(SETTINGS_CLI "${CMAKE_BINARY_DIR}/remya_settings_cli")
-add_custom_target(settings_cli ALL
-  COMMAND fvm dart compile exe tool/settings_cli.dart -o "${SETTINGS_CLI}"
-  WORKING_DIRECTORY "${RUST_WORKSPACE_DIR}"
-  BYPRODUCTS "${SETTINGS_CLI}"
-  COMMENT "Building the headless settings CLI client")
-add_dependencies(${BINARY_NAME} settings_cli)
-
-
-set(RUST_CAMERA_LIBRARY "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/libremya_settings_camera.so")
+set(RUST_CAMERA_LIBRARY "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/libremya_settings_camera_preview.so")
 add_custom_target(rust_camera ALL
-  COMMAND "${CARGO_EXECUTABLE}" build --locked --package remya_settings_camera ${RUST_PROFILE_ARGS}
+  COMMAND "${CARGO_EXECUTABLE}" build --locked --package remya_settings_camera_preview ${RUST_PROFILE_ARGS}
   WORKING_DIRECTORY "${RUST_WORKSPACE_DIR}"
   BYPRODUCTS "${RUST_CAMERA_LIBRARY}")
 add_dependencies(${BINARY_NAME} rust_camera)
@@ -137,9 +106,7 @@ install(CODE "
 
 set(INSTALL_BUNDLE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/data")
 set(INSTALL_BUNDLE_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
-install(PROGRAMS "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/remya-settings-service" "${RUST_WORKSPACE_DIR}/target/${RUST_PROFILE}/remya-settings-update" DESTINATION "${CMAKE_INSTALL_PREFIX}/libexec" COMPONENT Runtime)
-install(PROGRAMS "${SETTINGS_CLI}" DESTINATION "${CMAKE_INSTALL_PREFIX}/libexec" COMPONENT Runtime)
-install(FILES "${RUST_CAMERA_LIBRARY}" "${RUST_DATE_TIME_LIBRARY}" "${RUST_APPEARANCE_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
+install(FILES "${RUST_CAMERA_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
 
 install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
   COMPONENT Runtime)
@@ -173,8 +140,6 @@ install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
 
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/packaging/top.remya.settings.desktop"
   DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications" COMPONENT Runtime)
-install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/packaging/top.remya.settings.Service1.service"
-  DESTINATION "${CMAKE_INSTALL_PREFIX}/share/dbus-1/services" COMPONENT Runtime)
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/../assets/icons/app_icon.svg"
   DESTINATION "${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps"
   RENAME "top.remya.settings.svg" COMPONENT Runtime)

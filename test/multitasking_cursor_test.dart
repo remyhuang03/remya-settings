@@ -6,7 +6,7 @@ import 'package:remya_settings/features/appearance/application/app_preferences_c
 import 'package:remya_settings/features/multitasking/presentation/multitasking_page.dart';
 import 'package:remya_settings/features/themes/presentation/cursor_page.dart';
 import 'package:remya_settings/features/themes/presentation/themes_page.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
 import 'input_test.dart' show catalog, pump;
 import 'display_test.dart' show fakeAppPreferencesController;

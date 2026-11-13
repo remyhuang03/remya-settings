@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:remya_settings_client/ai_identity.dart';
+import 'package:remya_ui/ai_identity.dart';
 
 double _hueDistance(Color a, Color b) {
   final d = (Hct.fromInt(a.toARGB32()).hue - Hct.fromInt(b.toARGB32()).hue)
@@ -53,7 +53,7 @@ void main() {
   });
 
   testWidgets('every manifest icon exists and parses', (tester) async {
-    const dir = 'packages/remya_settings_client/assets/ai_providers';
+    const dir = '../remya-core/packages/remya_ui/assets/ai_providers';
     final manifest = jsonDecode(
       File('$dir/manifest.json').readAsStringSync(),
     ) as Map<String, dynamic>;

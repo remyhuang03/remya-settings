@@ -8,7 +8,6 @@
 struct _MyApplication {
   GtkApplication parent_instance;
   char** dart_entrypoint_arguments;
-  gboolean service_mode;
 };
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
@@ -83,7 +82,7 @@ static void theme_icon(FlMethodCall* call) {
 
 // Called when first Flutter frame received.
 static void first_frame_cb(MyApplication* self, FlView* view) {
-  if (!self->service_mode) gtk_widget_show(gtk_widget_get_toplevel(GTK_WIDGET(view)));
+  gtk_widget_show(gtk_widget_get_toplevel(GTK_WIDGET(view)));
 }
 
 // Implements GApplication::activate.
@@ -92,7 +91,6 @@ static void my_application_activate(GApplication* application) {
   GList* windows = gtk_application_get_windows(GTK_APPLICATION(self));
   GtkWindow* existing = windows == nullptr ? nullptr : GTK_WINDOW(windows->data);
   if (existing != nullptr) {
-    self->service_mode = FALSE;
     gtk_window_present(existing);
     return;
   }
@@ -155,12 +153,14 @@ static void my_application_activate(GApplication* application) {
           theme_icon(call);
         } else if (g_strcmp0(fl_method_call_get_name(call), "initialPage") == 0) {
           auto* self = MY_APPLICATION(data);
-          const char* page = self->dart_entrypoint_arguments && self->dart_entrypoint_arguments[0] && self->dart_entrypoint_arguments[1] ? self->dart_entrypoint_arguments[1] : "home";
+          const char* page = "home";
+          if (self->dart_entrypoint_arguments != nullptr) {
+            for (char** arg = self->dart_entrypoint_arguments; *arg != nullptr; ++arg) {
+              if (!g_str_has_prefix(*arg, "--")) { page = *arg; break; }
+            }
+          }
           g_autoptr(FlValue) value = fl_value_new_string(page);
           fl_method_call_respond_success(call, value, nullptr);
-        } else if (g_strcmp0(fl_method_call_get_name(call), "repositoryDirectory") == 0) {
-          g_autoptr(FlValue) root = fl_value_new_string(REMYA_REPOSITORY_DIR);
-          fl_method_call_respond_success(call, root, nullptr);
         } else if (g_strcmp0(fl_method_call_get_name(call), "show") == 0) {
           my_application_activate(G_APPLICATION(data));
           fl_method_call_respond_success(call, nullptr, nullptr);
@@ -175,7 +175,7 @@ static void my_application_activate(GApplication* application) {
 
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
 
-  if (!self->service_mode) gtk_widget_grab_focus(GTK_WIDGET(view));
+  gtk_widget_grab_focus(GTK_WIDGET(view));
 }
 
 // Implements GApplication::local_command_line.
@@ -185,7 +185,6 @@ static gboolean my_application_local_command_line(GApplication* application,
   MyApplication* self = MY_APPLICATION(application);
   // Strip out the first argument as it is the binary name.
   self->dart_entrypoint_arguments = g_strdupv(*arguments + 1);
-  self->service_mode = g_strv_contains(*arguments, "--service");
 
   g_autoptr(GError) error = nullptr;
   if (!g_application_register(application, nullptr, &error)) {
@@ -197,7 +196,7 @@ static gboolean my_application_local_command_line(GApplication* application,
   if (!g_application_get_is_remote(application)) {
 
     g_application_activate(application);
-  } else if (!self->service_mode) {
+  } else {
     g_application_activate(application);
   }
   *exit_status = 0;

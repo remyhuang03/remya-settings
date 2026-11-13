@@ -7,9 +7,7 @@ import 'frb_generated.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `gst_app_leaky`, `previews`
-// These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `Preview`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `drop`
+import 'preview.dart';
 
 Future<BigInt> startPreview({required String camera, required BigInt serial}) =>
     CameraRustLib.instance.api.crateApiStartPreview(
@@ -22,27 +20,3 @@ Future<PreviewFrame> nextPreviewFrame({required BigInt id}) =>
 
 Future<void> stopPreview({required BigInt id}) =>
     CameraRustLib.instance.api.crateApiStopPreview(id: id);
-
-class PreviewFrame {
-  final int width;
-  final int height;
-  final Uint8List rgba;
-
-  const PreviewFrame({
-    required this.width,
-    required this.height,
-    required this.rgba,
-  });
-
-  @override
-  int get hashCode => width.hashCode ^ height.hashCode ^ rgba.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PreviewFrame &&
-          runtimeType == other.runtimeType &&
-          width == other.width &&
-          height == other.height &&
-          rgba == other.rgba;
-}

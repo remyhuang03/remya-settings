@@ -1,7 +1,7 @@
 import '../../ai/presentation/ai_providers_page.dart';
-import '../../ai/presentation/ai_usage_page.dart';
-import '../../clipboard/presentation/clipboard_page.dart';
 import '../../printers/presentation/printers_page.dart';
+import '../../remya_apps/presentation/remya_apps_page.dart';
+import '../../applications/presentation/application_icon.dart';
 import '../../storage/application/storage_controller.dart';
 import '../../storage/presentation/storage_page.dart';
 import '../../storage/presentation/cleanup_page.dart';
@@ -50,16 +50,14 @@ import '../../text_size/presentation/text_size_page.dart';
 import '../../language/presentation/language_page.dart';
 import '../../default_apps/presentation/default_apps_page.dart';
 
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../about/presentation/about_page.dart';
 import '../../about/presentation/licenses_view.dart';
-import '../../appearance/presentation/bar_appearance_page.dart';
 import '../../fonts/application/fonts_controller.dart';
 import '../../fonts/presentation/fonts_page.dart';
-import '../../notifications/presentation/notifications_page.dart';
 import '../domain/settings_catalog.dart';
 import 'settings_content.dart';
 import 'settings_category_group.dart';
@@ -105,6 +103,10 @@ class _SettingsShellState extends State<SettingsShell> {
   SettingsPageSpec? _page;
   String _query = '';
   bool _searchOpen = false;
+  int _navigationRequest = 0;
+
+  /// The page a navigation is loading or failed to load; the previous page stays shown.
+  ({String category, SettingsPageSpec page})? _target;
   Future<String?>? _appVersion;
 
   void _focusSearch() {
@@ -117,6 +119,7 @@ class _SettingsShellState extends State<SettingsShell> {
   @override
   void initState() {
     super.initState();
+    widget.catalog.addListener(_catalogChanged);
     widget.navigation?.addListener(_externalNavigation);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _externalNavigation();
@@ -125,7 +128,16 @@ class _SettingsShellState extends State<SettingsShell> {
 
   void _externalNavigation() {
     final target = widget.navigation?.value;
-    if (target == null) return;
+    if (target == null ||
+        (!const {
+              'home',
+              'about',
+              'licenses',
+              'system-information',
+            }.contains(target) &&
+            !widget.catalog.pages.any((page) => page.id == target))) {
+      return;
+    }
     if (const {'home', 'about', 'licenses'}.contains(target)) {
       _navigate(target);
     } else {
@@ -137,16 +149,46 @@ class _SettingsShellState extends State<SettingsShell> {
 
   @override
   void dispose() {
+    widget.catalog.removeListener(_catalogChanged);
     widget.navigation?.removeListener(_externalNavigation);
     _searchController.dispose();
     _searchFocus.dispose();
     super.dispose();
   }
 
-  void _navigate(String category, [SettingsPageSpec? page]) {
+  void _catalogChanged() {
+    if (mounted) {
+      setState(() {
+        if (_page != null) _page = widget.catalog.page(_page!.id);
+      });
+    }
+  }
+
+  void _navigate(String category, [SettingsPageSpec? page]) async {
+    final request = ++_navigationRequest;
     widget.scheduler?.refresh();
-    if (!const {'home', 'about', 'licenses'}.contains(category)) {
-      page ??= widget.catalog.inCategory(category).first;
+    setState(() => _target = null);
+    // Registrations change as apps are installed, so reread them on every visit.
+    if (category == 'remya-apps') widget.catalog.loadApps();
+    if (!const {'home', 'about', 'licenses', 'remya-apps'}.contains(category)) {
+      final pages = widget.catalog.inCategory(category);
+      if (pages.isEmpty) return;
+      page ??= pages.first;
+    }
+    final target = page?.id ?? (category == 'about' ? 'about' : null);
+    if (target != null) {
+      final pending = widget.catalog.openPage(target);
+      setState(
+        () => _target = (category: category, page: widget.catalog.page(target)),
+      );
+      await pending;
+      if (!mounted ||
+          request != _navigationRequest ||
+          widget.catalog.pageErrors.containsKey(target)) {
+        return;
+      }
+      _target = null;
+      if (page != null) page = widget.catalog.page(target);
     }
     if (_category == category && _page?.id == page?.id && _query.isEmpty) {
       return;
@@ -171,8 +213,10 @@ class _SettingsShellState extends State<SettingsShell> {
       return;
     }
     if (_history.isEmpty) return;
+    _navigationRequest++;
     final location = _history.removeLast();
     setState(() {
+      _target = null;
       _category = location.category;
       _page = location.page == null
           ? null
@@ -423,13 +467,34 @@ class _SettingsShellState extends State<SettingsShell> {
     }
     final Widget content;
     if (_query.trim().isNotEmpty) {
-      final results = widget.catalog.search(_query);
+      final catalog = widget.catalog;
+      final results = catalog.search(_query);
+      final appResults = catalog.appResults;
+      final count = results.length + appResults.length;
       content = Column(
         crossAxisAlignment: .stretch,
         children: [
-          Text('${results.length} pages match "${_query.trim()}"'),
+          Text('$count pages match "${_query.trim()}"'),
           const SizedBox(height: 16),
-          if (results.isEmpty)
+          if (catalog.searchError case final error?)
+            SettingsErrorCard(
+              message: 'Search failed in Remya Core: $error',
+              onRetry: catalog.searching ? null : catalog.retrySearch,
+            )
+          else if (count == 0 && catalog.searching)
+            const SettingsSurface(
+              child: Row(
+                children: [
+                  SizedBox.square(
+                    dimension: 24,
+                    child: CircularProgressIndicator(),
+                  ),
+                  SizedBox(width: 16),
+                  Text('Searching'),
+                ],
+              ),
+            )
+          else if (count == 0)
             const SettingsSurface(
               child: Column(
                 children: [
@@ -459,6 +524,31 @@ class _SettingsShellState extends State<SettingsShell> {
                 ],
               ),
             ),
+          if (appResults.isNotEmpty) ...[
+            if (results.isNotEmpty) const SizedBox(height: 12),
+            SettingsSurface(
+              padding: .zero,
+              child: Column(
+                children: [
+                  for (final result in appResults)
+                    _AppSearchResult(
+                      result: result,
+                      appTitle: catalog.appTitle(result.app),
+                      icon: catalog.apps
+                          ?.where((app) => app.id == result.app)
+                          .firstOrNull
+                          ?.icon,
+                      onTap: () => openRemyaApp(
+                        context,
+                        catalog,
+                        result.app,
+                        result.page,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
         ],
       );
     } else if (const {
@@ -474,27 +564,12 @@ class _SettingsShellState extends State<SettingsShell> {
         catalog: widget.catalog,
         client: widget.client,
       );
-    } else if (_page?.id == 'clipboard') {
-      content = ClipboardPage(client: widget.client, page: _page!);
     } else if (_page?.id == 'printers' && widget.client != null) {
       content = PrintersPage(client: widget.client!, page: _page!);
-    } else if (NotificationsPage.pageIds.contains(_page?.id) &&
-        widget.client != null) {
-      content = NotificationsPage(
-        key: ValueKey(_page!.id),
-        client: widget.client!,
-        catalog: widget.catalog,
-        page: _page!,
-        onPage: _openPage,
-      );
     } else if (_inputPage(_page) case final page?) {
       content = page;
     } else if (_page?.id == 'ai-providers' && widget.client != null) {
       content = AiProvidersPage(client: widget.client!);
-    } else if (_page?.id == 'ai-usage' && widget.client != null) {
-      content = AiUsagePage(client: widget.client!);
-    } else if (_page?.id == 'remya-bar' && widget.client != null) {
-      content = BarAppearancePage(client: widget.client!, page: _page!);
     } else if (_page?.id == 'battery-usage' && widget.client != null) {
       content = BatteryUsagePage(client: widget.client!, page: _page!);
     } else if ((_page?.id == 'power' || _page?.id == 'battery-saver') &&
@@ -586,6 +661,8 @@ class _SettingsShellState extends State<SettingsShell> {
         client: widget.client,
         onPage: _openPage,
       );
+    } else if (_category == 'remya-apps') {
+      content = RemyaAppsPage(catalog: widget.catalog);
     } else if (_category == 'home') {
       content = SettingsHome(catalog: widget.catalog, onCategory: _navigate);
     } else if (_category == 'about') {
@@ -619,13 +696,60 @@ class _SettingsShellState extends State<SettingsShell> {
                 alignment: .topCenter,
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 1080),
-                  child: content,
+                  child: Column(
+                    crossAxisAlignment: .stretch,
+                    children: [
+                      if (widget.catalog.error case final error?)
+                        SettingsErrorCard(
+                          message: 'Lost contact with Remya Core: $error',
+                          onRetry: widget.catalog.reload,
+                        ),
+                      if (_query.isEmpty) ?_pageStatus(),
+                      content,
+                    ],
+                  ),
                 ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  /// Loading or failure of the requested page; the previously shown page stays below.
+  Widget? _pageStatus() {
+    final catalog = widget.catalog;
+    final target = _target;
+    final id = target?.page.id ?? _page?.id;
+    if (id == null) return null;
+    final title = catalog.page(id).title;
+    if (catalog.loadingPages.contains(id)) {
+      return Padding(
+        padding: const .only(bottom: 12),
+        child: SettingsSurface(
+          child: Row(
+            children: [
+              const SizedBox.square(
+                dimension: 24,
+                child: CircularProgressIndicator(),
+              ),
+              const SizedBox(width: 16),
+              Flexible(child: Text('Loading $title from Remya Core')),
+            ],
+          ),
+        ),
+      );
+    }
+    final error = catalog.pageErrors[id];
+    if (error == null) return null;
+    return SettingsErrorCard(
+      message: target == null
+          ? 'Could not refresh $title. Showing the last loaded values. $error'
+          : 'Could not open $title: $error',
+      onRetry: target == null
+          ? () => catalog.openPage(id)
+          : () => _navigate(target.category, target.page),
     );
   }
 
@@ -799,6 +923,58 @@ class _PageButtonGroup extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+class _AppSearchResult extends StatelessWidget {
+  const _AppSearchResult({
+    required this.result,
+    required this.appTitle,
+    required this.icon,
+    required this.onTap,
+  });
+  final AppSearchResult result;
+  final String appTitle;
+  final String? icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    return Semantics(
+      button: true,
+      hint: 'Opens in the $appTitle settings window',
+      child: InkWell(
+        key: ValueKey(
+          'app-result-${result.app}-${result.page}-${result.title}',
+        ),
+        onTap: onTap,
+        child: Padding(
+          padding: const .symmetric(horizontal: 20, vertical: 16),
+          child: Row(
+            children: [
+              ApplicationIcon(icon: icon, size: 24),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    Text(result.title, style: text.bodyLarge),
+                    const SizedBox(height: 4),
+                    Text(
+                      '$appTitle\nOpens in the $appTitle settings window',
+                      style: text.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Icon(Icons.open_in_new_rounded, size: 20),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

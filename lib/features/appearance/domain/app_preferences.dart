@@ -1,10 +1,10 @@
+import 'package:remya_ui/remya_ui.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:remya_settings_client/remya_settings_client.dart';
-export 'package:remya_settings_client/remya_settings_client.dart'
-    show MaterialStyleKey, materialThemeModeSettingId;
+export 'package:remya_client/remya_client.dart' show materialThemeModeSettingId;
+export 'package:remya_ui/remya_ui.dart' show MaterialStyleKey;
 
-import '../../../src/rust/appearance_bridge/api.dart';
-export '../../../src/rust/appearance_bridge/api.dart' show SystemThemeMode;
+import '../data/system_appearance_backend.dart';
+export '../data/system_appearance_backend.dart' show SystemThemeMode;
 
 const materialStyleSettingId = 'themes.material-style-variant';
 const accentSourceSettingId = 'themes.8983f367';

@@ -22,7 +22,7 @@ class RustCameraPreview implements CameraPreview {
     final generation = ++_generation;
     await (_initializing ??= CameraRustLib.init(
       externalLibrary: ExternalLibrary.open(
-        '${File(Platform.resolvedExecutable).parent.path}/lib/libremya_settings_camera.so',
+        '${File(Platform.resolvedExecutable).parent.path}/lib/libremya_settings_camera_preview.so',
       ),
     ));
     final id = await api.startPreview(

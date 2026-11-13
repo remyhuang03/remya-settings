@@ -1,3 +1,5 @@
+import 'package:remya_ui/remya_ui.dart';
+
 import 'dart:io';
 
 import 'package:remya_settings/features/integration/settings_scheduler.dart';
@@ -11,7 +13,7 @@ import 'package:remya_settings/features/integration/service_controllers.dart';
 import 'package:remya_settings/features/date_time/application/date_time_controller.dart';
 import 'package:remya_settings/features/applications/application/applications_controller.dart';
 import 'package:remya_settings/features/default_apps/application/default_apps_controller.dart';
-import 'package:remya_settings_client/remya_settings_client.dart';
+import 'package:remya_client/remya_client.dart';
 
 class FakeService extends SettingsClient {
   final calls = <(String, List<String>)>[];
@@ -340,30 +342,6 @@ void main() {
     expect(tester.widget<EditableText>(editable).controller.text, 'draft');
     await tester.pumpWidget(const SizedBox.shrink());
   });
-
-  test(
-    'debug launcher passes the requested page to the local executable',
-    () async {
-      final directory = Directory.systemTemp.createTempSync(
-        'remya-debug-launch-',
-      );
-      addTearDown(() => directory.deleteSync(recursive: true));
-      final executable = File(
-        '${directory.path}/settings with spaces',
-      )..writeAsStringSync('#!/bin/sh\nprintf "%s\\n" "\$@" > "\$0.started"\n');
-      expect(
-        (await Process.run('chmod', ['+x', '--', executable.path])).exitCode,
-        0,
-      );
-      await openRemyaSettings(debugExecutable: executable, page: 'power');
-      final marker = File('${executable.path}.started');
-      final deadline = DateTime.now().add(const Duration(seconds: 5));
-      while (!marker.existsSync() && DateTime.now().isBefore(deadline)) {
-        await Future<void>.delayed(const Duration(milliseconds: 20));
-      }
-      expect(marker.readAsLinesSync(), ['open', 'power']);
-    },
-  );
 
   test('missing debug build reports the build command instead of using release config', () async {
     await expectLater(

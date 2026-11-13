@@ -1,18 +1,18 @@
+import 'support/catalog.dart';
+
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/appearance/application/app_preferences_controller.dart';
-import 'package:remya_settings/features/appearance/data/app_preferences_file.dart';
+import 'package:remya_settings/features/integration/service_controllers.dart';
+import 'package:remya_client/settings_contract.dart';
 import 'package:remya_settings/features/display/application/display_controller.dart';
 import 'package:remya_settings/features/display/data/display_backend.dart';
 import 'package:remya_settings/features/integration/settings_status.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 import 'package:remya_settings/features/settings/presentation/settings_shell.dart';
-
-import 'support/fake_system_appearance.dart';
 
 Map<String, dynamic> output(
   String name, {
@@ -172,18 +172,10 @@ class FakeDisplayBackend implements DisplayBackend {
   }
 }
 
-final catalog = SettingsCatalog.fromJson(
-  jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
-      as Map<String, dynamic>,
-);
+final catalog = SettingsCatalog.fromJson(readCatalog());
 
 AppPreferencesController fakeAppPreferencesController() =>
-    AppPreferencesController(
-      store: AppPreferencesFile(
-        File('${Directory.systemTemp.path}/remya-display-test-unused.toml'),
-      ),
-      systemAppearance: FakeSystemAppearance(),
-    );
+    ServicePreferencesController(SettingsClient());
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:remya_settings_client/ai_identity.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_ui/ai_identity.dart';
+import 'package:remya_client/settings_contract.dart';
 
 typedef AiRow = Map<String, dynamic>;
 

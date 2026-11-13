@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/environment/presentation/environment_page.dart';
 import 'package:remya_settings/features/window_rules/presentation/window_rules_page.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
 import 'input_test.dart' show catalog, pump;
 

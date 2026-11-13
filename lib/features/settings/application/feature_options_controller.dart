@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:material_ui/material_ui.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
 /// State of one service feature with saved options, a system readback and
 /// conflicts: the Hyprland option groups `input` (Mouse, Touchpad, Keyboard

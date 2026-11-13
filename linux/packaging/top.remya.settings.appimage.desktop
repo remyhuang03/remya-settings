@@ -2,7 +2,7 @@
 Type=Application
 Name=Install AppImage
 Comment=Install an AppImage with Remy'a Settings
-Exec=remya_settings install-appimage %f
+Exec=remya install-appimage %f
 Icon=top.remya.settings
 Terminal=false
 NoDisplay=true

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:material_ui/material_ui.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
 class BluetoothController extends ChangeNotifier {
   BluetoothController({required this.read, required this.write});

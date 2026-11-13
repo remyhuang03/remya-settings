@@ -1,3 +1,5 @@
+import 'support/catalog.dart';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remya_settings/features/night_light/application/night_light_controller.dart';
 import 'package:remya_settings/features/night_light/presentation/night_light_page.dart';
@@ -26,7 +28,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   Future<SettingsPageSpec> page() async =>
-      (await SettingsCatalog.load()).page('night-light');
+      SettingsCatalog.fromJson(readCatalog()).page('night-light');
 
   NightLightController controller(
     Map<String, dynamic> value, {

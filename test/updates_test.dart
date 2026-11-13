@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
+import 'support/catalog.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
@@ -8,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/updates/application/updates_controller.dart';
 import 'package:remya_settings/features/updates/presentation/active_hours_page.dart';
 import 'package:remya_settings/features/updates/presentation/updates_page.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
 /// The switch in the setting row titled [title].
 Finder _switch(String title) => find.descendant(
@@ -166,10 +165,8 @@ void main() {
       await tester.pumpAndSettle();
       expect(writes, [(updatesAutomaticSettingId, 'true')]);
       expect(find.textContaining('once per inactive period'), findsOneWidget);
-      final activeHours = SettingsCatalog.fromJson(
-        jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
-            as Map<String, dynamic>,
-      ).page('active-hours');
+      final activeHours = SettingsCatalog.fromJson(readCatalog())
+          .page('active-hours');
       expect(activeHours.availability, SettingAvailability.available);
       expect(activeHours.controls.map((control) => control.id), [
         activeHoursStartSettingId,
@@ -190,7 +187,8 @@ void main() {
         'missing': [],
         'updater': 'missing',
         'reason': 'The system updater is missing.',
-        'install_command': 'sudo python tool/install_system_updater.py',
+        'install_command':
+            'sudo python ../remya-core/tool/install_system_updater.py',
         'checked_at': 1,
         'eligible': true,
         'packages': [
@@ -218,7 +216,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('The system updater is missing.'), findsOneWidget);
       expect(
-        find.text('sudo python tool/install_system_updater.py'),
+        find.text('sudo python ../remya-core/tool/install_system_updater.py'),
         findsOneWidget,
       );
       expect(find.text('Update now'), findsNothing);
