@@ -56,7 +56,7 @@
   },
   "codex": {
     "color": "#B1A7FF",
-    "icon": "codex.svg",
+    "icon": "openai.svg",
     "modelsDev": "openai"
   },
   "commandcode": {
