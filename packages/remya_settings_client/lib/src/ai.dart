@@ -5,7 +5,7 @@ import 'dbus_client.dart';
 /// Visible providers, the addable catalog and the Bar preferences.
 const aiProvidersSettingId = 'ai.providers';
 
-/// Bar quota preferences: `{pinned, lowPercent}`.
+/// Bar quota preferences: `{pinned, lowPercent, showUsed, ringOrder}`.
 const aiBarSettingId = 'ai.bar';
 
 const _aiProviderPrefix = 'ai.provider/';
@@ -24,7 +24,7 @@ extension AiClient on SettingsClient {
   Future<Map<String, dynamic>> readAi() =>
       _value('Get', [aiProvidersSettingId]);
 
-  /// `{pinned, lowPercent}` without probing providers; cheap enough to poll.
+  /// `{pinned, lowPercent, showUsed, ringOrder}` without probing providers; cheap enough to poll.
   Future<Map<String, dynamic>> readAiBar() => _value('Get', [aiBarSettingId]);
 
   /// `{provider, usage, modelsDev: {status, provider, models}}`.
@@ -44,7 +44,14 @@ extension AiClient on SettingsClient {
   Future<Map<String, dynamic>> setAiBar({
     List<String>? pinned,
     int? lowPercent,
-  }) => _set(aiBarSettingId, {'pinned': ?pinned, 'lowPercent': ?lowPercent});
+    bool? showUsed,
+    String? ringOrder,
+  }) => _set(aiBarSettingId, {
+    'pinned': ?pinned,
+    'lowPercent': ?lowPercent,
+    'showUsed': ?showUsed,
+    'ringOrder': ?ringOrder,
+  });
 
   /// Exactly one of [apiKey], [cookie] or [clear]. The secret travels to the
   /// service only; replies never contain it.

@@ -14,6 +14,15 @@ pub struct Prefs {
     pub custom: Vec<Custom>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+pub enum RingOrder {
+    #[default]
+    #[serde(rename = "5h-outer")]
+    FiveHourOuter,
+    #[serde(rename = "5h-inner")]
+    FiveHourInner,
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Bar {
@@ -21,6 +30,10 @@ pub struct Bar {
     pub pinned: Vec<String>,
     #[serde(default = "default_low_percent")]
     pub low_percent: u8,
+    #[serde(default)]
+    pub show_used: bool,
+    #[serde(default)]
+    pub ring_order: RingOrder,
 }
 
 impl Default for Bar {
@@ -28,6 +41,8 @@ impl Default for Bar {
         Self {
             pinned: Vec::new(),
             low_percent: DEFAULT_LOW_PERCENT,
+            show_used: false,
+            ring_order: RingOrder::FiveHourOuter,
         }
     }
 }
@@ -222,6 +237,8 @@ mod tests {
             bar: Bar {
                 pinned: vec!["claude".into(), "codex".into()],
                 low_percent: 15,
+                show_used: true,
+                ring_order: RingOrder::FiveHourInner,
             },
             custom: vec![Custom {
                 id: "custom-my-endpoint".into(),
@@ -237,6 +254,8 @@ mod tests {
             "{text}"
         );
         assert_eq!(Prefs::load(&path).unwrap(), prefs);
+        fs::write(&path, "[bar]\nring_order = \"other\"\n").unwrap();
+        assert!(Prefs::load(&path).is_err());
         fs::write(&path, "[bar]\nlow_percent = 0\n").unwrap();
         assert!(Prefs::load(&path).is_err());
         fs::write(&path, "[bar]\nunknown = 1\n").unwrap();

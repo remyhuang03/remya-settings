@@ -1518,7 +1518,7 @@ use `readAi`, `readAiProvider`, `setAiProvider`, `setAiBar`, `setAiCredential`,
      "credential":{"apiKey":true,"cookie":false},"sourceModes":["api","auto"]},
     {"id":"models.dev:groq","name":"Groq","kind":"models-dev",
      "baseUrl":"https://api.groq.com/openai/v1","modelsDev":"groq"}],
-  "bar":{"pinned":["claude","codex"],"lowPercent":20}}}
+  "bar":{"pinned":["claude","codex"],"lowPercent":20,"showUsed":false,"ringOrder":"5h-outer"}}}
 ```
 
 - `updatedAt` is the UTC time of the usage probe
@@ -1552,8 +1552,8 @@ use `readAi`, `readAiProvider`, `setAiProvider`, `setAiBar`, `setAiCredential`,
 
 ### Get `ai.bar`
 
-Returns `{"id":"ai.bar","value":{"pinned":[...],"lowPercent":20}}` from
-`remya-ai.toml` without running CodexBar. Defaults are no pins and 20 %.
+Returns `{"id":"ai.bar","value":{"pinned":[...],"lowPercent":20,"showUsed":false,"ringOrder":"5h-outer"}}` from
+`remya-ai.toml` without running CodexBar. Defaults are no pins, 20 %, `showUsed: false` (remaining quota) and `ringOrder: "5h-outer"`.
 
 ### Get `ai.provider/<id>`
 
@@ -1580,9 +1580,12 @@ Each successful Set returns the fresh `ai.providers` Get reply and emits
   override). While CodexBar has no configuration file, the first write
   validates and creates it without clobbering, with every other provider
   enabled. `enabled` and `source` are verified by readback.
-- `ai.bar` `{"pinned"?:[ids],"lowPercent"?:int}` accepts at most 3 unique
-  ids that are currently visible providers and a percent in 1..=100. The file
-  is written atomically; an invalid existing file is refused, not replaced.
+- `ai.bar` `{"pinned"?:[ids],"lowPercent"?:int,"showUsed"?:bool,"ringOrder"?:"5h-outer"|"5h-inner"}`
+  accepts at most 3 unique ids that are currently visible providers, a percent
+  in 1..=100, whether the bar shows used (`true`) or remaining (`false`) quota,
+  and whether the 5h window sits on the outer (`"5h-outer"`) or inner
+  (`"5h-inner"`) ring (`1w` on the other ring). The file is written atomically;
+  an invalid existing file is refused, not replaced.
 - `ai.credential` `{"id":...,"apiKey"?:str,"cookie"?:str,"clear"?:true}` takes
   exactly one action. Secrets must be non-empty, at most 16 KiB and free of
   control characters. CodexBar providers use

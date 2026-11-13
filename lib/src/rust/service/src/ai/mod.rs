@@ -359,7 +359,7 @@ impl Ai {
             "updatedAt":updated_at,
             "providers":visible,
             "catalog":catalog,
-            "bar":{"pinned":prefs.bar.pinned,"lowPercent":prefs.bar.low_percent},
+            "bar":Self::bar_json(&prefs.bar),
         });
         Ok(Snapshot {
             value,
@@ -374,6 +374,15 @@ impl Ai {
         Ok(json!({"id":PROVIDERS,"availability":"available","value":value}))
     }
 
+    fn bar_json(bar: &prefs::Bar) -> Value {
+        json!({
+            "pinned": bar.pinned,
+            "lowPercent": bar.low_percent,
+            "showUsed": bar.show_used,
+            "ringOrder": bar.ring_order,
+        })
+    }
+
     pub fn is_get(key: &str) -> bool {
         key == PROVIDERS || key == BAR || key.starts_with(PROVIDER_PREFIX)
     }
@@ -382,7 +391,7 @@ impl Ai {
         if key == BAR {
             let bar = Prefs::load(&self.prefs)?.bar;
             return Ok(json!({"id":BAR,"availability":"available",
-                "value":{"pinned":bar.pinned,"lowPercent":bar.low_percent}}));
+                "value":Self::bar_json(&bar)}));
         }
         let Some(id) = key.strip_prefix(PROVIDER_PREFIX) else {
             return self.reply();
@@ -507,14 +516,27 @@ impl Ai {
         struct Change {
             pinned: Option<Vec<String>>,
             low_percent: Option<i64>,
+            show_used: Option<bool>,
+            ring_order: Option<prefs::RingOrder>,
         }
         let change: Change = serde_json::from_str(request)
             .ok()
-            .filter(|c: &Change| c.pinned.is_some() || c.low_percent.is_some())
-            .ok_or_else(|| invalid("Expected pinned and/or lowPercent"))?;
+            .filter(|c: &Change| {
+                c.pinned.is_some()
+                    || c.low_percent.is_some()
+                    || c.show_used.is_some()
+                    || c.ring_order.is_some()
+            })
+            .ok_or_else(|| invalid("Expected one of pinned, lowPercent, showUsed or ringOrder"))?;
         let mut prefs = Prefs::load(&self.prefs)?;
         if let Some(low) = change.low_percent {
             prefs.bar.low_percent = prefs::validate_low_percent(low).map_err(|e| invalid(&e))?;
+        }
+        if let Some(show_used) = change.show_used {
+            prefs.bar.show_used = show_used;
+        }
+        if let Some(ring_order) = change.ring_order {
+            prefs.bar.ring_order = ring_order;
         }
         if let Some(pinned) = change.pinned {
             prefs::validate_pinned(&pinned).map_err(|e| invalid(&e))?;
@@ -840,5 +862,26 @@ mod tests {
         assert!(check_secret("").is_err());
         assert!(check_secret("a\nb").is_err());
         assert!(check_secret(&"a".repeat(MAX_SECRET + 1)).is_err());
+    }
+
+    #[test]
+    fn bar_prefs_support_show_used_and_ring_order() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("remya-ai.toml");
+        let mut ai = Ai::new(path.clone());
+        let initial = ai.get(BAR).unwrap();
+        assert_eq!(
+            initial["value"],
+            json!({"pinned":[],"lowPercent":20,"showUsed":false,"ringOrder":"5h-outer"})
+        );
+        ai.set_bar(r#"{"showUsed":true,"ringOrder":"5h-inner"}"#)
+            .unwrap();
+        let updated = ai.get(BAR).unwrap();
+        assert_eq!(
+            updated["value"],
+            json!({"pinned":[],"lowPercent":20,"showUsed":true,"ringOrder":"5h-inner"})
+        );
+        assert!(ai.set_bar(r#"{"ringOrder":"unknown"}"#).is_err());
+        assert!(ai.set_bar(r"{}").is_err());
     }
 }

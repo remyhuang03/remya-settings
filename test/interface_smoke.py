@@ -519,18 +519,18 @@ def ai_checks():
     assert value['providers'][0]['windows'] == [{'slot': 'primary', 'label': '5h', 'windowMinutes': 300, 'usedPercent': 40.0, 'resetsAt': '2026-01-01T00:00:00Z'}]
     assert 'cursor' in [row['id'] for row in value['catalog']]
     assert 'mail' not in json.dumps(initial).lower()
-    assert value['bar'] == {'pinned': [], 'lowPercent': 20}
+    assert value['bar'] == {'pinned': [], 'lowPercent': 20, 'showUsed': False, 'ringOrder': '5h-outer'}
     assert cli('get', 'ai.bar') == dbus('Get', 'ai.bar') == {'id': 'ai.bar', 'availability': 'available', 'value': value['bar']}
     assert not config.exists()
-    changed = cli('set', 'ai.bar', json.dumps({'pinned': ['claude'], 'lowPercent': 15}))
+    changed = cli('set', 'ai.bar', json.dumps({'pinned': ['claude'], 'lowPercent': 15, 'showUsed': True, 'ringOrder': '5h-inner'}))
     assert changed == dbus('Get', 'ai.providers')
-    assert changed['value']['bar'] == {'pinned': ['claude'], 'lowPercent': 15}
+    assert changed['value']['bar'] == {'pinned': ['claude'], 'lowPercent': 15, 'showUsed': True, 'ringOrder': '5h-inner'}
     saved = config.read_text()
-    assert 'pinned = ["claude"]' in saved and 'low_percent = 15' in saved, saved
-    for invalid in ({'pinned': ['cursor']}, {'pinned': ['claude', 'claude']}, {'pinned': ['a', 'b', 'c', 'd']}, {'lowPercent': 0}, {'lowPercent': 101}, {}, {'unknown': 1}):
+    assert 'pinned = ["claude"]' in saved and 'low_percent = 15' in saved and 'show_used = true' in saved and 'ring_order = "5h-inner"' in saved, saved
+    for invalid in ({'pinned': ['cursor']}, {'pinned': ['claude', 'claude']}, {'pinned': ['a', 'b', 'c', 'd']}, {'lowPercent': 0}, {'lowPercent': 101}, {'ringOrder': 'bad'}, {}, {'unknown': 1}):
         assert 'InvalidArgument' in cli('set', 'ai.bar', json.dumps(invalid), ok=False)
     assert config.read_text() == saved
-    assert dbus('Set', 'ai.bar', json.dumps(json.dumps({'pinned': [], 'lowPercent': 20})))['value']['bar'] == value['bar']
+    assert dbus('Set', 'ai.bar', json.dumps(json.dumps({'pinned': [], 'lowPercent': 20, 'showUsed': False, 'ringOrder': '5h-outer'})))['value']['bar'] == value['bar']
     assert cli('get', 'ai.bar')['value'] == value['bar']
     assert 'InvalidArgument' in cli('get', 'ai.provider/unknown', ok=False)
     config.unlink()

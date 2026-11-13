@@ -46,6 +46,8 @@ class _AiUsagePageState extends State<AiUsagePage> with AiSettingsReader {
         if (!pinned.contains(id)) id,
     ];
     final low = (_dragging ?? (_bar['lowPercent'] as num?) ?? 20).toDouble();
+    final showUsed = _bar['showUsed'] == true;
+    final ringOrder = _bar['ringOrder'] == '5h-inner' ? '5h-inner' : '5h-outer';
     return Column(
       crossAxisAlignment: .stretch,
       children: [
@@ -140,6 +142,70 @@ class _AiUsagePageState extends State<AiUsagePage> with AiSettingsReader {
             ]),
           ),
         ],
+        const SettingsSectionTitle('Bar display'),
+        SettingsSurface(
+          padding: .zero,
+          child: settingsRows([
+            SettingRow(
+              id: 'ai-show-used',
+              label: Column(
+                crossAxisAlignment: .start,
+                spacing: 2,
+                children: [
+                  Text('Quota metric', style: text.titleSmall),
+                  Text(
+                    'Show remaining quota or used quota in Remy\'a Bar',
+                    style: text.bodySmall,
+                  ),
+                ],
+              ),
+              control: SegmentedButton<bool>(
+                showSelectedIcon: false,
+                segments: const [
+                  ButtonSegment(value: false, label: Text('Remaining')),
+                  ButtonSegment(value: true, label: Text('Used')),
+                ],
+                selected: {showUsed},
+                onSelectionChanged: busy || settings == null
+                    ? null
+                    : (values) =>
+                          run(() => client.setAiBar(showUsed: values.first)),
+              ),
+            ),
+            SettingRow(
+              id: 'ai-ring-order',
+              label: Column(
+                crossAxisAlignment: .start,
+                spacing: 2,
+                children: [
+                  Text('Quota rings', style: text.titleSmall),
+                  Text(
+                    'Choose whether 5h or 1w sits on the outer ring',
+                    style: text.bodySmall,
+                  ),
+                ],
+              ),
+              control: SegmentedButton<String>(
+                showSelectedIcon: false,
+                segments: const [
+                  ButtonSegment(
+                    value: '5h-outer',
+                    label: Text('Outer 5h / Inner 1w'),
+                  ),
+                  ButtonSegment(
+                    value: '5h-inner',
+                    label: Text('Inner 5h / Outer 1w'),
+                  ),
+                ],
+                selected: {ringOrder},
+                onSelectionChanged: busy || settings == null
+                    ? null
+                    : (values) =>
+                          run(() => client.setAiBar(ringOrder: values.first)),
+              ),
+            ),
+          ]),
+        ),
         const SettingsSectionTitle('Alerts'),
         SettingsSurface(
           padding: .zero,

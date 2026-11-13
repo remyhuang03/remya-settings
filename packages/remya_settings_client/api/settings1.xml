@@ -19,11 +19,11 @@
        Get/Set display-gamma reads/writes live hyprsunset gamma (10-100); Changed uses display-gamma.
        Get/Set display-brightness:<output> reads/writes a single output's hardware brightness. -->
   <!-- AI: Get ai.providers returns {codexbar,updatedAt,providers,catalog,bar}; Get ai.bar
-       returns {pinned,lowPercent}; Get ai.provider/<id> returns {provider,usage,modelsDev}.
-       Set ai.providers {id,enabled?,source?}, ai.bar {pinned?,lowPercent?},
-       ai.credential {id,apiKey|cookie|clear} and ai.custom {add}|{remove} return the
-       ai.providers reply and emit Changed for the written ID and ai.providers.
-       See docs/public-api.md#ai-providers. -->
+       returns {pinned,lowPercent,showUsed,ringOrder}; Get ai.provider/<id> returns
+       {provider,usage,modelsDev}. Set ai.providers {id,enabled?,source?},
+       ai.bar {pinned?,lowPercent?,showUsed?,ringOrder?}, ai.credential {id,apiKey|cookie|clear}
+       and ai.custom {add}|{remove} return the ai.providers reply and emit Changed
+       for the written ID and ai.providers. See docs/public-api.md#ai-providers. -->
   <!-- Airplane: Get airplane returns live derived radio state; Get/Set
        airplane.enabled and airplane.wifi accept boolean strings. Set airplane.enabled
        disables/enables NM Wi-Fi/WWAN and all BlueZ adapters with readback.

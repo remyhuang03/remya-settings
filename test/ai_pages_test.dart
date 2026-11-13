@@ -21,6 +21,8 @@ Map<String, dynamic> _row(String id) => {
 class _Client extends SettingsClient {
   final sets = <List<String>>[];
   List<String> pinned = ['claude', 'codex', 'gemini'];
+  bool showUsed = false;
+  String ringOrder = '5h-outer';
 
   @override
   Stream<SettingsChange> get changes => const Stream.empty();
@@ -32,10 +34,12 @@ class _Client extends SettingsClient {
   ]) async {
     if (method == 'Set') {
       sets.add(arguments);
-      pinned = [
-        for (final id in jsonDecode(arguments[1])['pinned'] as List)
-          id as String,
-      ];
+      final body = jsonDecode(arguments[1]) as Map;
+      if (body['pinned'] case final List list) {
+        pinned = [for (final id in list) id as String];
+      }
+      if (body['showUsed'] case final bool used) showUsed = used;
+      if (body['ringOrder'] case final String order) ringOrder = order;
     }
     return {
       'id': aiProvidersSettingId,
@@ -45,7 +49,12 @@ class _Client extends SettingsClient {
           for (final id in ['claude', 'codex', 'gemini', 'kimi']) _row(id),
         ],
         'catalog': const [],
-        'bar': {'pinned': pinned, 'lowPercent': 20},
+        'bar': {
+          'pinned': pinned,
+          'lowPercent': 20,
+          'showUsed': showUsed,
+          'ringOrder': ringOrder,
+        },
       },
     };
   }
@@ -70,6 +79,14 @@ void main() {
     await tester.tap(show('kimi'));
     await tester.pumpAndSettle();
     expect(client.pinned, ['codex', 'gemini', 'kimi']);
+
+    await tester.tap(find.text('Used'));
+    await tester.pumpAndSettle();
+    expect(client.showUsed, isTrue);
+
+    await tester.tap(find.text('Inner 5h / Outer 1w'));
+    await tester.pumpAndSettle();
+    expect(client.ringOrder, '5h-inner');
   });
 
   testWidgets('a custom endpoint needs https unless it is local', (
