@@ -262,8 +262,19 @@ void main() {
     ]);
   });
 
-  testWidgets('the About coverage parts add up to the total', (tester) async {
-    await pump(tester, AboutPage(catalog: catalog, onLicenses: () {}));
+  testWidgets('About shows the service version and coverage totals', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      AboutPage(
+        catalog: catalog,
+        onLicenses: () {},
+        version: Future.value('0.1.0-dev.20261113.0'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('v0.1.0-dev.20261113.0'), findsOneWidget);
     final controls = catalog.pages.expand((p) => p.controls).toList();
     int count(String label) => int.parse(
       tester.widget<Text>(find.byKey(ValueKey('coverage-$label'))).data!,

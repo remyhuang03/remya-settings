@@ -5,7 +5,6 @@ import 'package:material_ui/material_ui.dart';
 import '../../settings/presentation/settings_widgets.dart';
 import '../../settings/domain/settings_catalog.dart';
 
-const appVersion = '0.1.0+2026-10-26';
 const repositoryUrl = 'https://github.com/remyhuang03/remya-settings';
 
 Future<void> openSettingsRepository() async {
@@ -18,9 +17,15 @@ Future<void> openSettingsRepository() async {
 }
 
 class AboutPage extends StatelessWidget {
-  const AboutPage({super.key, required this.catalog, required this.onLicenses});
+  const AboutPage({
+    super.key,
+    required this.catalog,
+    required this.onLicenses,
+    this.version,
+  });
   final SettingsCatalog catalog;
   final VoidCallback onLicenses;
+  final Future<String?>? version;
 
   Future<void> _openRepository(BuildContext context) async {
     try {
@@ -68,12 +73,20 @@ class AboutPage extends StatelessWidget {
                 textAlign: .center,
               ),
               const SizedBox(height: 8),
-              Text(
-                'v$appVersion',
-                style: text.labelLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+              if (version != null)
+                FutureBuilder(
+                  future: version,
+                  builder: (context, snapshot) {
+                    final value = snapshot.data;
+                    if (value == null) return const SizedBox.shrink();
+                    return Text(
+                      'v$value',
+                      style: text.labelLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    );
+                  },
                 ),
-              ),
               const SizedBox(height: 16),
             ],
           ),

@@ -1058,7 +1058,7 @@ impl State {
                         Ok(field)
                     }
                     "about" => Ok(
-                        json!({"name":"Remy'a Settings","version":"0.1.0+2026-10-26","application_id":"top.remya.settings","repository":"https://github.com/remyhuang03/remya-settings","license":"PolyForm-Noncommercial-1.0.0","api_version":1}),
+                        json!({"name":"Remy'a Settings","version":env!("CARGO_PKG_VERSION"),"application_id":"top.remya.settings","repository":"https://github.com/remyhuang03/remya-settings","license":"PolyForm-Noncommercial-1.0.0","api_version":1}),
                     ),
                     "catalog" => {
                         let mut v = self.catalog.clone();

@@ -105,6 +105,7 @@ class _SettingsShellState extends State<SettingsShell> {
   SettingsPageSpec? _page;
   String _query = '';
   bool _searchOpen = false;
+  Future<String?>? _appVersion;
 
   void _focusSearch() {
     setState(() => _searchOpen = true);
@@ -591,6 +592,9 @@ class _SettingsShellState extends State<SettingsShell> {
       content = AboutPage(
         catalog: widget.catalog,
         onLicenses: () => _navigate('licenses'),
+        version: _appVersion ??= widget.client
+            ?.call('Get', ['about'])
+            .then((about) => about['version'] as String?),
       );
     } else {
       content = const SizedBox.shrink();
