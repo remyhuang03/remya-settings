@@ -8,50 +8,48 @@
   <img src="https://img.shields.io/badge/Platform-Arch%20Linux%20%7C%20Hyprland-1793D1?logo=archlinux" alt="Platform">
   <img src="https://img.shields.io/badge/Flutter-3.47.8-02569B?logo=flutter" alt="Flutter">
   <img src="https://img.shields.io/badge/Rust-2024-dea584?logo=rust" alt="Rust">
-  <a href="docs/public-api.md"><img src="https://img.shields.io/badge/D--Bus-top.remya.settings-5865F2" alt="D-Bus"></a>
+  <a href="https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/public-api.md"><img src="https://img.shields.io/badge/D--Bus-top.remya.Core1-5865F2" alt="D-Bus"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue" alt="License"></a>
 </p>
 
-A global system settings application for **Hyprland on Linux**, built with **Flutter**, **Material Design 3 Expressive**, and a modular **Rust workspace**. Layout and information architecture are inspired by modern desktop settings benchmarks like Windows 11 Settings, while tailored and diverged for native Linux and Hyprland workflows.
+A global system settings application for **Hyprland on Linux**, built with **Flutter**, **Material Design 3 Expressive**, and [**Remya Core**](https://github.com/remyhuang03/remya-core). Layout and information architecture are inspired by modern desktop settings benchmarks like Windows 11 Settings, while tailored and diverged for native Linux and Hyprland workflows.
 
 > [!CAUTION]
 > **Early Development & Preview Only — Not Ready for Daily Use**
 >
 > - **Under Active Development**: This software is in an early, experimental stage of development and has **not** reached a usable production state.
-> - **Many Features Unavailable**: Out of 802 controls across 82 catalog pages, **326 controls are unimplemented UI-only previews** (`planned`). 476 controls currently have backend integrations.
+> - **Many Features Unavailable**: Core reports which controls have verified integrations and which remain UI-only previews (`planned`).
 > - **Implemented Features Are Unstable**: Even the implemented integrations are unstable, subject to breaking changes, and may have incomplete hardware verification boundaries.
 > - **For Preview & Evaluation Only**: This repository is currently intended strictly for design preview and development reference. Use at your own risk on real systems.
 
 ## Implemented Features (Experimental)
 
-- **Desktop and Appearance**. Configure wallpapers, themes, window appearance, animations, workspaces, text size, fonts, display layouts, night light, bell, and Remya Bar personalization. Detailed styling and interface controls are documented in [Appearance](docs/app-preferences.md) and [Themes](docs/themes.md).
-- **Bar and Interface Integration**. Settings configures Remya Bar through public D-Bus methods and typed client interfaces:
-  - **Bar Layout**: Configures the main pill arrangement (`remya-bar.layout`), workspace slot count (1 to 10), media marquee scrolling, window title display, and resource metrics. The default layout groups pills into `["notifications", "window", "resources"]`, centered `["workspaces", "clock"]`, `["tray"]`, and `["ai-usage", "battery", "sidebar"]`. The Resources pill displays default metrics (`cpu`, `memory`, `network`), while `gpu` is an optional metric that can be enabled. Available pill IDs include `notifications`, `window`, `resources`, `media`, `workspaces`, `clock`, `tray`, `ai-usage`, `battery`, and `sidebar`.
-  - **Sidebar Layout**: Configures the ordered visible quick-setting tiles (`remya-bar.sidebar-layout`), validating tile lists, rejecting duplicates, and handling retired tiles.
-  - **Keyboard Preview**: Toggles touch key previews (`remya-bar.keyboard-preview`), defaulting to enabled.
-  - **On-Screen Display**: Configures volume step size (`remya-bar.volume-step`), maximum volume (`remya-bar.volume-max`), brightness step size (`remya-bar.brightness-step`), and minimum gamma (`remya-bar.gamma-min`).
-- **Connectivity and Devices**. Manage network connections, VPNs, and proxies alongside device pairing and shortcut recording. See [Network](docs/network.md), [Bluetooth](docs/bluetooth.md), [Sound](docs/sound.md), [Camera](docs/camera.md), and [Input](docs/input.md) for audio routing, video feeds, and peripherals.
-- **Apps and Storage**. Oversee default MIME handlers, installed software, AppImage packages, and XDG session autostart entries. Inspect drive partitions, track usage, and clean package caches using [Default apps](docs/default-apps.md), [Installed apps](docs/installed-apps.md), [AppImages](docs/appimages.md), [Startup](docs/startup.md), and [Storage](docs/storage.md).
-- **System and Power**. Track battery metrics, idle policies, hardware specifications, user avatars, languages, locales, and time synchronization. Configure Energy Saver thresholds, AI providers and usage monitoring, and manage software upgrades through [Power](docs/power.md) and [System updates](docs/updates.md).
+- **Desktop and Appearance**. Configure wallpapers, themes, window appearance, animations, workspaces, text size, fonts, display layouts, night light, bell. Detailed styling and interface controls are documented in [Appearance](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/app-preferences.md) and [Themes](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/themes.md).
+- **Connectivity and Devices**. Manage network connections, VPNs, and proxies alongside device pairing and shortcut recording. See [Network](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/network.md), [Bluetooth](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/bluetooth.md), [Sound](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/sound.md), [Camera](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/camera.md), and [Input](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/input.md) for audio routing, video feeds, and peripherals.
+- **Apps and Storage**. Oversee default MIME handlers, installed software, AppImage packages, and XDG session autostart entries. Inspect drive partitions, track usage, and clean package caches using [Default apps](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/default-apps.md), [Installed apps](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/installed-apps.md), [AppImages](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/appimages.md), [Startup](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/startup.md), and [Storage](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/storage.md).
+- **System and Power**. Track battery metrics, idle policies, hardware specifications, user avatars, languages, locales, and time synchronization. Configure Energy Saver thresholds, AI providers and usage monitoring, and manage software upgrades through [Power](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/power.md) and [System updates](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/updates.md).
 
 ## Settings Catalog & Coverage
 
-Browse Home, category pages, and About; search settings locally, follow related pages, and inspect third-party licenses.
+Browse Home, category pages, and About; search settings through Core, follow related pages, and inspect third-party licenses.
 
-- **Current Catalog**: 14 categories, 82 pages, 802 controls (476 available, 326 planned previews).
-- **Desktop Reference & Inspiration**: Draws reference from applicable desktop settings benchmarks (including Windows 11 reference taxonomies), retaining relevant pages, controls, URI names, and hierarchy structures as design inspiration while departing where native Linux and Hyprland workflows differ. Removed Windows-only features are excluded from coverage records. See [research, sources, and limitations](docs/windows-settings-research.md).
-- **Hyprland Extensions**: Retains controls based on official configuration documentation and ecosystem tools, merging related previews into ordinary pages’ Advanced sections. See [Hyprland sources and version limits](docs/hyprland-settings-research.md).
+- **Current Catalog**: Loaded from Remya Core; the GUI does not maintain its own catalog copy.
+- **Desktop Reference & Inspiration**: Draws reference from applicable desktop settings benchmarks (including Windows 11 reference taxonomies), retaining relevant pages, controls, URI names, and hierarchy structures as design inspiration while departing where native Linux and Hyprland workflows differ. Removed Windows-only features are excluded from coverage records. See [research, sources, and limitations](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/windows-settings-research.md).
+- **Hyprland Extensions**: Retains controls based on official configuration documentation and ecosystem tools, merging related previews into ordinary pages’ Advanced sections. See [Hyprland sources and version limits](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/hyprland-settings-research.md).
 - **Availability & Tracking**: Every setting declares availability (`available` or `planned`). Unavailable controls remain disabled while allowing navigation to preview pages; contextually inapplicable options are hidden automatically. The catalog's `availability` and `reason` fields are the tracker; verification evidence lives in each feature document.
 
 ## Architecture & Resident Service
 
-Settings uses a client-service architecture to keep memory footprint minimal and provide full operation parity across GUI, CLI, and D-Bus interfaces:
+Settings is a disposable GUI client of [Remya Core](https://github.com/remyhuang03/remya-core).
+Core owns `remyad`, the `remya` CLI, `top.remya.Core1`, system reconciliation,
+and shared preferences. Closing Settings releases its Flutter process.
+Only camera preview frames use an in-process Rust wrapper of Core's camera crate.
+Remya apps own their preferences through Core registrations; Bar, Clipboard and
+notification configuration no longer belongs to Settings.
 
-- **Resident User Service (`remya_settings`)**: An ordinary-user Rust service that owns production configuration, reconciliation, CLI dispatch, and the session D-Bus interface (`top.remya.settings.Settings1`). Closing the settings window hides it so dependent clients can continue using the service; `remya_settings quit` stops it.
-- **Disposable Flutter GUI**: The Flutter desktop application connects as a client to the resident service, running within a hidden view structure to maintain service continuity.
-- **GPU Optimization**: The native runner prefers the integrated GPU for the Flutter settings window to avoid discrete GPU (e.g. NVIDIA) driver memory overhead.
-- **Privilege Separation**: Elevated operations (such as hostname changes and package uninstallation) execute through a dedicated helper process authenticated via polkit communicating over private bounded pipes.
-- **Dependent Applications**: Remya Bar (`top.remya.bar`) integrates via `packages/remya_settings_client` (a package with a pure Dart D-Bus contract and Flutter theme helpers) for synchronized themes and settings observation over D-Bus. See [public API and process boundaries](docs/public-api.md).
+The GUI consumes `remya_client` and `remya_ui` from a sibling `../remya-core`
+checkout. Navigation comes from `Get("catalog")`, details from `Get("page:<id>")`,
+and search from Core's `Search`. See [GUI development](docs/gui-client.md).
 
 ## Repository Layout
 
@@ -60,21 +58,21 @@ Cargo.toml                Root Rust workspace
 lib/
   main.dart, app.dart     Flutter startup, composition, and theme
   features/<feature>/     Feature-first Flutter UI, state, and controllers
-  src/rust/<crate>/       Modular Rust backends, bridges, and resident service
-packages/
-  remya_settings_client/  Pure Dart D-Bus contract and Flutter theme helpers
-assets/                   Application icons, settings catalog/schema, and license notices
+  src/rust/camera_preview/ In-process camera preview bridge
+  src/rust/camera_bridge/  Generated Dart bridge
+assets/                   Application icons and license notices
 linux/                    Native runner, GPU preference, and packaging templates
-docs/                     Architecture, feature specs, public API, and progress tracking
-test/                     Unit, widget, catalog, and isolated CLI/D-Bus smoke tests
-tool/                     Installer, CLI entrypoint, and license notice generator
+docs/                     GUI client architecture and UI performance notes
+test/                     Controller, widget, catalog-loader and isolated installer tests
+tool/                     GUI installer and license notice generator
 ```
 
 ## Development
 
-Prerequisites: FVM, Rust via rustup, and Linux Flutter build prerequisites (Clang, CMake, Ninja, pkg-config, GTK 3 development libraries, GLib/GIO 2.84+, GdkPixbuf and libpulse headers, and GSettings tools). Current Arch Linux packages are the target; GTK 4 appearance requires GTK 4.20+. fish and luac validate their respective configuration targets. Sound requires dynamically linked system `libpulse` (PulseAudio 15+ API) and the current PipeWire, pipewire-pulse and WirePlumber services. Network requires NetworkManager; Bluetooth requires BlueZ; Night light requires `hyprsunset`; elevated operations require `polkit-kde-agent`.
-
-Kernel backlight notifications use the system `libudev` from Arch's `systemd-libs`.
+Prerequisites: FVM, Rust via rustup, a sibling Remya Core checkout, and Linux
+Flutter build tools (Clang, CMake, Ninja, pkg-config and GTK 3). Camera preview
+links dynamically to PipeWire and GStreamer 1.28+. Install Core separately for
+system integration dependencies and D-Bus activation.
 
 ```bash
 fvm install
@@ -86,13 +84,13 @@ FVM pins Flutter to `3.47.8`; `rust-toolchain.toml` selects stable Rust with rus
 
 ### Code Quality & Verification
 
-Choose checks for the actual change. Keep focused tests for non-trivial logic and regressions, and check affected interactions on the real desktop. Application changes are delivered through a rebuilt, locally installed release for review; see `AGENTS.md`.
+Choose checks for the actual change. Keep focused tests for non-trivial logic and regressions, and check affected interactions on the real desktop. Validate changes with analysis, tests and a release build. Install only when authorized; see `AGENTS.md`.
 
 After updating Rust dependencies, run `python tool/generate_rust_notices.py` to refresh bundled third-party notices.
 
 ## Installation
 
-The application ID is `top.remya.settings`; its executable is `remya_settings`. For paired installations with Remya Bar, install Settings before Bar so that shared services and D-Bus interfaces are in place.
+The application ID is `top.remya.settings`; its executable is `remya_settings`. Install Remya Core first; the GUI installer requires its D-Bus activation file.
 
 ### Release Archive
 
@@ -114,24 +112,17 @@ fvm flutter build linux --release
 python tool/install.py
 ```
 
-### System Updater
-
-For system updates, install the root updater and its polkit rule once (and again when the page reports it outdated):
-
-```bash
-sudo python tool/install_system_updater.py
-```
-
-- Launch **Remy'a Settings** from the application menu, run `remya_settings`, or use `gtk-launch top.remya.settings`.
-- CLI commands: `remya_settings --help` lists available commands. Implemented features provide full CLI parity (e.g. `remya_settings get theme`, `remya_settings get display`, `remya_settings get background`, `remya_settings get sound`, `remya_settings get network`, `remya_settings get bluetooth`, `remya_settings get default-apps`, `remya_settings get hostname`, `remya_settings get power`).
-- The resident background service starts on demand or with the graphical session (`remya_settings --service`). `tool/install.py` stops and restarts it around an update; it refuses while a system update is running. Run `remya_settings quit` to stop it manually.
-- See [XDG directory layout](docs/xdg-layout.md) and [public API documentation](docs/public-api.md).
+System updates and the privileged updater are owned by
+[Remya Core](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/xdg-layout.md).
+Launch from the application menu, `remya_settings`, or `gtk-launch top.remya.settings`.
+Use Core's `remya` command for CLI operations. The GUI installer writes only the
+bundle, command, desktop entries and icon, and refuses to replace a running GUI.
 
 ## Usage & Keyboard Shortcuts
 
 - **Search**: `Ctrl+F` or `Ctrl+E` focuses search; `Escape` clears search.
 - **Navigation**: `Alt+Left` navigates back through history.
-- **Window Geometry**: Minimum window size is 360 × 600 logical pixels; initial requested size is 1,251 × 720. Compositor tiling rules may override requested geometry.
+- **Window Geometry**: Minimum window size is 360 × 600 logical pixels; initial requested size is 1,280 × 720. Compositor tiling rules may override requested geometry.
 
 ## License
 
