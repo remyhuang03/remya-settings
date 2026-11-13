@@ -1,4 +1,4 @@
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
 import '../../system_information/presentation/system_information_page.dart';
 

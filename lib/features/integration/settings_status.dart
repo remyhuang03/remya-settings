@@ -60,7 +60,7 @@ class SettingsStatus extends StatelessWidget {
               _ConflictWarning(
                 navigatorKey: navigatorKey,
                 area: 'Appearance',
-                title: '$message\n${preferences.store.file.path}',
+                title: message,
                 busy: preferences.isBusy,
                 useSystem: preferences.retry,
               ),

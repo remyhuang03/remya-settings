@@ -10,8 +10,6 @@ import 'features/startup/application/startup_controller.dart';
 import 'features/network/application/network_controller.dart';
 import 'features/system_information/application/hostname_controller.dart';
 
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
@@ -25,18 +23,11 @@ import 'features/night_light/application/night_light_controller.dart';
 import 'app.dart';
 import 'features/integration/service_controllers.dart';
 
-import 'package:remya_settings_client/remya_settings_client.dart';
-
-import 'features/appearance/data/app_preferences_file.dart';
+import 'package:remya_client/remya_client.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
-  if (kDebugMode) {
-    final root = await const MethodChannel('top.remya.paths')
-        .invokeMethod<String>('repositoryDirectory');
-    if (root != null) AppPreferencesFile.debugRepository = Directory(root);
-  }
   LicenseRegistry.addLicense(() async* {
     yield LicenseEntryWithLineBreaks([
       "Remy'a Settings",

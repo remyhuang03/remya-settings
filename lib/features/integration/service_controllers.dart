@@ -1,11 +1,11 @@
-import 'dart:io';
+import 'package:remya_ui/remya_ui.dart';
+
 import 'dart:convert';
 
 import 'package:material_ui/material_ui.dart';
-import 'package:remya_settings_client/remya_settings_client.dart';
+import 'package:remya_client/remya_client.dart' hide AppPreferences;
 
 import '../appearance/application/app_preferences_controller.dart';
-import '../appearance/data/app_preferences_file.dart';
 import '../appearance/data/system_appearance_backend.dart';
 import '../appearance/domain/app_preferences.dart';
 import '../date_time/application/date_time_controller.dart';
@@ -57,12 +57,9 @@ class ServiceDisplayBackend implements DisplayBackend {
 }
 
 class ServicePreferencesController extends AppPreferencesController {
-  ServicePreferencesController(this.client)
-    : super(
-        store: AppPreferencesFile(AppPreferencesFile.resolve()),
-        systemAppearance: ServiceAppearanceBackend(client),
-      );
+  ServicePreferencesController(this.client);
   final SettingsClient client;
+  late final systemAppearance = ServiceAppearanceBackend(client);
   AppPreferences _value = const AppPreferences();
   SystemThemeState? _observed;
   bool _busy = false;
@@ -218,12 +215,7 @@ class ServiceDateTimeBackend implements DateTimeBackend {
 
 class ServiceDateTimeController extends DateTimeController {
   ServiceDateTimeController(this.client)
-    : super(
-        backend: ServiceDateTimeBackend(client),
-        file: File(
-          '${AppPreferencesFile.resolve().parent.path}/date-time.toml',
-        ),
-      );
+    : super(backend: ServiceDateTimeBackend(client));
   final SettingsClient client;
   Map<String, dynamic> _payload = {};
   bool _enabling = false;
@@ -240,10 +232,12 @@ class ServiceDateTimeController extends DateTimeController {
   @override
   Map<String, dynamic> toMap() => _payload;
   void _update(Map<String, dynamic> value) {
-    state = _clock(value);
+    final next = _clock(value);
+    final error = value['error'] as String?;
+    state = next;
     _payload = value;
     restartSuggested = value['restart_suggested'] == true;
-    errorMessage = value['error'] as String?;
+    errorMessage = error;
     isBusy = _activeSetting != null || value['authorizing'] == true;
     notifyListeners();
   }

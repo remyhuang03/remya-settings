@@ -1,5 +1,5 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
 import '../../settings/presentation/settings_widgets.dart';
 import 'ai_add_provider_dialog.dart';
