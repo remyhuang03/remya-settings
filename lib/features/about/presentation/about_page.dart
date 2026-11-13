@@ -61,7 +61,7 @@ class AboutPage extends StatelessWidget {
             children: [
               const SizedBox(height: 16),
               Image.asset(
-                'assets/icons/settings.png',
+                'assets/icons/app_icon.png',
                 width: 104,
                 height: 104,
                 semanticLabel: "Remy'a Settings application icon",

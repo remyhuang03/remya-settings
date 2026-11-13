@@ -67,10 +67,10 @@ Retained tests resolve recorded URI and backup references, reject malformed data
 
 ## Application icon and About
 
-The owner-provided `settings.svg` is copied unchanged to `assets/icons/settings.svg`. The adjacent 512-pixel PNG is rendered with Inkscape so SVG filters are preserved without a new runtime package:
+The owner-provided `settings.svg` is copied unchanged to `assets/icons/app_icon.svg`. The adjacent 512-pixel PNG is rendered with Inkscape so SVG filters are preserved without a new runtime package:
 
 ```bash
-inkscape assets/icons/settings.svg --export-type=png --export-filename=assets/icons/settings.png --export-width=512 --export-height=512
+inkscape assets/icons/app_icon.svg --export-type=png --export-filename=assets/icons/app_icon.png --export-width=512 --export-height=512
 ```
 
 Flutter uses the PNG in navigation, Home, About, and license branding. The GTK runner loads the bundled PNG independently of the working directory. The desktop entry and scalable SVG are included in the build bundle for future packaging; nothing is installed into the user's desktop configuration. Wayland taskbar icon discovery depends on desktop entry installation by a future package.

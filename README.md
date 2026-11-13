@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/icons/settings.svg" width="128" alt="Remy'a Settings icon">
+  <img src="assets/icons/app_icon-full.svg" width="128" alt="Remy'a Settings icon">
 </p>
 
 <h1 align="center">Remy'a Settings</h1>

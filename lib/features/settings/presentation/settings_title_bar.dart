@@ -18,7 +18,7 @@ class SettingsTitleBar extends StatelessWidget {
                 child: Row(
                   children: [
                     Image.asset(
-                      'assets/icons/settings.png',
+                      'assets/icons/app_icon.png',
                       width: 20,
                       height: 20,
                     ),

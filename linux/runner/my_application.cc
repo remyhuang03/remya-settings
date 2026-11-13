@@ -116,7 +116,7 @@ static void my_application_activate(GApplication* application) {
     g_autofree gchar* executable_dir = g_path_get_dirname(executable_path);
     g_autofree gchar* icon_path = g_build_filename(
         executable_dir, "data", "flutter_assets", "assets", "icons",
-        "settings.png", nullptr);
+        "app_icon.png", nullptr);
     g_autoptr(GError) icon_error = nullptr;
     if (!gtk_window_set_icon_from_file(window, icon_path, &icon_error)) {
       g_warning("Failed to load application icon: %s", icon_error->message);

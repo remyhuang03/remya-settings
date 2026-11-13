@@ -175,7 +175,7 @@ install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/packaging/top.remya.settings.desktop"
   DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications" COMPONENT Runtime)
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/packaging/top.remya.settings.Service1.service"
   DESTINATION "${CMAKE_INSTALL_PREFIX}/share/dbus-1/services" COMPONENT Runtime)
-install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/../assets/icons/settings.svg"
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/../assets/icons/app_icon.svg"
   DESTINATION "${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps"
   RENAME "top.remya.settings.svg" COMPONENT Runtime)
 

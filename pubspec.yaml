@@ -31,8 +31,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/settings/catalog.json
-    - assets/icons/settings.svg
-    - assets/icons/settings.png
+    - assets/icons/app_icon.svg
+    - assets/icons/app_icon.png
     - LICENSE
     - assets/licenses/rust-dependencies.txt
     - assets/licenses/croppy-kiwi.txt

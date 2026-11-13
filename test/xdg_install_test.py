@@ -44,7 +44,7 @@ class InstallTest(unittest.TestCase):
                     (packaging / f'{entry}.desktop').write_text(
                         f'[Desktop Entry]\nType=Application\nName=Test\nExec={installer.APP_ID} %f\n')
                 (root / 'assets/icons').mkdir(parents=True)
-                icon = 'bar.svg' if installer.APP_ID == 'remya_bar' else 'settings.svg'
+                icon = 'app_icon.svg'
                 (root / 'assets/icons' / icon).write_text('<svg/>')
                 (data / 'applications').mkdir(parents=True)
                 (data / 'applications/top.remya.settings.desktop').write_text('dependency')
