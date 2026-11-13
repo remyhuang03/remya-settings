@@ -1,16 +1,14 @@
+import 'support/catalog.dart';
+
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/power/presentation/power_page.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
-final _catalog = SettingsCatalog.fromJson(
-  jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
-      as Map<String, dynamic>,
-);
+final _catalog = SettingsCatalog.fromJson(readCatalog());
 
 class _Client extends SettingsClient {
   _Client({required this.canLock});

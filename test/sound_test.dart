@@ -1,13 +1,14 @@
+import 'support/catalog.dart';
+
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 import 'package:remya_settings/features/sound/application/sound_controller.dart';
 import 'package:remya_settings/features/sound/presentation/sound_page.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
 class _FakeDesktopClient extends SettingsClient {
   _FakeDesktopClient(this.state);
@@ -114,10 +115,7 @@ void main() {
   });
   tearDown(() => controller.dispose());
   Future<void> host(WidgetTester tester, String page) async {
-    final catalog = SettingsCatalog.fromJson(
-      jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
-          as Map<String, dynamic>,
-    );
+    final catalog = SettingsCatalog.fromJson(readCatalog());
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -225,10 +223,7 @@ void main() {
   testWidgets(
     'compositor bell switches between default, off and custom audio files',
     (tester) async {
-      final catalog = SettingsCatalog.fromJson(
-        jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
-            as Map<String, dynamic>,
-      );
+      final catalog = SettingsCatalog.fromJson(readCatalog());
       final client = _FakeDesktopClient({
         'options': {'sound.compositor-bell': 'default'},
         'system': {'sound.compositor-bell': 'none'},

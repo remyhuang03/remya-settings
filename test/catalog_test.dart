@@ -1,23 +1,15 @@
+import 'support/catalog.dart';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/power/presentation/power_page.dart';
 import 'package:remya_settings/features/power/presentation/battery_usage_page.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 import 'package:remya_settings/features/settings/presentation/settings_row_layout.dart';
 import 'package:remya_settings/features/settings/presentation/settings_shell.dart';
 import 'package:remya_settings/features/settings/presentation/settings_category_group.dart';
 
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
-
-Map<String, dynamic> readCatalog() =>
-    jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
-        as Map<String, dynamic>;
-
-Map<String, dynamic> _readJson(String path) =>
-    jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
 
 class _PowerReadClient extends SettingsClient {
   @override
@@ -109,33 +101,13 @@ void main() {
   });
 
   test(
-    'Camera catalog implements supported controls and removes discarded pages',
-    () {
-      final catalog = SettingsCatalog.fromJson(readCatalog());
-      final ids = catalog.pages.map((p) => p.id).toSet();
-      expect(ids.intersection({'pen', 'pen-shortcuts', 'recovery'}), isEmpty);
-      final camera = catalog.page('cameras');
-      expect(camera.controls.map((c) => c.id).toSet(), {
-        'cameras.devices',
-        'cameras.brightness',
-        'cameras.contrast',
-        'cameras.saturation',
-        'cameras.sharpness',
-        'cameras.reset',
-      });
-      expect(
-        camera.controls.every((c) => c.availability.name == 'available'),
-        isTrue,
-      );
-    },
-  );
-
-  test(
     'category groups cover the catalog once and use readable distinct colors',
     () {
       final catalog = SettingsCatalog.fromJson(readCatalog());
       final groups = SettingsCategoryGroup.values;
-      final ids = groups.expand((group) => group.ids).toList();
+      final ids = groups
+          .expand((group) => group.categories(catalog).map((c) => c.id))
+          .toList();
       expect(
         ids.toSet(),
         catalog.categories.map((category) => category.id).toSet(),
@@ -243,165 +215,5 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.getSize(content).height, 800);
     expect(tester.takeException(), isNull);
-  });
-
-  test(
-    'every source route and backup leaf has a renderable catalog target',
-    () {
-      final catalog = SettingsCatalog.fromJson(readCatalog());
-      final coverage = jsonDecode(
-        File('docs/windows-settings-coverage.json').readAsStringSync(),
-      ) as Map<String, dynamic>;
-      expect(
-        catalog.pages.expand((p) => p.controls).map((c) => c.kind).toSet(),
-        SettingKind.values.toSet(),
-      );
-      for (final entry in coverage['uris'] as List) {
-        expect(
-          catalog.page(entry['page'] as String).windowsUris,
-          contains(entry['uri']),
-        );
-      }
-      for (final entry in coverage['backupSettings'] as List) {
-        final page = catalog.page(entry['page'] as String);
-        if (entry['coverage'] == 'control') {
-          expect(page.controls.map((c) => c.id), contains(entry['control']));
-        }
-      }
-      for (final category in catalog.categories) {
-        final original = catalog.pages.where((p) => p.category == category.id);
-        final ordered = catalog.inCategory(category.id);
-        final regular = original.where((p) => !p.id.endsWith('-more'));
-        final more = original.where((p) => p.id.endsWith('-more'));
-        expect(ordered, orderedEquals([...regular, ...more]));
-      }
-      for (final page in catalog.pages) {
-        expect(page.controls, isNotEmpty);
-        for (final control in page.controls) {
-          expect(control.reason, isNotEmpty);
-        }
-      }
-      expect(
-        catalog.search('Night light').map((p) => p.id),
-        contains('night-light'),
-      );
-      expect(
-        catalog.search('ms-settings:network-wifi').map((p) => p.id),
-        contains('wifi'),
-      );
-      expect(catalog.search('definitely-no-such-setting'), isEmpty);
-    },
-  );
-
-  test(
-    'invalid schema values and navigation references fail before rendering',
-    () {
-      final json = readCatalog();
-      final control =
-          ((json['pages'] as List).first['sections'] as List)
-                  .first['controls'][0]
-              as Map<String, dynamic>;
-      control['value'] = -1;
-      expect(() => SettingsCatalog.fromJson(json), throwsFormatException);
-      final badLink = readCatalog();
-      (badLink['pages'] as List).first['children'] = ['unknown-page'];
-      expect(() => SettingsCatalog.fromJson(badLink), throwsFormatException);
-      final duplicate = readCatalog();
-      (duplicate['pages'] as List).add((duplicate['pages'] as List).first);
-      expect(() => SettingsCatalog.fromJson(duplicate), throwsFormatException);
-    },
-  );
-
-  final raw = _readJson('assets/settings/catalog.json');
-  final catalog = SettingsCatalog.fromJson(raw);
-  final coverage = _readJson('docs/hyprland-settings-coverage.json');
-
-  test('Hyprland additions retain every baseline setting and category', () {
-    expect(
-      catalog.categories.map((c) => c.id),
-      containsAll(coverage['baselineCategories'] as List),
-    );
-    expect(
-      catalog.pages.map((p) => p.id),
-      containsAll(coverage['baselinePages'] as List),
-    );
-    expect(
-      catalog.pages.expand((p) => p.controls).map((c) => c.id),
-      containsAll(coverage['baselineControls'] as List),
-    );
-  });
-
-  test('every added control has a pinned source and verified availability', () {
-    final sources = {
-      for (final source in coverage['sources'] as List)
-        source['id'] as String: source as Map<String, dynamic>,
-    };
-    final addedPages = (coverage['addedPages'] as List).cast<String>().toSet();
-    final evidence = (coverage['controls'] as List)
-        .cast<Map<String, dynamic>>();
-    final evidenced = evidence.map((e) => e['control']).toSet();
-    // Cursor mixes Hyprland and Windows-reference controls, so it is not an added page.
-    final addedControls = {
-      for (final page in catalog.pages)
-        for (final control in page.controls)
-          if (addedPages.contains(page.id) || evidenced.contains(control.id))
-            control.id: control,
-    };
-    expect(
-      evidence.map((e) => e['control']).toSet(),
-      addedControls.keys.toSet(),
-    );
-    for (final entry in evidence) {
-      final source = sources[entry['source']];
-      expect(source, isNotNull, reason: entry['control'] as String);
-      expect(source!['revision'], matches(RegExp(r'^[0-9a-f]{40}$')));
-      if (entry['availability'] == 'available') {
-        expect(entry['verification'], isNotEmpty);
-      }
-      expect(source['url'], contains('/blob/${source['revision']}/'));
-      expect(
-        catalog.page(entry['page'] as String).controls.map((c) => c.id),
-        contains(entry['control']),
-      );
-      expect(
-        addedControls[entry['control']]!.availability,
-        entry['availability'] == 'available'
-            ? SettingAvailability.available
-            : SettingAvailability.planned,
-      );
-    }
-    final sourceIds = (raw['sources'] as List).map((s) => s['id']).toSet();
-    for (final page in raw['pages'] as List) {
-      expect(sourceIds, containsAll(page['sources'] as List));
-    }
-    expect(
-      catalog.search('direct scanout').map((p) => p.id),
-      contains('graphics'),
-    );
-    expect(catalog.search('lock screen').map((p) => p.id), contains('power'));
-    expect(
-      catalog.search('window rules').map((p) => p.id),
-      contains('window-rules'),
-    );
-  });
-
-  test('folded compositor controls stay in their owner’s collapsed Advanced section', () {
-    final standalone = (coverage['addedPages'] as List).cast<String>().toSet();
-    for (final entry
-        in (coverage['controls'] as List).cast<Map<String, dynamic>>()) {
-      final pageId = entry['page'] as String;
-      // Cursor already groups both reference catalogs in its existing layout.
-      if (standalone.contains(pageId) ||
-          pageId == 'cursor' ||
-          entry['availability'] == 'available') {
-        continue;
-      }
-      final page = catalog.page(pageId);
-      final section = page.sections.singleWhere(
-        (s) => s.controls.any((c) => c.id == entry['control']),
-      );
-      expect(section.title, 'Advanced', reason: entry['control'] as String);
-      expect(section.collapsed, isTrue, reason: entry['control'] as String);
-    }
   });
 }

@@ -1,3 +1,5 @@
+import 'support/catalog.dart';
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -13,7 +15,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/account/application/account_controller.dart';
 import 'package:remya_settings/features/account/presentation/account_information_page.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
 Map<String, dynamic> _state() => {
   'username': 'test-user',
@@ -99,10 +101,7 @@ void main() {
         },
       );
       addTearDown(controller.dispose);
-      final catalog = SettingsCatalog.fromJson(
-        jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
-            as Map<String, dynamic>,
-      );
+      final catalog = SettingsCatalog.fromJson(readCatalog());
       final capture = GlobalKey();
       await tester.pumpWidget(
         RepaintBoundary(

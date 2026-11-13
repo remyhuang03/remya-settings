@@ -1,6 +1,6 @@
 rust_input: crate::api
-rust_root: lib/src/rust/camera
-rust_output: lib/src/rust/camera/src/frb_generated.rs
+rust_root: lib/src/rust/camera_preview
+rust_output: lib/src/rust/camera_preview/src/frb_generated.rs
 dart_output: lib/src/rust/camera_bridge
 dart_entrypoint_class_name: CameraRustLib
 web: false

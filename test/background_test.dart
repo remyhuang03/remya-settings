@@ -1,12 +1,13 @@
+import 'support/catalog.dart';
+
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/background/application/background_controller.dart';
 import 'package:remya_settings/features/background/presentation/background_page.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
-import 'package:remya_settings_client/settings_contract.dart';
+import 'package:remya_client/settings_contract.dart';
 
 Map<String, dynamic> _state() => {
   'initialized': true,
@@ -84,10 +85,7 @@ Future<void> _pump(
   BackgroundController controller, {
   SettingsClient? client,
 }) async {
-  final catalog = SettingsCatalog.fromJson(
-    jsonDecode(File('assets/settings/catalog.json').readAsStringSync())
-        as Map<String, dynamic>,
-  );
+  final catalog = SettingsCatalog.fromJson(readCatalog());
   await tester.pumpWidget(
     MaterialApp(
       home: Scaffold(

@@ -1,0 +1,16 @@
+[package]
+name = "remya_settings_camera_preview"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+remya_camera = { path = "../../../../../remya-core/crates/camera", features = ["preview"] }
+flutter_rust_bridge = "=2.13.0"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }

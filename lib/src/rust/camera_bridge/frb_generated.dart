@@ -14,6 +14,8 @@ import 'frb_generated.io.dart'
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+import 'preview.dart';
+
 /// Main entrypoint of the Rust API
 class CameraRustLib
     extends
@@ -77,8 +79,8 @@ class CameraRustLib
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
-        stem: 'remya_settings_camera',
-        ioDirectory: 'lib/src/rust/camera/target/release/',
+        stem: 'remya_settings_camera_preview',
+        ioDirectory: 'lib/src/rust/camera_preview/target/release/',
         webPrefix: 'pkg/',
         wasmBindgenName: 'wasm_bindgen',
       );
