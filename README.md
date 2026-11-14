@@ -69,7 +69,7 @@ tool/                     GUI installer and license notice generator
 
 ## Development
 
-Prerequisites: FVM, Rust via rustup, a sibling Remya Core checkout, and Linux
+Prerequisites: FVM, Rust via rustup, a sibling `../remya-core` checkout at `v0.1.0` for this dev release, and Linux
 Flutter build tools (Clang, CMake, Ninja, pkg-config and GTK 3). Camera preview
 links dynamically to PipeWire and GStreamer 1.28+. Install Core separately for
 system integration dependencies and D-Bus activation.
@@ -90,7 +90,21 @@ After updating Rust dependencies, run `python tool/generate_rust_notices.py` to 
 
 ## Installation
 
-The application ID is `top.remya.settings`; its executable is `remya_settings`. Install Remya Core first; the GUI installer requires its D-Bus activation file.
+This dev release uses Remya Core `0.1.0`. Install Core first. The Settings GUI
+connects to Core over the session D-Bus at `top.remya.Core1` and uses GTK 3.
+Camera preview uses PipeWire and GStreamer 1.28+ with its base libraries.
+
+If you are upgrading from the old all-in-one Settings package, see
+[Moving existing configuration](https://github.com/remyhuang03/remya-core/blob/v0.1.0/docs/xdg-layout.md#moving-existing-configuration).
+
+### Arch User Repository
+
+```bash
+paru -S remya-settings-git
+```
+
+The AUR recipe depends on `remya-core`. The binary Core package can also
+satisfy that dependency.
 
 ### Release Archive
 
@@ -98,8 +112,8 @@ When installing from a Linux x86_64 release archive from [GitHub Releases](https
 
 ```bash
 sha256sum -c SHA256SUMS
-tar --zstd -xf remya_settings-0.1.0-dev.20261111.0-linux-x86_64.tar.zst
-cd remya_settings-0.1.0-dev.20261111.0-linux-x86_64
+tar --zstd -xf remya_settings-0.1.0-dev.20261114.0-linux-x86_64.tar.zst
+cd remya_settings-0.1.0-dev.20261114.0-linux-x86_64
 python tool/install.py
 ```
 
