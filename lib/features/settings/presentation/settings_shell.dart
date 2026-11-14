@@ -53,9 +53,9 @@ import '../../default_apps/presentation/default_apps_page.dart';
 import 'package:remya_client/settings_contract.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 
 import '../../about/presentation/about_page.dart';
-import '../../about/presentation/licenses_view.dart';
 import '../../fonts/application/fonts_controller.dart';
 import '../../fonts/presentation/fonts_page.dart';
 import '../domain/settings_catalog.dart';
@@ -237,176 +237,84 @@ class _SettingsShellState extends State<SettingsShell> {
         if (_query.isNotEmpty) _back();
       },
     },
-    child: Scaffold(
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) => Row(
-            children: [
-              SizedBox(
-                width: constraints.maxWidth < 1000 ? 80 : 280,
-                child: _sidebar(constraints.maxWidth < 1000),
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    ?widget.topStatus,
-                    Expanded(
-                      child: LayoutBuilder(
-                        key: const ValueKey('settings-main-content'),
-                        builder: (context, constraints) => _body(),
-                      ),
-                    ),
-                    ?widget.status,
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+    child: RemyaSettingsLayout(
+      top: widget.topStatus,
+      bottom: widget.status,
+      loading: _loading,
+      sidebar: _sidebar,
+      content: KeyedSubtree(
+        key: const ValueKey('settings-main-content'),
+        child: _body(),
       ),
     ),
   );
 
-  Widget _search() => TextField(
+  /// The requested or shown page is loading, or search waits for results.
+  bool get _loading {
+    final catalog = widget.catalog;
+    final id = _target?.page.id ?? _page?.id;
+    return _query.isNotEmpty
+        ? catalog.searching
+        : id != null && catalog.loadingPages.contains(id) ||
+              _category == 'remya-apps' && catalog.loadingApps;
+  }
+
+  Widget _search() => RemyaSearchField(
     key: const ValueKey('settings-search'),
     controller: _searchController,
     focusNode: _searchFocus,
-    decoration: InputDecoration(
-      hintText: 'Find a setting',
-      prefixIcon: const Icon(Icons.search_rounded, size: 21),
-      suffixIcon: _query.isEmpty
-          ? null
-          : IconButton(
-              tooltip: 'Clear search',
-              onPressed: () => setState(() {
-                _searchController.clear();
-                _query = '';
-              }),
-              icon: const Icon(Icons.close_rounded, size: 18),
-            ),
-      filled: true,
-      fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
-      border: const OutlineInputBorder(
-        borderSide: .none,
-        borderRadius: .all(.circular(18)),
-      ),
-    ),
-    onChanged: (value) => setState(() => _query = value.trim()),
+    onChanged: (value) => setState(() => _query = value),
   );
 
-  Widget _sidebar(bool compact) {
-    final colors = Theme.of(context).colorScheme;
-    return Material(
-      color: colors.surfaceContainerLow,
-      child: Padding(
-        padding: .fromLTRB(compact ? 8 : 16, 24, compact ? 8 : 16, 16),
-        child: Column(
-          crossAxisAlignment: .stretch,
+  Widget _sidebar(bool compact) => RemyaSidebar(
+    compact: compact,
+    search: compact
+        ? IconButton(
+            tooltip: 'Find a setting',
+            onPressed: _focusSearch,
+            icon: const Icon(Icons.search_rounded),
+          )
+        : _search(),
+    children: [
+      _navigationTile('home', 'Home', Icons.home_outlined, compact),
+      const SizedBox(height: 6),
+      for (final group in SettingsCategoryGroup.values)
+        RemyaSidebarGroup(
+          key: ValueKey('nav-group-${group.name}'),
+          title: group.title,
+          compact: compact,
           children: [
-            if (compact)
-              IconButton(
-                tooltip: 'Find a setting',
-                onPressed: () {
-                  _focusSearch();
-                },
-                icon: const Icon(Icons.search_rounded),
-              )
-            else
-              _search(),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView(
-                children: [
-                  _navigationTile('home', 'Home', Icons.home_outlined, compact),
-                  const SizedBox(height: 6),
-                  for (final group in SettingsCategoryGroup.values) ...[
-                    if (!compact)
-                      Padding(
-                        padding: const .fromLTRB(12, 14, 8, 8),
-                        child: Text(
-                          group.title,
-                          style: Theme.of(context).textTheme.labelMedium,
-                        ),
-                      )
-                    else
-                      const SizedBox(height: 14),
-                    Material(
-                      key: ValueKey('nav-group-${group.name}'),
-                      color: colors.surfaceContainer,
-                      borderRadius: .circular(24),
-                      clipBehavior: .antiAlias,
-                      child: Column(
-                        crossAxisAlignment: .stretch,
-                        children: [
-                          for (final category in group.categories(
-                            widget.catalog,
-                          ))
-                            _navigationTile(
-                              category.id,
-                              category.title,
-                              categoryIcon(category.icon),
-                              compact,
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 6),
-                  _navigationTile(
-                    'about',
-                    'About',
-                    Icons.info_outline_rounded,
-                    compact,
-                  ),
-                ],
+            for (final category in group.categories(widget.catalog))
+              _navigationTile(
+                category.id,
+                category.title,
+                categoryIcon(category.icon),
+                compact,
               ),
-            ),
           ],
         ),
-      ),
-    );
-  }
+      const SizedBox(height: 6),
+      _navigationTile('about', 'About', Icons.info_outline_rounded, compact),
+    ],
+  );
 
-  Widget _navigationTile(String id, String title, IconData icon, bool compact) {
-    final colors = Theme.of(context).colorScheme;
-    final selected =
-        _category == id || id == 'about' && _category == 'licenses';
-    final categoryIconWidget = const {'home', 'about'}.contains(id)
+  Widget _navigationTile(
+    String id,
+    String title,
+    IconData icon,
+    bool compact,
+  ) => RemyaSidebarItem(
+    key: ValueKey('nav-$id'),
+    title: title,
+    icon: const {'home', 'about'}.contains(id)
         ? Icon(icon, size: 22)
-        : SettingsCategoryIcon(category: widget.catalog.category(id), size: 34);
-    return Padding(
-      padding: const .symmetric(vertical: 2),
-      child: compact
-          ? IconButton.filledTonal(
-              key: ValueKey('nav-$id'),
-              tooltip: title,
-              isSelected: selected,
-              style: IconButton.styleFrom(
-                backgroundColor: selected
-                    ? colors.secondaryContainer
-                    : Colors.transparent,
-                foregroundColor: selected
-                    ? colors.onSecondaryContainer
-                    : colors.onSurfaceVariant,
-                minimumSize: const Size(48, 48),
-              ),
-              onPressed: () => _navigate(id),
-              icon: categoryIconWidget,
-            )
-          : ListTile(
-              key: ValueKey('nav-$id'),
-              selected: selected && _query.isEmpty,
-              selectedTileColor: colors.secondaryContainer,
-              selectedColor: colors.onSecondaryContainer,
-              shape: RoundedRectangleBorder(borderRadius: .circular(18)),
-              leading: categoryIconWidget,
-              title: Text(title, style: const TextStyle(fontSize: 14)),
-              contentPadding: const .symmetric(horizontal: 12),
-              minTileHeight: 48,
-              onTap: () => _navigate(id),
-            ),
-    );
-  }
+        : SettingsCategoryIcon(category: widget.catalog.category(id), size: 34),
+    selected:
+        _query.isEmpty &&
+        (_category == id || id == 'about' && _category == 'licenses'),
+    compact: compact,
+    onTap: () => _navigate(id),
+  );
 
   Widget _header() {
     final title = _query.isNotEmpty
@@ -417,52 +325,43 @@ class _SettingsShellState extends State<SettingsShell> {
             'licenses' => 'Licenses',
             _ => widget.catalog.category(_category).title,
           };
-    return Padding(
-      padding: .fromLTRB(
-        MediaQuery.sizeOf(context).width < 600 ? 16 : 32,
-        20,
-        MediaQuery.sizeOf(context).width < 600 ? 16 : 32,
-        16,
-      ),
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          if (MediaQuery.sizeOf(context).width < 1000 &&
-              (_searchOpen || _query.isNotEmpty))
-            Padding(padding: const .only(bottom: 16), child: _search()),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.headlineMedium
-                ?.copyWith(fontWeight: .w600),
-          ),
-          if (_page != null &&
-              _query.isEmpty &&
-              widget.catalog.inCategory(_category).length > 1) ...[
-            const SizedBox(height: 16),
-            _PageButtonGroup(
-              category: widget.catalog.category(_category),
-              pages: widget.catalog.inCategory(_category),
+    final category = widget.catalog.categories
+        .where((c) => c.id == _category)
+        .firstOrNull;
+    final pages = category == null
+        ? const <SettingsPageSpec>[]
+        : widget.catalog.inCategory(_category);
+    return RemyaPageHeader(
+      title: title,
+      top:
+          MediaQuery.sizeOf(context).width < remyaCompactSidebarWidth &&
+              (_searchOpen || _query.isNotEmpty)
+          ? _search()
+          : null,
+      tabs: _page != null && _query.isEmpty && pages.length > 1
+          ? RemyaPageTabs(
+              key: ValueKey('page-buttons-${category!.id}'),
+              tabs: [
+                for (final page in pages)
+                  (
+                    id: page.id,
+                    title: page.title,
+                    icon: pageIcon(page, category),
+                  ),
+              ],
               selected: _page!.id,
-              onPage: _openPage,
-            ),
-          ],
-        ],
-      ),
+              onSelected: (id) => _openPage(widget.catalog.page(id)),
+            )
+          : null,
     );
   }
 
   Widget _body() {
     if (_category == 'licenses' && _query.isEmpty) {
-      return Column(
-        children: [
-          _header(),
-          const Expanded(
-            child: Padding(
-              padding: .fromLTRB(32, 8, 32, 24),
-              child: LicensesView(),
-            ),
-          ),
-        ],
+      return RemyaContentFrame(
+        header: _header(),
+        fill: true,
+        child: const RemyaLicensesView(),
       );
     }
     final Widget content;
@@ -481,20 +380,7 @@ class _SettingsShellState extends State<SettingsShell> {
               message: 'Search failed in Remya Core: $error',
               onRetry: catalog.searching ? null : catalog.retrySearch,
             )
-          else if (count == 0 && catalog.searching)
-            const SettingsSurface(
-              child: Row(
-                children: [
-                  SizedBox.square(
-                    dimension: 24,
-                    child: CircularProgressIndicator(),
-                  ),
-                  SizedBox(width: 16),
-                  Text('Searching'),
-                ],
-              ),
-            )
-          else if (count == 0)
+          else if (count == 0 && !catalog.searching)
             const SettingsSurface(
               child: Column(
                 children: [
@@ -669,78 +555,39 @@ class _SettingsShellState extends State<SettingsShell> {
       content = AboutPage(
         catalog: widget.catalog,
         onLicenses: () => _navigate('licenses'),
-        version: _appVersion ??= widget.client
-            ?.call('Get', ['about'])
-            .then((about) => about['version'] as String?),
+        version: _appVersion ??= remyaAppVersion(),
       );
     } else {
       content = const SizedBox.shrink();
     }
-    return SelectionArea(
-      child: SingleChildScrollView(
-        key: ValueKey(
-          'content-$_category-${_page?.id}-${_query.trim().isNotEmpty}',
-        ),
-        child: Column(
-          crossAxisAlignment: .stretch,
-          children: [
-            _header(),
-            Padding(
-              padding: .fromLTRB(
-                MediaQuery.sizeOf(context).width < 600 ? 16 : 32,
-                8,
-                MediaQuery.sizeOf(context).width < 600 ? 16 : 32,
-                40,
-              ),
-              child: Align(
-                alignment: .topCenter,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1080),
-                  child: Column(
-                    crossAxisAlignment: .stretch,
-                    children: [
-                      if (widget.catalog.error case final error?)
-                        SettingsErrorCard(
-                          message: 'Lost contact with Remya Core: $error',
-                          onRetry: widget.catalog.reload,
-                        ),
-                      if (_query.isEmpty) ?_pageStatus(),
-                      content,
-                    ],
-                  ),
-                ),
-              ),
+    return RemyaContentFrame(
+      key: ValueKey(
+        'content-$_category-${_page?.id}-${_query.trim().isNotEmpty}',
+      ),
+      header: _header(),
+      child: Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          if (widget.catalog.error case final error?)
+            SettingsErrorCard(
+              message: 'Lost contact with Remya Core: $error',
+              onRetry: widget.catalog.reload,
             ),
-          ],
-        ),
+          if (_query.isEmpty) ?_pageStatus(),
+          content,
+        ],
       ),
     );
   }
 
-  /// Loading or failure of the requested page; the previously shown page stays below.
+  /// Failure of the requested page; the previously shown page stays below.
+  /// Loading shows only the bar of [RemyaSettingsLayout].
   Widget? _pageStatus() {
     final catalog = widget.catalog;
     final target = _target;
     final id = target?.page.id ?? _page?.id;
-    if (id == null) return null;
+    if (id == null || catalog.loadingPages.contains(id)) return null;
     final title = catalog.page(id).title;
-    if (catalog.loadingPages.contains(id)) {
-      return Padding(
-        padding: const .only(bottom: 12),
-        child: SettingsSurface(
-          child: Row(
-            children: [
-              const SizedBox.square(
-                dimension: 24,
-                child: CircularProgressIndicator(),
-              ),
-              const SizedBox(width: 16),
-              Flexible(child: Text('Loading $title from Remya Core')),
-            ],
-          ),
-        ),
-      );
-    }
     final error = catalog.pageErrors[id];
     if (error == null) return null;
     return SettingsErrorCard(
@@ -872,58 +719,6 @@ class _SettingsShellState extends State<SettingsShell> {
       'hotspot' => HotspotPage(controller: controller),
       _ => null,
     };
-  }
-}
-
-class _PageButtonGroup extends StatelessWidget {
-  const _PageButtonGroup({
-    required this.category,
-    required this.pages,
-    required this.selected,
-    required this.onPage,
-  });
-  final SettingsCategory category;
-  final List<SettingsPageSpec> pages;
-  final String selected;
-  final ValueChanged<SettingsPageSpec> onPage;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    // material_ui has no connected button group; use its standard filled buttons.
-    return Wrap(
-      key: ValueKey('page-buttons-${category.id}'),
-      spacing: 2,
-      runSpacing: 6,
-      children: [
-        for (var i = 0; i < pages.length; i++)
-          Semantics(
-            selected: pages[i].id == selected,
-            child: FilledButton.icon(
-              key: ValueKey('nav-page-${pages[i].id}'),
-              style: FilledButton.styleFrom(
-                backgroundColor: pages[i].id == selected
-                    ? colors.primary
-                    : colors.secondaryContainer,
-                foregroundColor: pages[i].id == selected
-                    ? colors.onPrimary
-                    : colors.onSecondaryContainer,
-                shape: RoundedRectangleBorder(
-                  borderRadius: pages[i].id == selected
-                      ? .circular(24)
-                      : .horizontal(
-                          left: .circular(i == 0 ? 24 : 8),
-                          right: .circular(i == pages.length - 1 ? 24 : 8),
-                        ),
-                ),
-              ),
-              onPressed: () => onPage(pages[i]),
-              icon: Icon(pageIcon(pages[i], category), size: 18),
-              label: Text(pages[i].title),
-            ),
-          ),
-      ],
-    );
   }
 }
 

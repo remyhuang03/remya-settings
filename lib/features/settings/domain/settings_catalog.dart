@@ -14,6 +14,9 @@ enum SettingAvailability {
 
 enum SettingKind { toggle, choice, slider, action, info, text, color }
 
+/// Control counts over the whole catalog, as reported by remyad.
+typedef SettingsCoverage = ({int supported, int planned, int total});
+
 class SettingsCatalog extends ChangeNotifier {
   SettingsCatalog({required this.categories, required this.pages}) {
     final categoryIds = categories.map((c) => c.id).toSet();
@@ -63,6 +66,16 @@ class SettingsCatalog extends ChangeNotifier {
       pages: _objects(json, 'pages').map(SettingsPageSpec.summary).toList(),
     );
     catalog.sources = _objects(json, 'sources');
+    catalog.coverage = switch (json['coverage']) {
+      {
+        'supported': final int supported,
+        'planned': final int planned,
+        'total': final int total,
+      }
+          when supported >= 0 && planned >= 0 && supported + planned == total =>
+        (supported: supported, planned: planned, total: total),
+      _ => throw const FormatException('Invalid catalog coverage'),
+    };
     catalog._client = connection;
     catalog._ownsClient = client == null;
     catalog._changes = connection.changes.listen(
@@ -266,7 +279,8 @@ class SettingsCatalog extends ChangeNotifier {
     ];
   }
 
-  int get controlCount => pages.fold(0, (sum, p) => sum + p.controls.length);
+  /// Null for a catalog not loaded from remyad.
+  SettingsCoverage? coverage;
 
   List<SettingsPageSpec> search(String query) {
     if (_client == null) return [];

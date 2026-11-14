@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/remya_client.dart';
 
-import '../../settings/presentation/settings_widgets.dart';
 import 'network_widgets.dart';
 
 /// The desktop proxy follows live GSettings, which proxy tools change routinely.
@@ -95,7 +95,7 @@ class _ProxyPageState extends State<ProxyPage> {
     final value = _value;
     if (value == null) {
       return _error == null
-          ? const Center(child: CircularProgressIndicator())
+          ? const RemyaLoadingBar()
           : SettingsErrorCard(message: _error!, onRetry: _read);
     }
     if (value['available'] != true) {

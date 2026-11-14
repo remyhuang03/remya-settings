@@ -2,8 +2,8 @@ import 'support/catalog.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
-import 'package:remya_settings/features/settings/presentation/settings_widgets.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_settings/features/updates/application/updates_controller.dart';
 import 'package:remya_settings/features/updates/presentation/active_hours_page.dart';
 import 'package:remya_settings/features/updates/presentation/updates_page.dart';

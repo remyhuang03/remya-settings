@@ -1,9 +1,7 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
-import '../../settings/presentation/settings_list.dart';
-import '../../settings/presentation/settings_row_layout.dart';
-import '../../settings/presentation/settings_widgets.dart';
 import '../application/updates_controller.dart';
 
 class UpdatesPage extends StatefulWidget {

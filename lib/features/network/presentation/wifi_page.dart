@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/remya_client.dart';
 
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_widgets.dart';
-import '../../settings/presentation/settings_list.dart';
 import '../application/network_controller.dart';
 import 'network_widgets.dart';
 

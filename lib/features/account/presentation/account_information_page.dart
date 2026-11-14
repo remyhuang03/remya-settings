@@ -7,6 +7,7 @@ import 'package:croppy/croppy.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/gestures.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import '../../settings/domain/settings_catalog.dart';
@@ -258,10 +259,7 @@ class _AvatarCropDialogState extends State<_AvatarCropDialog> {
     return AlertDialog(
       title: const Text('Crop avatar'),
       content: _error == null
-          ? const SizedBox.square(
-              dimension: 64,
-              child: Center(child: CircularProgressIndicator()),
-            )
+          ? const SizedBox(width: 240, child: RemyaLoadingBar())
           : Text(_error!),
       actions: [
         TextButton(

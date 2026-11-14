@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import '../../settings/application/feature_options_controller.dart';
 import '../../settings/domain/settings_catalog.dart';
-import '../../settings/presentation/settings_widgets.dart';
 
 /// One installed theme pack as the service lists it.
 typedef ThemePack = Map<String, dynamic>;

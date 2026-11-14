@@ -1,7 +1,6 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 
-import '../../settings/presentation/settings_widgets.dart';
-import '../../settings/presentation/settings_list.dart';
 import '../application/applications_controller.dart';
 import 'application_icon.dart';
 import 'application_metadata.dart';

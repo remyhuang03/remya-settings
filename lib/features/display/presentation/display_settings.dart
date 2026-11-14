@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 
 import '../../settings/domain/settings_catalog.dart';
-import '../../settings/presentation/settings_widgets.dart';
 import '../application/display_controller.dart';
 
 const _colorPresets = {

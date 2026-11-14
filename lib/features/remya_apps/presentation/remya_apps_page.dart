@@ -1,8 +1,8 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 
 import '../../applications/presentation/application_icon.dart';
 import '../../settings/domain/settings_catalog.dart';
-import '../../settings/presentation/settings_widgets.dart';
 
 /// Opens a Remya app's own settings window and reports a failed launch.
 Future<void> openRemyaApp(
@@ -44,19 +44,6 @@ class RemyaAppsPage extends StatelessWidget {
           SettingsErrorCard(
             message: 'Could not list Remya apps from Remya Core: $error',
             onRetry: catalog.loadingApps ? null : catalog.loadApps,
-          ),
-        if (apps == null && catalog.loadingApps)
-          const SettingsSurface(
-            child: Row(
-              children: [
-                SizedBox.square(
-                  dimension: 24,
-                  child: CircularProgressIndicator(),
-                ),
-                SizedBox(width: 16),
-                Text('Loading Remya apps'),
-              ],
-            ),
           ),
         if (apps != null && apps.isEmpty) const _EmptyApps(),
         for (final app in apps ?? const <RemyaApp>[])

@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import '../../settings/application/feature_options_controller.dart';
 import '../../settings/domain/settings_catalog.dart';
-import '../../settings/presentation/settings_widgets.dart';
 
 /// CUPS printers with their state, default choice and queue. Printers are
 /// live system state, so the page polls while it is open.
@@ -103,10 +103,7 @@ class _PrintersPageState extends State<PrintersPage> {
               onRetry: _controller.isBusy ? null : _controller.reload,
             ),
           if (!_controller.isLoaded)
-            const Padding(
-              padding: .all(48),
-              child: Center(child: CircularProgressIndicator()),
-            )
+            const RemyaLoadingBar()
           else if (printers.isEmpty)
             const _Empty()
           else

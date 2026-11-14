@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import '../../applications/presentation/application_icon.dart';
-import '../../settings/presentation/settings_widgets.dart';
 import '../application/startup_controller.dart';
 
 class StartupPage extends StatefulWidget {
@@ -575,7 +575,7 @@ class _ApplicationPickerState extends State<_ApplicationPicker> {
                   return Text('${snapshot.error}');
                 }
                 if (snapshot.connectionState != .done) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const RemyaLoadingBar();
                 }
                 final apps =
                     snapshot.data?['applications'] as List? ?? const [];

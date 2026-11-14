@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
-
-import '../../settings/presentation/settings_widgets.dart';
 
 class AirplanePage extends StatefulWidget {
   const AirplanePage({super.key, required this.client});

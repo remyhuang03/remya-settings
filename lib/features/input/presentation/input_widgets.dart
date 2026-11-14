@@ -1,9 +1,9 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/color_button.dart';
 import '../../settings/presentation/settings_content.dart';
-import '../../settings/presentation/settings_widgets.dart';
 import '../../settings/application/feature_options_controller.dart';
 
 /// Service values for each catalog option, in the catalog's option order.
@@ -502,10 +502,7 @@ class InputPageFrame extends StatelessWidget {
         SettingsErrorCard(message: error, onRetry: controller.reload),
       // Placeholder values before the first read would look like device state.
       if (!controller.isLoaded)
-        const Padding(
-          padding: .all(48),
-          child: Center(child: CircularProgressIndicator()),
-        )
+        const RemyaLoadingBar()
       else ...[
         if (controller.writeBlocked case final reason?)
           SettingsErrorCard(message: reason, onRetry: controller.reload),

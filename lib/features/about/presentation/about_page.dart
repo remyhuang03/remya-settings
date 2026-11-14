@@ -1,20 +1,9 @@
-import 'dart:io';
-
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 
-import '../../settings/presentation/settings_widgets.dart';
 import '../../settings/domain/settings_catalog.dart';
 
 const repositoryUrl = 'https://github.com/remyhuang03/remya-settings';
-
-Future<void> openSettingsRepository() async {
-  final result = await Process.run('xdg-open', [repositoryUrl]);
-  if (result.exitCode != 0) {
-    throw const ProcessException('xdg-open', [
-      repositoryUrl,
-    ], 'Unable to open the repository.');
-  }
-}
 
 class AboutPage extends StatelessWidget {
   const AboutPage({
@@ -27,151 +16,85 @@ class AboutPage extends StatelessWidget {
   final VoidCallback onLicenses;
   final Future<String?>? version;
 
-  Future<void> _openRepository(BuildContext context) async {
-    try {
-      await openSettingsRepository();
-      return;
-    } on ProcessException {
-      // The desktop opener may be missing or unavailable.
-    }
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Unable to open the repository.')),
-      );
-    }
-  }
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: .stretch,
+    children: [
+      FutureBuilder(
+        future: version,
+        builder: (context, snapshot) => RemyaAboutHeader(
+          icon: Image.asset(
+            'assets/icons/app_icon.png',
+            semanticLabel: "Remy'a Settings application icon",
+          ),
+          name: "Remy'a Settings",
+          version: snapshot.data,
+        ),
+      ),
+      if (catalog.coverage case final coverage?) ...[
+        _Coverage(coverage),
+        const SizedBox(height: 16),
+      ],
+      RemyaAboutLinks(repository: repositoryUrl, onLicenses: onLicenses),
+    ],
+  );
+}
+
+class _Coverage extends StatelessWidget {
+  const _Coverage(this.coverage);
+  final SettingsCoverage coverage;
 
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
-    final controls = catalog.pages.expand((page) => page.controls);
-    final supported = controls
-        .where((item) => item.availability == .available)
-        .length;
-    final pending = controls
-        .where((item) => item.availability == .planned)
-        .length;
-    final total = controls.length;
-    return Column(
-      crossAxisAlignment: .stretch,
-      children: [
-        Padding(
-          padding: const .all(20),
-          child: Column(
+    final (:supported, :planned, :total) = coverage;
+    return SettingsSurface(
+      child: Column(
+        crossAxisAlignment: .start,
+        children: [
+          Text('Settings coverage', style: text.titleMedium),
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 40,
+            runSpacing: 16,
             children: [
-              const SizedBox(height: 16),
-              Image.asset(
-                'assets/icons/app_icon.png',
-                width: 104,
-                height: 104,
-                semanticLabel: "Remy'a Settings application icon",
-              ),
-              const SizedBox(height: 20),
-              Text(
-                "Remy'a Settings",
-                style: text.headlineMedium,
-                textAlign: .center,
-              ),
-              const SizedBox(height: 8),
-              if (version != null)
-                FutureBuilder(
-                  future: version,
-                  builder: (context, snapshot) {
-                    final value = snapshot.data;
-                    if (value == null) return const SizedBox.shrink();
-                    return Text(
-                      'v$value',
-                      style: text.labelLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    );
-                  },
-                ),
-              const SizedBox(height: 16),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        SettingsSurface(
-          child: Column(
-            crossAxisAlignment: .start,
-            children: [
-              Text('Settings coverage', style: text.titleMedium),
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 40,
-                runSpacing: 16,
-                children: [
-                  // Every count is shown so the parts visibly add up to the total.
-                  for (final stat in [
-                    ('Supported', supported),
-                    ('Not yet done', pending),
-                    ('Total', total),
-                  ])
-                    Column(
-                      crossAxisAlignment: .start,
-                      mainAxisSize: .min,
-                      children: [
-                        Text(
-                          '${stat.$2}',
-                          key: ValueKey('coverage-${stat.$1}'),
-                          style: text.headlineSmall,
-                        ),
-                        Text(stat.$1, style: text.bodyMedium),
-                      ],
+              // Every count is shown so the parts visibly add up to the total.
+              for (final stat in [
+                ('Supported', supported),
+                ('Not yet done', planned),
+                ('Total', total),
+              ])
+                Column(
+                  crossAxisAlignment: .start,
+                  mainAxisSize: .min,
+                  children: [
+                    Text(
+                      '${stat.$2}',
+                      key: ValueKey('coverage-${stat.$1}'),
+                      style: text.headlineSmall,
                     ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              ClipRRect(
-                borderRadius: .circular(4),
-                child: LinearProgressIndicator(
-                  key: const ValueKey('coverage-progress'),
-                  value: total == 0 ? 0 : supported / total,
-                  minHeight: 8,
-                  semanticsLabel: 'Supported share of settings',
+                    Text(stat.$1, style: text.bodyMedium),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '${total == 0 ? 0 : (supported * 100 / total).round()}% of settings are supported.',
-                style: text.bodySmall,
-              ),
             ],
           ),
-        ),
-        const SizedBox(height: 16),
-        SettingsSurface(
-          padding: .zero,
-          child: Column(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.code_rounded),
-                title: const Text('Repository'),
-                subtitle: const Text(repositoryUrl),
-                trailing: const Icon(Icons.open_in_new_rounded),
-                onTap: () => _openRepository(context),
-              ),
-              const Divider(height: 1),
-              ListTile(
-                leading: const Icon(Icons.description_outlined),
-                title: const Text('Third-party licenses'),
-                subtitle: const Text(
-                  'View licenses for Flutter and dependencies',
-                ),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: onLicenses,
-              ),
-              const Divider(height: 1),
-              const ListTile(
-                leading: Icon(Icons.policy_outlined),
-                title: Text('Project license'),
-                subtitle: Text('PolyForm Noncommercial License 1.0.0'),
-              ),
-            ],
+          const SizedBox(height: 16),
+          ClipRRect(
+            borderRadius: .circular(4),
+            child: LinearProgressIndicator(
+              key: const ValueKey('coverage-progress'),
+              value: total == 0 ? 0 : supported / total,
+              minHeight: 8,
+              semanticsLabel: 'Supported share of settings',
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 8),
+          Text(
+            '${total == 0 ? 0 : (supported * 100 / total).round()}% of settings are supported.',
+            style: text.bodySmall,
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,10 +1,10 @@
 import 'support/catalog.dart';
 
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_settings/features/power/presentation/power_page.dart';
 import 'package:remya_settings/features/power/presentation/battery_usage_page.dart';
 import 'package:remya_client/settings_contract.dart';
-import 'package:remya_settings/features/settings/presentation/settings_row_layout.dart';
 import 'package:remya_settings/features/settings/presentation/settings_shell.dart';
 import 'package:remya_settings/features/settings/presentation/settings_category_group.dart';
 
@@ -125,65 +125,6 @@ void main() {
       }
     },
   );
-
-  testWidgets('grouped categories navigate in wide and compact sidebars', (
-    tester,
-  ) async {
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetDevicePixelRatio);
-    addTearDown(tester.view.resetPhysicalSize);
-    for (final width in [1200.0, 800.0]) {
-      tester.view.physicalSize = Size(width, 900);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: SettingsShell(
-            key: ValueKey(width),
-            catalog: SettingsCatalog.fromJson(readCatalog()),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      for (final group in SettingsCategoryGroup.values) {
-        expect(
-          find.byKey(ValueKey('home-group-${group.name}')),
-          findsOneWidget,
-        );
-      }
-      await tester.tap(find.byKey(const ValueKey('nav-network')));
-      await tester.pumpAndSettle();
-      expect(
-        find.byKey(const ValueKey('nav-page-network-status')),
-        findsOneWidget,
-      );
-      expect(tester.takeException(), isNull);
-    }
-  });
-
-  testWidgets('single-page categories omit redundant page navigation', (
-    tester,
-  ) async {
-    final navigation = ValueNotifier<String?>('updates');
-    addTearDown(navigation.dispose);
-    final singlePageCatalog = readCatalog();
-    (singlePageCatalog['pages'] as List).removeWhere(
-      (page) => page['id'] == 'active-hours',
-    );
-    await tester.pumpWidget(
-      MaterialApp(
-        home: SettingsShell(
-          catalog: SettingsCatalog.fromJson(singlePageCatalog),
-          navigation: navigation,
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.byKey(const ValueKey('nav-page-updates')), findsNothing);
-    navigation.value = 'sound-volume';
-    await tester.pumpAndSettle();
-    expect(find.byKey(const ValueKey('nav-page-sound-volume')), findsOneWidget);
-    expect(find.byKey(const ValueKey('nav-page-volume-mixer')), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
 
   testWidgets('content reserves only the visible status bar height', (
     tester,

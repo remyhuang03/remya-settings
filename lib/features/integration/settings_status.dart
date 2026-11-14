@@ -1,10 +1,10 @@
 import '../sound/application/sound_controller.dart';
-import '../settings/presentation/settings_row_layout.dart';
 import '../default_apps/application/default_apps_controller.dart';
 import '../network/application/network_controller.dart';
 import '../system_information/application/hostname_controller.dart';
 
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 
 import '../appearance/application/app_preferences_controller.dart';
 import '../background/application/background_controller.dart';

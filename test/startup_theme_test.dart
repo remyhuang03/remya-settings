@@ -61,6 +61,7 @@ class _AppearanceService extends SettingsClient {
     'catalog' => {
       'version': 1,
       'sources': <Object>[],
+      'coverage': {'supported': 0, 'planned': 0, 'total': 0},
       'pages': <Object>[],
       'categories': <Object>[],
     },

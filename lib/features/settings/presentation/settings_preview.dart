@@ -1,6 +1,5 @@
 import 'package:material_ui/material_ui.dart';
-
-import 'settings_widgets.dart';
+import 'package:remya_ui/settings_ui.dart';
 
 class SettingsPreview extends StatelessWidget {
   const SettingsPreview(this.kind, {super.key});

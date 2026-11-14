@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import '../../input/presentation/input_widgets.dart';
@@ -86,10 +87,7 @@ class _CursorPageState extends State<CursorPage> {
               title: 'Desktop settings differ from saved Settings',
             ),
           if (!_packs.isLoaded || !_desktop.isLoaded)
-            const Padding(
-              padding: .all(48),
-              child: Center(child: CircularProgressIndicator()),
-            )
+            const RemyaLoadingBar()
           else ...[
             if (_theme case final theme?)
               InputHero(
