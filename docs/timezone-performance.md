@@ -4,8 +4,6 @@
 
 The Time & language sidebar category opens the Date & time page. Its closed DropdownMenu built all 598 system time-zone entries. The option data was already cached by ServiceDateTimeController, but rebuilding the page recreated the menu's widget tree. Keeping DropdownMenuEntry objects cached would not remove that work.
 
-A separate cost was default-app enumeration added to every global navigation refresh: two full scans took approximately 0.8 seconds on this workstation and shared the service mutex with other feature reads. Default-app discovery now runs on startup, page entry, and relevant invalidations instead of every unrelated sidebar navigation. System configuration is still freshly reconciled on entry to its page.
-
 ## Applied design
 
 - Keep cached system time-zone IDs and labels in the owning controller.
