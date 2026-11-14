@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 
-import '../../settings/presentation/settings_widgets.dart';
 import '../application/camera_controller.dart';
 import '../data/camera_preview.dart';
 

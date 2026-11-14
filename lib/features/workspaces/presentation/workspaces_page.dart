@@ -1,12 +1,12 @@
 import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import '../../input/presentation/input_widgets.dart';
 import '../../settings/application/feature_options_controller.dart';
 import '../../settings/domain/settings_catalog.dart';
-import '../../settings/presentation/settings_widgets.dart';
 
 /// A Settings rule or a live one from another configuration file.
 typedef WorkspaceRule = ({

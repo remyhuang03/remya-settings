@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 
 import '../domain/settings_catalog.dart';
 import 'settings_widgets.dart';
@@ -67,15 +68,11 @@ class SettingsCategoryIcon extends StatelessWidget {
     final group = SettingsCategoryGroup.values.firstWhere(
       (g) => g.ids.contains(category.id),
     );
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(color: group.background, shape: .circle),
-      child: Icon(
-        categoryIcon(category.icon),
-        color: group.foreground,
-        size: size * .55,
-      ),
+    return RemyaSidebarIcon(
+      categoryIcon(category.icon),
+      size: size,
+      background: group.background,
+      foreground: group.foreground,
     );
   }
 }

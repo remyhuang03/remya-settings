@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import '../../input/presentation/input_widgets.dart';
@@ -64,10 +65,7 @@ class _TextSizePageState extends State<TextSizePage> {
               title: 'Text size differs from saved Settings',
             ),
           if (!_controller.isLoaded)
-            const Padding(
-              padding: .all(48),
-              child: Center(child: CircularProgressIndicator()),
-            )
+            const RemyaLoadingBar()
           else ...[
             if (scale != null) _Sample(scale: scale),
             for (final section in widget.page.sections)

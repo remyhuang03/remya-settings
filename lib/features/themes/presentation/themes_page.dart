@@ -1,11 +1,11 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import '../../input/presentation/input_widgets.dart';
 import '../../settings/application/feature_options_controller.dart';
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_content.dart';
-import '../../settings/presentation/settings_widgets.dart';
 import 'theme_pack_widgets.dart';
 
 /// Icons that show a theme's character at a glance.
@@ -71,10 +71,7 @@ class _ThemesPageState extends State<ThemesPage> {
           _ => true,
         },
         controlBuilder: (setting) => switch (setting.id) {
-          iconThemeId when !_packs.isLoaded => const Padding(
-            padding: .all(24),
-            child: Center(child: CircularProgressIndicator()),
-          ),
+          iconThemeId when !_packs.isLoaded => const RemyaLoadingBar(),
           iconThemeId => ThemeGalleryRow(
             setting: setting,
             packs: _packs.iconThemes,

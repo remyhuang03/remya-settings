@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import '../../settings/domain/settings_catalog.dart';

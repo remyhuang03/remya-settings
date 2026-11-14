@@ -36,6 +36,7 @@ class CatalogService extends SettingsClient {
       return {
         'version': 1,
         'sources': <Object>[],
+        'coverage': {'supported': 1, 'planned': 0, 'total': 1},
         'categories': [
           {
             'id': 'system',

@@ -1,8 +1,8 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import '../../settings/domain/settings_catalog.dart';
-import '../../settings/presentation/settings_widgets.dart';
 import '../../settings/application/feature_options_controller.dart';
 import 'input_widgets.dart';
 import 'keyboard_map.dart';

@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/badge/Platform-Arch%20Linux%20%7C%20Hyprland-1793D1?logo=archlinux" alt="Platform">
   <img src="https://img.shields.io/badge/Flutter-3.47.8-02569B?logo=flutter" alt="Flutter">
   <img src="https://img.shields.io/badge/Rust-2024-dea584?logo=rust" alt="Rust">
-  <a href="https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/public-api.md"><img src="https://img.shields.io/badge/D--Bus-top.remya.Core1-5865F2" alt="D-Bus"></a>
+  <a href="https://github.com/remyhuang03/remya-core/blob/main/docs/public-api.md"><img src="https://img.shields.io/badge/D--Bus-top.remya.Core1-5865F2" alt="D-Bus"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue" alt="License"></a>
 </p>
 
@@ -24,18 +24,18 @@ A global system settings application for **Hyprland on Linux**, built with **Flu
 
 ## Implemented Features (Experimental)
 
-- **Desktop and Appearance**. Configure wallpapers, themes, window appearance, animations, workspaces, text size, fonts, display layouts, night light, bell. Detailed styling and interface controls are documented in [Appearance](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/app-preferences.md) and [Themes](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/themes.md).
-- **Connectivity and Devices**. Manage network connections, VPNs, and proxies alongside device pairing and shortcut recording. See [Network](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/network.md), [Bluetooth](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/bluetooth.md), [Sound](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/sound.md), [Camera](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/camera.md), and [Input](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/input.md) for audio routing, video feeds, and peripherals.
-- **Apps and Storage**. Oversee default MIME handlers, installed software, AppImage packages, and XDG session autostart entries. Inspect drive partitions, track usage, and clean package caches using [Default apps](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/default-apps.md), [Installed apps](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/installed-apps.md), [AppImages](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/appimages.md), [Startup](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/startup.md), and [Storage](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/storage.md).
-- **System and Power**. Track battery metrics, idle policies, hardware specifications, user avatars, languages, locales, and time synchronization. Configure Energy Saver thresholds, AI providers and usage monitoring, and manage software upgrades through [Power](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/power.md) and [System updates](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/updates.md).
+- **Desktop and Appearance**. Configure wallpapers, themes, window appearance, animations, workspaces, text size, fonts, display layouts, night light, bell. Detailed styling and interface controls are documented in [Appearance](https://github.com/remyhuang03/remya-core/blob/main/docs/app-preferences.md) and [Themes](https://github.com/remyhuang03/remya-core/blob/main/docs/themes.md).
+- **Connectivity and Devices**. Manage network connections, VPNs, and proxies alongside device pairing and shortcut recording. See [Network](https://github.com/remyhuang03/remya-core/blob/main/docs/network.md), [Bluetooth](https://github.com/remyhuang03/remya-core/blob/main/docs/bluetooth.md), [Sound](https://github.com/remyhuang03/remya-core/blob/main/docs/sound.md), [Camera](https://github.com/remyhuang03/remya-core/blob/main/docs/camera.md), and [Input](https://github.com/remyhuang03/remya-core/blob/main/docs/input.md) for audio routing, video feeds, and peripherals.
+- **Apps and Storage**. Oversee default MIME handlers, installed software, AppImage packages, and XDG session autostart entries. Inspect drive partitions, track usage, and clean package caches using [Default apps](https://github.com/remyhuang03/remya-core/blob/main/docs/default-apps.md), [Installed apps](https://github.com/remyhuang03/remya-core/blob/main/docs/installed-apps.md), [AppImages](https://github.com/remyhuang03/remya-core/blob/main/docs/appimages.md), [Startup](https://github.com/remyhuang03/remya-core/blob/main/docs/startup.md), and [Storage](https://github.com/remyhuang03/remya-core/blob/main/docs/storage.md).
+- **System and Power**. Track battery metrics, idle policies, hardware specifications, user avatars, languages, locales, and time synchronization. Configure Energy Saver thresholds, AI providers and usage monitoring, and manage software upgrades through [Power](https://github.com/remyhuang03/remya-core/blob/main/docs/power.md) and [System updates](https://github.com/remyhuang03/remya-core/blob/main/docs/updates.md).
 
 ## Settings Catalog & Coverage
 
 Browse Home, category pages, and About; search settings through Core, follow related pages, and inspect third-party licenses.
 
 - **Current Catalog**: Loaded from Remya Core; the GUI does not maintain its own catalog copy.
-- **Desktop Reference & Inspiration**: Draws reference from applicable desktop settings benchmarks (including Windows 11 reference taxonomies), retaining relevant pages, controls, URI names, and hierarchy structures as design inspiration while departing where native Linux and Hyprland workflows differ. Removed Windows-only features are excluded from coverage records. See [research, sources, and limitations](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/windows-settings-research.md).
-- **Hyprland Extensions**: Retains controls based on official configuration documentation and ecosystem tools, merging related previews into ordinary pages’ Advanced sections. See [Hyprland sources and version limits](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/hyprland-settings-research.md).
+- **Desktop Reference & Inspiration**: Draws reference from applicable desktop settings benchmarks (including Windows 11 reference taxonomies), retaining relevant pages, controls, URI names, and hierarchy structures as design inspiration while departing where native Linux and Hyprland workflows differ. Removed Windows-only features are excluded from coverage records. See [research, sources, and limitations](https://github.com/remyhuang03/remya-core/blob/main/docs/windows-settings-research.md).
+- **Hyprland Extensions**: Retains controls based on official configuration documentation and ecosystem tools, merging related previews into ordinary pages’ Advanced sections. See [Hyprland sources and version limits](https://github.com/remyhuang03/remya-core/blob/main/docs/hyprland-settings-research.md).
 - **Availability & Tracking**: Every setting declares availability (`available` or `planned`). Unavailable controls remain disabled while allowing navigation to preview pages; contextually inapplicable options are hidden automatically. The catalog's `availability` and `reason` fields are the tracker; verification evidence lives in each feature document.
 
 ## Architecture & Resident Service
@@ -113,7 +113,7 @@ python tool/install.py
 ```
 
 System updates and the privileged updater are owned by
-[Remya Core](https://github.com/remyhuang03/remya-core/blob/refactor/core-split/docs/xdg-layout.md).
+[Remya Core](https://github.com/remyhuang03/remya-core/blob/main/docs/xdg-layout.md).
 Launch from the application menu, `remya_settings`, or `gtk-launch top.remya.settings`.
 Use Core's `remya` command for CLI operations. The GUI installer writes only the
 bundle, command, desktop entries and icon, and refuses to replace a running GUI.

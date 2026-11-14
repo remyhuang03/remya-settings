@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
-import '../../settings/presentation/settings_widgets.dart';
 import 'ai_widgets.dart';
 
 /// One provider: usage, connection, models and links.

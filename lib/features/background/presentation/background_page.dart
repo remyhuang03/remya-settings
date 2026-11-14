@@ -3,13 +3,13 @@ import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import '../../settings/application/feature_options_controller.dart';
 import '../../input/presentation/input_widgets.dart';
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/color_button.dart';
-import '../../settings/presentation/settings_widgets.dart';
 import '../application/background_controller.dart';
 
 const _imageTypes = XTypeGroup(
@@ -175,10 +175,7 @@ class _BackgroundPageState extends State<BackgroundPage> {
           title: 'Blur, background and display wake differ from saved Settings',
         ),
       if (!desktop.isLoaded)
-        const Padding(
-          padding: .all(32),
-          child: Center(child: CircularProgressIndicator()),
-        )
+        const RemyaLoadingBar()
       else
         SettingsSurface(
           padding: .zero,

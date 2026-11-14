@@ -1,9 +1,8 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/remya_client.dart';
 
-import '../../settings/presentation/settings_widgets.dart';
-import '../../settings/presentation/settings_list.dart';
 import '../application/appimages_controller.dart';
 import 'application_icon.dart';
 import 'application_metadata.dart';

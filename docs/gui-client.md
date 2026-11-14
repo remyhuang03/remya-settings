@@ -37,3 +37,12 @@ Validation: `fvm flutter analyze`, `fvm flutter test`, `cargo fmt --all --check`
 `fvm flutter build linux --release`. Component tests consume Core's authoritative
 catalog as input rather than maintaining a duplicate snapshot. Catalog loader
 regressions use minimal in-memory responses and never contact the live daemon.
+
+## Avatar editor
+
+The GUI uses MIT-licensed Croppy with its public pure-Dart Cassowary solver.
+Drag, pinch, vertical wheel and slider changes use the same controller and square
+crop rectangle, with 1–8× zoom; scrolling up zooms in. The package's native asset
+is still bundled and its Kiwi/Loki notices are retained, but crop geometry does
+not depend on loading that library. Core owns image decoding, validation and
+saved output; see the [avatar API](../../remya-core/docs/public-api.md#account-information-and-settings-avatar).

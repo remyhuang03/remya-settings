@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
-import '../../settings/presentation/settings_widgets.dart';
 import '../application/updates_controller.dart';
 
 /// Active hours: automatic updates wait until they end.

@@ -1,10 +1,10 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import '../../input/presentation/input_widgets.dart';
 import '../../settings/application/feature_options_controller.dart';
 import '../../settings/domain/settings_catalog.dart';
-import '../../settings/presentation/settings_widgets.dart';
 import '../../workspaces/presentation/workspaces_page.dart' show workspaceLabel;
 
 /// A Settings window rule, keyed by what it matches.

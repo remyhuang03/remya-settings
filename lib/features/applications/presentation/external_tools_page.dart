@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 
-import '../../settings/presentation/settings_widgets.dart';
 import 'application_icon.dart';
 
 class ExternalToolsPage extends StatefulWidget {

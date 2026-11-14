@@ -14,6 +14,8 @@ import 'features/system_information/application/hostname_controller.dart';
 
 import 'package:remya_client/settings_contract.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'features/background/application/background_controller.dart';
 import 'features/fonts/application/fonts_controller.dart';
@@ -25,7 +27,6 @@ import 'features/integration/settings_scheduler.dart';
 import 'features/appearance/application/app_preferences_controller.dart';
 import 'features/settings/domain/settings_catalog.dart';
 import 'features/settings/presentation/settings_shell.dart';
-import 'features/settings/presentation/settings_title_bar.dart';
 
 class RemyaSettingsApp extends StatefulWidget {
   const RemyaSettingsApp({
@@ -126,7 +127,12 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
           builder: (context, child) => Overlay.wrap(
             child: Column(
               children: [
-                const SettingsTitleBar(),
+                RemyaTitleBar(
+                  icon: Image.asset('assets/icons/app_icon.png'),
+                  title: "Remy'a Settings",
+                  dragArea: (child) => DragToMoveArea(child: child),
+                  onClose: windowManager.close,
+                ),
                 Expanded(child: child!),
               ],
             ),
@@ -144,7 +150,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
               }
               if (!snapshot.hasData) {
                 return const Scaffold(
-                  body: Center(child: CircularProgressIndicator()),
+                  body: Align(alignment: .topCenter, child: RemyaLoadingBar()),
                 );
               }
               return SettingsShell(

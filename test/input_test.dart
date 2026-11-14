@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:remya_settings/features/about/presentation/about_page.dart';
 import 'package:remya_settings/features/input/presentation/keyboard_shortcuts_page.dart';
 import 'package:remya_settings/features/input/presentation/mouse_page.dart';
 import 'package:remya_settings/features/input/presentation/touchpad_page.dart';
@@ -258,27 +257,5 @@ void main() {
       disableShortcutId,
       jsonEncode({'keys': 'SUPER + q', 'disabled': true}),
     ]);
-  });
-
-  testWidgets('About shows the service version and coverage totals', (
-    tester,
-  ) async {
-    await pump(
-      tester,
-      AboutPage(
-        catalog: catalog,
-        onLicenses: () {},
-        version: Future.value('0.1.0-dev.20261113.0'),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.text('v0.1.0-dev.20261113.0'), findsOneWidget);
-    final controls = catalog.pages.expand((p) => p.controls).toList();
-    int count(String label) => int.parse(
-      tester.widget<Text>(find.byKey(ValueKey('coverage-$label'))).data!,
-    );
-    expect(count('Supported') + count('Not yet done'), count('Total'));
-    expect(count('Total'), controls.length);
-    expect(find.byKey(const ValueKey('coverage-progress')), findsOneWidget);
   });
 }

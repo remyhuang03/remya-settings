@@ -3,10 +3,9 @@ import 'dart:async';
 import '../../applications/presentation/application_icon.dart';
 
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
-import '../../settings/presentation/settings_widgets.dart';
-import '../../settings/presentation/settings_list.dart';
 import '../application/default_apps_controller.dart';
 
 class DefaultAppsPage extends StatefulWidget {

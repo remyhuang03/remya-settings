@@ -1,10 +1,10 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import '../../input/presentation/input_widgets.dart';
 import '../../settings/application/feature_options_controller.dart';
 import '../../settings/domain/settings_catalog.dart';
-import '../../settings/presentation/settings_widgets.dart';
 
 /// Common session variables for apps on Wayland, offered as one-tap fills.
 const _suggestions = [

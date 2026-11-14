@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/rendering.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import '../../input/presentation/input_widgets.dart';
 import '../../settings/application/feature_options_controller.dart';
 import '../../settings/domain/settings_catalog.dart';
 import '../../settings/presentation/settings_widgets.dart';
-import '../../settings/presentation/settings_list.dart';
 import '../application/fonts_controller.dart';
 
 const _fontTypes = XTypeGroup(

@@ -2,9 +2,9 @@ import 'dart:math' as math;
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 
 import '../../applications/presentation/application_metadata.dart';
-import '../../settings/presentation/settings_widgets.dart';
 import '../application/storage_controller.dart';
 import 'storage_widgets.dart';
 

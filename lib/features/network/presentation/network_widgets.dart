@@ -1,10 +1,9 @@
 import 'dart:convert';
 
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/remya_client.dart';
 
-import '../../settings/presentation/settings_widgets.dart';
-import '../../settings/presentation/settings_row_layout.dart';
 import '../application/network_controller.dart';
 
 String securityLabel(String? security) => switch (security) {
