@@ -193,7 +193,6 @@ class SettingsCatalog extends ChangeNotifier {
     };
     if (aliases[page.id] case final feature?) yield feature;
     if (page.id == 'cursor') yield 'themes';
-    if (page.id == 'themes') yield 'appearance';
   }
 
   Future<void> refreshPages() async {
@@ -296,7 +295,7 @@ class SettingsCatalog extends ChangeNotifier {
 
   Future<void> retrySearch() => _search(_query);
 
-  /// Registered Remya apps from `List`, including rejected registration files.
+  /// Registered Remy'a apps from `List`, including rejected registration files.
   /// Null until first loaded; a failed refresh keeps the previous list.
   List<RemyaApp>? apps;
   Object? appsError;
@@ -330,11 +329,11 @@ class SettingsCatalog extends ChangeNotifier {
   }
 }
 
-/// Client-side category listing installed Remya apps; it has no catalog pages.
+/// Client-side category listing installed Remy'a apps; it has no catalog pages.
 const remyaAppsCategory = SettingsCategory(
   id: 'remya-apps',
-  title: 'Remya apps',
-  description: 'Settings windows of installed Remya apps',
+  title: "Remy'a apps",
+  description: "Settings windows of installed Remy'a apps",
   icon: 'remya_apps',
 );
 

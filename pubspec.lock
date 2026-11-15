@@ -90,7 +90,7 @@ packages:
     source: hosted
     version: "1.19.1"
   croppy:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: croppy
       sha256: "6193bb0c47890b6fb6beba577a011818480412f8f80257b4448afde7cf6af43d"

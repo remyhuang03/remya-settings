@@ -75,7 +75,7 @@ class CatalogService extends SettingsClient {
           {
             'id': 'remya-bar',
             'app': 'top.remya.bar',
-            'title': 'Remya Bar',
+            'title': "Remy'a Bar",
             'icon': 'top.remya.bar',
             'pages': [
               {'id': 'layout', 'title': 'Layout', 'keywords': <String>[]},
@@ -190,7 +190,7 @@ void main() {
     () async {
       await catalog.loadApps();
       final [bar, broken] = catalog.apps!;
-      expect(bar.title, 'Remya Bar');
+      expect(bar.title, "Remy'a Bar");
       expect(bar.pages.single, (id: 'layout', title: 'Layout'));
       expect(bar.error, isNull);
       expect(broken.title, isNull);
@@ -212,7 +212,7 @@ void main() {
     },
   );
 
-  testWidgets('Remya apps category and app search results open apps', (
+  testWidgets("Remy'a apps category and app search results open apps", (
     tester,
   ) async {
     tester.view.devicePixelRatio = 1;
@@ -222,7 +222,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsShell(catalog: catalog)));
     await tester.tap(find.byKey(const ValueKey('nav-remya-apps')));
     await tester.pumpAndSettle();
-    expect(find.text('Remya Bar'), findsOneWidget);
+    expect(find.text("Remy'a Bar"), findsOneWidget);
     expect(find.textContaining('missing field `config`'), findsOneWidget);
     // A rejected registration cannot open, so only the valid app has the action.
     expect(find.text('Open settings'), findsOneWidget);
@@ -237,7 +237,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Bar height'), findsOneWidget);
     expect(
-      find.textContaining('Opens in the Remya Bar settings window'),
+      find.textContaining("Opens in the Remy'a Bar settings window"),
       findsOneWidget,
     );
     await tester.tap(find.text('Bar height'));

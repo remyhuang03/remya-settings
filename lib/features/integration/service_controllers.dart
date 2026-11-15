@@ -1,44 +1,10 @@
-import 'package:remya_ui/remya_ui.dart';
-
 import 'dart:convert';
 
-import 'package:material_ui/material_ui.dart';
-import 'package:remya_client/remya_client.dart' hide AppPreferences;
+import 'package:remya_client/remya_client.dart';
 
-import '../appearance/application/app_preferences_controller.dart';
-import '../appearance/data/system_appearance_backend.dart';
-import '../appearance/domain/app_preferences.dart';
 import '../date_time/application/date_time_controller.dart';
 import '../date_time/data/date_time_backend.dart';
 import '../display/data/display_backend.dart';
-
-class ServiceAppearanceBackend implements SystemAppearanceBackend {
-  ServiceAppearanceBackend(this.client);
-  final SettingsClient client;
-  @override
-  Future<SystemThemeState> read() async {
-    final value = await client.call('Get', ['system']);
-    return SystemThemeState(
-      mode: value['mode'] == null
-          ? null
-          : SystemThemeMode.values.byName(value['mode'] as String),
-      targets: [
-        for (final raw in value['targets'] as List)
-          ThemeTargetResult(
-            name: raw['name'] as String,
-            status: ThemeTargetStatus.values.byName(raw['status'] as String),
-            detail: raw['detail'] as String,
-          ),
-      ],
-    );
-  }
-
-  @override
-  Future<SystemThemeState> apply(SystemThemeMode mode) async {
-    await client.call('Set', [materialThemeModeSettingId, mode.name]);
-    return read();
-  }
-}
 
 class ServiceDisplayBackend implements DisplayBackend {
   ServiceDisplayBackend(this.client);
@@ -54,109 +20,6 @@ class ServiceDisplayBackend implements DisplayBackend {
   @override
   Future<Map<String, dynamic>> resolve(String source) =>
       client.call('Resolve', ['display', source]);
-}
-
-class ServicePreferencesController extends AppPreferencesController {
-  ServicePreferencesController(this.client);
-  final SettingsClient client;
-  late final systemAppearance = ServiceAppearanceBackend(client);
-  AppPreferences _value = const AppPreferences();
-  SystemThemeState? _observed;
-  bool _busy = false;
-  (String, List<String>)? _failedChange;
-  String _accentSource = 'custom';
-  String? _accentError;
-  @override
-  String get accentSource => _accentSource;
-  @override
-  String? get accentError => _accentError;
-  @override
-  AppPreferences get preferences => _value;
-  @override
-  SystemThemeState? get systemTheme => _observed;
-  @override
-  bool get isBusy => _busy;
-  @override
-  bool get hasConflict =>
-      _observed?.mode != null && _value.themeMode != _observed!.mode;
-  void reportError(String message) {
-    errorMessage = message;
-    notifyListeners();
-  }
-
-  @override
-  Future<void> reload() async {
-    try {
-      final accent = await client.call('Get', ['accent']);
-      final value = AppPreferences.fromMap(await client.call('Get', ['theme']))
-          .copyWith(
-            seedColor: RemyaTheme.seedFromHex(
-              ThemeConfig.seedFromAccent(accent),
-            ),
-          );
-      final observed = await systemAppearance.read();
-      final source = accent['source'] as String;
-      final accentError = accent['error'] as String?;
-      final changed =
-          value != _value ||
-          source != _accentSource ||
-          accentError != _accentError ||
-          observed.mode != _observed?.mode ||
-          errorMessage != null;
-      _value = value;
-      _observed = observed;
-      _accentSource = source;
-      _accentError = accentError;
-      errorMessage = null;
-      if (changed) notifyListeners();
-    } catch (error) {
-      errorMessage = '$error';
-      notifyListeners();
-    }
-  }
-
-  Future<void> _change(String method, List<String> args) async {
-    _busy = true;
-    notifyListeners();
-    try {
-      await client.call(method, args);
-      _failedChange = null;
-      await reload();
-    } catch (error) {
-      _failedChange = (method, List.of(args));
-      errorMessage = '$error';
-    } finally {
-      _busy = false;
-      notifyListeners();
-    }
-  }
-
-  @override
-  Future<void> retry() async {
-    if (isBusy) return;
-    final failed = _failedChange;
-    if (failed == null) {
-      await reload();
-    } else {
-      await _change(failed.$1, failed.$2);
-    }
-  }
-
-  @override
-  Future<void> setStyleVariant(DynamicSchemeVariant value) =>
-      _change('Set', [materialStyleSettingId, value.configKey]);
-  @override
-  Future<void> setThemeMode(SystemThemeMode value) =>
-      _change('Set', [materialThemeModeSettingId, value.name]);
-  @override
-  Future<void> setAccentSource(String source) =>
-      _change('Set', [accentSourceSettingId, source]);
-  @override
-  Future<void> setAccentColor(String hex) =>
-      _change('Set', [accentColorSettingId, hex]);
-  @override
-  Future<void> useSystemConfiguration() =>
-      _change('Resolve', ['appearance', 'system']);
 }
 
 DateTimeState _clock(Map<String, dynamic> map) => DateTimeState(

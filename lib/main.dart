@@ -2,7 +2,7 @@ import 'features/storage/application/storage_controller.dart';
 import 'features/camera/application/camera_controller.dart';
 import 'features/updates/application/updates_controller.dart';
 import 'features/sound/application/sound_controller.dart';
-import 'features/account/application/account_controller.dart';
+import 'package:remya_ui/settings_ui.dart' show RemyaAccountController;
 import 'features/bluetooth/application/bluetooth_controller.dart';
 import 'features/applications/application/applications_controller.dart';
 import 'features/default_apps/application/default_apps_controller.dart';
@@ -21,6 +21,7 @@ import 'features/fonts/application/fonts_controller.dart';
 import 'features/integration/settings_scheduler.dart';
 import 'features/night_light/application/night_light_controller.dart';
 import 'app.dart';
+import 'features/appearance/application/appearance_controller.dart';
 import 'features/integration/service_controllers.dart';
 
 import 'package:remya_client/remya_client.dart';
@@ -35,12 +36,9 @@ Future<void> main() async {
     yield LicenseEntryWithLineBreaks([
       'Rust backend dependencies',
     ], await rootBundle.loadString('assets/licenses/rust-dependencies.txt'));
-    yield LicenseEntryWithLineBreaks([
-      'Croppy native solver: Kiwi',
-    ], await rootBundle.loadString('assets/licenses/croppy-kiwi.txt'));
   });
   final client = SettingsClient();
-  final preferences = ServicePreferencesController(client);
+  final appearance = AppearanceController(client);
   final dateTime = ServiceDateTimeController(client);
   final display = DisplayController(ServiceDisplayBackend(client));
   final nightLight = NightLightController(
@@ -102,10 +100,7 @@ Future<void> main() async {
     formatDate: client.formatCalendarDate,
     readTraffic: client.readNetworkTraffic,
   );
-  final account = AccountController(
-    read: client.readAccountInformation,
-    save: client.saveAccountAvatar,
-  );
+  final account = RemyaAccountController.service(client: client);
   final cameras = CameraController(
     read: client.readCameras,
     write: client.changeCamera,
@@ -124,7 +119,7 @@ Future<void> main() async {
   );
   final navigation = ValueNotifier<String?>(null);
   final scheduler = SettingsScheduler([
-    preferences.reload,
+    appearance.reload,
     dateTime.reload,
     display.reload,
     nightLight.reload,
@@ -137,11 +132,11 @@ Future<void> main() async {
     updates.reload,
   ]);
   // The native window appears on the first frame, so load its complete theme first.
-  await preferences.reload();
+  await appearance.start();
   runApp(
     RemyaSettingsApp(
       account: account,
-      preferences: preferences,
+      appearance: appearance,
       client: client,
       dateTime: dateTime,
       display: display,
@@ -168,15 +163,8 @@ Future<void> main() async {
       case 'navigation':
         navigation.value = change.value['page'] as String;
         const MethodChannel('top.remya.paths').invokeMethod<void>('show');
-      case 'error':
-        final message = change.value['message'];
-        if (message is String) {
-          preferences.reportError(message);
-        } else {
-          preferences.reload();
-        }
-      case 'theme' || 'accent':
-        preferences.reload();
+      case 'appearance':
+        appearance.apply(change.value);
       case 'background':
         background.apply(change.value);
       case 'installed-apps':
@@ -206,8 +194,6 @@ Future<void> main() async {
         network.apply(change.value);
       case 'date-time':
         dateTime.reload();
-      case 'account-information':
-        account.reload();
       case 'hostname':
         hostname.reload();
       case 'display':

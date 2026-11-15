@@ -38,11 +38,20 @@ Validation: `fvm flutter analyze`, `fvm flutter test`, `cargo fmt --all --check`
 catalog as input rather than maintaining a duplicate snapshot. Catalog loader
 regressions use minimal in-memory responses and never contact the live daemon.
 
+## Appearance
+
+Colors and themes uses the same Material controls as other Remy'a apps. Remy'a
+Core applies the selected theme and contrast across the apps. Use **Apply to
+system** to send the current light or dark mode to supported GNOME, GTK and
+Qt Quick settings. If the saved system mode and desktop differ afterward,
+Settings offers explicit choices to adopt the desktop mode or restore the
+saved system mode.
+
 ## Avatar editor
 
-The GUI uses MIT-licensed Croppy with its public pure-Dart Cassowary solver.
+The avatar editor shared with Remy'a Bar uses MIT-licensed Croppy with its public pure-Dart Cassowary solver.
 Drag, pinch, vertical wheel and slider changes use the same controller and square
 crop rectangle, with 1–8× zoom; scrolling up zooms in. The package's native asset
 is still bundled and its Kiwi/Loki notices are retained, but crop geometry does
 not depend on loading that library. Core owns image decoding, validation and
-saved output; see the [avatar API](../../remya-core/docs/public-api.md#account-information-and-settings-avatar).
+saved output; see the [avatar API](../../remya-core/docs/public-api.md#account-information-and-remya-avatar).

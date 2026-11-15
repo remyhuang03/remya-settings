@@ -14,7 +14,6 @@ import '../../updates/presentation/active_hours_page.dart';
 import '../../updates/presentation/updates_page.dart';
 import '../../sound/application/sound_controller.dart';
 import '../../sound/presentation/sound_page.dart';
-import '../../account/application/account_controller.dart';
 import '../../account/presentation/account_information_page.dart';
 import '../../bluetooth/application/bluetooth_controller.dart';
 import '../../bluetooth/presentation/bluetooth_page.dart';
@@ -44,6 +43,7 @@ import '../../workspaces/presentation/workspaces_page.dart';
 import '../../window_rules/presentation/window_rules_page.dart';
 import '../../window_appearance/presentation/window_appearance_page.dart';
 import '../../animations/presentation/animations_page.dart';
+import '../../appearance/application/appearance_controller.dart';
 import '../../themes/presentation/cursor_page.dart';
 import '../../themes/presentation/themes_page.dart';
 import '../../text_size/presentation/text_size_page.dart';
@@ -69,6 +69,7 @@ class SettingsShell extends StatefulWidget {
     super.key,
     required this.catalog,
     this.navigation,
+    this.appearance,
     this.scheduler,
     this.status,
     this.topStatus,
@@ -79,7 +80,8 @@ class SettingsShell extends StatefulWidget {
     this.cameras,
     this.updates,
   });
-  final AccountController? account;
+  final AppearanceController? appearance;
+  final RemyaAccountController? account;
   final SoundController? sound;
   final SettingsClient? client;
   final CameraController? cameras;
@@ -377,7 +379,7 @@ class _SettingsShellState extends State<SettingsShell> {
           const SizedBox(height: 16),
           if (catalog.searchError case final error?)
             SettingsErrorCard(
-              message: 'Search failed in Remya Core: $error',
+              message: "Search failed in Remy'a Core: $error",
               onRetry: catalog.searching ? null : catalog.retrySearch,
             )
           else if (count == 0 && !catalog.searching)
@@ -570,7 +572,7 @@ class _SettingsShellState extends State<SettingsShell> {
         children: [
           if (widget.catalog.error case final error?)
             SettingsErrorCard(
-              message: 'Lost contact with Remya Core: $error',
+              message: "Lost contact with Remy'a Core: $error",
               onRetry: widget.catalog.reload,
             ),
           if (_query.isEmpty) ?_pageStatus(),
@@ -681,6 +683,7 @@ class _SettingsShellState extends State<SettingsShell> {
       ),
       'themes' => ThemesPage(
         key: key,
+        appearance: widget.appearance,
         catalog: catalog,
         page: page,
         client: client,

@@ -4,7 +4,7 @@ import 'package:remya_ui/settings_ui.dart';
 import '../../applications/presentation/application_icon.dart';
 import '../../settings/domain/settings_catalog.dart';
 
-/// Opens a Remya app's own settings window and reports a failed launch.
+/// Opens a Remy'a app's own settings window and reports a failed launch.
 Future<void> openRemyaApp(
   BuildContext context,
   SettingsCatalog catalog,
@@ -23,7 +23,7 @@ Future<void> openRemyaApp(
   }
 }
 
-/// Installed Remya apps registered with Remya Core, each with its settings pages.
+/// Installed Remy'a apps registered with Remy'a Core, each with its settings pages.
 /// The shell reloads registrations on each visit and rebuilds on catalog changes.
 class RemyaAppsPage extends StatelessWidget {
   const RemyaAppsPage({super.key, required this.catalog});
@@ -36,13 +36,13 @@ class RemyaAppsPage extends StatelessWidget {
       crossAxisAlignment: .stretch,
       children: [
         Text(
-          'Each Remya app keeps its preferences in its own settings window.',
+          "Each Remy'a app keeps its preferences in its own settings window.",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(height: 20),
         if (catalog.appsError case final error?)
           SettingsErrorCard(
-            message: 'Could not list Remya apps from Remya Core: $error',
+            message: "Could not list Remy'a apps from Remy'a Core: $error",
             onRetry: catalog.loadingApps ? null : catalog.loadApps,
           ),
         if (apps != null && apps.isEmpty) const _EmptyApps(),
@@ -66,12 +66,12 @@ class _EmptyApps extends StatelessWidget {
         const Icon(Icons.widgets_outlined, size: 40),
         const SizedBox(height: 12),
         Text(
-          'No Remya apps are installed',
+          "No Remy'a apps are installed",
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
         const Text(
-          'Apps such as Remya Bar, Remya Launcher and Remya Screen Capture '
+          "Apps such as Remy'a Bar, Remy'a Launcher and Remy'a Screen Capture "
           'list their settings here once installed.',
           textAlign: .center,
         ),

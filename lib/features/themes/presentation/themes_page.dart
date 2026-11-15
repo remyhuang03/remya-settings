@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
+import '../../appearance/application/appearance_controller.dart';
 import '../../input/presentation/input_widgets.dart';
 import '../../settings/application/feature_options_controller.dart';
 import '../../settings/domain/settings_catalog.dart';
@@ -25,10 +26,12 @@ class ThemesPage extends StatefulWidget {
     required this.page,
     required this.client,
     required this.onPage,
+    this.appearance,
   });
   final SettingsCatalog catalog;
   final SettingsPageSpec page;
   final SettingsClient client;
+  final AppearanceController? appearance;
   final ValueChanged<SettingsPageSpec> onPage;
 
   @override
@@ -65,12 +68,18 @@ class _ThemesPageState extends State<ThemesPage> {
               controller: _packs,
               title: 'Cursor and icon themes differ from saved Settings',
             ),
+          RemyaMaterialThemeSettings(client: widget.client),
         ],
         isVisible: (setting) => switch (setting.id) {
+          final id when materialThemeSettingIds.contains(id) => false,
           iconRemoveId => _packs.userThemes.isNotEmpty,
           _ => true,
         },
         controlBuilder: (setting) => switch (setting.id) {
+          applyThemeToSystemSettingId
+              when widget.appearance != null &&
+                  setting.availability == .available =>
+            _ApplySystemTheme(setting: setting, appearance: widget.appearance!),
           iconThemeId when !_packs.isLoaded => const RemyaLoadingBar(),
           iconThemeId => ThemeGalleryRow(
             setting: setting,
@@ -97,6 +106,40 @@ class _ThemesPageState extends State<ThemesPage> {
           ),
           _ => null,
         },
+      );
+    },
+  );
+}
+
+class _ApplySystemTheme extends StatelessWidget {
+  const _ApplySystemTheme({required this.setting, required this.appearance});
+
+  final SettingSpec setting;
+  final AppearanceController appearance;
+
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: appearance,
+    builder: (context, _) {
+      final mode = switch (appearance.systemMode) {
+        'light' => 'Light',
+        'dark' => 'Dark',
+        _ => null,
+      };
+      return SettingRow(
+        id: setting.id,
+        label: SettingLabel(
+          setting.title,
+          description: mode == null
+              ? setting.reason
+              : '${setting.reason}\nCurrent system mode: $mode',
+        ),
+        control: FilledButton.tonal(
+          onPressed: appearance.canApplyToSystem
+              ? appearance.applyToSystem
+              : null,
+          child: Text(setting.value as String),
+        ),
       );
     },
   );

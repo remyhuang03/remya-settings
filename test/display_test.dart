@@ -5,8 +5,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:remya_settings/features/appearance/application/app_preferences_controller.dart';
-import 'package:remya_settings/features/integration/service_controllers.dart';
+import 'package:remya_settings/features/appearance/application/appearance_controller.dart';
 import 'package:remya_client/settings_contract.dart';
 import 'package:remya_settings/features/display/application/display_controller.dart';
 import 'package:remya_settings/features/display/data/display_backend.dart';
@@ -174,9 +173,6 @@ class FakeDisplayBackend implements DisplayBackend {
 
 final catalog = SettingsCatalog.fromJson(readCatalog());
 
-AppPreferencesController fakeAppPreferencesController() =>
-    ServicePreferencesController(SettingsClient());
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -301,24 +297,23 @@ void main() {
       final controller = DisplayController(backend);
       await controller.reload();
       final navigatorKey = GlobalKey<NavigatorState>();
-      final preferences = fakeAppPreferencesController();
-      addTearDown(preferences.dispose);
+      final client = SettingsClient();
+      final appearance = AppearanceController(client);
+      addTearDown(client.close);
+      addTearDown(appearance.dispose);
       await tester.pumpWidget(
         DisplayScope(
           controller: controller,
-          child: AppPreferencesScope(
-            controller: preferences,
-            child: MaterialApp(
-              navigatorKey: navigatorKey,
-              theme: ThemeData(useMaterial3: true),
-              home: SettingsShell(
-                catalog: catalog,
-                navigation: ValueNotifier('display'),
-                status: SettingsStatus(
-                  preferences: preferences,
-                  display: controller,
-                  navigatorKey: navigatorKey,
-                ),
+          child: MaterialApp(
+            navigatorKey: navigatorKey,
+            theme: ThemeData(useMaterial3: true),
+            home: SettingsShell(
+              catalog: catalog,
+              navigation: ValueNotifier('display'),
+              status: SettingsStatus(
+                appearance: appearance,
+                display: controller,
+                navigatorKey: navigatorKey,
               ),
             ),
           ),

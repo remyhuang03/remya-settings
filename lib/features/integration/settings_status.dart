@@ -6,7 +6,7 @@ import '../system_information/application/hostname_controller.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_ui/settings_ui.dart';
 
-import '../appearance/application/app_preferences_controller.dart';
+import '../appearance/application/appearance_controller.dart';
 import '../background/application/background_controller.dart';
 import '../date_time/application/date_time_controller.dart';
 import '../display/application/display_controller.dart';
@@ -16,7 +16,7 @@ import '../night_light/application/night_light_controller.dart';
 class SettingsStatus extends StatelessWidget {
   const SettingsStatus({
     super.key,
-    required this.preferences,
+    required this.appearance,
     this.dateTime,
     this.display,
     this.nightLight,
@@ -26,7 +26,7 @@ class SettingsStatus extends StatelessWidget {
     this.sound,
     this.navigatorKey,
   });
-  final AppPreferencesController preferences;
+  final AppearanceController appearance;
   final BackgroundController? background;
   final DefaultAppsController? defaultApps;
   final NetworkController? network;
@@ -39,7 +39,7 @@ class SettingsStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: Listenable.merge([
-      preferences,
+      appearance,
       dateTime,
       display,
       nightLight,
@@ -56,24 +56,23 @@ class SettingsStatus extends StatelessWidget {
         child: Column(
           mainAxisSize: .min,
           children: [
-            if (preferences.errorMessage case final message?)
+            if (appearance.errorMessage case final message?)
               _ConflictWarning(
                 navigatorKey: navigatorKey,
                 area: 'Appearance',
                 title: message,
-                busy: preferences.isBusy,
-                useSystem: preferences.retry,
+                busy: appearance.isBusy,
+                useSystem: appearance.retry,
               ),
-            if (preferences.hasConflict)
+            if (appearance.hasConflict)
               _ConflictWarning(
                 navigatorKey: navigatorKey,
                 area: 'Appearance',
                 title:
-                    'System: ${preferences.systemTheme!.mode!.name}\nSettings: ${preferences.preferences.themeMode.name}',
-                busy: preferences.isBusy,
-                useSystem: preferences.useSystemConfiguration,
-                useSettings: () =>
-                    preferences.setThemeMode(preferences.preferences.themeMode),
+                    'System: ${appearance.systemMode ?? 'Unknown'}\nSaved system mode: ${appearance.savedSystemMode ?? 'Unknown'}',
+                busy: appearance.isBusy,
+                useSystem: appearance.useSystemConfiguration,
+                useSettings: appearance.applySavedConfiguration,
               ),
             if (dateTime case final controller?) ...[
               if (controller.hasConflict)

@@ -1,10 +1,7 @@
-import 'features/integration/service_controllers.dart';
-import 'features/appearance/domain/app_preferences.dart';
 import 'features/storage/application/storage_controller.dart';
 import 'features/camera/application/camera_controller.dart';
 import 'features/updates/application/updates_controller.dart';
 import 'features/sound/application/sound_controller.dart';
-import 'features/account/application/account_controller.dart';
 import 'features/bluetooth/application/bluetooth_controller.dart';
 import 'features/applications/application/applications_controller.dart';
 import 'features/default_apps/application/default_apps_controller.dart';
@@ -14,6 +11,7 @@ import 'features/system_information/application/hostname_controller.dart';
 
 import 'package:remya_client/settings_contract.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/remya_ui.dart';
 import 'package:remya_ui/settings_ui.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -24,14 +22,14 @@ import 'features/display/application/display_controller.dart';
 import 'features/night_light/application/night_light_controller.dart';
 import 'features/integration/settings_status.dart';
 import 'features/integration/settings_scheduler.dart';
-import 'features/appearance/application/app_preferences_controller.dart';
+import 'features/appearance/application/appearance_controller.dart';
 import 'features/settings/domain/settings_catalog.dart';
 import 'features/settings/presentation/settings_shell.dart';
 
 class RemyaSettingsApp extends StatefulWidget {
   const RemyaSettingsApp({
     super.key,
-    this.preferences,
+    this.appearance,
     this.client,
     this.account,
     this.navigation,
@@ -53,7 +51,7 @@ class RemyaSettingsApp extends StatefulWidget {
     this.cameras,
     this.updates,
   });
-  final AccountController? account;
+  final RemyaAccountController? account;
   final BackgroundController? background;
   final FontsController? fonts;
   final DefaultAppsController? defaultApps;
@@ -65,7 +63,7 @@ class RemyaSettingsApp extends StatefulWidget {
   final SoundController? sound;
   final CameraController? cameras;
   final UpdatesController? updates;
-  final AppPreferencesController? preferences;
+  final AppearanceController? appearance;
   final SettingsClient? client;
   final DateTimeController? dateTime;
   final DisplayController? display;
@@ -83,15 +81,15 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
   final _navigatorKey = GlobalKey<NavigatorState>();
   late final _client = widget.client ?? SettingsClient();
   late var _catalog = SettingsCatalog.load(client: _client);
-  late final _preferences =
-      widget.preferences ?? ServicePreferencesController(_client);
+  late final _appearance =
+      widget.appearance ?? (AppearanceController(_client)..start());
 
   @override
   void dispose() {
     _catalog.then((catalog) => catalog.dispose(), onError: (Object _) {});
-    if (widget.client == null) _client.close();
     widget.scheduler?.dispose();
-    _preferences.dispose();
+    _appearance.dispose();
+    if (widget.client == null) _client.close();
     widget.account?.dispose();
     widget.dateTime?.dispose();
     widget.display?.dispose();
@@ -113,76 +111,74 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
 
   @override
   Widget build(BuildContext context) {
-    final app = AppPreferencesScope(
-      controller: _preferences,
-      child: ListenableBuilder(
-        listenable: _preferences,
-        builder: (context, _) => MaterialApp(
-          navigatorKey: _navigatorKey,
-          title: "Remy'a Settings",
-          debugShowCheckedModeBanner: false,
-          theme: _preferences.preferences.theme(.light),
-          darkTheme: _preferences.preferences.theme(.dark),
-          themeMode: _preferences.preferences.themeMode.materialMode,
-          builder: (context, child) => Overlay.wrap(
-            child: Column(
-              children: [
-                RemyaTitleBar(
-                  icon: Image.asset('assets/icons/app_icon.png'),
-                  title: "Remy'a Settings",
-                  dragArea: (child) => DragToMoveArea(child: child),
-                  onClose: windowManager.close,
-                ),
-                Expanded(child: child!),
-              ],
-            ),
+    final app = ListenableBuilder(
+      listenable: _appearance,
+      builder: (context, _) => MaterialApp(
+        navigatorKey: _navigatorKey,
+        title: "Remy'a Settings",
+        debugShowCheckedModeBanner: false,
+        theme: _settingsTheme(_appearance.theme, .light),
+        darkTheme: _settingsTheme(_appearance.theme, .dark),
+        themeMode: _appearance.theme.mode,
+        builder: (context, child) => Overlay.wrap(
+          child: Column(
+            children: [
+              RemyaTitleBar(
+                icon: Image.asset('assets/icons/app_icon.png'),
+                title: "Remy'a Settings",
+                dragArea: (child) => DragToMoveArea(child: child),
+                onClose: windowManager.close,
+              ),
+              Expanded(child: child!),
+            ],
           ),
-          home: FutureBuilder<SettingsCatalog>(
-            future: _catalog,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return _CoreUnavailable(
-                  error: snapshot.error!,
-                  onRetry: () => setState(
-                    () => _catalog = SettingsCatalog.load(client: _client),
-                  ),
-                );
-              }
-              if (!snapshot.hasData) {
-                return const Scaffold(
-                  body: Align(alignment: .topCenter, child: RemyaLoadingBar()),
-                );
-              }
-              return SettingsShell(
-                catalog: snapshot.data!,
-                client: widget.client,
-                cameras: widget.cameras,
-                account: widget.account,
-                sound: widget.sound,
-                updates: widget.updates,
-                navigation: widget.navigation,
-                scheduler: widget.scheduler,
-                systemInformation: widget.systemInformation,
-                topStatus: widget.hostname == null
-                    ? null
-                    : HostnameStatus(
-                        controller: widget.hostname!,
-                        navigatorKey: _navigatorKey,
-                      ),
-                status: SettingsStatus(
-                  navigatorKey: _navigatorKey,
-                  preferences: _preferences,
-                  dateTime: widget.dateTime,
-                  display: widget.display,
-                  nightLight: widget.nightLight,
-                  background: widget.background,
-                  defaultApps: widget.defaultApps,
-                  network: widget.network,
-                  sound: widget.sound,
+        ),
+        home: FutureBuilder<SettingsCatalog>(
+          future: _catalog,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return _CoreUnavailable(
+                error: snapshot.error!,
+                onRetry: () => setState(
+                  () => _catalog = SettingsCatalog.load(client: _client),
                 ),
               );
-            },
-          ),
+            }
+            if (!snapshot.hasData) {
+              return const Scaffold(
+                body: Align(alignment: .topCenter, child: RemyaLoadingBar()),
+              );
+            }
+            return SettingsShell(
+              catalog: snapshot.data!,
+              client: _client,
+              appearance: _appearance,
+              cameras: widget.cameras,
+              account: widget.account,
+              sound: widget.sound,
+              updates: widget.updates,
+              navigation: widget.navigation,
+              scheduler: widget.scheduler,
+              systemInformation: widget.systemInformation,
+              topStatus: widget.hostname == null
+                  ? null
+                  : HostnameStatus(
+                      controller: widget.hostname!,
+                      navigatorKey: _navigatorKey,
+                    ),
+              status: SettingsStatus(
+                navigatorKey: _navigatorKey,
+                appearance: _appearance,
+                dateTime: widget.dateTime,
+                display: widget.display,
+                nightLight: widget.nightLight,
+                background: widget.background,
+                defaultApps: widget.defaultApps,
+                network: widget.network,
+                sound: widget.sound,
+              ),
+            );
+          },
         ),
       ),
     );
@@ -231,6 +227,19 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
   }
 }
 
+ThemeData _settingsTheme(RemyaTheme theme, Brightness brightness) => theme
+    .theme(brightness)
+    .copyWith(
+      dropdownMenuTheme: const DropdownMenuThemeData(
+        inputDecorationTheme: InputDecorationThemeData(
+          isDense: true,
+          constraints: BoxConstraints.tightFor(height: 48),
+          contentPadding: .symmetric(horizontal: 14),
+          border: OutlineInputBorder(borderRadius: .all(.circular(14))),
+        ),
+      ),
+    );
+
 class _CoreUnavailable extends StatelessWidget {
   const _CoreUnavailable({required this.error, required this.onRetry});
   final Object error;
@@ -255,15 +264,15 @@ class _CoreUnavailable extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Remya Core is not available',
+                  "Remy'a Core is not available",
                   style: text.headlineSmall,
                   textAlign: .center,
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'Settings is a window for Remya Core, a separate background '
+                  "Settings is a window for Remy'a Core, a separate background "
                   'service (remyad) that reads and applies your settings. '
-                  'Install or start Remya Core, then retry.',
+                  "Install or start Remy'a Core, then retry.",
                   textAlign: .center,
                 ),
                 const SizedBox(height: 12),

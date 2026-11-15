@@ -389,6 +389,7 @@ void main() {
     'service snapshots and signals use the same validated theme contract',
     () async {
       final client = _Client();
+      addTearDown(client.close);
       final preferences = SettingsThemeController.service(client: client);
       await preferences.start();
       expect(preferences.error, isNull);
@@ -412,7 +413,7 @@ void main() {
       await preferences.reload();
       expect(preferences.error, isNull);
       preferences.dispose();
-      expect(client.closed, isTrue);
+      expect(client.closed, isFalse);
     },
   );
 }

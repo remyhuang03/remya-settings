@@ -2,14 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:remya_settings/features/appearance/application/app_preferences_controller.dart';
 import 'package:remya_settings/features/multitasking/presentation/multitasking_page.dart';
 import 'package:remya_settings/features/themes/presentation/cursor_page.dart';
 import 'package:remya_settings/features/themes/presentation/themes_page.dart';
 import 'package:remya_client/settings_contract.dart';
 
 import 'input_test.dart' show catalog, pump;
-import 'display_test.dart' show fakeAppPreferencesController;
 
 /// Answers `desktop` and `themes` like the service; `Set` updates options.
 class FeaturesClient extends SettingsClient {
@@ -31,6 +29,12 @@ class FeaturesClient extends SettingsClient {
         'sizes': [24, 32, 48],
         'images': <Object>[],
       };
+    }
+    if (method == 'Get' && arguments.single == 'theme') {
+      return const ThemeConfig().toMap();
+    }
+    if (method == 'Get' && arguments.single == 'accent') {
+      return {'source': 'custom', 'color': '#8054C9'};
     }
     final feature = method == 'Set'
         ? (arguments[0].startsWith('multitasking.') ||
@@ -223,18 +227,13 @@ void main() {
     });
     // No pack is the user's own here.
     (client.features['themes']!['cursor_themes'] as List).removeLast();
-    final preferences = fakeAppPreferencesController();
-    addTearDown(preferences.dispose);
     await pump(
       tester,
-      AppPreferencesScope(
-        controller: preferences,
-        child: ThemesPage(
-          catalog: catalog,
-          page: catalog.page('themes'),
-          client: client,
-          onPage: (_) {},
-        ),
+      ThemesPage(
+        catalog: catalog,
+        page: catalog.page('themes'),
+        client: client,
+        onPage: (_) {},
       ),
     );
     expect(find.byKey(const ValueKey('themes.icon-remove')), findsNothing);

@@ -114,13 +114,14 @@ void main() {
       );
       expect(ids.length, ids.toSet().length);
       expect(
-        groups.map((group) => group.background).toSet().length,
+        groups.map((group) => group.category.background).toSet().length,
         groups.length,
       );
       for (final group in groups) {
+        final category = group.category;
         final contrast =
-            (group.background.computeLuminance() + .05) /
-            (group.foreground.computeLuminance() + .05);
+            (category.background.computeLuminance() + .05) /
+            (category.foreground.computeLuminance() + .05);
         expect(contrast, greaterThanOrEqualTo(4.5));
       }
     },

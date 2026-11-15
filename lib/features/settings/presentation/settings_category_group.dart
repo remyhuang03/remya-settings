@@ -5,47 +5,17 @@ import '../domain/settings_catalog.dart';
 import 'settings_widgets.dart';
 
 enum SettingsCategoryGroup {
-  connections(
-    'Connections',
-    ['network', 'devices'],
-    Color(0xffb8d8ff),
-    Color(0xff12385b),
-  ),
-  personalization(
-    'Personalization',
-    ['sound', 'appearance'],
-    Color(0xffffc4df),
-    Color(0xff5b173d),
-  ),
-  system(
-    'Device & system',
-    ['system', 'power', 'apps', 'remya-apps', 'ai', 'update'],
-    Color(0xffbdebbd),
-    Color(0xff1b4624),
-  ),
-  privacy(
-    'Accounts & privacy',
-    ['accounts', 'privacy'],
-    Color(0xffa8e8ed),
-    Color(0xff004b50),
-  ),
-  preferences(
-    'Language & accessibility',
-    ['time', 'accessibility'],
-    Color(0xffffdda6),
-    Color(0xff593b08),
-  );
+  connections(['network', 'devices'], .connections),
+  personalization(['sound', 'appearance'], .personalization),
+  system(['system', 'power', 'apps', 'remya-apps', 'ai', 'update'], .system),
+  privacy(['accounts', 'privacy'], .privacy),
+  preferences(['time', 'accessibility'], .preferences);
 
-  const SettingsCategoryGroup(
-    this.title,
-    this.ids,
-    this.background,
-    this.foreground,
-  );
-  final String title;
+  const SettingsCategoryGroup(this.ids, this.category);
   final List<String> ids;
-  final Color background;
-  final Color foreground;
+  final RemyaSettingsCategory category;
+
+  String get title => category.title;
 
   List<SettingsCategory> categories(SettingsCatalog catalog) => [
     for (final id in ids)
@@ -71,8 +41,7 @@ class SettingsCategoryIcon extends StatelessWidget {
     return RemyaSidebarIcon(
       categoryIcon(category.icon),
       size: size,
-      background: group.background,
-      foreground: group.foreground,
+      category: group.category,
     );
   }
 }

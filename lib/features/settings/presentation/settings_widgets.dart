@@ -1,10 +1,7 @@
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'package:remya_ui/settings_ui.dart';
 
-import '../../appearance/application/app_preferences_controller.dart';
-import '../../appearance/domain/app_preferences.dart';
 import '../domain/settings_catalog.dart';
 import '../../date_time/application/date_time_controller.dart';
 import '../../date_time/presentation/date_time_settings.dart';
@@ -201,7 +198,6 @@ class SettingControlTile extends StatelessWidget {
                 )
               else
                 AvailabilityBadge(setting.availability, reason: setting.reason),
-              if (setting.id == accentColorSettingId) const _AccentReadout(),
               if (dateTimeSettingIds.contains(setting.id) && state == null)
                 Text('System settings unavailable', style: detailStyle),
               if (setting.id == syncNowSettingId && state != null) ...[
@@ -232,11 +228,7 @@ class SettingControlTile extends StatelessWidget {
           return label;
         },
       ),
-      control:
-          setting.kind == .info ||
-              // The sampled color is a readout; a picker only applies to Custom.
-              setting.id == accentColorSettingId &&
-                  AppPreferencesScope.of(context).accentSource == 'background'
+      control: setting.kind == .info
           ? null
           : Semantics(
               label:
@@ -259,18 +251,6 @@ class _PreviewControl extends StatelessWidget {
   Widget build(BuildContext context) {
     if (dateTimeSettingIds.contains(setting.id)) {
       return DateTimeSettingControl(setting.id);
-    }
-    if (setting.id == materialStyleSettingId) {
-      return _AppStyleChoice(setting);
-    }
-    if (setting.id == materialThemeModeSettingId) {
-      return const _AppThemeModeChoice();
-    }
-    if (setting.id == accentSourceSettingId) {
-      return _AccentSourceChoice(setting);
-    }
-    if (setting.id == accentColorSettingId) {
-      return const _AccentColorButton();
     }
     // System previews stay disabled until real integrations are verified.
     return switch (setting.kind) {
@@ -337,185 +317,6 @@ class _PreviewControl extends StatelessWidget {
         label: Text('Sample ${setting.value}'),
       ),
     };
-  }
-}
-
-class _AppStyleChoice extends StatelessWidget {
-  const _AppStyleChoice(this.setting);
-  final SettingSpec setting;
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = AppPreferencesScope.of(context);
-    final value = controller.preferences.styleVariant.label;
-    return SizedBox(
-      width: 232,
-      child: DropdownButtonFormField<String>(
-        key: ValueKey('control-${setting.id}'),
-        initialValue: value,
-        isExpanded: true,
-        decoration: const InputDecoration(
-          isDense: true,
-          border: OutlineInputBorder(borderRadius: .all(.circular(14))),
-        ),
-        items: [
-          for (final option in setting.options)
-            DropdownMenuItem(value: option, child: Text(option)),
-        ],
-        onChanged: (value) {
-          if (value == null || controller.isBusy) return;
-          controller.setStyleVariant(
-            DynamicSchemeVariant.values.firstWhere(
-              (item) => item.label == value,
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _AppThemeModeChoice extends StatelessWidget {
-  const _AppThemeModeChoice();
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = AppPreferencesScope.of(context);
-    return Row(
-      mainAxisSize: .min,
-      spacing: 8,
-      children: [
-        for (final mode in SystemThemeMode.values)
-          IconButton.filledTonal(
-            key: ValueKey('$materialThemeModeSettingId-${mode.label}'),
-            tooltip: mode.label,
-            isSelected: controller.preferences.themeMode == mode,
-            onPressed: controller.systemTheme == null
-                ? null
-                : () {
-                    if (!controller.isBusy) controller.setThemeMode(mode);
-                  },
-            icon: Icon(switch (mode) {
-              .light => Icons.light_mode_outlined,
-              .dark => Icons.dark_mode_outlined,
-            }),
-            selectedIcon: Icon(switch (mode) {
-              .light => Icons.light_mode_rounded,
-              .dark => Icons.dark_mode_rounded,
-            }),
-          ),
-      ],
-    );
-  }
-}
-
-String _hex(Color color) =>
-    '#${(color.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase()}';
-
-class _AccentReadout extends StatelessWidget {
-  const _AccentReadout();
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = AppPreferencesScope.of(context);
-    final style = Theme.of(context).textTheme;
-    return Column(
-      crossAxisAlignment: .start,
-      children: [
-        const SizedBox(height: 4),
-        Text(
-          _hex(controller.preferences.seedColor),
-          key: const ValueKey('accent-readout'),
-          style: style.bodyMedium,
-        ),
-        if (controller.accentError case final error?)
-          Text(
-            'Could not sample the background. The last color is kept. $error',
-            style: style.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.error,
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _AccentSourceChoice extends StatelessWidget {
-  const _AccentSourceChoice(this.setting);
-  final SettingSpec setting;
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = AppPreferencesScope.of(context);
-    return SizedBox(
-      width: 232,
-      child: DropdownButtonFormField<String>(
-        key: ValueKey('control-${setting.id}-${controller.accentSource}'),
-        initialValue: controller.accentSource,
-        isExpanded: true,
-        decoration: const InputDecoration(
-          isDense: true,
-          border: OutlineInputBorder(borderRadius: .all(.circular(14))),
-        ),
-        items: const [
-          DropdownMenuItem(value: 'background', child: Text('From background')),
-          DropdownMenuItem(value: 'custom', child: Text('Custom')),
-        ],
-        onChanged: (value) {
-          if (value != null && !controller.isBusy) {
-            controller.setAccentSource(value);
-          }
-        },
-      ),
-    );
-  }
-}
-
-class _AccentColorButton extends StatelessWidget {
-  const _AccentColorButton();
-
-  Future<void> _pick(
-    BuildContext context,
-    AppPreferencesController controller,
-  ) async {
-    var picked = controller.preferences.seedColor;
-    final confirmed = await ColorPicker(
-      color: picked,
-      onColorChanged: (color) => picked = color,
-      pickersEnabled: const {
-        ColorPickerType.primary: true,
-        ColorPickerType.accent: false,
-        ColorPickerType.wheel: true,
-      },
-      enableShadesSelection: true,
-      showColorCode: true,
-      colorCodeHasColor: true,
-      heading: Text(
-        'Accent color',
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-      subheading: const Text('Shades'),
-      wheelSubheading: const Text('Shades'),
-    ).showPickerDialog(context);
-    if (confirmed) await controller.setAccentColor(_hex(picked));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = AppPreferencesScope.of(context);
-    return FilledButton.icon(
-      key: const ValueKey('accent-color-button'),
-      onPressed: controller.isBusy ? null : () => _pick(context, controller),
-      icon: Container(
-        width: 20,
-        height: 20,
-        decoration: BoxDecoration(
-          color: controller.preferences.seedColor,
-          shape: .circle,
-        ),
-      ),
-      label: const Text('Choose color'),
-    );
   }
 }
 
