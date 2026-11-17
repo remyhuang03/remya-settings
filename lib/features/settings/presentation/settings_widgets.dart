@@ -67,6 +67,7 @@ IconData pageIcon(SettingsPageSpec page, SettingsCategory category) =>
       'window-appearance' => Icons.rounded_corner_outlined,
       'animations' => Icons.animation_outlined,
       'touchpad' => Icons.touch_app_outlined,
+      'touch' => Icons.tablet_mac_outlined,
       'airplane' => Icons.airplanemode_active_rounded,
       'wifi' => Icons.wifi_outlined,
       'known-networks' => Icons.bookmark_outline_rounded,

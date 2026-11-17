@@ -172,6 +172,7 @@ class SettingsCatalog extends ChangeNotifier {
     const aliases = {
       'mouse': 'input',
       'touchpad': 'input',
+      'touch': 'input',
       'keyboard-shortcuts': 'input',
       'about': 'hostname',
       'network-status': 'network',

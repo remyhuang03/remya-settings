@@ -7,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/input/presentation/keyboard_shortcuts_page.dart';
 import 'package:remya_settings/features/input/presentation/mouse_page.dart';
 import 'package:remya_settings/features/input/presentation/touchpad_page.dart';
+import 'package:remya_settings/features/input/presentation/touchscreen_page.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 import 'package:remya_client/settings_contract.dart';
 
@@ -115,6 +116,35 @@ Future<void> pump(WidgetTester tester, Widget page) async {
 }
 
 void main() {
+  testWidgets('touchscreen mapping is only offered with a detected device', (
+    tester,
+  ) async {
+    final client = FakeClient(
+      inputState(options: {'touch.mapping-output': '[[Auto]]'}),
+    );
+    Widget touchscreen({Key? key}) => TouchscreenPage(
+      key: key,
+      catalog: catalog,
+      page: catalog.page('touch'),
+      client: client,
+    );
+
+    await pump(tester, touchscreen());
+    expect(find.byType(DropdownMenu<String>), findsNothing);
+
+    client.state['touchscreens'] = ['test-touchscreen'];
+    client.state['touch_displays'] = [
+      {'name': 'DP-1', 'description': 'External display'},
+    ];
+    await pump(tester, touchscreen(key: const ValueKey('connected')));
+    expect(find.text('test-touchscreen'), findsOneWidget);
+    await tester.tap(find.byType(DropdownMenu<String>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('DP-1 (External display)').hitTestable());
+    await tester.pumpAndSettle();
+    expect(client.calls.last, ['Set', 'touch.mapping-output', '"DP-1"']);
+  });
+
   testWidgets('mouse buttons map to left-handed and dependent rows hide', (
     tester,
   ) async {

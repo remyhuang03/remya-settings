@@ -279,6 +279,14 @@ String _percent(double v) => '${(v * 100).round()}%';
 
 /// Readable text of a stored value, for rows and the conflict summary.
 String describeValue(SettingSpec setting, Object? value) {
+  if (setting.id == 'touch.mapping-output') {
+    return switch (value) {
+      '[[Auto]]' => 'Default',
+      '' => 'Focused display',
+      null => 'Unknown',
+      _ => '$value',
+    };
+  }
   if (setting.id == 'language.format') {
     return switch (value) {
       '' => 'Same as display language',

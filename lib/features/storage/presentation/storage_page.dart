@@ -359,6 +359,12 @@ String _fileSystem(Object? type) => switch (type) {
   _ => 'Unknown',
 };
 
+String? _encryptionStatus(Map volume) => switch (volume['encryption']) {
+  'locked' => 'Encrypted and locked',
+  'unlocked' => 'Encrypted and unlocked',
+  _ => null,
+};
+
 String _volumeName(Map v) {
   final label = v['label'] as String? ?? '';
   if (label.isNotEmpty) return label;
@@ -669,7 +675,10 @@ class _VolumeRow extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 2,
-                  child: Text(_fileSystem(volume['fs_type']), style: muted),
+                  child: Text(
+                    _encryptionStatus(volume) ?? _fileSystem(volume['fs_type']),
+                    style: muted,
+                  ),
                 ),
                 Expanded(
                   flex: 3,
@@ -785,6 +794,8 @@ class _VolumeDetails extends StatelessWidget {
                   label: 'File system',
                   value: _fileSystem(volume['fs_type']),
                 ),
+                if (_encryptionStatus(volume) case final status?)
+                  PropertyField(label: 'Encryption', value: status),
                 PropertyField(
                   label: 'Device',
                   value: volume['device'] as String,
