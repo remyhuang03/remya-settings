@@ -26,6 +26,8 @@ class BackgroundController extends ChangeNotifier {
   Map<String, dynamic> value = {};
   String? _failure;
   bool _busy = false;
+  bool _disposed = false;
+  int _readGeneration = 0;
   (String, String)? _failedChange;
 
   bool get isBusy => _busy;
@@ -129,39 +131,50 @@ class BackgroundController extends ChangeNotifier {
   }
 
   void apply(Map<String, dynamic> state) {
+    if (_disposed) return;
+    _readGeneration++;
     value = state;
     notifyListeners();
   }
 
-  Future<void> reload() async {
+  Future<void> reload() => _busy || _disposed ? Future.value() : _reload();
+
+  Future<void> _reload() async {
+    final generation = ++_readGeneration;
+    bool current() => !_disposed && generation == _readGeneration;
     try {
-      value = await read();
+      final next = await read();
+      if (!current()) return;
+      value = next;
       _failure = null;
     } catch (error) {
+      if (!current()) return;
       _failure = '$error';
     }
     notifyListeners();
   }
 
   Future<void> _run(BackgroundReply Function() operation) async {
+    if (_busy || _disposed) return;
+    _readGeneration++;
     _busy = true;
     notifyListeners();
+    String? failure;
     try {
       await operation();
-      _failure = null;
-      value = await read();
     } catch (error) {
-      _failure = '$error';
-      try {
-        value = await read();
-      } catch (_) {}
-    } finally {
-      _busy = false;
-      notifyListeners();
+      failure = '$error';
     }
+    if (_disposed) return;
+    await _reload();
+    if (_disposed) return;
+    _failure = failure ?? _failure;
+    _busy = false;
+    notifyListeners();
   }
 
   Future<void> set(String id, String setting) async {
+    if (_busy || _disposed) return;
     _failedChange = (id, setting);
     await _run(() => write(id, setting));
     if (_failure == null) _failedChange = null;
@@ -177,6 +190,12 @@ class BackgroundController extends ChangeNotifier {
 
   Future<void> useSystemConfiguration() => _run(() => resolve('system'));
   Future<void> applySavedConfiguration() => _run(() => resolve('settings'));
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
 }
 
 class BackgroundScope extends InheritedNotifier<BackgroundController> {

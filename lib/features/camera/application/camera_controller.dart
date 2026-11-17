@@ -27,6 +27,7 @@ class CameraController extends ChangeNotifier {
       (state['conflicts'] as List? ?? []).contains(name);
   void apply(Map<String, dynamic> value) {
     if (_disposed) return;
+    _revision++;
     state = value;
     error = value['error'] as String?;
     notifyListeners();

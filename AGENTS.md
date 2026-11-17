@@ -22,7 +22,7 @@
 
 ## Toolchains & Dependencies
 - Always invoke Flutter and Dart as `fvm flutter ...` and `fvm dart ...`, never through global SDK commands.
-- `.fvmrc` pins Flutter to `3.47.8`. Do not change versions without explicit instruction. Run `fvm install` for fresh setup.
+- `.fvmrc` is the source of truth for the Flutter version. Do not change versions without explicit instruction. Run `fvm install` for fresh setup.
 - Use the root `rust-toolchain.toml` for the preview wrapper. Commit `.fvmrc`, `pubspec.lock`, and `Cargo.lock`; ignore SDK caches, build output, and local configuration.
 - Reuse existing helpers and dependencies. Add packages only for concrete requirements.
 - This project uses the PolyForm Noncommercial License 1.0.0 (`LICENSE`), matching `image_resizer` by explicit owner instruction.

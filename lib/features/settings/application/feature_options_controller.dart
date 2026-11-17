@@ -11,16 +11,28 @@ import 'package:remya_client/settings_contract.dart';
 class FeatureOptionsController extends ChangeNotifier {
   FeatureOptionsController(this.client, {this.feature = 'input'}) {
     _changes = client.changes.listen((change) {
-      if (change.topic == feature && !isBusy) _apply(change.value);
+      if (_disposed || change.topic != feature) return;
+      if (isBusy || _reading != null) {
+        unawaited(_refresh());
+      } else {
+        _apply(change.value);
+      }
     }, onError: (Object error) => debugPrint('$feature changes: $error'));
   }
   final SettingsClient client;
   final String feature;
   StreamSubscription<SettingsChange>? _changes;
   Map<String, dynamic> state = {};
-  String? errorMessage;
-  bool isBusy = false;
+  String? _readError;
+  String? _writeError;
+  Completer<void>? _writing;
+  Future<void>? _reading;
+  bool _dirty = false;
   bool _readFailed = false;
+  bool _disposed = false;
+
+  String? get errorMessage => _writeError ?? _readError;
+  bool get isBusy => _writing != null;
 
   bool get isLoaded => state.isNotEmpty;
   Map<String, dynamic> get options =>
@@ -43,37 +55,68 @@ class FeatureOptionsController extends ChangeNotifier {
   void _apply(Object? next) {
     if (next is! Map) return;
     state = next.cast<String, dynamic>();
-    errorMessage = state['error'] as String?;
+    _readError = state['error'] as String?;
     _readFailed = false;
     notifyListeners();
   }
 
-  Future<void> reload() async {
+  Future<void> reload() {
+    _writeError = null;
+    return _refresh();
+  }
+
+  Future<void> _refresh() {
+    if (_disposed) return Future<void>.value();
+    _dirty = true;
+    return _reading ??= _readChanges();
+  }
+
+  Future<void> _readChanges() async {
+    // Register the in-flight future even if a test client fails synchronously.
+    await Future<void>.value();
     try {
-      _apply(await client.call('Get', [feature]));
-    } catch (error) {
-      _readFailed = true;
-      errorMessage = '$error';
-      notifyListeners();
+      while (_dirty && !_disposed) {
+        while (_writing != null) {
+          await _writing!.future;
+        }
+        if (_disposed) return;
+        _dirty = false;
+        try {
+          final next = await client.call('Get', [feature]);
+          if (!_dirty && !_disposed) _apply(next);
+        } catch (error) {
+          if (_dirty || _disposed) continue;
+          _readFailed = true;
+          _readError = '$error';
+          notifyListeners();
+        }
+      }
+    } finally {
+      _reading = null;
     }
   }
 
   /// Runs one write; a rejected write stays visible until the next change.
   Future<bool> _change(Future<Map<String, dynamic>> Function() action) async {
-    if (isBusy) return false;
-    isBusy = true;
+    if (_disposed || isBusy) return false;
+    final write = _writing = Completer<void>();
+    if (_reading != null) _dirty = true;
+    _writeError = null;
     notifyListeners();
-    String? failure;
+    var succeeded = false;
     try {
-      _apply(await action());
+      final next = await action();
+      if (!_disposed) _apply(next);
+      succeeded = true;
     } catch (error) {
-      failure = '$error';
-      await reload();
+      if (!_disposed) _writeError = '$error';
+    } finally {
+      _writing = null;
+      write.complete();
+      if (!_disposed) notifyListeners();
     }
-    errorMessage = failure ?? errorMessage;
-    isBusy = false;
-    notifyListeners();
-    return failure == null;
+    if (!succeeded) await _refresh();
+    return succeeded;
   }
 
   Future<bool> set(String id, Object value) =>
@@ -83,6 +126,7 @@ class FeatureOptionsController extends ChangeNotifier {
 
   @override
   void dispose() {
+    _disposed = true;
     unawaited(_changes?.cancel());
     super.dispose();
   }

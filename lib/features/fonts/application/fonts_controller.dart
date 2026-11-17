@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:material_ui/material_ui.dart';
 
+import '../../integration/snapshot_order.dart';
+
 const fontsSearchSettingId = 'fonts.65a8477b';
 const fontsInstallSettingId = 'fonts.158ba0bb';
 const fontsDetailsSettingId = 'fonts.fc3969c7';
@@ -30,6 +32,7 @@ class FontsController extends ChangeNotifier {
   bool loaded = false;
   bool isBusy = false;
   String? _loaded;
+  final _snapshots = SnapshotOrder();
 
   Iterable<FontFamily> matching(String query) {
     final needle = query.trim().toLowerCase();
@@ -39,10 +42,15 @@ class FontsController extends ChangeNotifier {
   }
 
   /// Rebuilds only when something changed; the list has hundreds of families.
-  Future<void> reload() async {
+  Future<void> reload() => isBusy ? Future.value() : _reload();
+
+  Future<void> _reload() async {
+    if (_snapshots.disposed) return;
+    final current = _snapshots.beginRead();
     final previousError = errorMessage;
     try {
       final state = await read();
+      if (!current()) return;
       final encoded = jsonEncode(state['families']);
       errorMessage = null;
       if (encoded != _loaded) {
@@ -55,12 +63,15 @@ class FontsController extends ChangeNotifier {
         return;
       }
     } catch (error) {
+      if (!current()) return;
       errorMessage = '$error';
     }
     if (errorMessage != previousError) notifyListeners();
   }
 
   Future<void> _change(Future<void> Function() operation) async {
+    if (isBusy || _snapshots.disposed) return;
+    _snapshots.invalidate();
     isBusy = true;
     notifyListeners();
     try {
@@ -69,8 +80,10 @@ class FontsController extends ChangeNotifier {
     } catch (error) {
       errorMessage = '$error';
     }
+    if (_snapshots.disposed) return;
     final failure = errorMessage;
-    await reload();
+    await _reload();
+    if (_snapshots.disposed) return;
     errorMessage = failure ?? errorMessage;
     isBusy = false;
     notifyListeners();
@@ -79,12 +92,19 @@ class FontsController extends ChangeNotifier {
   /// Installs in order; a failure stops there and leaves earlier fonts installed.
   Future<void> install(List<String> paths) => _change(() async {
     for (final path in paths) {
+      if (_snapshots.disposed) return;
       await write(fontsInstallSettingId, path);
     }
   });
 
   Future<void> uninstall(String family) =>
       _change(() => write(fontsUninstallSettingId, family));
+
+  @override
+  void dispose() {
+    _snapshots.dispose();
+    super.dispose();
+  }
 }
 
 class FontsScope extends InheritedNotifier<FontsController> {

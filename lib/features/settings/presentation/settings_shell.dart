@@ -196,6 +196,7 @@ class _SettingsShellState extends State<SettingsShell> {
     if (_category == category && _page?.id == page?.id && _query.isEmpty) {
       return;
     }
+    widget.catalog.search('');
     setState(() {
       _history.add((category: _category, page: _page?.id));
       _category = category;
@@ -209,6 +210,7 @@ class _SettingsShellState extends State<SettingsShell> {
 
   void _back() {
     if (_query.isNotEmpty) {
+      widget.catalog.search('');
       setState(() {
         _query = '';
         _searchController.clear();
@@ -266,7 +268,10 @@ class _SettingsShellState extends State<SettingsShell> {
     key: const ValueKey('settings-search'),
     controller: _searchController,
     focusNode: _searchFocus,
-    onChanged: (value) => setState(() => _query = value),
+    onChanged: (value) {
+      if (value.isEmpty) widget.catalog.search('');
+      setState(() => _query = value);
+    },
   );
 
   Widget _sidebar(bool compact) => RemyaSidebar(

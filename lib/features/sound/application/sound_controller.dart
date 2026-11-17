@@ -34,13 +34,14 @@ class SoundController extends ChangeNotifier {
 
   void apply(Map<String, dynamic> state) {
     if (_disposed) return;
+    _revision++;
     value = state;
     errorMessage = state['error'] as String?;
     notifyListeners();
   }
 
   Future<void> reload() async {
-    if (isBusy || _reading) return;
+    if (_disposed || isBusy || _reading) return;
     _reading = true;
     final revision = _revision;
     try {
@@ -59,14 +60,17 @@ class SoundController extends ChangeNotifier {
   Future<void> _attempt(Future<Map<String, dynamic>> Function() action) async {
     if (_disposed || isBusy) return;
     isBusy = true;
-    _revision++;
+    final revision = ++_revision;
     errorMessage = null;
     notifyListeners();
     try {
-      apply(await action());
+      final result = await action();
+      if (revision == _revision) apply(result);
     } catch (e) {
       try {
-        apply(await read());
+        final readRevision = _revision;
+        final result = await read();
+        if (readRevision == _revision) apply(result);
       } catch (_) {}
       if (!_disposed) errorMessage = '$e';
     } finally {

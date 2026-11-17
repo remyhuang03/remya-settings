@@ -54,6 +54,18 @@ class SettingsCatalog extends ChangeNotifier {
 
   static Future<SettingsCatalog> load({SettingsClient? client}) async {
     final connection = client ?? SettingsClient();
+    try {
+      return await _load(connection, ownsClient: client == null);
+    } catch (_) {
+      if (client == null) await connection.close();
+      rethrow;
+    }
+  }
+
+  static Future<SettingsCatalog> _load(
+    SettingsClient connection, {
+    required bool ownsClient,
+  }) async {
     final json = await connection.call('Get', ['catalog']);
     if (json['version'] != 1) {
       throw const FormatException('Unsupported catalog');
@@ -77,7 +89,7 @@ class SettingsCatalog extends ChangeNotifier {
       _ => throw const FormatException('Invalid catalog coverage'),
     };
     catalog._client = connection;
-    catalog._ownsClient = client == null;
+    catalog._ownsClient = ownsClient;
     catalog._changes = connection.changes.listen(
       (change) {
         // Changed values are invalidations: page payloads always come from Get.
@@ -101,6 +113,8 @@ class SettingsCatalog extends ChangeNotifier {
   final Map<String, Future<void>> _pending = {};
   final Set<String> _managed = {};
   final Set<String> _opened = {};
+  Future<void>? _refreshingPages;
+  bool _pagesDirty = false;
   Object? error;
   bool _disposed = false;
 
@@ -109,6 +123,7 @@ class SettingsCatalog extends ChangeNotifier {
   }
 
   Future<void> openPage(String id) {
+    if (_disposed) return Future<void>.value();
     _opened.add(id);
     return _pending[id] ??= _loadPage(id).whenComplete(() {
       _pending.remove(id);
@@ -127,6 +142,7 @@ class SettingsCatalog extends ChangeNotifier {
         spec = SettingsPageSpec.fromJson(
           await client.call('Get', ['page:$id']),
         );
+        if (_disposed) return;
         if (spec.id != id ||
             spec.category != page(id).category ||
             spec.children.any((child) => !pages.any((p) => p.id == child))) {
@@ -136,6 +152,7 @@ class SettingsCatalog extends ChangeNotifier {
       if (!_managed.contains(id)) {
         for (final feature in _features(spec)) {
           await client.manage(feature);
+          if (_disposed) return;
         }
         _managed.add(id);
       }
@@ -143,7 +160,7 @@ class SettingsCatalog extends ChangeNotifier {
       _loaded.add(id);
       error = null;
     } catch (failure) {
-      pageErrors[id] = failure;
+      if (!_disposed) pageErrors[id] = failure;
     } finally {
       loadingPages.remove(id);
       _notify();
@@ -196,10 +213,26 @@ class SettingsCatalog extends ChangeNotifier {
     if (page.id == 'cursor') yield 'themes';
   }
 
-  Future<void> refreshPages() async {
-    _loaded.clear();
-    await Future.wait([for (final id in _opened.toList()) openPage(id)]);
-    if (_query.isNotEmpty) await _search(_query);
+  Future<void> refreshPages() {
+    if (_disposed) return Future<void>.value();
+    _pagesDirty = true;
+    return _refreshingPages ??= _refreshPages();
+  }
+
+  Future<void> _refreshPages() async {
+    try {
+      while (_pagesDirty && !_disposed) {
+        _pagesDirty = false;
+        // In-flight loads may have read an older snapshot before Changed.
+        await Future.wait(_pending.values.toList());
+        if (_disposed) return;
+        _loaded.clear();
+        await Future.wait([for (final id in _opened.toList()) openPage(id)]);
+        if (_query.isNotEmpty) await _search(_query);
+      }
+    } finally {
+      _refreshingPages = null;
+    }
   }
 
   Future<void> reload() async {
@@ -215,16 +248,21 @@ class SettingsCatalog extends ChangeNotifier {
   }
 
   String _query = '';
+  int _searchRequest = 0;
   List<SettingsPageSpec> _results = [];
   List<Map<String, dynamic>> searchResults = [];
   List<AppSearchResult> appResults = [];
   bool searching = false;
   Object? searchError;
   Future<void> _search(String query) async {
+    if (_disposed || query.isEmpty) return;
+    final request = ++_searchRequest;
+    bool current() => !_disposed && request == _searchRequest;
     searching = true;
     searchError = null;
     try {
       final result = await _client!.call('Search', [query]);
+      if (!current()) return;
       final rows = _objects(result, 'pages');
       final ids = rows
           .where((p) => !p.containsKey('app'))
@@ -239,17 +277,15 @@ class SettingsCatalog extends ChangeNotifier {
               title: _string(row, 'title'),
             ),
       ];
-      if (_query == query) {
-        searchResults = rows;
-        appResults = appRows;
-        _results = pages.where((p) => ids.contains(p.id)).toList();
-      }
+      searchResults = rows;
+      appResults = appRows;
+      _results = pages.where((p) => ids.contains(p.id)).toList();
       // App results are labeled with their registration title.
       if (appRows.isNotEmpty && apps == null) unawaited(loadApps());
     } catch (failure) {
-      if (_query == query) searchError = failure;
+      if (current()) searchError = failure;
     } finally {
-      if (_query == query) {
+      if (current()) {
         searching = false;
         _notify();
       }
@@ -259,9 +295,19 @@ class SettingsCatalog extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
-    _changes?.cancel();
-    if (_ownsClient) _client?.close();
+    final cancel = _changes?.cancel();
+    if (_ownsClient) {
+      unawaited(_closeClient(cancel));
+    }
     super.dispose();
+  }
+
+  Future<void> _closeClient(Future<void>? cancel) async {
+    try {
+      await cancel;
+    } finally {
+      await _client?.close();
+    }
   }
 
   final List<SettingsCategory> categories;
@@ -283,13 +329,19 @@ class SettingsCatalog extends ChangeNotifier {
   SettingsCoverage? coverage;
 
   List<SettingsPageSpec> search(String query) {
-    if (_client == null) return [];
+    if (_disposed || _client == null) return [];
     if (_query != query) {
       _query = query;
       _results = [];
       appResults = [];
       searchResults = [];
-      unawaited(_search(query));
+      if (query.isEmpty) {
+        _searchRequest++;
+        searching = false;
+        searchError = null;
+      } else {
+        unawaited(_search(query));
+      }
     }
     return _results;
   }
@@ -304,17 +356,17 @@ class SettingsCatalog extends ChangeNotifier {
 
   Future<void> loadApps() async {
     final client = _client;
-    if (client == null || loadingApps) return;
+    if (_disposed || client == null || loadingApps) return;
     loadingApps = true;
     appsError = null;
     _notify();
     try {
-      apps = _objects(
-        await client.call('List', ['0']),
-        'apps',
-      ).map(RemyaApp.fromJson).toList();
+      final response = await client.call('List', ['0']);
+      if (!_disposed) {
+        apps = _objects(response, 'apps').map(RemyaApp.fromJson).toList();
+      }
     } catch (failure) {
-      appsError = failure;
+      if (!_disposed) appsError = failure;
     } finally {
       loadingApps = false;
       _notify();

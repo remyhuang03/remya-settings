@@ -10,8 +10,11 @@ class BluetoothController extends ChangeNotifier {
   Map<String, dynamic> value = {};
   String? selectedAdapter;
   String? errorMessage;
-  bool sending = false;
   bool _disposed = false;
+  int _pendingWrites = 0;
+  int _revision = 0;
+
+  bool get sending => _pendingWrites != 0;
 
   List<Map> get adapters => (value['adapters'] as List? ?? []).cast<Map>();
   Map? get adapter =>
@@ -33,16 +36,20 @@ class BluetoothController extends ChangeNotifier {
 
   void apply(Map<String, dynamic> state) {
     if (_disposed) return;
+    _revision++;
     value = state;
     errorMessage = state['error'] as String?;
     notifyListeners();
   }
 
   Future<void> reload() async {
+    if (_disposed || sending) return;
+    final revision = ++_revision;
     try {
-      apply(await read());
+      final result = await read();
+      if (revision == _revision) apply(result);
     } catch (error) {
-      if (!_disposed) {
+      if (!_disposed && revision == _revision) {
         errorMessage = '$error';
         notifyListeners();
       }
@@ -58,18 +65,21 @@ class BluetoothController extends ChangeNotifier {
 
   Future<void> set(String id, [Map<String, dynamic> request = const {}]) async {
     if (_disposed) return;
-    sending = true;
+    final revision = ++_revision;
+    _pendingWrites++;
     notifyListeners();
     try {
-      apply(
-        await write(id, jsonEncode({'adapter': ?adapter?['id'], ...request})),
+      final result = await write(
+        id,
+        jsonEncode({'adapter': ?adapter?['id'], ...request}),
       );
+      if (revision == _revision) apply(result);
     } catch (error) {
-      if (!_disposed) {
+      if (!_disposed && revision == _revision) {
         errorMessage = '$error';
       }
     } finally {
-      sending = false;
+      _pendingWrites--;
       if (!_disposed) notifyListeners();
     }
   }

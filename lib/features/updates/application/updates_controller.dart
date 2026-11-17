@@ -9,6 +9,8 @@ class UpdatesController extends ChangeNotifier {
   bool pending = false;
   bool _disposed = false;
   int _revision = 0;
+  int _serviceGeneration = 0;
+  num? _serviceRevision;
 
   bool get busy => value['busy'] == true;
 
@@ -28,38 +30,48 @@ class UpdatesController extends ChangeNotifier {
   List<String> get output => (value['output'] as List? ?? []).cast<String>();
 
   void apply(Map<String, dynamic> state) {
-    if (_disposed ||
-        (state['revision'] as num? ?? 0) < (value['revision'] as num? ?? 0)) {
-      return;
-    }
+    if (_disposed) return;
+    final revision = state['revision'] as num? ?? 0;
+    if (_serviceRevision case final previous? when revision < previous) return;
+    _serviceRevision = revision;
+    _revision++;
     value = state;
     errorMessage = state['error'] as String?;
     notifyListeners();
   }
 
   Future<void> reload() async {
-    final revision = _revision;
+    if (_disposed) return;
+    final revision = ++_revision;
     try {
       final state = await read();
       if (revision == _revision) apply(state);
     } catch (error) {
-      if (!_disposed) {
+      if (!_disposed && revision == _revision) {
         errorMessage = '$error';
         notifyListeners();
       }
     }
   }
 
+  Future<void> reconnect() {
+    _serviceGeneration++;
+    _serviceRevision = null;
+    return reload();
+  }
+
   Future<void> set(String id, String request) async {
     if (_disposed || pending) return;
     pending = true;
+    final service = _serviceGeneration;
     _revision++;
     errorMessage = null;
     notifyListeners();
     try {
-      apply(await write(id, request));
+      final state = await write(id, request);
+      if (service == _serviceGeneration) apply(state);
     } catch (error) {
-      if (!_disposed) errorMessage = '$error';
+      if (!_disposed && service == _serviceGeneration) errorMessage = '$error';
     } finally {
       if (!_disposed) {
         pending = false;

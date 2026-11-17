@@ -2,7 +2,9 @@ import 'features/storage/application/storage_controller.dart';
 import 'features/camera/application/camera_controller.dart';
 import 'features/updates/application/updates_controller.dart';
 import 'features/sound/application/sound_controller.dart';
+
 import 'package:remya_ui/settings_ui.dart' show RemyaAccountController;
+
 import 'features/bluetooth/application/bluetooth_controller.dart';
 import 'features/applications/application/applications_controller.dart';
 import 'features/default_apps/application/default_apps_controller.dart';
@@ -202,6 +204,9 @@ Future<void> main() async {
         nightLight.apply(change.value);
     }
   }); // The native runner forwards the initial page separately from VM arguments.
+  client.serviceAvailableChanges.listen((available) {
+    if (available) updates.reconnect();
+  }, onError: (Object error) => debugPrint('Core availability: $error'));
   final page = await const MethodChannel('top.remya.paths')
       .invokeMethod<String>('initialPage');
   navigation.value = page ?? 'home';

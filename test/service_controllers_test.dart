@@ -3,6 +3,7 @@ import 'package:remya_ui/remya_ui.dart';
 import 'dart:io';
 
 import 'package:remya_settings/features/integration/settings_scheduler.dart';
+import 'package:remya_settings/features/settings/application/feature_options_controller.dart';
 
 import 'dart:async';
 
@@ -18,6 +19,7 @@ import 'package:remya_client/remya_client.dart';
 class FakeService extends SettingsClient {
   final calls = <(String, List<String>)>[];
   Completer<void>? gate;
+  Completer<void>? readGate;
   bool fail = false;
   bool ntp = false;
   Map<String, Object?> saved = {'timezone': 'UTC'};
@@ -38,7 +40,7 @@ class FakeService extends SettingsClient {
         'labels': {'UTC': 'UTC (GMT+00:00)'},
       };
     }
-    return {
+    final reply = {
       'unix_micros': '1793408409410434',
       'local_time': '2026-10-31T09:00:09',
       'timezone': 'UTC',
@@ -51,6 +53,8 @@ class FakeService extends SettingsClient {
       'saved': saved,
       'conflict': conflict,
     };
+    if (method == 'Get') await readGate?.future;
+    return reply;
   }
 }
 
@@ -288,6 +292,38 @@ void main() {
     expect(controller.errorMessage, isNull);
   });
 
+  test('a delayed date/time read cannot revert a successful write', () async {
+    final service = FakeService();
+    addTearDown(service.close);
+    final controller = ServiceDateTimeController(service);
+    addTearDown(controller.dispose);
+    await controller.reload();
+    final gate = service.readGate = Completer<void>();
+    final stale = controller.reload();
+    service.ntp = true;
+    await controller.setAutomaticTime(true);
+    gate.complete();
+    await stale;
+    expect(controller.state?.ntp, isTrue);
+  });
+
+  test(
+    'feature writes invalidate older reads and reread queued signals',
+    () async {
+      final client = _FeatureClient();
+      addTearDown(client.close);
+      final controller = FeatureOptionsController(client);
+      addTearDown(controller.dispose);
+      final pending = controller.reload();
+      await client.readStarted.future;
+      await controller.set('mouse.primary-button', true);
+      client.readGate.complete();
+      await pending;
+      expect(client.reads, 2);
+      expect(controller.option('mouse.primary-button'), isTrue);
+    },
+  );
+
   testWidgets('writes and refreshes preserve dropdown state, focus and draft', (
     tester,
   ) async {
@@ -397,6 +433,7 @@ void main() {
       expect(preferences.theme.styleVariant, DynamicSchemeVariant.neutral);
       client.current = const ThemeConfig(styleVariant: 'vibrant').toMap();
       client.events.add((topic: 'theme', value: client.current));
+      await pumpEventQueue();
       expect(preferences.theme.mode, ThemeMode.light);
       expect(preferences.theme.styleVariant, DynamicSchemeVariant.vibrant);
       final valid = preferences.theme;
@@ -416,6 +453,45 @@ void main() {
       expect(client.closed, isFalse);
     },
   );
+}
+
+class _FeatureClient extends SettingsClient {
+  final _events = StreamController<SettingsChange>.broadcast(sync: true);
+  final readStarted = Completer<void>();
+  final readGate = Completer<void>();
+  int reads = 0;
+  bool value = false;
+
+  @override
+  Stream<SettingsChange> get changes => _events.stream;
+
+  Map<String, dynamic> get reply => {
+    'options': {'mouse.primary-button': value},
+  };
+
+  @override
+  Future<Map<String, dynamic>> call(
+    String method, [
+    List<String> arguments = const [],
+  ]) async {
+    if (method == 'Set') {
+      _events.add((topic: 'input', value: reply));
+      value = true;
+      return reply;
+    }
+    final snapshot = reply;
+    if (++reads == 1) {
+      readStarted.complete();
+      await readGate.future;
+    }
+    return snapshot;
+  }
+
+  @override
+  Future<void> close() async {
+    await _events.close();
+    await super.close();
+  }
 }
 
 class _Client extends SettingsClient {

@@ -250,7 +250,8 @@ class DisplayController extends ChangeNotifier {
   /// value the user just picked. Background reloads never bump it: they must not
   /// recreate a control the user is editing.
   int revision = 0;
-  int _writes = 0;
+  int _readGeneration = 0;
+  int _brightnessGeneration = 0;
   final _brightnessQueue = <String, int>{};
   Future<void>? _brightnessWrite;
 
@@ -304,30 +305,37 @@ class DisplayController extends ChangeNotifier {
   }
 
   Future<void> reload() async {
-    if (isBusy) return;
+    if (isBusy || _disposed) return;
+    final generation = ++_readGeneration;
+    bool current() => !_disposed && generation == _readGeneration;
     try {
-      final before = _writes;
       final map = await backend.read();
-      // A change finished meanwhile and already delivered newer values.
-      if (before != _writes || isBusy) return;
+      if (!current()) return;
       _accept(map);
     } catch (error) {
+      if (!current()) return;
       errorMessage = '$error';
     }
     _notify();
   }
 
   Future<void> loadBrightness() async {
+    if (_disposed) return;
+    final generation = ++_brightnessGeneration;
+    bool current() => !_disposed && generation == _brightnessGeneration;
     try {
-      _acceptBrightness(await backend.brightness());
+      final map = await backend.brightness();
+      if (!current()) return;
+      _acceptBrightness(map);
     } catch (error) {
-      brightness = const {};
+      if (!current()) return;
       errorMessage = '$error';
     }
     _notify();
   }
 
   void _acceptBrightness(Map<String, dynamic> map) {
+    _brightnessGeneration++;
     brightness = {
       for (final raw in map['outputs'] as List)
         raw['output'] as String: DisplayBrightness(
@@ -338,7 +346,8 @@ class DisplayController extends ChangeNotifier {
   }
 
   Future<void> _run(Future<void> Function() action) async {
-    _writes++;
+    if (_disposed) return;
+    _readGeneration++;
     isBusy = true;
     _notify();
     try {
@@ -370,9 +379,11 @@ class DisplayController extends ChangeNotifier {
   });
 
   Future<void> setBrightness(String output, int percent) {
+    if (_disposed) return Future.value();
+    _brightnessGeneration++;
     _brightnessQueue[output] = percent;
     return _brightnessWrite ??= _run(() async {
-      while (_brightnessQueue.isNotEmpty) {
+      while (!_disposed && _brightnessQueue.isNotEmpty) {
         final request = _brightnessQueue.entries.first;
         _brightnessQueue.remove(request.key);
         try {
@@ -395,6 +406,7 @@ class DisplayController extends ChangeNotifier {
   }
 
   Future<void> detect() => _run(() async {
+    _brightnessGeneration++;
     _accept(await backend.set(displayDetectId, 'detect'));
     _acceptBrightness(await backend.brightness());
   });
@@ -429,6 +441,7 @@ class DisplayController extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    _brightnessQueue.clear();
     super.dispose();
   }
 }

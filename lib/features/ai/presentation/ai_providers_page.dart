@@ -38,6 +38,7 @@ class _AiProvidersPageState extends State<AiProvidersPage>
       if (providers.where((row) => row['id'] == id).firstOrNull
           case final row?) {
         return AiProviderDetail(
+          key: ValueKey(id),
           client: client,
           row: row,
           lowPercent: _lowPercent,

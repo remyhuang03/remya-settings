@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../integration/snapshot_order.dart';
+
 class HostnameController extends ChangeNotifier {
   HostnameController({
     required this.read,
@@ -12,6 +14,7 @@ class HostnameController extends ChangeNotifier {
   Map<String, dynamic> value = {};
   String? errorMessage;
   bool _busy = false;
+  final _snapshots = SnapshotOrder();
   Future<Map<String, dynamic>> Function()? _retry;
   bool get isBusy => _busy || value['authorizing'] == true;
   bool get hasConflict => value['conflict'] == true;
@@ -26,30 +29,39 @@ class HostnameController extends ChangeNotifier {
       staticHostname != null;
 
   Future<void> reload() async {
+    if (_busy || _snapshots.disposed) return;
+    final current = _snapshots.beginRead();
     try {
-      value = await read();
+      final next = await read();
+      if (!current()) return;
+      value = next;
       errorMessage = value['error'] as String?;
     } catch (error) {
+      if (!current()) return;
       errorMessage = '$error';
     }
     notifyListeners();
   }
 
   Future<void> _change(Future<Map<String, dynamic>> Function() action) async {
-    if (isBusy) return;
+    if (isBusy || _snapshots.disposed) return;
+    _snapshots.invalidate();
     _busy = true;
     notifyListeners();
     try {
-      value = await action();
+      final next = await action();
+      if (_snapshots.disposed) return;
+      value = next;
       errorMessage = value['error'] as String?;
       _retry = null;
     } catch (error) {
+      if (_snapshots.disposed) rethrow;
       _retry = action;
       errorMessage = '$error';
       rethrow;
     } finally {
       _busy = false;
-      notifyListeners();
+      if (!_snapshots.disposed) notifyListeners();
     }
   }
 
@@ -57,6 +69,12 @@ class HostnameController extends ChangeNotifier {
   Future<void> useSystemConfiguration() => _change(() => resolve('system'));
   Future<void> applySavedConfiguration() => _change(() => resolve('settings'));
   Future<void> retry() => _retry == null ? reload() : _change(_retry!);
+
+  @override
+  void dispose() {
+    _snapshots.dispose();
+    super.dispose();
+  }
 }
 
 class HostnameScope extends InheritedNotifier<HostnameController> {

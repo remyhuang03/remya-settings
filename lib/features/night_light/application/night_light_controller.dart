@@ -20,6 +20,8 @@ class NightLightController extends ChangeNotifier {
   String? errorMessage;
   bool isBusy = false;
   bool _readFailed = false;
+  bool _disposed = false;
+  int _readGeneration = 0;
 
   bool get isLoaded => value.isNotEmpty;
   bool get hasConflict => value['conflict'] == true;
@@ -52,16 +54,24 @@ class NightLightController extends ChangeNotifier {
       'Settings: ${_describe(value['saved'] as Map?)}';
 
   void apply(Map<String, dynamic> next) {
+    if (_disposed) return;
+    _readGeneration++;
     value = next;
     errorMessage = next['error'] as String?;
     _readFailed = false;
     notifyListeners();
   }
 
-  Future<void> reload() async {
+  Future<void> reload() => isBusy || _disposed ? Future.value() : _reload();
+
+  Future<void> _reload() async {
+    final generation = ++_readGeneration;
+    bool current() => !_disposed && generation == _readGeneration;
     try {
-      apply(await read());
+      final next = await read();
+      if (current()) apply(next);
     } catch (error) {
+      if (!current()) return;
       _readFailed = true;
       errorMessage = '$error';
       notifyListeners();
@@ -69,7 +79,8 @@ class NightLightController extends ChangeNotifier {
   }
 
   Future<void> _change(Future<Map<String, dynamic>> Function() action) async {
-    if (isBusy) return;
+    if (isBusy || _disposed) return;
+    _readGeneration++;
     isBusy = true;
     notifyListeners();
     String? failure;
@@ -78,7 +89,9 @@ class NightLightController extends ChangeNotifier {
     } catch (error) {
       failure = '$error';
     }
-    await reload();
+    if (_disposed) return;
+    await _reload();
+    if (_disposed) return;
     errorMessage = failure ?? errorMessage;
     isBusy = false;
     notifyListeners();
@@ -87,6 +100,12 @@ class NightLightController extends ChangeNotifier {
   Future<void> set(String id, String next) => _change(() => write(id, next));
   Future<void> useSystemConfiguration() => _change(() => resolve('system'));
   Future<void> applySavedConfiguration() => _change(() => resolve('settings'));
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
 }
 
 class NightLightScope extends InheritedNotifier<NightLightController> {

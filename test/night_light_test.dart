@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'support/catalog.dart';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -49,6 +51,21 @@ void main() {
       home: Scaffold(body: SingleChildScrollView(child: child)),
     ),
   );
+
+  test('an earlier read cannot overwrite a newer night light signal', () async {
+    final stale = Completer<Map<String, dynamic>>();
+    final nightLight = NightLightController(
+      read: () => stale.future,
+      write: (_, _) async => _state(),
+      resolve: (_) async => _state(),
+    );
+    addTearDown(nightLight.dispose);
+    final pending = nightLight.reload();
+    nightLight.apply(_state(enabled: false));
+    stale.complete(_state());
+    await pending;
+    expect(nightLight.isEnabled, isFalse);
+  });
 
   testWidgets(
     'toggle writes and schedule times stay hidden without a schedule',

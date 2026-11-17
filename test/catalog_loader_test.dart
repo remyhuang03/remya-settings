@@ -24,6 +24,7 @@ class CatalogService extends SettingsClient {
   Completer<void>? gate;
   Object? failure;
   Map<String, dynamic> page = detail;
+  Future<Map<String, dynamic>> Function(String)? search;
   @override
   Stream<SettingsChange> get changes => events.stream;
   @override
@@ -49,11 +50,13 @@ class CatalogService extends SettingsClient {
       };
     }
     if (arguments.firstOrNull == 'page:display') {
+      final snapshot = page;
       await gate?.future;
       if (failure != null) throw failure!;
-      return page;
+      return snapshot;
     }
     if (method == 'Search') {
+      if (search case final custom?) return custom(arguments.first);
       return {
         'pages': [
           summary,
@@ -184,6 +187,43 @@ void main() {
       expect(catalog.searchResults, hasLength(2));
     },
   );
+
+  test('a change during the page load schedules a fresh read', () async {
+    final gate = service.gate = Completer<void>();
+    final pending = catalog.openPage('display');
+    service.page = {...detail, 'description': 'Updated while loading'};
+    service.events.add((topic: 'display', value: {}));
+    gate.complete();
+    await pending;
+    await pumpEventQueue();
+    expect(catalog.page('display').description, 'Updated while loading');
+    expect(
+      service.calls.where((c) => c.$2.firstOrNull == 'page:display'),
+      hasLength(2),
+    );
+  });
+
+  test('a late search response cannot replace a repeated query', () async {
+    final responses = List.generate(
+      3,
+      (_) => Completer<Map<String, dynamic>>(),
+    );
+    var request = 0;
+    service.search = (_) => responses[request++].future;
+    catalog.search('display');
+    catalog.search('network');
+    catalog.search('display');
+    responses[2].complete({
+      'pages': [summary],
+    });
+    await pumpEventQueue();
+    expect(catalog.search('display').single.id, 'display');
+
+    responses[1].complete({'pages': []});
+    responses[0].complete({'pages': []});
+    await pumpEventQueue();
+    expect(catalog.search('display').single.id, 'display');
+  });
 
   test(
     'apps include rejected registrations and search routes to OpenApp',

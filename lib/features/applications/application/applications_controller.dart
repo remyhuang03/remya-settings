@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../integration/snapshot_order.dart';
 import 'appimages_controller.dart';
 
 export 'appimages_controller.dart';
@@ -39,10 +40,16 @@ class ApplicationsController extends ChangeNotifier {
   String? errorMessage;
   bool isBusy = false;
   bool loaded = false;
+  final _snapshots = SnapshotOrder();
 
-  Future<void> reload() async {
+  Future<void> reload() => isBusy ? Future.value() : _reload();
+
+  Future<void> _reload() async {
+    if (_snapshots.disposed) return;
+    final current = _snapshots.beginRead();
     try {
       final state = await read();
+      if (!current()) return;
       applications = [
         for (final raw in state['applications'] as List)
           InstalledApplication(raw as Map),
@@ -51,13 +58,15 @@ class ApplicationsController extends ChangeNotifier {
       errorMessage = null;
       loaded = true;
     } catch (error) {
+      if (!current()) return;
       errorMessage = '$error';
     }
     notifyListeners();
   }
 
   Future<void> uninstall(InstalledApplication app) async {
-    if (isBusy) return;
+    if (isBusy || _snapshots.disposed) return;
+    _snapshots.invalidate();
     isBusy = true;
     notifyListeners();
     String? failure;
@@ -66,10 +75,17 @@ class ApplicationsController extends ChangeNotifier {
     } catch (error) {
       failure = '$error';
     }
-    await reload();
+    await _reload();
+    if (_snapshots.disposed) return;
     errorMessage = failure ?? errorMessage;
     isBusy = false;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _snapshots.dispose();
+    super.dispose();
   }
 }
 

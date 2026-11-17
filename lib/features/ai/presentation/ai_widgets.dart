@@ -12,22 +12,24 @@ List<AiRow> aiRows(Object? value) => [
     if (row is Map) Map<String, dynamic>.from(row),
 ];
 
-/// Loads `ai.providers` and follows every `ai.*` change from the service.
+/// Loads `ai.providers` and rereads stale snapshots after service changes.
 mixin AiSettingsReader<T extends StatefulWidget> on State<T> {
   SettingsClient get client;
   Map<String, dynamic>? settings;
   String? error;
   bool busy = false;
+  bool _dirty = false;
   StreamSubscription<SettingsChange>? _changes;
 
   @override
   void initState() {
     super.initState();
     _changes = client.changes.listen((change) {
-      if (change.topic == aiProvidersSettingId && !busy) {
-        if (change.value['value'] case final Map value) {
-          setState(() => settings = Map<String, dynamic>.from(value));
-        }
+      if (change.topic != aiProvidersSettingId || !mounted) return;
+      if (busy) {
+        _dirty = true;
+      } else if (change.value['value'] case final Map value) {
+        setState(() => settings = Map<String, dynamic>.from(value));
       }
     }, onError: (Object _) {});
     unawaited(run(client.readAi));
@@ -41,19 +43,32 @@ mixin AiSettingsReader<T extends StatefulWidget> on State<T> {
 
   /// Runs one service operation; a failure keeps the last valid state.
   Future<void> run(Future<Map<String, dynamic>> Function() operation) async {
-    if (busy) return;
+    if (!mounted || busy) return;
     setState(() {
       busy = true;
       error = null;
     });
+    Map<String, dynamic>? next;
+    String? failure;
     try {
-      final (value, _) = await (operation(), loadAiIdentity()).wait;
-      if (mounted) setState(() => settings = value);
-    } catch (failure) {
-      if (mounted) setState(() => error = '$failure');
-    } finally {
-      if (mounted) setState(() => busy = false);
+      (next, _) = await (operation(), loadAiIdentity()).wait;
+    } catch (error) {
+      failure = '$error';
     }
+    while (mounted && _dirty) {
+      _dirty = false;
+      try {
+        next = await client.readAi();
+      } catch (error) {
+        failure ??= '$error';
+      }
+    }
+    if (!mounted) return;
+    setState(() {
+      settings = next ?? settings;
+      error = failure;
+      busy = false;
+    });
   }
 }
 

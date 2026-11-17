@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../integration/snapshot_order.dart';
+
 class DefaultApplication {
   const DefaultApplication(this.raw);
   final Map raw;
@@ -30,6 +32,7 @@ class DefaultAppsController extends ChangeNotifier {
   String? errorMessage;
   bool isBusy = false;
   bool _readFailed = false;
+  final _snapshots = SnapshotOrder();
   bool get hasConflict => value['conflict'] == true;
   bool get canChange =>
       value['writable'] == true && !_readFailed && !hasConflict && !isBusy;
@@ -60,17 +63,25 @@ class DefaultAppsController extends ChangeNotifier {
         '$type\nSystem: ${name(system[type] as String?)}\nSettings: ${name(saved[type] as String?)}',
   ].join('\n\n');
 
-  Future<void> reload() async {
+  Future<void> reload() => isBusy ? Future.value() : _reload();
+
+  Future<void> _reload() async {
+    if (_snapshots.disposed) return;
+    final current = _snapshots.beginRead();
     try {
-      value = await read();
+      final next = await read();
+      if (!current()) return;
       final result = await applications('');
+      if (!current()) return;
       apps = [
         for (final raw in result['applications'] as List)
           DefaultApplication(raw as Map),
       ];
+      value = next;
       _readFailed = false;
       errorMessage = value['error'] as String?;
     } catch (error) {
+      if (!current()) return;
       _readFailed = true;
       errorMessage = '$error';
     }
@@ -78,16 +89,19 @@ class DefaultAppsController extends ChangeNotifier {
   }
 
   Future<void> _change(Future<Map<String, dynamic>> Function() action) async {
-    if (isBusy) return;
+    if (isBusy || _snapshots.disposed) return;
+    _snapshots.invalidate();
     isBusy = true;
     notifyListeners();
     String? failure;
     try {
-      value = await action();
+      final next = await action();
+      if (!_snapshots.disposed) value = next;
     } catch (error) {
       failure = '$error';
     }
-    await reload();
+    await _reload();
+    if (_snapshots.disposed) return;
     errorMessage = failure ?? errorMessage;
     isBusy = false;
     notifyListeners();
@@ -98,6 +112,12 @@ class DefaultAppsController extends ChangeNotifier {
   Future<void> resetAll() => _change(reset);
   Future<void> useSystemConfiguration() => _change(() => resolve('system'));
   Future<void> applySavedConfiguration() => _change(() => resolve('settings'));
+
+  @override
+  void dispose() {
+    _snapshots.dispose();
+    super.dispose();
+  }
 }
 
 class DefaultAppsScope extends InheritedNotifier<DefaultAppsController> {

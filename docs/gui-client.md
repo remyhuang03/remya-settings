@@ -19,8 +19,16 @@ crate through a normal Cargo path dependency with its opt-in, plain Rust
 `preview` feature. Core owns capture and validation; Settings owns `api.rs`,
 the frame transfer type and generated FRB 2.13.0 bindings. No Core source files
 are included directly and Core exports no FRB symbols.
-Regenerate with `flutter_rust_bridge_codegen generate --config-file
-flutter_rust_bridge.camera.yaml`, then `fvm dart format lib/src/rust/camera_bridge`.
+Regenerate from the repository root with `flutter_rust_bridge_codegen` 2.13.0
+and `cargo-expand` on PATH.
+
+```sh
+PATH="$PWD/.fvm/flutter_sdk/bin:$PATH" flutter_rust_bridge_codegen generate --config-file flutter_rust_bridge.camera.yaml
+fvm dart format lib/src/rust/camera_bridge
+cargo fmt --all
+git diff --exit-code -- lib/src/rust/camera_bridge lib/src/rust/camera_preview/src/frb_generated.rs
+```
+
 Rust notices cover the wrapper's complete linked dependency graph, including
 Core dependencies.
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'support/catalog.dart';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -16,6 +18,29 @@ Finder _switch(String title) => find.descendant(
 );
 
 void main() {
+  test(
+    'a Core restart accepts the new daemon revision and discards old reads',
+    () async {
+      final stale = Completer<Map<String, dynamic>>();
+      var reads = 0;
+      final controller = UpdatesController(
+        read: () => ++reads == 1
+            ? stale.future
+            : Future.value({'revision': 0, 'phase': 'idle'}),
+        write: (_, _) async => {},
+      );
+      addTearDown(controller.dispose);
+      controller.apply({'revision': 9, 'phase': 'completed'});
+
+      final pending = controller.reload();
+      await controller.reconnect();
+      expect(controller.value['revision'], 0);
+      stale.complete({'revision': 10, 'phase': 'checking'});
+      await pending;
+      expect(controller.value['phase'], 'idle');
+    },
+  );
+
   test(
     'inspection never upgrades and stale snapshots cannot replace new progress',
     () async {

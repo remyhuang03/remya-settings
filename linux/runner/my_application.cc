@@ -63,6 +63,9 @@ static void theme_icon(FlMethodCall* call) {
   static GHashTable* themes = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_object_unref);
   auto* icons = GTK_ICON_THEME(g_hash_table_lookup(themes, theme));
   if (icons == nullptr) {
+    if (g_hash_table_size(themes) == 16) {
+      g_hash_table_remove_all(themes);
+    }
     icons = gtk_icon_theme_new();
     gtk_icon_theme_set_custom_theme(icons, theme);
     g_hash_table_insert(themes, g_strdup(theme), icons);
@@ -172,6 +175,15 @@ static void my_application_activate(GApplication* application) {
         }
       },
       self, nullptr);
+  g_object_set_data_full(G_OBJECT(view), "remya-paths-channel",
+                         g_object_ref(paths_channel), g_object_unref);
+  g_signal_connect_object(
+      gtk_icon_theme_get_default(), "changed",
+      G_CALLBACK(+[](GtkIconTheme*, FlMethodChannel* channel) {
+        fl_method_channel_invoke_method(channel, "iconThemeChanged", nullptr,
+                                        nullptr, nullptr, nullptr);
+      }),
+      paths_channel, G_CONNECT_DEFAULT);
 
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
 

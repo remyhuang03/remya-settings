@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:remya_client/remya_client.dart';
@@ -84,6 +85,9 @@ class ServiceDateTimeController extends DateTimeController {
   bool _enabling = false;
   (String, String)? _failedChange;
   String? _activeSetting;
+  int _readGeneration = 0;
+  bool _reread = false;
+  bool _disposed = false;
   @override
   bool get isSyncing => _activeSetting == syncNowSettingId;
   @override
@@ -107,30 +111,44 @@ class ServiceDateTimeController extends DateTimeController {
 
   @override
   Future<void> reload() async {
+    if (_disposed) return;
+    if (_activeSetting != null) {
+      _reread = true;
+      return;
+    }
+    final generation = ++_readGeneration;
+    bool current() => !_disposed && generation == _readGeneration;
     try {
       if (timezones.isEmpty) {
         final zones = await backend.timezones();
+        if (!current()) return;
         timezones = zones.map((z) => z.id).toList();
         timezoneLabels = {for (final z in zones) z.id: z.label};
       }
-      _update(await client.call('Get', ['date-time']));
+      final snapshot = await client.call('Get', ['date-time']);
+      if (current()) _update(snapshot);
     } catch (error) {
+      if (!current()) return;
       errorMessage = '$error';
       notifyListeners();
     }
   }
 
   Future<DateTimeState> _change(String id, String value) async {
+    if (_disposed || isBusy) throw StateError('Date and time is busy');
+    _readGeneration++;
     _activeSetting = id;
     isBusy = true;
     _enabling = id == automaticTimeSettingId && value == 'true';
     notifyListeners();
     try {
       final result = await client.call('Set', [id, value]);
+      if (_disposed) return _clock(result);
       _failedChange = null;
       _update(result);
       return state!;
     } catch (error) {
+      if (_disposed) rethrow;
       _failedChange = (id, value);
       errorMessage = '$error';
       rethrow;
@@ -138,7 +156,11 @@ class ServiceDateTimeController extends DateTimeController {
       _activeSetting = null;
       isBusy = _payload['authorizing'] == true;
       _enabling = false;
-      notifyListeners();
+      if (!_disposed) {
+        notifyListeners();
+        if (_reread && _failedChange == null) unawaited(reload());
+      }
+      _reread = false;
     }
   }
 
@@ -184,4 +206,10 @@ class ServiceDateTimeController extends DateTimeController {
 
   @override
   Future<void> restart() => backend.restart();
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
 }

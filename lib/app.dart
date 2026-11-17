@@ -100,6 +100,7 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
     widget.defaultApps?.dispose();
     widget.startup?.dispose();
     widget.storage?.dispose();
+    widget.applications?.appImages?.dispose();
     widget.applications?.dispose();
     widget.network?.dispose();
     widget.bluetooth?.dispose();

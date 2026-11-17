@@ -33,6 +33,7 @@ class AiProviderDetail extends StatefulWidget {
 class _AiProviderDetailState extends State<AiProviderDetail> {
   Map<String, dynamic>? _detail;
   String? _error;
+  int _request = 0;
 
   String get _id => widget.row['id'] as String;
   String get _name => (widget.row['name'] as String?) ?? _id;
@@ -44,12 +45,14 @@ class _AiProviderDetailState extends State<AiProviderDetail> {
   }
 
   Future<void> _load() async {
+    if (!mounted) return;
+    final request = ++_request;
     setState(() => _error = null);
     try {
       final detail = await widget.client.readAiProvider(_id);
-      if (mounted) setState(() => _detail = detail);
+      if (mounted && request == _request) setState(() => _detail = detail);
     } catch (error) {
-      if (mounted) setState(() => _error = '$error');
+      if (mounted && request == _request) setState(() => _error = '$error');
     }
   }
 

@@ -21,6 +21,8 @@ class NetworkController extends ChangeNotifier {
   Map<String, dynamic> value = {};
   String? errorMessage;
   bool isBusy = false;
+  int _revision = 0;
+  bool _disposed = false;
 
   bool get isAvailable => value['available'] == true;
   bool get hasConflict => value['conflict'] == true;
@@ -92,34 +94,49 @@ class NetworkController extends ChangeNotifier {
 
   /// A `Changed` signal already carries the fresh state.
   void apply(Map<String, dynamic> state) {
+    if (_disposed) return;
+    _revision++;
     value = state;
     errorMessage = state['error'] as String?;
     notifyListeners();
   }
 
   Future<void> reload() async {
+    if (_disposed || isBusy) return;
+    await _readSnapshot();
+  }
+
+  Future<void> _readSnapshot() async {
+    final revision = ++_revision;
     try {
-      apply(await read());
+      final result = await read();
+      if (revision == _revision) apply(result);
     } catch (error) {
-      errorMessage = '$error';
-      notifyListeners();
+      if (!_disposed && revision == _revision) {
+        errorMessage = '$error';
+        notifyListeners();
+      }
     }
   }
 
   Future<void> _change(Future<Map<String, dynamic>> Function() action) async {
-    if (isBusy) return;
+    if (_disposed || isBusy) return;
+    final revision = ++_revision;
     isBusy = true;
     notifyListeners();
     String? failed;
     try {
-      value = await action();
+      final result = await action();
+      if (!_disposed && revision == _revision) value = result;
     } catch (error) {
       failed = '$error';
     }
-    await reload();
-    errorMessage = failed ?? errorMessage;
+    if (!_disposed) await _readSnapshot();
     isBusy = false;
-    notifyListeners();
+    if (!_disposed) {
+      errorMessage = failed ?? errorMessage;
+      notifyListeners();
+    }
   }
 
   Future<void> set(String id, String setting) =>
@@ -131,7 +148,7 @@ class NetworkController extends ChangeNotifier {
 
   /// Background refresh: a rejected scan must not replace visible results or errors.
   Future<void> scan() async {
-    if (isBusy || !wifiEnabled || wifiAdapter == null) return;
+    if (_disposed || isBusy || !wifiEnabled || wifiAdapter == null) return;
     try {
       await write(wifiRefreshSettingId, 'scan');
     } catch (_) {
@@ -141,6 +158,12 @@ class NetworkController extends ChangeNotifier {
 
   Future<void> useSystemConfiguration() => _change(() => resolve('system'));
   Future<void> applySavedConfiguration() => _change(() => resolve('settings'));
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
 }
 
 class NetworkScope extends InheritedNotifier<NetworkController> {

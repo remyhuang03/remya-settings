@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:file_selector/file_selector.dart';
-import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_ui/settings_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
+import '../../integration/settings_icon_cache.dart';
 import '../../settings/application/feature_options_controller.dart';
 import '../../settings/domain/settings_catalog.dart';
 
@@ -114,36 +115,27 @@ class ThemeIcon extends StatelessWidget {
   final String theme;
   final String name;
   final double size;
-  static final _icons = <String, Future<Uint8List?>>{};
-  static const _channel = MethodChannel('top.remya.paths');
-
-  static Future<Uint8List?> _load(String theme, String name, int size) async {
-    try {
-      return await _channel.invokeMethod<Uint8List>('themeIcon', [
-        theme,
-        name,
-        size,
-      ]);
-    } on PlatformException {
-      return null;
-    } on MissingPluginException {
-      return null;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final pixels = (size * MediaQuery.devicePixelRatioOf(context)).round();
     return SizedBox.square(
       dimension: size,
-      child: FutureBuilder<Uint8List?>(
-        future: _icons.putIfAbsent(
-          '$theme/$name@$pixels',
-          () => _load(theme, name, pixels),
+      child: ListenableBuilder(
+        listenable: settingsIcons,
+        builder: (context, _) => FutureBuilder<Uint8List?>(
+          future: settingsIcons.get(
+            (theme, name, pixels),
+            () => settingsIconChannel.invokeMethod<Uint8List>('themeIcon', [
+              theme,
+              name,
+              pixels,
+            ]),
+            fileBacked: true,
+          ),
+          builder: (context, snapshot) => snapshot.data == null
+              ? const SizedBox.shrink()
+              : Image.memory(snapshot.data!, width: size, height: size),
         ),
-        builder: (context, snapshot) => snapshot.data == null
-            ? const SizedBox.shrink()
-            : Image.memory(snapshot.data!, width: size, height: size),
       ),
     );
   }

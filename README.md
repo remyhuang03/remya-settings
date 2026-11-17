@@ -69,7 +69,7 @@ tool/                     GUI installer and license notice generator
 
 ## Development
 
-Prerequisites: FVM, Rust via rustup, a sibling `../remya-core` checkout at `v0.1.0` for this dev release, and Linux
+Prerequisites: FVM, Rust via rustup, a sibling `../remya-core` checkout at the revision pinned in [Linux CI](.github/workflows/linux.yml), and Linux
 Flutter build tools (Clang, CMake, Ninja, pkg-config and GTK 3). Camera preview
 links dynamically to PipeWire and GStreamer 1.28+. Install Core separately for
 system integration dependencies and D-Bus activation.
@@ -80,7 +80,7 @@ fvm flutter pub get
 fvm flutter run -d linux
 ```
 
-FVM pins Flutter to `3.47.8`; `rust-toolchain.toml` selects stable Rust with rustfmt and Clippy. See `AGENTS.md` for project rules and guidelines.
+The repository pins Flutter in `.fvmrc` and Rust with rustfmt and Clippy in `rust-toolchain.toml`. See `AGENTS.md` for project rules and guidelines.
 
 ### Code Quality & Verification
 

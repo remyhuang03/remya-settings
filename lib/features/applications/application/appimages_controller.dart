@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../integration/snapshot_order.dart';
+
 class AppImageEntry {
   const AppImageEntry(this.raw);
   final Map raw;
@@ -40,6 +42,7 @@ class AppImagesController extends ChangeNotifier {
   bool loaded = false;
   String? serviceError;
   String? requestError;
+  final _snapshots = SnapshotOrder();
 
   String? get errorMessage => requestError ?? serviceError;
   Iterable<AppImageEntry> get updatable =>
@@ -47,6 +50,8 @@ class AppImagesController extends ChangeNotifier {
   bool get checking => apps.any((a) => a.job != null);
 
   void apply(Map value) {
+    if (_snapshots.disposed) return;
+    _snapshots.invalidate();
     apps = [for (final raw in value['apps'] as List) AppImageEntry(raw as Map)];
     installing = (value['installing'] as List).cast<String>();
     directory = value['directory'] as String;
@@ -59,15 +64,21 @@ class AppImagesController extends ChangeNotifier {
   }
 
   Future<void> reload() async {
+    if (_snapshots.disposed) return;
+    final current = _snapshots.beginRead();
     try {
-      apply(await read());
+      final next = await read();
+      if (current()) apply(next);
     } catch (error) {
+      if (!current()) return;
       requestError = '$error';
       notifyListeners();
     }
   }
 
   Future<bool> _attempt(Future<void> Function() action) async {
+    if (_snapshots.disposed) return false;
+    _snapshots.invalidate();
     requestError = null;
     try {
       await action();
@@ -75,6 +86,7 @@ class AppImagesController extends ChangeNotifier {
       return true;
     } catch (error) {
       await reload();
+      if (_snapshots.disposed) return false;
       requestError = '$error';
       notifyListeners();
       return false;
@@ -84,4 +96,10 @@ class AppImagesController extends ChangeNotifier {
   Future<bool> run(String id, String value) => _attempt(() => write(id, value));
   Future<bool> saveSource(AppImageEntry app, String? source, bool updates) =>
       _attempt(() => setSource(app.id, source, updates));
+
+  @override
+  void dispose() {
+    _snapshots.dispose();
+    super.dispose();
+  }
 }

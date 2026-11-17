@@ -1,6 +1,8 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_client/settings_contract.dart';
 
+import '../../integration/snapshot_order.dart';
+
 class StartupController extends ChangeNotifier {
   StartupController({
     required this.read,
@@ -17,6 +19,7 @@ class StartupController extends ChangeNotifier {
   String? errorMessage;
   bool isBusy = false;
   bool _readFailed = false;
+  final _snapshots = SnapshotOrder();
   bool get hasConflict => value['conflict'] == true;
   bool get canResolve => value['writable'] == true && !_readFailed && !isBusy;
   bool get canChange => canResolve && !hasConflict;
@@ -32,12 +35,19 @@ class StartupController extends ChangeNotifier {
       ? errorMessage ?? 'Startup configuration is not writable.'
       : null;
 
-  Future<void> reload() async {
+  Future<void> reload() => isBusy ? Future.value() : _reload();
+
+  Future<void> _reload() async {
+    if (_snapshots.disposed) return;
+    final current = _snapshots.beginRead();
     try {
-      value = await read();
+      final next = await read();
+      if (!current()) return;
+      value = next;
       _readFailed = false;
       errorMessage = value['error'] as String?;
     } catch (error) {
+      if (!current()) return;
       _readFailed = true;
       errorMessage = '$error';
     }
@@ -45,16 +55,19 @@ class StartupController extends ChangeNotifier {
   }
 
   Future<bool> _change(Future<Map<String, dynamic>> Function() action) async {
-    if (isBusy) return false;
+    if (isBusy || _snapshots.disposed) return false;
+    _snapshots.invalidate();
     isBusy = true;
     notifyListeners();
     String? failure;
     try {
-      value = await action();
+      final next = await action();
+      if (!_snapshots.disposed) value = next;
     } catch (error) {
       failure = '$error';
     }
-    await reload();
+    await _reload();
+    if (_snapshots.disposed) return false;
     errorMessage = failure ?? errorMessage;
     isBusy = false;
     notifyListeners();
@@ -65,6 +78,12 @@ class StartupController extends ChangeNotifier {
       _change(() => write(setting, payload));
   Future<bool> useSystemConfiguration() => _change(() => resolve('system'));
   Future<bool> applySavedConfiguration() => _change(() => resolve('settings'));
+
+  @override
+  void dispose() {
+    _snapshots.dispose();
+    super.dispose();
+  }
 }
 
 class StartupScope extends InheritedNotifier<StartupController> {
