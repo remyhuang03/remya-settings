@@ -90,7 +90,7 @@ After updating Rust dependencies, run `python tool/generate_rust_notices.py` to 
 
 ## Installation
 
-This dev release uses Remya Core `0.1.0`. Install Core first. The Settings GUI
+This dev release uses Remya Core `0.2.0`. Install Core first. The Settings GUI
 connects to Core over the session D-Bus at `top.remya.Core1` and uses GTK 3.
 Camera preview uses PipeWire and GStreamer 1.28+ with its base libraries.
 
@@ -103,7 +103,7 @@ If you are upgrading from the old all-in-one Settings package, see
 paru -S remya-settings-git
 ```
 
-The AUR recipe depends on `remya-core`. The binary Core package can also
+The AUR recipe depends on `remya-core>=0.2.0`. The binary Core package can also
 satisfy that dependency.
 
 ### Release Archive
@@ -112,8 +112,8 @@ When installing from a Linux x86_64 release archive from [GitHub Releases](https
 
 ```bash
 sha256sum -c SHA256SUMS
-tar --zstd -xf remya_settings-0.1.0-dev.20261114.0-linux-x86_64.tar.zst
-cd remya_settings-0.1.0-dev.20261114.0-linux-x86_64
+tar --zstd -xf remya_settings-0.1.0-dev.20261118.0-linux-x86_64.tar.zst
+cd remya_settings-0.1.0-dev.20261118.0-linux-x86_64
 python tool/install.py
 ```
 
