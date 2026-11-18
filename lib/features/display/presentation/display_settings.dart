@@ -793,32 +793,42 @@ class DisplayChoice extends StatelessWidget {
   final Map<String, String> entries;
   final ValueChanged<String>? onChanged;
 
+  static const _staticChoices = {
+    displayBitDepthId,
+    displaySupportsHdrId,
+    displaySupportsWideId,
+    displayEotfId,
+  };
+
   @override
-  Widget build(BuildContext context) => SizedBox(
-    width: 232,
-    child: DropdownButtonFormField<String>(
-      key: ValueKey('display-control-$id'),
-      initialValue: value,
-      isExpanded: true,
-      decoration: InputDecoration(
-        labelText: label,
-        isDense: true,
-        border: OutlineInputBorder(borderRadius: .all(.circular(14))),
-      ),
-      items: [
-        for (final entry in entries.entries)
-          DropdownMenuItem(
-            value: entry.key,
-            child: Text(entry.value, overflow: .ellipsis),
-          ),
+  Widget build(BuildContext context) {
+    final control = _staticChoices.contains(id)
+        ? SettingsChoice<String>(
+            key: ValueKey('display-control-$id'),
+            label: label,
+            choices: entries,
+            selected: value,
+            width: 232,
+            onSelected: onChanged,
+          )
+        : SettingsDropdown<String>(
+            key: ValueKey('display-control-$id'),
+            label: label,
+            choices: entries,
+            selected: value,
+            width: 232,
+            onSelected: onChanged,
+          );
+    if (label == null) return control;
+    return Column(
+      crossAxisAlignment: .start,
+      spacing: 6,
+      children: [
+        Text(label!, style: Theme.of(context).textTheme.bodySmall),
+        control,
       ],
-      onChanged: onChanged == null
-          ? null
-          : (next) {
-              if (next != null && next != value) onChanged!(next);
-            },
-    ),
-  );
+    );
+  }
 }
 
 /// Commits on Enter or when focus leaves; the service validates the value.

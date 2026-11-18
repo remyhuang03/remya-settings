@@ -100,7 +100,7 @@ class _DisplayMapping extends StatelessWidget {
       for (final display in controller.list('touch_displays'))
         display['name'] as String: display['description'] as String? ?? '',
     };
-    final options = <DropdownMenuEntry<String>>[
+    final options = <SettingsChoiceOption<String>>[
       const .new(value: '[[Auto]]', label: 'Default'),
       if (value == '') const .new(value: '', label: 'Focused display'),
       for (final MapEntry(key: name, value: description) in displays.entries)
@@ -125,21 +125,21 @@ class _DisplayMapping extends StatelessWidget {
       ),
       control: Semantics(
         label: setting.title,
-        child: DropdownMenu<String>(
+        child: SettingsDropdown<String>.options(
           key: ValueKey((value, controller.isBusy, displays.keys.join('\n'))),
+          label: setting.title,
           width: 280,
-          enabled:
-              controller.canChange &&
-              value != null &&
-              controller.state['error'] == null,
-          initialSelection: options.any((entry) => entry.value == value)
-              ? value
-              : null,
+          options: options,
+          selected: options.any((entry) => entry.value == value) ? value : null,
           hintText: value == null ? 'Unknown' : '$value (not connected)',
-          dropdownMenuEntries: options,
-          onSelected: (next) {
-            if (next != null && next != value) controller.set(setting.id, next);
-          },
+          onSelected:
+              controller.canChange &&
+                  value != null &&
+                  controller.state['error'] == null
+              ? (next) {
+                  if (next != value) controller.set(setting.id, next);
+                }
+              : null,
         ),
       ),
     );

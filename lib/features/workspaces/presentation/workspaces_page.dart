@@ -590,17 +590,16 @@ class _RuleDialogState extends State<_RuleDialog> {
             crossAxisAlignment: .stretch,
             spacing: 16,
             children: [
-              SegmentedButton<_Kind>(
+              SettingsSegmentedButton<_Kind>.choices(
                 key: const ValueKey('workspace-kind'),
-                segments: const [
-                  ButtonSegment(value: .number, label: Text('Numbered')),
-                  ButtonSegment(value: .named, label: Text('Named')),
-                  ButtonSegment(value: .scratchpad, label: Text('Scratchpad')),
-                ],
-                selected: {_kind},
-                showSelectedIcon: false,
-                onSelectionChanged: (next) =>
-                    setState(() => _kind = next.first),
+                expand: true,
+                choices: const {
+                  .number: 'Numbered',
+                  .named: 'Named',
+                  .scratchpad: 'Scratchpad',
+                },
+                selected: _kind,
+                onSelected: (next) => setState(() => _kind = next),
               ),
               TextField(
                 key: const ValueKey('workspace-name'),
@@ -613,17 +612,23 @@ class _RuleDialogState extends State<_RuleDialog> {
                 ),
                 onChanged: (_) => setState(() {}),
               ),
-              DropdownMenu<String>(
-                key: const ValueKey('workspace-monitor'),
-                expandedInsets: .zero,
-                label: const Text('Display'),
-                initialSelection: _monitor,
-                dropdownMenuEntries: [
-                  const DropdownMenuEntry(value: '', label: 'Any display'),
-                  for (final m in monitors)
-                    DropdownMenuEntry(value: m, label: m),
+              Column(
+                crossAxisAlignment: .start,
+                spacing: 6,
+                children: [
+                  Text('Display', style: Theme.of(context).textTheme.bodySmall),
+                  SettingsDropdown<String>(
+                    key: const ValueKey('workspace-monitor'),
+                    label: 'Display',
+                    fillWidth: true,
+                    selected: _monitor,
+                    choices: {
+                      '': 'Any display',
+                      for (final m in monitors) m: m,
+                    },
+                    onSelected: (next) => setState(() => _monitor = next),
+                  ),
                 ],
-                onSelected: (next) => setState(() => _monitor = next ?? ''),
               ),
               SwitchListTile(
                 key: const ValueKey('workspace-persistent'),

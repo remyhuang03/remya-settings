@@ -361,45 +361,19 @@ class InputRows {
     final value = controller.option(setting.id);
     final Widget control;
     if (choiceValues[setting.id] case final values?) {
-      control =
-          values.length <= 3 && setting.options.every((o) => o.length <= 14)
-          ? SegmentedButton<Object>(
-              key: ValueKey('${setting.id}-segments'),
-              segments: [
-                for (var i = 0; i < values.length; i++)
-                  ButtonSegment(
-                    value: values[i],
-                    label: Text(setting.options[i]),
-                  ),
-              ],
-              selected: {if (value != null && values.contains(value)) value},
-              emptySelectionAllowed: true,
-              showSelectedIcon: false,
-              onSelectionChanged: enabled
-                  ? (next) {
-                      if (next.isNotEmpty) {
-                        controller.set(setting.id, next.first);
-                      }
-                    }
-                  : null,
-            )
-          : DropdownMenu<Object>(
-              key: ValueKey('${setting.id}-$value'),
-              width: 260,
-              enabled: enabled,
-              initialSelection: values.contains(value) ? value : null,
-              hintText: describeValue(setting, value),
-              dropdownMenuEntries: [
-                for (var i = 0; i < values.length; i++)
-                  DropdownMenuEntry(
-                    value: values[i],
-                    label: setting.options[i],
-                  ),
-              ],
-              onSelected: (next) {
-                if (next != null) controller.set(setting.id, next);
-              },
-            );
+      final choices = {
+        for (var i = 0; i < values.length; i++) values[i]: setting.options[i],
+      };
+      control = SettingsChoice<Object>(
+        key: ValueKey('${setting.id}-$value'),
+        label: setting.title,
+        selected: values.contains(value) ? value : null,
+        hintText: describeValue(setting, value),
+        choices: choices,
+        width: 260,
+        maxSegmentLabelLength: 14,
+        onSelected: enabled ? (next) => controller.set(setting.id, next) : null,
+      );
     } else if (sliderShapes[setting.id] case final shape?) {
       // A gap with different sides shows them; moving the slider evens them out.
       final sides = value is List ? value : null;

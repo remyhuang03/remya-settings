@@ -135,19 +135,14 @@ class _PowerPageState extends State<PowerPage> {
     return SettingRow(
       id: setting.id,
       label: Text(setting.title, style: Theme.of(context).textTheme.bodyLarge),
-      control: DropdownMenu<Object>(
+      control: SettingsChoice<Object>(
         key: ValueKey('${setting.id}-$selected'),
+        label: setting.title,
+        selected: selected,
+        choices: choices,
         width: 232,
         menuHeight: 300,
-        initialSelection: selected,
-        enabled: _enabled,
-        dropdownMenuEntries: [
-          for (final entry in choices.entries)
-            DropdownMenuEntry(value: entry.key, label: entry.value),
-        ],
-        onSelected: (value) {
-          if (value != null) _set(setting.id, value);
-        },
+        onSelected: _enabled ? (value) => _set(setting.id, value) : null,
       ),
     );
   }

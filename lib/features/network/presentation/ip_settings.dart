@@ -145,24 +145,22 @@ class _IpDialogState extends State<_IpDialog> {
             children: [
               Text('IPv4', style: text.titleSmall),
               const SizedBox(height: 8),
-              SegmentedButton<bool>(
+              SettingsSegmentedButton<bool>(
+                expand: true,
                 segments: [
-                  ButtonSegment(
-                    value: false,
-                    label: Text(
-                      _editableMethod ? 'Automatic (DHCP)' : 'Keep current',
-                    ),
-                    icon: const Icon(Icons.auto_mode_rounded),
+                  SettingsSegment(
+                    false,
+                    _editableMethod ? 'Automatic (DHCP)' : 'Keep current',
+                    icon: const Icon(Icons.auto_mode_rounded, size: 18),
                   ),
-                  const ButtonSegment(
-                    value: true,
-                    label: Text('Manual'),
-                    icon: Icon(Icons.edit_outlined),
+                  const SettingsSegment(
+                    true,
+                    'Manual',
+                    icon: Icon(Icons.edit_outlined, size: 18),
                   ),
                 ],
-                selected: {_manual},
-                onSelectionChanged: (value) =>
-                    setState(() => _manual = value.single),
+                selected: _manual,
+                onSelected: (value) => setState(() => _manual = value),
               ),
               if (_manual) ...[
                 const SizedBox(height: 16),
@@ -312,22 +310,22 @@ class _DnsDialogState extends State<_DnsDialog> {
           mainAxisSize: .min,
           crossAxisAlignment: .stretch,
           children: [
-            SegmentedButton<bool>(
+            SettingsSegmentedButton<bool>(
+              expand: true,
               segments: const [
-                ButtonSegment(
-                  value: false,
-                  label: Text('Automatic (DHCP)'),
-                  icon: Icon(Icons.auto_mode_rounded),
+                SettingsSegment(
+                  false,
+                  'Automatic (DHCP)',
+                  icon: Icon(Icons.auto_mode_rounded, size: 18),
                 ),
-                ButtonSegment(
-                  value: true,
-                  label: Text('Manual'),
-                  icon: Icon(Icons.edit_outlined),
+                SettingsSegment(
+                  true,
+                  'Manual',
+                  icon: Icon(Icons.edit_outlined, size: 18),
                 ),
               ],
-              selected: {_manual},
-              onSelectionChanged: (value) =>
-                  setState(() => _manual = value.single),
+              selected: _manual,
+              onSelected: (value) => setState(() => _manual = value),
             ),
             const SizedBox(height: 8),
             Text(
@@ -374,21 +372,26 @@ class _DnsDialogState extends State<_DnsDialog> {
             ),
             if (widget.tls) ...[
               const SizedBox(height: 8),
-              DropdownMenu<String>(
-                initialSelection: _tls,
-                label: const Text('DNS over TLS'),
-                expandedInsets: .zero,
-                onSelected: (value) {
-                  if (value != null) setState(() => _tls = value);
-                },
-                dropdownMenuEntries: const [
-                  DropdownMenuEntry(value: 'default', label: 'System default'),
-                  DropdownMenuEntry(value: 'no', label: 'Off'),
-                  DropdownMenuEntry(
-                    value: 'opportunistic',
-                    label: 'When available',
+              Column(
+                crossAxisAlignment: .start,
+                spacing: 6,
+                children: [
+                  Text(
+                    'DNS over TLS',
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
-                  DropdownMenuEntry(value: 'yes', label: 'Required'),
+                  SettingsDropdown<String>(
+                    label: 'DNS over TLS',
+                    fillWidth: true,
+                    selected: _tls,
+                    choices: const {
+                      'default': 'System default',
+                      'no': 'Off',
+                      'opportunistic': 'When available',
+                      'yes': 'Required',
+                    },
+                    onSelected: (value) => setState(() => _tls = value),
+                  ),
                 ],
               ),
             ],

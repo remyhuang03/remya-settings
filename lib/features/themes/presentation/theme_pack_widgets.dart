@@ -448,20 +448,17 @@ class _ThemeRemoveRowState extends State<ThemeRemoveRow> {
         runSpacing: 8,
         crossAxisAlignment: .center,
         children: [
-          DropdownMenu<String>(
+          SettingsDropdown<String>(
             key: ValueKey('${widget.setting.id}-choice'),
+            label: widget.setting.title,
             width: 220,
-            enabled: enabled,
             hintText: 'Theme',
-            initialSelection: choice?['id'] as String?,
-            dropdownMenuEntries: [
+            selected: choice?['id'] as String?,
+            choices: {
               for (final pack in packs)
-                DropdownMenuEntry(
-                  value: pack['id'] as String,
-                  label: pack['name'] as String,
-                ),
-            ],
-            onSelected: (id) => setState(() => _choice = id),
+                pack['id'] as String: pack['name'] as String,
+            },
+            onSelected: enabled ? (id) => setState(() => _choice = id) : null,
           ),
           FilledButton.tonal(
             key: ValueKey('${widget.setting.id}-button'),

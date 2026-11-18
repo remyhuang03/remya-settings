@@ -265,30 +265,35 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
                 const Icon(Icons.camera_alt_outlined),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: DropdownButtonFormField<String>(
-                    initialValue: _selected,
-                    key: ValueKey(_selected),
-                    isExpanded: true,
-                    decoration: const InputDecoration(labelText: 'Camera'),
-                    items: [
-                      for (final d in controller.devices)
-                        DropdownMenuItem(
-                          value: d['name'] as String,
-                          child: Text(
-                            '${d['description']} (${d['name']})',
-                            overflow: .ellipsis,
-                          ),
-                        ),
+                  child: Column(
+                    crossAxisAlignment: .start,
+                    spacing: 6,
+                    children: [
+                      Text(
+                        'Camera',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      SettingsDropdown<String>(
+                        key: ValueKey(_selected),
+                        label: 'Camera',
+                        fillWidth: true,
+                        selected: _selected,
+                        choices: {
+                          for (final d in controller.devices)
+                            d['name'] as String:
+                                '${d['description']} (${d['name']})',
+                        },
+                        onSelected: (name) async {
+                          await _stop();
+                          if (!mounted) return;
+                          setState(() {
+                            _selected = name;
+                            _serial = selected?['serial'] as int?;
+                            _previewError = null;
+                          });
+                        },
+                      ),
                     ],
-                    onChanged: (name) async {
-                      await _stop();
-                      if (!mounted) return;
-                      setState(() {
-                        _selected = name;
-                        _serial = selected?['serial'] as int?;
-                        _previewError = null;
-                      });
-                    },
                   ),
                 ),
               ],

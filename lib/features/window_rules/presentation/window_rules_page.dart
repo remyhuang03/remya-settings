@@ -382,17 +382,16 @@ class _RuleDialogState extends State<_RuleDialog> {
                   (v) => _pin = v,
                 ),
               ],
-              SegmentedButton<_Start>(
+              SettingsSegmentedButton<_Start>.choices(
                 key: const ValueKey('window-rule-start'),
-                segments: const [
-                  ButtonSegment(value: .normal, label: Text('Normal')),
-                  ButtonSegment(value: .maximize, label: Text('Maximized')),
-                  ButtonSegment(value: .fullscreen, label: Text('Full screen')),
-                ],
-                selected: {_start},
-                showSelectedIcon: false,
-                onSelectionChanged: (next) =>
-                    setState(() => _start = next.first),
+                expand: true,
+                choices: const {
+                  .normal: 'Normal',
+                  .maximize: 'Maximized',
+                  .fullscreen: 'Full screen',
+                },
+                selected: _start,
+                onSelected: (next) => setState(() => _start = next),
               ),
               TextField(
                 key: const ValueKey('window-rule-workspace'),
@@ -450,17 +449,20 @@ class _RuleDialogState extends State<_RuleDialog> {
                 _aspect,
                 (v) => _aspect = v,
               ),
-              DropdownMenu<String>(
-                key: const ValueKey('window-rule-idle'),
-                expandedInsets: .zero,
-                label: const Text('Keep the screen awake'),
-                initialSelection: _idleInhibit,
-                dropdownMenuEntries: [
-                  const DropdownMenuEntry(value: '', label: 'Never'),
-                  for (final MapEntry(:key, :value) in _idle.entries)
-                    DropdownMenuEntry(value: key, label: value),
+              Column(
+                crossAxisAlignment: .start,
+                spacing: 6,
+                children: [
+                  Text('Keep the screen awake', style: text.bodySmall),
+                  SettingsDropdown<String>(
+                    key: const ValueKey('window-rule-idle'),
+                    label: 'Keep the screen awake',
+                    fillWidth: true,
+                    selected: _idleInhibit,
+                    choices: {'': 'Never', ..._idle},
+                    onSelected: (next) => setState(() => _idleInhibit = next),
+                  ),
                 ],
-                onSelected: (next) => setState(() => _idleInhibit = next ?? ''),
               ),
               if (_error case final error?)
                 Text(

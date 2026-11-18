@@ -104,18 +104,10 @@ class _SoundPageState extends State<SoundPage> {
       title: '${matches.length} sound devices',
       actions: [
         _search('Search sound devices'),
-        DropdownMenu<String>(
-          width: 160,
-          label: const Text('Device type'),
-          initialSelection: _kind,
-          dropdownMenuEntries: const [
-            DropdownMenuEntry(value: 'All', label: 'All'),
-            DropdownMenuEntry(value: 'Output', label: 'Output'),
-            DropdownMenuEntry(value: 'Input', label: 'Input'),
-          ],
-          onSelected: (v) {
-            if (v != null) setState(() => _kind = v);
-          },
+        SettingsSegmentedButton<String>.choices(
+          choices: const {'All': 'All', 'Output': 'Output', 'Input': 'Input'},
+          selected: _kind,
+          onSelected: (v) => setState(() => _kind = v),
         ),
         _refresh(),
       ],
@@ -195,23 +187,20 @@ class _SoundPageState extends State<SoundPage> {
                     _DeviceFacts(device),
                 ],
               ),
-              control: DropdownMenu<String>(
+              control: SettingsDropdown<String>(
                 key: ValueKey('sound-$direction-${device?['name']}'),
+                label: output ? 'Output device' : 'Input device',
                 width: 280,
-                initialSelection: device?['name'] as String?,
-                enabled: controller.canChange && devices.isNotEmpty,
-                dropdownMenuEntries: [
+                selected: device?['name'] as String?,
+                choices: {
                   for (final d in devices)
-                    DropdownMenuEntry(
-                      value: d['name'] as String,
-                      label: d['description'] as String,
-                    ),
-                ],
-                onSelected: (name) {
-                  if (name != null) {
-                    controller.set('sound.$direction-device', {'name': name});
-                  }
+                    d['name'] as String: d['description'] as String,
                 },
+                onSelected: controller.canChange && devices.isNotEmpty
+                    ? (name) => controller.set('sound.$direction-device', {
+                        'name': name,
+                      })
+                    : null,
               ),
             ),
             if (device != null)
@@ -270,20 +259,17 @@ class _SoundPageState extends State<SoundPage> {
         runSpacing: 8,
         crossAxisAlignment: .center,
         children: [
-          SegmentedButton<String>(
+          SettingsSegmentedButton<String>.choices(
             key: const ValueKey('sound.compositor-bell-segments'),
-            segments: const [
-              ButtonSegment(value: 'default', label: Text('Default')),
-              ButtonSegment(value: 'none', label: Text('Off')),
-              ButtonSegment(value: 'custom', label: Text('Custom')),
-            ],
-            selected: {?mode},
-            emptySelectionAllowed: true,
-            showSelectedIcon: false,
-            onSelectionChanged: enabled
-                ? (next) {
-                    if (next.isEmpty) return;
-                    final choice = next.first;
+            choices: const {
+              'default': 'Default',
+              'none': 'Off',
+              'custom': 'Custom',
+            },
+            selected: mode,
+            allowReselect: true,
+            onSelected: enabled
+                ? (choice) {
                     if (choice == 'custom') {
                       _pickBell(desktop);
                     } else if (choice != raw) {
@@ -492,26 +478,21 @@ class _StreamRow extends StatelessWidget {
             direction == 'output' ? 'Output device' : 'Input device',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          control: DropdownMenu<String>(
+          control: SettingsDropdown<String>(
             key: ValueKey('stream-${stream['index']}-${stream['device']}'),
+            label: direction == 'output' ? 'Output device' : 'Input device',
             width: 280,
-            initialSelection: stream['device'] as String?,
-            enabled: enabled,
-            dropdownMenuEntries: [
+            selected: stream['device'] as String?,
+            choices: {
               for (final d in controller.devicesFor(direction))
-                DropdownMenuEntry(
-                  value: d['name'] as String,
-                  label: d['description'] as String,
-                ),
-            ],
-            onSelected: (name) {
-              if (name != null) {
-                controller.set('sound.stream-device', {
-                  ...request,
-                  'device': name,
-                });
-              }
+                d['name'] as String: d['description'] as String,
             },
+            onSelected: enabled
+                ? (name) => controller.set('sound.stream-device', {
+                    ...request,
+                    'device': name,
+                  })
+                : null,
           ),
         ),
       ],

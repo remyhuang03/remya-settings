@@ -11,7 +11,6 @@ import 'features/system_information/application/hostname_controller.dart';
 
 import 'package:remya_client/settings_contract.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:remya_ui/remya_ui.dart';
 import 'package:remya_ui/settings_ui.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -118,8 +117,8 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
         navigatorKey: _navigatorKey,
         title: "Remy'a Settings",
         debugShowCheckedModeBanner: false,
-        theme: _settingsTheme(_appearance.theme, .light),
-        darkTheme: _settingsTheme(_appearance.theme, .dark),
+        theme: _appearance.theme.theme(.light),
+        darkTheme: _appearance.theme.theme(.dark),
         themeMode: _appearance.theme.mode,
         builder: (context, child) => Overlay.wrap(
           child: Column(
@@ -227,19 +226,6 @@ class _RemyaSettingsAppState extends State<RemyaSettingsApp> {
         : DateTimeScope(controller: widget.dateTime!, child: withBluetooth);
   }
 }
-
-ThemeData _settingsTheme(RemyaTheme theme, Brightness brightness) => theme
-    .theme(brightness)
-    .copyWith(
-      dropdownMenuTheme: const DropdownMenuThemeData(
-        inputDecorationTheme: InputDecorationThemeData(
-          isDense: true,
-          constraints: BoxConstraints.tightFor(height: 48),
-          contentPadding: .symmetric(horizontal: 14),
-          border: OutlineInputBorder(borderRadius: .all(.circular(14))),
-        ),
-      ),
-    );
 
 class _CoreUnavailable extends StatelessWidget {
   const _CoreUnavailable({required this.error, required this.onRetry});

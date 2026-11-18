@@ -382,26 +382,27 @@ class _LanguagePageState extends State<LanguagePage> {
           ),
         ],
       ),
-      control: DropdownMenu<int>(
+      control: SettingsDropdown<int>(
         key: ValueKey('${setting.id}-$index'),
+        label: setting.title,
         width: 260,
-        enabled: _input.canChange,
-        initialSelection: index < 0 ? null : index,
+        selected: index < 0 ? null : index,
         hintText: 'Custom',
-        dropdownMenuEntries: [
-          for (var i = 0; i < switchOptions.length; i++)
-            DropdownMenuEntry(value: i, label: setting.options[i]),
-        ],
-        onSelected: (next) {
-          if (next == null || next == index) return;
-          _input.set(
-            keyboardOptionsId,
-            [
-              ...options.where((o) => !o.startsWith('grp:')),
-              ?switchOptions[next],
-            ].join(','),
-          );
+        choices: {
+          for (var i = 0; i < switchOptions.length; i++) i: setting.options[i],
         },
+        onSelected: _input.canChange
+            ? (next) {
+                if (next == index) return;
+                _input.set(
+                  keyboardOptionsId,
+                  [
+                    ...options.where((o) => !o.startsWith('grp:')),
+                    ?switchOptions[next],
+                  ].join(','),
+                );
+              }
+            : null,
       ),
     );
   }

@@ -244,22 +244,22 @@ class _BackgroundPageState extends State<BackgroundPage> {
       children: [
         _Row(
           setting: _setting(backgroundKindSettingId),
-          control: SegmentedButton<String>(
+          control: SettingsSegmentedButton<String>(
             key: const ValueKey('background-kind'),
             segments: const [
-              ButtonSegment(
-                value: 'image',
-                label: Text('Image'),
-                icon: Icon(Icons.image_outlined),
+              SettingsSegment(
+                'image',
+                'Image',
+                icon: Icon(Icons.image_outlined, size: 18),
               ),
-              ButtonSegment(
-                value: 'video',
-                label: Text('Video'),
-                icon: Icon(Icons.movie_outlined),
+              SettingsSegment(
+                'video',
+                'Video',
+                icon: Icon(Icons.movie_outlined, size: 18),
               ),
             ],
-            selected: {_controller.kind},
-            onSelectionChanged: enabled ? (s) => _setKind(s.single) : null,
+            selected: _controller.kind,
+            onSelected: enabled ? _setKind : null,
           ),
         ),
         const Divider(height: 1, indent: 20, endIndent: 20),
@@ -570,26 +570,13 @@ class _Choice extends StatelessWidget {
   final ValueChanged<String>? onChanged;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
+  Widget build(BuildContext context) => SettingsDropdown<String>(
+    key: ValueKey('$id-$value'),
     width: 232,
-    child: DropdownButtonFormField<String>(
-      key: ValueKey('$id-$value'),
-      initialValue: labels.containsKey(value) ? value : null,
-      isExpanded: true,
-      decoration: const InputDecoration(
-        isDense: true,
-        border: OutlineInputBorder(borderRadius: .all(.circular(14))),
-      ),
-      items: [
-        for (final entry in labels.entries)
-          DropdownMenuItem(value: entry.key, child: Text(entry.value)),
-      ],
-      onChanged: onChanged == null
-          ? null
-          : (value) {
-              if (value != null) onChanged!(value);
-            },
-    ),
+    choices: labels,
+    selected: labels.containsKey(value) ? value : null,
+    includeUnknownSelected: false,
+    onSelected: onChanged,
   );
 }
 

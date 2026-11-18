@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 
 import '../application/date_time_controller.dart';
 
@@ -364,20 +365,18 @@ class _TimeServersState extends State<_TimeServers> {
         crossAxisAlignment: .stretch,
         mainAxisSize: .min,
         children: [
-          DropdownMenu<bool>(
+          SettingsSegmentedButton<bool>.choices(
             key: const ValueKey('time-server-mode'),
-            width: 232,
-            initialSelection: _custom,
-            enabled: enabled,
-            dropdownMenuEntries: const [
-              DropdownMenuEntry(value: false, label: 'Default'),
-              DropdownMenuEntry(value: true, label: 'Custom'),
-            ],
-            onSelected: (value) {
-              if (value == null || widget.controller.isBusy) return;
-              setState(() => _custom = value);
-              if (!value) _useDefault();
-            },
+            choices: const {false: 'Default', true: 'Custom'},
+            selected: _custom,
+            expand: true,
+            onSelected: enabled
+                ? (value) {
+                    if (widget.controller.isBusy) return;
+                    setState(() => _custom = value);
+                    if (!value) _useDefault();
+                  }
+                : null,
           ),
           if (_custom) ...[
             const SizedBox(height: 8),

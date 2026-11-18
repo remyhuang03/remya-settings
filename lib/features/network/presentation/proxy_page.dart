@@ -139,19 +139,17 @@ class _ProxyPageState extends State<ProxyPage> {
             SettingRow(
               id: proxyModeSettingId,
               label: const Text('Use a proxy'),
-              control: SegmentedButton<String>(
-                showSelectedIcon: false,
-                segments: const [
-                  ButtonSegment(value: 'none', label: Text('Off')),
-                  ButtonSegment(value: 'detect', label: Text('Detect')),
-                  ButtonSegment(value: 'script', label: Text('Script')),
-                  ButtonSegment(value: 'manual', label: Text('Manual')),
-                ],
-                selected: {mode},
-                onSelectionChanged: _busy
+              control: SettingsSegmentedButton<String>.choices(
+                choices: const {
+                  'none': 'Off',
+                  'detect': 'Detect',
+                  'script': 'Script',
+                  'manual': 'Manual',
+                },
+                selected: mode,
+                onSelected: _busy
                     ? null
-                    : (selection) {
-                        final choice = selection.single;
+                    : (choice) {
                         setState(
                           () => _scriptDraft =
                               choice == 'script' &&

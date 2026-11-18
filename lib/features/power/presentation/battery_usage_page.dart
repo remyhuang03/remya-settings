@@ -132,14 +132,10 @@ class _BatteryUsagePageState extends State<BatteryUsagePage> {
               SettingRow(
                 id: 'battery-usage.2be90408',
                 label: const Text('Time frame'),
-                control: SegmentedButton<int>(
-                  segments: const [
-                    ButtonSegment(value: 1, label: Text('24 hours')),
-                    ButtonSegment(value: 7, label: Text('7 days')),
-                  ],
-                  selected: {_days},
-                  showSelectedIcon: false,
-                  onSelectionChanged: _busy ? null : (v) => _select(v.single),
+                control: SettingsSegmentedButton<int>.choices(
+                  choices: const {1: '24 hours', 7: '7 days'},
+                  selected: _days,
+                  onSelected: _busy ? null : _select,
                 ),
               ),
               const Divider(height: 1, indent: 20, endIndent: 20),

@@ -153,25 +153,26 @@ class _Adapter extends StatelessWidget {
               SettingRow(
                 id: ethernetMeteredSettingId,
                 label: const Text('Metered connection'),
-                control: DropdownMenu<String>(
-                  width: 232,
+                control: SettingsChoice<String>(
                   key: ValueKey('ethernet-metered-${profile['metered']}'),
-                  initialSelection: profile['metered'] as String,
-                  enabled: editable,
-                  onSelected: (value) {
-                    if (value != null && value != profile['metered']) {
-                      controller.edit(
-                        ethernetMeteredSettingId,
-                        profile['uuid'] as String,
-                        value,
-                      );
-                    }
+                  label: 'Metered connection',
+                  selected: profile['metered'] as String,
+                  choices: const {
+                    'automatic': 'Automatic',
+                    'yes': 'Metered',
+                    'no': 'Not metered',
                   },
-                  dropdownMenuEntries: const [
-                    DropdownMenuEntry(value: 'automatic', label: 'Automatic'),
-                    DropdownMenuEntry(value: 'yes', label: 'Metered'),
-                    DropdownMenuEntry(value: 'no', label: 'Not metered'),
-                  ],
+                  onSelected: editable
+                      ? (value) {
+                          if (value != profile['metered']) {
+                            controller.edit(
+                              ethernetMeteredSettingId,
+                              profile['uuid'] as String,
+                              value,
+                            );
+                          }
+                        }
+                      : null,
                 ),
               ),
               ...addressRows(

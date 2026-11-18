@@ -102,20 +102,17 @@ class _WifiPageState extends State<WifiPage> {
   Widget _adapter() => SettingRow(
     id: wifiAdapterSettingId,
     label: const Text('Adapter'),
-    control: DropdownMenu<String>(
+    control: SettingsDropdown<String>(
+      label: 'Adapter',
       width: 232,
-      initialSelection: _controller.adapter,
-      enabled: !_controller.isBusy,
-      onSelected: (value) {
-        if (value != null) _controller.set(wifiAdapterSettingId, value);
-      },
-      dropdownMenuEntries: [
+      selected: _controller.adapter,
+      choices: {
         for (final device in _controller.wifiAdapters)
-          DropdownMenuEntry(
-            value: device['interface'] as String,
-            label: device['interface'] as String,
-          ),
-      ],
+          device['interface'] as String: device['interface'] as String,
+      },
+      onSelected: !_controller.isBusy
+          ? (value) => _controller.set(wifiAdapterSettingId, value)
+          : null,
     ),
   );
 

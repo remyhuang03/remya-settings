@@ -220,21 +220,22 @@ class _ProfileTile extends StatelessWidget {
       SettingRow(
         id: knownNetworkMeteredSettingId,
         label: const Text('Metered connection'),
-        control: DropdownMenu<String>(
-          width: 232,
+        control: SettingsChoice<String>(
           key: ValueKey('metered-${profile['metered']}'),
-          initialSelection: profile['metered'] as String,
-          enabled: _editable,
-          onSelected: (value) {
-            if (value != null && value != profile['metered']) {
-              _setValue(knownNetworkMeteredSettingId, value);
-            }
+          label: 'Metered connection',
+          selected: profile['metered'] as String,
+          choices: const {
+            'automatic': 'Automatic',
+            'yes': 'Metered',
+            'no': 'Not metered',
           },
-          dropdownMenuEntries: const [
-            DropdownMenuEntry(value: 'automatic', label: 'Automatic'),
-            DropdownMenuEntry(value: 'yes', label: 'Metered'),
-            DropdownMenuEntry(value: 'no', label: 'Not metered'),
-          ],
+          onSelected: _editable
+              ? (value) {
+                  if (value != profile['metered']) {
+                    _setValue(knownNetworkMeteredSettingId, value);
+                  }
+                }
+              : null,
         ),
       ),
       if (!controller.wifiBackendIwd)
@@ -254,38 +255,31 @@ class _ProfileTile extends StatelessWidget {
               ),
             ],
           ),
-          control: DropdownMenu<String>(
-            width: 232,
+          control: SettingsDropdown<String>(
             key: ValueKey('mac-${profile['mac']}'),
-            initialSelection: profile['mac'] as String,
-            enabled: _editable,
-            onSelected: (value) {
-              if (value != null && value != profile['mac']) {
-                controller.edit(knownNetworkMacSettingId, _uuid, value);
-              }
-            },
-            dropdownMenuEntries: [
-              const DropdownMenuEntry(value: '', label: 'System default'),
-              const DropdownMenuEntry(value: 'permanent', label: 'Off'),
-              const DropdownMenuEntry(
-                value: 'stable',
-                label: 'On, fixed for this network',
-              ),
-              const DropdownMenuEntry(
-                value: 'random',
-                label: 'On, new each connection',
-              ),
+            label: 'Random hardware address',
+            width: 232,
+            selected: profile['mac'] as String,
+            choices: {
+              '': 'System default',
+              'permanent': 'Off',
+              'stable': 'On, fixed for this network',
+              'random': 'On, new each connection',
               if (!const {
                 '',
                 'permanent',
                 'stable',
                 'random',
               }.contains(profile['mac']))
-                DropdownMenuEntry(
-                  value: profile['mac'] as String,
-                  label: 'Set elsewhere: ${profile['mac']}',
-                ),
-            ],
+                profile['mac'] as String: 'Set elsewhere: ${profile['mac']}',
+            },
+            onSelected: _editable
+                ? (value) {
+                    if (value != profile['mac']) {
+                      controller.edit(knownNetworkMacSettingId, _uuid, value);
+                    }
+                  }
+                : null,
           ),
         ),
       ...addressRows(
@@ -373,18 +367,10 @@ class _PriorityRow extends StatelessWidget {
           ),
         ],
       ),
-      control: SegmentedButton<int>(
-        emptySelectionAllowed: true,
-        segments: [
-          for (final MapEntry(:key, :value) in _levels.entries)
-            ButtonSegment(value: key, label: Text(value)),
-        ],
-        selected: {if (_levels.containsKey(priority)) priority},
-        onSelectionChanged: enabled
-            ? (value) {
-                if (value.isNotEmpty) onChanged(value.single);
-              }
-            : null,
+      control: SettingsSegmentedButton<int>.choices(
+        choices: _levels,
+        selected: _levels.containsKey(priority) ? priority : null,
+        onSelected: enabled ? onChanged : null,
       ),
     );
   }
@@ -479,17 +465,25 @@ class _AddNetworkDialogState extends State<_AddNetworkDialog> {
               ),
             ),
             const SizedBox(height: 16),
-            DropdownMenu<String>(
-              initialSelection: _security,
-              label: const Text('Security type'),
-              expandedInsets: .zero,
-              onSelected: (value) {
-                if (value != null) setState(() => _security = value);
-              },
-              dropdownMenuEntries: const [
-                DropdownMenuEntry(value: 'open', label: 'Open'),
-                DropdownMenuEntry(value: 'wpa2', label: 'WPA2/WPA3 Personal'),
-                DropdownMenuEntry(value: 'wpa3', label: 'WPA3 Personal'),
+            Column(
+              crossAxisAlignment: .start,
+              spacing: 6,
+              children: [
+                Text(
+                  'Security type',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                SettingsDropdown<String>(
+                  label: 'Security type',
+                  fillWidth: true,
+                  selected: _security,
+                  choices: const {
+                    'open': 'Open',
+                    'wpa2': 'WPA2/WPA3 Personal',
+                    'wpa3': 'WPA3 Personal',
+                  },
+                  onSelected: (value) => setState(() => _security = value),
+                ),
               ],
             ),
             if (_needsPassword) ...[

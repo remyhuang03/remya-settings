@@ -10,6 +10,7 @@ import 'package:remya_settings/features/input/presentation/touchpad_page.dart';
 import 'package:remya_settings/features/input/presentation/touchscreen_page.dart';
 import 'package:remya_settings/features/settings/domain/settings_catalog.dart';
 import 'package:remya_client/settings_contract.dart';
+import 'package:remya_ui/settings_ui.dart';
 
 final catalog = SettingsCatalog.fromJson(readCatalog());
 
@@ -130,7 +131,7 @@ void main() {
     );
 
     await pump(tester, touchscreen());
-    expect(find.byType(DropdownMenu<String>), findsNothing);
+    expect(find.byType(SettingsDropdown<String>), findsNothing);
 
     client.state['touchscreens'] = ['test-touchscreen'];
     client.state['touch_displays'] = [
@@ -138,7 +139,7 @@ void main() {
     ];
     await pump(tester, touchscreen(key: const ValueKey('connected')));
     expect(find.text('test-touchscreen'), findsOneWidget);
-    await tester.tap(find.byType(DropdownMenu<String>));
+    await tester.tap(find.byType(SettingsDropdown<String>));
     await tester.pumpAndSettle();
     await tester.tap(find.text('DP-1 (External display)').hitTestable());
     await tester.pumpAndSettle();

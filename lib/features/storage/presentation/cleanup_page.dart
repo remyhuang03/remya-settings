@@ -233,17 +233,12 @@ class _CleanupPageState extends State<CleanupPage> {
                 spacing: 16,
                 children: [
                   const Expanded(child: Text('Latest versions to keep')),
-                  SegmentedButton<int>(
-                    segments: const [
-                      ButtonSegment(value: 1, label: Text('1')),
-                      ButtonSegment(value: 2, label: Text('2')),
-                      ButtonSegment(value: 3, label: Text('3')),
-                    ],
-                    selected: {_keep},
-                    showSelectedIcon: false,
-                    onSelectionChanged: c.busy
+                  SettingsSegmentedButton<int>.choices(
+                    choices: const {1: '1', 2: '2', 3: '3'},
+                    selected: _keep,
+                    onSelected: c.busy
                         ? null
-                        : (v) => setState(() => _keep = v.single),
+                        : (v) => setState(() => _keep = v),
                   ),
                 ],
               ),
@@ -803,18 +798,15 @@ class _AutomaticCleanup extends StatelessWidget {
   ) => SettingRow(
     id: id,
     label: Text(label, style: Theme.of(context).textTheme.bodyLarge),
-    control: DropdownMenu<Object>(
+    control: SettingsChoice<Object>(
       key: ValueKey('$id-$value'),
+      label: label,
+      selected: value,
+      choices: options,
       width: 232,
-      initialSelection: value,
-      enabled: controller.policyWritable,
-      dropdownMenuEntries: [
-        for (final e in options.entries)
-          DropdownMenuEntry(value: e.key, label: e.value),
-      ],
-      onSelected: (v) {
-        if (v != null && v != value) controller.change(id, v);
-      },
+      onSelected: controller.policyWritable
+          ? (v) => controller.change(id, v)
+          : null,
     ),
   );
 

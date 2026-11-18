@@ -260,15 +260,15 @@ class _HotspotDialogState extends State<_HotspotDialog> {
             const SizedBox(height: 20),
             Text('Network band', style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 8),
-            SegmentedButton<String>(
-              segments: [
+            SettingsSegmentedButton<String>.choices(
+              expand: true,
+              choices: {
                 for (final band in ['auto', '2.4', '5'])
                   if (band == 'auto' || widget.bands.contains(band))
-                    ButtonSegment(value: band, label: Text(_bandLabel(band))),
-              ],
-              selected: {_band},
-              onSelectionChanged: (value) =>
-                  setState(() => _band = value.single),
+                    band: _bandLabel(band),
+              },
+              selected: _band,
+              onSelected: (value) => setState(() => _band = value),
             ),
             const SizedBox(height: 4),
             Text(

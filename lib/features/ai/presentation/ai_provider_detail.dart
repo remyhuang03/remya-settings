@@ -197,19 +197,17 @@ class _Connection extends StatelessWidget {
         SettingRow(
           id: 'ai-source',
           label: const _Field('Data source', 'Where CodexBar reads usage'),
-          control: DropdownMenu<String>(
-            initialSelection: modes.contains(row['source'])
+          control: SettingsChoice<String>(
+            label: 'Data source',
+            selected: modes.contains(row['source'])
                 ? row['source'] as String
                 : 'auto',
-            dropdownMenuEntries: [
+            choices: {
               for (final mode in modes)
-                DropdownMenuEntry(
-                  value: mode,
-                  label: aiSourceLabel(mode) ?? 'Automatic',
-                ),
-            ],
+                mode: aiSourceLabel(mode) ?? 'Automatic',
+            },
             onSelected: (mode) {
-              if (mode != null && mode != row['source']) {
+              if (mode != row['source']) {
                 onChanged(() => client.setAiProvider(id, source: mode));
               }
             },

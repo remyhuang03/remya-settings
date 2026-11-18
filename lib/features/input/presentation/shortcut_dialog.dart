@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_client/settings_contract.dart';
+import 'package:remya_ui/settings_ui.dart';
 
 import '../../settings/application/feature_options_controller.dart';
 import 'shortcut_model.dart';
@@ -276,16 +277,20 @@ class _ShortcutDialogState extends State<_ShortcutDialog> {
                     ),
                   ],
                 ),
-              DropdownMenu<String>(
-                key: const ValueKey('shortcut-action'),
-                label: const Text('Action'),
-                expandedInsets: .zero,
-                initialSelection: _action,
-                dropdownMenuEntries: [
-                  for (final MapEntry(:key, :value) in shortcutActions.entries)
-                    DropdownMenuEntry(value: key, label: value),
+              Column(
+                crossAxisAlignment: .start,
+                spacing: 6,
+                children: [
+                  Text('Action', style: text.bodySmall),
+                  SettingsDropdown<String>(
+                    key: const ValueKey('shortcut-action'),
+                    label: 'Action',
+                    fillWidth: true,
+                    selected: _action,
+                    choices: shortcutActions,
+                    onSelected: (next) => setState(() => _action = next),
+                  ),
                 ],
-                onSelected: (next) => setState(() => _action = next ?? _action),
               ),
               if (command)
                 TextField(

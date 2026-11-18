@@ -72,36 +72,19 @@ class _BluetoothPageState extends State<BluetoothPage> {
                   SettingRow(
                     id: 'bluetooth.adapter',
                     label: Text('Adapter', style: text.bodyLarge),
-                    control: SizedBox(
+                    control: SettingsDropdown<String>(
+                      key: ValueKey(adapter['id']),
+                      label: 'Adapter',
                       width: 280,
-                      child: DropdownButtonFormField<String>(
-                        key: ValueKey(adapter['id']),
-                        initialValue: adapter['id'] as String,
-                        decoration: const InputDecoration(
-                          isDense: true,
-                          border: OutlineInputBorder(
-                            borderRadius: .all(.circular(14)),
-                          ),
-                        ),
-                        isExpanded: true,
-                        items: [
-                          for (final a in controller.adapters)
-                            DropdownMenuItem(
-                              value: a['id'] as String,
-                              child: Text(
-                                '${a['name']} (${a['address']})',
-                                overflow: .ellipsis,
-                              ),
-                            ),
-                        ],
-                        onChanged:
-                            controller.busy ||
-                                adapter['hardware_blocked'] == true
-                            ? null
-                            : (id) {
-                                if (id != null) controller.selectAdapter(id);
-                              },
-                      ),
+                      selected: adapter['id'] as String,
+                      choices: {
+                        for (final a in controller.adapters)
+                          a['id'] as String: '${a['name']} (${a['address']})',
+                      },
+                      onSelected:
+                          controller.busy || adapter['hardware_blocked'] == true
+                          ? null
+                          : controller.selectAdapter,
                     ),
                   ),
                 SettingRow(

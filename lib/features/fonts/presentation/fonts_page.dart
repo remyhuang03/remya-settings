@@ -96,24 +96,21 @@ class _FontsPageState extends State<FontsPage> {
           Text(setting.reason, style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
-      control: DropdownMenu<String>(
+      control: SettingsDropdown<String>(
         key: ValueKey('${setting.id}-$value-${options.length}'),
+        label: setting.title,
         width: 260,
         menuHeight: 320,
-        enabled: enabled,
-        initialSelection: value != null && options.contains(value)
-            ? value
-            : null,
+        selected: value != null && options.contains(value) ? value : null,
         hintText: value ?? 'Unknown',
-        dropdownMenuEntries: [
-          for (final family in options)
-            DropdownMenuEntry(value: family, label: family),
-        ],
-        onSelected: (next) {
-          if (next != null && next != value) {
-            desktop?.set(fontsCompositorFamilySettingId, next);
-          }
-        },
+        choices: {for (final family in options) family: family},
+        onSelected: enabled
+            ? (next) {
+                if (next != value) {
+                  desktop.set(fontsCompositorFamilySettingId, next);
+                }
+              }
+            : null,
       ),
     );
   }

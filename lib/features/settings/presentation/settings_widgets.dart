@@ -265,24 +265,12 @@ class _PreviewControl extends StatelessWidget {
           onChanged: null,
         ),
       ),
-      .choice => SizedBox(
+      .choice => SettingsChoice<String>(
+        label: setting.title,
+        choices: {for (final option in setting.options) option: option},
+        selected: setting.value as String,
         width: 232,
-        child: DropdownButtonFormField<String>(
-          initialValue: setting.value as String,
-          isExpanded: true,
-          decoration: const InputDecoration(
-            isDense: true,
-            border: OutlineInputBorder(borderRadius: .all(.circular(14))),
-          ),
-          items: [
-            for (final option in setting.options)
-              DropdownMenuItem(
-                value: option,
-                child: Text(option, overflow: .ellipsis),
-              ),
-          ],
-          onChanged: null,
-        ),
+        onSelected: null,
       ),
       .action => FilledButton(
         onPressed: null,

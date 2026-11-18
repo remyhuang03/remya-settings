@@ -102,27 +102,26 @@ class _InstalledAppsPageState extends State<InstalledAppsPage> {
                   onChanged: (v) => setState(() => _query = v),
                 ),
               ),
-              DropdownMenu<String>(
+              SettingsDropdown<String>(
                 key: const ValueKey('installed.3bf3689a'),
                 width: 200,
-                label: const Text('Sort by'),
-                initialSelection: _sort,
+                label: 'Sort by',
                 leadingIcon: const Icon(Icons.sort_rounded),
-                dropdownMenuEntries: [
-                  for (final name in ['Name', 'Size', 'Installation date'])
-                    DropdownMenuEntry(value: name, label: name),
-                ],
-                onSelected: (v) {
-                  if (v != null) setState(() => _sort = v);
+                selected: _sort,
+                choices: const {
+                  'Name': 'Name',
+                  'Size': 'Size',
+                  'Installation date': 'Installation date',
                 },
+                onSelected: (v) => setState(() => _sort = v),
               ),
-              DropdownMenu<String>(
+              SettingsDropdown<String>(
                 key: const ValueKey('installed.765cf6c3'),
                 width: 200,
-                label: const Text('Source'),
-                initialSelection: _source,
+                label: 'Source',
                 leadingIcon: const Icon(Icons.filter_list_rounded),
-                dropdownMenuEntries: [
+                selected: _source,
+                choices: {
                   for (final name in [
                     'All sources',
                     ...controller.applications
@@ -131,14 +130,9 @@ class _InstalledAppsPageState extends State<InstalledAppsPage> {
                         .toList()
                       ..sort(),
                   ])
-                    DropdownMenuEntry(
-                      value: name,
-                      label: applicationSourceLabel(name),
-                    ),
-                ],
-                onSelected: (v) {
-                  if (v != null) setState(() => _source = v);
+                    name: applicationSourceLabel(name),
                 },
+                onSelected: (v) => setState(() => _source = v),
               ),
               IconButton(
                 tooltip: 'Refresh applications',

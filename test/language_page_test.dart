@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remya_settings/features/language/presentation/language_page.dart';
 import 'package:remya_client/settings_contract.dart';
+import 'package:remya_ui/settings_ui.dart';
 
 import 'input_test.dart' show catalog, pump;
 
@@ -181,7 +182,7 @@ void main() {
       await _pick(tester, 'fr()');
       expect(client.layouts.last, {'layout': 'fr', 'variant': ''});
 
-      await tester.tap(find.byType(DropdownMenu<int>));
+      await tester.tap(find.byType(SettingsDropdown<int>));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Alt+Shift').last);
       await tester.pumpAndSettle();
