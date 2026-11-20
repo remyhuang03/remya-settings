@@ -52,6 +52,8 @@
 - Inspect the installed release on the desktop to confirm the intended glyph renders. Passing analysis, widget tests, or a release build alone does not verify icon appearance.
 
 ## Validation
+- Run `python tool/check_source_length.py` as part of local validation. It warns for Rust and Dart source files over 800 physical lines, including comments and blank lines. Review every reported file against the single-responsibility principle and refactor files that mix responsibilities.
+- When a reviewed file should stay together, run `python tool/check_source_length.py add <path> --reason "<why it should stay together>"` and include the updated `tool/source_length_exceptions.json` in the change. The exception applies only to that file's recorded SHA-256. Changed files still over 800 lines require another review.
 - Run `fvm flutter pub get` after dependency changes. Use `fvm flutter run -d linux` for interactive verification and release builds when release behavior changes.
 - Keep durable tests only for non-trivial logic and regressions. Check trivial content (static text, catalog wording, one-off UI inspection) with temporary test files and delete them once they pass; avoid duplicate coverage.
 - A successful build does not verify desktop behavior. Check affected window behavior and interactions on the real desktop; report untested boundaries.
