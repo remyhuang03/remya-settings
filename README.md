@@ -82,6 +82,30 @@ fvm flutter run -d linux
 
 The repository pins Flutter in `.fvmrc` and Rust with rustfmt and Clippy in `rust-toolchain.toml`. See `AGENTS.md` for project rules and guidelines.
 
+### NixOS development
+
+Use sibling Settings and Core checkouts. Follow `../remya-core/docs/nixos-debug.md`
+to start Core and use the same XDG roots in a terminal in the guest's Hyprland
+session. From the Settings checkout, enter the Nix shell and run the debug GUI.
+
+```sh
+nix-shell -I nixpkgs=channel:nixos-unstable
+fvm install --no-setup --skip-pub-get
+fvm flutter precache --linux
+fvm flutter pub get --enforce-lockfile
+fvm flutter run -d linux
+```
+
+Open Home and confirm it loads the live Core catalog. Camera preview also
+needs a guest PipeWire session and a camera visible to the guest.
+
+If VMware's virtual GPU rejects the Wayland DMA-BUF, start the debug bundle with
+Mesa software rendering in the same shell.
+
+```sh
+LIBGL_ALWAYS_SOFTWARE=1 ./build/linux/x64/debug/bundle/remya_settings
+```
+
 ### Code Quality & Verification
 
 Choose checks for the actual change. Keep focused tests for non-trivial logic and regressions, and check affected interactions on the real desktop. Validate changes with analysis, tests and a release build. Install only when authorized; see `AGENTS.md`.
