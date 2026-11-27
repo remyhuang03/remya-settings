@@ -23,6 +23,8 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
   ui.Image? _image;
   String? _previewError;
   bool _playing = false;
+  // Slider readouts while dragging or waiting for readback, by control key.
+  final _readouts = <String, double>{};
   int _generation = 0;
   CameraController get controller => widget.controller;
   Map? get selected =>
@@ -139,18 +141,69 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
           ),
         ),
         const SizedBox(height: 12),
-        FilledButton.tonalIcon(
+        SettingsButton(
           onPressed: _playing
               ? _stop
               : (controller.available && selected != null ? _start : null),
           icon: Icon(_playing ? Icons.stop_rounded : Icons.videocam_outlined),
-          label: Text(_playing ? 'Stop preview' : 'Start preview'),
+          label: _playing ? 'Stop preview' : 'Start preview',
         ),
         if (_previewError != null)
           Padding(padding: const .only(top: 12), child: Text(_previewError!)),
       ],
     ),
   );
+  Widget _slider({
+    required String key,
+    required String label,
+    required IconData icon,
+    required Map control,
+    required bool enabled,
+    required Future<void> Function(double) change,
+  }) {
+    final min = (control['min'] as num).toDouble(),
+        max = (control['max'] as num).toDouble(),
+        step = (control['step'] as num).toDouble();
+    final value = (control['value'] as num).toDouble();
+    String format(double v) => v.toStringAsFixed(step >= 1 ? 0 : 2);
+    return Padding(
+      key: ValueKey(key),
+      padding: const .only(bottom: 16),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(icon),
+              const SizedBox(width: 12),
+              Expanded(child: Text(label)),
+              Text(format(_readouts[key] ?? value)),
+            ],
+          ),
+          SettingsSlider(
+            value: value,
+            min: min,
+            max: max,
+            divisions: step > 0 && (max - min) / step <= 10000
+                ? ((max - min) / step).round()
+                : null,
+            label: format,
+            onPreview: (v) => setState(
+              () => v == null ? _readouts.remove(key) : _readouts[key] = v,
+            ),
+            onChanged: enabled
+                ? (v) async {
+                    // Keep the readout on the released value until it reads back.
+                    setState(() => _readouts[key] = v);
+                    await change(v);
+                    if (mounted) setState(() => _readouts.remove(key));
+                  }
+                : null,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _controls(Map camera) {
     final controls = camera['controls'] as Map;
     final enabled =
@@ -168,8 +221,8 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
             'sharpness': ('Sharpness', Icons.details_outlined),
           }.entries)
             if (controls[entry.key] case final Map control)
-              _CameraSlider(
-                key: ValueKey('${camera['serial']}-${entry.key}'),
+              _slider(
+                key: '${camera['serial']}-${entry.key}',
                 label: entry.value.$1,
                 icon: entry.value.$2,
                 control: control,
@@ -180,10 +233,10 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
           if (controls.isEmpty)
             const Text('This camera has no supported image adjustments.'),
           if (controls.values.any((c) => (c as Map)['writable'] == true))
-            OutlinedButton.icon(
+            SettingsButton(
               onPressed: enabled ? () => controller.set(camera, 'reset') : null,
               icon: const Icon(Icons.restore_rounded),
-              label: const Text('Reset camera settings'),
+              label: 'Reset camera settings',
             ),
         ],
       ),
@@ -233,17 +286,17 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
                 Wrap(
                   spacing: 12,
                   children: [
-                    TextButton(
+                    SettingsButton(
                       onPressed: controller.busy
                           ? null
                           : () => controller.reconcile(camera, 'system'),
-                      child: const Text('Use system configuration'),
+                      label: 'Use system configuration',
                     ),
-                    TextButton(
+                    SettingsButton(
                       onPressed: controller.busy
                           ? null
                           : () => controller.reconcile(camera, 'settings'),
-                      child: const Text('Apply Settings configuration'),
+                      label: 'Apply Settings configuration',
                     ),
                   ],
                 ),
@@ -321,67 +374,6 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
           ),
         ],
       ],
-    );
-  }
-}
-
-class _CameraSlider extends StatefulWidget {
-  const _CameraSlider({
-    super.key,
-    required this.label,
-    required this.icon,
-    required this.control,
-    required this.enabled,
-    required this.change,
-  });
-  final String label;
-  final IconData icon;
-  final Map control;
-  final bool enabled;
-  final Future<void> Function(double) change;
-  @override
-  State<_CameraSlider> createState() => _CameraSliderState();
-}
-
-class _CameraSliderState extends State<_CameraSlider> {
-  double? _drag;
-  @override
-  Widget build(BuildContext context) {
-    final min = (widget.control['min'] as num).toDouble(),
-        max = (widget.control['max'] as num).toDouble(),
-        step = (widget.control['step'] as num).toDouble();
-    final value = _drag ?? (widget.control['value'] as num).toDouble();
-    return Padding(
-      padding: const .only(bottom: 16),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Icon(widget.icon),
-              const SizedBox(width: 12),
-              Expanded(child: Text(widget.label)),
-              Text(value.toStringAsFixed(step >= 1 ? 0 : 2)),
-            ],
-          ),
-          Slider(
-            value: value.clamp(min, max),
-            min: min,
-            max: max,
-            divisions: step > 0 && (max - min) / step <= 10000
-                ? ((max - min) / step).round()
-                : null,
-            label: '$value',
-            onChanged: widget.enabled ? (v) => setState(() => _drag = v) : null,
-            onChangeEnd: widget.enabled
-                ? (v) async {
-                    setState(() => _drag = v);
-                    await widget.change(v);
-                    if (mounted) setState(() => _drag = null);
-                  }
-                : null,
-          ),
-        ],
-      ),
     );
   }
 }

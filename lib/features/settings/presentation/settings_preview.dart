@@ -114,8 +114,8 @@ class _DisplayPreview extends StatelessWidget {
             runSpacing: 8,
             alignment: .center,
             children: [
-              OutlinedButton(onPressed: null, child: Text('Identify')),
-              OutlinedButton(onPressed: null, child: Text('Detect')),
+              SettingsButton(label: 'Identify', onPressed: null),
+              SettingsButton(label: 'Detect', onPressed: null),
               Text(
                 'Displays have not been detected; arrangement is not draggable',
               ),

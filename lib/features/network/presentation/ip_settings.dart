@@ -39,10 +39,10 @@ List<Widget> addressRows({
             Text(value, style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
-        control: FilledButton.tonalIcon(
+        control: SettingsButton(
           onPressed: editable ? () => edit(id, dialog) : null,
           icon: const Icon(Icons.edit_outlined),
-          label: const Text('Edit'),
+          label: 'Edit',
         ),
       );
   return [
@@ -363,11 +363,11 @@ class _DnsDialogState extends State<_DnsDialog> {
               ),
             Align(
               alignment: .centerLeft,
-              child: TextButton.icon(
+              child: SettingsButton(
                 onPressed: () =>
                     setState(() => _servers.add(TextEditingController())),
                 icon: const Icon(Icons.add_rounded),
-                label: const Text('Add server'),
+                label: 'Add server',
               ),
             ),
             if (widget.tls) ...[

@@ -236,23 +236,23 @@ class _PrinterCard extends StatelessWidget {
               runSpacing: 8,
               children: [
                 if (!isDefault)
-                  TextButton.icon(
+                  SettingsButton(
                     onPressed: enabled
                         ? () => onSet(defaultPrinterId, {'name': name})
                         : null,
                     icon: const Icon(Icons.star_outline_rounded),
-                    label: const Text('Set as default'),
+                    label: 'Set as default',
                   ),
-                TextButton.icon(
+                SettingsButton(
                   onPressed: enabled
                       ? () => onSet(printTestPageId, {
                           'name': name,
                         }, done: 'Test page sent to $name')
                       : null,
                   icon: const Icon(Icons.description_outlined),
-                  label: const Text('Print test page'),
+                  label: 'Print test page',
                 ),
-                TextButton.icon(
+                SettingsButton(
                   onPressed: enabled
                       ? () => onSet(pausePrinterId, {
                           'name': name,
@@ -262,15 +262,13 @@ class _PrinterCard extends StatelessWidget {
                   icon: Icon(
                     paused ? Icons.play_arrow_rounded : Icons.pause_rounded,
                   ),
-                  label: Text(paused ? 'Resume' : 'Pause'),
+                  label: paused ? 'Resume' : 'Pause',
                 ),
-                TextButton.icon(
-                  style: TextButton.styleFrom(
-                    foregroundColor: Theme.of(context).colorScheme.error,
-                  ),
+                SettingsButton(
+                  variant: .destructive,
                   onPressed: enabled ? () => onRemove(name) : null,
                   icon: const Icon(Icons.delete_outline_rounded),
-                  label: const Text('Remove'),
+                  label: 'Remove',
                 ),
               ],
             ),
@@ -301,13 +299,13 @@ class _PrinterCard extends StatelessWidget {
                           'Size: ${(size / 1024).ceil()} KB',
                       ].join('\n'),
                     ),
-                    trailing: TextButton(
+                    trailing: SettingsButton(
                       onPressed: enabled
                           ? () => onSet(cancelPrintJobId, {
                               'id': job['id'] as String,
                             })
                           : null,
-                      child: const Text('Cancel'),
+                      label: 'Cancel',
                     ),
                   ),
               ],

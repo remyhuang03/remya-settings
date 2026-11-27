@@ -102,10 +102,12 @@ void main() {
     final slider = tester.widget<Slider>(find.byType(Slider));
     slider.onChanged!(6);
     await tester.pump();
+    expect(find.text('6'), findsOneWidget);
     tester.widget<Slider>(find.byType(Slider)).onChangeEnd!(6);
     await tester.pump();
     expect(c.busy, isTrue);
     expect(tester.widget<Slider>(find.byType(Slider)).value, 6);
+    expect(find.text('6'), findsOneWidget);
     (state['devices'] as List).first['controls']['brightness']['value'] = 6;
     pending.complete(state);
     await tester.pump();

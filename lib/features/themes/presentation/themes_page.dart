@@ -134,11 +134,11 @@ class _ApplySystemTheme extends StatelessWidget {
               ? setting.reason
               : '${setting.reason}\nCurrent system mode: $mode',
         ),
-        control: FilledButton.tonal(
+        control: SettingsButton(
           onPressed: appearance.canApplyToSystem
               ? appearance.applyToSystem
               : null,
-          child: Text(setting.value as String),
+          label: setting.value as String,
         ),
       );
     },

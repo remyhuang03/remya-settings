@@ -224,13 +224,13 @@ class _Connection extends StatelessWidget {
             spacing: 8,
             children: [
               if (credential['configured'] == true && !custom)
-                TextButton(
-                  style: destructiveTextButtonStyle(context),
+                SettingsButton(
+                  variant: .destructive,
                   onPressed: () =>
                       onChanged(() => client.setAiCredential(id, clear: true)),
-                  child: const Text('Remove'),
+                  label: 'Remove',
                 ),
-              FilledButton.tonal(
+              SettingsButton(
                 onPressed: () async {
                   final value = await _askSecret(context, secret);
                   if (value == null) return;
@@ -242,11 +242,9 @@ class _Connection extends StatelessWidget {
                     ),
                   );
                 },
-                child: Text(
-                  credential['configured'] == true || custom
-                      ? 'Replace'
-                      : 'Add',
-                ),
+                label: credential['configured'] == true || custom
+                    ? 'Replace'
+                    : 'Add',
               ),
             ],
           ),
@@ -271,14 +269,14 @@ class _Connection extends StatelessWidget {
             'Remove endpoint',
             'Deletes its settings and saved API key',
           ),
-          control: TextButton(
-            style: destructiveTextButtonStyle(context),
+          control: SettingsButton(
+            variant: .destructive,
             onPressed: () async {
               if (await _confirmRemove(context, '${row['name']}')) {
                 await onChanged(() => client.removeAiCustomProvider(id));
               }
             },
-            child: const Text('Remove'),
+            label: 'Remove',
           ),
         ),
     ]);

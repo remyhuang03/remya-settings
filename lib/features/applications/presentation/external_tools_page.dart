@@ -97,12 +97,12 @@ class _ExternalToolsPageState extends State<ExternalToolsPage> {
                 ),
                 control: tool['launch_error'] != null
                     ? null
-                    : FilledButton.tonalIcon(
+                    : SettingsButton(
                         onPressed: _busy
                             ? null
                             : () => _open(tool['id'] as String),
                         icon: const Icon(Icons.open_in_new_rounded),
-                        label: const Text('Open'),
+                        label: 'Open',
                       ),
               ),
           ]),

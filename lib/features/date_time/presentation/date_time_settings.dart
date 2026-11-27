@@ -95,7 +95,7 @@ class DateTimeSettingControl extends StatelessWidget {
       case syncNowSettingId:
         return _SyncNowButton(controller: controller);
     }
-    return FilledButton.icon(
+    return SettingsButton(
       key: ValueKey('control-$id'),
       onPressed: controller.hideManualTime
           ? null
@@ -107,7 +107,7 @@ class DateTimeSettingControl extends StatelessWidget {
               );
             },
       icon: const Icon(Icons.edit_calendar_rounded),
-      label: const Text('Set date and time'),
+      label: 'Set date and time',
     );
   }
 }
@@ -207,11 +207,11 @@ class _DateTimeChoiceState extends State<_DateTimeChoice> {
   }
 
   @override
-  Widget build(BuildContext context) => FilledButton.icon(
+  Widget build(BuildContext context) => SettingsButton(
     key: const ValueKey('timezone-combobox'),
     onPressed: widget.controller.isBusy ? null : _chooseTimezone,
     icon: const Icon(Icons.expand_more_rounded),
-    label: Text(widget.controller.timezoneLabels[_value]!),
+    label: widget.controller.timezoneLabels[_value]!,
   );
 }
 
@@ -431,7 +431,7 @@ class _ManualTimeDialogState extends State<_ManualTimeDialog> {
             'Applying a manual time turns off automatic time synchronization. System authorization may be required.',
           ),
           const SizedBox(height: 16),
-          OutlinedButton.icon(
+          SettingsButton(
             key: const ValueKey('manual-date'),
             onPressed: _busy
                 ? null
@@ -445,10 +445,10 @@ class _ManualTimeDialogState extends State<_ManualTimeDialog> {
                     if (value != null && mounted) setState(() => _date = value);
                   },
             icon: const Icon(Icons.calendar_today_outlined),
-            label: Text(_date.toIso8601String().substring(0, 10)),
+            label: _date.toIso8601String().substring(0, 10),
           ),
           const SizedBox(height: 8),
-          OutlinedButton.icon(
+          SettingsButton(
             key: const ValueKey('manual-time'),
             onPressed: _busy
                 ? null
@@ -459,8 +459,8 @@ class _ManualTimeDialogState extends State<_ManualTimeDialog> {
                     );
                     if (value != null && mounted) setState(() => _time = value);
                   },
-            icon: const Icon(Icons.schedule),
-            label: Text(_time.format(context)),
+            icon: const Icon(Icons.schedule_rounded),
+            label: _time.format(context),
           ),
           if (_busy)
             const Padding(

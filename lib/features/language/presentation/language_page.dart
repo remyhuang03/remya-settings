@@ -213,13 +213,13 @@ class _LanguagePageState extends State<LanguagePage> {
                 ),
             ],
           ),
-          control: FilledButton.tonalIcon(
+          control: SettingsButton(
             key: ValueKey('${setting.id}-choose'),
             onPressed: _language.canChange && _locales.isNotEmpty
                 ? () => _chooseLocale(setting)
                 : null,
             icon: const Icon(Icons.expand_more_rounded),
-            label: Text(shown, overflow: .ellipsis),
+            label: shown,
           ),
         ),
         if (format && _preview != null)
@@ -344,12 +344,12 @@ class _LanguagePageState extends State<LanguagePage> {
             ),
           Align(
             alignment: .centerLeft,
-            child: OutlinedButton.icon(
+            child: SettingsButton(
               key: const ValueKey('add-keyboard-layout'),
               // XKB keymaps hold at most four layouts.
               onPressed: enabled && current.length < 4 ? _addLayout : null,
               icon: const Icon(Icons.add_rounded),
-              label: Text(setting.value as String),
+              label: setting.value as String,
             ),
           ),
         ],

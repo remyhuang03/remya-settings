@@ -124,7 +124,7 @@ class _StartupPageState extends State<StartupPage> {
             ),
           SettingsSectionTitle(
             'Added by you',
-            trailing: FilledButton.tonalIcon(
+            trailing: TextButton.icon(
               onPressed: controller.canChange ? _addApp : null,
               icon: const Icon(Icons.add_rounded),
               label: const Text('Add an app'),
@@ -154,7 +154,7 @@ class _StartupPageState extends State<StartupPage> {
                   ),
                 ],
               ),
-              control: FilledButton.tonalIcon(
+              control: SettingsButton(
                 onPressed: controller.canChange
                     ? () => showDialog<void>(
                         context: context,
@@ -163,7 +163,7 @@ class _StartupPageState extends State<StartupPage> {
                       )
                     : null,
                 icon: const Icon(Icons.terminal_rounded),
-                label: const Text('Add command'),
+                label: 'Add command',
               ),
             ),
           ),
@@ -395,17 +395,17 @@ class _Conflict extends StatelessWidget {
         Wrap(
           spacing: 8,
           children: [
-            TextButton(
+            SettingsButton(
               onPressed: controller.canResolve
                   ? controller.useSystemConfiguration
                   : null,
-              child: const Text('Use system configuration'),
+              label: 'Use system configuration',
             ),
-            TextButton(
+            SettingsButton(
               onPressed: controller.canResolve
                   ? controller.applySavedConfiguration
                   : null,
-              child: const Text('Apply Settings configuration'),
+              label: 'Apply Settings configuration',
             ),
           ],
         ),

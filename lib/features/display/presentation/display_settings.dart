@@ -476,15 +476,26 @@ class DisplaySettingRow extends StatelessWidget {
               controller.change(setting.id, output.name, value),
         );
       case displayBrightnessId:
-        return _BrightnessSlider(
+        final percent = controller.brightness[output.name]?.percent;
+        void write(double value) =>
+            controller.setBrightness(output.name, value.round());
+        return SizedBox(
           key: ValueKey(
             'display-brightness-${output.name}-${controller.revision}',
           ),
-          percent: controller.brightness[output.name]?.percent,
-          isBusy: controller.isBusy,
-          onChanged: output.disabled
-              ? null
-              : (value) => controller.setBrightness(output.name, value),
+          width: 232,
+          child: SettingsSlider(
+            key: const ValueKey('display-control-$displayBrightnessId'),
+            value: (percent ?? 0).toDouble(),
+            max: 100,
+            divisions: 100,
+            label: (value) => '${value.round()}%',
+            // Brightness follows the drag; the controller coalesces writes.
+            onPreview: (value) {
+              if (value != null) write(value);
+            },
+            onChanged: percent == null || output.disabled ? null : write,
+          ),
         );
       case displayColorId:
         final cm = values['cm'] ?? 'srgb';
@@ -895,51 +906,6 @@ class _DisplayTextFieldState extends State<DisplayTextField> {
       onSubmitted: (_) => _commit(),
     ),
   );
-}
-
-class _BrightnessSlider extends StatefulWidget {
-  const _BrightnessSlider({
-    super.key,
-    required this.percent,
-    required this.isBusy,
-    required this.onChanged,
-  });
-  final int? percent;
-  final bool isBusy;
-  final ValueChanged<int>? onChanged;
-  @override
-  State<_BrightnessSlider> createState() => _BrightnessSliderState();
-}
-
-class _BrightnessSliderState extends State<_BrightnessSlider> {
-  double? _dragging;
-
-  @override
-  void didUpdateWidget(covariant _BrightnessSlider oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (!widget.isBusy) _dragging = null;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final percent = widget.percent;
-    return SizedBox(
-      width: 232,
-      child: Slider(
-        key: const ValueKey('display-control-$displayBrightnessId'),
-        value: _dragging ?? (percent ?? 0).toDouble(),
-        max: 100,
-        divisions: 100,
-        label: '${(_dragging ?? percent ?? 0).round()}%',
-        onChanged: percent == null || widget.onChanged == null
-            ? null
-            : (value) {
-                setState(() => _dragging = value);
-                widget.onChanged!(value.round());
-              },
-      ),
-    );
-  }
 }
 
 /// Shows the keep-or-revert countdown wherever the user is in the app.

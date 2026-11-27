@@ -170,7 +170,7 @@ class VpnPage extends StatelessWidget {
         ),
         SettingsSectionTitle(
           'VPN connections',
-          trailing: FilledButton.icon(
+          trailing: TextButton.icon(
             key: const ValueKey(vpnImportSettingId),
             onPressed:
                 controller.isBusy ||

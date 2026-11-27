@@ -124,11 +124,12 @@ class _WindowRulesPageState extends State<WindowRulesPage> {
               ),
             ],
           ),
-          control: FilledButton.icon(
+          control: SettingsButton(
             key: const ValueKey('window-rule-add'),
+            variant: .filled,
             onPressed: canChange ? _edit : null,
             icon: const Icon(Icons.add_rounded),
-            label: const Text('Add'),
+            label: 'Add',
           ),
         ),
         for (final rule in rules)

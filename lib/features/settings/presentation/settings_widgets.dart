@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:remya_ui/settings_ui.dart';
 
 import '../domain/settings_catalog.dart';
+import 'color_button.dart';
 import '../../date_time/application/date_time_controller.dart';
 import '../../date_time/presentation/date_time_settings.dart';
 import '../../display/application/display_controller.dart';
@@ -258,7 +259,7 @@ class _PreviewControl extends StatelessWidget {
       .toggle => Switch(value: setting.value as bool, onChanged: null),
       .slider => SizedBox(
         width: 220,
-        child: Slider(
+        child: SettingsSlider(
           value: (setting.value as num).toDouble(),
           min: setting.min,
           max: setting.max,
@@ -272,9 +273,9 @@ class _PreviewControl extends StatelessWidget {
         width: 232,
         onSelected: null,
       ),
-      .action => FilledButton(
+      .action => SettingsButton(
+        label: setting.value as String,
         onPressed: null,
-        child: Text(setting.value as String),
       ),
       .text => SizedBox(
         width: 232,
@@ -288,22 +289,10 @@ class _PreviewControl extends StatelessWidget {
         ),
       ),
       .info => const SizedBox.shrink(),
-      .color => FilledButton.icon(
-        onPressed: null,
-        icon: Container(
-          width: 20,
-          height: 20,
-          decoration: BoxDecoration(
-            color: Color(
-              int.parse(
-                (setting.value as String).replaceFirst('#', 'FF'),
-                radix: 16,
-              ),
-            ),
-            shape: .circle,
-          ),
-        ),
-        label: Text('Sample ${setting.value}'),
+      .color => ColorButton(
+        color: setting.value as String,
+        title: setting.title,
+        onChanged: null,
       ),
     };
   }

@@ -437,17 +437,17 @@ class _PowerConflict extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                TextButton(
+                SettingsButton(
                   onPressed: onResolve == null
                       ? null
                       : () => onResolve!('system'),
-                  child: const Text('Use system configuration'),
+                  label: 'Use system configuration',
                 ),
-                FilledButton.tonal(
+                SettingsButton(
                   onPressed: onResolve == null
                       ? null
                       : () => onResolve!('settings'),
-                  child: const Text('Apply Settings configuration'),
+                  label: 'Apply Settings configuration',
                 ),
               ],
             ),

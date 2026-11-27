@@ -92,11 +92,12 @@ class _EnvironmentPageState extends State<EnvironmentPage> {
               ),
             ],
           ),
-          control: FilledButton.icon(
+          control: SettingsButton(
             key: const ValueKey('environment-add'),
+            variant: .filled,
             onPressed: canChange ? _edit : null,
             icon: const Icon(Icons.add_rounded),
-            label: const Text('Add'),
+            label: 'Add',
           ),
         ),
         for (final v in variables)

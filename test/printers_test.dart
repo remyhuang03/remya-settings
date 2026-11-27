@@ -66,7 +66,12 @@ void main() {
       client.reject = true;
       await tester.tap(find.text('Remove'));
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(FilledButton, 'Remove'));
+      await tester.tap(
+        find.descendant(
+          of: find.byType(AlertDialog),
+          matching: find.widgetWithText(FilledButton, 'Remove'),
+        ),
+      );
       await tester.pumpAndSettle();
       expect(client.calls.last.sublist(0, 2), ['Get', 'printers']);
       expect(client.calls.where((c) => c.first == 'Set').single, [

@@ -348,7 +348,10 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    final zone = find.byKey(const ValueKey('timezone-combobox'));
+    final zone = find.descendant(
+      of: find.byKey(const ValueKey('timezone-combobox')),
+      matching: find.byType(FilledButton),
+    );
     final zoneState = tester.state(zone);
     await tester.tap(zone);
     await tester.pumpAndSettle();

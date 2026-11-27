@@ -73,19 +73,13 @@ class _Adapter extends StatelessWidget {
       '{"interface":"$_interface","value":${!connected}}',
     );
     final enabled = !controller.isBusy && controller.allowed('network-control');
-    return connected
-        ? FilledButton.tonalIcon(
-            key: const ValueKey(ethernetConnectSettingId),
-            onPressed: enabled ? toggle : null,
-            icon: const Icon(Icons.link_off_rounded),
-            label: const Text('Disconnect'),
-          )
-        : FilledButton.icon(
-            key: const ValueKey(ethernetConnectSettingId),
-            onPressed: enabled ? toggle : null,
-            icon: const Icon(Icons.link_rounded),
-            label: const Text('Connect'),
-          );
+    return SettingsButton(
+      key: const ValueKey(ethernetConnectSettingId),
+      variant: connected ? .destructive : .filled,
+      onPressed: enabled ? toggle : null,
+      icon: Icon(connected ? Icons.link_off_rounded : Icons.link_rounded),
+      label: connected ? 'Disconnect' : 'Connect',
+    );
   }
 
   @override

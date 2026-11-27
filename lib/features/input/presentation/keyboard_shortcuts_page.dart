@@ -108,12 +108,12 @@ class _KeyboardShortcutsPageState extends State<KeyboardShortcutsPage> {
                 else
                   for (final s in onKey) Text(s.title, style: text.bodyMedium),
                 if (onKey.isEmpty)
-                  FilledButton.tonalIcon(
+                  SettingsButton(
                     onPressed: _controller.canChange
                         ? () => _edit(keys: selectedKeys)
                         : null,
                     icon: const Icon(Icons.add_rounded),
-                    label: const Text('Add a shortcut here'),
+                    label: 'Add a shortcut here',
                   ),
               ],
             ),
@@ -144,11 +144,12 @@ class _KeyboardShortcutsPageState extends State<KeyboardShortcutsPage> {
               ),
             ],
           ),
-          control: FilledButton.icon(
+          control: SettingsButton(
             key: const ValueKey('shortcut-add'),
+            variant: .filled,
             onPressed: _controller.canChange ? _edit : null,
             icon: const Icon(Icons.add_rounded),
-            label: const Text('Add'),
+            label: 'Add',
           ),
         ),
         for (final c in custom)
@@ -209,14 +210,14 @@ class _KeyboardShortcutsPageState extends State<KeyboardShortcutsPage> {
             modifiers: (d['modifiers'] as List).cast(),
             label: d['label'] as String? ?? '',
             actions: [
-              TextButton(
+              SettingsButton(
                 onPressed: _controller.canChange
                     ? () => _controller.set(disableShortcutId, {
                         'keys': d['keys'],
                         'disabled': false,
                       })
                     : null,
-                child: const Text('Restore'),
+                label: 'Restore',
               ),
             ],
           ),

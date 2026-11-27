@@ -188,7 +188,10 @@ void main() {
 
     // The slider moves between the theme's own sizes.
     final slider = tester.widget<Slider>(
-      find.byKey(const ValueKey('cursor.size-slider')),
+      find.descendant(
+        of: find.byKey(const ValueKey('cursor.size-slider')),
+        matching: find.byType(Slider),
+      ),
     );
     expect(slider.divisions, 2);
     slider.onChangeEnd!(2);

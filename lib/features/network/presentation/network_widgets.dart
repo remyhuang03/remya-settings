@@ -87,10 +87,7 @@ class NetworkUnavailable extends StatelessWidget {
           controller.errorMessage ?? 'Settings needs the NetworkManager service to read and change network connections.',
         ),
         const SizedBox(height: 16),
-        FilledButton.tonal(
-          onPressed: controller.reload,
-          child: const Text('Try again'),
-        ),
+        SettingsButton(onPressed: controller.reload, label: 'Try again'),
       ],
     ),
   );
@@ -267,9 +264,10 @@ class NetworkFailureBanner extends StatelessWidget {
             style: TextStyle(color: colors.onErrorContainer),
           ),
           control: failure['needs_password'] == true
-              ? FilledButton(
+              ? SettingsButton(
+                  variant: .filled,
                   onPressed: () => _retry(context, failure),
-                  child: const Text('Enter password'),
+                  label: 'Enter password',
                 )
               : null,
         ),

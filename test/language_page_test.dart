@@ -220,7 +220,7 @@ void main() {
       find.textContaining('system de_DE.UTF-8, Settings en_US.UTF-8'),
       findsOneWidget,
     );
-    final choose = tester.widget<ButtonStyleButton>(
+    final choose = tester.widget<SettingsButton>(
       find.byKey(const ValueKey('language.display-choose')),
     );
     expect(choose.onPressed, isNull);

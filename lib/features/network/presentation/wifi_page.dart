@@ -125,13 +125,14 @@ class _WifiPageState extends State<WifiPage> {
       icon: signalIcon(signal),
       title: network['ssid'] as String,
       status: 'Connected',
-      action: FilledButton.icon(
+      action: SettingsButton(
         key: const ValueKey(wifiDisconnectSettingId),
+        variant: .destructive,
         onPressed: _controller.isBusy || !_controller.allowed('network-control')
             ? null
             : () => _controller.set(wifiDisconnectSettingId, 'disconnect'),
         icon: const Icon(Icons.link_off_rounded),
-        label: const Text('Disconnect'),
+        label: 'Disconnect',
       ),
       children: [
         NetworkFacts([
@@ -183,7 +184,8 @@ class _WifiPageState extends State<WifiPage> {
           ),
         ],
       ),
-      control: FilledButton.icon(
+      control: SettingsButton(
+        variant: .filled,
         icon: const Icon(Icons.wifi_rounded),
         onPressed:
             _controller.isBusy ||
@@ -192,7 +194,7 @@ class _WifiPageState extends State<WifiPage> {
                 !_controller.allowed('network-control')
             ? null
             : () => _connect(network),
-        label: Text(connecting ? 'Connecting' : 'Connect'),
+        label: connecting ? 'Connecting' : 'Connect',
       ),
     );
   }

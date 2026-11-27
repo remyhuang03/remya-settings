@@ -59,7 +59,10 @@ void main() {
     await pump(tester, _page(client));
     final base = _sampleSize(tester);
     final slider = tester.widget<Slider>(
-      find.byKey(const ValueKey('$textScaleId-slider')),
+      find.descendant(
+        of: find.byKey(const ValueKey('$textScaleId-slider')),
+        matching: find.byType(Slider),
+      ),
     );
     expect(slider.divisions, 50);
     slider.onChanged!(1.5);
@@ -78,7 +81,10 @@ void main() {
     await pump(tester, _page(_Client(_state(1.25, 2))));
     expect(find.text('Text size: system 200%, Settings 125%'), findsOneWidget);
     final slider = tester.widget<Slider>(
-      find.byKey(const ValueKey('$textScaleId-slider')),
+      find.descendant(
+        of: find.byKey(const ValueKey('$textScaleId-slider')),
+        matching: find.byType(Slider),
+      ),
     );
     expect(slider.onChanged, isNull);
   });

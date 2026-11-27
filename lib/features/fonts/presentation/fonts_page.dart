@@ -172,11 +172,12 @@ class _FontsPageState extends State<FontsPage> {
                 ),
                 Tooltip(
                   message: _setting(fontsInstallSettingId).reason,
-                  child: FilledButton.icon(
+                  child: SettingsButton(
                     key: const ValueKey('fonts-install'),
+                    variant: .filled,
                     onPressed: controller.isBusy ? null : _install,
                     icon: const Icon(Icons.add_rounded),
-                    label: const Text('Install fonts'),
+                    label: 'Install fonts',
                   ),
                 ),
               ],

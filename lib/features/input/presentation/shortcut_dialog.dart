@@ -221,14 +221,12 @@ class _ShortcutDialogState extends State<_ShortcutDialog> {
               color: _recording ? colors.primary : colors.onSurfaceVariant,
             ),
             Expanded(child: Semantics(liveRegion: true, child: content)),
-            FilledButton.tonal(
+            SettingsButton(
               key: const ValueKey('shortcut-record'),
               onPressed: () => _setRecording(!_recording),
-              child: Text(
-                _recording
-                    ? 'Stop'
-                    : (_lookup == null ? 'Record' : 'Record again'),
-              ),
+              label: _recording
+                  ? 'Stop'
+                  : (_lookup == null ? 'Record' : 'Record again'),
             ),
           ],
         ),

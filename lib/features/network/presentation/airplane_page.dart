@@ -101,14 +101,14 @@ class _AirplanePageState extends State<AirplanePage> {
         const SizedBox(height: 12),
         Align(
           alignment: .centerLeft,
-          child: TextButton(
+          child: SettingsButton(
             onPressed: _busy
                 ? null
                 : () async {
                     setState(() => _error = null);
                     await _reload();
                   },
-            child: const Text('Refresh'),
+            label: 'Refresh',
           ),
         ),
       ],

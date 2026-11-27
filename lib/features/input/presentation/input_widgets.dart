@@ -378,32 +378,29 @@ class InputRows {
       // A gap with different sides shows them; moving the slider evens them out.
       final sides = value is List ? value : null;
       final numeric = sides == null ? value as num? : sides.first as num?;
-      final current = dragging[setting.id] ?? (numeric ?? shape.min).toDouble();
-      final shown = current.clamp(shape.min, shape.max).toDouble();
+      final saved = (numeric ?? shape.min).toDouble();
+      final current = dragging[setting.id] ?? saved;
       final integer = value is int || sides != null;
       subtitle ??= sides != null && !dragging.containsKey(setting.id)
           ? '${_sides(sides)}. Moving the slider sets every side.'
           : shape.text(current);
       control = SizedBox(
         width: 260,
-        child: Slider(
+        child: SettingsSlider(
           key: ValueKey('${setting.id}-slider'),
-          value: shown,
+          value: saved,
           min: shape.min,
           max: shape.max,
           divisions: ((shape.max - shape.min) / shape.step).round(),
-          label: shape.text(shown),
-          onChanged: enabled ? (next) => onDrag(setting.id, next) : null,
-          onChangeEnd: enabled
-              ? (next) {
-                  onDrag(setting.id, null);
-                  controller.set(
-                    setting.id,
-                    integer
-                        ? next.round()
-                        : double.parse(next.toStringAsFixed(3)),
-                  );
-                }
+          label: shape.text,
+          onPreview: (next) => onDrag(setting.id, next),
+          onChanged: enabled
+              ? (next) => controller.set(
+                  setting.id,
+                  integer
+                      ? next.round()
+                      : double.parse(next.toStringAsFixed(3)),
+                )
               : null,
         ),
       );
@@ -569,13 +566,13 @@ class InputConflictCard extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                TextButton(
+                SettingsButton(
                   onPressed: busy ? null : () => controller.resolve('system'),
-                  child: const Text('Use system configuration'),
+                  label: 'Use system configuration',
                 ),
-                FilledButton.tonal(
+                SettingsButton(
                   onPressed: busy ? null : () => controller.resolve('settings'),
-                  child: const Text('Apply Settings configuration'),
+                  label: 'Apply Settings configuration',
                 ),
               ],
             ),

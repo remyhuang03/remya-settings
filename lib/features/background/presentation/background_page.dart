@@ -266,11 +266,11 @@ class _BackgroundPageState extends State<BackgroundPage> {
         _Row(
           setting: _setting(backgroundFileSettingId),
           readout: _controller.nameOf(path) ?? 'No file selected',
-          control: FilledButton.icon(
+          control: SettingsButton(
             key: const ValueKey('background-browse'),
             onPressed: enabled ? () => _choose(_controller.isVideo) : null,
             icon: const Icon(Icons.folder_open_outlined),
-            label: const Text('Browse'),
+            label: 'Browse',
           ),
         ),
         if (path != null) ...[
@@ -333,32 +333,41 @@ class _BackgroundPageState extends State<BackgroundPage> {
         _Row(
           setting: _setting(splashOffsetSettingId),
           readout: '${offset.round()} px',
-          control: _CommitSlider(
-            key: const ValueKey('background-splash-offset'),
-            value: offset,
-            // A larger value set through the CLI stays representable.
-            max: offset > 200 ? offset : 200,
-            divisions: offset > 200 ? null : 40,
-            label: (value) => '${value.round()} px',
-            enabled: enabled,
-            onChanged: (value) =>
-                _controller.set(splashOffsetSettingId, '${value.round()}'),
+          control: SizedBox(
+            width: 220,
+            child: SettingsSlider(
+              key: const ValueKey('background-splash-offset'),
+              value: offset,
+              // A larger value set through the CLI stays representable.
+              max: offset > 200 ? offset : 200,
+              divisions: offset > 200 ? null : 40,
+              label: (value) => '${value.round()} px',
+              onChanged: enabled
+                  ? (value) => _controller.set(
+                      splashOffsetSettingId,
+                      '${value.round()}',
+                    )
+                  : null,
+            ),
           ),
         ),
         const Divider(height: 1, indent: 20, endIndent: 20),
         _Row(
           setting: _setting(splashOpacitySettingId),
           readout: opacity.toStringAsFixed(2),
-          control: _CommitSlider(
-            key: const ValueKey('background-splash-opacity'),
-            value: opacity,
-            max: 1,
-            divisions: 20,
-            label: (value) => value.toStringAsFixed(2),
-            enabled: enabled,
-            onChanged: (value) => _controller.set(
-              splashOpacitySettingId,
-              value.toStringAsFixed(2),
+          control: SizedBox(
+            width: 220,
+            child: SettingsSlider(
+              key: const ValueKey('background-splash-opacity'),
+              value: opacity,
+              divisions: 20,
+              label: (value) => value.toStringAsFixed(2),
+              onChanged: enabled
+                  ? (value) => _controller.set(
+                      splashOpacitySettingId,
+                      value.toStringAsFixed(2),
+                    )
+                  : null,
             ),
           ),
         ),
@@ -578,53 +587,4 @@ class _Choice extends StatelessWidget {
     includeUnknownSelected: false,
     onSelected: onChanged,
   );
-}
-
-/// Follows the drag locally and applies once, when the drag ends.
-class _CommitSlider extends StatefulWidget {
-  const _CommitSlider({
-    super.key,
-    required this.value,
-    required this.max,
-    required this.label,
-    required this.enabled,
-    required this.onChanged,
-    this.divisions,
-  });
-  final double value;
-  final double max;
-  final int? divisions;
-  final String Function(double) label;
-  final bool enabled;
-  final ValueChanged<double> onChanged;
-
-  @override
-  State<_CommitSlider> createState() => _CommitSliderState();
-}
-
-class _CommitSliderState extends State<_CommitSlider> {
-  double? _dragging;
-
-  @override
-  Widget build(BuildContext context) {
-    final value = _dragging ?? widget.value;
-    return SizedBox(
-      width: 220,
-      child: Slider(
-        value: value,
-        max: widget.max,
-        divisions: widget.divisions,
-        label: widget.label(value),
-        onChanged: widget.enabled
-            ? (next) => setState(() => _dragging = next)
-            : null,
-        onChangeEnd: widget.enabled
-            ? (next) {
-                setState(() => _dragging = null);
-                widget.onChanged(next);
-              }
-            : null,
-      ),
-    );
-  }
 }

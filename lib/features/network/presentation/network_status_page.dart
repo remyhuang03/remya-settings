@@ -147,12 +147,13 @@ class _NetworkStatusPageState extends State<NetworkStatusPage> {
     title: primary?['connection'] as String? ?? 'Not connected',
     status: _status,
     action: _controller.canSignIn
-        ? FilledButton(
+        ? SettingsButton(
             key: const ValueKey(networkSignInSettingId),
+            variant: .filled,
             onPressed: _controller.isBusy
                 ? null
                 : () => _controller.set(networkSignInSettingId, 'open'),
-            child: const Text('Sign in'),
+            label: 'Sign in',
           )
         : null,
     children: [

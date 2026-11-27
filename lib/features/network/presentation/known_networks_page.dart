@@ -72,15 +72,16 @@ class _KnownNetworksPageState extends State<KnownNetworksPage> {
                 onChanged: (value) => setState(() => _query = value.trim()),
               ),
             ),
-            FilledButton.icon(
+            SettingsButton(
               key: const ValueKey(knownNetworkAddSettingId),
+              variant: .filled,
               onPressed:
                   _controller.isBusy ||
                       !_controller.allowed('settings.modify.system')
                   ? null
                   : _add,
               icon: const Icon(Icons.add_rounded),
-              label: const Text('Add network'),
+              label: 'Add network',
             ),
           ],
           empty: const Text('No saved networks found'),
@@ -184,7 +185,8 @@ class _ProfileTile extends StatelessWidget {
                 ? 'Connect to this hidden network'
                 : 'Connect to this network',
           ),
-          control: FilledButton.icon(
+          control: SettingsButton(
+            variant: .filled,
             onPressed:
                 controller.isBusy ||
                     controller.connecting != null ||
@@ -198,7 +200,7 @@ class _ProfileTile extends StatelessWidget {
                     ),
                   ),
             icon: const Icon(Icons.wifi_rounded),
-            label: const Text('Connect'),
+            label: 'Connect',
           ),
         ),
       if (profile['read_only'] == true)
@@ -294,17 +296,17 @@ class _ProfileTile extends StatelessWidget {
         SettingRow(
           id: knownNetworkPasswordSettingId,
           label: const Text('Password'),
-          control: FilledButton.tonalIcon(
+          control: SettingsButton(
             onPressed: _editable ? () => _changePassword(context) : null,
             icon: const Icon(Icons.edit_outlined),
-            label: const Text('Change'),
+            label: 'Change',
           ),
         ),
       SettingRow(
         id: knownNetworkForgetSettingId,
         label: const Text('Forget this network'),
-        control: FilledButton.tonalIcon(
-          style: destructiveTonalButtonStyle(context),
+        control: SettingsButton(
+          variant: .destructive,
           onPressed:
               controller.isBusy ||
                   profile['read_only'] == true ||
@@ -312,7 +314,7 @@ class _ProfileTile extends StatelessWidget {
               ? null
               : () => _forget(context),
           icon: const Icon(Icons.delete_outline_rounded),
-          label: const Text('Forget'),
+          label: 'Forget',
         ),
       ),
     ]),

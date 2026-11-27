@@ -104,10 +104,10 @@ class _AppCard extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(child: Text(title, style: text.titleMedium)),
                 if (app.error == null)
-                  FilledButton.tonalIcon(
+                  SettingsButton(
                     onPressed: () => openRemyaApp(context, catalog, app.id, ''),
                     icon: const Icon(Icons.open_in_new_rounded),
-                    label: const Text('Open settings'),
+                    label: 'Open settings',
                   ),
               ],
             ),

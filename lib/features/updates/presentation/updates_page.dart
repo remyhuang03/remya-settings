@@ -70,12 +70,13 @@ class _UpdatesPageState extends State<UpdatesPage> {
                     runSpacing: 12,
                     children: [
                       if (controller.canInstall) ...[
-                        OutlinedButton.icon(
+                        SettingsButton(
                           onPressed: idle && controller.canCheck ? check : null,
                           icon: const Icon(Icons.refresh_rounded),
-                          label: const Text('Check for updates'),
+                          label: 'Check for updates',
                         ),
-                        FilledButton.icon(
+                        SettingsButton(
+                          variant: .filled,
                           onPressed: idle
                               ? () => controller.set(
                                   updatesUpgradeSettingId,
@@ -83,13 +84,14 @@ class _UpdatesPageState extends State<UpdatesPage> {
                                 )
                               : null,
                           icon: const Icon(Icons.downloading_rounded),
-                          label: const Text('Update now'),
+                          label: 'Update now',
                         ),
                       ] else
-                        FilledButton.icon(
+                        SettingsButton(
+                          variant: .filled,
                           onPressed: idle && controller.canCheck ? check : null,
                           icon: const Icon(Icons.refresh_rounded),
-                          label: const Text('Check for updates'),
+                          label: 'Check for updates',
                         ),
                     ],
                   ),

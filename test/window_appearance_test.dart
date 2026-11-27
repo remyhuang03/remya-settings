@@ -56,7 +56,10 @@ void main() {
     // Each offset axis writes both coordinates on release.
     tester
         .widget<Slider>(
-          find.byKey(const ValueKey('window-appearance.shadow-offset-x')),
+          find.descendant(
+            of: find.byKey(const ValueKey('window-appearance.shadow-offset-x')),
+            matching: find.byType(Slider),
+          ),
         )
         .onChangeEnd!(3);
     await tester.pumpAndSettle();

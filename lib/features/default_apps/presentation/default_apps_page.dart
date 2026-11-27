@@ -149,12 +149,12 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
       types: [type],
       controller: widget.controller,
     ),
-    control: FilledButton.icon(
+    control: SettingsButton(
       onPressed: widget.controller.canChange
           ? () => _choose(defaultAppsTypeSettingId, [type])
           : null,
       icon: const Icon(Icons.edit_outlined),
-      label: const Text('Change'),
+      label: 'Change',
     ),
   );
 
@@ -192,17 +192,17 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
                   Wrap(
                     spacing: 8,
                     children: [
-                      TextButton(
+                      SettingsButton(
                         onPressed: controller.isBusy
                             ? null
                             : controller.useSystemConfiguration,
-                        child: const Text('Use system configuration'),
+                        label: 'Use system configuration',
                       ),
-                      TextButton(
+                      SettingsButton(
                         onPressed: controller.isBusy
                             ? null
                             : controller.applySavedConfiguration,
-                        child: const Text('Apply saved Settings'),
+                        label: 'Apply saved Settings',
                       ),
                     ],
                   ),
@@ -234,7 +234,7 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
                         controller: controller,
                       ),
                     ),
-                    control: FilledButton.icon(
+                    control: SettingsButton(
                       key: ValueKey("choose-${group['id']}"),
                       onPressed: controller.canChange
                           ? () => _associations(
@@ -244,7 +244,7 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
                             )
                           : null,
                       icon: const Icon(Icons.tune_rounded),
-                      label: const Text('Manage'),
+                      label: 'Manage',
                     ),
                   ),
               ],
@@ -279,7 +279,8 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
                   onPressed: () => setState(() => _application = null),
                   icon: const Icon(Icons.arrow_back_rounded),
                 ),
-                FilledButton(
+                SettingsButton(
+                  variant: .filled,
                   onPressed:
                       controller.canChange &&
                           app.types.isNotEmpty &&
@@ -290,7 +291,7 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
                           applicationId: app.id,
                         )
                       : null,
-                  child: const Text('Set defaults'),
+                  label: 'Set defaults',
                 ),
               ],
             ],
@@ -346,9 +347,9 @@ class _DefaultAppsPageState extends State<DefaultAppsPage> {
             child: SettingRow(
               id: defaultAppsResetSettingId,
               label: const Text('Reset all default apps'),
-              control: OutlinedButton(
+              control: SettingsButton(
                 onPressed: controller.canChange ? _confirmReset : null,
-                child: const Text('Reset'),
+                label: 'Reset',
               ),
             ),
           ),
@@ -530,9 +531,9 @@ class _AssociationsDialogState extends State<_AssociationsDialog> {
                         onChanged: (value) => setState(() => _query = value),
                       ),
                     ),
-                    FilledButton(
+                    SettingsButton(
                       onPressed: controller.canChange ? widget.setAll : null,
-                      child: const Text('Set all'),
+                      label: 'Set all',
                     ),
                   ],
                   empty: const Text('No matching file types'),
@@ -577,12 +578,12 @@ class _AssociationsDialogState extends State<_AssociationsDialog> {
                           ),
                         ],
                       ),
-                      control: FilledButton.icon(
+                      control: SettingsButton(
                         onPressed: controller.canChange
                             ? () => widget.choose(entry.type)
                             : null,
                         icon: const Icon(Icons.edit_outlined),
-                        label: const Text('Change'),
+                        label: 'Change',
                       ),
                     );
                   },

@@ -107,7 +107,8 @@ class _TextSizePageState extends State<TextSizePage> {
   Widget _row(SettingSpec setting, double? scale) {
     final text = Theme.of(context).textTheme;
     final enabled = _controller.canChange && scale != null;
-    final value = (scale ?? 1).clamp(_shape.min, _shape.max);
+    // The saved value; the slider follows its own drag.
+    final value = (_saved ?? 1).clamp(_shape.min, _shape.max);
     return SettingRow(
       id: setting.id,
       label: Column(
@@ -129,18 +130,20 @@ class _TextSizePageState extends State<TextSizePage> {
       ),
       control: SizedBox(
         width: 260,
-        child: Slider(
+        child: SettingsSlider(
           key: const ValueKey('$textScaleId-slider'),
           value: value,
           min: _shape.min,
           max: _shape.max,
           divisions: ((_shape.max - _shape.min) / _shape.step).round(),
-          label: _percent(value),
-          onChanged: enabled ? (v) => setState(() => _dragging = v) : null,
-          onChangeEnd: enabled
+          label: _percent,
+          onPreview: (v) => setState(() => _dragging = v),
+          onChanged: enabled
               ? (v) async {
                   // Whole 5 % steps, so 1.15 is stored rather than 1.1500000000000001.
                   final factor = (v * 20).round() / 20;
+                  // The sample keeps the released size until it reads back.
+                  setState(() => _dragging = factor);
                   await _controller.set(textScaleId, factor);
                   if (mounted) setState(() => _dragging = null);
                 }

@@ -355,17 +355,17 @@ class ThemeInstallRow extends StatelessWidget {
         spacing: 8,
         runSpacing: 8,
         children: [
-          OutlinedButton.icon(
+          SettingsButton(
             key: ValueKey('${setting.id}-folder'),
             onPressed: enabled ? () => _install(context, true) : null,
             icon: const Icon(Icons.folder_open_rounded),
-            label: const Text('Folder'),
+            label: 'Folder',
           ),
-          OutlinedButton.icon(
+          SettingsButton(
             key: ValueKey('${setting.id}-archive'),
             onPressed: enabled ? () => _install(context, false) : null,
             icon: const Icon(Icons.archive_outlined),
-            label: const Text('Archive'),
+            label: 'Archive',
           ),
         ],
       ),
@@ -460,12 +460,13 @@ class _ThemeRemoveRowState extends State<ThemeRemoveRow> {
             },
             onSelected: enabled ? (id) => setState(() => _choice = id) : null,
           ),
-          FilledButton.tonal(
+          SettingsButton(
             key: ValueKey('${widget.setting.id}-button'),
+            variant: .destructive,
             onPressed: enabled && choice != null && !blocked
                 ? () => _remove(choice)
                 : null,
-            child: const Text('Remove'),
+            label: 'Remove',
           ),
         ],
       ),

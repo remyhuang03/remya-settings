@@ -178,11 +178,12 @@ class _WorkspacesPageState extends State<WorkspacesPage> {
               ),
             ],
           ),
-          control: FilledButton.icon(
+          control: SettingsButton(
             key: const ValueKey('workspace-rule-add'),
+            variant: .filled,
             onPressed: canChange ? _edit : null,
             icon: const Icon(Icons.add_rounded),
-            label: const Text('Add'),
+            label: 'Add',
           ),
         ),
         for (final rule in own)

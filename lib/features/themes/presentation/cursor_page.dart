@@ -226,46 +226,31 @@ class _SizeRow extends StatelessWidget {
             .toList();
         final stops = sizes.length >= 2 ? sizes : null;
         final enabled = controller.canChange;
-        final Widget slider;
+        // The slider starts from the saved size and reports its drag up.
+        var index = 0;
         if (stops != null) {
           // Positions are indexes into the theme's own sizes.
-          var index = 0;
           for (var i = 0; i < stops.length; i++) {
-            if ((stops[i] - size).abs() < (stops[index] - size).abs()) {
+            if ((stops[i] - saved).abs() < (stops[index] - saved).abs()) {
               index = i;
             }
           }
-          slider = Slider(
-            key: ValueKey('$cursorSizeId-slider'),
-            value: index.toDouble(),
-            max: (stops.length - 1).toDouble(),
-            divisions: stops.length - 1,
-            label: '${stops[index].round()} px',
-            onChanged: enabled ? (i) => onDrag(stops[i.round()]) : null,
-            onChangeEnd: enabled
-                ? (i) {
-                    onDrag(null);
-                    controller.set(cursorSizeId, stops[i.round()].round());
-                  }
-                : null,
-          );
-        } else {
-          slider = Slider(
-            key: ValueKey('$cursorSizeId-slider'),
-            value: size.clamp(16, 96).toDouble(),
-            min: 16,
-            max: 96,
-            divisions: 20,
-            label: '$size px',
-            onChanged: enabled ? onDrag : null,
-            onChangeEnd: enabled
-                ? (v) {
-                    onDrag(null);
-                    controller.set(cursorSizeId, v.round());
-                  }
-                : null,
-          );
         }
+        double sizeAt(double v) => stops == null ? v : stops[v.round()];
+        final slider = SettingsSlider(
+          key: ValueKey('$cursorSizeId-slider'),
+          value: stops == null
+              ? saved.clamp(16, 96).toDouble()
+              : index.toDouble(),
+          min: stops == null ? 16 : 0,
+          max: stops == null ? 96 : (stops.length - 1).toDouble(),
+          divisions: stops == null ? 20 : stops.length - 1,
+          label: (v) => '${sizeAt(v).round()} px',
+          onPreview: (v) => onDrag(v == null ? null : sizeAt(v)),
+          onChanged: enabled
+              ? (v) => controller.set(cursorSizeId, sizeAt(v).round())
+              : null,
+        );
         final text = Theme.of(context).textTheme;
         return SettingRow(
           id: setting.id,

@@ -816,17 +816,17 @@ class _VolumeDetails extends StatelessWidget {
               runSpacing: 8,
               children: [
                 if (mounts.isNotEmpty)
-                  FilledButton.tonalIcon(
+                  SettingsButton(
                     onPressed: busy
                         ? null
                         : () => controller.change('storage.open', {
                             'path': mounts.first,
                           }),
                     icon: const Icon(Icons.folder_open_outlined),
-                    label: const Text('Open'),
+                    label: 'Open',
                   ),
                 if (volume['can_mount'] == true)
-                  OutlinedButton.icon(
+                  SettingsButton(
                     onPressed: busy
                         ? null
                         : () => controller.change('storage.mount', {
@@ -834,10 +834,10 @@ class _VolumeDetails extends StatelessWidget {
                             'action': 'mount',
                           }),
                     icon: const Icon(Icons.drive_folder_upload_outlined),
-                    label: const Text('Mount'),
+                    label: 'Mount',
                   ),
                 if (volume['can_unmount'] == true)
-                  OutlinedButton.icon(
+                  SettingsButton(
                     onPressed: busy
                         ? null
                         : () => controller.change('storage.mount', {
@@ -845,13 +845,13 @@ class _VolumeDetails extends StatelessWidget {
                             'action': 'unmount',
                           }),
                     icon: const Icon(Icons.eject_rounded),
-                    label: const Text('Unmount'),
+                    label: 'Unmount',
                   ),
                 if (volume['can_rename'] == true)
-                  OutlinedButton.icon(
+                  SettingsButton(
                     onPressed: busy ? null : onRename,
                     icon: const Icon(Icons.edit_outlined),
-                    label: const Text('Rename'),
+                    label: 'Rename',
                   ),
               ],
             ),

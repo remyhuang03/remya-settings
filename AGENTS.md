@@ -24,6 +24,7 @@
 - Do not use the middle dot character (U+00B7) to separate text information. Present distinct facts as labeled fields or separate lines.
 - Put a page's advanced options in a default-collapsed `Advanced` section of that same page, not in a separate second-level page or menu. Do not keep a folded-in page's old ID.
 - Apply setting changes immediately when the setting supports immediate application and doing so is appropriate; do not add an unnecessary Apply button.
+- Build settings controls from `remya_ui` as specified in Core's `docs/settings-controls.md` (choices, `SettingsButton` variants, sliders, number fields, metrics). Do not use Material `SegmentedButton`, dropdowns or `OutlinedButton` in settings rows.
 - For settings that require a system restart, show a global "Reboot to apply" status bar with Restart now and Later actions, and a local explanation beside the setting. State application restart or sign-in requirements accurately when a full reboot is unnecessary.
 - Let the native runner own initial window setup and respect Wayland compositor policy. Change desktop configuration only through explicitly selected, implemented system settings; never alter unrelated compositor policy or window rules.
 

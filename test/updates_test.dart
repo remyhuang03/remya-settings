@@ -122,12 +122,12 @@ void main() {
         tester.getTopLeft(find.text('latest line')).dy,
         lessThan(tester.getTopLeft(find.text('first line')).dy),
       );
-      await tester.tap(find.widgetWithText(FilledButton, 'Update now'));
+      await tester.tap(find.widgetWithText(SettingsButton, 'Update now'));
       await tester.pump();
       expect(writes, [(updatesUpgradeSettingId, 'upgrade')]);
       expect(find.text('Upgrading packages (attempt 1)'), findsOneWidget);
-      final check = tester.widget<OutlinedButton>(
-        find.widgetWithText(OutlinedButton, 'Check for updates'),
+      final check = tester.widget<SettingsButton>(
+        find.widgetWithText(SettingsButton, 'Check for updates'),
       );
       expect(check.onPressed, isNull);
       final terminalError = tester.widget<Text>(
@@ -249,7 +249,9 @@ void main() {
       for (final title in ['Include held packages', 'Retry after failure']) {
         expect(tester.widget<Switch>(_switch(title)).onChanged, isNull);
       }
-      await tester.tap(find.widgetWithText(FilledButton, 'Check for updates'));
+      await tester.tap(
+        find.widgetWithText(SettingsButton, 'Check for updates'),
+      );
       await tester.pump();
       expect(writes, [(updatesCheckSettingId, 'check')]);
       await tester.pumpWidget(const SizedBox.shrink());
@@ -283,8 +285,9 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text('09:30'), findsOneWidget);
         expect(find.text('01:00'), findsOneWidget);
-        for (final button in tester.widgetList<OutlinedButton>(
-          find.byType(OutlinedButton),
+        expect(find.byType(SettingsButton), findsNWidgets(2));
+        for (final button in tester.widgetList<SettingsButton>(
+          find.byType(SettingsButton),
         )) {
           expect(button.onPressed == null, !editable);
         }

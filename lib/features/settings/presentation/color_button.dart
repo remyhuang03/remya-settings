@@ -1,5 +1,6 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:remya_ui/settings_ui.dart';
 
 /// The current color as a swatch; the picker applies only a confirmed choice.
 ///
@@ -57,7 +58,7 @@ class ColorButton extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => FilledButton.icon(
+  Widget build(BuildContext context) => SettingsButton(
     onPressed: onChanged == null ? null : () => _pick(context),
     icon: Container(
       width: 20,
@@ -68,6 +69,6 @@ class ColorButton extends StatelessWidget {
         border: .all(color: Theme.of(context).colorScheme.outline),
       ),
     ),
-    label: Text(color ?? 'Unknown'),
+    label: color ?? 'Unknown',
   );
 }

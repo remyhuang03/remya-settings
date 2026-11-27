@@ -164,7 +164,7 @@ class HotspotPage extends StatelessWidget {
             SettingRow(
               id: hotspotConfigureSettingId,
               label: const Text('Name, password and band'),
-              control: FilledButton.tonalIcon(
+              control: SettingsButton(
                 onPressed:
                     problem == null &&
                         controller.canChangePreferences &&
@@ -174,7 +174,7 @@ class HotspotPage extends StatelessWidget {
                 icon: Icon(
                   info == null ? Icons.add_rounded : Icons.edit_outlined,
                 ),
-                label: Text(info == null ? 'Set up' : 'Edit'),
+                label: info == null ? 'Set up' : 'Edit',
               ),
             ),
           ]),

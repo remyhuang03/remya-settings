@@ -111,27 +111,28 @@ class _AppImagesPageState extends State<AppImagesPage> {
                 ? '${controller.apps.length} AppImages'
                 : 'Reading AppImages…',
             actions: [
-              FilledButton.icon(
+              SettingsButton(
                 key: const ValueKey('appimages-install'),
+                variant: .filled,
                 onPressed: _install,
                 icon: const Icon(Icons.add_rounded),
-                label: const Text('Install AppImage'),
+                label: 'Install AppImage',
               ),
-              OutlinedButton.icon(
+              SettingsButton(
                 key: const ValueKey('appimages-check'),
                 onPressed: controller.checking
                     ? null
                     : () => controller.run(appImagesCheckSettingId, 'all'),
                 icon: const Icon(Icons.refresh_rounded),
-                label: const Text('Check now'),
+                label: 'Check now',
               ),
               if (controller.updatable.isNotEmpty)
-                FilledButton.icon(
+                SettingsButton(
                   key: const ValueKey('appimages-update-all'),
                   onPressed: () =>
                       controller.run(appImagesUpdateSettingId, 'all'),
                   icon: const Icon(Icons.system_update_alt_rounded),
-                  label: const Text('Update all'),
+                  label: 'Update all',
                 ),
             ],
             empty: Text(
@@ -322,12 +323,12 @@ class _AppCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   if (app.available != null && app.job == null)
-                    FilledButton.tonalIcon(
+                    SettingsButton(
                       key: ValueKey('appimage-update-${app.id}'),
                       onPressed: () =>
                           controller.run(appImagesUpdateSettingId, app.id),
                       icon: const Icon(Icons.system_update_alt_rounded),
-                      label: const Text('Update'),
+                      label: 'Update',
                     )
                   else
                     const Icon(Icons.chevron_right_rounded),
@@ -582,11 +583,11 @@ class _AppDetailsState extends State<_AppDetails> {
                 const SizedBox(height: 8),
                 Align(
                   alignment: .centerRight,
-                  child: TextButton.icon(
+                  child: SettingsButton(
                     key: const ValueKey('appimage-source-save'),
                     onPressed: () => _saveSource(app),
                     icon: const Icon(Icons.save_outlined),
-                    label: const Text('Save source'),
+                    label: 'Save source',
                   ),
                 ),
                 if (app.source != null)

@@ -139,12 +139,12 @@ class _BluetoothPageState extends State<BluetoothPage> {
                         ),
                       ],
                     ),
-                    control: OutlinedButton.icon(
+                    control: SettingsButton(
                       onPressed: controller.busy
                           ? null
                           : () => _add(visible: true),
                       icon: const Icon(Icons.visibility_outlined),
-                      label: const Text('Make visible'),
+                      label: 'Make visible',
                     ),
                   ),
               ]),
@@ -154,11 +154,12 @@ class _BluetoothPageState extends State<BluetoothPage> {
               title: 'Paired devices',
               actions: [
                 if (controller.powered)
-                  FilledButton.icon(
+                  SettingsButton(
                     key: const ValueKey('bluetooth.add'),
+                    variant: .filled,
                     onPressed: controller.busy ? null : _add,
                     icon: const Icon(Icons.add_rounded),
-                    label: const Text('Add device'),
+                    label: 'Add device',
                   ),
               ],
               empty: const Text('No paired devices.'),
@@ -320,7 +321,8 @@ class _DeviceCard extends StatelessWidget {
               runSpacing: 8,
               children: [
                 if (controller.powered && !blocked)
-                  FilledButton.tonalIcon(
+                  SettingsButton(
+                    variant: connected && !nearby ? .destructive : .filled,
                     icon: Icon(
                       nearby
                           ? Icons.link_rounded
@@ -338,20 +340,18 @@ class _DeviceCard extends StatelessWidget {
                                 : bluetoothConnectSettingId,
                             device,
                           ),
-                    label: Text(
-                      nearby
-                          ? 'Pair'
-                          : connected
-                          ? 'Disconnect'
-                          : 'Connect',
-                    ),
+                    label: nearby
+                        ? 'Pair'
+                        : connected
+                        ? 'Disconnect'
+                        : 'Connect',
                   ),
                 if (!nearby)
-                  TextButton.icon(
-                    style: destructiveTextButtonStyle(context),
+                  SettingsButton(
+                    variant: .destructive,
                     onPressed: controller.busy ? null : () => _forget(context),
                     icon: const Icon(Icons.delete_outline_rounded),
-                    label: const Text('Remove'),
+                    label: 'Remove',
                   ),
               ],
             ),

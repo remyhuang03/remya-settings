@@ -362,11 +362,12 @@ class _CleanupPageState extends State<CleanupPage> {
                           dimension: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         ),
-                      FilledButton.icon(
+                      SettingsButton(
                         key: const ValueKey('cleanup-run'),
+                        variant: .filled,
                         onPressed: c.busy || !anySelected ? null : _clean,
                         icon: const Icon(Icons.cleaning_services_outlined),
-                        label: const Text('Clean up'),
+                        label: 'Clean up',
                       ),
                     ],
                   ),
@@ -912,12 +913,12 @@ class _AutomaticCleanup extends StatelessWidget {
                 ...lastRun,
               ],
             ),
-            control: FilledButton.tonalIcon(
+            control: SettingsButton(
               onPressed: c.policyWritable
                   ? () => c.change('cleanup.run-now', {})
                   : null,
               icon: const Icon(Icons.play_arrow_rounded),
-              label: const Text('Run now'),
+              label: 'Run now',
             ),
           ),
         ] else if (last != null)

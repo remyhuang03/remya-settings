@@ -21,9 +21,8 @@ class NightLightPage extends StatefulWidget {
 }
 
 class _NightLightPageState extends State<NightLightPage> {
-  double? _dragging;
-
   NightLightController get _controller => widget.controller;
+  double? _preview;
 
   @override
   void initState() {
@@ -59,10 +58,11 @@ class _NightLightPageState extends State<NightLightPage> {
   );
 
   Widget _time(String id, String value, {required bool enabled}) =>
-      OutlinedButton(
+      SettingsButton(
         key: ValueKey('$id-button'),
         onPressed: enabled ? () => _pickTime(id, value) : null,
-        child: Text(value),
+        icon: const Icon(Icons.schedule_rounded),
+        label: value,
       );
 
   @override
@@ -70,7 +70,8 @@ class _NightLightPageState extends State<NightLightPage> {
     listenable: _controller,
     builder: (context, _) {
       final enabled = _controller.canChange;
-      final kelvin = _dragging ?? _controller.temperature.toDouble();
+      final kelvin = _controller.temperature.toDouble();
+      final shown = _preview ?? kelvin;
       return Column(
         crossAxisAlignment: .stretch,
         children: [
@@ -105,28 +106,23 @@ class _NightLightPageState extends State<NightLightPage> {
                 const Divider(height: 1, indent: 20, endIndent: 20),
                 _Row(
                   setting: _setting(nightLightTemperatureId),
-                  subtitle: '${kelvin.round()} K',
+                  subtitle: '${shown.round()} K',
                   control: SizedBox(
                     width: 220,
-                    child: Slider(
+                    // Each change restarts hyprsunset, so only the release applies.
+                    child: SettingsSlider(
                       key: const ValueKey('night-light-temperature'),
-                      value: kelvin.clamp(1000, 6500),
+                      value: kelvin,
                       min: 1000,
                       max: 6500,
                       divisions: 55,
-                      label: '${kelvin.round()} K',
+                      label: (value) => '${value.round()} K',
+                      onPreview: (value) => setState(() => _preview = value),
                       onChanged: enabled
-                          ? (next) => setState(() => _dragging = next)
-                          : null,
-                      // Each change restarts hyprsunset, so only the release applies.
-                      onChangeEnd: enabled
-                          ? (next) {
-                              setState(() => _dragging = null);
-                              _controller.set(
-                                nightLightTemperatureId,
-                                '${next.round()}',
-                              );
-                            }
+                          ? (next) => _controller.set(
+                              nightLightTemperatureId,
+                              '${next.round()}',
+                            )
                           : null,
                     ),
                   ),

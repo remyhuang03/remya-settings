@@ -279,11 +279,11 @@ class _SoundPageState extends State<SoundPage> {
                 : null,
           ),
           if (customPath != null)
-            OutlinedButton.icon(
+            SettingsButton(
               key: const ValueKey('sound.compositor-bell-browse'),
               onPressed: enabled ? () => _pickBell(desktop) : null,
-              icon: const Icon(Icons.folder_open_rounded, size: 18),
-              label: const Text('Browse'),
+              icon: const Icon(Icons.folder_open_rounded),
+              label: 'Browse',
             ),
         ],
       ),
@@ -597,17 +597,12 @@ class _VolumeRowState extends State<_VolumeRow> {
       ),
       control: SizedBox(
         width: 280,
-        child: Slider(
-          value: value.clamp(0, 150),
+        child: SettingsSlider(
+          value: widget.value,
           max: 150,
-          semanticFormatterCallback: (v) => '${widget.label} ${v.round()}%',
-          onChanged: widget.enabled ? (v) => setState(() => _draft = v) : null,
-          onChangeEnd: widget.enabled
-              ? (v) {
-                  setState(() => _draft = null);
-                  widget.onChanged(v.clamp(0, 150));
-                }
-              : null,
+          label: (v) => '${widget.label} ${v.round()}%',
+          onPreview: (v) => setState(() => _draft = v),
+          onChanged: widget.enabled ? widget.onChanged : null,
         ),
       ),
     );

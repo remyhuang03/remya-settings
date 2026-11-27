@@ -115,7 +115,12 @@ void main() {
       find.text('You will need to pair this device again to use it.'),
       findsOneWidget,
     );
-    await tester.tap(find.widgetWithText(FilledButton, 'Remove'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.widgetWithText(FilledButton, 'Remove'),
+      ),
+    );
     await refresh(tester);
     expect(writes.last.$1, 'bluetooth.forget');
   });

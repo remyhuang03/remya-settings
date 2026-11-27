@@ -59,10 +59,10 @@ class _ActiveHoursPageState extends State<ActiveHoursPage> {
               ),
             ],
           ),
-          control: OutlinedButton.icon(
+          control: SettingsButton(
             onPressed: editable ? () => _choose(id, value) : null,
             icon: const Icon(Icons.schedule_rounded),
-            label: Text(value),
+            label: value,
           ),
         );
       }

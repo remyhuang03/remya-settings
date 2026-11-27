@@ -49,13 +49,15 @@ class _WindowAppearancePageState extends State<WindowAppearancePage> {
   Color? _color(String id) =>
       ColorButton.parse(_controller.option(id) as String?);
 
-  (double, double) get _offset {
+  (double, double) get _savedOffset {
     final saved = _controller.option(_offsetId);
     final pair = saved is List && saved.length == 2 ? saved : const [0, 0];
-    return (
-      _dragging['$_offsetId.x'] ?? (pair[0] as num).toDouble(),
-      _dragging['$_offsetId.y'] ?? (pair[1] as num).toDouble(),
-    );
+    return ((pair[0] as num).toDouble(), (pair[1] as num).toDouble());
+  }
+
+  (double, double) get _offset {
+    final (x, y) = _savedOffset;
+    return (_dragging['$_offsetId.x'] ?? x, _dragging['$_offsetId.y'] ?? y);
   }
 
   void _drag(String id, double? value) => setState(
@@ -128,7 +130,8 @@ class _WindowAppearancePageState extends State<WindowAppearancePage> {
         controlBuilder: (setting) => switch (setting.id) {
           _offsetId => _OffsetRow(
             setting: setting,
-            offset: _offset,
+            saved: _savedOffset,
+            shown: _offset,
             enabled: _controller.canChange,
             onDrag: _drag,
             onDone: (x, y) => _controller.set(_offsetId, [x, y]),
@@ -175,13 +178,15 @@ class _WindowAppearancePageState extends State<WindowAppearancePage> {
 class _OffsetRow extends StatelessWidget {
   const _OffsetRow({
     required this.setting,
-    required this.offset,
+    required this.saved,
+    required this.shown,
     required this.enabled,
     required this.onDrag,
     required this.onDone,
   });
   final SettingSpec setting;
-  final (double, double) offset;
+  final (double, double) saved;
+  final (double, double) shown;
   final bool enabled;
   final void Function(String id, double? value) onDrag;
   final void Function(int x, int y) onDone;
@@ -189,27 +194,25 @@ class _OffsetRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
-    final (x, y) = offset;
+    final (x, y) = saved;
+    final (shownX, shownY) = shown;
     Widget axis(String label, String key, double value) => Row(
       children: [
         SizedBox(width: 88, child: Text(label, style: text.bodySmall)),
         Expanded(
-          child: Slider(
+          child: SettingsSlider(
             key: ValueKey('$_offsetId-$key'),
-            value: value.clamp(-20, 20).toDouble(),
+            value: value,
             min: -20,
             max: 20,
             divisions: 40,
-            label: '${value.round()} px',
-            onChanged: enabled ? (v) => onDrag('$_offsetId.$key', v) : null,
-            onChangeEnd: enabled
-                ? (v) {
-                    onDrag('$_offsetId.$key', null);
-                    onDone(
-                      key == 'x' ? v.round() : x.round(),
-                      key == 'y' ? v.round() : y.round(),
-                    );
-                  }
+            label: (v) => '${v.round()} px',
+            onPreview: (v) => onDrag('$_offsetId.$key', v),
+            onChanged: enabled
+                ? (v) => onDone(
+                    key == 'x' ? v.round() : x.round(),
+                    key == 'y' ? v.round() : y.round(),
+                  )
                 : null,
           ),
         ),
@@ -223,7 +226,7 @@ class _OffsetRow extends StatelessWidget {
         children: [
           Text(setting.title, style: text.bodyLarge),
           Text(
-            'Right ${x.round()} px, down ${y.round()} px',
+            'Right ${shownX.round()} px, down ${shownY.round()} px',
             style: text.bodySmall,
           ),
         ],

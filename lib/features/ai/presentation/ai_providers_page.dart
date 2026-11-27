@@ -72,10 +72,11 @@ class _AiProvidersPageState extends State<AiProvidersPage>
               onPressed: busy ? null : _refresh,
               icon: const Icon(Icons.refresh_rounded),
             ),
-            FilledButton.icon(
+            SettingsButton(
+              variant: .filled,
               onPressed: busy || settings == null ? null : _add,
               icon: const Icon(Icons.add_rounded),
-              label: const Text('Add provider'),
+              label: 'Add provider',
             ),
           ],
         ),
